@@ -1,0 +1,5 @@
+Gets rid of all the weather effects from weather items and from "cl_weather" console command.
+
+https://dota2.fandom.com/wiki/Weather_Effects
+
+Lets you take advantage of the ambient lighting from them without the crap on the screen.
