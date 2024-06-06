@@ -1,1 +1,1 @@
-@@https://raw.githubusercontent.com/robbyz512/dota2-minify/stable/bin/modpaths/Remove%20Ambient%20Sounds/blacklist.txt
+@@https://raw.githubusercontent.com/robbyz512/dota2-minify-remote/remote-data/Remove%20Ambient%20Sounds/blacklist.txt

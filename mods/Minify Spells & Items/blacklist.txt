@@ -1,1 +1,1 @@
-@@https://raw.githubusercontent.com/robbyz512/dota2-minify/stable/bin/modpaths/Minify%20Spells%20%26%20Items/blacklist.txt
+@@https://raw.githubusercontent.com/robbyz512/dota2-minify-remote/remote-data/Minify%20Spells%20%26%20Items/blacklist.txt

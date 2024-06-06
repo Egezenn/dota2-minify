@@ -1,1 +1,0 @@
-@@https://raw.githubusercontent.com/robbyz512/dota2-minify/stable/bin/modpaths/Dark%20Terrain%20%5B7.34%5D/blacklist.txt

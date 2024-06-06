@@ -1,6 +1,8 @@
 import os
 import winreg
 import traceback
+import requests
+import yaml
 from urllib.request import urlopen
 
 try:
@@ -50,17 +52,21 @@ maps_dir = os.path.join(bin_dir, "maps")
 gi_file_default = os.path.join(bin_dir, "gi_files\\default\\gameinfo_branchspecific.gi")
 gi_file_patched = os.path.join(bin_dir, "gi_files\\patched\\gameinfo_branchspecific.gi")
 
-# configure urls remotely
-urls = []
-for line in urlopen('https://raw.githubusercontent.com/robbyz512/dota2-minify/stable/bin/modpaths/urls.txt'):
-    line = line.decode('utf-8').strip().split('=')
-    urls.append(line)
+# -------------------------------- remote data ------------------------------- #
+response = requests.get('https://raw.githubusercontent.com/robbyz512/dota2-minify-remote/remote-data/data.yaml')
 
-update_url  = urls[0][1]
-discord_url = urls[1][1]
-help_url    = urls[2][1]
-latest_version_url = urls[3][1]
-dev_version = urls[4][1]
+if response.status_code == 200:
+    data = yaml.safe_load(response.text)
+
+    latest_version_url = data.get('latest_version')
+    discord_url = data.get('discord')
+    donations_url = data.get('donations')
+    help_url = data.get('help')
+    new_version = data.get('minify_2')
+    update_url = data.get('releases')
+
+else:
+    print("Failed to fetch data from the URL")
 
 # dota2 paths
 content_dir = os.path.join(steam_dir, "steamapps\\common\\dota 2 beta\\content\\dota_addons\\minify")
@@ -69,12 +75,13 @@ gi_dir = os.path.join(steam_dir, "steamapps\\common\\dota 2 beta\\game\\dota\\ga
 resource_compiler = os.path.join(steam_dir, "steamapps\\common\\dota 2 beta\\game\\bin\\win64\\resourcecompiler.exe")
 pak01_dir = os.path.join(steam_dir, "steamapps\\common\\dota 2 beta\\game\\dota\\pak01_dir.vpk")
 
+dota_minify_content = os.path.join(steam_dir, "steamapps\\common\\dota 2 beta\\content\\dota_minify")
 dota_minify = os.path.join(steam_dir, "steamapps\\common\\dota 2 beta\\game\\dota_minify")
 dota_minify_maps = os.path.join(dota_minify, "maps")
 
 # exclude invalid mods
 enabled_mods = ['Auto Accept Match',
-                'Dark Terrain [7.35]',
+                'Dark Terrain',
                 'Default Menu Background',
                 'Dotabuff in Profiles',
                 'Minify Base Attacks',
@@ -83,7 +90,7 @@ enabled_mods = ['Auto Accept Match',
                 'Misc Optimization',
                 'Remove Ambient Sounds',
                 'Remove Battlepass Sounds', 
-                'Remove Foilage [7.35]', 
+                'Remove Foilage', 
                 'Remove Pinging', 
                 'Remove River',
                 'Remove Sprays',

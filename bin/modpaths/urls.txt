@@ -1,5 +1,0 @@
-update_url=https://github.com/robbyz512/dota2-minify/releases
-discord_url=https://discord.gg/2YDnqpbcKM
-help_url=https://github.com/robbyz512/dota2-minify/tree/stable#rocket-installation
-latest_version_url=1.06c
-dev_version=https://github.com/robbyz512/dota2-minify/tree/stable#for-developers

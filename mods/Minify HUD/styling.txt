@@ -1,1 +1,1 @@
-@@https://raw.githubusercontent.com/robbyz512/dota2-minify/master/bin/modpaths/Minify%20HUD/styling.txt
+@@https://raw.githubusercontent.com/robbyz512/dota2-minify-remote/remote-data/Minify%20HUD/styling.txt

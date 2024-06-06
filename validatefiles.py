@@ -41,6 +41,8 @@ class MyClass:
             setFolder(self.main_window)
             
     def c_isMinifyFolderPresent(self):
+        if not os.path.exists(mpaths.dota_minify_content):
+            os.makedirs(mpaths.dota_minify_content)
         if not os.path.exists(mpaths.dota_minify):
             os.makedirs(mpaths.dota_minify)
 

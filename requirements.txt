@@ -1,5 +1,11 @@
+certifi==2024.6.2
+charset-normalizer==3.3.2
+idna==3.7
 Nuitka==1.9.5
 ordered-set==4.1.0
 psutil==5.9.7
+PyYAML==6.0.1
+requests==2.32.3
+urllib3==2.2.1
 vpk==1.4.0
 zstandard==0.22.0

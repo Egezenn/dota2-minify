@@ -1,1 +1,1 @@
-@@https://raw.githubusercontent.com/robbyz512/dota2-minify/stable/bin/modpaths/Minify%20Base%20Attacks/blacklist.txt
+@@https://raw.githubusercontent.com/robbyz512/dota2-minify-remote/remote-data/Minify%20Base%20Attacks/blacklist.txt

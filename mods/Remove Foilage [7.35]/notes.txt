@@ -1,4 +1,0 @@
-Removes all the bushes, flowers, rocks and any other ground props so you just have tiles. 
-This improves FPS a lot since it reduces the number of draw calls your GPU has to make.
-
-- Remember to turn off grass in dota2 video settings.

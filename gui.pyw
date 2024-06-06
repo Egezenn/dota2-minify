@@ -5,6 +5,11 @@
 #   \/_/  \/_/   \/_/   \/_/ \/_/   \/_/   \/_/     \/_____/ 
 # ---------------------------------------------------------- 
 
+# this code was written when I was newer to programming and not worth the headache to try to improve
+# instead if you want to help develop contact me on discord and help work on Minify 2.0 -- a full stack desktop app.
+# https://github.com/robbyz512/dota2-minify?tab=readme-ov-file#fast_forward-future-of-this-project---minify-20
+# discord = robbyz
+
 import os
 import sys
 import vpk
@@ -23,7 +28,7 @@ import mpaths
 import validatefiles
 import helper
 
-version = "1.06c"
+version = "1.06d"
 
 # widget vars
 btnXpad = 8
@@ -36,10 +41,26 @@ blacklist_dictionary = {}
 styling_dictionary = {}
 
 def welcomeMsg():
- print(r"""
- Github: https://github.com/robbyz512/dota2-minify
- Donations: https://www.buymeacoffee.com/dota2minify
- -------------------------------------------------
+    print(r""" __    __     __     __   __     __     ______   __  __    
+ /\ "-./  \   /\ \   /\ "-.\ \   /\ \   /\  ___\ /\ \_\ \   
+ \ \ \-./\ \  \ \ \  \ \ \-.  \  \ \ \  \ \  __\ \ \____ \  
+  \ \_\ \ \_\  \ \_\  \ \_/"\_\   \ \_\  \ \_\    \/\_____\ 
+   \/_/  \/_/   \/_/   \/_/ \/_/   \/_/   \/_/     \/_____/ 
+ -------------------------------------------------------  
+ If you like this project and want to help keep it going
+       
+ -> Join Discord ♥
+       
+ -> Share Minify with friends or online groups
+       
+ -> Star the project on Github ★
+       
+ -> Help code Minify 2.0
+       
+ -> Donate to Buymeacoffee below $
+       
+ -> Create and Share mods
+ -------------------------------------------------------
        """)
 
 class Extension:
@@ -132,7 +153,7 @@ class App():
         self.uninstallBtn.grid(row=11, column=1, pady=btnYpad, padx=btnXpad, sticky='w')
         self.versionLabel = tk.Label(self.buttonsFrame, font=("None", 8), width=20)
         self.versionLabel.grid(row=12, column=0, sticky='w')
-        self.newVersionLabel = tk.Label(self.buttonsFrame, font=("None", 8), width=20)
+        self.newVersionLabel = tk.Label(self.buttonsFrame, font=("None", 8, "bold"), width=20)
         self.newVersionLabel.grid(row=13, column=0, sticky='w')
         self.discordBtn = tk.Button(self.buttonsFrame, text='Discord', width=btnW, takefocus=False, command=lambda:threading.Thread(target=helper.urlDispatcher(mpaths.discord_url), daemon=True).start())
         self.discordBtn.grid(row=14, column=0, pady=btnYpad, padx=btnXpad, sticky='w')
@@ -146,9 +167,15 @@ class App():
 
         self.devLabel = tk.Label(self.consoleFrame, font=("Tahoma", 10))
         self.devLabel.config(text="Minify 2.0 under development", fg="#FF8C00")
-        self.devLabel.grid(row=1, column=0, sticky='e')
-        self.devbtn = tk.Button(self.consoleFrame, text='Preview', width=22, height=1, font=("None", 8, "bold"), takefocus=False, command=lambda:threading.Thread(target=helper.urlDispatcher(mpaths.dev_version), daemon=True).start())
-        self.devbtn.grid(row=2, column=0, sticky='e')
+        self.devLabel.grid(row=1, column=0, pady=4, sticky='s')
+        self.devbtn = tk.Button(self.consoleFrame, text='Preview 2.0', width=22, height=1, font=("None", 8, "bold"), takefocus=False, command=lambda:threading.Thread(target=helper.urlDispatcher(mpaths.new_version), daemon=True).start())
+        self.devbtn.grid(row=1, column=0, pady=4, sticky='e')
+
+        self.donateLabel = tk.Label(self.consoleFrame, font=("Tahoma", 10))
+        self.donateLabel.config(text="Support the Project", fg="#FF8C00")
+        self.donateLabel.grid(row=2, column=0, pady=4, sticky='s')
+        self.donateBtn = tk.Button(self.consoleFrame, text='Donation Page', width=22, height=1, font=("None", 8, "bold"), takefocus=False, command=lambda:threading.Thread(target=helper.urlDispatcher(mpaths.donations_url), daemon=True).start())
+        self.donateBtn.grid(row=2, column=0, pady=4, sticky='e')
         
         # redirects stdout and stderror to text box widget, which means print statements will not appear in the gui until these two lines are ran
         sys.stdout = TextRedirector(self.consoleText, "stdout")
@@ -190,11 +217,13 @@ class App():
         else:
             self.updateBtn.config(state='normal', fg='#0cb6b3', activeforeground='#0cb6b3')
         
-            self.newVersionLabel.config(fg='red')
+            self.newVersionLabel.config(fg='#0cb6b3')
             self.newVersionLabel.config(text=f"New version! {mpaths.latest_version_url}")
 
-            self.versionLabel.config(fg="#0cb6b3")
+            self.versionLabel.config(fg="red")
             self.versionLabel.config(text=f"Your version {version}")
+
+            # 0cb6b3
 
     def uninstaller(self):
 
@@ -255,7 +284,7 @@ class App():
                         if box.var.get() == 1 and checkboxes[box] == folder: # step into folders that have ticked checkboxes only
                             print("→ Installing " + folder)
                             
-                            if checkboxes[box] == 'Dark Terrain [7.35]' or checkboxes[box] == 'Remove Foilage [7.35]':
+                            if checkboxes[box] == 'Dark Terrain' or checkboxes[box] == 'Remove Foilage':
                                 shutil.copytree(mpaths.maps_dir, os.path.join(mpaths.dota_minify, os.path.basename(mpaths.maps_dir)), dirs_exist_ok=True)
                             # ----------------------------------- files ---------------------------------- #
                             # if files_total == 0:    pass

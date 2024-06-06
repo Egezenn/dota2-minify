@@ -1,1 +1,1 @@
-@@https://raw.githubusercontent.com/robbyz512/dota2-minify/stable/bin/modpaths/Misc%20Optimization/blacklist.txt
+@@https://raw.githubusercontent.com/robbyz512/dota2-minify-remote/remote-data/Misc%20Optimization/blacklist.txt
