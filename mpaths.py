@@ -6,7 +6,7 @@ import yaml
 from urllib.request import urlopen
 
 try:
-    hkey = winreg.OpenKey(winreg.HKEY_LOCAL_MACHINE, "SOFTWARE\WOW6432Node\Valve\Steam")
+    hkey = winreg.OpenKey(winreg.HKEY_LOCAL_MACHINE, r"SOFTWARE\WOW6432Node\Valve\Steam")
 except Exception as exception:
     hkey = None
     with open(os.path.join(os.getcwd(), 'logs\\registry.txt'), 'w') as file:
@@ -26,7 +26,7 @@ except:
 
 # when dota2 is not inside Steam folder then set new steam directory from 'dota2path_minify.txt
 # this text file is created and set by the user in validatefiles.py during startup
-if not os.path.exists(os.path.join(steam_dir, 'common\dota 2 beta\game\bin\win64\dota2.exe')):
+if not os.path.exists(os.path.join(steam_dir, 'steamapps\\common\\dota 2 beta\\game\\bin\\win64\\dota2.exe')):
     path_file = os.path.join(os.getcwd(), 'dota2path_minify.txt')
 
     # make sure the text file exists
