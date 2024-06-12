@@ -27,8 +27,7 @@ except:
 # when dota2 is not inside Steam folder then set new steam directory from 'dota2path_minify.txt
 # this text file is created and set by the user in validatefiles.py during startup
 if not os.path.exists(os.path.join(steam_dir, 'common\dota 2 beta\game\bin\win64\dota2.exe')):
-    documents = os.path.join(os.path.expanduser('~'), 'Documents')
-    path_file   = os.path.join(documents, 'dota2path_minify.txt')
+    path_file = os.path.join(os.getcwd(), 'dota2path_minify.txt')
 
     # make sure the text file exists
     if not os.path.exists(path_file):
