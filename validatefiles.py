@@ -10,8 +10,15 @@ def setFolder(main_window):
     dialog_root = tk.Tk()
     dialog_root.withdraw()
     folder = filedialog.askdirectory()
-    with open(mpaths.path_file, 'w') as file: file.write(folder)
-    messagebox.showinfo("","Path saved, go start Minify again.")
+
+    if folder:  # Check if the user selected a folder
+        with open(mpaths.path_file, 'w') as file:
+            file.write(folder)
+        messagebox.showinfo("Saved", "Path saved, go start Minify again.")
+    else:
+        messagebox.showinfo("Canceled", "You did not select a folder. Exiting.")
+        
+    dialog_root.destroy()
     main_window.destroy()
 
 # this class is called with getattr method and calls all functions here alphabetically
@@ -30,13 +37,16 @@ class MyClass:
 
     def b_isDotaInstallFound(self):
         dota2path = os.path.join(mpaths.steam_dir, "steamapps\\common\\dota 2 beta\\game\\bin\\win64\\dota2.exe")
+        normalized_dota2path = os.path.normpath(dota2path)
 
-        if not os.path.exists(dota2path):
+        if not os.path.exists(normalized_dota2path):
             self.toggle_flag = True
             
             message_root = tk.Tk()
             message_root.withdraw()
-            messagebox.showinfo("",f"Dota2 not found in '{dota2path}' ---- Select where your 'SteamLibrary' folder is. For example 'D:\SteamLibrary'")
+            messagebox.showinfo("Dota 2 Not Found",
+                                f"Dota2 not found in\n\n\"{normalized_dota2path}\"\n\n"
+                                "Please select the location of your \"SteamLibrary\" folder, for example \"D:\\SteamLibrary\".")
             message_root.destroy()
             setFolder(self.main_window)
             

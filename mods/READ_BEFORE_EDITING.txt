@@ -1,2 +1,1 @@
-Editing files in this folder is not recommended and you should know what you are doing. 
-Eventually this project will have more user friendly customization.
+Editing files in this folder is not recommended and you should know what you are doing.

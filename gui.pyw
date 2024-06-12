@@ -28,7 +28,7 @@ import mpaths
 import validatefiles
 import helper
 
-version = "1.06d"
+version = "1.06e"
 
 # widget vars
 btnXpad = 8
@@ -62,6 +62,16 @@ def welcomeMsg():
  -> Create and Share mods
  -------------------------------------------------------
        """)
+
+def failureMsg():
+    print(r""":( Failed to connect to 
+https://github.com/robbyz512/dota2-minify-remote/tree/remote-data
+          
+Either you are not connected to the internet or your network configuration is not allowing this app to make requests to Github
+          
+Minify may not work correctly.
+-------------------------------------------------------
+    """)
 
 class Extension:
     def __init__(self, path):
@@ -145,9 +155,9 @@ class App():
         # Buttons
         self.patchBtn = tk.Button(self.buttonsFrame, text='Patch', state=tk.NORMAL, width=btnW, takefocus=False, command=lambda:threading.Thread(target=self.patcher, daemon=True).start())
         self.patchBtn.grid(row=10, column=0, pady=btnYpad, padx=btnXpad, sticky='w')
-        self.helpBtn = tk.Button(self.buttonsFrame, text='Help', state=tk.NORMAL, width=btnW, takefocus=False, command=lambda:threading.Thread(target=helper.urlDispatcher(mpaths.help_url), daemon=True).start())
+        self.helpBtn = tk.Button(self.buttonsFrame, text='Help', state=tk.NORMAL, width=btnW, takefocus=False, command=lambda:threading.Thread(target=helper.urlDispatcher(helper.help_url), daemon=True).start())
         self.helpBtn.grid(row=10, column=1, pady=btnYpad, padx=btnXpad, sticky='w')
-        self.updateBtn = tk.Button(self.buttonsFrame, text='Update', state=tk.NORMAL, width=btnW, takefocus=False, command=lambda:threading.Thread(target=helper.urlDispatcher(mpaths.update_url), daemon=True).start())
+        self.updateBtn = tk.Button(self.buttonsFrame, text='Update', state=tk.NORMAL, width=btnW, takefocus=False, command=lambda:threading.Thread(target=helper.urlDispatcher(helper.update_url), daemon=True).start())
         self.updateBtn.grid(row=11, column=0, pady=btnYpad, padx=btnXpad, sticky='w')
         self.uninstallBtn = tk.Button(self.buttonsFrame, text='Uninstall', width=btnW, takefocus=False, command=lambda:threading.Thread(target=self.uninstaller, daemon=True).start())
         self.uninstallBtn.grid(row=11, column=1, pady=btnYpad, padx=btnXpad, sticky='w')
@@ -155,7 +165,7 @@ class App():
         self.versionLabel.grid(row=12, column=0, sticky='w')
         self.newVersionLabel = tk.Label(self.buttonsFrame, font=("None", 8, "bold"), width=20)
         self.newVersionLabel.grid(row=13, column=0, sticky='w')
-        self.discordBtn = tk.Button(self.buttonsFrame, text='Discord', width=btnW, takefocus=False, command=lambda:threading.Thread(target=helper.urlDispatcher(mpaths.discord_url), daemon=True).start())
+        self.discordBtn = tk.Button(self.buttonsFrame, text='Discord', width=btnW, takefocus=False, command=lambda:threading.Thread(target=helper.urlDispatcher(helper.discord_url), daemon=True).start())
         self.discordBtn.grid(row=14, column=0, pady=btnYpad, padx=btnXpad, sticky='w')
         self.exitBtn = tk.Button(self.buttonsFrame, text='Exit', width=btnW, takefocus=False, command=self.exit)
         self.exitBtn.grid(row=14, column=1, pady=btnYpad, padx=btnXpad, sticky='w')
@@ -168,20 +178,23 @@ class App():
         self.devLabel = tk.Label(self.consoleFrame, font=("Tahoma", 10))
         self.devLabel.config(text="Minify 2.0 under development", fg="#FF8C00")
         self.devLabel.grid(row=1, column=0, pady=4, sticky='s')
-        self.devbtn = tk.Button(self.consoleFrame, text='Preview 2.0', width=22, height=1, font=("None", 8, "bold"), takefocus=False, command=lambda:threading.Thread(target=helper.urlDispatcher(mpaths.new_version), daemon=True).start())
+        self.devbtn = tk.Button(self.consoleFrame, text='Preview 2.0', width=22, height=1, font=("None", 8, "bold"), takefocus=False, command=lambda:threading.Thread(target=helper.urlDispatcher(helper.new_version), daemon=True).start())
         self.devbtn.grid(row=1, column=0, pady=4, sticky='e')
 
         self.donateLabel = tk.Label(self.consoleFrame, font=("Tahoma", 10))
         self.donateLabel.config(text="Support the Project", fg="#FF8C00")
         self.donateLabel.grid(row=2, column=0, pady=4, sticky='s')
-        self.donateBtn = tk.Button(self.consoleFrame, text='Donation Page', width=22, height=1, font=("None", 8, "bold"), takefocus=False, command=lambda:threading.Thread(target=helper.urlDispatcher(mpaths.donations_url), daemon=True).start())
+        self.donateBtn = tk.Button(self.consoleFrame, text='Donation Page', width=22, height=1, font=("None", 8, "bold"), takefocus=False, command=lambda:threading.Thread(target=helper.urlDispatcher(helper.donations_url), daemon=True).start())
         self.donateBtn.grid(row=2, column=0, pady=4, sticky='e')
         
         # redirects stdout and stderror to text box widget, which means print statements will not appear in the gui until these two lines are ran
         sys.stdout = TextRedirector(self.consoleText, "stdout")
         sys.stderr = TextRedirector(self.consoleText, "stderr")
 
-        welcomeMsg()
+        if helper.response.status_code == 200:
+            welcomeMsg()
+        else:
+            failureMsg()
 
     def setupSystem(self):
         x = validatefiles.MyClass(checkboxes, self.root)
@@ -210,20 +223,21 @@ class App():
         if helper.workshop_installed == False:
             helper.disableWorkshopMods(mpaths.mods_dir, mpaths.mods_folders, checkboxes)
 
-        if version == mpaths.latest_version_url:
-            self.updateBtn.config(state='disabled')
-            self.versionLabel.config(fg="#0cb6b3")
-            self.versionLabel.config(text=f"Latest version {version}")
+        if helper.latest_version_url == None:
+            pass
         else:
-            self.updateBtn.config(state='normal', fg='#0cb6b3', activeforeground='#0cb6b3')
-        
-            self.newVersionLabel.config(fg='#0cb6b3')
-            self.newVersionLabel.config(text=f"New version! {mpaths.latest_version_url}")
+            if version == helper.latest_version_url:
+                self.updateBtn.config(state='disabled')
+                self.versionLabel.config(fg="#0cb6b3")
+                self.versionLabel.config(text=f"Latest version {version}")
+            else:
+                self.updateBtn.config(state='normal', fg='#0cb6b3', activeforeground='#0cb6b3')
+            
+                self.newVersionLabel.config(fg='#0cb6b3')
+                self.newVersionLabel.config(text=f"New version! {helper.latest_version_url}")
 
-            self.versionLabel.config(fg="red")
-            self.versionLabel.config(text=f"Your version {version}")
-
-            # 0cb6b3
+                self.versionLabel.config(fg="red")
+                self.versionLabel.config(text=f"Your version {version}")
 
     def uninstaller(self):
 

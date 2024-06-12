@@ -1,9 +1,6 @@
 import os
 import winreg
 import traceback
-import requests
-import yaml
-from urllib.request import urlopen
 
 try:
     hkey = winreg.OpenKey(winreg.HKEY_LOCAL_MACHINE, "SOFTWARE\WOW6432Node\Valve\Steam")
@@ -52,22 +49,6 @@ maps_dir = os.path.join(bin_dir, "maps")
 gi_file_default = os.path.join(bin_dir, "gi_files\\default\\gameinfo_branchspecific.gi")
 gi_file_patched = os.path.join(bin_dir, "gi_files\\patched\\gameinfo_branchspecific.gi")
 
-# -------------------------------- remote data ------------------------------- #
-response = requests.get('https://raw.githubusercontent.com/robbyz512/dota2-minify-remote/remote-data/data.yaml')
-
-if response.status_code == 200:
-    data = yaml.safe_load(response.text)
-
-    latest_version_url = data.get('latest_version')
-    discord_url = data.get('discord')
-    donations_url = data.get('donations')
-    help_url = data.get('help')
-    new_version = data.get('minify_2')
-    update_url = data.get('releases')
-
-else:
-    print("Failed to fetch data from the URL")
-
 # dota2 paths
 content_dir = os.path.join(steam_dir, "steamapps\\common\\dota 2 beta\\content\\dota_addons\\minify")
 game_dir = os.path.join(steam_dir, "steamapps\\common\\dota 2 beta\\game\\dota_addons\\minify")
@@ -88,13 +69,13 @@ enabled_mods = ['Auto Accept Match',
                 'Minify HUD',
                 'Minify Spells & Items',
                 'Misc Optimization',
-                'Remove Ambient Sounds',
-                'Remove Battlepass Sounds', 
+                'Mute Ambient Sounds',
+                'Mute Taunt Sounds',
+                'Mute Voice Line Sounds', 
                 'Remove Foilage', 
                 'Remove Pinging', 
                 'Remove River',
                 'Remove Sprays',
-                'Remove Taunt Sounds',
                 'Remove Weather Effects',
                 'Show NetWorth',
                 'Saiyan Mod',

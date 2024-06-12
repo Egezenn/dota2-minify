@@ -5,9 +5,32 @@ import webbrowser
 import tkinter
 import urllib.error
 from urllib.request import urlopen
+import requests
+import yaml
 
 workshop_installed = False
 
+# # ---------------------------------------------------------------------------- #
+# #                                Connect Remote                                #
+# # ---------------------------------------------------------------------------- #
+response = requests.get('https://raw.githubusercontent.com/robbyz512/dota2-minify-remote/remote-data/data.yaml')
+
+if response.status_code == 200:
+    data = yaml.safe_load(response.text)
+
+    latest_version_url = data.get('latest_version')
+    discord_url = data.get('discord')
+    donations_url = data.get('donations')
+    help_url = data.get('help')
+    new_version = data.get('minify_2')
+    update_url = data.get('releases')
+else:
+    latest_version_url = None
+    discord_url = None
+    donations_url = None
+    help_url = None
+    new_version = None
+    update_url = None
 # ---------------------------------------------------------------------------- #
 #                                   Warnings                                   #
 # ---------------------------------------------------------------------------- #
@@ -124,7 +147,10 @@ def cleanFolders(build_dir, logs_dir, content_dir, game_dir, minify_dir, dota_mi
     os.makedirs(os.path.join(minify_dir, 'build'))
 
 def urlDispatcher(url):
-    webbrowser.open(url)
+    if url == None:
+        print("Could not connect to Github")
+    else:
+        webbrowser.open(url)
 
 def getBlankFileExtensions(blank_files_dir):
     extensions = []

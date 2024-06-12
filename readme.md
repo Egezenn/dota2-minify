@@ -10,15 +10,15 @@
   <img src="https://img.shields.io/badge/License-GPLv3-blue.svg">
 </p>
 
-<h4 align="center" style="font-weight: bold;">Modding is awesome</h4>
+<h4 align="center" style="font-weight: bold; font-size:15px">All in one smart patcher for Dota2 to install all types of mods</h4>
 
 <br>
 
 <p align="center" style="font-size: 16px">
   <span>✔️500+ Spells Simplified •</span>
-  <span>✔️7,000+ files modded •</span>
+  <span>✔️8,000+ files modded •</span>
   <span>✔️Boost FPS •</span>
-  <span>✔️Creator Toolkit •</span>
+  <span>✔️Creator Toolkit</span>
 </p>
 
 <p align="center">
@@ -28,8 +28,13 @@
     <img src="bin/images/screenshot-4.jpg">
 </p>
 
-
 <hr>
+
+## :information_desk_person: Is this safe to use?
+
+This open-source project has been around for over 3 years with thousands of downloads and users. While binaries are offered for ease of use, anyone can compile it themselves.
+
+Nobody has ever been banned either. This project focuses on mods -- NO hacks, utilizing Valve's approved methods (VPK loading) for creating assets, as documented on the official Valve Wiki. Historically Valve just disabled problematic assets from loading and never punished modders. Worst thing that can happen is a mod stops working and that's it.
 
 ## :rocket: Installation
 
@@ -45,13 +50,13 @@
 
 <hr>
 
-**Optional**: To compile project from source [Click Here for instructions](https://github.com/robbyz512/dota2-minify/wiki/Minify#compiling-minify) 
+**Optional**: To compile project from source [Click Here for instructions](https://github.com/robbyz512/dota2-minify/wiki/Minify#compiling-minify)
 
 **Optional**: If you want to manually get Decompiler.exe and libSkiaSharp.dll
 
 1. Open https://github.com/SteamDatabase/ValveResourceFormat/releases
 
-2. Download "Decompiler-windows-x64.zip" (Get latest or use 5.0 if you have problems)
+2. Download "Decompiler-windows-x64.zip"
 
 3. Extract both files into Minify folder.
 
@@ -95,20 +100,19 @@ Once you get comfortable with the workflow you can use Minify to easily patch la
 
 ## :fast_forward: Future of this project - Minify 2.0
 
-- Very customziable that makes editing mods or editing anything in dota2 easy without any experience in modding. 
+-   Very customziable that makes editing mods or editing anything in dota2 easy without any experience in modding.
 
-- Adjust settings within Minify and instantly see changes in realtime while you are playing dota2
+-   Adjust settings within Minify and instantly see changes in realtime while you are playing dota2
 
-- Builder tab to create, export and submit your mods to the community. With a dashboard to update your files at any time for your users.
+-   Builder tab to create, export and submit your mods to the community. With a dashboard to update your files at any time for your users.
 
-- Say goodbye to dealing with outdated and broken mods, Minify will recompile every file now.
+-   Say goodbye to dealing with outdated and broken mods, Minify will recompile every file now.
 
-- Fullstack application with backend web server to create accounts and upload/share/follow each others works.
+-   Fullstack application with backend web server to create accounts and upload/share/follow each others works.
 
 ### For Developers:
 
 New app is being built with [Django](https://www.djangoproject.com/) and [Pywebview](https://pywebview.flowrl.com/) send a message on [Discord](https://discord.com/invite/2YDnqpbcKM) if you want to help.
-
 
 <p align="center">
     <img src="bin/images/screenshot-5.jpg">
