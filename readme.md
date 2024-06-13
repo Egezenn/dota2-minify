@@ -38,29 +38,40 @@ Nobody has ever been banned either. This project focuses on mods -- NO hacks, ut
 
 ## :rocket: Installation
 
-[Dota 2 Workshop Tools](https://developer.valvesoftware.com/wiki/Dota_2_Workshop_Tools) must be installed to use mods that edit the Interface like "Minify HUD". Skip step 1 if you don't want those.
+1. **Download Minify**
 
-1. Right-click on Dota 2 in Steam and select **Properties** > **DLC** then install **"Dota 2 Workshop Tools DLC"**
+    - [Click here to download the latest Minify release](https://github.com/robbyz512/dota2-minify/releases)
 
-2. [Click here and download latest Minify](https://github.com/robbyz512/dota2-minify/releases)
+2. **(Optional) Install Dota 2 Workshop Tools DLC**
 
-3. Extract zip file and run Minify.exe then patch.
+    - <span style="color:#2ecc71;">These tools enable HUD/Interface mods. **Skip this step if you don't need them.**</span>
+    - Right-click on Dota 2 in Steam.
+    - Select **Properties** > **DLC**.
+    - Install **"Dota 2 Workshop Tools DLC"**.
 
-4. Go play dota2!
+3. **Run Minify**
+
+    - Extract the ZIP file.
+    - Run `Minify.exe` and patch the mods you want.
+
+4. **Start Dota 2**
+    - Launch Dota 2 and enjoy! :v:
 
 <hr>
 
-**Optional**: To compile project from source [Click Here for instructions](https://github.com/robbyz512/dota2-minify/wiki/Minify#compiling-minify)
+### Optional Setup
 
-**Optional**: If you want to manually get Decompiler.exe and libSkiaSharp.dll
+**Compile from Source**: If you prefer compiling the project yourself [Click here for instructions](https://github.com/robbyz512/dota2-minify/wiki/Minify#compiling-minify)
 
-1. Open https://github.com/SteamDatabase/ValveResourceFormat/releases
+**External Binaries**: To get these files from the source `Decompiler.exe` and `libSkiaSharp.dll`:
 
-2. Download "Decompiler-windows-x64.zip"
+1. [Click here to go to SteamDatabase/ValveResourceFormat releases](https://github.com/SteamDatabase/ValveResourceFormat/releases)
 
-3. Extract both files into Minify folder.
+2. Download `Decompiler-windows-x64.zip`
 
-<p align="right">(<a href="#top">back to top</a>)</p>
+3. Extract both files into your Minify folder.
+
+<p align="right">(<a href="#top">Back to Top</a>)</p>
 
 <!-- ABOUT THE PROJECT -->
 

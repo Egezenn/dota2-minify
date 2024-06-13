@@ -74,8 +74,7 @@ class MyClass:
     def g_isCompillerFound(self):
         if not os.path.exists(mpaths.resource_compiler):
             helper.workshop_installed == False
-            print("Styling mods have been disabled.")
-            print("Install Steam Workshop Tools to use them. Click Help for instructions.")
+            print("Some mods have been grayed out because you don't have \n Workshop Tools installed. Click Help for instructions.")
         else:
             helper.workshop_installed = True
 
