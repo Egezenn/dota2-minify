@@ -83,6 +83,57 @@ def modInfo(widget, name, mod_path, event):
     close_button = tkinter.Button(infoWindow, text="Close", command=infoWindow.destroy, font=("Poplar Std", 10), height=1, width=10)
     close_button.grid(row=1, column=0, pady=5)
 
+def cryptoInfo():
+    BTC = "bc1qeykc7qfhkp0h0e8a3nry3dwh2tnyryg8r3pgwv"
+    ETH = "0x1A751823E32AdbB5c119D0908DabF2095290f97b"
+    Solana = "71s57cHbgqV8Xyi5y8R5U7yxJEP2L4EcoNMvacEAErUL"
+    Monero = "43kr1X9AxJ3iTCNRfTSRzAaWJgMgCpoMz63JeUnDDC7yQ2WvuHuHdtAQV7bnBSEY44Hv9C4kLarKtH7tPiN48pZeVm3d1nN"
+
+    infoWindow = tkinter.Toplevel()
+    infoWindow.title("Donate Crypto")
+    infoWindow.iconbitmap('bin/images/info.ico')
+    infoWindow.resizable(False, False)
+
+    # Center the window
+    window_width = infoWindow.winfo_width()
+    window_height = infoWindow.winfo_height()
+    screen_width = infoWindow.winfo_screenwidth()
+    screen_height = infoWindow.winfo_screenheight()
+    x = (screen_width - window_width) // 2
+    y = (screen_height - window_height) // 2
+    infoWindow.geometry(f"+{x}+{y}")
+
+    # Create text widget
+    text_widget = tkinter.Text(infoWindow, bg='#1C1F2B', fg='#fff', wrap=tkinter.WORD)
+    text_widget.grid(row=0, column=0, padx=5, pady=5, sticky='nsew')
+
+    # Define color tags
+    text_widget.tag_configure("btc", foreground="#F7931A")  # Bitcoin orange
+    text_widget.tag_configure("eth", foreground="#89CFF0")  # Ethereum blue
+    text_widget.tag_configure("sol", foreground="#9945FF")  # Solana purple
+    text_widget.tag_configure("xmr", foreground="#FF6600")  # Monero orange
+
+    # Insert text with color tags
+    text_widget.insert("1.0", "Bitcoin (BTC): ", "btc")
+    text_widget.insert("2.0", BTC + "\n\n", "btc")
+    
+    text_widget.insert("3.0", "Ethereum (ETH): ", "eth")
+    text_widget.insert("4.0", ETH + "\n\n", "eth")
+    
+    text_widget.insert("5.0", "Solana (SOL): ", "sol")
+    text_widget.insert("6.0", Solana + "\n\n", "sol")
+    
+    text_widget.insert("7.0", "Monero (XMR): ", "xmr")
+    text_widget.insert("8.0", Monero, "xmr")
+
+    # Disable editing
+    text_widget.config(state="disabled")
+
+    # Close button
+    close_button = tkinter.Button(infoWindow, text="Close", command=infoWindow.destroy, font=("Poplar Std", 10), height=1, width=10)
+    close_button.grid(row=1, column=0, pady=5)
+    
+
 def disableWorkshopMods(mods_dir, mods_folders, checkboxes):
     for folder in mods_folders:
         mod_path = os.path.join(mods_dir, folder)

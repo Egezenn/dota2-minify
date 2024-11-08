@@ -5,7 +5,7 @@
 #   \/_/  \/_/   \/_/   \/_/ \/_/   \/_/   \/_/     \/_____/ 
 # ---------------------------------------------------------- 
 
-# this code was written when I was newer to programming and not worth the headache to try to improve
+# this code was written when I was newer to programming and not worth the headache to try to improve.
 # instead if you want to help develop contact me on discord and help work on Minify 2.0 -- a full stack desktop app.
 # https://github.com/robbyz512/dota2-minify?tab=readme-ov-file#fast_forward-future-of-this-project---minify-20
 # discord = robbyz
@@ -23,12 +23,13 @@ import tkinter as tk
 from tkinter.messagebox import askyesno
 from functools import partial
 from shutil import copytree, ignore_patterns
+from PIL import Image, ImageTk
 
 import mpaths
 import validatefiles
 import helper
 
-version = "1.06e"
+version = "1.07"
 
 # widget vars
 btnXpad = 8
@@ -47,19 +48,15 @@ def welcomeMsg():
   \ \_\ \ \_\  \ \_\  \ \_/"\_\   \ \_\  \ \_\    \/\_____\ 
    \/_/  \/_/   \/_/   \/_/ \/_/   \/_/   \/_/     \/_____/ 
  -------------------------------------------------------  
- If you like this project and want to help keep it going
+ If you appreciate this project and want to support its growth 
+ here's how you can help:
        
- -> Join Discord ♥
-       
- -> Share Minify with friends or online groups
-       
- -> Star the project on Github ★
-       
- -> Help code Minify 2.0
-       
- -> Donate to Buymeacoffee below $
-       
- -> Create and Share mods
+ -> Join our Discord community ♥
+ -> Share Minify with your friends and online groups
+ -> Star the project on GitHub ★
+ -> Contribute to the development of Minify 2.0
+ -> Donate via Buy Me a Coffee $
+ -> Create mods for this project
  -------------------------------------------------------
        """)
 
@@ -108,6 +105,9 @@ class App():
 
     def exit(self):
         self.root.destroy()
+    
+    def restart_app(self):
+        self.root.destroy()
 
     def setupGUI(self):
         # ------------------------------ gui properties ------------------------------ #
@@ -133,13 +133,23 @@ class App():
         self.consoleFrame.grid(row=0, column=1, rowspan=2, pady=5, padx=5, sticky='nsew')
 
         # Checkboxes
+        def change_color_to_red(event):
+            event.widget.config(fg="#0cb6b3")
+
+        def revert_color(event):
+            event.widget.config(fg="#333333")  # Original color when the cursor is not hovering
+
         for index in range(len(mpaths.mods_folders)):
             self.name = mpaths.mods_folders[index]
             self.current_var = tk.IntVar()
-            self.current_box = tk.Checkbutton(self.checkboxesFrame, text=self.name, variable=self.current_var, takefocus=False, command=self.setupButtonState)
+            self.current_box = tk.Checkbutton(self.checkboxesFrame, text=self.name, variable=self.current_var, takefocus=False, cursor="hand2", command=self.setupButtonState)
             self.current_box.var = self.current_var
             self.current_box.grid(row=index, column=0, sticky='w')
             checkboxes[self.current_box] = self.name  # so checkbutton object is the key and value is string
+            
+            # Bind mouse enter and leave events to change the text color
+            self.current_box.bind("<Enter>", change_color_to_red)
+            self.current_box.bind("<Leave>", revert_color)
             
             # details label
             mod_path = os.path.join(mpaths.mods_dir, self.name)
@@ -155,19 +165,17 @@ class App():
         # Buttons
         self.patchBtn = tk.Button(self.buttonsFrame, text='Patch', state=tk.NORMAL, width=btnW, takefocus=False, command=lambda:threading.Thread(target=self.patcher, daemon=True).start())
         self.patchBtn.grid(row=10, column=0, pady=btnYpad, padx=btnXpad, sticky='w')
-        self.helpBtn = tk.Button(self.buttonsFrame, text='Help', state=tk.NORMAL, width=btnW, takefocus=False, command=lambda:threading.Thread(target=helper.urlDispatcher(helper.help_url), daemon=True).start())
+        self.helpBtn = tk.Button(self.buttonsFrame, text='Help', state=tk.NORMAL, width=btnW, takefocus=False, cursor="hand2", command=lambda:threading.Thread(target=helper.urlDispatcher(helper.help_url), daemon=True).start())
         self.helpBtn.grid(row=10, column=1, pady=btnYpad, padx=btnXpad, sticky='w')
         self.updateBtn = tk.Button(self.buttonsFrame, text='Update', state=tk.NORMAL, width=btnW, takefocus=False, command=lambda:threading.Thread(target=helper.urlDispatcher(helper.update_url), daemon=True).start())
         self.updateBtn.grid(row=11, column=0, pady=btnYpad, padx=btnXpad, sticky='w')
-        self.uninstallBtn = tk.Button(self.buttonsFrame, text='Uninstall', width=btnW, takefocus=False, command=lambda:threading.Thread(target=self.uninstaller, daemon=True).start())
+        self.uninstallBtn = tk.Button(self.buttonsFrame, text='Uninstall', width=btnW, takefocus=False, cursor="hand2", command=lambda:threading.Thread(target=self.uninstaller, daemon=True).start())
         self.uninstallBtn.grid(row=11, column=1, pady=btnYpad, padx=btnXpad, sticky='w')
         self.versionLabel = tk.Label(self.buttonsFrame, font=("None", 8), width=20)
         self.versionLabel.grid(row=12, column=0, sticky='w')
-        self.newVersionLabel = tk.Label(self.buttonsFrame, font=("None", 8, "bold"), width=20)
-        self.newVersionLabel.grid(row=13, column=0, sticky='w')
-        self.discordBtn = tk.Button(self.buttonsFrame, text='Discord', width=btnW, takefocus=False, command=lambda:threading.Thread(target=helper.urlDispatcher(helper.discord_url), daemon=True).start())
+        self.discordBtn = tk.Button(self.buttonsFrame, text='Discord', width=btnW, takefocus=False, cursor="hand2", command=lambda:threading.Thread(target=helper.urlDispatcher(helper.discord_url), daemon=True).start())
         self.discordBtn.grid(row=14, column=0, pady=btnYpad, padx=btnXpad, sticky='w')
-        self.exitBtn = tk.Button(self.buttonsFrame, text='Exit', width=btnW, takefocus=False, command=self.exit)
+        self.exitBtn = tk.Button(self.buttonsFrame, text='Exit', width=btnW, takefocus=False, cursor="hand2", command=self.exit)
         self.exitBtn.grid(row=14, column=1, pady=btnYpad, padx=btnXpad, sticky='w')
 
         # Other Widget
@@ -176,16 +184,24 @@ class App():
         self.consoleText.configure(font=("Fixedsys"))
 
         self.devLabel = tk.Label(self.consoleFrame, font=("Tahoma", 10))
-        self.devLabel.config(text="Minify 2.0 under development", fg="#FF8C00")
+        self.devLabel.config(text="Minify 2.0 under development")
         self.devLabel.grid(row=1, column=0, pady=4, sticky='s')
-        self.devbtn = tk.Button(self.consoleFrame, text='Preview 2.0', width=22, height=1, font=("None", 8, "bold"), takefocus=False, command=lambda:threading.Thread(target=helper.urlDispatcher(helper.new_version), daemon=True).start())
+        self.devbtn = tk.Button(self.consoleFrame, text='Preview', width=22, cursor="hand2", height=1, font=("None", 8, "bold"), takefocus=False, command=lambda:threading.Thread(target=helper.urlDispatcher(helper.new_version), daemon=True).start())
         self.devbtn.grid(row=1, column=0, pady=4, sticky='e')
 
-        self.donateLabel = tk.Label(self.consoleFrame, font=("Tahoma", 10))
-        self.donateLabel.config(text="Support the Project", fg="#FF8C00")
-        self.donateLabel.grid(row=2, column=0, pady=4, sticky='s')
-        self.donateBtn = tk.Button(self.consoleFrame, text='Donation Page', width=22, height=1, font=("None", 8, "bold"), takefocus=False, command=lambda:threading.Thread(target=helper.urlDispatcher(helper.donations_url), daemon=True).start())
-        self.donateBtn.grid(row=2, column=0, pady=4, sticky='e')
+        self.donateLabel = tk.Label(self.consoleFrame, font=("Tahoma", 10), fg="#333333", bg="white")
+        self.donateLabel.config(text="If you'd like to say thanks you can send a donation below.\nHelps me stay motivated to keep this project updated and develop it further.")
+        self.donateLabel.grid(row=2, column=0, pady=50, sticky='s')
+
+        self.donate_image = Image.open("bin/images/coffee.jpg")
+        self.donate_photo = ImageTk.PhotoImage(self.donate_image)
+        self.donateBtn = tk.Button(self.consoleFrame, image=self.donate_photo, width=155, height=28, cursor="hand2", takefocus=False, command=lambda:threading.Thread(target=helper.urlDispatcher(helper.donations_url), daemon=True).start())
+        self.donateBtn.grid(row=2, column=0, pady=0, sticky='s')
+        
+        self.donate_image2 = Image.open("bin/images/crypto.jpg")
+        self.donate_photo2 = ImageTk.PhotoImage(self.donate_image2)
+        self.donateBtn2 = tk.Button(self.consoleFrame, image=self.donate_photo2, width=155, height=28, cursor="hand2", takefocus=False,  command=lambda: threading.Thread(target=helper.cryptoInfo, daemon=True).start())
+        self.donateBtn2.grid(row=3, column=0, pady=10, sticky='s')
         
         # redirects stdout and stderror to text box widget, which means print statements will not appear in the gui until these two lines are ran
         sys.stdout = TextRedirector(self.consoleText, "stdout")
@@ -195,6 +211,22 @@ class App():
             welcomeMsg()
         else:
             failureMsg()
+
+        if helper.latest_version_url == None:
+            pass
+        else:
+            if version == helper.latest_version_url:
+                self.updateBtn.config(state='disabled', cursor="")
+                self.versionLabel.config(fg="#0cb6b3", text=f"Latest version: {version}")
+            else:
+                self.updateBtn.config(state='normal', fg='blue', cursor="hand2")
+                self.versionLabel.config(fg="blue", text=f"Update available: {helper.latest_version_url}")
+
+                answer = askyesno(title='Update', message='New version available. Go to Download page now?')
+                if answer:
+                   helper.urlDispatcher(helper.update_url)
+                else:
+                    pass
 
     def setupSystem(self):
         x = validatefiles.MyClass(checkboxes, self.root)
@@ -215,40 +247,17 @@ class App():
     def setupButtonState(self):  
         for box in checkboxes:
             if box.var.get() == 1:
-                self.patchBtn.config(state='normal')
+                self.patchBtn.config(state='normal', cursor="hand2")
                 break
             else:
-                self.patchBtn.config(state='disabled')
+                self.patchBtn.config(state='disabled', cursor="")
 
         if helper.workshop_installed == False:
             helper.disableWorkshopMods(mpaths.mods_dir, mpaths.mods_folders, checkboxes)
 
-        if helper.latest_version_url == None:
-            pass
-        else:
-            if version == helper.latest_version_url:
-                self.updateBtn.config(state='disabled')
-                self.versionLabel.config(fg="#0cb6b3")
-                self.versionLabel.config(text=f"Latest version {version}")
-            else:
-                self.updateBtn.config(state='normal', fg='#0cb6b3', activeforeground='#0cb6b3')
-            
-                self.newVersionLabel.config(fg='#0cb6b3')
-                self.newVersionLabel.config(text=f"New version! {helper.latest_version_url}")
-
-                self.versionLabel.config(fg="red")
-                self.versionLabel.config(text=f"Your version {version}")
-
     def uninstaller(self):
-
-        root = tk.Tk()
-        root.title('Tkinter Yes/No Dialog')
-        root.geometry('300x150')
-        answer = askyesno(title='Confirm',
-                        message='Remove all mods?')
+        answer = askyesno(title='Confirm', message='Remove all mods?')
         if answer:
-            # restore gi file
-            shutil.copy(mpaths.gi_file_default, mpaths.gi_dir)
 
             # remove pak01_dir.vpk if it exists
             vpkPath = os.path.join(mpaths.dota_minify, 'pak01_dir.vpk')
@@ -268,9 +277,6 @@ class App():
         if "dota2.exe" in (p.name() for p in psutil.process_iter()):
             print("Please close Dota 2 first and then patch.")
             return
-
-        if not filecmp.cmp(mpaths.gi_file_patched, mpaths.gi_dir): 
-            shutil.copy(mpaths.gi_file_patched, mpaths.gi_dir)
 
         patching = True 
         helper.toggleFrameOff(self.checkboxesFrame, self.buttonsFrame)
@@ -304,7 +310,7 @@ class App():
                             # if files_total == 0:    pass
                             # elif files_total == 1:  print(f"    files: Found {files_total} file")
                             # else:                   print(f"    files: Found {files_total} files")
-                            shutil.copytree(os.path.join(mod_path, 'files'), mpaths.game_dir, dirs_exist_ok=True, ignore=ignore_patterns('*.txt'))
+                            shutil.copytree(os.path.join(mod_path, 'files'), mpaths.game_dir, dirs_exist_ok=True, ignore=ignore_patterns('*.gitkeep'))
                             # ------------------------------- blacklist.txt ------------------------------ #
                             if os.stat(blacklist_txt).st_size == 0: pass
                             else:
@@ -438,7 +444,7 @@ class App():
             patching = False
             helper.toggleFrameOn(self.checkboxesFrame, self.buttonsFrame, mpaths.mods_dir, mpaths.mods_folders, checkboxes)
             print("→ Done!")
-            print("-------------------------------------------------")
+            print("-------------------------------------------------------")
             helper.handleWarnings(mpaths.logs_dir)
 
         except Exception:
@@ -450,7 +456,7 @@ class App():
             print("")
             print("Patching failed.")
             print("Check 'logs\\crashlog.txt' for more info.")
-            print("-------------------------------------------------")
+            print("-------------------------------------------------------")
 
 if __name__ == '__main__':
     app = App()

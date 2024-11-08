@@ -34,7 +34,7 @@
 
 This open-source project has been around for over 3 years with thousands of downloads and users. While binaries are offered for ease of use, anyone can compile it themselves.
 
-Nobody has ever been banned either. This project focuses on mods -- NO hacks, utilizing Valve's approved methods (VPK loading) for creating assets, as documented on the official Valve Wiki. Historically Valve just disabled problematic assets from loading and never punished modders. Worst thing that can happen is a mod stops working and that's it.
+And no one has ever been banned for mods. This project strictly deals with mods and never hacking related things like memory/file manipulation. It is utilizing Valve's approved methods (VPK loading) for creating assets, as documented on the [official Valve Wiki.](https://developer.valvesoftware.com/wiki/VPK) Historically Valve has only disabled assets from loading and never punished modders. The worst thing that can happen is a mod stops working and that's it.
 
 ## :rocket: Installation
 
@@ -44,7 +44,7 @@ Nobody has ever been banned either. This project focuses on mods -- NO hacks, ut
 
 2. **(Optional) Install Dota 2 Workshop Tools DLC**
 
-    - <span style="color:#2ecc71;">These tools enable HUD/Interface mods. **Skip this step if you don't need them.**</span>
+    - These tools enable HUD/Interface mods. **Skip this step if you don't need them.**
     - Right-click on Dota 2 in Steam.
     - Select **Properties** > **DLC**.
     - Install **"Dota 2 Workshop Tools DLC"**.
@@ -53,6 +53,8 @@ Nobody has ever been banned either. This project focuses on mods -- NO hacks, ut
 
     - Extract the ZIP file.
     - Run `Minify.exe` and patch the mods you want.
+	- Right click Dota2 in Steam and click Properties
+	- Add "-language minify" to launch options, example : [https://i.imgur.com/KTfqXUg.jpeg](https://i.imgur.com/KTfqXUg.jpeg)
 
 4. **Start Dota 2**
     - Launch Dota 2 and enjoy! :v:
@@ -70,8 +72,6 @@ Nobody has ever been banned either. This project focuses on mods -- NO hacks, ut
 2. Download `Decompiler-windows-x64.zip`
 
 3. Extract both files into your Minify folder.
-
-<p align="right">(<a href="#top">Back to Top</a>)</p>
 
 <!-- ABOUT THE PROJECT -->
 
@@ -130,5 +130,3 @@ New app is being built with [Django](https://www.djangoproject.com/) and [Pywebv
     <img src="bin/images/screenshot-6.jpg">
     <img src="bin/images/screenshot-7.jpg">
 </p>
-
-<p align="right">(<a href="#top">back to top</a>)</p>

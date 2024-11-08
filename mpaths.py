@@ -45,13 +45,10 @@ mods_dir = os.path.join(minify_dir, "mods")
 # bin
 blank_files_dir = os.path.join(bin_dir, "blank-files")
 maps_dir = os.path.join(bin_dir, "maps")
-gi_file_default = os.path.join(bin_dir, "gi_files\\default\\gameinfo_branchspecific.gi")
-gi_file_patched = os.path.join(bin_dir, "gi_files\\patched\\gameinfo_branchspecific.gi")
 
 # dota2 paths
 content_dir = os.path.join(steam_dir, "steamapps\\common\\dota 2 beta\\content\\dota_addons\\minify")
 game_dir = os.path.join(steam_dir, "steamapps\\common\\dota 2 beta\\game\\dota_addons\\minify")
-gi_dir = os.path.join(steam_dir, "steamapps\\common\\dota 2 beta\\game\\dota\\gameinfo_branchspecific.gi")
 resource_compiler = os.path.join(steam_dir, "steamapps\\common\\dota 2 beta\\game\\bin\\win64\\resourcecompiler.exe")
 pak01_dir = os.path.join(steam_dir, "steamapps\\common\\dota 2 beta\\game\\dota\\pak01_dir.vpk")
 
@@ -62,7 +59,6 @@ dota_minify_maps = os.path.join(dota_minify, "maps")
 # exclude invalid mods
 enabled_mods = ['Auto Accept Match',
                 'Dark Terrain',
-                'Default Menu Background',
                 'Dotabuff in Profiles',
                 'Minify Base Attacks',
                 'Minify HUD',
@@ -84,3 +80,4 @@ enabled_mods = ['Auto Accept Match',
 mods_folders = []
 for mod in os.listdir(mods_dir): mods_folders.append(mod)
 mods_folders = [p for p in mods_folders if p in enabled_mods]
+
