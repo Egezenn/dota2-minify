@@ -53,11 +53,16 @@ And no one has ever been banned for mods. This project strictly deals with mods 
 
     - Extract the ZIP file.
     - Run `Minify.exe` and patch the mods you want.
-	- Right click Dota2 in Steam and click Properties
-	- Add "-language minify" to launch options, example : [https://i.imgur.com/KTfqXUg.jpeg](https://i.imgur.com/KTfqXUg.jpeg)
 
-4. **Start Dota 2**
+4. **Set Language for Steam**
+    - Right-click on Dota2 in Steam and click **Properties**.
+    - **For English Dota2:** Add `-language minify` to your launch options. [See example image](https://i.imgur.com/KTfqXUg.jpeg).
+    - **For Other Languages:** Follow the [instructions here](https://github.com/robbyz512/dota2-minify/wiki/Minify#using-minify-with-a-different-language-in-dota2).
+
+5. **Start Dota 2**
+
     - Launch Dota 2 and enjoy! :v:
+
 
 <hr>
 

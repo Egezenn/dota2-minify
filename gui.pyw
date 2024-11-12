@@ -48,8 +48,7 @@ def welcomeMsg():
   \ \_\ \ \_\  \ \_\  \ \_/"\_\   \ \_\  \ \_\    \/\_____\ 
    \/_/  \/_/   \/_/   \/_/ \/_/   \/_/   \/_/     \/_____/ 
  -------------------------------------------------------  
- If you appreciate this project and want to support its growth 
- here's how you can help:
+ Want to contribute to the project's growth?
        
  -> Join our Discord community ♥
  -> Share Minify with your friends and online groups
@@ -445,6 +444,8 @@ class App():
             helper.toggleFrameOn(self.checkboxesFrame, self.buttonsFrame, mpaths.mods_dir, mpaths.mods_folders, checkboxes)
             print("→ Done!")
             print("-------------------------------------------------------")
+            print("Remember to add '-language minify' to dota2 launch options")
+            print("Click Help button below for instructions")
             helper.handleWarnings(mpaths.logs_dir)
 
         except Exception:
