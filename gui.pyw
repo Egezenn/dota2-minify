@@ -12,6 +12,7 @@
 
 import os
 import sys
+import requests
 import vpk
 import shutil
 import psutil
@@ -266,6 +267,14 @@ class App():
             mapPath = os.path.join(mpaths.dota_minify_maps, 'dota.vpk')
             if os.path.exists(mapPath): os.remove(mapPath)
 
+            # default builds will be reinstalled if they don't exist in the path
+            with open(os.path.join(mpaths.itembuilds_dir, "default_antimage.txt"), 'r') as file:
+                lines = file.readlines()
+            if len(lines) >= 3:
+                if "OpenDotaGuides" in lines[2]:
+                    for file in os.listdir(mpaths.itembuilds_dir):
+                        os.remove(file)
+
             print("All Minify mods have been removed.")
     # ---------------------------------------------------------------------------- #
     #                                     Main                                     #
@@ -305,6 +314,24 @@ class App():
                             
                             if checkboxes[box] == 'Dark Terrain' or checkboxes[box] == 'Remove Foilage':
                                 shutil.copytree(mpaths.maps_dir, os.path.join(mpaths.dota_minify, os.path.basename(mpaths.maps_dir)), dirs_exist_ok=True)
+                            elif checkboxes[box] == 'OpenDotaGuides Guides':
+                                zip_path = os.path.join(mod_path, 'files', 'OpenDotaGuides.zip')
+                                temp_dump_path = os.path.join(mod_path, 'files', 'temp')
+                                if os.path.exists(zip_path):
+                                    os.remove(zip_path)
+                                response = requests.get('https://github.com/Egezenn/OpenDotaGuides/releases/latest/download/itembuilds.zip')
+                                if response.status_code == 200:
+                                    with open(zip_path, 'wb') as file:
+                                        file.write(response.content)
+                                    print('→ Downloaded latest OpenDotaGuides guides.')
+                                    shutil.unpack_archive(zip_path, temp_dump_path, 'zip')
+                                    for file in os.listdir(temp_dump_path):
+                                        shutil.copy(os.path.join(temp_dump_path, file), os.path.join(mpaths.itembuilds_dir, file))
+                                    shutil.rmtree(temp_dump_path)
+                                    os.remove(zip_path)
+                                    print('→ Replaced default guides with OpenDotaGuides guides.')
+                                else:
+                                    print('→ Failed to download latest OpenDotaGuides guides.')
                             # ----------------------------------- files ---------------------------------- #
                             # if files_total == 0:    pass
                             # elif files_total == 1:  print(f"    files: Found {files_total} file")

@@ -51,6 +51,7 @@ content_dir = os.path.join(steam_dir, "steamapps\\common\\dota 2 beta\\content\\
 game_dir = os.path.join(steam_dir, "steamapps\\common\\dota 2 beta\\game\\dota_addons\\minify")
 resource_compiler = os.path.join(steam_dir, "steamapps\\common\\dota 2 beta\\game\\bin\\win64\\resourcecompiler.exe")
 pak01_dir = os.path.join(steam_dir, "steamapps\\common\\dota 2 beta\\game\\dota\\pak01_dir.vpk")
+itembuilds_dir = os.path.join(steam_dir, "steamapps\\common\\dota 2 beta\\game\\dota\\itembuilds")
 
 dota_minify_content = os.path.join(steam_dir, "steamapps\\common\\dota 2 beta\\content\\dota_minify")
 dota_minify = os.path.join(steam_dir, "steamapps\\common\\dota 2 beta\\game\\dota_minify")
@@ -67,13 +68,14 @@ enabled_mods = ['Auto Accept Match',
                 'Mute Ambient Sounds',
                 'Mute Taunt Sounds',
                 'Mute Voice Line Sounds', 
+                'OpenDotaGuides Guides',
                 'Remove Foilage', 
                 'Remove Pinging', 
                 'Remove River',
                 'Remove Sprays',
                 'Remove Weather Effects',
-                'Show NetWorth',
                 'Saiyan Mod',
+                'Show NetWorth',
                 'Tree Mod',
                 ]
 
