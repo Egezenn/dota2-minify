@@ -314,7 +314,7 @@ class App():
                             
                             if checkboxes[box] == 'Dark Terrain' or checkboxes[box] == 'Remove Foilage':
                                 shutil.copytree(mpaths.maps_dir, os.path.join(mpaths.dota_minify, os.path.basename(mpaths.maps_dir)), dirs_exist_ok=True)
-                            elif checkboxes[box] == 'OpenDotaGuides Guides':
+                            if checkboxes[box] == 'OpenDotaGuides Guides':
                                 zip_path = os.path.join(mod_path, 'files', 'OpenDotaGuides.zip')
                                 temp_dump_path = os.path.join(mod_path, 'files', 'temp')
                                 if os.path.exists(zip_path):
