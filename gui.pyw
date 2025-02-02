@@ -54,7 +54,6 @@ def welcomeMsg():
  -> Share Minify with your friends and online groups
  -> Star the project on GitHub ★
  -> Contribute to the development of Minify 2.0
- -> Donate via Buy Me a Coffee $
  -> Create mods for this project
  -------------------------------------------------------
        """)

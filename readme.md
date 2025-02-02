@@ -1,3 +1,5 @@
+<h1>I've moved on to other projects so this repo is now archived but will stay up for research and reference purposes.</h1>
+
 <!-- PROJECT LOGO -->
 <h1 align="center">
   <a href="http://www.amitmerchant.com/electron-markdownify"><img src="bin/images/logo.png" alt="Markdownify" width="150"></a>
@@ -113,25 +115,3 @@ Once you get comfortable with the workflow you can use Minify to easily patch la
 </div>
 
 <hr>
-
-## :fast_forward: Future of this project - Minify 2.0
-
--   Very customziable that makes editing mods or editing anything in dota2 easy without any experience in modding.
-
--   Adjust settings within Minify and instantly see changes in realtime while you are playing dota2
-
--   Builder tab to create, export and submit your mods to the community. With a dashboard to update your files at any time for your users.
-
--   Say goodbye to dealing with outdated and broken mods, Minify will recompile every file now.
-
--   Fullstack application with backend web server to create accounts and upload/share/follow each others works.
-
-### For Developers:
-
-New app is being built with [Django](https://www.djangoproject.com/) and [Pywebview](https://pywebview.flowrl.com/) send a message on [Discord](https://discord.com/invite/2YDnqpbcKM) if you want to help.
-
-<p align="center">
-    <img src="bin/images/screenshot-5.jpg">
-    <img src="bin/images/screenshot-6.jpg">
-    <img src="bin/images/screenshot-7.jpg">
-</p>
