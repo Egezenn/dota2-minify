@@ -1,9 +1,13 @@
 # Minify
-Decompiler.exe
-libSkiaSharp.dll
 *.css
 *.vcss_c
 local
+
+## Source2Viewer
+cli-*-*.*
+Source2Viewer-CLI.exe
+libSkiaSharp.dll
+TinyEXR.Native.dll
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

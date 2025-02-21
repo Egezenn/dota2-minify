@@ -62,7 +62,7 @@ No one has ever been banned for these mods. This project strictly deals with VPK
 
 **Compile from Source**: If you prefer compiling the project yourself [Click here for instructions](https://github.com/robbyz512/dota2-minify/wiki/Minify#compiling-minify)
 
-**External Binaries**: To get these files from the source `Decompiler.exe` and `libSkiaSharp.dll`:
+**External Binaries**: To get these files from the source `Source2Viewer-CLI.exe` and `libSkiaSharp.dll`:
 
 1. [Click here to go to SteamDatabase/ValveResourceFormat releases](https://github.com/SteamDatabase/ValveResourceFormat/releases/latest)
 2. Download `cli-windows-x64.zip`

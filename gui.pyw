@@ -325,33 +325,23 @@ class App:
         sys.stdout = TextRedirector(self.consoleText, "stdout")
         sys.stderr = TextRedirector(self.consoleText, "stderr")
 
-        if helper.response.status_code == 200:
-            welcomeMsg()
+        if version == "1.09":
+            self.updateBtn.config(state="disabled", cursor="")
+            self.versionLabel.config(fg="#0cb6b3", text=f"Latest version: {version}")
         else:
-            failureMsg()
+            self.updateBtn.config(state="normal", fg="blue", cursor="hand2")
+            self.versionLabel.config(
+                fg="blue", text=f"Update available: {helper.latest_version_url}"
+            )
 
-        if helper.latest_version_url == None:
-            pass
-        else:
-            if version == helper.latest_version_url:
-                self.updateBtn.config(state="disabled", cursor="")
-                self.versionLabel.config(
-                    fg="#0cb6b3", text=f"Latest version: {version}"
-                )
+            answer = askyesno(
+                title="Update",
+                message="New version available. Go to Download page now?",
+            )
+            if answer:
+                helper.urlDispatcher(helper.update_url)
             else:
-                self.updateBtn.config(state="normal", fg="blue", cursor="hand2")
-                self.versionLabel.config(
-                    fg="blue", text=f"Update available: {helper.latest_version_url}"
-                )
-
-                answer = askyesno(
-                    title="Update",
-                    message="New version available. Go to Download page now?",
-                )
-                if answer:
-                    helper.urlDispatcher(helper.update_url)
-                else:
-                    pass
+                pass
 
     def setupSystem(self):
         x = validatefiles.MyClass(checkboxes, self.root)
@@ -662,10 +652,12 @@ class App:
             # ------------------- Decompile all files in "build" folder ------------------ #
             # ---------------------------------------------------------------------------- #
             print("→ Decompiling")
-            with open(os.path.join(mpaths.logs_dir, "decompiler.txt"), "w") as file:
+            with open(
+                os.path.join(mpaths.logs_dir, "Source2Viewer-CLI.txt"), "w"
+            ) as file:
                 subprocess.run(
                     [
-                        mpaths.minify_dir + "/Decompiler.exe",
+                        mpaths.minify_dir + "/Source2Viewer-CLI.exe",
                         "--input",
                         "build",
                         "--recursive",

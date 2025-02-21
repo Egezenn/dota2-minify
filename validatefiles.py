@@ -71,9 +71,11 @@ class MyClass:
             print("Error: Please close Dota 2 and restart Minify.")
 
     def e_isDecompilerFound(self):
-        if not os.path.exists(os.path.join(mpaths.minify_dir, "Decompiler.exe")):
+        if not os.path.exists(os.path.join(mpaths.minify_dir, "Source2Viewer-CLI.exe")):
             self.toggle_flag = True
-            print("Error: 'Decompiler.exe' not found, click Help for instructions.")
+            print(
+                "Error: 'Source2Viewer-CLI.exe' not found, click Help for instructions."
+            )
 
     def f_isDllFound(self):
         if not os.path.exists(os.path.join(mpaths.minify_dir, "libSkiaSharp.dll")):
