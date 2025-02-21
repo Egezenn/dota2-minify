@@ -6,7 +6,7 @@ on:
       release_name:
         description: "Name the release"
         required: true
-        default: "Minify v1.xx"
+        default: "Minify-v1.xx"
 
 env:
   RELEASE_NAME: ""
