@@ -1,1 +1,2 @@
-@@https://raw.githubusercontent.com/robbyz512/dota2-minify-remote/remote-data/Remove%20Sprays/blacklist.txt
+>>particles\sprays
+sounds\misc\spraypaint.vsnd_c

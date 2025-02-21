@@ -9,7 +9,7 @@
 <div align="center">
   <img alt="license badge" src="https://img.shields.io/badge/License-GPLv3-blue.svg?style=for-the-badge">
   <a href="https://discord.gg/2YDnqpbcKM"><img alt="badge" src="https://img.shields.io/badge/Discord-%237289DA.svg?style=for-the-badge&logo=discord&logoColor=white"></a>
-  <a href="https://github.com/robbyz512/dota2-minify/wiki"><img alt="badge" src="https://img.shields.io/badge/github_wiki-%23000000.svg?style=for-the-badge&logo=github"></a>
+  <a href="https://github.com/Egezenn/dota2-minify/wiki"><img alt="badge" src="https://img.shields.io/badge/github_wiki-%23000000.svg?style=for-the-badge&logo=github"></a>
 </div>
 
 **<div align="center">All in one smart patcher for Dota2 to install all types of mods</div>**
@@ -36,7 +36,7 @@ No one has ever been banned for these mods. This project strictly deals with VPK
 
 1. **Download Minify**
 
-   - [Click here to download the latest Minify release](https://github.com/robbyz512/dota2-minify/releases/latest)
+   - [Click here to download the latest Minify release](https://github.com/Egezenn/dota2-minify/releases/latest)
 
     **(Optional) Install Dota 2 Workshop Tools DLC**
     - These tools enable HUD/Interface mods. **Skip this step if you don't need them.**
@@ -53,14 +53,14 @@ No one has ever been banned for these mods. This project strictly deals with VPK
 
    - Right-click on Dota2 in Steam and click **Properties**.
    - **For English Dota2:** Add `-language minify` to your launch options. [See example image](https://i.imgur.com/KTfqXUg.jpeg).
-   - **For Other Languages:** Follow the [instructions here](https://github.com/robbyz512/dota2-minify/wiki/Minify#using-minify-with-a-different-language-in-dota2).
+   - **For Other Languages:** Follow the [instructions here](https://github.com/Egezenn/dota2-minify/wiki/Minify#using-minify-with-a-different-language-in-dota2).
 
 4. **Start Dota 2**
      - Launch Dota2 and enjoy!
 
 ### Optional Setup
 
-**Compile from Source**: If you prefer compiling the project yourself [Click here for instructions](https://github.com/robbyz512/dota2-minify/wiki/Minify#compiling-minify)
+**Compile from Source**: If you prefer compiling the project yourself [Click here for instructions](https://github.com/Egezenn/dota2-minify/wiki/Minify#compiling-minify)
 
 **External Binaries**: To get these files from the source `Source2Viewer-CLI.exe` and `libSkiaSharp.dll`:
 
@@ -72,19 +72,19 @@ No one has ever been banned for these mods. This project strictly deals with VPK
 
 You can create your own mods with Minify
 
-[The wiki](https://github.com/robbyz512/dota2-minify/wiki/Dota2-Modding-Tutorials) will teach you the basics of working with steam files and more.
+[The wiki](https://github.com/Egezenn/dota2-minify/wiki/Dota2-Modding-Tutorials) will teach you the basics of working with steam files and more.
 
 Once you get comfortable with the workflow you can use Minify to easily patch latest files from Dota2 and always have your mods updated.
 
-## Minify File Structure [>> tutorial](https://github.com/robbyz512/dota2-minify/wiki/Minify)
+## Minify File Structure [>> tutorial](https://github.com/Egezenn/dota2-minify/wiki/Minify)
 
 | Name                                                                                  | Description                                                                                   |
 |---------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------|
-| [`Files`](https://github.com/robbyz512/dota2-minify/wiki/Minify#files)                | Compiled files you want to pack (Models, Meshes, Textures...etc)                              |
-| [`blacklist.txt`](https://github.com/robbyz512/dota2-minify/wiki/Minify#blacklisttxt) | _Paths_ to files to replace with blanks so they wont appear in game (Particles, Sounds...etc) |
-| [`styling.txt`](https://github.com/robbyz512/dota2-minify/wiki/Minify#stylingtxt)     | Custom CSS you want to apply to the Panorama (Interfaces, Layouts, HUD's...etc)               |
+| [`Files`](https://github.com/Egezenn/dota2-minify/wiki/Minify#files)                | Compiled files you want to pack (Models, Meshes, Textures...etc)                              |
+| [`blacklist.txt`](https://github.com/Egezenn/dota2-minify/wiki/Minify#blacklisttxt) | _Paths_ to files to replace with blanks so they wont appear in game (Particles, Sounds...etc) |
+| [`styling.txt`](https://github.com/Egezenn/dota2-minify/wiki/Minify#stylingtxt)     | Custom CSS you want to apply to the Panorama (Interfaces, Layouts, HUD's...etc)               |
 | `notes.txt`                                                                           | Optionally include this file to have a details button beside your mod for users to read.      |
 
 ## Thanks
 
-This project wouldn't be available without the work of the community. Thanks to everyone that has contributed to the project over [GitHub](https://github.com/robbyz512/dota2-minify/graphs/contributors) or Discord!
+This project wouldn't be available without the work of the community. Thanks to everyone that has contributed to the project over [GitHub](https://github.com/Egezenn/dota2-minify/graphs/contributors) or Discord!

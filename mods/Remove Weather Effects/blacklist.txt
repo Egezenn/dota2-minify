@@ -1,1 +1,6 @@
-@@https://raw.githubusercontent.com/robbyz512/dota2-minify-remote/remote-data/Remove%20Weather%20Effects/blacklist.txt
+>>particles/rain_fx
+sounds/ambient/soundscapes/rain_thunder01.vsnd_c
+sounds/ambient/soundscapes/rain_thunder02.vsnd_c
+sounds/ambient/soundscapes/rain_thunder03.vsnd_c
+sounds/ambient/soundscapes/rain_thunder04.vsnd_c
+sounds/ambient/soundscapes/rain_thunder05.vsnd_c

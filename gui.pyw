@@ -1,4 +1,5 @@
 import os
+import platform
 import shutil
 import subprocess
 import sys
@@ -12,7 +13,6 @@ from tkinter.messagebox import askyesno
 import psutil
 import requests
 import vpk
-from PIL import Image, ImageTk
 
 import helper
 import mpaths
@@ -46,19 +46,6 @@ def welcomeMsg():
  -> Create mods for this project
  -------------------------------------------------------
        """
-    )
-
-
-def failureMsg():
-    print(
-        r""":( Failed to connect to 
-https://github.com/robbyz512/dota2-minify-remote/tree/remote-data
-          
-Either you are not connected to the internet or your network configuration is not allowing this app to make requests to Github
-          
-Minify may not work correctly.
--------------------------------------------------------
-    """
     )
 
 
@@ -204,7 +191,10 @@ class App:
             takefocus=False,
             cursor="hand2",
             command=lambda: threading.Thread(
-                target=helper.urlDispatcher(helper.help_url), daemon=True
+                target=helper.urlDispatcher(
+                    "https://github.com/Egezenn/dota2-minify/tree/stable#installation"
+                ),
+                daemon=True,
             ).start(),
         )
         self.helpBtn.grid(row=10, column=1, pady=btnYpad, padx=btnXpad, sticky="w")
@@ -215,7 +205,10 @@ class App:
             width=btnW,
             takefocus=False,
             command=lambda: threading.Thread(
-                target=helper.urlDispatcher(helper.update_url), daemon=True
+                target=helper.urlDispatcher(
+                    "https://github.com/Egezenn/dota2-minify/releases/latest"
+                ),
+                daemon=True,
             ).start(),
         )
         self.updateBtn.grid(row=11, column=0, pady=btnYpad, padx=btnXpad, sticky="w")
@@ -259,67 +252,13 @@ class App:
             wrap=tk.WORD,
             state=tk.DISABLED,
             width=65,
+            height=41,
             borderwidth=2,
             bg="#FFFFF7",
             relief="groove",
         )
         self.consoleText.grid(row=0, column=0)
         self.consoleText.configure(font=("Fixedsys"))
-
-        self.devLabel = tk.Label(self.consoleFrame, font=("Tahoma", 10))
-        self.devLabel.config(text="Minify 2.0 under development")
-        self.devLabel.grid(row=1, column=0, pady=4, sticky="s")
-        self.devbtn = tk.Button(
-            self.consoleFrame,
-            text="Preview",
-            width=22,
-            cursor="hand2",
-            height=1,
-            font=("None", 8, "bold"),
-            takefocus=False,
-            command=lambda: threading.Thread(
-                target=helper.urlDispatcher(helper.new_version), daemon=True
-            ).start(),
-        )
-        self.devbtn.grid(row=1, column=0, pady=4, sticky="e")
-
-        self.donateLabel = tk.Label(
-            self.consoleFrame, font=("Tahoma", 10), fg="#333333", bg="white"
-        )
-        self.donateLabel.config(
-            text="If you'd like to say thanks you can send a donation below.\nHelps me stay motivated to keep this project updated and develop it further."
-        )
-        self.donateLabel.grid(row=2, column=0, pady=50, sticky="s")
-
-        self.donate_image = Image.open("bin/images/coffee.jpg")
-        self.donate_photo = ImageTk.PhotoImage(self.donate_image)
-        self.donateBtn = tk.Button(
-            self.consoleFrame,
-            image=self.donate_photo,
-            width=155,
-            height=28,
-            cursor="hand2",
-            takefocus=False,
-            command=lambda: threading.Thread(
-                target=helper.urlDispatcher(helper.donations_url), daemon=True
-            ).start(),
-        )
-        self.donateBtn.grid(row=2, column=0, pady=0, sticky="s")
-
-        self.donate_image2 = Image.open("bin/images/crypto.jpg")
-        self.donate_photo2 = ImageTk.PhotoImage(self.donate_image2)
-        self.donateBtn2 = tk.Button(
-            self.consoleFrame,
-            image=self.donate_photo2,
-            width=155,
-            height=28,
-            cursor="hand2",
-            takefocus=False,
-            command=lambda: threading.Thread(
-                target=helper.cryptoInfo, daemon=True
-            ).start(),
-        )
-        self.donateBtn2.grid(row=3, column=0, pady=10, sticky="s")
 
         # redirects stdout and stderror to text box widget, which means print statements will not appear in the gui until these two lines are ran
         sys.stdout = TextRedirector(self.consoleText, "stdout")
@@ -339,11 +278,12 @@ class App:
                 message="New version available. Go to Download page now?",
             )
             if answer:
-                helper.urlDispatcher(helper.update_url)
+                helper.urlDispatcher("https://github.com/Egezenn/dota2-minify/releases")
             else:
                 pass
 
     def setupSystem(self):
+        os.makedirs("logs", exist_ok=True)
         x = validatefiles.MyClass(checkboxes, self.root)
         public_methods = [
             method
@@ -352,6 +292,27 @@ class App:
             if not method.startswith("_")
         ]  # private methods start with _
         try:
+            if not os.path.exists(
+                os.path.join(mpaths.minify_dir, "Source2Viewer-CLI.exe")
+            ):
+                if platform.system() == "Windows":
+                    zip_name = "cli-windows-x64.zip"
+                    zip_path = os.path.join(mpaths.minify_dir, zip_name)
+                    # need to update regularly, can't do latest and call it a day
+                    response = requests.get(
+                        "https://github.com/ValveResourceFormat/ValveResourceFormat/releases/download/11.1/cli-windows-x64.zip"
+                    )
+                    if response.status_code == 200:
+                        with open(zip_path, "wb") as file:
+                            file.write(response.content)
+                        print(f"→ Downloaded {zip_name}")
+                        shutil.unpack_archive(zip_path, mpaths.minify_dir, "zip")
+                        os.remove(zip_path)
+                        print(f"→ Extracted {zip_name}.")
+                else:
+                    print(
+                        "Error: Instructions to download Source2Viewer binaries for your system is not available yet, click Help for instructions."
+                    )
             for method in public_methods:
                 getattr(x, method)()
                 if x.toggle_flag == True:

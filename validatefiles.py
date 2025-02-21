@@ -70,7 +70,7 @@ class MyClass:
             self.toggle_flag = True
             print("Error: Please close Dota 2 and restart Minify.")
 
-    def e_isDecompilerFound(self):
+    def e_isSource2ViewerFound(self):
         if not os.path.exists(os.path.join(mpaths.minify_dir, "Source2Viewer-CLI.exe")):
             self.toggle_flag = True
             print(
