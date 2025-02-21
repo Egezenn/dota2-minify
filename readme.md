@@ -8,14 +8,17 @@
 
 <div align="center">
   <img alt="license badge" src="https://img.shields.io/badge/License-GPLv3-blue.svg?style=for-the-badge">
-  <a href="https://discord.gg/2YDnqpbcKM"><img alt="badge" src="https://img.shields.io/badge/Discord-%237289DA.svg?style=for-the-badge&logo=discord&logoColor=white"></a>
+  <a href="https://discord.com/invite/2YDnqpbcKM"><img alt="badge" src="https://img.shields.io/badge/Discord-%237289DA.svg?style=for-the-badge&logo=discord&logoColor=white"></a>
   <a href="https://github.com/Egezenn/dota2-minify/wiki"><img alt="badge" src="https://img.shields.io/badge/github_wiki-%23000000.svg?style=for-the-badge&logo=github"></a>
 </div>
 
-**<div align="center">All in one smart patcher for Dota2 to install all types of mods</div>**
+**<h3 align="center">All in one smart patcher for Dota2 to install all types of mods</h3>**
+
+**<h3 align="center">Updated to 7.38!</h3>**
 
 <div align="center">
-  ✔️500+ Spells Simplified • ✔️8,000+ files modded • ✔️Boost FPS • ✔️ Creator Toolkit</div>
+  ✔️500+ Spells Simplified • ✔️8,000+ files modded • ✔️Boost FPS • ✔️ Creator Toolkit
+</div>
 
 <div align="center">
     <img alt="ss1" src="bin/images/screenshot-1.jpg">
@@ -78,13 +81,13 @@ Once you get comfortable with the workflow you can use Minify to easily patch la
 
 ## Minify File Structure [>> tutorial](https://github.com/Egezenn/dota2-minify/wiki/Minify)
 
-| Name                                                                                  | Description                                                                                   |
-|---------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------|
+| Name                                                                                | Description                                                                                   |
+|-------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------|
 | [`Files`](https://github.com/Egezenn/dota2-minify/wiki/Minify#files)                | Compiled files you want to pack (Models, Meshes, Textures...etc)                              |
 | [`blacklist.txt`](https://github.com/Egezenn/dota2-minify/wiki/Minify#blacklisttxt) | _Paths_ to files to replace with blanks so they wont appear in game (Particles, Sounds...etc) |
 | [`styling.txt`](https://github.com/Egezenn/dota2-minify/wiki/Minify#stylingtxt)     | Custom CSS you want to apply to the Panorama (Interfaces, Layouts, HUD's...etc)               |
-| `notes.txt`                                                                           | Optionally include this file to have a details button beside your mod for users to read.      |
+| `notes.txt`                                                                         | Optionally include this file to have a details button beside your mod for users to read.      |
 
 ## Thanks
 
-This project wouldn't be available without the work of the community. Thanks to everyone that has contributed to the project over [GitHub](https://github.com/Egezenn/dota2-minify/graphs/contributors) or Discord!
+This project wouldn't be available without the work of the community. Thanks to everyone that has contributed to the project over [GitHub](https://github.com/Egezenn/dota2-minify/graphs/contributors) or [Discord](https://discord.com/invite/2YDnqpbcKM)!
