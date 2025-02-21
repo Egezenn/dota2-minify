@@ -1,19 +1,21 @@
 import os
-import winreg
 import traceback
+import winreg
 
 try:
-    hkey = winreg.OpenKey(winreg.HKEY_LOCAL_MACHINE, r"SOFTWARE\WOW6432Node\Valve\Steam")
+    hkey = winreg.OpenKey(
+        winreg.HKEY_LOCAL_MACHINE, r"SOFTWARE\WOW6432Node\Valve\Steam"
+    )
 except Exception as exception:
     hkey = None
-    with open(os.path.join(os.getcwd(), 'logs\\registry.txt'), 'w') as file:
+    with open(os.path.join(os.getcwd(), "logs\\registry.txt"), "w") as file:
         file.write(traceback.format_exc())
 
 try:
     steam_path = winreg.QueryValueEx(hkey, "InstallPath")
 except:
     steam_path = None
-    with open(os.path.join(os.getcwd(), 'logs\\registry_query.txt'), 'w') as file:
+    with open(os.path.join(os.getcwd(), "logs\\registry_query.txt"), "w") as file:
         file.write(traceback.format_exc())
 
 try:
@@ -23,16 +25,20 @@ except:
 
 # when dota2 is not inside Steam folder then set new steam directory from 'dota2path_minify.txt
 # this text file is created and set by the user in validatefiles.py during startup
-if not os.path.exists(os.path.join(steam_dir, 'steamapps\\common\\dota 2 beta\\game\\bin\\win64\\dota2.exe')):
-    path_file = os.path.join(os.getcwd(), 'dota2path_minify.txt')
+if not os.path.exists(
+    os.path.join(
+        steam_dir, "steamapps\\common\\dota 2 beta\\game\\bin\\win64\\dota2.exe"
+    )
+):
+    path_file = os.path.join(os.getcwd(), "dota2path_minify.txt")
 
     # make sure the text file exists
     if not os.path.exists(path_file):
-        with open(path_file,'a+') as file:
-            file.write('')
-    
+        with open(path_file, "a+") as file:
+            file.write("")
+
     # load the path from text file
-    with open(path_file, 'r') as file:
+    with open(path_file, "r") as file:
         for line in file:
             steam_dir = line.strip()
 
@@ -47,39 +53,54 @@ blank_files_dir = os.path.join(bin_dir, "blank-files")
 maps_dir = os.path.join(bin_dir, "maps")
 
 # dota2 paths
-content_dir = os.path.join(steam_dir, "steamapps\\common\\dota 2 beta\\content\\dota_addons\\minify")
-game_dir = os.path.join(steam_dir, "steamapps\\common\\dota 2 beta\\game\\dota_addons\\minify")
-resource_compiler = os.path.join(steam_dir, "steamapps\\common\\dota 2 beta\\game\\bin\\win64\\resourcecompiler.exe")
-pak01_dir = os.path.join(steam_dir, "steamapps\\common\\dota 2 beta\\game\\dota\\pak01_dir.vpk")
-itembuilds_dir = os.path.join(steam_dir, "steamapps\\common\\dota 2 beta\\game\\dota\\itembuilds")
+content_dir = os.path.join(
+    steam_dir, "steamapps\\common\\dota 2 beta\\content\\dota_addons\\minify"
+)
+game_dir = os.path.join(
+    steam_dir, "steamapps\\common\\dota 2 beta\\game\\dota_addons\\minify"
+)
+resource_compiler = os.path.join(
+    steam_dir, "steamapps\\common\\dota 2 beta\\game\\bin\\win64\\resourcecompiler.exe"
+)
+pak01_dir = os.path.join(
+    steam_dir, "steamapps\\common\\dota 2 beta\\game\\dota\\pak01_dir.vpk"
+)
+itembuilds_dir = os.path.join(
+    steam_dir, "steamapps\\common\\dota 2 beta\\game\\dota\\itembuilds"
+)
 
-dota_minify_content = os.path.join(steam_dir, "steamapps\\common\\dota 2 beta\\content\\dota_minify")
-dota_minify = os.path.join(steam_dir, "steamapps\\common\\dota 2 beta\\game\\dota_minify")
+dota_minify_content = os.path.join(
+    steam_dir, "steamapps\\common\\dota 2 beta\\content\\dota_minify"
+)
+dota_minify = os.path.join(
+    steam_dir, "steamapps\\common\\dota 2 beta\\game\\dota_minify"
+)
 dota_minify_maps = os.path.join(dota_minify, "maps")
 
 # exclude invalid mods
-enabled_mods = ['Auto Accept Match',
-                'Dark Terrain',
-                'Dotabuff in Profiles',
-                'Minify Base Attacks',
-                'Minify HUD',
-                'Minify Spells & Items',
-                'Misc Optimization',
-                'Mute Ambient Sounds',
-                'Mute Taunt Sounds',
-                'Mute Voice Line Sounds', 
-                'OpenDotaGuides Guides',
-                'Remove Foilage', 
-                'Remove Pinging', 
-                'Remove River',
-                'Remove Sprays',
-                'Remove Weather Effects',
-                'Saiyan Mod',
-                'Show NetWorth',
-                'Tree Mod',
-                ]
+enabled_mods = [
+    "Auto Accept Match",
+    "Dark Terrain",
+    "Dotabuff in Profiles",
+    "Minify Base Attacks",
+    "Minify HUD",
+    "Minify Spells & Items",
+    "Misc Optimization",
+    "Mute Ambient Sounds",
+    "Mute Taunt Sounds",
+    "Mute Voice Line Sounds",
+    "OpenDotaGuides Guides",
+    "Remove Foilage",
+    "Remove Pinging",
+    "Remove River",
+    "Remove Sprays",
+    "Remove Weather Effects",
+    "Saiyan Mod",
+    "Show NetWorth",
+    "Tree Mod",
+]
 
 mods_folders = []
-for mod in os.listdir(mods_dir): mods_folders.append(mod)
+for mod in os.listdir(mods_dir):
+    mods_folders.append(mod)
 mods_folders = [p for p in mods_folders if p in enabled_mods]
-
