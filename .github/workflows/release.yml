@@ -32,16 +32,27 @@ jobs:
 
       - name: Build executable with Nuitka
         run: | # change to newer builds
+          Get-ChildItem
           curl -s -L -o "cli-windows-x64.zip" "https://github.com/ValveResourceFormat/ValveResourceFormat/releases/download/11.1/cli-windows-x64.zip"
+          Get-ChildItem
           Expand-Archive -Path ".\cli-windows-x64.zip" -DestinationPath ".\"
+          Get-ChildItem
           cd .\cli-windows-x64
+          Get-ChildItem
           Move-Item -Path ".\*" -Destination ".\..\"
+          Get-ChildItem
           cd .\..\
+          Get-ChildItem
           python -m nuitka --assume-yes-for-downloads --follow-imports --onefile --standalone --include-data-files=Source2Viewer-CLI.exe=Source2Viewer-CLI.exe --include-data-files=TinyEXR.Native.dll=TinyEXR.Native.dll --include-data-files=.\libSkiaSharp.dll=libSkiaSharp.dll --include-data-dir=./bin=bin --include-data-dir=./mods=mods --enable-plugin=tk-inter --windows-console-mode=disable --windows-icon-from-ico=bin/images/favicon.ico gui.pyw
+          Get-ChildItem
           cd gui.dist
+          Get-ChildItem
           Rename-Item -Path "gui.exe" -NewName "Minify.exe"
+          Get-ChildItem
           Compress-Archive -Path ".\*" -DestinationPath ".\..\${{ github.event.inputs.release_name }}.zip"
+          Get-ChildItem
           cd .\..\
+          Get-ChildItem
 
       - name: Create Release
         uses: softprops/action-gh-release@v1
