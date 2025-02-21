@@ -198,9 +198,9 @@ class App:
             ).start(),
         )
         self.helpBtn.grid(row=10, column=1, pady=btnYpad, padx=btnXpad, sticky="w")
-        self.updateBtn = tk.Button(
+        self.githubLatestBtn = tk.Button(
             self.buttonsFrame,
-            text="Update",
+            text="Latest",
             state=tk.NORMAL,
             width=btnW,
             takefocus=False,
@@ -211,7 +211,9 @@ class App:
                 daemon=True,
             ).start(),
         )
-        self.updateBtn.grid(row=11, column=0, pady=btnYpad, padx=btnXpad, sticky="w")
+        self.githubLatestBtn.grid(
+            row=11, column=0, pady=btnYpad, padx=btnXpad, sticky="w"
+        )
         self.uninstallBtn = tk.Button(
             self.buttonsFrame,
             text="Uninstall",
@@ -223,8 +225,6 @@ class App:
             ).start(),
         )
         self.uninstallBtn.grid(row=11, column=1, pady=btnYpad, padx=btnXpad, sticky="w")
-        self.versionLabel = tk.Label(self.buttonsFrame, font=("None", 8), width=20)
-        self.versionLabel.grid(row=12, column=0, sticky="w")
         self.discordBtn = tk.Button(
             self.buttonsFrame,
             text="Discord",
@@ -232,7 +232,8 @@ class App:
             takefocus=False,
             cursor="hand2",
             command=lambda: threading.Thread(
-                target=helper.urlDispatcher(helper.discord_url), daemon=True
+                target=helper.urlDispatcher("https://discord.com/invite/2YDnqpbcKM"),
+                daemon=True,
             ).start(),
         )
         self.discordBtn.grid(row=14, column=0, pady=btnYpad, padx=btnXpad, sticky="w")
@@ -264,23 +265,7 @@ class App:
         sys.stdout = TextRedirector(self.consoleText, "stdout")
         sys.stderr = TextRedirector(self.consoleText, "stderr")
 
-        if version == "1.09":
-            self.updateBtn.config(state="disabled", cursor="")
-            self.versionLabel.config(fg="#0cb6b3", text=f"Latest version: {version}")
-        else:
-            self.updateBtn.config(state="normal", fg="blue", cursor="hand2")
-            self.versionLabel.config(
-                fg="blue", text=f"Update available: {helper.latest_version_url}"
-            )
-
-            answer = askyesno(
-                title="Update",
-                message="New version available. Go to Download page now?",
-            )
-            if answer:
-                helper.urlDispatcher("https://github.com/Egezenn/dota2-minify/releases")
-            else:
-                pass
+        welcomeMsg()
 
     def setupSystem(self):
         os.makedirs("logs", exist_ok=True)
