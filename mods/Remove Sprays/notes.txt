@@ -1,0 +1,1 @@
+Removes visibility of sprays on terrain, to improve visibility and not disturbe.
