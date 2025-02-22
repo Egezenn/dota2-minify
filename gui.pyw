@@ -39,13 +39,12 @@ def welcomeMsg():
   \/_/  \/_/   \/_/   \/_/ \/_/   \/_/   \/_/     \/_____/
  -------------------------------------------------------  
  Want to contribute to the project's growth?
-       
  -> Join our Discord community ♥
  -> Share Minify with your friends and online groups
  -> Star the project on GitHub ★
  -> Create mods for this project
  -------------------------------------------------------
-       """
+"""
     )
 
 
@@ -277,8 +276,10 @@ class App:
             if not method.startswith("_")
         ]  # private methods start with _
         try:
-            if not os.path.exists(
-                os.path.join(mpaths.minify_dir, "Source2Viewer-CLI.exe")
+            if not (
+                os.path.exists(os.path.join(mpaths.minify_dir, "Source2Viewer-CLI.exe"))
+                or os.path.exists(os.path.join(mpaths.minify_dir, "libSkiaSharp.dll"))
+                or os.path.exists(os.path.join(mpaths.minify_dir, "TinyEXR.Native.dll"))
             ):
                 if platform.system() == "Windows":
                     zip_name = "cli-windows-x64.zip"
@@ -335,15 +336,19 @@ class App:
             if os.path.exists(mapPath):
                 os.remove(mapPath)
 
-            # default builds will be reinstalled if they don't exist in the path
-            with open(
-                os.path.join(mpaths.itembuilds_dir, "default_antimage.txt"), "r"
-            ) as file:
-                lines = file.readlines()
-            if len(lines) >= 3:
-                if "OpenDotaGuides" in lines[2]:
-                    for file in os.listdir(mpaths.itembuilds_dir):
-                        os.remove(file)
+            try:
+                # default builds will be reinstalled if they don't exist in the path by the game itself
+                # i don't exactly know when it does though, could backup the original ones
+                with open(
+                    os.path.join(mpaths.itembuilds_dir, "default_antimage.txt"), "r"
+                ) as file:
+                    lines = file.readlines()
+                if len(lines) >= 3:
+                    if "OpenDotaGuides" in lines[2]:
+                        for file in os.listdir(mpaths.itembuilds_dir):
+                            os.remove(file)
+            except:
+                pass
 
             print("All Minify mods have been removed.")
 
