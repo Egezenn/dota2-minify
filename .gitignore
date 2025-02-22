@@ -2,6 +2,7 @@
 *.css
 *.vcss_c
 logs
+locale.txt
 
 ## Source2Viewer
 cli-*-*.*

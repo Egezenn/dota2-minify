@@ -20,9 +20,12 @@ import validatefiles
 
 version = "1.09"
 
+locale = ""
+locales = ["en", "ru"]
+
 btnXpad = 8
 btnYpad = 8
-btnW = 8
+btnW = 10
 
 patching = False
 checkboxes = {}
@@ -245,6 +248,26 @@ class App:
             command=self.exit,
         )
         self.exitBtn.grid(row=14, column=1, pady=btnYpad, padx=btnXpad, sticky="w")
+        locale_val = tk.StringVar()
+        locale_val.set(locales[0])
+        self.localeOption = tk.OptionMenu(
+            self.buttonsFrame,
+            locale_val,
+            *locales,
+        )
+        self.localeOption.grid(row=15, column=1, pady=btnYpad, padx=btnXpad, sticky="w")
+        self.changeLocale = tk.Button(
+            self.buttonsFrame,
+            text="Change",
+            width=btnW,
+            takefocus=False,
+            cursor="hand2",
+            command=lambda: threading.Thread(
+                target=helper.write_locale(locale_val.get()),
+                daemon=True,
+            ).start(),
+        )
+        self.changeLocale.grid(row=15, column=0, pady=btnYpad, padx=btnXpad, sticky="w")
 
         # Other Widget
         self.consoleText = tk.Text(
@@ -336,20 +359,22 @@ class App:
             if os.path.exists(mapPath):
                 os.remove(mapPath)
 
-            try:
-                # default builds will be reinstalled if they don't exist in the path by the game itself
-                # i don't exactly know when it does though, could backup the original ones
-                with open(
-                    os.path.join(mpaths.itembuilds_dir, "default_antimage.txt"), "r"
-                ) as file:
-                    lines = file.readlines()
-                if len(lines) >= 3:
-                    if "OpenDotaGuides" in lines[2]:
-                        for file in os.listdir(mpaths.itembuilds_dir):
-                            os.remove(file)
-            except:
-                pass
-
+            # try:
+            with open(
+                os.path.join(mpaths.itembuilds_dir, "default_antimage.txt"), "r"
+            ) as file:
+                lines = file.readlines()
+            if len(lines) >= 3:
+                if "OpenDotaGuides" in lines[2]:
+                    for name in os.listdir(mpaths.itembuilds_dir):
+                        if name != "bkup":
+                            os.remove(os.path.join(mpaths.itembuilds_dir, name))
+                    print(os.path.join(mpaths.itembuilds_dir, "bkup"))
+                    for name in os.listdir(os.path.join(mpaths.itembuilds_dir, "bkup")):
+                        os.rename(
+                            os.path.join(mpaths.itembuilds_dir, "bkup", name),
+                            os.path.join(mpaths.itembuilds_dir, name),
+                        )
             print("All Minify mods have been removed.")
 
     # ---------------------------------------------------------------------------- #
@@ -425,6 +450,20 @@ class App:
                                     with open(zip_path, "wb") as file:
                                         file.write(response.content)
                                     print("→ Downloaded latest OpenDotaGuides guides.")
+                                    os.makedirs(
+                                        os.path.join(mpaths.itembuilds_dir, "bkup"),
+                                        exist_ok=True,
+                                    )
+                                    for name in os.listdir(mpaths.itembuilds_dir):
+                                        if name != "bkup":
+                                            os.rename(
+                                                os.path.join(
+                                                    mpaths.itembuilds_dir, name
+                                                ),
+                                                os.path.join(
+                                                    mpaths.itembuilds_dir, "bkup", name
+                                                ),
+                                            )
                                     shutil.unpack_archive(
                                         zip_path, temp_dump_path, "zip"
                                     )

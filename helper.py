@@ -1,6 +1,6 @@
 import os
 import shutil
-import tkinter
+import tkinter as tk
 import urllib.error
 import webbrowser
 from urllib.request import urlopen
@@ -8,6 +8,7 @@ from urllib.request import urlopen
 import vpk
 
 workshop_installed = False
+
 
 # ---------------------------------------------------------------------------- #
 #                                   Warnings                                   #
@@ -43,10 +44,23 @@ def modLabelColorConfig(widget, color, event):
 
 
 def modInfo(widget, name, mod_path, event):
-    with open(os.path.join(mod_path, "notes.txt"), "r") as file:
-        data = file.read()  # Read the entire file as a single string
+    try:
+        with open("locale.txt", "r") as file:
+            locale = file.read()
+    except:
+        locale = ""
+    if locale == "" or locale == "en":
+        with open(os.path.join(mod_path, "notes.txt"), "r", encoding="utf-8") as file:
+            data = file.read()  # Read the entire file as a single string
+    elif locale == "ru":
+        with open(
+            os.path.join(mod_path, "notes_ru.txt"), "r", encoding="utf-8"
+        ) as file:
+            data = file.read()
 
-    infoWindow = tkinter.Toplevel()
+    infoWindow = tk.Toplevel()
+    infoWindow.lift()
+    infoWindow.focus_force()
     infoWindow.title(name)
     infoWindow.iconbitmap("bin/images/info.ico")
     infoWindow.resizable(False, False)
@@ -58,14 +72,14 @@ def modInfo(widget, name, mod_path, event):
     y = (screen_height - window_height) // 2
     infoWindow.geometry(f"+{x}+{y}")
 
-    text_widget = tkinter.Text(infoWindow, bg="#1C1F2B", fg="#fff", wrap=tkinter.WORD)
+    text_widget = tk.Text(infoWindow, bg="#1C1F2B", fg="#fff", wrap=tk.WORD)
     text_widget.grid(row=0, column=0, padx=5, pady=5, sticky="nsew")
 
     text_widget.insert("1.0", data)
 
     text_widget.config(state="disabled")
 
-    close_button = tkinter.Button(
+    close_button = tk.Button(
         infoWindow,
         text="Close",
         command=infoWindow.destroy,
@@ -259,3 +273,8 @@ def processBlackList(index, line, folder, blank_file_extensions, pak01_dir):
                 )
 
     return data
+
+
+def write_locale(text):
+    with open("locale.txt", "w") as file:
+        file.write(text)
