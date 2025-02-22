@@ -455,15 +455,20 @@ class App:
                                         exist_ok=True,
                                     )
                                     for name in os.listdir(mpaths.itembuilds_dir):
-                                        if name != "bkup":
-                                            os.rename(
-                                                os.path.join(
-                                                    mpaths.itembuilds_dir, name
-                                                ),
-                                                os.path.join(
-                                                    mpaths.itembuilds_dir, "bkup", name
-                                                ),
-                                            )
+                                        try:
+                                            if name != "bkup":
+                                                os.rename(
+                                                    os.path.join(
+                                                        mpaths.itembuilds_dir, name
+                                                    ),
+                                                    os.path.join(
+                                                        mpaths.itembuilds_dir,
+                                                        "bkup",
+                                                        name,
+                                                    ),
+                                                )
+                                        except FileExistsError:
+                                            pass  # backup was created and opendotaguides was replacing the guides already
                                     shutil.unpack_archive(
                                         zip_path, temp_dump_path, "zip"
                                     )
@@ -477,6 +482,8 @@ class App:
                                     print(
                                         "→ Replaced default guides with OpenDotaGuides guides."
                                     )
+                                    if os.path.exists(zip_path):
+                                        os.remove(zip_path)
                                 else:
                                     print(
                                         "→ Failed to download latest OpenDotaGuides guides."
