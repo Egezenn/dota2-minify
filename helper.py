@@ -87,6 +87,7 @@ def modInfo(widget, name, mod_path, event):
         height=1,
         width=10,
     )
+    infoWindow.bind("<Escape>", lambda e: infoWindow.destroy())
     close_button.grid(row=1, column=0, pady=5)
 
 
