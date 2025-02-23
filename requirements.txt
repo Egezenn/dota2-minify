@@ -1,12 +1,4 @@
-certifi
-charset-normalizer
-idna
 Nuitka
-ordered-set
-pillow
 psutil
-PyYAML
 requests
-urllib3
 vpk
-zstandard

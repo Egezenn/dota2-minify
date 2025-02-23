@@ -23,8 +23,6 @@
 <div align="center">
     <img alt="ss1" src="bin/images/screenshot-1.jpg">
     <img alt="ss2" src="bin/images/screenshot-2.jpg">
-    <img alt="ss3" src="bin/images/screenshot-3.jpg">
-    <img alt="ss4" src="bin/images/screenshot-4.jpg">
 </div>
 
 <hr>
