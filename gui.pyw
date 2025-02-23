@@ -18,7 +18,11 @@ import helper
 import mpaths
 import validatefiles
 
-version = "1.09.2"  # TODO stamp before release
+try:
+    with open("version", "r") as file:
+        version = file.readline()
+except:
+    pass
 
 locale = ""
 locales = ["en", "ru"]
@@ -287,25 +291,28 @@ class App:
         sys.stdout = TextRedirector(self.consoleText, "stdout")
         sys.stderr = TextRedirector(self.consoleText, "stderr")
 
-        response = requests.get(
-            "https://raw.githubusercontent.com/Egezenn/dota2-minify/refs/heads/stable/version"
-        )
-        if response.status_code == 200:
-            if version == response.text:
-                self.githubLatestBtn.config(state="disabled", cursor="")
-            else:
-                self.githubLatestBtn.config(state="normal", fg="blue", cursor="hand2")
-
-                answer = askyesno(
-                    title="Update",
-                    message=f"{response.text} is now available. Would you like to go to the download page?",
-                )
-                if answer:
-                    helper.urlDispatcher(
-                        "https://github.com/Egezenn/dota2-minify/releases"
+        if version is not None:
+            response = requests.get(
+                "https://raw.githubusercontent.com/Egezenn/dota2-minify/refs/heads/stable/version"
+            )
+            if response.status_code == 200:
+                if version == response.text:
+                    self.githubLatestBtn.config(state="disabled", cursor="")
+                else:
+                    self.githubLatestBtn.config(
+                        state="normal", fg="blue", cursor="hand2"
                     )
-                    self.exit()
-                    exit()
+
+                    answer = askyesno(
+                        title="Update",
+                        message=f"{response.text} is now available. Would you like to go to the download page?",
+                    )
+                    if answer:
+                        helper.urlDispatcher(
+                            "https://github.com/Egezenn/dota2-minify/releases"
+                        )
+                        self.exit()
+                        exit()
 
         welcomeMsg()
 
