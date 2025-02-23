@@ -359,22 +359,28 @@ class App:
             if os.path.exists(mapPath):
                 os.remove(mapPath)
 
-            # try:
-            with open(
-                os.path.join(mpaths.itembuilds_dir, "default_antimage.txt"), "r"
-            ) as file:
-                lines = file.readlines()
-            if len(lines) >= 3:
-                if "OpenDotaGuides" in lines[2]:
-                    for name in os.listdir(mpaths.itembuilds_dir):
-                        if name != "bkup":
-                            os.remove(os.path.join(mpaths.itembuilds_dir, name))
-                    print(os.path.join(mpaths.itembuilds_dir, "bkup"))
-                    for name in os.listdir(os.path.join(mpaths.itembuilds_dir, "bkup")):
-                        os.rename(
-                            os.path.join(mpaths.itembuilds_dir, "bkup", name),
-                            os.path.join(mpaths.itembuilds_dir, name),
-                        )
+            try:
+                with open(
+                    os.path.join(mpaths.itembuilds_dir, "default_antimage.txt"), "r"
+                ) as file:
+                    lines = file.readlines()
+                if len(lines) >= 3:
+                    if "OpenDotaGuides" in lines[2]:
+                        for name in os.listdir(mpaths.itembuilds_dir):
+                            if name != "bkup":
+                                os.remove(os.path.join(mpaths.itembuilds_dir, name))
+                        print(os.path.join(mpaths.itembuilds_dir, "bkup"))
+                        for name in os.listdir(
+                            os.path.join(mpaths.itembuilds_dir, "bkup")
+                        ):
+                            os.rename(
+                                os.path.join(mpaths.itembuilds_dir, "bkup", name),
+                                os.path.join(mpaths.itembuilds_dir, name),
+                            )
+            except FileNotFoundError:
+                helper.warnings.append(
+                    "Unable to recover backed up default guides or the itembuilds directory is empty, verify files to get the default guides back"
+                )
             print("All Minify mods have been removed.")
 
     # ---------------------------------------------------------------------------- #
