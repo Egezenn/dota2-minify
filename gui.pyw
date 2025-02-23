@@ -288,7 +288,7 @@ class App:
         sys.stderr = TextRedirector(self.consoleText, "stderr")
 
         response = requests.get(
-            "https://raw.githubusercontent.com/Egezenn/OpenDotaGuides/refs/heads/main/version"
+            "https://raw.githubusercontent.com/Egezenn/dota2-minify/refs/heads/stable/version"
         )
         if response.status_code == 200:
             if version == response.text:
