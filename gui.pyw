@@ -304,6 +304,8 @@ class App:
                     helper.urlDispatcher(
                         "https://github.com/Egezenn/dota2-minify/releases"
                     )
+                    self.exit()
+                    exit()
 
         welcomeMsg()
 
