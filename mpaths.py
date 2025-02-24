@@ -78,29 +78,7 @@ dota_minify = os.path.join(
 dota_minify_maps = os.path.join(dota_minify, "maps")
 
 # exclude invalid mods
-enabled_mods = [
-    "Auto Accept Match",
-    "Dark Terrain",
-    "Dotabuff in Profiles",
-    "Minify Base Attacks",
-    "Minify HUD",
-    "Minify Spells & Items",
-    "Misc Optimization",
-    "Mute Ambient Sounds",
-    "Mute Taunt Sounds",
-    "Mute Voice Line Sounds",
-    "OpenDotaGuides Guides",
-    "Remove Foilage",
-    "Remove Pinging",
-    "Remove River",
-    "Remove Sprays",
-    "Remove Weather Effects",
-    "Saiyan Mod",
-    "Show NetWorth",
-    "Tree Mod",
-]
 
 mods_folders = []
 for mod in os.listdir(mods_dir):
     mods_folders.append(mod)
-mods_folders = [p for p in mods_folders if p in enabled_mods]

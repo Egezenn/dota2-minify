@@ -28,7 +28,7 @@ def setFolder(main_window):
 # use naming convention (a_, b_, c_ ...etc) to run this class top to bottom if order mattters
 
 
-class MyClass:
+class Requirements:
     def __init__(self, checkboxes, main_window):
         self.checkboxes = checkboxes
         self.toggle_flag = False

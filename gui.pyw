@@ -318,7 +318,7 @@ class App:
 
     def setupSystem(self):
         os.makedirs("logs", exist_ok=True)
-        x = validatefiles.MyClass(checkboxes, self.root)
+        x = validatefiles.Requirements(checkboxes, self.root)
         public_methods = [
             method
             for method in dir(x)

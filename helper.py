@@ -49,9 +49,10 @@ def modInfo(widget, name, mod_path, event):
             locale = file.read()
     except:
         locale = ""
+
     if locale == "" or locale == "en":
         with open(os.path.join(mod_path, "notes.txt"), "r", encoding="utf-8") as file:
-            data = file.read()  # Read the entire file as a single string
+            data = file.read()
     elif locale == "ru":
         with open(
             os.path.join(mod_path, "notes_ru.txt"), "r", encoding="utf-8"
@@ -164,10 +165,7 @@ def cleanFolders(
 
 
 def urlDispatcher(url):
-    if url == None:
-        print("Could not connect to Github")
-    else:
-        webbrowser.open(url)
+    webbrowser.open(url)
 
 
 def getBlankFileExtensions(blank_files_dir):
