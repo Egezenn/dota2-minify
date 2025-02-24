@@ -336,7 +336,7 @@ class App:
                     zip_path = os.path.join(mpaths.minify_dir, zip_name)
                     # need to update regularly, can't do latest and call it a day
                     response = requests.get(
-                        "https://github.com/ValveResourceFormat/ValveResourceFormat/releases/download/11.1/cli-windows-x64.zip"
+                        "https://github.com/ValveResourceFormat/ValveResourceFormat/releases/latest/download/cli-windows-x64.zip"
                     )
                     if response.status_code == 200:
                         with open(zip_path, "wb") as file:
