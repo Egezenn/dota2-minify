@@ -1,0 +1,61 @@
+{
+  "button_patch": {
+    "EN": "Patch",
+    "RU": "Патч"
+  },
+  "button_select_mods": {
+    "EN": "Select Mods",
+    "RU": "Выбрать Моды"
+  },
+  "button_discord": {
+    "EN": "Discord",
+    "RU": "Дискорд"
+  },
+  "header_text_1": {
+    "EN": "Want to contribute to the project's growth?",
+    "RU": "Хочешь помочь проекту развиваться?"
+  },
+  "header_text_2": {
+    "EN": "-> Join our Discord community!",
+    "RU": "Заходи в наше Дискорд сообщество!"
+  },
+  "close_dota_text": {
+    "EN": "Please close Dota 2 first and then patch."
+  },
+  "installing_text": {
+    "EN": "-> Installing {folder}}"
+  },
+  "downloaded_open_dota_guides": {
+    "EN": "-> Downloaded latest OpenDotaGuides guides."
+  },
+  "replaced_open_dota_guides": {
+    "EN": "-> Replaced default guides with OpenDotaGuides guides."
+  },
+  "failed_downloading_open_dota_guides": {
+    "EN": "-> Failed to download latest OpenDotaGuides guides."
+  },
+  "decompiling_text": {
+    "EN": "-> Decompiling"
+  },
+  "patching_text": {
+    "EN": "-> Patching"
+  },
+  "compiling_text": {
+    "EN": "-> Compiling"
+  },
+  "done_text": {
+    "EN": "-> Done!"
+  },
+  "launch_option_text": {
+    "EN": "Remember to add '-language minify' to dota2 launch options"
+  },
+  "help_text": {
+    "EN": "Click Help button below for instructions"
+  },
+  "patching_failed_text": {
+    "EN": "Patching failed."
+  },
+  "check_logs_text": {
+    "EN": "Check 'logs\\crashlog.txt' for more info."
+  }
+}

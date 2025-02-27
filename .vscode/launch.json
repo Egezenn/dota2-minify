@@ -2,10 +2,17 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "Python Debugger: gui.pyw",
+      "name": "tkinter",
       "type": "debugpy",
       "request": "launch",
       "program": "gui.pyw",
+      "console": "integratedTerminal"
+    },
+    {
+      "name": "imgui",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "imgui.py",
       "console": "integratedTerminal"
     }
   ]

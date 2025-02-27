@@ -51,6 +51,7 @@ mods_dir = os.path.join(minify_dir, "mods")
 # bin
 blank_files_dir = os.path.join(bin_dir, "blank-files")
 maps_dir = os.path.join(bin_dir, "maps")
+localization_file_dir = os.path.join(bin_dir, "localization.json")
 
 # dota2 paths
 content_dir = os.path.join(
