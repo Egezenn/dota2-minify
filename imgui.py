@@ -31,6 +31,9 @@ checkboxes = {}
 blacklist_dictionary = {}
 styling_dictionary = {}
 
+blue = (0, 230, 230)
+banner_pad_y = 16
+
 # Debug_text
 text = r"""-> Installing Auto Accept Match"""
 
@@ -84,13 +87,14 @@ def change_localization():
             if ui.get_item_info(key).get("type") == "mvAppItemType::mvButton":
                 if locale in localization_data[key]:
                     ui.configure_item(key, label=value[locale])
-                else:
-                    ui.configure_item(key, label=value["en"])
+                else:  # default to english if the line isn't available on selected locale
+                    ui.configure_item(key, label=value["EN"])
+
             if ui.get_item_info(key).get("type") == "mvAppItemType::mvText":
                 if locale in localization_data[key]:
                     ui.configure_item(key, default_value=value[locale])
                 else:
-                    ui.configure_item(key, default_value=value["en"])
+                    ui.configure_item(key, default_value=value["EN"])
         except:  # find out later what this is
             pass  # <built-in function get_item_info> returned a result with an exception set
 
@@ -111,7 +115,7 @@ def hover():
 
 def add_text_to_terminal():
     global text
-    ui.add_text(text, parent="terminal_window", wrap=400, color=(0, 230, 230))
+    ui.add_text(text, parent="terminal_window", wrap=400, color=blue)
     time.sleep(0.02)
     ui.set_y_scroll("terminal_window", ui.get_y_scroll_max("terminal_window"))
 
@@ -155,7 +159,7 @@ def patcher():
             tag="close_dota_text",
             parent="terminal_window",
             wrap=400,
-            color=(0, 230, 230),
+            color=blue,
         )
         return
 
@@ -200,7 +204,7 @@ def patcher():
                             tag="installing_text",
                             parent="terminal_window",
                             wrap=400,
-                            color=(0, 230, 230),
+                            color=blue,
                         )  ###???  #print("→ Installing " + folder)
 
                         if (
@@ -233,7 +237,7 @@ def patcher():
                                     tag="downloaded_open_dota_guides",
                                     parent="terminal_window",
                                     wrap=400,
-                                    color=(0, 230, 230),
+                                    color=blue,
                                 )
                                 os.makedirs(
                                     os.path.join(mpaths.itembuilds_dir, "bkup"),
@@ -267,7 +271,7 @@ def patcher():
                                     tag="replaced_open_dota_guides",
                                     parent="terminal_window",
                                     wrap=400,
-                                    color=(0, 230, 230),
+                                    color=blue,
                                 )
                                 if os.path.exists(zip_path):
                                     os.remove(zip_path)
@@ -277,7 +281,7 @@ def patcher():
                                     tag="failed_downloading_open_dota_guides",
                                     parent="terminal_window",
                                     wrap=400,
-                                    color=(0, 230, 230),
+                                    color=blue,
                                 )
                         # ----------------------------------- files ---------------------------------- #
                         # if files_total == 0:    pass
@@ -438,7 +442,7 @@ def patcher():
             tag="decompiling_text",
             parent="terminal_window",
             wrap=400,
-            color=(0, 230, 230),
+            color=blue,
         )
         with open(os.path.join(mpaths.logs_dir, "Source2Viewer-CLI.txt"), "w") as file:
             subprocess.run(
@@ -461,7 +465,7 @@ def patcher():
             tag="patching_text",
             parent="terminal_window",
             wrap=400,
-            color=(0, 230, 230),
+            color=blue,
         )
         for key, value in list(styling_dictionary.items()):
             construct2 = Path(value[0], value[1])
@@ -492,7 +496,7 @@ def patcher():
                     tag="compiling_text",
                     parent="terminal_window",
                     wrap=400,
-                    color=(0, 230, 230),
+                    color=blue,
                 )
                 sp_compiler = subprocess.run(
                     [
@@ -525,14 +529,14 @@ def patcher():
             tag="done_text",
             parent="terminal_window",
             wrap=400,
-            color=(0, 230, 230),
+            color=blue,
         )
 
         ui.add_text(
             default_value="-------------------------------------------------------",
             parent="terminal_window",
             wrap=400,
-            color=(0, 230, 230),
+            color=blue,
         )
 
         ui.add_text(
@@ -540,7 +544,7 @@ def patcher():
             tag="launch_option_text",
             parent="terminal_window",
             wrap=400,
-            color=(0, 230, 230),
+            color=blue,
         )
 
         ui.add_text(
@@ -548,7 +552,7 @@ def patcher():
             tag="help_text",
             parent="terminal_window",
             wrap=400,
-            color=(0, 230, 230),
+            color=blue,
         )
         helper.handleWarnings(mpaths.logs_dir)
 
@@ -567,7 +571,7 @@ def patcher():
             tag="patching_failed_text",
             parent="terminal_window",
             wrap=400,
-            color=(0, 230, 230),
+            color=blue,
         )
 
         ui.add_text(
@@ -575,14 +579,14 @@ def patcher():
             tag="check_logs_text",
             parent="terminal_window",
             wrap=400,
-            color=(0, 230, 230),
+            color=blue,
         )
 
         ui.add_text(
             default_value="-------------------------------------------------------",
             parent="terminal_window",
             wrap=400,
-            color=(0, 230, 230),
+            color=blue,
         )
 
 
@@ -656,42 +660,42 @@ with ui.window(tag="primary_window", no_close=True, no_title_bar=True):
      \ \_\ \ \_\  \ \_\  \ \_\\"\_\  \ \_\  \ \_\_/  \/\_____\
       \/_/  \/_/   \/_/   \/_/ \/_/   \/_/   \/_/     \/_____/
     ----------------------------------------------------------""",
-                color=(0, 230, 230),
+                color=blue,
             )
             ui.add_text(
                 "Want to contribute to the project's growth?",
                 tag="header_text_1",
-                color=(0, 230, 230),
-                pos=(124, 95),
+                color=blue,
+                pos=(124, 15 + banner_pad_y * 5),
             )
             ui.add_text(
                 "-> Join our Discord community!",
                 tag="header_text_2",
-                color=(0, 230, 230),
-                pos=(123, 111),
+                color=blue,
+                pos=(123, 15 + banner_pad_y * 6),
             )
             ui.add_text(
                 "-> Share Minify with your friends and online groups",
                 tag="header_text_3",
-                color=(0, 230, 230),
-                pos=(123, 127),
+                color=blue,
+                pos=(123, 15 + banner_pad_y * 7),
             )
             ui.add_text(
                 "-> Star the project on GitHub",
                 tag="header_text_4",
-                color=(0, 230, 230),
-                pos=(123, 143),
+                color=blue,
+                pos=(123, 15 + banner_pad_y * 8),
             )
             ui.add_text(
                 "-> Create and maintain mods for this project",
                 tag="header_text_5",
-                color=(0, 230, 230),
-                pos=(123, 159),
+                color=blue,
+                pos=(123, 15 + banner_pad_y * 9),
             )
             ui.add_text(
                 "----------------------------------------------------------",
-                color=(0, 230, 230),
-                pos=(123, 170),
+                color=blue,
+                pos=(123, 15 + banner_pad_y * 10),
             )
     # Creating log terminal
     with ui.group():
