@@ -110,7 +110,22 @@ def unlock_interaction():
 
 
 def hover():
-    print("hovered")
+    print("hovered") ##Debug
+
+
+def delete_update_popup():
+    ui.configure_item("update_popup", show=False)
+    ui.delete_item("update_popup")
+
+
+def delete_uninstall_popup():
+    ui.configure_item("uninstall_popup", show=False)
+    ui.delete_item("uninstall_popup")
+
+
+def open_github_link_and_close_minify():
+    open_github_link()
+    close()
 
 
 def add_text_to_terminal():
@@ -143,13 +158,146 @@ def close_mod_menu():
     ui.configure_item("mod_menu", show=False)
 
 
+def open_discord_link():
+    helper.urlDispatcher("https://discord.com/invite/2YDnqpbcKM")
+
+
+def open_github_link():
+    helper.urlDispatcher("https://github.com/Egezenn/dota2-minify/releases/latest")
+
+
 def close():
     ui.stop_dearpygui()
 
 
-# ---------------------------------------------------------------------------- #
-#                                     Main                                     #
-# ---------------------------------------------------------------------------- #
+def unistall_popup():
+    ui.add_window(label="Uninstall",
+                  modal=True, 
+                  no_move=True, 
+                  tag="uninstall_popup", 
+                  show=True,
+                  no_collapse=True,
+                  no_close=True,
+                  no_saved_settings=True
+                )
+    ui.add_text(default_value="Remove all mods?",
+                parent="uninstall_popup",
+                color=blue)
+    with ui.group(parent="uninstall_popup", horizontal=True):
+        ui.add_button(label="Confirm", tag="confirm_button", callback=uninstaller)
+        ui.add_button(label="Cancel", tag="cancel_button", callback=delete_uninstall_popup)
+
+def create_checkboxes():
+    for index in range(len(mpaths.mods_folders)):
+        name = mpaths.mods_folders[index]
+        ui.add_group(parent="mod_menu", tag=f"{name}_group_tag", horizontal=True, width=300)
+        ui.add_checkbox(
+            parent=f"{name}_group_tag",
+            label=name,
+            tag=f"{name}_checkbox_tag",
+            default_value=True,
+        )
+        mod_path = os.path.join(mpaths.mods_dir, name)
+        notes_txt = os.path.join(mod_path, "notes.txt")
+        ui.add_button(
+            parent=f"{name}_group_tag",
+            small=True,
+            indent=200,
+            tag=f"{name}_details_tag",
+            label="Details",
+            #callback=OPEN NOTES TODO) 
+        )
+        current_box = f"{name}_checkbox_tag"
+        checkboxes[current_box] = (name)
+
+
+def update_popup_show():
+    ui.add_window(label=f"Update {response.text} is now available!",
+                    modal=True, 
+                    no_move=True, 
+                    tag="update_popup", 
+                    show=True,
+                    no_collapse=True,
+                    no_close=True,
+                    no_saved_settings=True,
+                    no_resize=True,
+                    width=309,
+                    height=100
+                    )
+    print(f"{ui.get_viewport_height()}, {ui.get_viewport_width()}")
+    print(f"{ui.get_item_height("update_popup")}, {ui.get_item_width("update_popup")}")
+    ui.configure_item("update_popup", 
+                      pos=(ui.get_viewport_width()/2-ui.get_item_width("update_popup")/2, ui.get_viewport_height()/2-ui.get_item_height("update_popup")/2)
+                      )
+    ui.add_text(default_value="Would you like to go to the download page?",
+                parent="update_popup",
+                color=blue)
+    with ui.group(parent="update_popup", 
+                  tag="update_popup_button_group",
+                  horizontal=True,
+                  horizontal_spacing=10,
+                  indent=42
+                  ):
+        ui.add_button(label="Yes", 
+                        width=100,
+                        height=20, 
+                        callback=open_github_link_and_close_minify,
+                        tag="update_popup_yes_button",
+                        )
+        ui.add_button(label="No", 
+                        width=100,
+                        height=20, 
+                        callback=delete_update_popup,
+                        tag="update_popup_no_button"
+                        )
+        
+
+
+def uninstaller():
+    delete_uninstall_popup()
+    time.sleep(0.01)
+    lock_interaction()
+    # remove pak01_dir.vpk if it exists
+    vpkPath = os.path.join(mpaths.dota_minify, "pak01_dir.vpk")
+    if os.path.exists(vpkPath):
+        os.remove(vpkPath)
+
+    # remove dota.vpk if it exists
+    mapPath = os.path.join(mpaths.dota_minify_maps, "dota.vpk")
+    if os.path.exists(mapPath):
+        os.remove(mapPath)
+
+    try:
+        with open(
+            os.path.join(mpaths.itembuilds_dir, "default_antimage.txt"), "r"
+        ) as file:
+            lines = file.readlines()
+        if len(lines) >= 3:
+            if "OpenDotaGuides" in lines[2]:
+                for name in os.listdir(mpaths.itembuilds_dir):
+                    if name != "bkup":
+                        os.remove(os.path.join(mpaths.itembuilds_dir, name))
+                print(os.path.join(mpaths.itembuilds_dir, "bkup"))
+                for name in os.listdir(
+                    os.path.join(mpaths.itembuilds_dir, "bkup")
+                ):
+                    os.rename(
+                        os.path.join(mpaths.itembuilds_dir, "bkup", name),
+                        os.path.join(mpaths.itembuilds_dir, name),
+                    )
+    except FileNotFoundError:
+        helper.warnings.append(
+            "Unable to recover backed up default guides or the itembuilds directory is empty, verify files to get the default guides back"
+        )   
+    unlock_interaction() 
+    ui.add_text(
+                "All Minify mods have been removed.",
+                tag="uninstaller_text",
+                color=blue,
+                parent="terminal_window"
+            )
+
+
 def patcher():
     global patching
 
@@ -634,7 +782,7 @@ with ui.window(tag="primary_window", no_close=True, no_title_bar=True):
                 tag="button_patch",
                 label="Patch",
                 width=100,
-                callback=add_text_to_terminal,
+                callback=patcher,
             )
             ui.add_button(
                 tag="button_select_mods",
@@ -649,9 +797,23 @@ with ui.window(tag="primary_window", no_close=True, no_title_bar=True):
                 width=100,
                 callback=change_localization,
             )
-            ui.add_button(tag="button_discord", label="Discord", width=100)
-            ui.add_button(tag="button_latest", label="Latest", width=100)
-            ui.add_button(tag="exit_button", label="Exit", width=100, callback=close)
+            ui.add_button(tag="button_discord",
+                           label="Discord", 
+                           width=100, 
+                           callback=open_discord_link)
+            ui.add_button(tag="button_latest", 
+                          label="Latest", 
+                          width=100, 
+                          callback=open_github_link)
+            ui.add_button(tag="uninstall_button", 
+                          label="Uninstall", 
+                          width=100, 
+                          callback=unistall_popup
+                          )
+            ui.add_button(tag="exit_button", 
+                          label="Exit", 
+                          width=100, 
+                          callback=close)
         with ui.group(pos=(95, 15)):
             ui.add_text(
                 r"""     __    __     __     __   __     __     ______   __  __
@@ -731,68 +893,21 @@ ui.add_window(
     show=False,
     no_resize=True,
 )
-
-for index in range(len(mpaths.mods_folders)):
-    name = mpaths.mods_folders[index]
-    ui.add_group(parent="mod_menu", tag=f"{name}_group_tag", horizontal=True, width=300)
-    ui.add_checkbox(
-        parent=f"{name}_group_tag",
-        label=name,
-        tag=f"{name}_checkbox_tag",
-        default_value=True,
-    )
-    ui.add_button(
-        parent=f"{name}_group_tag",
-        small=True,
-        indent=200,
-        tag=f"{name}_details_tag",
-        label="Details",
-    )
-    # current_var = tk.IntVar()
-    # current_box = tk.Checkbutton(
-    # checkboxesFrame,
-    # text=name,
-    # variable=current_var,
-    # takefocus=False,
-    # cursor="hand2",
-    # command=setupButtonState,
-    # )
-# current_box.var = current_var
-# current_box.grid(row=index, column=0, sticky="w")
-# checkboxes[current_box] = (
-# name
-# )
-# Bind mouse enter and leave events to change the text color
-# current_box.bind("<Enter>", change_color_to_red)
-# current_box.bind("<Leave>", revert_color)
-
-# details label
-# mod_path = os.path.join(mpaths.mods_dir, name)
-# notes_txt = os.path.join(mod_path, "notes.txt")
-# if os.path.exists(notes_txt) and os.stat(notes_txt).st_size != 0:
-# modLabel = tk.Label(
-# checkboxesFrame,
-# font=("Poplar Std", 7),
-# fg="#0000EE",
-# cursor="hand2",
-# )
-# modLabel.config(text="details")
-# modLabel.bind(
-# "<Enter>",
-# partial(helper.modLabelColorConfig, modLabel, "#000010"),
-# )
-# modLabel.bind(
-# "<Leave>",
-# partial(helper.modLabelColorConfig, modLabel, "#0000EE"),
-# )
-# modLabel.bind(
-# "<Button-1>",
-# partial(helper.modInfo, modLabel, name, mod_path),
-# )
-# modLabel.grid(row=index, column=1, sticky="w")
-
-
 ui.add_button(parent="mod_menu", label="X", callback=close_mod_menu)
+
+create_checkboxes()
+
+
+if version is not None:
+    response = requests.get(
+        "https://raw.githubusercontent.com/Egezenn/dota2-minify/refs/heads/stable/version"
+    )
+    if response.status_code == 200:
+        if version == response.text:
+            ui.configure_item("button_latest", enabled=False)
+        else:
+            ui.configure_item("button_latest", enabled=True)
+            update_popup_show()
 
 
 # DearPyGyi Setup
