@@ -821,6 +821,7 @@ def version_check():
 
 def app_start():
     get_available_localizations()
+    create_ui()
     setupSystem()
     version_check()
     create_checkboxes()
@@ -854,126 +855,128 @@ ui.create_viewport(
 
 
 # Creating main window of GUI and UI elements
-with ui.window(tag="primary_window", no_close=True, no_title_bar=True):
-    ui.add_child_window(tag="top_bar", pos=(-5, -5), height=25, width=543)
-    with ui.group(horizontal=True):
-        with ui.group(pos=(6, 30)):
-            ui.add_button(
-                tag="button_patch",
-                label="Patch",
-                width=100,
-                callback=patcher,
+def create_ui():
+    with ui.window(tag="primary_window", no_close=True, no_title_bar=True):
+        ui.set_primary_window("primary_window", True)
+        ui.add_child_window(tag="top_bar", pos=(-5, -5), height=25, width=543)
+        with ui.group(horizontal=True):
+            with ui.group(pos=(6, 30)):
+                ui.add_button(
+                    tag="button_patch",
+                    label="Patch",
+                    width=100,
+                    callback=patcher,
+                )
+                ui.add_button(
+                    tag="button_select_mods",
+                    label="Select Mods",
+                    width=100,
+                    callback=open_mod_menu,
+                )
+                ui.add_combo(
+                    tag="lang_select",
+                    items=(localizations),
+                    default_value="EN",
+                    width=100,
+                    callback=change_localization,
+                )
+                ui.add_button(tag="button_discord",
+                            label="Discord", 
+                            width=100, 
+                            callback=open_discord_link)
+                ui.add_button(tag="button_latest", 
+                            label="Latest", 
+                            width=100, 
+                            callback=open_github_link)
+                ui.add_button(tag="uninstall_button", 
+                            label="Uninstall", 
+                            width=100, 
+                            callback=unistall_popup
+                            )
+                ui.add_button(tag="exit_button", 
+                            label="Exit", 
+                            width=100, 
+                            callback=close)
+            with ui.group(pos=(67, 0)):
+                ui.add_text(r"""
+         __    __     __     __   __     __     ______   __  __
+        /\ "-./  \   /\ \   /\ "-.\ \   /\ \   /\  ___\ /\ \_\ \  
+        \ \ \-./\ \  \ \ \  \ \ \-.  \  \ \ \  \ \  __\ \ \____ \ 
+         \ \_\ \ \_\  \ \_\  \ \_\\"\_\  \ \_\  \ \_\_/  \/\_____\
+          \/_/  \/_/   \/_/   \/_/ \/_/   \/_/   \/_/     \/_____/
+        ----------------------------------------------------------""",
+                    color=blue,
+                )
+                ui.add_text(
+                    "Want to contribute to the project's growth?",
+                    tag="header_text_1",
+                    color=blue,
+                    pos=(124, 15 + banner_pad_y * 5),
+                )
+                ui.add_text(
+                    "-> Join our Discord community!",
+                    tag="header_text_2",
+                    color=blue,
+                    pos=(123, 15 + banner_pad_y * 6),
+                )
+                ui.add_text(
+                    "-> Share Minify with your friends and online groups",
+                    tag="header_text_3",
+                    color=blue,
+                    pos=(123, 15 + banner_pad_y * 7),
+                )
+                ui.add_text(
+                    "-> Star the project on GitHub",
+                    tag="header_text_4",
+                    color=blue,
+                    pos=(123, 15 + banner_pad_y * 8),
+                )
+                ui.add_text(
+                    "-> Create and maintain mods for this project",
+                    tag="header_text_5",
+                    color=blue,
+                    pos=(123, 15 + banner_pad_y * 9),
+                )
+                ui.add_text(
+                    "----------------------------------------------------------",
+                    color=blue,
+                    pos=(123, 15 + banner_pad_y * 10),
+                )
+        # Creating log terminal
+        with ui.group():
+            ui.add_window(
+                tag="terminal_window",
+                no_scrollbar=False,
+                no_title_bar=True,
+                no_resize=True,
+                no_move=True,
+                no_collapse=True,
+                modal=False,
+                no_close=True,
+                no_saved_settings=True,
+                show=True,
+                height=210,
+                width=538,
+                pos=(0, 191),
             )
-            ui.add_button(
-                tag="button_select_mods",
-                label="Select Mods",
-                width=100,
-                callback=open_mod_menu,
-            )
-            ui.add_combo(
-                tag="lang_select",
-                items=(localizations),
-                default_value="EN",
-                width=100,
-                callback=change_localization,
-            )
-            ui.add_button(tag="button_discord",
-                           label="Discord", 
-                           width=100, 
-                           callback=open_discord_link)
-            ui.add_button(tag="button_latest", 
-                          label="Latest", 
-                          width=100, 
-                          callback=open_github_link)
-            ui.add_button(tag="uninstall_button", 
-                          label="Uninstall", 
-                          width=100, 
-                          callback=unistall_popup
-                          )
-            ui.add_button(tag="exit_button", 
-                          label="Exit", 
-                          width=100, 
-                          callback=close)
-        with ui.group(pos=(95, 15)):
-            ui.add_text(
-                r"""     __    __     __     __   __     __     ______   __  __
-    /\ "-./  \   /\ \   /\ "-.\ \   /\ \   /\  ___\ /\ \_\ \  
-    \ \ \-./\ \  \ \ \  \ \ \-.  \  \ \ \  \ \  __\ \ \____ \ 
-     \ \_\ \ \_\  \ \_\  \ \_\\"\_\  \ \_\  \ \_\_/  \/\_____\
-      \/_/  \/_/   \/_/   \/_/ \/_/   \/_/   \/_/     \/_____/
-    ----------------------------------------------------------""",
-                color=blue,
-            )
-            ui.add_text(
-                "Want to contribute to the project's growth?",
-                tag="header_text_1",
-                color=blue,
-                pos=(124, 15 + banner_pad_y * 5),
-            )
-            ui.add_text(
-                "-> Join our Discord community!",
-                tag="header_text_2",
-                color=blue,
-                pos=(123, 15 + banner_pad_y * 6),
-            )
-            ui.add_text(
-                "-> Share Minify with your friends and online groups",
-                tag="header_text_3",
-                color=blue,
-                pos=(123, 15 + banner_pad_y * 7),
-            )
-            ui.add_text(
-                "-> Star the project on GitHub",
-                tag="header_text_4",
-                color=blue,
-                pos=(123, 15 + banner_pad_y * 8),
-            )
-            ui.add_text(
-                "-> Create and maintain mods for this project",
-                tag="header_text_5",
-                color=blue,
-                pos=(123, 15 + banner_pad_y * 9),
-            )
-            ui.add_text(
-                "----------------------------------------------------------",
-                color=blue,
-                pos=(123, 15 + banner_pad_y * 10),
-            )
-    # Creating log terminal
-    with ui.group():
-        ui.add_window(
-            tag="terminal_window",
-            no_scrollbar=False,
-            no_title_bar=True,
-            no_resize=True,
-            no_move=True,
-            no_collapse=True,
-            modal=False,
-            no_close=True,
-            no_saved_settings=True,
-            show=True,
-            height=210,
-            width=538,
-            pos=(0, 191),
-        )
 
 
-# Creating mod selection menu as popup/modal
-ui.add_window(
-    modal=True,
-    tag="mod_menu",
-    menubar=False,
-    no_title_bar=True,
-    no_move=True,
-    no_collapse=True,
-    no_close=True,
-    no_open_over_existing_popup=True,
-    height=394,
-    width=532,
-    show=False,
-    no_resize=True,
-)
-ui.add_button(parent="mod_menu", label="X", callback=close_mod_menu)
+    # Creating mod selection menu as popup/modal
+    ui.add_window(
+        modal=True,
+        tag="mod_menu",
+        menubar=False,
+        no_title_bar=True,
+        no_move=True,
+        no_collapse=True,
+        no_close=True,
+        no_open_over_existing_popup=True,
+        height=394,
+        width=532,
+        show=False,
+        no_resize=True,
+    )
+    ui.add_button(parent="mod_menu", label="X", callback=close_mod_menu)
 
 ui.set_frame_callback(1, callback=app_start)
 
@@ -981,6 +984,5 @@ ui.set_frame_callback(1, callback=app_start)
 # DearPyGyi Setup
 ui.setup_dearpygui()
 ui.show_viewport()
-ui.set_primary_window("primary_window", True)
 ui.start_dearpygui()
 ui.destroy_context()
