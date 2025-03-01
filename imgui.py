@@ -17,9 +17,12 @@ import psutil
 import requests
 import vpk
 
-import helper
+import helper_n as helper
 import mpaths
-import validatefiles
+import validatefiles_n as validatefiles
+
+# Setting up context for GUI
+ui.create_context()
 
 # Variables
 
@@ -30,6 +33,7 @@ patching = False
 checkboxes = {}
 blacklist_dictionary = {}
 styling_dictionary = {}
+response = {}
 
 blue = (0, 230, 230)
 banner_pad_y = 16
@@ -51,6 +55,8 @@ class Path:
     def __init__(self, path, style):
         self.path = Extension(path)
         self.style = style
+        print(self.path, self.style)
+
 
 
 class TextRedirector(object):
@@ -195,7 +201,8 @@ def create_checkboxes():
             parent=f"{name}_group_tag",
             label=name,
             tag=f"{name}_checkbox_tag",
-            default_value=True,
+            default_value=False,
+            callback=setupButtonState
         )
         mod_path = os.path.join(mpaths.mods_dir, name)
         notes_txt = os.path.join(mod_path, "notes.txt")
@@ -209,6 +216,7 @@ def create_checkboxes():
         )
         current_box = f"{name}_checkbox_tag"
         checkboxes[current_box] = (name)
+        #print(checkboxes)
 
 
 def update_popup_show():
@@ -221,11 +229,9 @@ def update_popup_show():
                     no_close=True,
                     no_saved_settings=True,
                     no_resize=True,
-                    width=309,
+                    width=310,
                     height=100
                     )
-    print(f"{ui.get_viewport_height()}, {ui.get_viewport_width()}")
-    print(f"{ui.get_item_height("update_popup")}, {ui.get_item_width("update_popup")}")
     ui.configure_item("update_popup", 
                       pos=(ui.get_viewport_width()/2-ui.get_item_width("update_popup")/2, ui.get_viewport_height()/2-ui.get_item_height("update_popup")/2)
                       )
@@ -251,7 +257,64 @@ def update_popup_show():
                         tag="update_popup_no_button"
                         )
         
+def setupSystem():
+        os.makedirs("logs", exist_ok=True)
+        x = validatefiles.Requirements(checkboxes)
+        public_methods = [
+            method
+            for method in dir(x)
+            if callable(getattr(x, method))
+            if not method.startswith("_")
+        ]  # private methods start with _
+        try:
+            if not (
+                os.path.exists(os.path.join(mpaths.minify_dir, "Source2Viewer-CLI.exe"))
+                or os.path.exists(os.path.join(mpaths.minify_dir, "libSkiaSharp.dll"))
+                or os.path.exists(os.path.join(mpaths.minify_dir, "TinyEXR.Native.dll"))
+            ):
+                if platform.system() == "Windows":
+                    ui.add_text(default_value="Downloading Source2Viewer-CLI...", parent="terminal_window")
+                    zip_name = "cli-windows-x64.zip"
+                    zip_path = os.path.join(mpaths.minify_dir, zip_name)
+                    # need to update regularly, can't do latest and call it a day
+                    response = requests.get(
+                        "https://github.com/ValveResourceFormat/ValveResourceFormat/releases/latest/download/cli-windows-x64.zip"
+                    )
+                    if response.status_code == 200:
+                        with open(zip_path, "wb") as file:
+                            file.write(response.content)
+                        ui.add_text(default_value=f"-> Downloaded {zip_name}", parent="terminal_window", tag="downloaded_text")
+                        shutil.unpack_archive(zip_path, mpaths.minify_dir, "zip")
+                        os.remove(zip_path)
+                        ui.add_text(default_value=f"-> Extracted {zip_name}.", parent="terminal_window", tag="extracted_text")
+                else:
+                    ui.add_text(
+                        default_value="Error: Instructions to download Source2Viewer binaries for your system is not available yet, click Help for instructions.",
+                        parent="terminal_window", 
+                        tag="error_cli_download_text")
+            for method in public_methods:
+                getattr(x, method)()
+                if x.toggle_flag == True:
+                    lock_interaction()
+                    break
+        except Exception:
+            with open(os.path.join(mpaths.logs_dir, "crashlog.txt"), "w") as file:
+                file.write(traceback.format_exc())
+                lock_interaction()
+                ui.add_text(default_value="Failed to start!", parent="terminal_window", tag="failed_to_start_text")
+                ui.add_text(default_value="Check 'logs\\crashlog.txt' for more info.", parent="terminal_window", tag="check_logs_text")
 
+def setupButtonState():
+        for box in checkboxes:
+            if ui.get_value(box) == True:
+                ui.configure_item("button_patch", enabled=True)
+                #self.patchBtn.config(state="normal", cursor="hand2")
+                break
+            else:
+                ui.configure_item("button_patch", enabled=False) #Disabled theme? TODO
+                #self.patchBtn.config(state="disabled", cursor="")
+        if helper.workshop_installed == False:
+            helper.disableWorkshopMods(mpaths.mods_dir, mpaths.mods_folders, checkboxes)
 
 def uninstaller():
     delete_uninstall_popup()
@@ -344,16 +407,14 @@ def patcher():
 
                 for box in checkboxes:
                     if (
-                        box.var.get() == 1 and checkboxes[box] == folder
+                        ui.get_value(box) == True and checkboxes[box] == folder
                     ):  # step into folders that have ticked checkboxes only
-
                         ui.add_text(
                             default_value=f"-> Installing {folder}",
-                            tag="installing_text",
+                            tag=f"installing_{folder}_text",
                             parent="terminal_window",
                             wrap=400,
-                            color=blue,
-                        )  ###???  #print("→ Installing " + folder)
+                            color=blue)  ###???  #print("→ Installing " + folder)
 
                         if (
                             checkboxes[box] == "Dark Terrain"
@@ -382,10 +443,10 @@ def patcher():
                                     file.write(response.content)
                                 ui.add_text(
                                     default_value="-> Downloaded latest OpenDotaGuides guides.",
-                                    tag="downloaded_open_dota_guides",
+                                    tag="downloaded_open_dota_guides_text",
                                     parent="terminal_window",
                                     wrap=400,
-                                    color=blue,
+                                    color=blue
                                 )
                                 os.makedirs(
                                     os.path.join(mpaths.itembuilds_dir, "bkup"),
@@ -416,20 +477,21 @@ def patcher():
                                 os.remove(zip_path)
                                 ui.add_text(
                                     default_value="-> Replaced default guides with OpenDotaGuides guides.",
-                                    tag="replaced_open_dota_guides",
+                                    tag="replaced_open_dota_guides_text",
                                     parent="terminal_window",
                                     wrap=400,
-                                    color=blue,
+                                    color=blue
                                 )
                                 if os.path.exists(zip_path):
                                     os.remove(zip_path)
                             else:
+                                print("else")
                                 ui.add_text(
                                     default_value="-> Failed to download latest OpenDotaGuides guides.",
                                     tag="failed_downloading_open_dota_guides",
                                     parent="terminal_window",
                                     wrap=400,
-                                    color=blue,
+                                    color=blue
                                 )
                         # ----------------------------------- files ---------------------------------- #
                         # if files_total == 0:    pass
@@ -490,7 +552,9 @@ def patcher():
                                 # blacklist_dictionary["blacklist-key{}".format(index+1)] = path, extension
 
                                 if not os.path.exists(
-                                    os.path.join(mpaths.game_dir, os.path.dirname(path))
+                                    os.path.join(
+                                        mpaths.game_dir, os.path.dirname(path)
+                                    )
                                 ):
                                     os.makedirs(
                                         os.path.join(
@@ -503,7 +567,9 @@ def patcher():
                                         os.path.join(
                                             mpaths.blank_files_dir, "blank{}"
                                         ).format(extension),
-                                        os.path.join(mpaths.game_dir, path + extension),
+                                        os.path.join(
+                                            mpaths.game_dir, path + extension
+                                        ),
                                     )
                                 except FileNotFoundError as exception:
                                     helper.warnings.append(
@@ -590,9 +656,10 @@ def patcher():
             tag="decompiling_text",
             parent="terminal_window",
             wrap=400,
-            color=blue,
+            color=blue
         )
-        with open(os.path.join(mpaths.logs_dir, "Source2Viewer-CLI.txt"), "w") as file:
+        with open(os.path.join(mpaths.logs_dir, "Source2Viewer-CLI.txt"), "w"
+        ) as file:
             subprocess.run(
                 [
                     mpaths.minify_dir + "/Source2Viewer-CLI.exe",
@@ -613,8 +680,9 @@ def patcher():
             tag="patching_text",
             parent="terminal_window",
             wrap=400,
-            color=blue,
-        )
+            color=blue)
+
+        
         for key, value in list(styling_dictionary.items()):
             construct2 = Path(value[0], value[1])
 
@@ -635,6 +703,7 @@ def patcher():
         # ---------------------------------- step 5 ---------------------------------- #
         # -------------- Compile content to game with resource compiler -------------- #
         # ---------------------------------------------------------------------------- #
+        print(helper.workshop_installed)
         if helper.workshop_installed == True:
             with open(
                 os.path.join(mpaths.logs_dir, "resourcecompiler.txt"), "wb"
@@ -644,7 +713,7 @@ def patcher():
                     tag="compiling_text",
                     parent="terminal_window",
                     wrap=400,
-                    color=blue,
+                    color=blue
                 )
                 sp_compiler = subprocess.run(
                     [
@@ -702,6 +771,7 @@ def patcher():
             wrap=400,
             color=blue,
         )
+
         helper.handleWarnings(mpaths.logs_dir)
 
     except Exception:
@@ -712,8 +782,6 @@ def patcher():
 
         unlock_interaction()
 
-        ui.add_text(default_value="", parent="terminal_window")
-
         ui.add_text(
             default_value="Patching failed.",
             tag="patching_failed_text",
@@ -723,7 +791,7 @@ def patcher():
         )
 
         ui.add_text(
-            default_value="Check 'logs\\crashlog.txt' for more info.",
+            default_value="""Check 'logs\\crashlog.txt' for more info.""",
             tag="check_logs_text",
             parent="terminal_window",
             wrap=400,
@@ -737,14 +805,26 @@ def patcher():
             color=blue,
         )
 
-
+def version_check():
+    global response
+    if version is not None:
+        response = requests.get(
+            "https://raw.githubusercontent.com/Egezenn/dota2-minify/refs/heads/stable/version"
+        )
+        if response.status_code == 200:
+            if version == response.text:
+                ui.configure_item("button_latest", enabled=False)
+            else:
+                ui.configure_item("button_latest", enabled=True)
+                update_popup_show()
 # Checking avalailable localization files and appending them to combo
-get_available_localizations()
 
-
-# Setting up context for GUI
-ui.create_context()
-
+def app_start():
+    get_available_localizations()
+    setupSystem()
+    version_check()
+    create_checkboxes()
+    setupButtonState()
 
 # Adding font to the ui registry
 with ui.font_registry():
@@ -895,19 +975,7 @@ ui.add_window(
 )
 ui.add_button(parent="mod_menu", label="X", callback=close_mod_menu)
 
-create_checkboxes()
-
-
-if version is not None:
-    response = requests.get(
-        "https://raw.githubusercontent.com/Egezenn/dota2-minify/refs/heads/stable/version"
-    )
-    if response.status_code == 200:
-        if version == response.text:
-            ui.configure_item("button_latest", enabled=False)
-        else:
-            ui.configure_item("button_latest", enabled=True)
-            update_popup_show()
+ui.set_frame_callback(1, callback=app_start)
 
 
 # DearPyGyi Setup
