@@ -1,11 +1,10 @@
 import os
 import shutil
-import tkinter as tk
 import urllib.error
 import webbrowser
 from urllib.request import urlopen
-import dearpygui.dearpygui as ui
 
+import dearpygui.dearpygui as ui
 import vpk
 
 workshop_installed = False
@@ -26,11 +25,12 @@ def handleWarnings(logs_dir):
         with open(os.path.join(logs_dir, "warnings.txt"), "w") as file:
             for line in warnings:
                 file.write(line + "\n")
-            #print(f"{len(warnings)} error occured. Check logs\\warnings.txt for details.")
-        ui.add_text(default_value="Minify encountered errors. Check Minify\\logs\\warnings.txt for details.",
-                    parent="terminal_window",
-                    color=(0, 203,230, 255)
-                    )
+            # print(f"{len(warnings)} error occured. Check logs\\warnings.txt for details.")
+        ui.add_text(
+            default_value="Minify encountered errors. Check Minify\\logs\\warnings.txt for details.",
+            parent="terminal_window",
+            color=(0, 203, 230, 255),
+        )
 
 
 # ---------------------------------------------------------------------------- #
@@ -175,7 +175,11 @@ def vpkExtractor(path, pak01_dir, build_dir):
     pak1 = vpk.open(pak01_dir)
     fullPath = os.path.join(build_dir, path)
     if not os.path.exists(fullPath):  # extract files from VPK only once
-        ui.add_text(default_value=f"    extracting: {path}", parent="terminal_window", tag=f"extracting_{path}_tag")
+        ui.add_text(
+            default_value=f"    extracting: {path}",
+            parent="terminal_window",
+            tag=f"extracting_{path}_tag",
+        )
         path = path.replace(os.sep, "/")
         pakfile = pak1.get_file(path)
         pakfile.save(os.path.join(fullPath))

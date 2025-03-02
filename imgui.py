@@ -1,15 +1,10 @@
 import json
 import os
 import platform
-import random
 import shutil
 import subprocess
-import sys
-import textwrap
-import threading
 import time
 import traceback
-from functools import partial
 from shutil import copytree, ignore_patterns
 
 import dearpygui.dearpygui as ui
@@ -21,12 +16,15 @@ import helper_n as helper
 import mpaths
 import validatefiles_n as validatefiles
 
-# Setting up context for GUI
 ui.create_context()
 
-# Variables
 
-version = "1.09"
+try:
+    with open("version", "r") as file:
+        version = file.readline()
+except:
+    pass
+
 
 localizations = []
 patching = False
@@ -34,17 +32,14 @@ checkboxes = {}
 checkboxes_state = {}
 blacklist_dictionary = {}
 styling_dictionary = {}
-response = {}
 
 blue = (0, 230, 230)
-banner_pad_y = 16
-
-# Debug_text
-text = r"""-> Installing Auto Accept Match"""
+header_pad_y = 16
 
 
 def save_init():
     ui.save_init_file("dpg.ini")
+
 
 class Extension:
     def __init__(self, path):
@@ -59,7 +54,6 @@ class Path:
     def __init__(self, path, style):
         self.path = Extension(path)
         self.style = style
-
 
 
 class TextRedirector(object):
@@ -87,10 +81,18 @@ def get_available_localizations():
     localizations = list(sub_headers)
 
 
-def change_localization():
+def change_localization(init=False):
     with open(mpaths.localization_file_dir, "r", encoding="utf-8") as localization_file:
         localization_data = json.load(localization_file)
+
+    # if init:
+    #     if os.path.exists(mpaths.locale_file_dir):
+    #         with open(mpaths.locale_file_dir, "r") as file:
+    #             locale = file.readline()
+    # else:
     locale = ui.get_value("lang_select")
+    with open(mpaths.locale_file_dir, "w") as file:
+        file.write(locale)
     for key, value in localization_data.items():
         try:
             if ui.get_item_info(key).get("type") == "mvAppItemType::mvButton":
@@ -128,31 +130,31 @@ def hide_uninstall_popup():
 
 
 def open_github_link_and_close_minify():
-    open_github_link()
+    open_github_link()  # behavior to download the latest release
     close()
 
 
-def add_text_to_terminal():
-    global text
-    ui.add_text(text, parent="terminal_window", wrap=400, color=blue)
-    scroll_to_terminal_end()
-
 def scroll_to_terminal_end():
-    time.sleep(0.02)    
+    time.sleep(0.02)
     ui.set_y_scroll("terminal_window", ui.get_y_scroll_max("terminal_window"))
 
+
 def save_state_checkboxes():
+    global checkboxes_state
     for box in checkboxes:
-        global checkboxes_state
-        checkboxes_state[box] = (ui.get_value(box))
-        with open('state_persistence.json', 'w', encoding='utf-8') as f:
-            json.dump(checkboxes_state, f, ensure_ascii=False, indent=4)
+        checkboxes_state[box] = ui.get_value(box)
+        with open("states.json", "w", encoding="utf-8") as file:
+            json.dump(checkboxes_state, file, indent=4)
+
 
 def load_state_checkboxes():
     global checkboxes_state
-    with open('state_persistence.json', 'r', encoding='utf-8') as f:
-        x = f.read()
-        checkboxes_state = json.loads(x)
+    try:
+        with open("states.json", "r", encoding="utf-8") as file:
+            checkboxes_state = json.load(file)
+    except FileNotFoundError:
+        pass
+
 
 # Creating window draging functionality
 def drag_viewport(sender, app_data, user_data):
@@ -179,11 +181,11 @@ def close_mod_menu():
 
 
 def open_discord_link():
-    helper.urlDispatcher("https://discord.com/invite/2YDnqpbcKM")
+    helper.urlDispatcher(mpaths.discord)
 
 
 def open_github_link():
-    helper.urlDispatcher("https://github.com/Egezenn/dota2-minify/releases/latest")
+    helper.urlDispatcher(mpaths.latest_release)
 
 
 def close():
@@ -192,25 +194,29 @@ def close():
 
 def unistall_popup_show():
     ui.configure_item("uninstall_popup", show=True)
-    
+
 
 def create_checkboxes():
     global checkboxes_state
     for index in range(len(mpaths.mods_folders)):
         name = mpaths.mods_folders[index]
-        ui.add_group(parent="mod_menu", tag=f"{name}_group_tag", horizontal=True, width=300)
+        ui.add_group(
+            parent="mod_menu", tag=f"{name}_group_tag", horizontal=True, width=300
+        )
         ui.add_checkbox(
             parent=f"{name}_group_tag",
             label=name,
-            tag=f"{name}_checkbox_tag",
+            tag=name,
             default_value=False,
-            callback=setupButtonState
+            callback=setupButtonState,
         )
-        x = checkboxes_state.keys()
-        for key in x:
-            if key == f"{name}_checkbox_tag":
-                ui.configure_item(f"{name}_checkbox_tag", default_value=checkboxes_state[f"{name}_checkbox_tag"])
-            
+        for key in checkboxes_state.keys():
+            if key == name:
+                ui.configure_item(
+                    name,
+                    default_value=checkboxes_state[name],
+                )
+
         mod_path = os.path.join(mpaths.mods_dir, name)
         notes_txt = os.path.join(mod_path, "notes.txt")
         ui.add_button(
@@ -219,120 +225,150 @@ def create_checkboxes():
             indent=200,
             tag=f"{name}_details_tag",
             label="Details",
-            #callback=OPEN NOTES TODO) 
+            # callback=OPEN NOTES TODO)
         )
-        current_box = f"{name}_checkbox_tag"
-        checkboxes[current_box] = (name)
+        current_box = name
+        checkboxes[current_box] = name
 
 
 def update_popup_show():
-    ui.add_window(label=f"Update {response.text} is now available!",
-                    modal=True, 
-                    no_move=True, 
-                    tag="update_popup", 
-                    show=True,
-                    no_collapse=True,
-                    no_close=True,
-                    no_saved_settings=True,
-                    no_resize=True,
-                    width=310,
-                    height=100
-                    )
-    ui.configure_item("update_popup", 
-                      pos=(ui.get_viewport_width()/2-ui.get_item_width("update_popup")/2, ui.get_viewport_height()/2-ui.get_item_height("update_popup")/2)
-                      )
-    ui.add_text(default_value="Would you like to go to the download page?",
-                parent="update_popup",
-                color=blue)
-    with ui.group(parent="update_popup", 
-                  tag="update_popup_button_group",
-                  horizontal=True,
-                  horizontal_spacing=10,
-                  indent=42
-                  ):
-        ui.add_button(label="Yes", 
-                        width=100,
-                        height=20, 
-                        callback=open_github_link_and_close_minify,
-                        tag="update_popup_yes_button",
-                        )
-        ui.add_button(label="No", 
-                        width=100,
-                        height=20, 
-                        callback=delete_update_popup,
-                        tag="update_popup_no_button"
-                        )
-        
+    ui.add_window(
+        label=f"Update {version} is now available!",
+        modal=True,
+        no_move=True,
+        tag="update_popup",
+        show=True,
+        no_collapse=True,
+        no_close=True,
+        no_saved_settings=True,
+        no_resize=True,
+        width=310,
+        height=100,
+    )
+    ui.configure_item(
+        "update_popup",
+        pos=(
+            ui.get_viewport_width() / 2 - ui.get_item_width("update_popup") / 2,
+            ui.get_viewport_height() / 2 - ui.get_item_height("update_popup") / 2,
+        ),
+    )
+    ui.add_text(
+        default_value="Would you like to go to the download page?",
+        parent="update_popup",
+        color=blue,
+    )
+    with ui.group(
+        parent="update_popup",
+        tag="update_popup_button_group",
+        horizontal=True,
+        horizontal_spacing=10,
+        indent=42,
+    ):
+        ui.add_button(
+            label="Yes",
+            width=100,
+            height=20,
+            callback=open_github_link_and_close_minify,
+            tag="update_popup_yes_button",
+        )
+        ui.add_button(
+            label="No",
+            width=100,
+            height=20,
+            callback=delete_update_popup,
+            tag="update_popup_no_button",
+        )
+
+
 def setupSystem():
-        os.makedirs("logs", exist_ok=True)
-        x = validatefiles.Requirements(checkboxes)
-        public_methods = [
-            method
-            for method in dir(x)
-            if callable(getattr(x, method))
-            if not method.startswith("_")
-        ]  # private methods start with _
-        try:
-            if not (
-                os.path.exists(os.path.join(mpaths.minify_dir, "Source2Viewer-CLI.exe"))
-                or os.path.exists(os.path.join(mpaths.minify_dir, "libSkiaSharp.dll"))
-                or os.path.exists(os.path.join(mpaths.minify_dir, "TinyEXR.Native.dll"))
-            ):
-                if platform.system() == "Windows":
-                    ui.add_text(default_value="Downloading Source2Viewer-CLI...", parent="terminal_window")
-                    scroll_to_terminal_end()
-                    zip_name = "cli-windows-x64.zip"
-                    zip_path = os.path.join(mpaths.minify_dir, zip_name)
-                    # need to update regularly, can't do latest and call it a day
-                    response = requests.get(
-                        "https://github.com/ValveResourceFormat/ValveResourceFormat/releases/latest/download/cli-windows-x64.zip"
-                    )
-                    if response.status_code == 200:
-                        with open(zip_path, "wb") as file:
-                            file.write(response.content)
-                        ui.add_text(default_value=f"-> Downloaded {zip_name}", parent="terminal_window", tag="downloaded_text")
-                        scroll_to_terminal_end()
-                        shutil.unpack_archive(zip_path, mpaths.minify_dir, "zip")
-                        os.remove(zip_path)
-                        ui.add_text(default_value=f"-> Extracted {zip_name}.", parent="terminal_window", tag="extracted_text")
-                        scroll_to_terminal_end()
-                else:
+    os.makedirs("logs", exist_ok=True)
+    x = validatefiles.Requirements(checkboxes)
+    public_methods = [
+        method
+        for method in dir(x)
+        if callable(getattr(x, method))
+        if not method.startswith("_")
+    ]  # private methods start with _
+    try:
+        if not (
+            os.path.exists(os.path.join(mpaths.minify_dir, "Source2Viewer-CLI.exe"))
+            or os.path.exists(os.path.join(mpaths.minify_dir, "libSkiaSharp.dll"))
+            or os.path.exists(os.path.join(mpaths.minify_dir, "TinyEXR.Native.dll"))
+        ):
+            if platform.system() == "Windows":
+                ui.add_text(
+                    default_value="Downloading Source2Viewer-CLI...",
+                    parent="terminal_window",
+                )
+                scroll_to_terminal_end()
+                zip_name = "cli-windows-x64.zip"
+                zip_path = os.path.join(mpaths.minify_dir, zip_name)
+                response = requests.get(mpaths.v2f_latest_windows_x64)
+                if response.status_code == 200:
+                    with open(zip_path, "wb") as file:
+                        file.write(response.content)
                     ui.add_text(
-                        default_value="Error: Instructions to download Source2Viewer binaries for your system is not available yet, click Help for instructions.",
-                        parent="terminal_window", 
-                        tag="error_cli_download_text")      
+                        default_value=f"-> Downloaded {zip_name}",
+                        parent="terminal_window",
+                        tag="downloaded_text",
+                    )
                     scroll_to_terminal_end()
-            for method in public_methods:
-                getattr(x, method)()
-                if x.toggle_flag == True:
-                    lock_interaction()
-                    break
-        except Exception:
-            with open(os.path.join(mpaths.logs_dir, "crashlog.txt"), "w") as file:
-                file.write(traceback.format_exc())
+                    shutil.unpack_archive(zip_path, mpaths.minify_dir, "zip")
+                    os.remove(zip_path)
+                    ui.add_text(
+                        default_value=f"-> Extracted {zip_name}.",
+                        parent="terminal_window",
+                        tag="extracted_text",
+                    )
+                    scroll_to_terminal_end()
+            else:
+                ui.add_text(
+                    default_value="Error: Instructions to download Source2Viewer binaries for your system is not available yet, click Help for instructions.",
+                    parent="terminal_window",
+                    tag="error_cli_download_text",
+                )
+                scroll_to_terminal_end()
+        for method in public_methods:
+            getattr(x, method)()
+            if x.toggle_flag == True:
                 lock_interaction()
-                ui.add_text(default_value="Failed to start!", parent="terminal_window", tag="failed_to_start_text")
-                scroll_to_terminal_end()
-                ui.add_text(default_value="Check 'logs\\crashlog.txt' for more info.", parent="terminal_window", tag="check_logs_text")
-                scroll_to_terminal_end()
+                break
+    except Exception:
+        with open(os.path.join(mpaths.logs_dir, "crashlog.txt"), "w") as file:
+            file.write(traceback.format_exc())
+            lock_interaction()
+            ui.add_text(
+                default_value="Failed to start!",
+                parent="terminal_window",
+                tag="failed_to_start_text",
+            )
+            scroll_to_terminal_end()
+            ui.add_text(
+                default_value="Check 'logs\\crashlog.txt' for more info.",
+                parent="terminal_window",
+                tag="check_logs_text",
+            )
+            scroll_to_terminal_end()
+
 
 def setupButtonState():
-        for box in checkboxes:
-            if ui.get_value(box) == True:
-                ui.configure_item("button_patch", enabled=True)
-                #self.patchBtn.config(state="normal", cursor="hand2")
-                break
-            else:
-                ui.configure_item("button_patch", enabled=False) #Disabled theme? TODO
-                #self.patchBtn.config(state="disabled", cursor="")
-        if helper.workshop_installed == False:
-            helper.disableWorkshopMods(mpaths.mods_dir, mpaths.mods_folders, checkboxes)
+    for box in checkboxes:
+        if ui.get_value(box) == True:
+            ui.configure_item("button_patch", enabled=True)
+            # self.patchBtn.config(state="normal", cursor="hand2")
+            break
+        else:
+            ui.configure_item("button_patch", enabled=False)  # Disabled theme? TODO
+            # self.patchBtn.config(state="disabled", cursor="")
+    if helper.workshop_installed == False:
+        helper.disableWorkshopMods(mpaths.mods_dir, mpaths.mods_folders, checkboxes)
+
 
 def uninstaller():
     hide_uninstall_popup()
     clean_terminal()
     time.sleep(0.01)
-    #lock_interaction()
+    # lock_interaction()
     # remove pak01_dir.vpk if it exists
     vpkPath = os.path.join(mpaths.dota_minify, "pak01_dir.vpk")
     if os.path.exists(vpkPath):
@@ -353,10 +389,8 @@ def uninstaller():
                 for name in os.listdir(mpaths.itembuilds_dir):
                     if name != "bkup":
                         os.remove(os.path.join(mpaths.itembuilds_dir, name))
-                #print(os.path.join(mpaths.itembuilds_dir, "bkup"))
-                for name in os.listdir(
-                    os.path.join(mpaths.itembuilds_dir, "bkup")
-                ):
+                # print(os.path.join(mpaths.itembuilds_dir, "bkup"))
+                for name in os.listdir(os.path.join(mpaths.itembuilds_dir, "bkup")):
                     os.rename(
                         os.path.join(mpaths.itembuilds_dir, "bkup", name),
                         os.path.join(mpaths.itembuilds_dir, name),
@@ -364,23 +398,25 @@ def uninstaller():
     except FileNotFoundError:
         helper.warnings.append(
             "Unable to recover backed up default guides or the itembuilds directory is empty, verify files to get the default guides back"
-        )   
+        )
     ui.add_text(
-                "All Minify mods have been removed.",
-                tag="uninstaller_text",
-                color=blue,
-                parent="terminal_window"
-            )
+        "All Minify mods have been removed.",
+        tag="uninstaller_text",
+        color=blue,
+        parent="terminal_window",
+    )
     scroll_to_terminal_end()
-    #unlock_interaction()
-    
+    # unlock_interaction()
+
+
 def clean_terminal():
     ui.delete_item("terminal_window", children_only=True)
+
 
 def patcher():
     global patching
     clean_terminal()
-    #lock_interaction()
+    # lock_interaction()
     if "dota2.exe" in (p.name() for p in psutil.process_iter()):
         ui.add_text(
             default_value="Please close Dota 2 first and then patch.",
@@ -430,7 +466,8 @@ def patcher():
                             tag=f"installing_{folder}_text",
                             parent="terminal_window",
                             wrap=400,
-                            color=blue)  ###???  #print("→ Installing " + folder)
+                            color=blue,
+                        )  ###???  #print("→ Installing " + folder)
                         if (
                             checkboxes[box] == "Dark Terrain"
                             or checkboxes[box] == "Remove Foilage"
@@ -450,9 +487,7 @@ def patcher():
                             temp_dump_path = os.path.join(mod_path, "files", "temp")
                             if os.path.exists(zip_path):
                                 os.remove(zip_path)
-                            response = requests.get(
-                                "https://github.com/Egezenn/OpenDotaGuides/releases/latest/download/itembuilds.zip"
-                            )
+                            response = requests.get(mpaths.odg_latest)
                             if response.status_code == 200:
                                 with open(zip_path, "wb") as file:
                                     file.write(response.content)
@@ -461,7 +496,7 @@ def patcher():
                                     tag="downloaded_open_dota_guides_text",
                                     parent="terminal_window",
                                     wrap=400,
-                                    color=blue
+                                    color=blue,
                                 )
                                 os.makedirs(
                                     os.path.join(mpaths.itembuilds_dir, "bkup"),
@@ -495,7 +530,7 @@ def patcher():
                                     tag="replaced_open_dota_guides_text",
                                     parent="terminal_window",
                                     wrap=400,
-                                    color=blue
+                                    color=blue,
                                 )
                                 if os.path.exists(zip_path):
                                     os.remove(zip_path)
@@ -505,7 +540,7 @@ def patcher():
                                     tag="failed_downloading_open_dota_guides",
                                     parent="terminal_window",
                                     wrap=400,
-                                    color=blue
+                                    color=blue,
                                 )
                         # ----------------------------------- files ---------------------------------- #
                         # if files_total == 0:    pass
@@ -566,9 +601,7 @@ def patcher():
                                 # blacklist_dictionary["blacklist-key{}".format(index+1)] = path, extension
 
                                 if not os.path.exists(
-                                    os.path.join(
-                                        mpaths.game_dir, os.path.dirname(path)
-                                    )
+                                    os.path.join(mpaths.game_dir, os.path.dirname(path))
                                 ):
                                     os.makedirs(
                                         os.path.join(
@@ -581,9 +614,7 @@ def patcher():
                                         os.path.join(
                                             mpaths.blank_files_dir, "blank{}"
                                         ).format(extension),
-                                        os.path.join(
-                                            mpaths.game_dir, path + extension
-                                        ),
+                                        os.path.join(mpaths.game_dir, path + extension),
                                     )
                                 except FileNotFoundError as exception:
                                     helper.warnings.append(
@@ -670,10 +701,9 @@ def patcher():
             tag="decompiling_text",
             parent="terminal_window",
             wrap=400,
-            color=blue
+            color=blue,
         )
-        with open(os.path.join(mpaths.logs_dir, "Source2Viewer-CLI.txt"), "w"
-        ) as file:
+        with open(os.path.join(mpaths.logs_dir, "Source2Viewer-CLI.txt"), "w") as file:
             subprocess.run(
                 [
                     mpaths.minify_dir + "/Source2Viewer-CLI.exe",
@@ -694,8 +724,9 @@ def patcher():
             tag="patching_text",
             parent="terminal_window",
             wrap=400,
-            color=blue)
-        
+            color=blue,
+        )
+
         for key, value in list(styling_dictionary.items()):
             construct2 = Path(value[0], value[1])
 
@@ -725,7 +756,7 @@ def patcher():
                     tag="compiling_text",
                     parent="terminal_window",
                     wrap=400,
-                    color=blue
+                    color=blue,
                 )
                 sp_compiler = subprocess.run(
                     [
@@ -751,7 +782,7 @@ def patcher():
 
         patching = False
 
-        #unlock_interaction()
+        # unlock_interaction()
 
         ui.add_text(
             default_value="-> Done!",
@@ -817,28 +848,30 @@ def patcher():
 
 
 def version_check():
-    global response
+    global version
     if version is not None:
-        response = requests.get(
-            "https://raw.githubusercontent.com/Egezenn/dota2-minify/refs/heads/stable/version"
-        )
+        response = requests.get(mpaths.version_query)
         if response.status_code == 200:
             if version == response.text:
                 ui.configure_item("button_latest", enabled=False)
             else:
                 ui.configure_item("button_latest", enabled=True)
+                version = response.text
                 update_popup_show()
+
 
 def app_start():
     ui.configure_app(init_file="dpg.ini")
     get_available_localizations()
     create_ui()
+    # change_localization(init=True)
     setupSystem()
     load_state_checkboxes()
     version_check()
     create_checkboxes()
     setupButtonState()
     item_handler_registry()
+
 
 # Adding font to the ui registry
 with ui.font_registry():
@@ -854,6 +887,7 @@ with ui.handler_registry():
         parent="top_bar", button=0, threshold=0.0, callback=drag_viewport
     )
 
+
 def item_handler_registry():
     with ui.item_handler_registry(tag="resize_handler") as handler:
         ui.add_item_resize_handler(callback=scroll_to_terminal_end)
@@ -868,8 +902,8 @@ ui.create_viewport(
     resizable=False,
     decorated=False,
     vsync=True,
-    clear_color=(0, 0, 0, 255)
-    )
+    clear_color=(0, 0, 0, 255),
+)
 
 
 # Creating main window of GUI and UI elements
@@ -900,30 +934,28 @@ def create_ui():
                 )
                 ui.add_button(
                     tag="button_discord",
-                    label="Discord", 
-                    width=100, 
-                    callback=open_discord_link
-                    )
+                    label="Discord",
+                    width=100,
+                    callback=open_discord_link,
+                )
                 ui.add_button(
-                    tag="button_latest", 
-                    label="Latest", 
-                    width=100, 
-                    callback=open_github_link
-                    )
+                    tag="button_latest",
+                    label="Latest",
+                    width=100,
+                    callback=open_github_link,
+                )
                 ui.add_button(
-                    tag="uninstall_button", 
-                    label="Uninstall", 
-                    width=100, 
-                    callback=unistall_popup_show
-                    )
+                    tag="uninstall_button",
+                    label="Uninstall",
+                    width=100,
+                    callback=unistall_popup_show,
+                )
                 ui.add_button(
-                    tag="exit_button", 
-                    label="Exit", 
-                    width=100, 
-                    callback=close
-                    )
+                    tag="exit_button", label="Exit", width=100, callback=close
+                )
             with ui.group(pos=(67, -2)):
-                ui.add_text(r"""
+                ui.add_text(
+                    r"""
          __    __     __     __   __     __     ______   __  __
         /\ "-./  \   /\ \   /\ "-.\ \   /\ \   /\  ___\ /\ \_\ \  
         \ \ \-./\ \  \ \ \  \ \ \-.  \  \ \ \  \ \  __\ \ \____ \ 
@@ -935,37 +967,37 @@ def create_ui():
                 ui.add_text(
                     "Want to contribute to the project's growth?",
                     tag="header_text_1",
+                    pos=(124, 15 + header_pad_y * 5),
                     color=blue,
-                    pos=(124, 15 + banner_pad_y * 5),
                 )
                 ui.add_text(
                     "-> Join our Discord community!",
                     tag="header_text_2",
                     color=blue,
-                    pos=(123, 15 + banner_pad_y * 6),
+                    pos=(123, 15 + header_pad_y * 6),
                 )
                 ui.add_text(
                     "-> Share Minify with your friends and online groups",
                     tag="header_text_3",
                     color=blue,
-                    pos=(123, 15 + banner_pad_y * 7),
+                    pos=(123, 15 + header_pad_y * 7),
                 )
                 ui.add_text(
                     "-> Star the project on GitHub",
                     tag="header_text_4",
                     color=blue,
-                    pos=(123, 15 + banner_pad_y * 8),
+                    pos=(123, 15 + header_pad_y * 8),
                 )
                 ui.add_text(
                     "-> Create and maintain mods for this project",
                     tag="header_text_5",
                     color=blue,
-                    pos=(123, 15 + banner_pad_y * 9),
+                    pos=(123, 15 + header_pad_y * 9),
                 )
                 ui.add_text(
                     "----------------------------------------------------------",
                     color=blue,
-                    pos=(123, 15 + banner_pad_y * 10),
+                    pos=(123, 15 + header_pad_y * 10),
                 )
         # Creating log terminal
         with ui.group():
@@ -982,24 +1014,25 @@ def create_ui():
                 height=203,
                 width=538,
                 pos=(0, 197),
-                no_resize=True
+                no_resize=True,
             )
 
-    ui.add_window(label="Uninstall",
-                  modal=True, 
-                  no_move=True, 
-                  tag="uninstall_popup", 
-                  show=False,
-                  no_collapse=True,
-                  no_close=True,
-                  no_saved_settings=True
-                )
-    ui.add_text(default_value="Remove all mods?",
-                parent="uninstall_popup",
-                color=blue)
+    ui.add_window(
+        label="Uninstall",
+        modal=True,
+        no_move=True,
+        tag="uninstall_popup",
+        show=False,
+        no_collapse=True,
+        no_close=True,
+        no_saved_settings=True,
+    )
+    ui.add_text(default_value="Remove all mods?", parent="uninstall_popup", color=blue)
     with ui.group(parent="uninstall_popup", horizontal=True):
         ui.add_button(label="Confirm", tag="confirm_button", callback=uninstaller)
-        ui.add_button(label="Cancel", tag="cancel_button", callback=hide_uninstall_popup)
+        ui.add_button(
+            label="Cancel", tag="cancel_button", callback=hide_uninstall_popup
+        )
 
     # Creating mod selection menu as popup/modal
     ui.add_window(

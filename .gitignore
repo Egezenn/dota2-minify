@@ -2,7 +2,9 @@
 *.css
 *.vcss_c
 logs
-locale.txt
+locale
+dpg.ini
+states.json
 
 ## Source2Viewer
 cli-*-*.*

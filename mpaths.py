@@ -42,6 +42,17 @@ if not os.path.exists(
         for line in file:
             steam_dir = line.strip()
 
+# links
+version_query = (
+    "https://raw.githubusercontent.com/Egezenn/dota2-minify/refs/heads/stable/version"
+)
+discord = "https://discord.com/invite/2YDnqpbcKM"
+latest_release = "https://github.com/Egezenn/dota2-minify/releases/latest"
+v2f_latest_windows_x64 = "https://github.com/ValveResourceFormat/ValveResourceFormat/releases/latest/download/cli-windows-x64.zip"
+odg_latest = (
+    "https://github.com/Egezenn/OpenDotaGuides/releases/latest/download/itembuilds.zip"
+)
+
 # minify project paths
 minify_dir = os.getcwd()
 bin_dir = os.path.join(minify_dir, "bin")
@@ -52,6 +63,7 @@ mods_dir = os.path.join(minify_dir, "mods")
 blank_files_dir = os.path.join(bin_dir, "blank-files")
 maps_dir = os.path.join(bin_dir, "maps")
 localization_file_dir = os.path.join(bin_dir, "localization.json")
+locale_file_dir = "locale"
 
 # dota2 paths
 content_dir = os.path.join(
@@ -77,8 +89,6 @@ dota_minify = os.path.join(
     steam_dir, "steamapps\\common\\dota 2 beta\\game\\dota_minify"
 )
 dota_minify_maps = os.path.join(dota_minify, "maps")
-
-# exclude invalid mods
 
 mods_folders = []
 for mod in os.listdir(mods_dir):
