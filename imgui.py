@@ -31,6 +31,7 @@ version = "1.09"
 localizations = []
 patching = False
 checkboxes = {}
+checkboxes_state = {}
 blacklist_dictionary = {}
 styling_dictionary = {}
 response = {}
@@ -41,6 +42,9 @@ banner_pad_y = 16
 # Debug_text
 text = r"""-> Installing Auto Accept Match"""
 
+
+def save_init():
+    ui.save_init_file("dpg.ini")
 
 class Extension:
     def __init__(self, path):
@@ -55,7 +59,6 @@ class Path:
     def __init__(self, path, style):
         self.path = Extension(path)
         self.style = style
-        print(self.path, self.style)
 
 
 
@@ -108,15 +111,11 @@ def change_localization():
 def lock_interaction():
     ui.configure_item("terminal_window", modal=True)
     time.sleep(0.01)
-    ui.configure_item("terminal_window", pos=(0, 191))
+    ui.configure_item("terminal_window", pos=(0, 197))
 
 
 def unlock_interaction():
     ui.configure_item("terminal_window", modal=False)
-
-
-def hover():
-    print("hovered") ##Debug
 
 
 def delete_update_popup():
@@ -124,9 +123,8 @@ def delete_update_popup():
     ui.delete_item("update_popup")
 
 
-def delete_uninstall_popup():
+def hide_uninstall_popup():
     ui.configure_item("uninstall_popup", show=False)
-    ui.delete_item("uninstall_popup")
 
 
 def open_github_link_and_close_minify():
@@ -137,9 +135,24 @@ def open_github_link_and_close_minify():
 def add_text_to_terminal():
     global text
     ui.add_text(text, parent="terminal_window", wrap=400, color=blue)
-    time.sleep(0.02)
+    scroll_to_terminal_end()
+
+def scroll_to_terminal_end():
+    time.sleep(0.02)    
     ui.set_y_scroll("terminal_window", ui.get_y_scroll_max("terminal_window"))
 
+def save_state_checkboxes():
+    for box in checkboxes:
+        global checkboxes_state
+        checkboxes_state[box] = (ui.get_value(box))
+        with open('state_persistence.json', 'w', encoding='utf-8') as f:
+            json.dump(checkboxes_state, f, ensure_ascii=False, indent=4)
+
+def load_state_checkboxes():
+    global checkboxes_state
+    with open('state_persistence.json', 'r', encoding='utf-8') as f:
+        x = f.read()
+        checkboxes_state = json.loads(x)
 
 # Creating window draging functionality
 def drag_viewport(sender, app_data, user_data):
@@ -161,6 +174,7 @@ def open_mod_menu():
 
 
 def close_mod_menu():
+    save_state_checkboxes()
     ui.configure_item("mod_menu", show=False)
 
 
@@ -176,24 +190,12 @@ def close():
     ui.stop_dearpygui()
 
 
-def unistall_popup():
-    ui.add_window(label="Uninstall",
-                  modal=True, 
-                  no_move=True, 
-                  tag="uninstall_popup", 
-                  show=True,
-                  no_collapse=True,
-                  no_close=True,
-                  no_saved_settings=True
-                )
-    ui.add_text(default_value="Remove all mods?",
-                parent="uninstall_popup",
-                color=blue)
-    with ui.group(parent="uninstall_popup", horizontal=True):
-        ui.add_button(label="Confirm", tag="confirm_button", callback=uninstaller)
-        ui.add_button(label="Cancel", tag="cancel_button", callback=delete_uninstall_popup)
+def unistall_popup_show():
+    ui.configure_item("uninstall_popup", show=True)
+    
 
 def create_checkboxes():
+    global checkboxes_state
     for index in range(len(mpaths.mods_folders)):
         name = mpaths.mods_folders[index]
         ui.add_group(parent="mod_menu", tag=f"{name}_group_tag", horizontal=True, width=300)
@@ -204,6 +206,11 @@ def create_checkboxes():
             default_value=False,
             callback=setupButtonState
         )
+        x = checkboxes_state.keys()
+        for key in x:
+            if key == f"{name}_checkbox_tag":
+                ui.configure_item(f"{name}_checkbox_tag", default_value=checkboxes_state[f"{name}_checkbox_tag"])
+            
         mod_path = os.path.join(mpaths.mods_dir, name)
         notes_txt = os.path.join(mod_path, "notes.txt")
         ui.add_button(
@@ -216,7 +223,6 @@ def create_checkboxes():
         )
         current_box = f"{name}_checkbox_tag"
         checkboxes[current_box] = (name)
-        #print(checkboxes)
 
 
 def update_popup_show():
@@ -274,6 +280,7 @@ def setupSystem():
             ):
                 if platform.system() == "Windows":
                     ui.add_text(default_value="Downloading Source2Viewer-CLI...", parent="terminal_window")
+                    scroll_to_terminal_end()
                     zip_name = "cli-windows-x64.zip"
                     zip_path = os.path.join(mpaths.minify_dir, zip_name)
                     # need to update regularly, can't do latest and call it a day
@@ -284,14 +291,17 @@ def setupSystem():
                         with open(zip_path, "wb") as file:
                             file.write(response.content)
                         ui.add_text(default_value=f"-> Downloaded {zip_name}", parent="terminal_window", tag="downloaded_text")
+                        scroll_to_terminal_end()
                         shutil.unpack_archive(zip_path, mpaths.minify_dir, "zip")
                         os.remove(zip_path)
                         ui.add_text(default_value=f"-> Extracted {zip_name}.", parent="terminal_window", tag="extracted_text")
+                        scroll_to_terminal_end()
                 else:
                     ui.add_text(
                         default_value="Error: Instructions to download Source2Viewer binaries for your system is not available yet, click Help for instructions.",
                         parent="terminal_window", 
-                        tag="error_cli_download_text")
+                        tag="error_cli_download_text")      
+                    scroll_to_terminal_end()
             for method in public_methods:
                 getattr(x, method)()
                 if x.toggle_flag == True:
@@ -302,7 +312,9 @@ def setupSystem():
                 file.write(traceback.format_exc())
                 lock_interaction()
                 ui.add_text(default_value="Failed to start!", parent="terminal_window", tag="failed_to_start_text")
+                scroll_to_terminal_end()
                 ui.add_text(default_value="Check 'logs\\crashlog.txt' for more info.", parent="terminal_window", tag="check_logs_text")
+                scroll_to_terminal_end()
 
 def setupButtonState():
         for box in checkboxes:
@@ -317,9 +329,10 @@ def setupButtonState():
             helper.disableWorkshopMods(mpaths.mods_dir, mpaths.mods_folders, checkboxes)
 
 def uninstaller():
-    delete_uninstall_popup()
+    hide_uninstall_popup()
+    clean_terminal()
     time.sleep(0.01)
-    lock_interaction()
+    #lock_interaction()
     # remove pak01_dir.vpk if it exists
     vpkPath = os.path.join(mpaths.dota_minify, "pak01_dir.vpk")
     if os.path.exists(vpkPath):
@@ -340,7 +353,7 @@ def uninstaller():
                 for name in os.listdir(mpaths.itembuilds_dir):
                     if name != "bkup":
                         os.remove(os.path.join(mpaths.itembuilds_dir, name))
-                print(os.path.join(mpaths.itembuilds_dir, "bkup"))
+                #print(os.path.join(mpaths.itembuilds_dir, "bkup"))
                 for name in os.listdir(
                     os.path.join(mpaths.itembuilds_dir, "bkup")
                 ):
@@ -352,18 +365,22 @@ def uninstaller():
         helper.warnings.append(
             "Unable to recover backed up default guides or the itembuilds directory is empty, verify files to get the default guides back"
         )   
-    unlock_interaction() 
     ui.add_text(
                 "All Minify mods have been removed.",
                 tag="uninstaller_text",
                 color=blue,
                 parent="terminal_window"
             )
-
+    scroll_to_terminal_end()
+    #unlock_interaction()
+    
+def clean_terminal():
+    ui.delete_item("terminal_window", children_only=True)
 
 def patcher():
     global patching
-
+    clean_terminal()
+    #lock_interaction()
     if "dota2.exe" in (p.name() for p in psutil.process_iter()):
         ui.add_text(
             default_value="Please close Dota 2 first and then patch.",
@@ -375,7 +392,6 @@ def patcher():
         return
 
     patching = True
-    lock_interaction()
 
     try:
         # clean up previous patching data
@@ -415,7 +431,6 @@ def patcher():
                             parent="terminal_window",
                             wrap=400,
                             color=blue)  ###???  #print("→ Installing " + folder)
-
                         if (
                             checkboxes[box] == "Dark Terrain"
                             or checkboxes[box] == "Remove Foilage"
@@ -485,7 +500,6 @@ def patcher():
                                 if os.path.exists(zip_path):
                                     os.remove(zip_path)
                             else:
-                                print("else")
                                 ui.add_text(
                                     default_value="-> Failed to download latest OpenDotaGuides guides.",
                                     tag="failed_downloading_open_dota_guides",
@@ -681,7 +695,6 @@ def patcher():
             parent="terminal_window",
             wrap=400,
             color=blue)
-
         
         for key, value in list(styling_dictionary.items()):
             construct2 = Path(value[0], value[1])
@@ -703,7 +716,6 @@ def patcher():
         # ---------------------------------- step 5 ---------------------------------- #
         # -------------- Compile content to game with resource compiler -------------- #
         # ---------------------------------------------------------------------------- #
-        print(helper.workshop_installed)
         if helper.workshop_installed == True:
             with open(
                 os.path.join(mpaths.logs_dir, "resourcecompiler.txt"), "wb"
@@ -739,7 +751,7 @@ def patcher():
 
         patching = False
 
-        unlock_interaction()
+        #unlock_interaction()
 
         ui.add_text(
             default_value="-> Done!",
@@ -780,8 +792,6 @@ def patcher():
 
         patching = False
 
-        unlock_interaction()
-
         ui.add_text(
             default_value="Patching failed.",
             tag="patching_failed_text",
@@ -805,6 +815,7 @@ def patcher():
             color=blue,
         )
 
+
 def version_check():
     global response
     if version is not None:
@@ -817,15 +828,17 @@ def version_check():
             else:
                 ui.configure_item("button_latest", enabled=True)
                 update_popup_show()
-# Checking avalailable localization files and appending them to combo
 
 def app_start():
+    ui.configure_app(init_file="dpg.ini")
     get_available_localizations()
     create_ui()
     setupSystem()
+    load_state_checkboxes()
     version_check()
     create_checkboxes()
     setupButtonState()
+    item_handler_registry()
 
 # Adding font to the ui registry
 with ui.font_registry():
@@ -841,6 +854,11 @@ with ui.handler_registry():
         parent="top_bar", button=0, threshold=0.0, callback=drag_viewport
     )
 
+def item_handler_registry():
+    with ui.item_handler_registry(tag="resize_handler") as handler:
+        ui.add_item_resize_handler(callback=scroll_to_terminal_end)
+    ui.bind_item_handler_registry("terminal_window", "resize_handler")
+
 
 # Creating_main_viewport
 ui.create_viewport(
@@ -850,8 +868,8 @@ ui.create_viewport(
     resizable=False,
     decorated=False,
     vsync=True,
-    clear_color=(0, 0, 0, 255),
-)
+    clear_color=(0, 0, 0, 255)
+    )
 
 
 # Creating main window of GUI and UI elements
@@ -860,7 +878,7 @@ def create_ui():
         ui.set_primary_window("primary_window", True)
         ui.add_child_window(tag="top_bar", pos=(-5, -5), height=25, width=543)
         with ui.group(horizontal=True):
-            with ui.group(pos=(6, 30)):
+            with ui.group(pos=(8, 27)):
                 ui.add_button(
                     tag="button_patch",
                     label="Patch",
@@ -880,24 +898,31 @@ def create_ui():
                     width=100,
                     callback=change_localization,
                 )
-                ui.add_button(tag="button_discord",
-                            label="Discord", 
-                            width=100, 
-                            callback=open_discord_link)
-                ui.add_button(tag="button_latest", 
-                            label="Latest", 
-                            width=100, 
-                            callback=open_github_link)
-                ui.add_button(tag="uninstall_button", 
-                            label="Uninstall", 
-                            width=100, 
-                            callback=unistall_popup
-                            )
-                ui.add_button(tag="exit_button", 
-                            label="Exit", 
-                            width=100, 
-                            callback=close)
-            with ui.group(pos=(67, 0)):
+                ui.add_button(
+                    tag="button_discord",
+                    label="Discord", 
+                    width=100, 
+                    callback=open_discord_link
+                    )
+                ui.add_button(
+                    tag="button_latest", 
+                    label="Latest", 
+                    width=100, 
+                    callback=open_github_link
+                    )
+                ui.add_button(
+                    tag="uninstall_button", 
+                    label="Uninstall", 
+                    width=100, 
+                    callback=unistall_popup_show
+                    )
+                ui.add_button(
+                    tag="exit_button", 
+                    label="Exit", 
+                    width=100, 
+                    callback=close
+                    )
+            with ui.group(pos=(67, -2)):
                 ui.add_text(r"""
          __    __     __     __   __     __     ______   __  __
         /\ "-./  \   /\ \   /\ "-.\ \   /\ \   /\  ___\ /\ \_\ \  
@@ -948,18 +973,33 @@ def create_ui():
                 tag="terminal_window",
                 no_scrollbar=False,
                 no_title_bar=True,
-                no_resize=True,
                 no_move=True,
                 no_collapse=True,
                 modal=False,
                 no_close=True,
                 no_saved_settings=True,
                 show=True,
-                height=210,
+                height=203,
                 width=538,
-                pos=(0, 191),
+                pos=(0, 197),
+                no_resize=True
             )
 
+    ui.add_window(label="Uninstall",
+                  modal=True, 
+                  no_move=True, 
+                  tag="uninstall_popup", 
+                  show=False,
+                  no_collapse=True,
+                  no_close=True,
+                  no_saved_settings=True
+                )
+    ui.add_text(default_value="Remove all mods?",
+                parent="uninstall_popup",
+                color=blue)
+    with ui.group(parent="uninstall_popup", horizontal=True):
+        ui.add_button(label="Confirm", tag="confirm_button", callback=uninstaller)
+        ui.add_button(label="Cancel", tag="cancel_button", callback=hide_uninstall_popup)
 
     # Creating mod selection menu as popup/modal
     ui.add_window(
@@ -976,9 +1016,11 @@ def create_ui():
         show=False,
         no_resize=True,
     )
-    ui.add_button(parent="mod_menu", label="X", callback=close_mod_menu)
+    ui.add_button(parent="mod_menu", label="SAVE", callback=close_mod_menu)
+
 
 ui.set_frame_callback(1, callback=app_start)
+ui.set_exit_callback(save_init)
 
 
 # DearPyGyi Setup
