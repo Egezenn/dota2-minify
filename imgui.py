@@ -85,14 +85,16 @@ def change_localization(init=False):
     with open(mpaths.localization_file_dir, "r", encoding="utf-8") as localization_file:
         localization_data = json.load(localization_file)
 
-    # if init:
-    #     if os.path.exists(mpaths.locale_file_dir):
-    #         with open(mpaths.locale_file_dir, "r") as file:
-    #             locale = file.readline()
-    # else:
-    locale = ui.get_value("lang_select")
-    with open(mpaths.locale_file_dir, "w") as file:
-        file.write(locale)
+    if init == True:
+        if os.path.exists(mpaths.locale_file_dir):
+            with open(mpaths.locale_file_dir, "r") as file:
+                locale = file.readline()
+                ui.configure_item("lang_select", default_value=f"{locale}")
+    else:
+        locale = ui.get_value("lang_select")
+        with open(mpaths.locale_file_dir, "w") as file:
+            file.write(locale)
+
     for key, value in localization_data.items():
         try:
             if ui.get_item_info(key).get("type") == "mvAppItemType::mvButton":
@@ -864,7 +866,7 @@ def app_start():
     ui.configure_app(init_file="dpg.ini")
     get_available_localizations()
     create_ui()
-    # change_localization(init=True)
+    change_localization(init=True)
     setupSystem()
     load_state_checkboxes()
     version_check()
