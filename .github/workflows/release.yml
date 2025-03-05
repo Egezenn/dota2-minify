@@ -26,7 +26,11 @@ jobs:
           python-version: "3.13"
 
       - name: Set version
-        run: Set-Content -Path "version" -Value "${{ github.event.inputs.release_name }}" -NoNewline
+        shell: pwsh
+        run: |
+          $releaseName = "${{ github.event.inputs.release_name }}"
+          $version = $releaseName.Substring(8)
+          Set-Content -Path "version" -Value $version -NoNewline
 
       - uses: stefanzweifel/git-auto-commit-action@v5
         with:
