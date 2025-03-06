@@ -1,11 +1,14 @@
 import os
 import shutil
 import urllib.error
+import time
 import webbrowser
 from urllib.request import urlopen
 
 import dearpygui.dearpygui as ui
 import vpk
+import mpaths
+
 
 workshop_installed = False
 
@@ -32,7 +35,14 @@ def handleWarnings(logs_dir):
             color=(0, 203, 230, 255),
         )
 
+def scroll_to_terminal_end():
+    time.sleep(0.02)
+    ui.set_y_scroll("terminal_window", ui.get_y_scroll_max("terminal_window"))
 
+
+def add_text_to_terminal(text, tag):
+    ui.add_text(default_value=text, parent="terminal_window", color=(0, 230, 230, 255), wrap=482, tag=tag)
+    scroll_to_terminal_end()
 # ---------------------------------------------------------------------------- #
 #                                   GUI                                        #
 # ---------------------------------------------------------------------------- #
@@ -170,16 +180,27 @@ def getBlankFileExtensions(blank_files_dir):
         extensions.append(os.path.splitext(file)[1])
     return extensions
 
+def validate_map_file():
+    add_text_to_terminal("""Checking map file...""", "map_check_text_tag")
+
+    if os.path.exists(mpaths.dota_minify_map_dir) == False:
+        shutil.copyfile(mpaths.dota_user_map_dir, mpaths.dota_minify_map_dir)
+        add_text_to_terminal("""-> Updating map file...""", "map_update_text_tag")
+
+    if os.path.exists(mpaths.dota_user_map_dir) and os.path.exists(mpaths.dota_minify_map_dir) and os.path.getsize(mpaths.dota_user_map_dir) != os.path.getsize(mpaths.dota_minify_map_dir):
+        add_text_to_terminal("""-> Updating map file...""", "map_update_text_tag")
+        os.remove(mpaths.dota_minify_map_dir)
+        shutil.copyfile(mpaths.dota_user_map_dir, mpaths.dota_minify_map_dir)
+
+    if os.path.exists(mpaths.dota_user_map_dir) and os.path.exists(mpaths.dota_minify_map_dir) and os.path.getsize(mpaths.dota_user_map_dir) == os.path.getsize(mpaths.dota_minify_map_dir):
+        add_text_to_terminal("""-> Map file is up to date...""", "map_up_to_date_text_tag")
+
 
 def vpkExtractor(path, pak01_dir, build_dir):
     pak1 = vpk.open(pak01_dir)
     fullPath = os.path.join(build_dir, path)
     if not os.path.exists(fullPath):  # extract files from VPK only once
-        ui.add_text(
-            default_value=f"    extracting: {path}",
-            parent="terminal_window",
-            tag=f"extracting_{path}_tag",
-        )
+        add_text_to_terminal(f"    extracting: {path}", f"extracting_{path}_tag")
         path = path.replace(os.sep, "/")
         pakfile = pak1.get_file(path)
         pakfile.save(os.path.join(fullPath))

@@ -12,7 +12,7 @@ import psutil
 import requests
 import vpk
 
-import helper_n as helper
+from helper_n import *
 import mpaths
 import validatefiles_n as validatefiles
 
@@ -135,12 +135,6 @@ def open_github_link_and_close_minify():
     open_github_link()  # behavior to download the latest release
     close()
 
-
-def scroll_to_terminal_end():
-    time.sleep(0.02)
-    ui.set_y_scroll("terminal_window", ui.get_y_scroll_max("terminal_window"))
-
-
 def save_state_checkboxes():
     global checkboxes_state
     for box in checkboxes:
@@ -183,11 +177,11 @@ def close_mod_menu():
 
 
 def open_discord_link():
-    helper.urlDispatcher(mpaths.discord)
+    urlDispatcher(mpaths.discord)
 
 
 def open_github_link():
-    helper.urlDispatcher(mpaths.latest_release)
+    urlDispatcher(mpaths.latest_release)
 
 
 def close():
@@ -298,10 +292,11 @@ def setupSystem():
             or os.path.exists(os.path.join(mpaths.minify_dir, "TinyEXR.Native.dll"))
         ):
             if platform.system() == "Windows":
-                ui.add_text(
-                    default_value="Downloading Source2Viewer-CLI...",
-                    parent="terminal_window",
-                )
+                add_text_to_terminal(text="Downloading Source2Viewer-CLI...", tag="downloading_s2v_cli_tag")
+                # ui.add_text(
+                #     default_value="Downloading Source2Viewer-CLI...",
+                #     parent="terminal_window",
+                # )
                 scroll_to_terminal_end()
                 zip_name = "cli-windows-x64.zip"
                 zip_path = os.path.join(mpaths.minify_dir, zip_name)
@@ -309,19 +304,21 @@ def setupSystem():
                 if response.status_code == 200:
                     with open(zip_path, "wb") as file:
                         file.write(response.content)
-                    ui.add_text(
-                        default_value=f"-> Downloaded {zip_name}",
-                        parent="terminal_window",
-                        tag="downloaded_text",
-                    )
+                    add_text_to_terminal(text=f"-> Downloaded {zip_name}", tag="downloaded_text_tag")    
+                    # ui.add_text(
+                    #     default_value=f"-> Downloaded {zip_name}",
+                    #     parent="terminal_window",
+                    #     tag="downloaded_text",
+                    # )
                     scroll_to_terminal_end()
                     shutil.unpack_archive(zip_path, mpaths.minify_dir, "zip")
                     os.remove(zip_path)
-                    ui.add_text(
-                        default_value=f"-> Extracted {zip_name}.",
-                        parent="terminal_window",
-                        tag="extracted_text",
-                    )
+                    add_text_to_terminal(text=f"-> Extracted {zip_name}", tag="extracted_text_tag")
+                    # ui.add_text(
+                    #     default_value=f"-> Extracted {zip_name}.",
+                    #     parent="terminal_window",
+                    #     tag="extracted_text",
+                    # )
                     scroll_to_terminal_end()
             else:
                 ui.add_text(
@@ -362,8 +359,8 @@ def setupButtonState():
         else:
             ui.configure_item("button_patch", enabled=False)  # Disabled theme? TODO
             # self.patchBtn.config(state="disabled", cursor="")
-    if helper.workshop_installed == False:
-        helper.disableWorkshopMods(mpaths.mods_dir, mpaths.mods_folders, checkboxes)
+    if workshop_installed == False:
+        disableWorkshopMods(mpaths.mods_dir, mpaths.mods_folders, checkboxes)
 
 
 def uninstaller():
@@ -398,9 +395,10 @@ def uninstaller():
                         os.path.join(mpaths.itembuilds_dir, name),
                     )
     except FileNotFoundError:
-        helper.warnings.append(
+        warnings.append(
             "Unable to recover backed up default guides or the itembuilds directory is empty, verify files to get the default guides back"
         )
+    add_text_to_terminal(text="All Minify mods have been removed.", tag="uninstaller_text_tag")    
     ui.add_text(
         "All Minify mods have been removed.",
         tag="uninstaller_text",
@@ -433,7 +431,7 @@ def patcher():
 
     try:
         # clean up previous patching data
-        helper.cleanFolders(
+        cleanFolders(
             mpaths.build_dir,
             mpaths.logs_dir,
             mpaths.content_dir,
@@ -444,9 +442,9 @@ def patcher():
 
         styling_dictionary = {}
         # blacklist_dictionary = {}
-        helper.warnings = []
+        warnings = []
 
-        blank_file_extensions = helper.getBlankFileExtensions(
+        blank_file_extensions = getBlankFileExtensions(
             mpaths.blank_files_dir
         )  # list of extensions in bin/blank-files
         blacklist_data = []  # path from every blacklist.txt
@@ -463,13 +461,7 @@ def patcher():
                     if (
                         ui.get_value(box) == True and checkboxes[box] == folder
                     ):  # step into folders that have ticked checkboxes only
-                        ui.add_text(
-                            default_value=f"-> Installing {folder}",
-                            tag=f"installing_{folder}_text",
-                            parent="terminal_window",
-                            wrap=400,
-                            color=blue,
-                        )  ###???  #print("→ Installing " + folder)
+                        add_text_to_terminal(f"-> Installing {folder}", f"installing_{folder}_text")
                         if (
                             checkboxes[box] == "Dark Terrain"
                             or checkboxes[box] == "Remove Foilage"
@@ -493,13 +485,7 @@ def patcher():
                             if response.status_code == 200:
                                 with open(zip_path, "wb") as file:
                                     file.write(response.content)
-                                ui.add_text(
-                                    default_value="-> Downloaded latest OpenDotaGuides guides.",
-                                    tag="downloaded_open_dota_guides_text",
-                                    parent="terminal_window",
-                                    wrap=400,
-                                    color=blue,
-                                )
+                                add_text_to_terminal("-> Downloaded latest OpenDotaGuides guides.", "downloaded_open_dota_guides_text")    
                                 os.makedirs(
                                     os.path.join(mpaths.itembuilds_dir, "bkup"),
                                     exist_ok=True,
@@ -527,23 +513,11 @@ def patcher():
                                     )
                                 shutil.rmtree(temp_dump_path)
                                 os.remove(zip_path)
-                                ui.add_text(
-                                    default_value="-> Replaced default guides with OpenDotaGuides guides.",
-                                    tag="replaced_open_dota_guides_text",
-                                    parent="terminal_window",
-                                    wrap=400,
-                                    color=blue,
-                                )
+                                add_text_to_terminal("-> Replaced default guides with OpenDotaGuides guides.", "replaced_open_dota_guides_text") 
                                 if os.path.exists(zip_path):
                                     os.remove(zip_path)
                             else:
-                                ui.add_text(
-                                    default_value="-> Failed to download latest OpenDotaGuides guides.",
-                                    tag="failed_downloading_open_dota_guides",
-                                    parent="terminal_window",
-                                    wrap=400,
-                                    color=blue,
-                                )
+                                add_text_to_terminal("-> Failed to download latest OpenDotaGuides guides.", "failed_downloading_open_dota_guides") 
                         # ----------------------------------- files ---------------------------------- #
                         # if files_total == 0:    pass
                         # elif files_total == 1:  print(f"    files: Found {files_total} file")
@@ -569,7 +543,7 @@ def patcher():
                                         continue
 
                                     elif line.startswith("@@"):
-                                        for path in helper.processBlackList(
+                                        for path in processBlackList(
                                             index,
                                             line,
                                             folder,
@@ -580,7 +554,7 @@ def patcher():
                                         continue
 
                                     elif line.startswith(">>"):
-                                        for path in helper.processBlacklistDir(
+                                        for path in processBlacklistDir(
                                             index, line, folder, mpaths.pak01_dir
                                         ):
                                             blacklist_data.append(path)
@@ -590,7 +564,7 @@ def patcher():
                                         if line.endswith(tuple(blank_file_extensions)):
                                             blacklist_data.append(line)
                                         else:
-                                            helper.warnings.append(
+                                            warnings.append(
                                                 f"[Invalid Extension] '{line}' in 'mods\\{folder}\\blacklist.txt' [line: {index+1}] does not end in one of the valid extensions -> {blank_file_extensions}"  ###???
                                             )
 
@@ -619,7 +593,7 @@ def patcher():
                                         os.path.join(mpaths.game_dir, path + extension),
                                     )
                                 except FileNotFoundError as exception:
-                                    helper.warnings.append(
+                                    warnings.append(
                                         f"[Invalid Extension] '{line}' in 'mods\\{os.path.basename(mod_path)}\\blacklist.txt' does not end in one of the valid extensions -> {blank_file_extensions}"  ###???
                                     )
 
@@ -639,7 +613,7 @@ def patcher():
                                         continue
 
                                     elif line.startswith("@@"):
-                                        for path in helper.urlValidator(line):
+                                        for path in urlValidator(line):
                                             styling_data.append(path)
                                         continue
                                     else:
@@ -658,7 +632,7 @@ def patcher():
                                     ] = (path, style)
 
                                 except Exception as exception:
-                                    helper.warnings.append(
+                                    warnings.append(
                                         "[{}]".format(type(exception).__name__)
                                         + " Could not validate '{}' in --> 'mods\\{}\\styling.txt' [line: {}]".format(
                                             line, folder, index + 1
@@ -679,13 +653,13 @@ def patcher():
                                 for key, value in list(styling_dictionary.items()):
                                     construct1 = Path(value[0], value[1])
                                     try:
-                                        helper.vpkExtractor(
+                                        vpkExtractor(
                                             construct1.path.vcss_c,
                                             mpaths.pak01_dir,
                                             mpaths.build_dir,
                                         )
                                     except KeyError:
-                                        helper.warnings.append(
+                                        warnings.append(
                                             "Path does not exist in VPK -> '{}', error in 'mods\\{}\\styling.txt'".format(
                                                 construct1.path.vcss_c, folder
                                             )  ###???
@@ -694,17 +668,11 @@ def patcher():
 
             except Exception as exception:
                 exceptiondata = traceback.format_exc().splitlines()
-                helper.warnings.append(exceptiondata[-1])
+                warnings.append(exceptiondata[-1])
         # ---------------------------------- STEP 2 ---------------------------------- #
         # ------------------- Decompile all files in "build" folder ------------------ #
         # ---------------------------------------------------------------------------- #
-        ui.add_text(
-            default_value="-> Decompiling",
-            tag="decompiling_text",
-            parent="terminal_window",
-            wrap=400,
-            color=blue,
-        )
+        add_text_to_terminal("-> Decompiling", "decompiling_text")
         with open(os.path.join(mpaths.logs_dir, "Source2Viewer-CLI.txt"), "w") as file:
             subprocess.run(
                 [
@@ -721,13 +689,7 @@ def patcher():
         # ---------------------------------- STEP 3 ---------------------------------- #
         # -------- Check what .css files are in "build" folder and write mods -------- #
         # ---------------------------------------------------------------------------- #
-        ui.add_text(
-            default_value="-> Patching",
-            tag="patching_text",
-            parent="terminal_window",
-            wrap=400,
-            color=blue,
-        )
+        add_text_to_terminal("-> Patching", "patching_text")
 
         for key, value in list(styling_dictionary.items()):
             construct2 = Path(value[0], value[1])
@@ -749,17 +711,11 @@ def patcher():
         # ---------------------------------- step 5 ---------------------------------- #
         # -------------- Compile content to game with resource compiler -------------- #
         # ---------------------------------------------------------------------------- #
-        if helper.workshop_installed == True:
+        if workshop_installed == True:
             with open(
                 os.path.join(mpaths.logs_dir, "resourcecompiler.txt"), "wb"
             ) as file:
-                ui.add_text(
-                    default_value="-> Compiling",
-                    tag="compiling_text",
-                    parent="terminal_window",
-                    wrap=400,
-                    color=blue,
-                )
+                add_text_to_terminal("-> Compiling", "compiling_text")
                 sp_compiler = subprocess.run(
                     [
                         mpaths.resource_compiler,
@@ -785,69 +741,21 @@ def patcher():
         patching = False
 
         # unlock_interaction()
+        add_text_to_terminal("-> Done!", "done_text")
+        add_text_to_terminal("-------------------------------------------------------", "spacer1_text")
+        add_text_to_terminal("Remember to add '-language minify' to dota2 launch options", "launch_option_text")
+        add_text_to_terminal("Click Help button below for instructions", "help_text")        
 
-        ui.add_text(
-            default_value="-> Done!",
-            tag="done_text",
-            parent="terminal_window",
-            wrap=400,
-            color=blue,
-        )
-
-        ui.add_text(
-            default_value="-------------------------------------------------------",
-            parent="terminal_window",
-            wrap=400,
-            color=blue,
-        )
-
-        ui.add_text(
-            default_value="Remember to add '-language minify' to dota2 launch options",
-            tag="launch_option_text",
-            parent="terminal_window",
-            wrap=400,
-            color=blue,
-        )
-
-        ui.add_text(
-            default_value="Click Help button below for instructions",
-            tag="help_text",
-            parent="terminal_window",
-            wrap=400,
-            color=blue,
-        )
-
-        helper.handleWarnings(mpaths.logs_dir)
+        handleWarnings(mpaths.logs_dir)
 
     except Exception:
         with open(os.path.join(mpaths.logs_dir, "crashlog.txt"), "w") as file:
             file.write(traceback.format_exc())
 
         patching = False
-
-        ui.add_text(
-            default_value="Patching failed.",
-            tag="patching_failed_text",
-            parent="terminal_window",
-            wrap=400,
-            color=blue,
-        )
-
-        ui.add_text(
-            default_value="""Check 'logs\\crashlog.txt' for more info.""",
-            tag="check_logs_text",
-            parent="terminal_window",
-            wrap=400,
-            color=blue,
-        )
-
-        ui.add_text(
-            default_value="-------------------------------------------------------",
-            parent="terminal_window",
-            wrap=400,
-            color=blue,
-        )
-
+        add_text_to_terminal("Patching failed.", "patching_failed_text")
+        add_text_to_terminal("""Check 'logs\\crashlog.txt' for more info.""", "check_logs_text")
+        add_text_to_terminal("-------------------------------------------------------", "spacer2_text")
 
 def version_check():
     global version
@@ -867,9 +775,10 @@ def app_start():
     get_available_localizations()
     create_ui()
     change_localization(init=True)
+    version_check()
     setupSystem()
     load_state_checkboxes()
-    version_check()
+    validate_map_file()
     create_checkboxes()
     setupButtonState()
     item_handler_registry()
