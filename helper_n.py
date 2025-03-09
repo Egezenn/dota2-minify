@@ -43,112 +43,15 @@ def scroll_to_terminal_end():
 def add_text_to_terminal(text, tag):
     ui.add_text(default_value=text, parent="terminal_window", color=(0, 230, 230, 255), wrap=482, tag=tag)
     scroll_to_terminal_end()
-# ---------------------------------------------------------------------------- #
-#                                   GUI                                        #
-# ---------------------------------------------------------------------------- #
-# when you add new arguments to bind function tkinter seems to expect event as the last argument.
-
-
-# def modInfo(widget, name, mod_path, event):
-#     try:
-#         with open("locale.txt", "r") as file:
-#             locale = file.read()
-#     except:
-#         locale = ""
-
-#     if locale == "" or locale == "en":
-#         with open(os.path.join(mod_path, "notes.txt"), "r", encoding="utf-8") as file:
-#             data = file.read()
-#     elif locale == "ru":
-#         with open(
-#             os.path.join(mod_path, "notes_ru.txt"), "r", encoding="utf-8"
-#         ) as file:
-#             data = file.read()
-
-#     infoWindow = tk.Toplevel()
-#     infoWindow.lift()
-#     infoWindow.focus_force()
-#     infoWindow.title(name)
-#     infoWindow.iconbitmap("bin/images/info.ico")
-#     infoWindow.resizable(False, False)
-#     window_width = infoWindow.winfo_width()
-#     window_height = infoWindow.winfo_height()
-#     screen_width = infoWindow.winfo_screenwidth()
-#     screen_height = infoWindow.winfo_screenheight()
-#     x = (screen_width - window_width) // 2
-#     y = (screen_height - window_height) // 2
-#     infoWindow.geometry(f"+{x}+{y}")
-
-#     text_widget = tk.Text(infoWindow, bg="#1C1F2B", fg="#fff", wrap=tk.WORD)
-#     text_widget.grid(row=0, column=0, padx=5, pady=5, sticky="nsew")
-
-#     text_widget.insert("1.0", data)
-
-#     text_widget.config(state="disabled")
-
-#     close_button = tk.Button(
-#         infoWindow,
-#         text="Close",
-#         command=infoWindow.destroy,
-#         font=("Poplar Std", 10),
-#         height=1,
-#         width=10,
-#     )
-#     infoWindow.bind("<Escape>", lambda e: infoWindow.destroy())
-#     close_button.grid(row=1, column=0, pady=5)
-
 
 def disableWorkshopMods(mods_dir, mods_folders, checkboxes):
     for folder in mods_folders:
         mod_path = os.path.join(mods_dir, folder)
         styling_txt = os.path.join(mod_path, "styling.txt")
-
         for box in checkboxes:
             if checkboxes[box] == folder:
                 if os.stat(styling_txt).st_size != 0:
-                    ui.configure_item(box, enabled=False)
-
-
-# def toggleFrameOn(frame_checkbox, frame_buttons, mods_dir, mods_folders, checkboxes):
-#     for widget in frame_checkbox.winfo_children():
-#         widget.configure(state="normal")
-
-#     for widget in frame_buttons.winfo_children():
-#         if widget.cget("text") == "Patch":
-#             widget.configure(state="normal")
-#         if widget.cget("text") == "Uninstall":
-#             widget.configure(state="normal")
-
-#     if workshop_installed == False:
-#         disableWorkshopMods(mods_dir, mods_folders, checkboxes)
-
-
-# def toggleFrameOff(frame_checkbox, frame_buttons):
-#     for widget in frame_checkbox.winfo_children():
-#         widget.configure(state="disable")
-
-#     for widget in frame_buttons.winfo_children():
-#         if widget.cget("text") == "Patch":
-#             widget.configure(state="disable")
-#         if widget.cget("text") == "Uninstall":
-#             widget.configure(state="disable")
-
-
-# def getAppHeight(mods_folders):
-#     height = 400
-
-#     num_of_mods = len(mods_folders)
-#     i = 10
-
-#     while i < num_of_mods:
-#         i += 1
-#         height += 30
-
-#     return height
-
-
-# ---------------------------------------------------------------------------- #
-
+                    ui.configure_item(box, enabled=False, default_value=False)          
 
 def cleanFolders(
     build_dir, logs_dir, content_dir, game_dir, minify_dir, dota_minify_maps

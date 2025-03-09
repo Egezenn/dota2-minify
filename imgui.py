@@ -12,7 +12,8 @@ import psutil
 import requests
 import vpk
 
-from helper_n import *
+import helper_n as helper
+# from helper_n import *
 import mpaths
 import validatefiles_n as validatefiles
 
@@ -177,11 +178,11 @@ def close_mod_menu():
 
 
 def open_discord_link():
-    urlDispatcher(mpaths.discord)
+    helper.urlDispatcher(mpaths.discord)
 
 
 def open_github_link():
-    urlDispatcher(mpaths.latest_release)
+    helper.urlDispatcher(mpaths.latest_release)
 
 
 def close():
@@ -215,16 +216,20 @@ def create_checkboxes():
 
         mod_path = os.path.join(mpaths.mods_dir, name)
         notes_txt = os.path.join(mod_path, "notes.txt")
-        ui.add_button(
-            parent=f"{name}_group_tag",
-            small=True,
-            indent=200,
-            tag=f"{name}_details_tag",
-            label="Details",
-            # callback=OPEN NOTES TODO)
-        )
+        with open(notes_txt, "r", encoding="utf-8") as file:
+            data = file.read()
+
+        data2=f"{name}_details_window_tag"
+        ui.add_button(parent=f"{name}_group_tag", small=True, indent=200, tag=f"{name}_button_show_details_tag", label="Details", callback=show_details, user_data=f"{name}_details_window_tag")
+        
+        ui.add_window(tag=f"{name}_details_window_tag", pos=(0,0), show=False, width=538, height=400, no_resize=True, no_move=True, no_collapse=True, label=f"{name}")
+        ui.add_text(default_value=f"{data}", parent=f"{name}_details_window_tag", wrap=482)
+
         current_box = name
         checkboxes[current_box] = name
+
+def show_details(sender, app_data, user_data):
+    ui.configure_item(user_data, show=True)
 
 
 def update_popup_show():
@@ -251,6 +256,7 @@ def update_popup_show():
     ui.add_text(
         default_value="Would you like to go to the download page?",
         parent="update_popup",
+        indent=1,
         color=blue,
     )
     with ui.group(
@@ -292,41 +298,27 @@ def setupSystem():
             or os.path.exists(os.path.join(mpaths.minify_dir, "TinyEXR.Native.dll"))
         ):
             if platform.system() == "Windows":
-                add_text_to_terminal(text="Downloading Source2Viewer-CLI...", tag="downloading_s2v_cli_tag")
-                # ui.add_text(
-                #     default_value="Downloading Source2Viewer-CLI...",
-                #     parent="terminal_window",
-                # )
-                scroll_to_terminal_end()
+                helper.add_text_to_terminal(text="Downloading Source2Viewer-CLI...", tag="downloading_s2v_cli_tag")
+                helper.scroll_to_terminal_end()
                 zip_name = "cli-windows-x64.zip"
                 zip_path = os.path.join(mpaths.minify_dir, zip_name)
                 response = requests.get(mpaths.v2f_latest_windows_x64)
                 if response.status_code == 200:
                     with open(zip_path, "wb") as file:
                         file.write(response.content)
-                    add_text_to_terminal(text=f"-> Downloaded {zip_name}", tag="downloaded_text_tag")    
-                    # ui.add_text(
-                    #     default_value=f"-> Downloaded {zip_name}",
-                    #     parent="terminal_window",
-                    #     tag="downloaded_text",
-                    # )
-                    scroll_to_terminal_end()
+                    helper.add_text_to_terminal(text=f"-> Downloaded {zip_name}", tag="downloaded_text_tag")    
+                    helper.scroll_to_terminal_end()
                     shutil.unpack_archive(zip_path, mpaths.minify_dir, "zip")
                     os.remove(zip_path)
-                    add_text_to_terminal(text=f"-> Extracted {zip_name}", tag="extracted_text_tag")
-                    # ui.add_text(
-                    #     default_value=f"-> Extracted {zip_name}.",
-                    #     parent="terminal_window",
-                    #     tag="extracted_text",
-                    # )
-                    scroll_to_terminal_end()
+                    helper.add_text_to_terminal(text=f"-> Extracted {zip_name}", tag="extracted_text_tag")
+                    helper.scroll_to_terminal_end()
             else:
                 ui.add_text(
                     default_value="Error: Instructions to download Source2Viewer binaries for your system is not available yet, click Help for instructions.",
                     parent="terminal_window",
                     tag="error_cli_download_text",
                 )
-                scroll_to_terminal_end()
+                helper.scroll_to_terminal_end()
         for method in public_methods:
             getattr(x, method)()
             if x.toggle_flag == True:
@@ -341,13 +333,13 @@ def setupSystem():
                 parent="terminal_window",
                 tag="failed_to_start_text",
             )
-            scroll_to_terminal_end()
+            helper.scroll_to_terminal_end()
             ui.add_text(
                 default_value="Check 'logs\\crashlog.txt' for more info.",
                 parent="terminal_window",
                 tag="check_logs_text",
             )
-            scroll_to_terminal_end()
+            helper.scroll_to_terminal_end()
 
 
 def setupButtonState():
@@ -359,8 +351,9 @@ def setupButtonState():
         else:
             ui.configure_item("button_patch", enabled=False)  # Disabled theme? TODO
             # self.patchBtn.config(state="disabled", cursor="")
-    if workshop_installed == False:
-        disableWorkshopMods(mpaths.mods_dir, mpaths.mods_folders, checkboxes)
+    if helper.workshop_installed == False:
+        print(f"Disabling mods cause {helper.workshop_installed}")
+        helper.disableWorkshopMods(mpaths.mods_dir, mpaths.mods_folders, checkboxes)
 
 
 def uninstaller():
@@ -395,17 +388,11 @@ def uninstaller():
                         os.path.join(mpaths.itembuilds_dir, name),
                     )
     except FileNotFoundError:
-        warnings.append(
+        helper.warnings.append(
             "Unable to recover backed up default guides or the itembuilds directory is empty, verify files to get the default guides back"
         )
-    add_text_to_terminal(text="All Minify mods have been removed.", tag="uninstaller_text_tag")    
-    ui.add_text(
-        "All Minify mods have been removed.",
-        tag="uninstaller_text",
-        color=blue,
-        parent="terminal_window",
-    )
-    scroll_to_terminal_end()
+    helper.add_text_to_terminal(text="All Minify mods have been removed.", tag="uninstaller_text_tag")    
+    helper.scroll_to_terminal_end()
     # unlock_interaction()
 
 
@@ -431,7 +418,7 @@ def patcher():
 
     try:
         # clean up previous patching data
-        cleanFolders(
+        helper.cleanFolders(
             mpaths.build_dir,
             mpaths.logs_dir,
             mpaths.content_dir,
@@ -444,7 +431,7 @@ def patcher():
         # blacklist_dictionary = {}
         warnings = []
 
-        blank_file_extensions = getBlankFileExtensions(
+        blank_file_extensions = helper.getBlankFileExtensions(
             mpaths.blank_files_dir
         )  # list of extensions in bin/blank-files
         blacklist_data = []  # path from every blacklist.txt
@@ -461,7 +448,7 @@ def patcher():
                     if (
                         ui.get_value(box) == True and checkboxes[box] == folder
                     ):  # step into folders that have ticked checkboxes only
-                        add_text_to_terminal(f"-> Installing {folder}", f"installing_{folder}_text")
+                        helper.add_text_to_terminal(f"-> Installing {folder}", f"installing_{folder}_text")
                         if (
                             checkboxes[box] == "Dark Terrain"
                             or checkboxes[box] == "Remove Foilage"
@@ -485,7 +472,7 @@ def patcher():
                             if response.status_code == 200:
                                 with open(zip_path, "wb") as file:
                                     file.write(response.content)
-                                add_text_to_terminal("-> Downloaded latest OpenDotaGuides guides.", "downloaded_open_dota_guides_text")    
+                                helper.add_text_to_terminal("-> Downloaded latest OpenDotaGuides guides.", "downloaded_open_dota_guides_text")    
                                 os.makedirs(
                                     os.path.join(mpaths.itembuilds_dir, "bkup"),
                                     exist_ok=True,
@@ -513,11 +500,11 @@ def patcher():
                                     )
                                 shutil.rmtree(temp_dump_path)
                                 os.remove(zip_path)
-                                add_text_to_terminal("-> Replaced default guides with OpenDotaGuides guides.", "replaced_open_dota_guides_text") 
+                                helper.add_text_to_terminal("-> Replaced default guides with OpenDotaGuides guides.", "replaced_open_dota_guides_text") 
                                 if os.path.exists(zip_path):
                                     os.remove(zip_path)
                             else:
-                                add_text_to_terminal("-> Failed to download latest OpenDotaGuides guides.", "failed_downloading_open_dota_guides") 
+                                helper.add_text_to_terminal("-> Failed to download latest OpenDotaGuides guides.", "failed_downloading_open_dota_guides") 
                         # ----------------------------------- files ---------------------------------- #
                         # if files_total == 0:    pass
                         # elif files_total == 1:  print(f"    files: Found {files_total} file")
@@ -543,7 +530,7 @@ def patcher():
                                         continue
 
                                     elif line.startswith("@@"):
-                                        for path in processBlackList(
+                                        for path in helper.processBlackList(
                                             index,
                                             line,
                                             folder,
@@ -554,7 +541,7 @@ def patcher():
                                         continue
 
                                     elif line.startswith(">>"):
-                                        for path in processBlacklistDir(
+                                        for path in helper.processBlacklistDir(
                                             index, line, folder, mpaths.pak01_dir
                                         ):
                                             blacklist_data.append(path)
@@ -613,7 +600,7 @@ def patcher():
                                         continue
 
                                     elif line.startswith("@@"):
-                                        for path in urlValidator(line):
+                                        for path in helper.urlValidator(line):
                                             styling_data.append(path)
                                         continue
                                     else:
@@ -653,7 +640,7 @@ def patcher():
                                 for key, value in list(styling_dictionary.items()):
                                     construct1 = Path(value[0], value[1])
                                     try:
-                                        vpkExtractor(
+                                        helper.vpkExtractor(
                                             construct1.path.vcss_c,
                                             mpaths.pak01_dir,
                                             mpaths.build_dir,
@@ -672,7 +659,7 @@ def patcher():
         # ---------------------------------- STEP 2 ---------------------------------- #
         # ------------------- Decompile all files in "build" folder ------------------ #
         # ---------------------------------------------------------------------------- #
-        add_text_to_terminal("-> Decompiling", "decompiling_text")
+        helper.add_text_to_terminal("-> Decompiling", "decompiling_text")
         with open(os.path.join(mpaths.logs_dir, "Source2Viewer-CLI.txt"), "w") as file:
             subprocess.run(
                 [
@@ -689,7 +676,7 @@ def patcher():
         # ---------------------------------- STEP 3 ---------------------------------- #
         # -------- Check what .css files are in "build" folder and write mods -------- #
         # ---------------------------------------------------------------------------- #
-        add_text_to_terminal("-> Patching", "patching_text")
+        helper.add_text_to_terminal("-> Patching", "patching_text")
 
         for key, value in list(styling_dictionary.items()):
             construct2 = Path(value[0], value[1])
@@ -711,11 +698,11 @@ def patcher():
         # ---------------------------------- step 5 ---------------------------------- #
         # -------------- Compile content to game with resource compiler -------------- #
         # ---------------------------------------------------------------------------- #
-        if workshop_installed == True:
+        if helper.workshop_installed == True:
             with open(
                 os.path.join(mpaths.logs_dir, "resourcecompiler.txt"), "wb"
             ) as file:
-                add_text_to_terminal("-> Compiling", "compiling_text")
+                helper.add_text_to_terminal("-> Compiling", "compiling_text")
                 sp_compiler = subprocess.run(
                     [
                         mpaths.resource_compiler,
@@ -741,21 +728,21 @@ def patcher():
         patching = False
 
         # unlock_interaction()
-        add_text_to_terminal("-> Done!", "done_text")
-        add_text_to_terminal("-------------------------------------------------------", "spacer1_text")
-        add_text_to_terminal("Remember to add '-language minify' to dota2 launch options", "launch_option_text")
-        add_text_to_terminal("Click Help button below for instructions", "help_text")        
+        helper.add_text_to_terminal("-> Done!", "done_text")
+        helper.add_text_to_terminal("-------------------------------------------------------", "spacer1_text")
+        helper.add_text_to_terminal("Remember to add '-language minify' to dota2 launch options", "launch_option_text")
+        helper.add_text_to_terminal("Click Help button below for instructions", "help_text")        
 
-        handleWarnings(mpaths.logs_dir)
+        helper.handleWarnings(mpaths.logs_dir)
 
     except Exception:
         with open(os.path.join(mpaths.logs_dir, "crashlog.txt"), "w") as file:
             file.write(traceback.format_exc())
 
         patching = False
-        add_text_to_terminal("Patching failed.", "patching_failed_text")
-        add_text_to_terminal("""Check 'logs\\crashlog.txt' for more info.""", "check_logs_text")
-        add_text_to_terminal("-------------------------------------------------------", "spacer2_text")
+        helper.add_text_to_terminal("Patching failed.", "patching_failed_text")
+        helper.add_text_to_terminal("""Check 'logs\\crashlog.txt' for more info.""", "check_logs_text")
+        helper.add_text_to_terminal("-------------------------------------------------------", "spacer2_text")
 
 def version_check():
     global version
@@ -778,10 +765,11 @@ def app_start():
     version_check()
     setupSystem()
     load_state_checkboxes()
-    validate_map_file()
+    helper.validate_map_file()
     create_checkboxes()
     setupButtonState()
-    item_handler_registry()
+    ui.show_style_editor()
+    ui.show_metrics()
 
 
 # Adding font to the ui registry
@@ -791,18 +779,18 @@ with ui.font_registry():
         ui.add_font_range_hint(ui.mvFontRangeHint_Cyrillic)
         ui.bind_font(main_font)
 
-
+def close_active_window():
+    print(ui.get_active_window())
+    if ui.get_active_window() != 29 and ui.get_active_window() !=49 and ui.get_active_window() !=30:
+        ui.configure_item(ui.get_active_window(), show=False)
+    
 # Adding mouse handler to ui registry
 with ui.handler_registry():
     ui.add_mouse_drag_handler(
         parent="top_bar", button=0, threshold=0.0, callback=drag_viewport
     )
+    ui.add_key_release_handler(0x20E, callback=close_active_window)
 
-
-def item_handler_registry():
-    with ui.item_handler_registry(tag="resize_handler") as handler:
-        ui.add_item_resize_handler(callback=scroll_to_terminal_end)
-    ui.bind_item_handler_registry("terminal_window", "resize_handler")
 
 
 # Creating_main_viewport
@@ -937,26 +925,34 @@ def create_ui():
         no_collapse=True,
         no_close=True,
         no_saved_settings=True,
+        width=310,
+        height=100,
+        no_resize=True
     )
-    ui.add_text(default_value="Remove all mods?", parent="uninstall_popup", color=blue)
-    with ui.group(parent="uninstall_popup", horizontal=True):
-        ui.add_button(label="Confirm", tag="confirm_button", callback=uninstaller)
-        ui.add_button(
-            label="Cancel", tag="cancel_button", callback=hide_uninstall_popup
-        )
+    ui.configure_item("uninstall_popup",
+    pos=(
+        ui.get_viewport_width() / 2 - ui.get_item_width("uninstall_popup") / 2,
+        ui.get_viewport_height() / 2 - ui.get_item_height("uninstall_popup") / 2,
+    ))
+    ui.add_text(default_value="Remove all mods?", parent="uninstall_popup", color=blue, indent=91)
+    with ui.group(parent="uninstall_popup", horizontal=True, horizontal_spacing=10, indent=42):
+        ui.add_button(label="Confirm", tag="confirm_button", callback=uninstaller, width=100)
+        ui.add_button(label="Cancel", tag="cancel_button", callback=hide_uninstall_popup, width=100)
 
     # Creating mod selection menu as popup/modal
     ui.add_window(
-        modal=True,
+        modal=False,
+        pos=(0,0),
         tag="mod_menu",
+        label="Mod Selection Menu",
         menubar=False,
-        no_title_bar=True,
+        no_title_bar=False,
         no_move=True,
         no_collapse=True,
         no_close=True,
         no_open_over_existing_popup=True,
-        height=394,
-        width=532,
+        height=400,
+        width=538,
         show=False,
         no_resize=True,
     )
