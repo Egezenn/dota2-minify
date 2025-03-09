@@ -40,6 +40,7 @@ header_pad_y = 16
 
 def save_init():
     ui.save_init_file("dpg.ini")
+    save_state_checkboxes()
 
 
 class Extension:
@@ -173,7 +174,6 @@ def open_mod_menu():
 
 
 def close_mod_menu():
-    save_state_checkboxes()
     ui.configure_item("mod_menu", show=False)
 
 
@@ -780,7 +780,6 @@ with ui.font_registry():
         ui.bind_font(main_font)
 
 def close_active_window():
-    print(ui.get_active_window())
     if ui.get_active_window() != 29 and ui.get_active_window() !=49 and ui.get_active_window() !=30:
         ui.configure_item(ui.get_active_window(), show=False)
     
