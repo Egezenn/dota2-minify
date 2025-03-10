@@ -1,14 +1,15 @@
+import hashlib
 import os
 import shutil
-import urllib.error
 import time
+import urllib.error
 import webbrowser
 from urllib.request import urlopen
 
 import dearpygui.dearpygui as ui
 import vpk
-import mpaths
 
+import mpaths
 
 workshop_installed = False
 
@@ -35,14 +36,22 @@ def handleWarnings(logs_dir):
             color=(0, 203, 230, 255),
         )
 
+
 def scroll_to_terminal_end():
     time.sleep(0.02)
     ui.set_y_scroll("terminal_window", ui.get_y_scroll_max("terminal_window"))
 
 
 def add_text_to_terminal(text, tag):
-    ui.add_text(default_value=text, parent="terminal_window", color=(0, 230, 230, 255), wrap=482, tag=tag)
+    ui.add_text(
+        default_value=text,
+        parent="terminal_window",
+        color=(0, 230, 230, 255),
+        wrap=482,
+        tag=tag,
+    )
     scroll_to_terminal_end()
+
 
 def disableWorkshopMods(mods_dir, mods_folders, checkboxes):
     for folder in mods_folders:
@@ -51,7 +60,8 @@ def disableWorkshopMods(mods_dir, mods_folders, checkboxes):
         for box in checkboxes:
             if checkboxes[box] == folder:
                 if os.stat(styling_txt).st_size != 0:
-                    ui.configure_item(box, enabled=False, default_value=False)          
+                    ui.configure_item(box, enabled=False, default_value=False)
+
 
 def cleanFolders(
     build_dir, logs_dir, content_dir, game_dir, minify_dir, dota_minify_maps
@@ -83,20 +93,25 @@ def getBlankFileExtensions(blank_files_dir):
         extensions.append(os.path.splitext(file)[1])
     return extensions
 
+
 def validate_map_file():
     add_text_to_terminal("""Checking map file...""", "map_check_text_tag")
 
-    if os.path.exists(mpaths.dota_minify_map_dir) == False:
-        shutil.copyfile(mpaths.dota_user_map_dir, mpaths.dota_minify_map_dir)
+    if os.path.exists(mpaths.minify_map) == False:
+        shutil.copyfile(mpaths.dota_user_map_dir, mpaths.minify_map)
         add_text_to_terminal("""-> Updating map file...""", "map_update_text_tag")
 
-    if os.path.exists(mpaths.dota_user_map_dir) and os.path.exists(mpaths.dota_minify_map_dir) and os.path.getsize(mpaths.dota_user_map_dir) != os.path.getsize(mpaths.dota_minify_map_dir):
+    elif os.path.exists(mpaths.minify_map) and (
+        calculate_md5(mpaths.dota_user_map_dir) != calculate_md5(mpaths.minify_map)
+    ):
         add_text_to_terminal("""-> Updating map file...""", "map_update_text_tag")
-        os.remove(mpaths.dota_minify_map_dir)
-        shutil.copyfile(mpaths.dota_user_map_dir, mpaths.dota_minify_map_dir)
+        os.remove(mpaths.minify_map)
+        shutil.copyfile(mpaths.dota_user_map_dir, mpaths.minify_map)
 
-    if os.path.exists(mpaths.dota_user_map_dir) and os.path.exists(mpaths.dota_minify_map_dir) and os.path.getsize(mpaths.dota_user_map_dir) == os.path.getsize(mpaths.dota_minify_map_dir):
-        add_text_to_terminal("""-> Map file is up to date...""", "map_up_to_date_text_tag")
+    else:
+        add_text_to_terminal(
+            """-> Map file is up to date...""", "map_up_to_date_text_tag"
+        )
 
 
 def vpkExtractor(path, pak01_dir, build_dir):
@@ -201,3 +216,12 @@ def processBlackList(index, line, folder, blank_file_extensions, pak01_dir):
 def write_locale(text):
     with open("locale.txt", "w") as file:
         file.write(text)
+
+
+def calculate_md5(file_path):
+    """Calculates the MD5 hash of a file."""
+    md5_hash = hashlib.md5()
+    with open(file_path, "rb") as file:
+        for byte_block in iter(lambda: file.read(4096), b""):
+            md5_hash.update(byte_block)
+    return md5_hash.hexdigest()

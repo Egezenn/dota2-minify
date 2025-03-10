@@ -13,12 +13,12 @@ import requests
 import vpk
 
 import helper_n as helper
-# from helper_n import *
 import mpaths
 import validatefiles_n as validatefiles
 
 ui.create_context()
 
+version = None
 
 try:
     with open("version", "r") as file:
@@ -39,7 +39,7 @@ header_pad_y = 16
 
 
 def save_init():
-    ui.save_init_file("dpg.ini")
+    # ui.save_init_file("dpg.ini")
     save_state_checkboxes()
 
 
@@ -137,6 +137,7 @@ def open_github_link_and_close_minify():
     open_github_link()  # behavior to download the latest release
     close()
 
+
 def save_state_checkboxes():
     global checkboxes_state
     for box in checkboxes:
@@ -219,14 +220,35 @@ def create_checkboxes():
         with open(notes_txt, "r", encoding="utf-8") as file:
             data = file.read()
 
-        data2=f"{name}_details_window_tag"
-        ui.add_button(parent=f"{name}_group_tag", small=True, indent=200, tag=f"{name}_button_show_details_tag", label="Details", callback=show_details, user_data=f"{name}_details_window_tag")
-        
-        ui.add_window(tag=f"{name}_details_window_tag", pos=(0,0), show=False, width=538, height=400, no_resize=True, no_move=True, no_collapse=True, label=f"{name}")
-        ui.add_text(default_value=f"{data}", parent=f"{name}_details_window_tag", wrap=482)
+        data2 = f"{name}_details_window_tag"
+        ui.add_button(
+            parent=f"{name}_group_tag",
+            small=True,
+            indent=200,
+            tag=f"{name}_button_show_details_tag",
+            label="Details",
+            callback=show_details,
+            user_data=f"{name}_details_window_tag",
+        )
+
+        ui.add_window(
+            tag=f"{name}_details_window_tag",
+            pos=(0, 0),
+            show=False,
+            width=538,
+            height=400,
+            no_resize=True,
+            no_move=True,
+            no_collapse=True,
+            label=f"{name}",
+        )
+        ui.add_text(
+            default_value=f"{data}", parent=f"{name}_details_window_tag", wrap=482
+        )
 
         current_box = name
         checkboxes[current_box] = name
+
 
 def show_details(sender, app_data, user_data):
     ui.configure_item(user_data, show=True)
@@ -298,7 +320,10 @@ def setupSystem():
             or os.path.exists(os.path.join(mpaths.minify_dir, "TinyEXR.Native.dll"))
         ):
             if platform.system() == "Windows":
-                helper.add_text_to_terminal(text="Downloading Source2Viewer-CLI...", tag="downloading_s2v_cli_tag")
+                helper.add_text_to_terminal(
+                    text="Downloading Source2Viewer-CLI...",
+                    tag="downloading_s2v_cli_tag",
+                )
                 helper.scroll_to_terminal_end()
                 zip_name = "cli-windows-x64.zip"
                 zip_path = os.path.join(mpaths.minify_dir, zip_name)
@@ -306,11 +331,15 @@ def setupSystem():
                 if response.status_code == 200:
                     with open(zip_path, "wb") as file:
                         file.write(response.content)
-                    helper.add_text_to_terminal(text=f"-> Downloaded {zip_name}", tag="downloaded_text_tag")    
+                    helper.add_text_to_terminal(
+                        text=f"-> Downloaded {zip_name}", tag="downloaded_text_tag"
+                    )
                     helper.scroll_to_terminal_end()
                     shutil.unpack_archive(zip_path, mpaths.minify_dir, "zip")
                     os.remove(zip_path)
-                    helper.add_text_to_terminal(text=f"-> Extracted {zip_name}", tag="extracted_text_tag")
+                    helper.add_text_to_terminal(
+                        text=f"-> Extracted {zip_name}", tag="extracted_text_tag"
+                    )
                     helper.scroll_to_terminal_end()
             else:
                 ui.add_text(
@@ -391,7 +420,9 @@ def uninstaller():
         helper.warnings.append(
             "Unable to recover backed up default guides or the itembuilds directory is empty, verify files to get the default guides back"
         )
-    helper.add_text_to_terminal(text="All Minify mods have been removed.", tag="uninstaller_text_tag")    
+    helper.add_text_to_terminal(
+        text="All Minify mods have been removed.", tag="uninstaller_text_tag"
+    )
     helper.scroll_to_terminal_end()
     # unlock_interaction()
 
@@ -448,7 +479,9 @@ def patcher():
                     if (
                         ui.get_value(box) == True and checkboxes[box] == folder
                     ):  # step into folders that have ticked checkboxes only
-                        helper.add_text_to_terminal(f"-> Installing {folder}", f"installing_{folder}_text")
+                        helper.add_text_to_terminal(
+                            f"-> Installing {folder}", f"installing_{folder}_text"
+                        )
                         if (
                             checkboxes[box] == "Dark Terrain"
                             or checkboxes[box] == "Remove Foilage"
@@ -472,7 +505,10 @@ def patcher():
                             if response.status_code == 200:
                                 with open(zip_path, "wb") as file:
                                     file.write(response.content)
-                                helper.add_text_to_terminal("-> Downloaded latest OpenDotaGuides guides.", "downloaded_open_dota_guides_text")    
+                                helper.add_text_to_terminal(
+                                    "-> Downloaded latest OpenDotaGuides guides.",
+                                    "downloaded_open_dota_guides_text",
+                                )
                                 os.makedirs(
                                     os.path.join(mpaths.itembuilds_dir, "bkup"),
                                     exist_ok=True,
@@ -500,11 +536,17 @@ def patcher():
                                     )
                                 shutil.rmtree(temp_dump_path)
                                 os.remove(zip_path)
-                                helper.add_text_to_terminal("-> Replaced default guides with OpenDotaGuides guides.", "replaced_open_dota_guides_text") 
+                                helper.add_text_to_terminal(
+                                    "-> Replaced default guides with OpenDotaGuides guides.",
+                                    "replaced_open_dota_guides_text",
+                                )
                                 if os.path.exists(zip_path):
                                     os.remove(zip_path)
                             else:
-                                helper.add_text_to_terminal("-> Failed to download latest OpenDotaGuides guides.", "failed_downloading_open_dota_guides") 
+                                helper.add_text_to_terminal(
+                                    "-> Failed to download latest OpenDotaGuides guides.",
+                                    "failed_downloading_open_dota_guides",
+                                )
                         # ----------------------------------- files ---------------------------------- #
                         # if files_total == 0:    pass
                         # elif files_total == 1:  print(f"    files: Found {files_total} file")
@@ -729,9 +771,16 @@ def patcher():
 
         # unlock_interaction()
         helper.add_text_to_terminal("-> Done!", "done_text")
-        helper.add_text_to_terminal("-------------------------------------------------------", "spacer1_text")
-        helper.add_text_to_terminal("Remember to add '-language minify' to dota2 launch options", "launch_option_text")
-        helper.add_text_to_terminal("Click Help button below for instructions", "help_text")        
+        helper.add_text_to_terminal(
+            "-------------------------------------------------------", "spacer1_text"
+        )
+        helper.add_text_to_terminal(
+            "Remember to add '-language minify' to dota2 launch options",
+            "launch_option_text",
+        )
+        helper.add_text_to_terminal(
+            "Click Help button below for instructions", "help_text"
+        )
 
         helper.handleWarnings(mpaths.logs_dir)
 
@@ -741,8 +790,13 @@ def patcher():
 
         patching = False
         helper.add_text_to_terminal("Patching failed.", "patching_failed_text")
-        helper.add_text_to_terminal("""Check 'logs\\crashlog.txt' for more info.""", "check_logs_text")
-        helper.add_text_to_terminal("-------------------------------------------------------", "spacer2_text")
+        helper.add_text_to_terminal(
+            """Check 'logs\\crashlog.txt' for more info.""", "check_logs_text"
+        )
+        helper.add_text_to_terminal(
+            "-------------------------------------------------------", "spacer2_text"
+        )
+
 
 def version_check():
     global version
@@ -779,17 +833,22 @@ with ui.font_registry():
         ui.add_font_range_hint(ui.mvFontRangeHint_Cyrillic)
         ui.bind_font(main_font)
 
+
 def close_active_window():
-    if ui.get_active_window() != 29 and ui.get_active_window() !=49 and ui.get_active_window() !=30:
+    if (
+        ui.get_active_window() != 29
+        and ui.get_active_window() != 49
+        and ui.get_active_window() != 30
+    ):
         ui.configure_item(ui.get_active_window(), show=False)
-    
+
+
 # Adding mouse handler to ui registry
 with ui.handler_registry():
     ui.add_mouse_drag_handler(
         parent="top_bar", button=0, threshold=0.0, callback=drag_viewport
     )
     ui.add_key_release_handler(0x20E, callback=close_active_window)
-
 
 
 # Creating_main_viewport
@@ -926,22 +985,38 @@ def create_ui():
         no_saved_settings=True,
         width=310,
         height=100,
-        no_resize=True
+        no_resize=True,
     )
-    ui.configure_item("uninstall_popup",
-    pos=(
-        ui.get_viewport_width() / 2 - ui.get_item_width("uninstall_popup") / 2,
-        ui.get_viewport_height() / 2 - ui.get_item_height("uninstall_popup") / 2,
-    ))
-    ui.add_text(default_value="Remove all mods?", parent="uninstall_popup", color=blue, indent=91)
-    with ui.group(parent="uninstall_popup", horizontal=True, horizontal_spacing=10, indent=42):
-        ui.add_button(label="Confirm", tag="confirm_button", callback=uninstaller, width=100)
-        ui.add_button(label="Cancel", tag="cancel_button", callback=hide_uninstall_popup, width=100)
+    ui.configure_item(
+        "uninstall_popup",
+        pos=(
+            ui.get_viewport_width() / 2 - ui.get_item_width("uninstall_popup") / 2,
+            ui.get_viewport_height() / 2 - ui.get_item_height("uninstall_popup") / 2,
+        ),
+    )
+    ui.add_text(
+        default_value="Remove all mods?",
+        parent="uninstall_popup",
+        color=blue,
+        indent=91,
+    )
+    with ui.group(
+        parent="uninstall_popup", horizontal=True, horizontal_spacing=10, indent=42
+    ):
+        ui.add_button(
+            label="Confirm", tag="confirm_button", callback=uninstaller, width=100
+        )
+        ui.add_button(
+            label="Cancel",
+            tag="cancel_button",
+            callback=hide_uninstall_popup,
+            width=100,
+        )
 
     # Creating mod selection menu as popup/modal
     ui.add_window(
         modal=False,
-        pos=(0,0),
+        pos=(0, 0),
         tag="mod_menu",
         label="Mod Selection Menu",
         menubar=False,

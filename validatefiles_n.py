@@ -101,7 +101,10 @@ class Requirements:
     def g_isCompillerFound(self):
         if not os.path.exists(mpaths.resource_compiler):
             helper.workshop_installed = False
-            helper.add_text_to_terminal("""Some mods have been grayed out because you don't have Workshop Tools installed. Click Help for instructions.""", "wst_not_found_text")
+            helper.add_text_to_terminal(
+                """Some mods have been grayed out because you don't have Workshop Tools installed. Click Help for instructions.""",
+                "wst_not_found_text",
+            )
         else:
             helper.workshop_installed = True
 

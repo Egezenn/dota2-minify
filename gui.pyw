@@ -18,6 +18,8 @@ import helper
 import mpaths
 import validatefiles
 
+version = None
+
 try:
     with open("version", "r") as file:
         version = file.readline()
