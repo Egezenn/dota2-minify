@@ -210,10 +210,13 @@ def create_checkboxes():
         )
         for key in checkboxes_state.keys():
             if key == name:
-                ui.configure_item(
-                    name,
-                    default_value=checkboxes_state[name],
-                )
+                try:
+                    ui.configure_item(
+                        name,
+                        default_value=checkboxes_state[name],
+                    )
+                except:
+                    pass  # SystemError: <built-in function configure_item> returned a result with an exception set
 
         mod_path = os.path.join(mpaths.mods_dir, name)
         notes_txt = os.path.join(mod_path, "notes.txt")
