@@ -5,6 +5,7 @@ logs
 locale
 dpg.ini
 states.json
+bin/maps/dota.vpk
 
 ## Source2Viewer
 cli-*-*.*
