@@ -5,6 +5,7 @@ import shutil
 import subprocess
 import time
 import traceback
+import threading
 from shutil import copytree, ignore_patterns
 
 import dearpygui.dearpygui as ui
@@ -12,10 +13,9 @@ import psutil
 import requests
 import vpk
 
-import helper_n as helper
-# from helper_n import *
+import helper
 import mpaths
-import validatefiles_n as validatefiles
+import validatefiles
 
 ui.create_context()
 
@@ -33,14 +33,8 @@ checkboxes = {}
 checkboxes_state = {}
 blacklist_dictionary = {}
 styling_dictionary = {}
-
-blue = (0, 230, 230)
+locale = ""
 header_pad_y = 16
-
-
-def save_init():
-    ui.save_init_file("dpg.ini")
-    save_state_checkboxes()
 
 
 class Extension:
@@ -70,6 +64,10 @@ class TextRedirector(object):
         self.widget.configure(state="disabled")
 
 
+def save_state():
+    save_state_checkboxes()
+
+
 def get_available_localizations():
     global localizations
     with open(mpaths.localization_file_dir, "r", encoding="utf-8") as file:
@@ -92,26 +90,26 @@ def change_localization(init=False):
             with open(mpaths.locale_file_dir, "r") as file:
                 locale = file.readline()
                 ui.configure_item("lang_select", default_value=f"{locale}")
-    else:
-        locale = ui.get_value("lang_select")
-        with open(mpaths.locale_file_dir, "w") as file:
-            file.write(locale)
-
+        else:
+            locale = ui.get_value("lang_select")
+            with open(mpaths.locale_file_dir, "w") as file:
+                file.write(locale)   
     for key, value in localization_data.items():
-        try:
-            if ui.get_item_info(key).get("type") == "mvAppItemType::mvButton":
-                if locale in localization_data[key]:
-                    ui.configure_item(key, label=value[locale])
-                else:  # default to english if the line isn't available on selected locale
-                    ui.configure_item(key, label=value["EN"])
+        locale = ui.get_value("lang_select")  
+        if ui.get_item_info(key).get("type") == "mvAppItemType::mvButton":
+            if locale in localization_data[key]:
+                ui.configure_item(key, label=value[locale])
+            else:  # default to english if the line isn't available on selected locale
+                ui.configure_item(key, label=value["EN"])
 
-            if ui.get_item_info(key).get("type") == "mvAppItemType::mvText":
-                if locale in localization_data[key]:
-                    ui.configure_item(key, default_value=value[locale])
-                else:
-                    ui.configure_item(key, default_value=value["EN"])
-        except:  # find out later what this is
-            pass  # <built-in function get_item_info> returned a result with an exception set
+        if ui.get_item_info(key).get("type") == "mvAppItemType::mvText":
+            if locale in localization_data[key]:
+                ui.configure_item(key, default_value=value[locale])
+            else:
+                ui.configure_item(key, default_value=value["EN"])
+        with open(mpaths.locale_file_dir, "w") as file:
+                file.write(locale)
+
 
 
 def lock_interaction():
@@ -127,6 +125,7 @@ def unlock_interaction():
 def delete_update_popup():
     ui.configure_item("update_popup", show=False)
     ui.delete_item("update_popup")
+    app_start2()
 
 
 def hide_uninstall_popup():
@@ -136,6 +135,7 @@ def hide_uninstall_popup():
 def open_github_link_and_close_minify():
     open_github_link()  # behavior to download the latest release
     close()
+
 
 def save_state_checkboxes():
     global checkboxes_state
@@ -154,7 +154,6 @@ def load_state_checkboxes():
         pass
 
 
-# Creating window draging functionality
 def drag_viewport(sender, app_data, user_data):
     if (
         ui.is_item_hovered("top_bar") == True
@@ -171,10 +170,6 @@ def drag_viewport(sender, app_data, user_data):
 
 def open_mod_menu():
     ui.configure_item("mod_menu", show=True)
-
-
-def close_mod_menu():
-    ui.configure_item("mod_menu", show=False)
 
 
 def open_discord_link():
@@ -209,11 +204,10 @@ def create_checkboxes():
         )
         for key in checkboxes_state.keys():
             if key == name:
-                ui.configure_item(
-                    name,
-                    default_value=checkboxes_state[name],
-                )
-
+                if checkboxes_state[name] == None:
+                    ui.configure_item(name, default_value=False)
+                else:
+                    ui.configure_item(name, default_value=checkboxes_state[name])
         mod_path = os.path.join(mpaths.mods_dir, name)
         notes_txt = os.path.join(mod_path, "notes.txt")
         with open(notes_txt, "r", encoding="utf-8") as file:
@@ -227,6 +221,7 @@ def create_checkboxes():
 
         current_box = name
         checkboxes[current_box] = name
+
 
 def show_details(sender, app_data, user_data):
     ui.configure_item(user_data, show=True)
@@ -257,7 +252,6 @@ def update_popup_show():
         default_value="Would you like to go to the download page?",
         parent="update_popup",
         indent=1,
-        color=blue,
     )
     with ui.group(
         parent="update_popup",
@@ -299,7 +293,6 @@ def setupSystem():
         ):
             if platform.system() == "Windows":
                 helper.add_text_to_terminal(text="Downloading Source2Viewer-CLI...", tag="downloading_s2v_cli_tag")
-                helper.scroll_to_terminal_end()
                 zip_name = "cli-windows-x64.zip"
                 zip_path = os.path.join(mpaths.minify_dir, zip_name)
                 response = requests.get(mpaths.v2f_latest_windows_x64)
@@ -307,18 +300,15 @@ def setupSystem():
                     with open(zip_path, "wb") as file:
                         file.write(response.content)
                     helper.add_text_to_terminal(text=f"-> Downloaded {zip_name}", tag="downloaded_text_tag")    
-                    helper.scroll_to_terminal_end()
                     shutil.unpack_archive(zip_path, mpaths.minify_dir, "zip")
                     os.remove(zip_path)
                     helper.add_text_to_terminal(text=f"-> Extracted {zip_name}", tag="extracted_text_tag")
-                    helper.scroll_to_terminal_end()
             else:
                 ui.add_text(
                     default_value="Error: Instructions to download Source2Viewer binaries for your system is not available yet, click Help for instructions.",
                     parent="terminal_window",
                     tag="error_cli_download_text",
                 )
-                helper.scroll_to_terminal_end()
         for method in public_methods:
             getattr(x, method)()
             if x.toggle_flag == True:
@@ -333,13 +323,11 @@ def setupSystem():
                 parent="terminal_window",
                 tag="failed_to_start_text",
             )
-            helper.scroll_to_terminal_end()
             ui.add_text(
                 default_value="Check 'logs\\crashlog.txt' for more info.",
                 parent="terminal_window",
                 tag="check_logs_text",
             )
-            helper.scroll_to_terminal_end()
 
 
 def setupButtonState():
@@ -352,7 +340,6 @@ def setupButtonState():
             ui.configure_item("button_patch", enabled=False)  # Disabled theme? TODO
             # self.patchBtn.config(state="disabled", cursor="")
     if helper.workshop_installed == False:
-        print(f"Disabling mods cause {helper.workshop_installed}")
         helper.disableWorkshopMods(mpaths.mods_dir, mpaths.mods_folders, checkboxes)
 
 
@@ -392,12 +379,17 @@ def uninstaller():
             "Unable to recover backed up default guides or the itembuilds directory is empty, verify files to get the default guides back"
         )
     helper.add_text_to_terminal(text="All Minify mods have been removed.", tag="uninstaller_text_tag")    
-    helper.scroll_to_terminal_end()
     # unlock_interaction()
 
 
 def clean_terminal():
     ui.delete_item("terminal_window", children_only=True)
+
+
+def patcher_start():
+    thread = threading.Thread(target=patcher)
+    thread.start()
+    thread.join
 
 
 def patcher():
@@ -410,7 +402,6 @@ def patcher():
             tag="close_dota_text",
             parent="terminal_window",
             wrap=400,
-            color=blue,
         )
         return
 
@@ -744,6 +735,7 @@ def patcher():
         helper.add_text_to_terminal("""Check 'logs\\crashlog.txt' for more info.""", "check_logs_text")
         helper.add_text_to_terminal("-------------------------------------------------------", "spacer2_text")
 
+
 def version_check():
     global version
     if version is not None:
@@ -751,84 +743,53 @@ def version_check():
         if response.status_code == 200:
             if version == response.text:
                 ui.configure_item("button_latest", enabled=False)
+                app_start2()
             else:
                 ui.configure_item("button_latest", enabled=True)
                 version = response.text
                 update_popup_show()
 
 
-def app_start():
-    ui.configure_app(init_file="dpg.ini")
-    get_available_localizations()
-    create_ui()
-    change_localization(init=True)
-    version_check()
-    setupSystem()
-    load_state_checkboxes()
-    helper.validate_map_file()
-    create_checkboxes()
-    setupButtonState()
-    ui.show_style_editor()
-    ui.show_metrics()
-
-
-# Adding font to the ui registry
-with ui.font_registry():
-    with ui.font(f"{mpaths.bin_dir}/FiraMono-Medium.ttf", 14) as main_font:
-        ui.add_font_range_hint(ui.mvFontRangeHint_Default)
-        ui.add_font_range_hint(ui.mvFontRangeHint_Cyrillic)
-        ui.bind_font(main_font)
-
 def close_active_window():
     if ui.get_active_window() != 29 and ui.get_active_window() !=49 and ui.get_active_window() !=30:
         ui.configure_item(ui.get_active_window(), show=False)
-    
-# Adding mouse handler to ui registry
-with ui.handler_registry():
-    ui.add_mouse_drag_handler(
-        parent="top_bar", button=0, threshold=0.0, callback=drag_viewport
-    )
-    ui.add_key_release_handler(0x20E, callback=close_active_window)
 
 
-
-# Creating_main_viewport
-ui.create_viewport(
-    title="Minify",
-    height=400,
-    width=538,
-    resizable=False,
-    decorated=False,
-    vsync=True,
-    clear_color=(0, 0, 0, 255),
-)
-
-
-# Creating main window of GUI and UI elements
 def create_ui():
     with ui.window(tag="primary_window", no_close=True, no_title_bar=True):
         ui.set_primary_window("primary_window", True)
-        ui.add_child_window(tag="top_bar", pos=(-5, -5), height=25, width=543)
+        ui.add_child_window(tag="top_bar", pos=(-5, -5), height=25, width=543, no_scrollbar=True, no_scroll_with_mouse=True, )
+        ui.add_button(
+                    parent="top_bar",
+                    tag="exit_button", 
+                    label="Exit", 
+                    callback=close,
+                    height=20,
+                    width=40,
+                    pos=(503,5)
+                )
+        ui.add_combo(
+                    parent="top_bar",
+                    tag="lang_select",
+                    items=(localizations),
+                    default_value="EN",
+                    width=50,
+                    pos=(5,5),
+                    callback=change_localization,
+                )
         with ui.group(horizontal=True):
             with ui.group(pos=(8, 27)):
                 ui.add_button(
                     tag="button_patch",
                     label="Patch",
                     width=100,
-                    callback=patcher,
+                    callback=patcher_start,
                 )
                 ui.add_button(
                     tag="button_select_mods",
                     label="Select Mods",
                     width=100,
                     callback=open_mod_menu,
-                )
-                ui.add_combo(
-                    tag="lang_select",
-                    items=(localizations),
-                    default_value="EN",
-                    width=100,
-                    callback=change_localization,
                 )
                 ui.add_button(
                     tag="button_discord",
@@ -848,9 +809,6 @@ def create_ui():
                     width=100,
                     callback=unistall_popup_show,
                 )
-                ui.add_button(
-                    tag="exit_button", label="Exit", width=100, callback=close
-                )
             with ui.group(pos=(67, -2)):
                 ui.add_text(
                     r"""
@@ -860,41 +818,34 @@ def create_ui():
          \ \_\ \ \_\  \ \_\  \ \_\\"\_\  \ \_\  \ \_\_/  \/\_____\
           \/_/  \/_/   \/_/   \/_/ \/_/   \/_/   \/_/     \/_____/
         ----------------------------------------------------------""",
-                    color=blue,
                 )
                 ui.add_text(
                     "Want to contribute to the project's growth?",
                     tag="header_text_1",
                     pos=(124, 15 + header_pad_y * 5),
-                    color=blue,
                 )
                 ui.add_text(
                     "-> Join our Discord community!",
                     tag="header_text_2",
-                    color=blue,
                     pos=(123, 15 + header_pad_y * 6),
                 )
                 ui.add_text(
                     "-> Share Minify with your friends and online groups",
                     tag="header_text_3",
-                    color=blue,
                     pos=(123, 15 + header_pad_y * 7),
                 )
                 ui.add_text(
                     "-> Star the project on GitHub",
                     tag="header_text_4",
-                    color=blue,
                     pos=(123, 15 + header_pad_y * 8),
                 )
                 ui.add_text(
                     "-> Create and maintain mods for this project",
                     tag="header_text_5",
-                    color=blue,
                     pos=(123, 15 + header_pad_y * 9),
                 )
                 ui.add_text(
                     "----------------------------------------------------------",
-                    color=blue,
                     pos=(123, 15 + header_pad_y * 10),
                 )
         # Creating log terminal
@@ -933,7 +884,7 @@ def create_ui():
         ui.get_viewport_width() / 2 - ui.get_item_width("uninstall_popup") / 2,
         ui.get_viewport_height() / 2 - ui.get_item_height("uninstall_popup") / 2,
     ))
-    ui.add_text(default_value="Remove all mods?", parent="uninstall_popup", color=blue, indent=91)
+    ui.add_text(default_value="Remove all mods?", parent="uninstall_popup", indent=91)
     with ui.group(parent="uninstall_popup", horizontal=True, horizontal_spacing=10, indent=42):
         ui.add_button(label="Confirm", tag="confirm_button", callback=uninstaller, width=100)
         ui.add_button(label="Cancel", tag="cancel_button", callback=hide_uninstall_popup, width=100)
@@ -948,19 +899,70 @@ def create_ui():
         no_title_bar=False,
         no_move=True,
         no_collapse=True,
-        no_close=True,
+        no_close=False,
         no_open_over_existing_popup=True,
         height=400,
         width=538,
         show=False,
         no_resize=True,
     )
-    ui.add_button(parent="mod_menu", label="SAVE", callback=close_mod_menu)
 
 
-ui.set_frame_callback(1, callback=app_start)
-ui.set_exit_callback(save_init)
+def app_start():
+    get_available_localizations()
+    create_ui()
+    change_localization(init=True)
+    version_check()
+    
 
+def app_start2():
+    t1 = threading.Thread(target=setupSystem)
+    t2 = threading.Thread(target=load_state_checkboxes)
+    t3 = threading.Thread(target=helper.validate_map_file)
+    t4 = threading.Thread(target=create_checkboxes)
+    t5 = threading.Thread(target=setupButtonState)
+    t1.start()
+    t2.start()
+    t3.start()
+    t4.start()
+    t5.start()
+    t1.join()
+    t2.join()
+    t3.join()
+    t4.join()
+    t5.join()
+    ui.show_style_editor()
+
+
+
+# Adding font to the ui registry
+with ui.font_registry():
+    with ui.font(f"{mpaths.bin_dir}/FiraMono-Medium.ttf", 14) as main_font:
+        ui.add_font_range_hint(ui.mvFontRangeHint_Default)
+        ui.add_font_range_hint(ui.mvFontRangeHint_Cyrillic)
+        ui.bind_font(main_font)
+
+# Adding mouse handler to ui registry
+with ui.handler_registry():
+    ui.add_mouse_drag_handler(
+        parent="top_bar", button=0, threshold=0.0, callback=drag_viewport
+    )
+    ui.add_key_release_handler(0x20E, callback=close_active_window)
+
+# Creating_main_viewport
+ui.create_viewport(
+    title="Minify",
+    height=400,
+    width=538,
+    resizable=False,
+    decorated=False,
+    vsync=True,
+    clear_color=(0, 0, 0, 255),
+)
+
+ui.set_frame_callback(1, callback=app_start) #On first frame execute app_start
+
+ui.set_exit_callback(save_state) # On last frame exectute save_state
 
 # DearPyGyi Setup
 ui.setup_dearpygui()

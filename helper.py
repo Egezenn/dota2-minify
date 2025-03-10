@@ -1,11 +1,14 @@
 import os
 import shutil
-import tkinter as tk
 import urllib.error
+import time
 import webbrowser
 from urllib.request import urlopen
 
+import dearpygui.dearpygui as ui
 import vpk
+import mpaths
+
 
 workshop_installed = False
 
@@ -25,123 +28,32 @@ def handleWarnings(logs_dir):
         with open(os.path.join(logs_dir, "warnings.txt"), "w") as file:
             for line in warnings:
                 file.write(line + "\n")
-        if len(warnings) == 1:
-            print(
-                f"{len(warnings)} error occured. Check logs\\warnings.txt for details."
-            )
-        elif len(warnings) >= 2:
-            print(
-                f"{len(warnings)} errors occured. Check logs\\warnings.txt for details."
-            )
+            # print(f"{len(warnings)} error occured. Check logs\\warnings.txt for details.")
+        ui.add_text(
+            default_value="Minify encountered errors. Check Minify\\logs\\warnings.txt for details.",
+            parent="terminal_window",
+            color=(0, 203, 230, 255),
+        )
 
 
-# ---------------------------------------------------------------------------- #
-#                                   GUI                                        #
-# ---------------------------------------------------------------------------- #
-# when you add new arguments to bind function tkinter seems to expect event as the last argument.
-def modLabelColorConfig(widget, color, event):
-    widget.configure(foreground=color)
+def scroll_to_terminal_end():
+    time.sleep(0.02)
+    ui.set_y_scroll("terminal_window", ui.get_y_scroll_max("terminal_window"))
 
 
-def modInfo(widget, name, mod_path, event):
-    try:
-        with open("locale.txt", "r") as file:
-            locale = file.read()
-    except:
-        locale = ""
-
-    if locale == "" or locale == "en":
-        with open(os.path.join(mod_path, "notes.txt"), "r", encoding="utf-8") as file:
-            data = file.read()
-    elif locale == "ru":
-        with open(
-            os.path.join(mod_path, "notes_ru.txt"), "r", encoding="utf-8"
-        ) as file:
-            data = file.read()
-
-    infoWindow = tk.Toplevel()
-    infoWindow.lift()
-    infoWindow.focus_force()
-    infoWindow.title(name)
-    infoWindow.iconbitmap("bin/images/info.ico")
-    infoWindow.resizable(False, False)
-    window_width = infoWindow.winfo_width()
-    window_height = infoWindow.winfo_height()
-    screen_width = infoWindow.winfo_screenwidth()
-    screen_height = infoWindow.winfo_screenheight()
-    x = (screen_width - window_width) // 2
-    y = (screen_height - window_height) // 2
-    infoWindow.geometry(f"+{x}+{y}")
-
-    text_widget = tk.Text(infoWindow, bg="#1C1F2B", fg="#fff", wrap=tk.WORD)
-    text_widget.grid(row=0, column=0, padx=5, pady=5, sticky="nsew")
-
-    text_widget.insert("1.0", data)
-
-    text_widget.config(state="disabled")
-
-    close_button = tk.Button(
-        infoWindow,
-        text="Close",
-        command=infoWindow.destroy,
-        font=("Poplar Std", 10),
-        height=1,
-        width=10,
-    )
-    infoWindow.bind("<Escape>", lambda e: infoWindow.destroy())
-    close_button.grid(row=1, column=0, pady=5)
+def add_text_to_terminal(text, tag):
+    ui.add_text(default_value=text, parent="terminal_window", wrap=482, tag=tag)
+    scroll_to_terminal_end()
 
 
 def disableWorkshopMods(mods_dir, mods_folders, checkboxes):
     for folder in mods_folders:
         mod_path = os.path.join(mods_dir, folder)
         styling_txt = os.path.join(mod_path, "styling.txt")
-
         for box in checkboxes:
             if checkboxes[box] == folder:
                 if os.stat(styling_txt).st_size != 0:
-                    box.configure(state="disable")
-
-
-def toggleFrameOn(frame_checkbox, frame_buttons, mods_dir, mods_folders, checkboxes):
-    for widget in frame_checkbox.winfo_children():
-        widget.configure(state="normal")
-
-    for widget in frame_buttons.winfo_children():
-        if widget.cget("text") == "Patch":
-            widget.configure(state="normal")
-        if widget.cget("text") == "Uninstall":
-            widget.configure(state="normal")
-
-    if workshop_installed == False:
-        disableWorkshopMods(mods_dir, mods_folders, checkboxes)
-
-
-def toggleFrameOff(frame_checkbox, frame_buttons):
-    for widget in frame_checkbox.winfo_children():
-        widget.configure(state="disable")
-
-    for widget in frame_buttons.winfo_children():
-        if widget.cget("text") == "Patch":
-            widget.configure(state="disable")
-        if widget.cget("text") == "Uninstall":
-            widget.configure(state="disable")
-
-
-def getAppHeight(mods_folders):
-    height = 400
-
-    num_of_mods = len(mods_folders)
-    i = 10
-
-    while i < num_of_mods:
-        i += 1
-        height += 30
-
-    return height
-
-
-# ---------------------------------------------------------------------------- #
+                    ui.configure_item(box, enabled=False, default_value=False)          
 
 
 def cleanFolders(
@@ -175,11 +87,27 @@ def getBlankFileExtensions(blank_files_dir):
     return extensions
 
 
+def validate_map_file():
+    add_text_to_terminal("""Checking map file...""", "map_check_text_tag")
+
+    if os.path.exists(mpaths.dota_minify_map_dir) == False:
+        shutil.copyfile(mpaths.dota_user_map_dir, mpaths.dota_minify_map_dir)
+        add_text_to_terminal("""-> Updating map file...""", "map_update_text_tag")
+
+    if os.path.exists(mpaths.dota_user_map_dir) and os.path.exists(mpaths.dota_minify_map_dir) and os.path.getsize(mpaths.dota_user_map_dir) != os.path.getsize(mpaths.dota_minify_map_dir):
+        add_text_to_terminal("""-> Updating map file...""", "map_update_text_tag")
+        os.remove(mpaths.dota_minify_map_dir)
+        shutil.copyfile(mpaths.dota_user_map_dir, mpaths.dota_minify_map_dir)
+
+    if os.path.exists(mpaths.dota_user_map_dir) and os.path.exists(mpaths.dota_minify_map_dir) and os.path.getsize(mpaths.dota_user_map_dir) == os.path.getsize(mpaths.dota_minify_map_dir):
+        add_text_to_terminal("""-> Map file is up to date...""", "map_up_to_date_text_tag")
+
+
 def vpkExtractor(path, pak01_dir, build_dir):
     pak1 = vpk.open(pak01_dir)
     fullPath = os.path.join(build_dir, path)
     if not os.path.exists(fullPath):  # extract files from VPK only once
-        print("        extracting: " + path)
+        add_text_to_terminal(f"    extracting: {path}", f"extracting_{path}_tag")
         path = path.replace(os.sep, "/")
         pakfile = pak1.get_file(path)
         pakfile.save(os.path.join(fullPath))
