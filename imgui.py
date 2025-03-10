@@ -38,10 +38,6 @@ locale = ""
 header_pad_y = 16
 
 
-def save_init():
-    save_state_checkboxes()
-
-
 class Extension:
     def __init__(self, path):
         self.path = path
@@ -420,9 +416,12 @@ def clean_terminal():
 
 
 def patcher_start():
-    thread = threading.Thread(target=patcher)
-    thread.start()
-    thread.join
+    thread1 = threading.Thread(target=save_state_checkboxes())
+    thread1.start()
+    thread1.join
+    thread2 = threading.Thread(target=patcher)
+    thread2.start()
+    thread2.join
 
 
 def patcher():
