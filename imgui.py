@@ -39,7 +39,6 @@ header_pad_y = 16
 
 
 def save_init():
-    # ui.save_init_file("dpg.ini")
     save_state_checkboxes()
 
 

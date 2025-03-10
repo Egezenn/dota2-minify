@@ -1,3 +1,4 @@
+import hashlib
 import os
 import shutil
 import urllib.error
@@ -7,8 +8,8 @@ from urllib.request import urlopen
 
 import dearpygui.dearpygui as ui
 import vpk
-import mpaths
 
+import mpaths
 
 workshop_installed = False
 
@@ -53,7 +54,7 @@ def disableWorkshopMods(mods_dir, mods_folders, checkboxes):
         for box in checkboxes:
             if checkboxes[box] == folder:
                 if os.stat(styling_txt).st_size != 0:
-                    ui.configure_item(box, enabled=False, default_value=False)          
+                    ui.configure_item(box, enabled=False, default_value=False)
 
 
 def cleanFolders(
@@ -90,17 +91,21 @@ def getBlankFileExtensions(blank_files_dir):
 def validate_map_file():
     add_text_to_terminal("""Checking map file...""", "map_check_text_tag")
 
-    if os.path.exists(mpaths.dota_minify_map_dir) == False:
-        shutil.copyfile(mpaths.dota_user_map_dir, mpaths.dota_minify_map_dir)
+    if os.path.exists(mpaths.minify_map) == False:
+        shutil.copyfile(mpaths.dota_user_map_dir, mpaths.minify_map)
         add_text_to_terminal("""-> Updating map file...""", "map_update_text_tag")
 
-    if os.path.exists(mpaths.dota_user_map_dir) and os.path.exists(mpaths.dota_minify_map_dir) and os.path.getsize(mpaths.dota_user_map_dir) != os.path.getsize(mpaths.dota_minify_map_dir):
+    elif os.path.exists(mpaths.minify_map) and (
+        calculate_md5(mpaths.dota_user_map_dir) != calculate_md5(mpaths.minify_map)
+    ):
         add_text_to_terminal("""-> Updating map file...""", "map_update_text_tag")
-        os.remove(mpaths.dota_minify_map_dir)
-        shutil.copyfile(mpaths.dota_user_map_dir, mpaths.dota_minify_map_dir)
+        os.remove(mpaths.minify_map)
+        shutil.copyfile(mpaths.dota_user_map_dir, mpaths.minify_map)
 
-    if os.path.exists(mpaths.dota_user_map_dir) and os.path.exists(mpaths.dota_minify_map_dir) and os.path.getsize(mpaths.dota_user_map_dir) == os.path.getsize(mpaths.dota_minify_map_dir):
-        add_text_to_terminal("""-> Map file is up to date...""", "map_up_to_date_text_tag")
+    else:
+        add_text_to_terminal(
+            """-> Map file is up to date...""", "map_up_to_date_text_tag"
+        )
 
 
 def vpkExtractor(path, pak01_dir, build_dir):
@@ -205,3 +210,12 @@ def processBlackList(index, line, folder, blank_file_extensions, pak01_dir):
 def write_locale(text):
     with open("locale.txt", "w") as file:
         file.write(text)
+
+
+def calculate_md5(file_path):
+    """Calculates the MD5 hash of a file."""
+    md5_hash = hashlib.md5()
+    with open(file_path, "rb") as file:
+        for byte_block in iter(lambda: file.read(4096), b""):
+            md5_hash.update(byte_block)
+    return md5_hash.hexdigest()
