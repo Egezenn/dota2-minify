@@ -7,27 +7,43 @@ import helper
 import mpaths
 
 
-
 def open_file_dialog():
-    ui.add_file_dialog(label='Select dota2.exe', default_path=mpaths.steam_dir, default_filename="dota2.exe", modal=False, tag="file_dialog_tag", callback=setFolder, cancel_callback=close_file_dialog, width=500, height=300)
+    ui.add_file_dialog(
+        label="Select dota2.exe",
+        default_path=mpaths.steam_dir,
+        default_filename="dota2.exe",
+        modal=False,
+        tag="file_dialog_tag",
+        callback=setFolder,
+        cancel_callback=close_file_dialog,
+        width=500,
+        height=300,
+    )
     ui.add_file_extension(parent="file_dialog_tag", extension=".exe")
+
 
 def close_file_dialog():
     ui.delete_item("file_dialog_tag")
 
+
 def setFolder(sender, app_data):
     folder = app_data["current_path"]
     print(folder)
-    if folder:   #Check if the user selected a folder
+    if folder:  # Check if the user selected a folder
         with open(mpaths.path_file, "w") as file:
             file.write(folder)
-        helper.add_text_to_terminal("Path saved, please restart Minify", "path_saved_text_tag")
+        helper.add_text_to_terminal(
+            "Path saved, please restart Minify", "path_saved_text_tag"
+        )
     else:
-        helper.add_text_to_terminal("Canceled, you did not select a folder.", "canceled_path_text_tag")
+        helper.add_text_to_terminal(
+            "Canceled, you did not select a folder.", "canceled_path_text_tag"
+        )
 
 
 # this class is called with getattr method and calls all functions here alphabetically
 # use naming convention (a_, b_, c_ ...etc) to run this class top to bottom if order mattters
+
 
 class Requirements:
     def __init__(self, checkboxes):
@@ -53,8 +69,14 @@ class Requirements:
         if not os.path.exists(normalized_dota2path):
             self.toggle_flag = True
             helper.add_text_to_terminal("Dota 2 Not Found", "dota_not_found_text")
-            helper.add_text_to_terminal(f'Dota 2 not found in\n\n"{normalized_dota2path}"\n\n', "dota_not_found_text_2")
-            helper.add_text_to_terminal(f"""Please select the location of your "SteamLibrary" folder, for example "D:\\SteamLibrary".""", "dota_not_found_text_3")
+            helper.add_text_to_terminal(
+                f'Dota 2 not found in\n\n"{normalized_dota2path}"\n\n',
+                "dota_not_found_text_2",
+            )
+            helper.add_text_to_terminal(
+                f"""Please select the location of your "SteamLibrary" folder, for example "D:\\SteamLibrary".""",
+                "dota_not_found_text_3",
+            )
             open_file_dialog()
 
     def c_isMinifyFolderPresent(self):
@@ -93,7 +115,10 @@ class Requirements:
     def g_isCompillerFound(self):
         if not os.path.exists(mpaths.resource_compiler):
             helper.workshop_installed = False
-            helper.add_text_to_terminal("""Some mods have been grayed out because you don't have Workshop Tools installed. Click Help for instructions.""", "wst_not_found_text")
+            helper.add_text_to_terminal(
+                """Some mods have been grayed out because you don't have Workshop Tools installed. Click Help for instructions.""",
+                "wst_not_found_text",
+            )
         else:
             helper.workshop_installed = True
 

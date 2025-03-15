@@ -1,8 +1,8 @@
 import hashlib
 import os
 import shutil
-import urllib.error
 import time
+import urllib.error
 import webbrowser
 from urllib.request import urlopen
 
@@ -90,6 +90,8 @@ def getBlankFileExtensions(blank_files_dir):
 
 def validate_map_file():
     add_text_to_terminal("""Checking map file...""", "map_check_text_tag")
+
+    os.makedirs(mpaths.maps_dir, exist_ok=True)
 
     if os.path.exists(mpaths.minify_map) == False:
         shutil.copyfile(mpaths.dota_user_map_dir, mpaths.minify_map)

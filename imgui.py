@@ -3,9 +3,9 @@ import os
 import platform
 import shutil
 import subprocess
+import threading
 import time
 import traceback
-import threading
 from shutil import copytree, ignore_patterns
 
 import dearpygui.dearpygui as ui
@@ -493,48 +493,56 @@ def patcher():
                             temp_dump_path = os.path.join(mod_path, "files", "temp")
                             if os.path.exists(zip_path):
                                 os.remove(zip_path)
-                            response = requests.get(mpaths.odg_latest)
-                            if response.status_code == 200:
-                                with open(zip_path, "wb") as file:
-                                    file.write(response.content)
-                                helper.add_text_to_terminal(
-                                    "-> Downloaded latest OpenDotaGuides guides.",
-                                    "downloaded_open_dota_guides_text",
-                                )
-                                os.makedirs(
-                                    os.path.join(mpaths.itembuilds_dir, "bkup"),
-                                    exist_ok=True,
-                                )
-                                for name in os.listdir(mpaths.itembuilds_dir):
-                                    try:
-                                        if name != "bkup":
-                                            os.rename(
-                                                os.path.join(
-                                                    mpaths.itembuilds_dir, name
-                                                ),
-                                                os.path.join(
-                                                    mpaths.itembuilds_dir,
-                                                    "bkup",
-                                                    name,
-                                                ),
-                                            )
-                                    except FileExistsError:
-                                        pass  # backup was created and opendotaguides was replacing the guides already
-                                shutil.unpack_archive(zip_path, temp_dump_path, "zip")
-                                for file in os.listdir(temp_dump_path):
-                                    shutil.copy(
-                                        os.path.join(temp_dump_path, file),
-                                        os.path.join(mpaths.itembuilds_dir, file),
+                            try:
+                                response = requests.get(mpaths.odg_latest)
+                                if response.status_code == 200:
+                                    with open(zip_path, "wb") as file:
+                                        file.write(response.content)
+                                    helper.add_text_to_terminal(
+                                        "-> Downloaded latest OpenDotaGuides guides.",
+                                        "downloaded_open_dota_guides_text",
                                     )
-                                shutil.rmtree(temp_dump_path)
-                                os.remove(zip_path)
-                                helper.add_text_to_terminal(
-                                    "-> Replaced default guides with OpenDotaGuides guides.",
-                                    "replaced_open_dota_guides_text",
-                                )
-                                if os.path.exists(zip_path):
+                                    os.makedirs(
+                                        os.path.join(mpaths.itembuilds_dir, "bkup"),
+                                        exist_ok=True,
+                                    )
+                                    for name in os.listdir(mpaths.itembuilds_dir):
+                                        try:
+                                            if name != "bkup":
+                                                os.rename(
+                                                    os.path.join(
+                                                        mpaths.itembuilds_dir, name
+                                                    ),
+                                                    os.path.join(
+                                                        mpaths.itembuilds_dir,
+                                                        "bkup",
+                                                        name,
+                                                    ),
+                                                )
+                                        except FileExistsError:
+                                            pass  # backup was created and opendotaguides was replacing the guides already
+                                    shutil.unpack_archive(
+                                        zip_path, temp_dump_path, "zip"
+                                    )
+                                    for file in os.listdir(temp_dump_path):
+                                        shutil.copy(
+                                            os.path.join(temp_dump_path, file),
+                                            os.path.join(mpaths.itembuilds_dir, file),
+                                        )
+                                    shutil.rmtree(temp_dump_path)
                                     os.remove(zip_path)
-                            else:
+                                    helper.add_text_to_terminal(
+                                        "-> Replaced default guides with OpenDotaGuides guides.",
+                                        "replaced_open_dota_guides_text",
+                                    )
+                                    if os.path.exists(zip_path):
+                                        os.remove(zip_path)
+                                else:
+                                    helper.add_text_to_terminal(
+                                        "-> Failed to download latest OpenDotaGuides guides.",
+                                        "failed_downloading_open_dota_guides",
+                                    )
+                            except:  # no connection
                                 helper.add_text_to_terminal(
                                     "-> Failed to download latest OpenDotaGuides guides.",
                                     "failed_downloading_open_dota_guides",
@@ -793,15 +801,19 @@ def patcher():
 def version_check():
     global version
     if version is not None:
-        response = requests.get(mpaths.version_query)
-        if response.status_code == 200:
-            if version == response.text:
-                ui.configure_item("button_latest", enabled=False)
-                app_start2()
-            else:
-                ui.configure_item("button_latest", enabled=True)
-                version = response.text
-                update_popup_show()
+        try:
+            response = requests.get(mpaths.version_query)
+            if response.status_code == 200:
+                if version == response.text:
+                    ui.configure_item("button_latest", enabled=False)
+                    app_start2()
+                else:
+                    ui.configure_item("button_latest", enabled=True)
+                    version = response.text
+                    update_popup_show()
+        except:  # no connection
+            ui.configure_item("button_latest", enabled=False)
+            app_start2()
 
 
 def close_active_window():
