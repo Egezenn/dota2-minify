@@ -22,7 +22,7 @@
 
 **<h3 align="center">All in one smart patcher for Dota2 to install all types of mods</h3>**
 
-**<h3 align="center">Updated to 7.38B!</h3>**
+**<h3 align="center">Updated to 7.38c!</h3>**
 
 <div align="center">
   ✔️500+ Spells Simplified • ✔️8,000+ files modded • ✔️Boost FPS • ✔️ Creator Toolkit
