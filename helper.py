@@ -1,3 +1,4 @@
+import hashlib
 import os
 import shutil
 import tkinter as tk
@@ -6,6 +7,8 @@ import webbrowser
 from urllib.request import urlopen
 
 import vpk
+
+import mpaths
 
 workshop_installed = False
 
@@ -277,3 +280,32 @@ def processBlackList(index, line, folder, blank_file_extensions, pak01_dir):
 def write_locale(text):
     with open("locale.txt", "w") as file:
         file.write(text)
+
+
+def validate_map_file():
+    print("""Checking map file...""")
+
+    os.makedirs(mpaths.maps_dir, exist_ok=True)
+
+    if os.path.exists(mpaths.minify_map) == False:
+        shutil.copyfile(mpaths.dota_user_map_dir, mpaths.minify_map)
+        print("""-> Updating map file...""")
+
+    elif os.path.exists(mpaths.minify_map) and (
+        calculate_md5(mpaths.dota_user_map_dir) != calculate_md5(mpaths.minify_map)
+    ):
+        print("""-> Updating map file...""")
+        os.remove(mpaths.minify_map)
+        shutil.copyfile(mpaths.dota_user_map_dir, mpaths.minify_map)
+
+    else:
+        print("""-> Map file is up to date...""")
+
+
+def calculate_md5(file_path):
+    """Calculates the MD5 hash of a file."""
+    md5_hash = hashlib.md5()
+    with open(file_path, "rb") as file:
+        for byte_block in iter(lambda: file.read(4096), b""):
+            md5_hash.update(byte_block)
+    return md5_hash.hexdigest()

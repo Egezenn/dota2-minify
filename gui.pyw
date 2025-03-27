@@ -294,31 +294,34 @@ class App:
         sys.stderr = TextRedirector(self.consoleText, "stderr")
 
         if version is not None:
-            response = requests.get(
-                "https://raw.githubusercontent.com/Egezenn/dota2-minify/refs/heads/stable/version"
-            )
-            if response.status_code == 200:
-                if version == response.text:
-                    self.githubLatestBtn.config(state="disabled", cursor="")
-                else:
-                    self.githubLatestBtn.config(
-                        state="normal", fg="blue", cursor="hand2"
-                    )
-
-                    answer = askyesno(
-                        title="Update",
-                        message=f"{response.text} is now available. Would you like to go to the download page?",
-                    )
-                    if answer:
-                        helper.urlDispatcher(
-                            "https://github.com/Egezenn/dota2-minify/releases"
+            try:
+                response = requests.get(
+                    "https://raw.githubusercontent.com/Egezenn/dota2-minify/refs/heads/stable/version"
+                )
+                if response.status_code == 200:
+                    if version == response.text:
+                        self.githubLatestBtn.config(state="disabled", cursor="")
+                    else:
+                        self.githubLatestBtn.config(
+                            state="normal", fg="blue", cursor="hand2"
                         )
-                        self.exit()
-                        exit()
 
+                        answer = askyesno(
+                            title="Update",
+                            message=f"{response.text} is now available. Would you like to go to the download page?",
+                        )
+                        if answer:
+                            helper.urlDispatcher(
+                                "https://github.com/Egezenn/dota2-minify/releases"
+                            )
+                            self.exit()
+                            exit()
+            except:
+                self.githubLatestBtn.config(state="disabled", cursor="")
         welcomeMsg()
 
     def setupSystem(self):
+        helper.validate_map_file()
         os.makedirs("logs", exist_ok=True)
         x = validatefiles.Requirements(checkboxes, self.root)
         public_methods = [
@@ -436,6 +439,8 @@ class App:
                 mpaths.dota_minify_maps,
             )
 
+            helper.validate_map_file()
+
             styling_dictionary = {}
             # blacklist_dictionary = {}
             helper.warnings = []
@@ -472,54 +477,65 @@ class App:
                                     dirs_exist_ok=True,
                                 )
                             if checkboxes[box] == "OpenDotaGuides Guides":
-                                zip_path = os.path.join(
-                                    mod_path, "files", "OpenDotaGuides.zip"
-                                )
-                                temp_dump_path = os.path.join(mod_path, "files", "temp")
-                                if os.path.exists(zip_path):
-                                    os.remove(zip_path)
-                                response = requests.get(
-                                    "https://github.com/Egezenn/OpenDotaGuides/releases/latest/download/itembuilds.zip"
-                                )
-                                if response.status_code == 200:
-                                    with open(zip_path, "wb") as file:
-                                        file.write(response.content)
-                                    print("→ Downloaded latest OpenDotaGuides guides.")
-                                    os.makedirs(
-                                        os.path.join(mpaths.itembuilds_dir, "bkup"),
-                                        exist_ok=True,
+                                try:
+                                    zip_path = os.path.join(
+                                        mod_path, "files", "OpenDotaGuides.zip"
                                     )
-                                    for name in os.listdir(mpaths.itembuilds_dir):
-                                        try:
-                                            if name != "bkup":
-                                                os.rename(
-                                                    os.path.join(
-                                                        mpaths.itembuilds_dir, name
-                                                    ),
-                                                    os.path.join(
-                                                        mpaths.itembuilds_dir,
-                                                        "bkup",
-                                                        name,
-                                                    ),
-                                                )
-                                        except FileExistsError:
-                                            pass  # backup was created and opendotaguides was replacing the guides already
-                                    shutil.unpack_archive(
-                                        zip_path, temp_dump_path, "zip"
-                                    )
-                                    for file in os.listdir(temp_dump_path):
-                                        shutil.copy(
-                                            os.path.join(temp_dump_path, file),
-                                            os.path.join(mpaths.itembuilds_dir, file),
-                                        )
-                                    shutil.rmtree(temp_dump_path)
-                                    os.remove(zip_path)
-                                    print(
-                                        "→ Replaced default guides with OpenDotaGuides guides."
+                                    temp_dump_path = os.path.join(
+                                        mod_path, "files", "temp"
                                     )
                                     if os.path.exists(zip_path):
                                         os.remove(zip_path)
-                                else:
+                                    response = requests.get(
+                                        "https://github.com/Egezenn/OpenDotaGuides/releases/latest/download/itembuilds.zip"
+                                    )
+                                    if response.status_code == 200:
+                                        with open(zip_path, "wb") as file:
+                                            file.write(response.content)
+                                        print(
+                                            "→ Downloaded latest OpenDotaGuides guides."
+                                        )
+                                        os.makedirs(
+                                            os.path.join(mpaths.itembuilds_dir, "bkup"),
+                                            exist_ok=True,
+                                        )
+                                        for name in os.listdir(mpaths.itembuilds_dir):
+                                            try:
+                                                if name != "bkup":
+                                                    os.rename(
+                                                        os.path.join(
+                                                            mpaths.itembuilds_dir, name
+                                                        ),
+                                                        os.path.join(
+                                                            mpaths.itembuilds_dir,
+                                                            "bkup",
+                                                            name,
+                                                        ),
+                                                    )
+                                            except FileExistsError:
+                                                pass  # backup was created and opendotaguides was replacing the guides already
+                                        shutil.unpack_archive(
+                                            zip_path, temp_dump_path, "zip"
+                                        )
+                                        for file in os.listdir(temp_dump_path):
+                                            shutil.copy(
+                                                os.path.join(temp_dump_path, file),
+                                                os.path.join(
+                                                    mpaths.itembuilds_dir, file
+                                                ),
+                                            )
+                                        shutil.rmtree(temp_dump_path)
+                                        os.remove(zip_path)
+                                        print(
+                                            "→ Replaced default guides with OpenDotaGuides guides."
+                                        )
+                                        if os.path.exists(zip_path):
+                                            os.remove(zip_path)
+                                    else:
+                                        print(
+                                            "→ Failed to download latest OpenDotaGuides guides."
+                                        )
+                                except:
                                     print(
                                         "→ Failed to download latest OpenDotaGuides guides."
                                     )

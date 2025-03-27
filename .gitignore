@@ -3,6 +3,7 @@
 *.vcss_c
 logs
 locale.txt
+bin/maps/
 
 ## Source2Viewer
 cli-*-*.*
