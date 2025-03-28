@@ -283,23 +283,25 @@ def write_locale(text):
 
 
 def validate_map_file():
-    print("""Checking map file...""")
+    print("Checking map file...")
 
     os.makedirs(mpaths.maps_dir, exist_ok=True)
 
     if os.path.exists(mpaths.minify_map) == False:
+        print("-> Updating map file...")
         shutil.copyfile(mpaths.dota_user_map_dir, mpaths.minify_map)
-        print("""-> Updating map file...""")
+        print("-> Updated map file")
 
     elif os.path.exists(mpaths.minify_map) and (
         calculate_md5(mpaths.dota_user_map_dir) != calculate_md5(mpaths.minify_map)
     ):
-        print("""-> Updating map file...""")
+        print("-> Updating map file...")
         os.remove(mpaths.minify_map)
         shutil.copyfile(mpaths.dota_user_map_dir, mpaths.minify_map)
+        print("-> Updated map file")
 
     else:
-        print("""-> Map file is up to date...""")
+        print("-> Map file is up to date...")
 
 
 def calculate_md5(file_path):

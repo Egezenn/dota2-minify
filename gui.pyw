@@ -321,7 +321,6 @@ class App:
         welcomeMsg()
 
     def setupSystem(self):
-        helper.validate_map_file()
         os.makedirs("logs", exist_ok=True)
         x = validatefiles.Requirements(checkboxes, self.root)
         public_methods = [
@@ -365,6 +364,8 @@ class App:
                 helper.toggleFrameOff(self.checkboxesFrame, self.buttonsFrame)
                 print("Failed to start!")
                 print("Check 'logs\\crashlog.txt' for more info.")
+
+        helper.validate_map_file()
 
     def setupButtonState(self):
         for box in checkboxes:
@@ -535,7 +536,8 @@ class App:
                                         print(
                                             "→ Failed to download latest OpenDotaGuides guides."
                                         )
-                                except:
+                                except Exception as e:
+                                    helper.warnings.append(e)
                                     print(
                                         "→ Failed to download latest OpenDotaGuides guides."
                                     )
