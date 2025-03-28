@@ -1,10 +1,10 @@
-name: Release
+name: Release Candidate
 
 on:
   workflow_dispatch:
     inputs:
       release_name:
-        description: "Name the release"
+        description: "Name the release (RC)"
         required: true
         default: "Minify-v1.xxRCx"
 
