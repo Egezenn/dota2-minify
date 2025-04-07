@@ -1,4 +1,5 @@
 import hashlib
+import json
 import os
 import shutil
 import time
@@ -12,7 +13,9 @@ import vpk
 import mpaths
 
 workshop_installed = False
-
+localizations = []
+locale = ""
+localization_dict = {}
 
 # ---------------------------------------------------------------------------- #
 #                                   Warnings                                   #
@@ -30,10 +33,9 @@ def handleWarnings(logs_dir):
             for line in warnings:
                 file.write(line + "\n")
             # print(f"{len(warnings)} error occured. Check logs\\warnings.txt for details.")
-        ui.add_text(
-            default_value="Minify encountered errors. Check Minify\\logs\\warnings.txt for details.",
-            parent="terminal_window",
-            color=(0, 203, 230, 255),
+        add_text_to_terminal(
+            "Minify encountered errors. Check Minify\\logs\\warnings.txt for details.",
+            "minify_error_var",
         )
 
 
@@ -88,8 +90,66 @@ def getBlankFileExtensions(blank_files_dir):
     return extensions
 
 
+def get_available_localizations():
+    global localizations
+    with open(mpaths.localization_file_dir, "r", encoding="utf-8") as file:
+        localization_data = json.load(file)
+    sub_headers = set()
+    for header in localization_data.values():
+        if isinstance(header, dict):
+            sub_headers.update(header.keys())
+    localizations = list(sub_headers)
+    for key, value in localization_data.items():
+        if key.endswith("var") == True:
+            localization_dict[key] = value["EN"]
+
+
+def change_localization(init=False):
+    with open(mpaths.localization_file_dir, "r", encoding="utf-8") as localization_file:
+        localization_data = json.load(localization_file)
+        if init == True:
+            if os.path.exists(mpaths.locale_file_dir):
+                with open(mpaths.locale_file_dir, "r") as file:
+                    locale = file.readline()
+                    ui.configure_item("lang_select", default_value=f"{locale}")
+            else:
+                locale = ui.get_value("lang_select")
+                with open(mpaths.locale_file_dir, "w") as file:
+                    file.write(locale)
+        for key, value in localization_data.items():
+            locale = ui.get_value("lang_select")
+            if key.endswith("var") == True:
+                print(key)
+                if locale in localization_data[key]:
+                    localization_dict[key] = value[locale]
+                    ui.set_value(key, value=value[locale])
+                else:
+                    ui.set_value(key, value=value["EN"])
+            if ui.does_item_exist(key) == True:
+                if (
+                    key.endswith("var") == False
+                    and ui.get_item_info(key).get("type") == "mvAppItemType::mvButton"
+                ):
+                    if locale in localization_data[key]:
+                        ui.configure_item(key, label=value[locale])
+                    else:  # default to english if the line isn't available on selected locale
+                        ui.configure_item(key, label=value["EN"])
+                if (
+                    key.endswith("var") == False
+                    and ui.get_item_info(key).get("type") == "mvAppItemType::mvText"
+                ):
+                    if locale in localization_data[key]:
+                        ui.configure_item(key, default_value=value[locale])
+                    else:
+                        ui.configure_item(key, default_value=value["EN"])
+                with open(mpaths.locale_file_dir, "w") as file:
+                    file.write(locale)
+
+
 def validate_map_file():
-    add_text_to_terminal("""Checking map file...""", "map_check_text_tag")
+    add_text_to_terminal(
+        f"{localization_dict["checking_map_file_var"]}", "map_check_text_tag"
+    )
 
     os.makedirs(mpaths.maps_dir, exist_ok=True)
 

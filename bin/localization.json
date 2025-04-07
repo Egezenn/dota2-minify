@@ -7,16 +7,40 @@
     "EN": "Select Mods",
     "RU": "Выбрать Моды"
   },
-  "button_discord": {
-    "EN": "Discord",
-    "RU": "Дискорд"
+  "checking_map_file_var": {
+    "EN": "Checking map file...",
+    "RU": "Проверяем файл карты..."
   },
-  "header_text_1": {
+  "minify_error_var": {
+    "EN": "Minify encountered errors. Check Minify\\logs\\warnings.txt for details.",
+    "RU": "Minify столкнулся с ошибками. Проверь Minify\\logs\\warnings.txt для подробностей."
+  },
+  "update_popup_text_1_tag": {
+    "EN": "New update is now available!",
+    "RU": "Новое обновление доступно!"
+  },
+  "update_popup_text_2_tag": {
+    "EN": "Would you like to go to the download page?",
+    "RU": "Перейти на страницу загрузки?"
+  },
+  "start_text_1_var": {
     "EN": "Want to contribute to the project's growth?",
     "RU": "Хочешь помочь проекту развиваться?"
   },
-  "header_text_2": {
+  "start_text_2_var": {
     "EN": "-> Join our Discord community!",
-    "RU": "Заходи в наше Дискорд сообщество!"
+    "RU": "-> Заходи в наше Дискорд сообщество!"
+  },
+  "start_text_3_var": {
+    "EN": "-> Share Minify with your friends and online groups",
+    "RU": "-> Делись Minify со своими друзьями и сообществами"
+  },
+  "start_text_4_var": {
+    "EN": "-> Star the project on GitHub",
+    "RU": "-> Ставь звездочку проекту на GitHub"
+  },
+  "start_text_5_var": {
+    "EN": "-> Create and maintain mods for this project",
+    "RU": "-> Создавай и поддерживай моды для этого проекта"
   }
 }

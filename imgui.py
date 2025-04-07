@@ -28,14 +28,38 @@ except:
     pass
 
 
-localizations = []
 patching = False
 checkboxes = {}
 checkboxes_state = {}
 blacklist_dictionary = {}
 styling_dictionary = {}
-locale = ""
-header_pad_y = 16
+
+with ui.value_registry():
+    ui.add_string_value(
+        default_value="Checking map file...", tag="checking_map_file_var"
+    )
+    ui.add_string_value(
+        default_value="Minify encountered errors. Check Minify\\logs\\warnings.txt for details.",
+        tag="minify_error_var",
+    )
+    ui.add_string_value(
+        default_value="Want to contribute to the project's growth?",
+        tag="start_text_1_var",
+    )
+    ui.add_string_value(
+        default_value="-> Join our Discord community!", tag="start_text_2_var"
+    )
+    ui.add_string_value(
+        default_value="-> Share Minify with your friends and online groups",
+        tag="start_text_3_var",
+    )
+    ui.add_string_value(
+        default_value="-> Star the project on GitHub", tag="start_text_4_var"
+    )
+    ui.add_string_value(
+        default_value="-> Create and maintain mods for this project",
+        tag="start_text_5_var",
+    )
 
 
 class Extension:
@@ -69,57 +93,18 @@ def save_state():
     save_state_checkboxes()
 
 
-def get_available_localizations():
-    global localizations
-    with open(mpaths.localization_file_dir, "r", encoding="utf-8") as file:
-        localization_data = json.load(file)
-    sub_headers = set()
-
-    for header in localization_data.values():
-        if isinstance(header, dict):
-            sub_headers.update(header.keys())
-
-    localizations = list(sub_headers)
-
-
-def change_localization(init=False):
-    with open(mpaths.localization_file_dir, "r", encoding="utf-8") as localization_file:
-        localization_data = json.load(localization_file)
-
-    if init == True:
-        if os.path.exists(mpaths.locale_file_dir):
-            with open(mpaths.locale_file_dir, "r") as file:
-                locale = file.readline()
-                ui.configure_item("lang_select", default_value=f"{locale}")
-        else:
-            locale = ui.get_value("lang_select")
-            with open(mpaths.locale_file_dir, "w") as file:
-                file.write(locale)
-    for key, value in localization_data.items():
-        locale = ui.get_value("lang_select")
-        if ui.get_item_info(key).get("type") == "mvAppItemType::mvButton":
-            if locale in localization_data[key]:
-                ui.configure_item(key, label=value[locale])
-            else:  # default to english if the line isn't available on selected locale
-                ui.configure_item(key, label=value["EN"])
-
-        if ui.get_item_info(key).get("type") == "mvAppItemType::mvText":
-            if locale in localization_data[key]:
-                ui.configure_item(key, default_value=value[locale])
-            else:
-                ui.configure_item(key, default_value=value["EN"])
-        with open(mpaths.locale_file_dir, "w") as file:
-            file.write(locale)
-
-
 def lock_interaction():
-    ui.configure_item("terminal_window", modal=True)
-    time.sleep(0.01)
-    ui.configure_item("terminal_window", pos=(0, 197))
+    ui.configure_item("button_patch", enabled=False)
+    ui.configure_item("button_select_mods", enabled=False)
+    ui.configure_item("button_uninstall", enabled=False)
+    ui.configure_item("exit_button", enabled=False)
 
 
 def unlock_interaction():
-    ui.configure_item("terminal_window", modal=False)
+    ui.configure_item("button_patch", enabled=True)
+    ui.configure_item("button_select_mods", enabled=True)
+    ui.configure_item("button_uninstall", enabled=True)
+    ui.configure_item("exit_button", enabled=True)
 
 
 def delete_update_popup():
@@ -155,17 +140,23 @@ def load_state_checkboxes():
 
 
 def drag_viewport(sender, app_data, user_data):
-    if (
-        ui.is_item_hovered("top_bar") == True
-    ):  # Check if mouse is over the top_bar the restrict area of drag handler(Note: If local pos [1] < *Height_of_top_bar is buggy)
-        drag_deltas = app_data
-        viewport_current_pos = ui.get_viewport_pos()
-        new_x_position = viewport_current_pos[0] + drag_deltas[1]
-        new_y_position = viewport_current_pos[1] + drag_deltas[2]
-        new_y_position = max(
-            new_y_position, 0
-        )  # prevent the viewport to go off the top of the screen
-        ui.set_viewport_pos([new_x_position, new_y_position])
+    if ui.get_item_alias(ui.get_active_window()) != None:
+        if (
+            ui.is_item_hovered("primary_window") == True
+            or ui.is_item_hovered("terminal_window") == True
+            or ui.is_item_hovered("top_bar") == True
+            or ui.is_item_hovered("mod_menu") == True
+            or ui.get_item_alias(ui.get_active_window()).endswith("details_window_tag")
+            == True
+        ):  # Note: If local pos [1] < *Height_of_top_bar is buggy)
+            drag_deltas = app_data
+            viewport_current_pos = ui.get_viewport_pos()
+            new_x_position = viewport_current_pos[0] + drag_deltas[1]
+            new_y_position = viewport_current_pos[1] + drag_deltas[2]
+            new_y_position = max(
+                new_y_position, 0
+            )  # prevent the viewport to go off the top of the screen
+            ui.set_viewport_pos([new_x_position, new_y_position])
 
 
 def open_mod_menu():
@@ -228,8 +219,8 @@ def create_checkboxes():
             tag=f"{name}_details_window_tag",
             pos=(0, 0),
             show=False,
-            width=538,
-            height=400,
+            width=494,
+            height=300,
             no_resize=True,
             no_move=True,
             no_collapse=True,
@@ -248,52 +239,7 @@ def show_details(sender, app_data, user_data):
 
 
 def update_popup_show():
-    ui.add_window(
-        label=f"Update {version} is now available!",
-        modal=True,
-        no_move=True,
-        tag="update_popup",
-        show=True,
-        no_collapse=True,
-        no_close=True,
-        no_saved_settings=True,
-        no_resize=True,
-        width=310,
-        height=100,
-    )
-    ui.configure_item(
-        "update_popup",
-        pos=(
-            ui.get_viewport_width() / 2 - ui.get_item_width("update_popup") / 2,
-            ui.get_viewport_height() / 2 - ui.get_item_height("update_popup") / 2,
-        ),
-    )
-    ui.add_text(
-        default_value="Would you like to go to the download page?",
-        parent="update_popup",
-        indent=1,
-    )
-    with ui.group(
-        parent="update_popup",
-        tag="update_popup_button_group",
-        horizontal=True,
-        horizontal_spacing=10,
-        indent=42,
-    ):
-        ui.add_button(
-            label="Yes",
-            width=100,
-            height=20,
-            callback=open_github_link_and_close_minify,
-            tag="update_popup_yes_button",
-        )
-        ui.add_button(
-            label="No",
-            width=100,
-            height=20,
-            callback=delete_update_popup,
-            tag="update_popup_no_button",
-        )
+    ui.configure_item("update_popup", show=True)
 
 
 def setupSystem():
@@ -361,11 +307,9 @@ def setupButtonState():
     for box in checkboxes:
         if ui.get_value(box) == True:
             ui.configure_item("button_patch", enabled=True)
-            # self.patchBtn.config(state="normal", cursor="hand2")
             break
         else:
-            ui.configure_item("button_patch", enabled=False)  # Disabled theme? TODO
-            # self.patchBtn.config(state="disabled", cursor="")
+            ui.configure_item("button_patch", enabled=False)
     if helper.workshop_installed == False:
         helper.disableWorkshopMods(mpaths.mods_dir, mpaths.mods_folders, checkboxes)
 
@@ -373,7 +317,7 @@ def setupButtonState():
 def uninstaller():
     hide_uninstall_popup()
     clean_terminal()
-    time.sleep(0.01)
+    time.sleep(0.015)
     # lock_interaction()
     # remove pak01_dir.vpk if it exists
     vpkPath = os.path.join(mpaths.dota_minify, "pak01_dir.vpk")
@@ -426,8 +370,8 @@ def patcher_start():
 
 def patcher():
     global patching
+    lock_interaction()
     clean_terminal()
-    # lock_interaction()
     if "dota2.exe" in (p.name() for p in psutil.process_iter()):
         ui.add_text(
             default_value="Please close Dota 2 first and then patch.",
@@ -769,7 +713,7 @@ def patcher():
 
         patching = False
 
-        # unlock_interaction()
+        unlock_interaction()
         helper.add_text_to_terminal("-> Done!", "done_text")
         helper.add_text_to_terminal(
             "-------------------------------------------------------", "spacer1_text"
@@ -796,6 +740,7 @@ def patcher():
         helper.add_text_to_terminal(
             "-------------------------------------------------------", "spacer2_text"
         )
+        unlock_interaction()
 
 
 def version_check():
@@ -805,24 +750,34 @@ def version_check():
             response = requests.get(mpaths.version_query)
             if response.status_code == 200:
                 if version == response.text:
-                    ui.configure_item("button_latest", enabled=False)
                     app_start2()
                 else:
-                    ui.configure_item("button_latest", enabled=True)
                     version = response.text
                     update_popup_show()
         except:  # no connection
-            ui.configure_item("button_latest", enabled=False)
             app_start2()
 
 
+def start_text():
+    clean_terminal()
+    ui.add_text(source="start_text_1_var", parent="terminal_window")
+    ui.add_text(source="start_text_2_var", parent="terminal_window")
+    ui.add_text(source="start_text_3_var", parent="terminal_window")
+    ui.add_text(source="start_text_4_var", parent="terminal_window")
+    ui.add_text(source="start_text_5_var", parent="terminal_window")
+
+
 def close_active_window():
+    active_window = ui.get_item_alias(ui.get_active_window())
     if (
-        ui.get_active_window() != 29
-        and ui.get_active_window() != 49
-        and ui.get_active_window() != 30
+        active_window != "terminal_window"
+        and active_window != "primary_window"
+        and active_window != "top_bar"
     ):
-        ui.configure_item(ui.get_active_window(), show=False)
+        if active_window == "update_popup":
+            delete_update_popup()
+        else:
+            ui.configure_item(active_window, show=False)
 
 
 def create_ui():
@@ -831,99 +786,74 @@ def create_ui():
         ui.add_child_window(
             tag="top_bar",
             pos=(-5, -5),
-            height=25,
-            width=543,
+            height=30,
+            width=499,
             no_scrollbar=True,
             no_scroll_with_mouse=True,
+        )
+        ui.add_image_button(
+            "discord_texture_tag",
+            parent="top_bar",
+            width=21,
+            height=16,
+            pos=(55, 7),
+            callback=open_discord_link,
+        )
+        ui.add_image_button(
+            "git_texture_tag",
+            parent="top_bar",
+            width=18,
+            height=18,
+            pos=(87, 6),
+            callback=open_github_link,
         )
         ui.add_button(
             parent="top_bar",
             tag="exit_button",
-            label="Exit",
+            label="Close",
             callback=close,
-            height=20,
-            width=40,
-            pos=(503, 5),
+            height=28,
+            width=60,
+            pos=(440, 5),
         )
         ui.add_combo(
             parent="top_bar",
             tag="lang_select",
-            items=(localizations),
+            items=(helper.localizations),
             default_value="EN",
             width=50,
-            pos=(5, 5),
-            callback=change_localization,
+            pos=(5, 6),
+            callback=helper.change_localization,
         )
+        ui.bind_item_font("lang_select", combo_font)
         with ui.group(horizontal=True):
-            with ui.group(pos=(8, 27)):
+            with ui.group(pos=(391, 29)):
                 ui.add_button(
                     tag="button_patch",
                     label="Patch",
-                    width=100,
+                    width=92,
                     callback=patcher_start,
                 )
                 ui.add_button(
                     tag="button_select_mods",
                     label="Select Mods",
-                    width=100,
+                    width=92,
                     callback=open_mod_menu,
                 )
                 ui.add_button(
-                    tag="button_discord",
-                    label="Discord",
-                    width=100,
-                    callback=open_discord_link,
-                )
-                ui.add_button(
-                    tag="button_latest",
-                    label="Latest",
-                    width=100,
-                    callback=open_github_link,
-                )
-                ui.add_button(
-                    tag="uninstall_button",
+                    tag="button_uninstall",
                     label="Uninstall",
-                    width=100,
+                    width=92,
                     callback=unistall_popup_show,
                 )
-            with ui.group(pos=(67, -2)):
+            with ui.group(pos=(-45, 4)):
                 ui.add_text(
                     r"""
-         __    __     __     __   __     __     ______   __  __
-        /\ "-./  \   /\ \   /\ "-.\ \   /\ \   /\  ___\ /\ \_\ \  
-        \ \ \-./\ \  \ \ \  \ \ \-.  \  \ \ \  \ \  __\ \ \____ \ 
-         \ \_\ \ \_\  \ \_\  \ \_\\"\_\  \ \_\  \ \_\_/  \/\_____\
-          \/_/  \/_/   \/_/   \/_/ \/_/   \/_/   \/_/     \/_____/
-        ----------------------------------------------------------""",
-                )
-                ui.add_text(
-                    "Want to contribute to the project's growth?",
-                    tag="header_text_1",
-                    pos=(124, 15 + header_pad_y * 5),
-                )
-                ui.add_text(
-                    "-> Join our Discord community!",
-                    tag="header_text_2",
-                    pos=(123, 15 + header_pad_y * 6),
-                )
-                ui.add_text(
-                    "-> Share Minify with your friends and online groups",
-                    tag="header_text_3",
-                    pos=(123, 15 + header_pad_y * 7),
-                )
-                ui.add_text(
-                    "-> Star the project on GitHub",
-                    tag="header_text_4",
-                    pos=(123, 15 + header_pad_y * 8),
-                )
-                ui.add_text(
-                    "-> Create and maintain mods for this project",
-                    tag="header_text_5",
-                    pos=(123, 15 + header_pad_y * 9),
-                )
-                ui.add_text(
-                    "----------------------------------------------------------",
-                    pos=(123, 15 + header_pad_y * 10),
+         __    __    __    __   __    __    ______  __  __
+        /\ "-./  \  /\ \  /\ "-.\ \  /\ \  /\  ___\/\ \_\ \  
+        \ \ \-./\ \ \ \ \ \ \ \-.  \ \ \ \ \ \  __\\ \____ \ 
+         \ \_\ \ \_\ \ \_\ \ \_\\"\_\ \ \_\ \ \_\_/ \/\_____\
+          \/_/  \/_/  \/_/  \/_/ \/_/  \/_/  \/_/    \/_____/""",
                 )
         # Creating log terminal
         with ui.group():
@@ -937,9 +867,9 @@ def create_ui():
                 no_close=True,
                 no_saved_settings=True,
                 show=True,
-                height=203,
-                width=538,
-                pos=(0, 197),
+                height=200,
+                width=494,
+                pos=(0, 100),
                 no_resize=True,
             )
 
@@ -993,37 +923,125 @@ def create_ui():
         no_collapse=True,
         no_close=False,
         no_open_over_existing_popup=True,
-        height=400,
-        width=538,
+        height=300,
+        width=494,
         show=False,
         no_resize=True,
+        on_close=save_state,
+    )
+
+    ui.add_window(
+        modal=True,
+        no_move=True,
+        tag="update_popup",
+        show=False,
+        autosize=True,
+        no_collapse=True,
+        no_close=True,
+        no_saved_settings=True,
+        no_resize=True,
+        no_title_bar=True,
+    )
+    ui.add_group(parent="update_popup", tag="popup_text_wraper_1")
+    ui.add_text(
+        default_value="New update is now available!",
+        parent="popup_text_wraper_1",
+        tag="update_popup_text_1_tag",
+        indent=1,
+    )
+    ui.add_group(parent="update_popup", tag="popup_text_wraper_2")
+    ui.add_text(
+        default_value="Would you like to go to the download page?",
+        parent="popup_text_wraper_2",
+        tag="update_popup_text_2_tag",
+        indent=1,
+    )
+    with ui.group(
+        parent="update_popup",
+        tag="update_popup_button_group",
+        horizontal=True,
+        horizontal_spacing=20,
+    ):
+        ui.add_button(
+            label="Yes",
+            width=120,
+            height=24,
+            callback=open_github_link_and_close_minify,
+            tag="update_popup_yes_button",
+        )
+        ui.add_button(
+            label="No",
+            width=120,
+            height=24,
+            callback=delete_update_popup,
+            tag="update_popup_no_button",
+        )
+
+
+def configure_update_popup():
+    ui.configure_item(
+        "update_popup",
+        pos=(
+            ui.get_viewport_width() / 2 - ui.get_item_rect_size("update_popup")[0] / 2,
+            ui.get_viewport_height() / 2 - ui.get_item_rect_size("update_popup")[1] / 2,
+        ),
+    )
+    ui.configure_item(
+        "popup_text_wraper_1",
+        pos=(
+            ui.get_item_rect_size("update_popup")[0] / 2
+            - ui.get_item_rect_size("popup_text_wraper_1")[0] / 2,
+            ui.get_item_rect_size("update_popup")[1] / 2
+            - ui.get_item_rect_size("popup_text_wraper_1")[1] / 2
+            - 30,
+        ),
+    )
+    ui.configure_item(
+        "popup_text_wraper_2",
+        pos=(
+            ui.get_item_rect_size("update_popup")[0] / 2
+            - ui.get_item_rect_size("popup_text_wraper_2")[0] / 2,
+            ui.get_item_rect_size("update_popup")[1] / 2
+            - ui.get_item_rect_size("popup_text_wraper_2")[1] / 2
+            - 8,
+        ),
+    )
+    ui.configure_item(
+        "update_popup_button_group",
+        pos=(
+            ui.get_item_rect_size("update_popup")[0] / 2
+            - ui.get_item_rect_size("update_popup_button_group")[0] / 2,
+            ui.get_item_rect_size("update_popup")[1] / 2
+            - ui.get_item_rect_size("update_popup_button_group")[1] / 2
+            + 26,
+        ),
     )
 
 
 def app_start():
-    get_available_localizations()
+    helper.get_available_localizations()
     create_ui()
-    change_localization(init=True)
+    theme()
     version_check()
+    helper.change_localization(init=True)
+    time.sleep(0.02)  # if popup's sizes break, increase this value
+    configure_update_popup()
 
 
 def app_start2():
     t1 = threading.Thread(target=setupSystem)
     t2 = threading.Thread(target=load_state_checkboxes)
     t3 = threading.Thread(target=helper.validate_map_file)
-    t4 = threading.Thread(target=create_checkboxes)
-    t5 = threading.Thread(target=setupButtonState)
     t1.start()
     t2.start()
     t3.start()
-    t4.start()
-    t5.start()
     t1.join()
     t2.join()
     t3.join()
-    t4.join()
-    t5.join()
+    create_checkboxes()
     ui.show_style_editor()
+    setupButtonState()
+    start_text()
 
 
 # Adding font to the ui registry
@@ -1032,6 +1050,9 @@ with ui.font_registry():
         ui.add_font_range_hint(ui.mvFontRangeHint_Default)
         ui.add_font_range_hint(ui.mvFontRangeHint_Cyrillic)
         ui.bind_font(main_font)
+    with ui.font(f"{mpaths.bin_dir}/FiraMono-Medium.ttf", 16) as combo_font:
+        ui.add_font_range_hint(ui.mvFontRangeHint_Default)
+        ui.add_font_range_hint(ui.mvFontRangeHint_Cyrillic)
 
 # Adding mouse handler to ui registry
 with ui.handler_registry():
@@ -1040,11 +1061,128 @@ with ui.handler_registry():
     )
     ui.add_key_release_handler(0x20E, callback=close_active_window)
 
+width_discord, height_discord, channels_discord, data_discord = ui.load_image(
+    f"{mpaths.img_dir}\\Discord-Symbol-White.png"
+)
+
+width_git, height_git, channels_git, data_git = ui.load_image(
+    f"{mpaths.img_dir}\\github-mark-white.png"
+)
+
+with ui.texture_registry(show=False):
+    ui.add_static_texture(
+        width=width_discord,
+        height=height_discord,
+        default_value=data_discord,
+        tag="discord_texture_tag",
+    )
+    ui.add_static_texture(
+        width=width_git,
+        height=height_git,
+        default_value=data_git,
+        tag="git_texture_tag",
+    )
+
+
+def theme():
+    with ui.theme() as global_theme:
+        with ui.theme_component(ui.mvAll):
+            ui.add_theme_style(ui.mvStyleVar_WindowPadding, x=12, y=4)
+            ui.add_theme_color(ui.mvThemeCol_Text, (0, 230, 230))
+            ui.add_theme_color(ui.mvThemeCol_WindowBg, (29, 29, 30, 255))
+            ui.add_theme_color(ui.mvThemeCol_ChildBg, (29, 29, 30, 255))
+            ui.add_theme_color(ui.mvThemeCol_ScrollbarBg, (29, 29, 30, 255))
+            ui.add_theme_color(ui.mvThemeCol_ScrollbarGrab, (0, 200, 200))
+            ui.add_theme_color(ui.mvThemeCol_ScrollbarGrabHovered, (0, 170, 170))
+            ui.add_theme_color(ui.mvThemeCol_ScrollbarGrabActive, (0, 120, 120))
+            ui.add_theme_color(ui.mvThemeCol_TitleBg, (35, 35, 35, 255))
+            ui.add_theme_color(ui.mvThemeCol_TitleBgActive, (35, 35, 35, 255))
+            ui.add_theme_color(ui.mvThemeCol_Header, (29, 29, 30, 255))
+            ui.add_theme_color(ui.mvThemeCol_HeaderHovered, (29, 29, 30, 255))
+            ui.add_theme_color(ui.mvThemeCol_HeaderActive, (17, 17, 18, 255))
+
+    ui.bind_theme(global_theme)
+
+    with ui.theme() as main_buttons_theme:
+        with ui.theme_component():
+            ui.add_theme_color(ui.mvThemeCol_Button, (0, 230, 230, 6))
+            ui.add_theme_color(ui.mvThemeCol_ButtonHovered, (17, 17, 18, 255))
+            ui.add_theme_color(ui.mvThemeCol_ButtonActive, (15, 15, 15, 255))
+            ui.add_theme_style(ui.mvStyleVar_ButtonTextAlign, x=0, y=0.5)
+        with ui.theme_component(enabled_state=False):
+            ui.add_theme_color(ui.mvThemeCol_Text, (0, 100, 100))
+            ui.add_theme_color(ui.mvThemeCol_Button, (29, 29, 30, 255))
+            ui.add_theme_color(ui.mvThemeCol_ButtonHovered, (29, 29, 30, 255))
+            ui.add_theme_color(ui.mvThemeCol_ButtonActive, (29, 29, 30, 255))
+            ui.add_theme_style(ui.mvStyleVar_ButtonTextAlign, x=0, y=0.5)
+
+    with ui.theme() as close_button_theme:
+        with ui.theme_component():
+            ui.add_theme_color(ui.mvThemeCol_Text, (0, 230, 230))
+            ui.add_theme_color(ui.mvThemeCol_Button, (29, 29, 30, 255))
+            ui.add_theme_color(ui.mvThemeCol_ButtonHovered, (17, 17, 18, 255))
+            ui.add_theme_color(ui.mvThemeCol_ButtonActive, (15, 15, 15, 255))
+        with ui.theme_component(enabled_state=False):
+            ui.add_theme_color(ui.mvThemeCol_Text, (0, 100, 100))
+            ui.add_theme_color(ui.mvThemeCol_Button, (29, 29, 30, 255))
+            ui.add_theme_color(ui.mvThemeCol_ButtonHovered, (29, 29, 30, 255))
+            ui.add_theme_color(ui.mvThemeCol_ButtonActive, (29, 29, 30, 255))
+
+    with ui.theme() as mod_menu_theme:
+        with ui.theme_component():
+            ui.add_theme_color(ui.mvThemeCol_FrameBg, (24, 24, 24, 255))
+            ui.add_theme_color(ui.mvThemeCol_CheckMark, (0, 230, 230, 255))
+            ui.add_theme_color(ui.mvThemeCol_FrameBgHovered, (20, 20, 20, 255))
+            ui.add_theme_color(ui.mvThemeCol_FrameBgActive, (20, 20, 20, 255))
+        with ui.theme_component(ui.mvCheckbox, enabled_state=False):
+            ui.add_theme_color(ui.mvThemeCol_Text, (0, 100, 100))
+            ui.add_theme_color(ui.mvThemeCol_FrameBg, (29, 29, 30, 255))
+            ui.add_theme_color(ui.mvThemeCol_FrameBgHovered, (29, 29, 30, 255))
+            ui.add_theme_color(ui.mvThemeCol_FrameBgActive, (29, 29, 30, 255))
+            ui.add_theme_color(ui.mvThemeCol_CheckMark, (29, 29, 30, 255))
+        with ui.theme_component():
+            ui.add_theme_color(ui.mvThemeCol_Text, (0, 230, 230))
+            ui.add_theme_color(ui.mvThemeCol_Button, (29, 29, 30, 255))
+            ui.add_theme_color(ui.mvThemeCol_ButtonHovered, (17, 17, 18, 255))
+            ui.add_theme_color(ui.mvThemeCol_ButtonActive, (29, 29, 30, 255))
+        with ui.theme_component(enabled_state=False):
+            ui.add_theme_color(ui.mvThemeCol_Button, (29, 29, 30, 255))
+            ui.add_theme_color(ui.mvThemeCol_Text, (0, 100, 100))
+            ui.add_theme_color(ui.mvThemeCol_ButtonHovered, (29, 29, 30, 255))
+            ui.add_theme_color(ui.mvThemeCol_ButtonActive, (29, 29, 30, 255))
+
+    with ui.theme() as top_bar_theme:
+        with ui.theme_component():
+            ui.add_theme_color(ui.mvThemeCol_Text, (0, 230, 230))
+            ui.add_theme_color(ui.mvThemeCol_Button, (29, 29, 30, 255))
+            ui.add_theme_color(ui.mvThemeCol_ButtonHovered, (17, 17, 18, 255))
+            ui.add_theme_color(ui.mvThemeCol_ButtonActive, (29, 29, 30, 255))
+            ui.add_theme_color(ui.mvThemeCol_FrameBg, (29, 29, 30, 255))
+            ui.add_theme_color(ui.mvThemeCol_FrameBgHovered, (29, 29, 30, 255))
+            ui.add_theme_color(ui.mvThemeCol_FrameBgActive, (29, 29, 30, 255))
+        with ui.theme_component(enabled_state=False):
+            ui.add_theme_color(ui.mvThemeCol_Button, (29, 29, 30, 255))
+            ui.add_theme_color(ui.mvThemeCol_Text, (0, 100, 100))
+            ui.add_theme_color(ui.mvThemeCol_ButtonHovered, (29, 29, 30, 255))
+            ui.add_theme_color(ui.mvThemeCol_ButtonActive, (29, 29, 30, 255))
+        with ui.theme_component(ui.mvCheckbox):
+            ui.add_theme_color(ui.mvThemeCol_FrameBg, (29, 29, 30, 255))
+            ui.add_theme_color(ui.mvThemeCol_FrameBgHovered, (29, 29, 30, 255))
+            ui.add_theme_color(ui.mvThemeCol_FrameBgActive, (29, 29, 30, 255))
+
+    ui.bind_item_theme("button_patch", main_buttons_theme)
+    ui.bind_item_theme("button_select_mods", main_buttons_theme)
+    ui.bind_item_theme("button_uninstall", main_buttons_theme)
+    ui.bind_item_theme("exit_button", close_button_theme)
+    ui.bind_item_theme("mod_menu", mod_menu_theme)
+    ui.bind_item_theme("top_bar", top_bar_theme)
+
+
 # Creating_main_viewport
 ui.create_viewport(
     title="Minify",
-    height=400,
-    width=538,
+    height=300,
+    width=494,
     resizable=False,
     decorated=False,
     vsync=True,
@@ -1053,7 +1191,6 @@ ui.create_viewport(
 
 ui.set_frame_callback(1, callback=app_start)  # On first frame execute app_start
 
-ui.set_exit_callback(save_state)  # On last frame exectute save_state
 
 # DearPyGyi Setup
 ui.setup_dearpygui()

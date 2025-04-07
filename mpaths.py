@@ -64,7 +64,7 @@ blank_files_dir = os.path.join(bin_dir, "blank-files")
 maps_dir = os.path.join(bin_dir, "maps")
 localization_file_dir = os.path.join(bin_dir, "localization.json")
 locale_file_dir = "locale"
-
+img_dir = os.path.join(bin_dir, "images")
 # dota2 paths
 content_dir = os.path.join(
     steam_dir, "steamapps\\common\\dota 2 beta\\content\\dota_addons\\minify"
