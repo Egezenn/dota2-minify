@@ -11,17 +11,22 @@ import mpaths
 def setFolder(main_window):
     dialog_root = tk.Tk()
     dialog_root.withdraw()
-    folder = filedialog.askdirectory()
+    folder = ""
 
-    if folder:  # Check if the user selected a folder
-        with open(mpaths.path_file, "w") as file:
-            file.write(folder)
-        messagebox.showinfo("Saved", "Path saved, go start Minify again.")
-    else:
-        messagebox.showinfo("Canceled", "You did not select a folder. Exiting.")
+    while not os.path.exists(os.path.join(folder, "steamapps\\common\\dota 2 beta\\game\\bin\\win64\\dota2.exe")):
+        folder = filedialog.askdirectory()
+        if folder:  # Check if the user selected a folder
+            with open(mpaths.path_file, "w") as file:
+                file.write(folder)
 
-    dialog_root.destroy()
-    main_window.destroy()
+            mpaths.steam_dir = folder
+            messagebox.showinfo("Saved", "Path saved, you can use Minify now.")
+
+        else:
+            messagebox.showinfo("Canceled", "You did not select a folder. Exiting.")
+            dialog_root.destroy()
+            main_window.destroy()
+            exit()
 
 
 # this class is called with getattr method and calls all functions here alphabetically
@@ -73,9 +78,7 @@ class Requirements:
     def e_isSource2ViewerFound(self):
         if not os.path.exists(os.path.join(mpaths.minify_dir, "Source2Viewer-CLI.exe")):
             self.toggle_flag = True
-            print(
-                "Error: 'Source2Viewer-CLI.exe' not found, click Help for instructions."
-            )
+            print("Error: 'Source2Viewer-CLI.exe' not found, click Help for instructions.")
 
     def f_isDllFound(self):
         if not os.path.exists(os.path.join(mpaths.minify_dir, "libSkiaSharp.dll")):

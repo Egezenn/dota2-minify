@@ -110,9 +110,7 @@ class App:
         self.screen_height = self.root.winfo_screenheight()
         self.x = (self.screen_width / 2) - (self.app_width / 2)
         self.y = (self.screen_height / 2) - (self.app_height / 2)
-        self.root.geometry(
-            f"{self.app_width}x{self.app_height}+{int(self.x)}+{int(self.y)}"
-        )
+        self.root.geometry(f"{self.app_width}x{self.app_height}+{int(self.x)}+{int(self.y)}")
         # -------------------------------- widgets -------------------------------- #
 
         self.checkboxesFrame = tk.Frame(self.root)
@@ -122,18 +120,14 @@ class App:
         self.buttonsFrame.grid(row=1, column=0, pady=13, sticky="nsew")
 
         self.consoleFrame = tk.Frame(self.root)
-        self.consoleFrame.grid(
-            row=0, column=1, rowspan=2, pady=5, padx=5, sticky="nsew"
-        )
+        self.consoleFrame.grid(row=0, column=1, rowspan=2, pady=5, padx=5, sticky="nsew")
 
         # Checkboxes
         def change_color_to_red(event):
             event.widget.config(fg="#0cb6b3")
 
         def revert_color(event):
-            event.widget.config(
-                fg="#333333"
-            )  # Original color when the cursor is not hovering
+            event.widget.config(fg="#333333")  # Original color when the cursor is not hovering
 
         for index in range(len(mpaths.mods_folders)):
             self.name = mpaths.mods_folders[index]
@@ -148,9 +142,7 @@ class App:
             )
             self.current_box.var = self.current_var
             self.current_box.grid(row=index, column=0, sticky="w")
-            checkboxes[self.current_box] = (
-                self.name
-            )  # so checkbutton object is the key and value is string
+            checkboxes[self.current_box] = self.name  # so checkbutton object is the key and value is string
 
             # Bind mouse enter and leave events to change the text color
             self.current_box.bind("<Enter>", change_color_to_red)
@@ -199,9 +191,7 @@ class App:
             takefocus=False,
             cursor="hand2",
             command=lambda: threading.Thread(
-                target=helper.urlDispatcher(
-                    "https://github.com/Egezenn/dota2-minify/tree/stable#installation"
-                ),
+                target=helper.urlDispatcher("https://github.com/Egezenn/dota2-minify/tree/stable#installation"),
                 daemon=True,
             ).start(),
         )
@@ -213,24 +203,18 @@ class App:
             width=btnW,
             takefocus=False,
             command=lambda: threading.Thread(
-                target=helper.urlDispatcher(
-                    "https://github.com/Egezenn/dota2-minify/releases/latest"
-                ),
+                target=helper.urlDispatcher("https://github.com/Egezenn/dota2-minify/releases/latest"),
                 daemon=True,
             ).start(),
         )
-        self.githubLatestBtn.grid(
-            row=11, column=0, pady=btnYpad, padx=btnXpad, sticky="w"
-        )
+        self.githubLatestBtn.grid(row=11, column=0, pady=btnYpad, padx=btnXpad, sticky="w")
         self.uninstallBtn = tk.Button(
             self.buttonsFrame,
             text="Uninstall",
             width=btnW,
             takefocus=False,
             cursor="hand2",
-            command=lambda: threading.Thread(
-                target=self.uninstaller, daemon=True
-            ).start(),
+            command=lambda: threading.Thread(target=self.uninstaller, daemon=True).start(),
         )
         self.uninstallBtn.grid(row=11, column=1, pady=btnYpad, padx=btnXpad, sticky="w")
         self.discordBtn = tk.Button(
@@ -302,18 +286,14 @@ class App:
                     if version == response.text:
                         self.githubLatestBtn.config(state="disabled", cursor="")
                     else:
-                        self.githubLatestBtn.config(
-                            state="normal", fg="blue", cursor="hand2"
-                        )
+                        self.githubLatestBtn.config(state="normal", fg="blue", cursor="hand2")
 
                         answer = askyesno(
                             title="Update",
                             message=f"{response.text} is now available. Would you like to go to the download page?",
                         )
                         if answer:
-                            helper.urlDispatcher(
-                                "https://github.com/Egezenn/dota2-minify/releases"
-                            )
+                            helper.urlDispatcher("https://github.com/Egezenn/dota2-minify/releases")
                             self.exit()
                             exit()
             except:
@@ -324,10 +304,7 @@ class App:
         os.makedirs("logs", exist_ok=True)
         x = validatefiles.Requirements(checkboxes, self.root)
         public_methods = [
-            method
-            for method in dir(x)
-            if callable(getattr(x, method))
-            if not method.startswith("_")
+            method for method in dir(x) if callable(getattr(x, method)) if not method.startswith("_")
         ]  # private methods start with _
         try:
             if not (
@@ -393,9 +370,7 @@ class App:
                 os.remove(mapPath)
 
             try:
-                with open(
-                    os.path.join(mpaths.itembuilds_dir, "default_antimage.txt"), "r"
-                ) as file:
+                with open(os.path.join(mpaths.itembuilds_dir, "default_antimage.txt"), "r") as file:
                     lines = file.readlines()
                 if len(lines) >= 3:
                     if "OpenDotaGuides" in lines[2]:
@@ -403,9 +378,7 @@ class App:
                             if name != "bkup":
                                 os.remove(os.path.join(mpaths.itembuilds_dir, name))
                         print(os.path.join(mpaths.itembuilds_dir, "bkup"))
-                        for name in os.listdir(
-                            os.path.join(mpaths.itembuilds_dir, "bkup")
-                        ):
+                        for name in os.listdir(os.path.join(mpaths.itembuilds_dir, "bkup")):
                             os.rename(
                                 os.path.join(mpaths.itembuilds_dir, "bkup", name),
                                 os.path.join(mpaths.itembuilds_dir, name),
@@ -465,10 +438,7 @@ class App:
                         ):  # step into folders that have ticked checkboxes only
                             print("→ Installing " + folder)
 
-                            if (
-                                checkboxes[box] == "Dark Terrain"
-                                or checkboxes[box] == "Remove Foilage"
-                            ):
+                            if checkboxes[box] == "Dark Terrain" or checkboxes[box] == "Remove Foilage":
                                 shutil.copytree(
                                     mpaths.maps_dir,
                                     os.path.join(
@@ -479,12 +449,8 @@ class App:
                                 )
                             if checkboxes[box] == "OpenDotaGuides Guides":
                                 try:
-                                    zip_path = os.path.join(
-                                        mod_path, "files", "OpenDotaGuides.zip"
-                                    )
-                                    temp_dump_path = os.path.join(
-                                        mod_path, "files", "temp"
-                                    )
+                                    zip_path = os.path.join(mod_path, "files", "OpenDotaGuides.zip")
+                                    temp_dump_path = os.path.join(mod_path, "files", "temp")
                                     if os.path.exists(zip_path):
                                         os.remove(zip_path)
                                     response = requests.get(
@@ -493,9 +459,7 @@ class App:
                                     if response.status_code == 200:
                                         with open(zip_path, "wb") as file:
                                             file.write(response.content)
-                                        print(
-                                            "→ Downloaded latest OpenDotaGuides guides."
-                                        )
+                                        print("→ Downloaded latest OpenDotaGuides guides.")
                                         os.makedirs(
                                             os.path.join(mpaths.itembuilds_dir, "bkup"),
                                             exist_ok=True,
@@ -504,9 +468,7 @@ class App:
                                             try:
                                                 if name != "bkup":
                                                     os.rename(
-                                                        os.path.join(
-                                                            mpaths.itembuilds_dir, name
-                                                        ),
+                                                        os.path.join(mpaths.itembuilds_dir, name),
                                                         os.path.join(
                                                             mpaths.itembuilds_dir,
                                                             "bkup",
@@ -515,32 +477,22 @@ class App:
                                                     )
                                             except FileExistsError:
                                                 pass  # backup was created and opendotaguides was replacing the guides already
-                                        shutil.unpack_archive(
-                                            zip_path, temp_dump_path, "zip"
-                                        )
+                                        shutil.unpack_archive(zip_path, temp_dump_path, "zip")
                                         for file in os.listdir(temp_dump_path):
                                             shutil.copy(
                                                 os.path.join(temp_dump_path, file),
-                                                os.path.join(
-                                                    mpaths.itembuilds_dir, file
-                                                ),
+                                                os.path.join(mpaths.itembuilds_dir, file),
                                             )
                                         shutil.rmtree(temp_dump_path)
                                         os.remove(zip_path)
-                                        print(
-                                            "→ Replaced default guides with OpenDotaGuides guides."
-                                        )
+                                        print("→ Replaced default guides with OpenDotaGuides guides.")
                                         if os.path.exists(zip_path):
                                             os.remove(zip_path)
                                     else:
-                                        print(
-                                            "→ Failed to download latest OpenDotaGuides guides."
-                                        )
+                                        print("→ Failed to download latest OpenDotaGuides guides.")
                                 except Exception as e:
                                     helper.warnings.append(e)
-                                    print(
-                                        "→ Failed to download latest OpenDotaGuides guides."
-                                    )
+                                    print("→ Failed to download latest OpenDotaGuides guides.")
                             # ----------------------------------- files ---------------------------------- #
                             # if files_total == 0:    pass
                             # elif files_total == 1:  print(f"    files: Found {files_total} file")
@@ -584,9 +536,7 @@ class App:
                                             continue
 
                                         else:
-                                            if line.endswith(
-                                                tuple(blank_file_extensions)
-                                            ):
+                                            if line.endswith(tuple(blank_file_extensions)):
                                                 blacklist_data.append(line)
                                             else:
                                                 helper.warnings.append(
@@ -601,25 +551,13 @@ class App:
 
                                     # blacklist_dictionary["blacklist-key{}".format(index+1)] = path, extension
 
-                                    if not os.path.exists(
-                                        os.path.join(
-                                            mpaths.game_dir, os.path.dirname(path)
-                                        )
-                                    ):
-                                        os.makedirs(
-                                            os.path.join(
-                                                mpaths.game_dir, os.path.dirname(path)
-                                            )
-                                        )
+                                    if not os.path.exists(os.path.join(mpaths.game_dir, os.path.dirname(path))):
+                                        os.makedirs(os.path.join(mpaths.game_dir, os.path.dirname(path)))
 
                                     try:
                                         shutil.copy(
-                                            os.path.join(
-                                                mpaths.blank_files_dir, "blank{}"
-                                            ).format(extension),
-                                            os.path.join(
-                                                mpaths.game_dir, path + extension
-                                            ),
+                                            os.path.join(mpaths.blank_files_dir, "blank{}").format(extension),
+                                            os.path.join(mpaths.game_dir, path + extension),
                                         )
                                     except FileNotFoundError as exception:
                                         helper.warnings.append(
@@ -656,9 +594,7 @@ class App:
                                         path = line[0].strip()
                                         style = line[1].strip()
 
-                                        styling_dictionary[
-                                            "styling-key{}".format(index + 1)
-                                        ] = (path, style)
+                                        styling_dictionary["styling-key{}".format(index + 1)] = (path, style)
 
                                     except Exception as exception:
                                         helper.warnings.append(
@@ -668,16 +604,8 @@ class App:
                                             )
                                         )
 
-                                    if not os.path.exists(
-                                        os.path.join(
-                                            mpaths.build_dir, os.path.dirname(path)
-                                        )
-                                    ):
-                                        os.makedirs(
-                                            os.path.join(
-                                                mpaths.build_dir, os.path.dirname(path)
-                                            )
-                                        )
+                                    if not os.path.exists(os.path.join(mpaths.build_dir, os.path.dirname(path))):
+                                        os.makedirs(os.path.join(mpaths.build_dir, os.path.dirname(path)))
 
                                     for key, value in list(styling_dictionary.items()):
                                         construct1 = Path(value[0], value[1])
@@ -702,9 +630,7 @@ class App:
             # ------------------- Decompile all files in "build" folder ------------------ #
             # ---------------------------------------------------------------------------- #
             print("→ Decompiling")
-            with open(
-                os.path.join(mpaths.logs_dir, "Source2Viewer-CLI.txt"), "w"
-            ) as file:
+            with open(os.path.join(mpaths.logs_dir, "Source2Viewer-CLI.txt"), "w") as file:
                 subprocess.run(
                     [
                         mpaths.minify_dir + "/Source2Viewer-CLI.exe",
@@ -724,9 +650,7 @@ class App:
             for key, value in list(styling_dictionary.items()):
                 construct2 = Path(value[0], value[1])
 
-                with open(
-                    os.path.join(mpaths.build_dir, construct2.path.css), "r+"
-                ) as file:
+                with open(os.path.join(mpaths.build_dir, construct2.path.css), "r+") as file:
                     if construct2.style not in file.read():
                         file.write("\n" + construct2.style.strip())
             # ---------------------------------- STEP 4 ---------------------------------- #
@@ -742,9 +666,7 @@ class App:
             # -------------- Compile content to game with resource compiler -------------- #
             # ---------------------------------------------------------------------------- #
             if helper.workshop_installed == True:
-                with open(
-                    os.path.join(mpaths.logs_dir, "resourcecompiler.txt"), "wb"
-                ) as file:
+                with open(os.path.join(mpaths.logs_dir, "resourcecompiler.txt"), "wb") as file:
                     print("→ Compiling")
                     sp_compiler = subprocess.run(
                         [

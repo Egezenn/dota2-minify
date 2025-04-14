@@ -4,6 +4,7 @@
 logs
 locale.txt
 bin/maps/
+mods/test
 
 ## Source2Viewer
 cli-*-*.*

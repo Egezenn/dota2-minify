@@ -29,13 +29,9 @@ def handleWarnings(logs_dir):
             for line in warnings:
                 file.write(line + "\n")
         if len(warnings) == 1:
-            print(
-                f"{len(warnings)} error occured. Check logs\\warnings.txt for details."
-            )
+            print(f"{len(warnings)} error occured. Check logs\\warnings.txt for details.")
         elif len(warnings) >= 2:
-            print(
-                f"{len(warnings)} errors occured. Check logs\\warnings.txt for details."
-            )
+            print(f"{len(warnings)} errors occured. Check logs\\warnings.txt for details.")
 
 
 # ---------------------------------------------------------------------------- #
@@ -57,9 +53,7 @@ def modInfo(widget, name, mod_path, event):
         with open(os.path.join(mod_path, "notes.txt"), "r", encoding="utf-8") as file:
             data = file.read()
     elif locale == "ru":
-        with open(
-            os.path.join(mod_path, "notes_ru.txt"), "r", encoding="utf-8"
-        ) as file:
+        with open(os.path.join(mod_path, "notes_ru.txt"), "r", encoding="utf-8") as file:
             data = file.read()
 
     infoWindow = tk.Toplevel()
@@ -147,9 +141,7 @@ def getAppHeight(mods_folders):
 # ---------------------------------------------------------------------------- #
 
 
-def cleanFolders(
-    build_dir, logs_dir, content_dir, game_dir, minify_dir, dota_minify_maps
-):
+def cleanFolders(build_dir, logs_dir, content_dir, game_dir, minify_dir, dota_minify_maps):
     shutil.rmtree(build_dir, ignore_errors=True)
 
     for root, dirs, files in os.walk(logs_dir):
@@ -208,19 +200,13 @@ def urlValidator(url):
             content.append(line)
 
     except urllib.error.HTTPError as exception:
-        warnings.append(
-            "[{}]".format(type(exception).__name__) + f" Could not connect to -> " + url
-        )
+        warnings.append("[{}]".format(type(exception).__name__) + f" Could not connect to -> " + url)
 
     except ValueError as exception:
-        warnings.append(
-            "[{}]".format(type(exception).__name__) + f" Invalid URL -> " + url
-        )
+        warnings.append("[{}]".format(type(exception).__name__) + f" Invalid URL -> " + url)
 
     except urllib.error.URLError as exception:
-        warnings.append(
-            "[{}]".format(type(exception).__name__) + f" Invalid URL -> " + url
-        )
+        warnings.append("[{}]".format(type(exception).__name__) + f" Invalid URL -> " + url)
 
     return content
 
@@ -268,11 +254,7 @@ def processBlackList(index, line, folder, blank_file_extensions, pak01_dir):
                     )
 
             except TypeError as exception:
-                warnings.append(
-                    "[{}]".format(type(exception).__name__)
-                    + " Invalid data type in line -> "
-                    + str(line)
-                )
+                warnings.append("[{}]".format(type(exception).__name__) + " Invalid data type in line -> " + str(line))
 
     return data
 
