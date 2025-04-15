@@ -105,6 +105,7 @@ def get_available_localizations():
 
 
 def change_localization(init=False):
+    global locale
     with open(mpaths.localization_file_dir, "r", encoding="utf-8") as localization_file:
         localization_data = json.load(localization_file)
         if init == True:
@@ -144,6 +145,19 @@ def change_localization(init=False):
                         ui.configure_item(key, default_value=value["EN"])
                 with open(mpaths.locale_file_dir, "w") as file:
                     file.write(locale)
+        for tag_id in ui.get_item_children("details_tags")[1]:
+            tag = ui.get_item_alias(tag_id).removesuffix("_details_text_value_tag")
+            mod_path = os.path.join(mpaths.mods_dir, tag)
+            note_path = os.path.join(mod_path, f"notes_{locale}.txt")
+            if os.path.exists(note_path):
+                with open(note_path, "r", encoding="utf-8") as file:
+                    data = file.read()
+                ui.configure_item(tag_id, default_value=data)
+            else:
+                note_path = os.path.join(mod_path, f"notes_en.txt")
+                with open(note_path, "r", encoding="utf-8") as file:
+                    data = file.read()
+                ui.configure_item(tag_id, default_value=data)
 
 
 def validate_map_file():

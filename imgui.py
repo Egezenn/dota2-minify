@@ -34,6 +34,8 @@ checkboxes_state = {}
 blacklist_dictionary = {}
 styling_dictionary = {}
 
+ui.add_value_registry(tag="details_tags")
+
 with ui.value_registry():
     ui.add_string_value(
         default_value="Checking map file...", tag="checking_map_file_var"
@@ -200,7 +202,7 @@ def create_checkboxes():
                 else:
                     ui.configure_item(name, default_value=checkboxes_state[name])
         mod_path = os.path.join(mpaths.mods_dir, name)
-        notes_txt = os.path.join(mod_path, "notes.txt")
+        notes_txt = os.path.join(mod_path, f"notes_{helper.locale}.txt")
         with open(notes_txt, "r", encoding="utf-8") as file:
             data = file.read()
 
@@ -226,8 +228,15 @@ def create_checkboxes():
             no_collapse=True,
             label=f"{name}",
         )
+        ui.add_string_value(
+            parent="details_tags",
+            default_value=f"{data}",
+            tag=f"{name}_details_text_value_tag",
+        )
         ui.add_text(
-            default_value=f"{data}", parent=f"{name}_details_window_tag", wrap=482
+            source=f"{name}_details_text_value_tag",
+            parent=f"{name}_details_window_tag",
+            wrap=486,
         )
 
         current_box = name
