@@ -54,21 +54,6 @@ with ui.value_registry():
     )
 
 
-class Extension:
-    def __init__(self, path):
-        self.path = path
-        self.css = path + ".css"
-        self.vcss_c = path + ".vcss_c"
-        self.xml = path + ".xml"
-        self.vxml_C = path + ".vxml_c"
-
-
-class Path:
-    def __init__(self, path, style):
-        self.path = Extension(path)
-        self.style = style
-
-
 class TextRedirector(object):
     def __init__(self, widget, tag="stdout"):
         self.widget = widget
@@ -82,7 +67,7 @@ class TextRedirector(object):
 
 
 def save_state():
-    save_state_checkboxes()
+    checkbox_state_save()
 
 
 def lock_interaction():
@@ -102,7 +87,7 @@ def unlock_interaction():
 def delete_update_popup():
     ui.configure_item("update_popup", show=False)
     ui.delete_item("update_popup")
-    app_start2()
+    initiate_conditionals()
 
 
 def hide_uninstall_popup():
@@ -114,7 +99,7 @@ def open_github_link_and_close_minify():
     close()
 
 
-def save_state_checkboxes():
+def checkbox_state_save():
     global checkboxes_state
     for box in checkboxes:
         checkboxes_state[box] = ui.get_value(box)
@@ -132,20 +117,19 @@ def load_state_checkboxes():
 
 
 def drag_viewport(sender, app_data, user_data):
-    if ui.get_item_alias(ui.get_active_window()) != None:
-        if (
-            ui.is_item_hovered("primary_window") == True
-            or ui.is_item_hovered("terminal_window") == True
-            or ui.is_item_hovered("top_bar") == True
-            or ui.is_item_hovered("mod_menu") == True
-            or ui.get_item_alias(ui.get_active_window()).endswith("details_window_tag") == True
-        ):  # Note: If local pos [1] < *Height_of_top_bar is buggy)
-            drag_deltas = app_data
-            viewport_current_pos = ui.get_viewport_pos()
-            new_x_position = viewport_current_pos[0] + drag_deltas[1]
-            new_y_position = viewport_current_pos[1] + drag_deltas[2]
-            new_y_position = max(new_y_position, 0)  # prevent the viewport to go off the top of the screen
-            ui.set_viewport_pos([new_x_position, new_y_position])
+    if ui.get_item_alias(ui.get_active_window()) != None and (
+        ui.is_item_hovered("primary_window") == True
+        or ui.is_item_hovered("terminal_window") == True
+        or ui.is_item_hovered("top_bar") == True
+        or ui.is_item_hovered("mod_menu") == True
+        or ui.get_item_alias(ui.get_active_window()).endswith("details_window_tag") == True
+    ):  # Note: If local pos [1] < *Height_of_top_bar is buggy)
+        drag_deltas = app_data
+        viewport_current_pos = ui.get_viewport_pos()
+        new_x_position = viewport_current_pos[0] + drag_deltas[1]
+        new_y_position = viewport_current_pos[1] + drag_deltas[2]
+        new_y_position = max(new_y_position, 0)  # prevent the viewport to go off the top of the screen
+        ui.set_viewport_pos([new_x_position, new_y_position])
 
 
 def open_mod_menu():
@@ -164,7 +148,7 @@ def close():
     ui.stop_dearpygui()
 
 
-def unistall_popup_show():
+def uninstall_popup_show():
     ui.configure_item("uninstall_popup", show=True)
     time.sleep(0.02)
     configure_uninstall_popup()
@@ -240,6 +224,7 @@ def update_popup_show():
 
 def setupSystem():
     os.makedirs("logs", exist_ok=True)
+    # TODO do this.. normally
     x = validatefiles.Requirements(checkboxes)
     public_methods = [
         method for method in dir(x) if callable(getattr(x, method)) if not method.startswith("_")
@@ -252,12 +237,12 @@ def setupSystem():
         ):
             if platform.system() == "Windows":
                 helper.add_text_to_terminal(
-                    text=f"{helper.localization_dict["downloading_cli_terminal_text_var"]}",
+                    text=helper.localization_dict["downloading_cli_terminal_text_var"],
                     tag="downloading_s2v_cli_tag",
                 )
                 zip_name = "cli-windows-x64.zip"
                 zip_path = os.path.join(mpaths.minify_dir, zip_name)
-                response = requests.get(mpaths.v2f_latest_windows_x64)
+                response = requests.get(mpaths.s2v_latest_windows_x64)
                 if response.status_code == 200:
                     with open(zip_path, "wb") as file:
                         file.write(response.content)
@@ -273,7 +258,7 @@ def setupSystem():
                     )
             else:
                 helper.add_text_to_terminal(
-                    text=f"{helper.localization_dict["no_instructions_cli_terminal_text_var"]}",
+                    text=helper.localization_dict["no_instructions_cli_terminal_text_var"],
                     tag="error_cli_download_text_tag",
                 )
         for method in public_methods:
@@ -286,11 +271,11 @@ def setupSystem():
             file.write(traceback.format_exc())
             lock_interaction()
             helper.add_text_to_terminal(
-                text=f"{helper.localization_dict["failed_to_start_terminal_text_var"]}",
+                text=helper.localization_dict["failed_to_start_terminal_text_var"],
                 tag="failed_to_start_text_tag",
             )
             helper.add_text_to_terminal(
-                text=f"{helper.localization_dict["check_crashlog_terminal_text_var"]}",
+                text=helper.localization_dict["check_crashlog_terminal_text_var"],
                 tag="check_logs_text_tag",
             )
 
@@ -312,35 +297,34 @@ def uninstaller():
     time.sleep(0.015)
     lock_interaction()
     # remove pak01_dir.vpk if it exists
-    vpkPath = os.path.join(mpaths.dota_minify, "pak01_dir.vpk")
+    vpkPath = os.path.join(mpaths.minify_dota_pak_output_path, "pak01_dir.vpk")
     if os.path.exists(vpkPath):
         os.remove(vpkPath)
 
     # remove dota.vpk if it exists
-    mapPath = os.path.join(mpaths.dota_minify_maps, "dota.vpk")
-    if os.path.exists(mapPath):
-        os.remove(mapPath)
+    if os.path.exists(mpaths.minify_dota_maps_output_path):
+        shutil.rmtree(mpaths.minify_dota_maps_output_path)
 
     try:
-        with open(os.path.join(mpaths.itembuilds_dir, "default_antimage.txt"), "r") as file:
+        with open(os.path.join(mpaths.dota_itembuilds_path, "default_antimage.txt"), "r") as file:
             lines = file.readlines()
         if len(lines) >= 3:
             if "OpenDotaGuides" in lines[2]:
-                for name in os.listdir(mpaths.itembuilds_dir):
+                for name in os.listdir(mpaths.dota_itembuilds_path):
                     if name != "bkup":
-                        os.remove(os.path.join(mpaths.itembuilds_dir, name))
+                        os.remove(os.path.join(mpaths.dota_itembuilds_path, name))
                 # print(os.path.join(mpaths.itembuilds_dir, "bkup"))
-                for name in os.listdir(os.path.join(mpaths.itembuilds_dir, "bkup")):
+                for name in os.listdir(os.path.join(mpaths.dota_itembuilds_path, "bkup")):
                     os.rename(
-                        os.path.join(mpaths.itembuilds_dir, "bkup", name),
-                        os.path.join(mpaths.itembuilds_dir, name),
+                        os.path.join(mpaths.dota_itembuilds_path, "bkup", name),
+                        os.path.join(mpaths.dota_itembuilds_path, name),
                     )
     except FileNotFoundError:
         helper.warnings.append(
             "Unable to recover backed up default guides or the itembuilds directory is empty, verify files to get the default guides back"
         )
     helper.add_text_to_terminal(
-        text=f"{helper.localization_dict["mods_removed_terminal_text_var"]}",
+        text=helper.localization_dict["mods_removed_terminal_text_var"],
         tag="uninstaller_text_tag",
     )
     unlock_interaction()
@@ -351,12 +335,12 @@ def clean_terminal():
 
 
 def patcher_start():
-    thread1 = threading.Thread(target=save_state_checkboxes())
-    thread1.start()
-    thread1.join
-    thread2 = threading.Thread(target=patcher)
-    thread2.start()
-    thread2.join
+    checkbox_state_save_thread = threading.Thread(target=checkbox_state_save)
+    checkbox_state_save_thread.start()
+    checkbox_state_save_thread.join()
+    patch_thread = threading.Thread(target=patcher)
+    patch_thread.start()
+    patch_thread.join()
 
 
 def patcher():
@@ -365,7 +349,7 @@ def patcher():
     clean_terminal()
     if "dota2.exe" in (p.name() for p in psutil.process_iter()):
         helper.add_text_to_terminal(
-            text=f"{helper.localization_dict["close_dota_terminal_text_var"]}",
+            text=helper.localization_dict["close_dota_terminal_text_var"],
             tag="close_dota_text_tag",
         )
         return
@@ -377,10 +361,10 @@ def patcher():
         helper.cleanFolders(
             mpaths.build_dir,
             mpaths.logs_dir,
-            mpaths.content_dir,
-            mpaths.game_dir,
+            mpaths.minify_dota_compile_input_path,
+            mpaths.minify_dota_compile_output_path,
             mpaths.minify_dir,
-            mpaths.dota_minify_maps,
+            mpaths.minify_dota_maps_output_path,
         )
 
         styling_dictionary = {}
@@ -412,7 +396,7 @@ def patcher():
                             shutil.copytree(
                                 mpaths.maps_dir,
                                 os.path.join(
-                                    mpaths.dota_minify,
+                                    mpaths.minify_dota_pak_output_path,
                                     os.path.basename(mpaths.maps_dir),
                                 ),
                                 dirs_exist_ok=True,
@@ -428,20 +412,20 @@ def patcher():
                                     with open(zip_path, "wb") as file:
                                         file.write(response.content)
                                     helper.add_text_to_terminal(
-                                        f"{helper.localization_dict["downloaded_latest_opendotaguides_terminal_text_var"]}",
+                                        helper.localization_dict["downloaded_latest_opendotaguides_terminal_text_var"],
                                         "downloaded_open_dota_guides_text_tag",
                                     )
                                     os.makedirs(
-                                        os.path.join(mpaths.itembuilds_dir, "bkup"),
+                                        os.path.join(mpaths.dota_itembuilds_path, "bkup"),
                                         exist_ok=True,
                                     )
-                                    for name in os.listdir(mpaths.itembuilds_dir):
+                                    for name in os.listdir(mpaths.dota_itembuilds_path):
                                         try:
                                             if name != "bkup":
                                                 os.rename(
-                                                    os.path.join(mpaths.itembuilds_dir, name),
+                                                    os.path.join(mpaths.dota_itembuilds_path, name),
                                                     os.path.join(
-                                                        mpaths.itembuilds_dir,
+                                                        mpaths.dota_itembuilds_path,
                                                         "bkup",
                                                         name,
                                                     ),
@@ -452,24 +436,24 @@ def patcher():
                                     for file in os.listdir(temp_dump_path):
                                         shutil.copy(
                                             os.path.join(temp_dump_path, file),
-                                            os.path.join(mpaths.itembuilds_dir, file),
+                                            os.path.join(mpaths.dota_itembuilds_path, file),
                                         )
                                     shutil.rmtree(temp_dump_path)
                                     os.remove(zip_path)
                                     helper.add_text_to_terminal(
-                                        f"{helper.localization_dict["replaced_guides_terminal_text_var"]}",
+                                        helper.localization_dict["replaced_guides_terminal_text_var"],
                                         "replaced_open_dota_guides_text_tag",
                                     )
                                     if os.path.exists(zip_path):
                                         os.remove(zip_path)
                                 else:
                                     helper.add_text_to_terminal(
-                                        f"{helper.localization_dict["failed_to_download_opendotaguides_terminal_text_var"]}",
+                                        helper.localization_dict["failed_to_download_opendotaguides_terminal_text_var"],
                                         "failed_downloading_open_dota_guides_text_tag",
                                     )
                             except:  # no connection
                                 helper.add_text_to_terminal(
-                                    f"{helper.localization_dict["failed_to_download_opendotaguides_terminal_text_var"]}",
+                                    helper.localization_dict["failed_to_download_opendotaguides_terminal_text_var"],
                                     "failed_downloading_open_dota_guides_text_tag",
                                 )
                         # ----------------------------------- files ---------------------------------- #
@@ -478,7 +462,7 @@ def patcher():
                         # else:                   print(f"    files: Found {files_total} files")
                         shutil.copytree(
                             os.path.join(mod_path, "files"),
-                            mpaths.game_dir,
+                            mpaths.minify_dota_compile_output_path,
                             dirs_exist_ok=True,
                             ignore=ignore_patterns("*.gitkeep"),
                         )
@@ -502,13 +486,15 @@ def patcher():
                                             line,
                                             folder,
                                             blank_file_extensions,
-                                            mpaths.pak01_dir,
+                                            mpaths.dota_pak01_path,
                                         ):
                                             blacklist_data.append(path)
                                         continue
 
                                     elif line.startswith(">>"):
-                                        for path in helper.processBlacklistDir(index, line, folder, mpaths.pak01_dir):
+                                        for path in helper.processBlacklistDir(
+                                            index, line, folder, mpaths.dota_pak01_path
+                                        ):
                                             blacklist_data.append(path)
                                         continue
 
@@ -528,13 +514,17 @@ def patcher():
 
                                 # blacklist_dictionary["blacklist-key{}".format(index+1)] = path, extension
 
-                                if not os.path.exists(os.path.join(mpaths.game_dir, os.path.dirname(path))):
-                                    os.makedirs(os.path.join(mpaths.game_dir, os.path.dirname(path)))
+                                if not os.path.exists(
+                                    os.path.join(mpaths.minify_dota_compile_output_path, os.path.dirname(path))
+                                ):
+                                    os.makedirs(
+                                        os.path.join(mpaths.minify_dota_compile_output_path, os.path.dirname(path))
+                                    )
 
                                 try:
                                     shutil.copy(
                                         os.path.join(mpaths.blank_files_dir, "blank{}").format(extension),
-                                        os.path.join(mpaths.game_dir, path + extension),
+                                        os.path.join(mpaths.minify_dota_compile_output_path, path + extension),
                                     )
                                 except FileNotFoundError as exception:
                                     warnings.append(
@@ -584,18 +574,17 @@ def patcher():
                                 if not os.path.exists(os.path.join(mpaths.build_dir, os.path.dirname(path))):
                                     os.makedirs(os.path.join(mpaths.build_dir, os.path.dirname(path)))
 
-                                for key, value in list(styling_dictionary.items()):
-                                    construct1 = Path(value[0], value[1])
+                                for key, path_style in list(styling_dictionary.items()):
                                     try:
                                         helper.vpkExtractor(
-                                            construct1.path.vcss_c,
-                                            mpaths.pak01_dir,
+                                            f"{path_style[0]}.vcss_c",
+                                            mpaths.dota_pak01_path,
                                             mpaths.build_dir,
                                         )
                                     except KeyError:
                                         warnings.append(
                                             "Path does not exist in VPK -> '{}', error in 'mods\\{}\\styling.txt'".format(
-                                                construct1.path.vcss_c, folder
+                                                f"{path_style[0]}.vcss_c", folder
                                             )  ###???
                                         )
                                         del styling_dictionary[key]
@@ -607,7 +596,7 @@ def patcher():
         # ------------------- Decompile all files in "build" folder ------------------ #
         # ---------------------------------------------------------------------------- #
         helper.add_text_to_terminal(
-            f"{helper.localization_dict["decompiling_terminal_text_var"]}",
+            helper.localization_dict["decompiling_terminal_text_var"],
             "decompiling_text",
         )
         with open(os.path.join(mpaths.logs_dir, "Source2Viewer-CLI.txt"), "w") as file:
@@ -627,22 +616,20 @@ def patcher():
         # -------- Check what .css files are in "build" folder and write mods -------- #
         # ---------------------------------------------------------------------------- #
         helper.add_text_to_terminal(
-            f"{helper.localization_dict["patching_terminal_text_var"]}",
+            helper.localization_dict["patching_terminal_text_var"],
             "patching_text_tag",
         )
 
-        for key, value in list(styling_dictionary.items()):
-            construct2 = Path(value[0], value[1])
-
-            with open(os.path.join(mpaths.build_dir, construct2.path.css), "r+") as file:
-                if construct2.style not in file.read():
-                    file.write("\n" + construct2.style.strip())
+        for key, path_style in list(styling_dictionary.items()):
+            with open(os.path.join(mpaths.build_dir, f"{path_style[0]}.css"), "r+") as file:
+                if path_style[1] not in file.read():
+                    file.write("\n" + path_style[1])
         # ---------------------------------- STEP 4 ---------------------------------- #
         # -----------------  Move uncompiled files in build to content --------------- #
         # ---------------------------------------------------------------------------- #
         copytree(
             mpaths.build_dir,
-            mpaths.content_dir,
+            mpaths.minify_dota_compile_input_path,
             dirs_exist_ok=True,
             ignore=ignore_patterns("*.vcss_c"),
         )
@@ -652,14 +639,14 @@ def patcher():
         if helper.workshop_installed == True:
             with open(os.path.join(mpaths.logs_dir, "resourcecompiler.txt"), "wb") as file:
                 helper.add_text_to_terminal(
-                    f"{helper.localization_dict["compiling_terminal_text_var"]}",
+                    helper.localization_dict["compiling_terminal_text_var"],
                     "compiling_text",
                 )
                 sp_compiler = subprocess.run(
                     [
-                        mpaths.resource_compiler,
+                        mpaths.dota_resource_compiler_path,
                         "-i",
-                        mpaths.content_dir + "/*",
+                        mpaths.minify_dota_compile_input_path + "/*",
                         "-r",
                     ],
                     stdout=subprocess.PIPE,
@@ -674,19 +661,19 @@ def patcher():
         # ---------------------------------- STEP 6 ---------------------------------- #
         # -------- Create VPK from game folder and save into Minify directory -------- #
         # ---------------------------------------------------------------------------- #
-        newpak = vpk.new(mpaths.game_dir)
-        newpak.save(os.path.join(mpaths.dota_minify, "pak01_dir.vpk"))
+        newpak = vpk.new(mpaths.minify_dota_compile_output_path)
+        newpak.save(os.path.join(mpaths.minify_dota_pak_output_path, "pak01_dir.vpk"))
 
         patching = False
 
         unlock_interaction()
         helper.add_text_to_terminal("-------------------------------------------------------", "spacer1_text")
         helper.add_text_to_terminal(
-            f"{helper.localization_dict["success_terminal_text_var"]}",
+            helper.localization_dict["success_terminal_text_var"],
             "success_text_tag",
         )
         helper.add_text_to_terminal(
-            f"{helper.localization_dict["launch_option_text_var"]}",
+            helper.localization_dict["launch_option_text_var"],
             "launch_option_text",
         )
 
@@ -699,11 +686,11 @@ def patcher():
         patching = False
         helper.add_text_to_terminal("-------------------------------------------------------", "spacer2_text")
         helper.add_text_to_terminal(
-            f"{helper.localization_dict["failure_terminal_text_var"]}",
+            helper.localization_dict["failure_terminal_text_var"],
             "patching_failed_text_tag",
         )
         helper.add_text_to_terminal(
-            f"""{helper.localization_dict["check_logs_terminal_text_var"]}""",
+            helper.localization_dict["check_logs_terminal_text_var"],
             "check_logs_text_tag",
         )
         unlock_interaction()
@@ -716,12 +703,12 @@ def version_check():
             response = requests.get(mpaths.version_query)
             if response.status_code == 200:
                 if version == response.text:
-                    app_start2()
+                    initiate_conditionals()
                 else:
                     version = response.text
                     update_popup_show()
         except:  # no connection
-            app_start2()
+            initiate_conditionals()
 
 
 def start_text():
@@ -806,7 +793,7 @@ def create_ui():
                     tag="button_uninstall",
                     label="Uninstall",
                     width=92,
-                    callback=unistall_popup_show,
+                    callback=uninstall_popup_show,
                 )
             with ui.group(pos=(-45, 4)):
                 ui.add_text(
@@ -848,15 +835,15 @@ def create_ui():
         no_resize=True,
         no_title_bar=True,
     )
-    ui.add_group(tag="unistall_popup_text_wrapper", parent="uninstall_popup")
+    ui.add_group(tag="uninstall_popup_text_wrapper", parent="uninstall_popup")
     ui.add_text(
         default_value="Remove all mods?",
-        parent="unistall_popup_text_wrapper",
+        parent="uninstall_popup_text_wrapper",
         tag="remove_mods_text_tag",
     )
     with ui.group(
         parent="uninstall_popup",
-        tag="unistall_popup_button_wrapper",
+        tag="uninstall_popup_button_wrapper",
         horizontal=True,
         horizontal_spacing=10,
     ):
@@ -982,28 +969,28 @@ def configure_uninstall_popup():
         ),
     )
     ui.configure_item(
-        "unistall_popup_text_wrapper",
+        "uninstall_popup_text_wrapper",
         pos=(
             ui.get_item_rect_size("uninstall_popup")[0] / 2
-            - ui.get_item_rect_size("unistall_popup_text_wrapper")[0] / 2,
+            - ui.get_item_rect_size("uninstall_popup_text_wrapper")[0] / 2,
             ui.get_item_rect_size("uninstall_popup")[1] / 2
-            - ui.get_item_rect_size("unistall_popup_text_wrapper")[1] / 2
+            - ui.get_item_rect_size("uninstall_popup_text_wrapper")[1] / 2
             - 20,
         ),
     )
     ui.configure_item(
-        "unistall_popup_button_wrapper",
+        "uninstall_popup_button_wrapper",
         pos=(
             ui.get_item_rect_size("uninstall_popup")[0] / 2
-            - ui.get_item_rect_size("unistall_popup_button_wrapper")[0] / 2,
+            - ui.get_item_rect_size("uninstall_popup_button_wrapper")[0] / 2,
             ui.get_item_rect_size("uninstall_popup")[1] / 2
-            - ui.get_item_rect_size("unistall_popup_button_wrapper")[1] / 2
+            - ui.get_item_rect_size("uninstall_popup_button_wrapper")[1] / 2
             + 10,
         ),
     )
 
 
-def app_start():
+def create_base_ui():
     helper.get_available_localizations()
     create_ui()
     theme()
@@ -1013,16 +1000,16 @@ def app_start():
     configure_update_popup()
 
 
-def app_start2():
-    t1 = threading.Thread(target=setupSystem)
-    t2 = threading.Thread(target=load_state_checkboxes)
-    t3 = threading.Thread(target=helper.validate_map_file)
-    t1.start()
-    t2.start()
-    t3.start()
-    t1.join()
-    t2.join()
-    t3.join()
+def initiate_conditionals():
+    setup_system_thread = threading.Thread(target=setupSystem)
+    load_state_checkboxes_thread = threading.Thread(target=load_state_checkboxes)
+    validate_map_file_thread = threading.Thread(target=helper.validate_map_file)
+    setup_system_thread.start()
+    load_state_checkboxes_thread.start()
+    validate_map_file_thread.start()
+    setup_system_thread.join()
+    load_state_checkboxes_thread.join()
+    validate_map_file_thread.join()
     create_checkboxes()
     setupButtonState()
     start_text()
@@ -1181,7 +1168,7 @@ ui.create_viewport(
     clear_color=(0, 0, 0, 255),
 )
 
-ui.set_frame_callback(1, callback=app_start)  # On first frame execute app_start
+ui.set_frame_callback(1, callback=create_base_ui)  # On first frame execute app_start
 
 
 # DearPyGyi Setup

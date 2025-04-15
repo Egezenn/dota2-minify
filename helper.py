@@ -35,7 +35,7 @@ def handleWarnings(logs_dir):
             for line in warnings:
                 file.write(line + "\n")
         add_text_to_terminal(
-            f"{localization_dict["minify_encountered_errors_terminal_text_var"]}",
+            localization_dict["minify_encountered_errors_terminal_text_var"],
             "minify_error_var",
         )
 
@@ -72,9 +72,7 @@ def cleanFolders(build_dir, logs_dir, content_dir, game_dir, minify_dir, dota_mi
     for root, dirs, files in os.walk(game_dir):
         for filename in files:
             os.remove(os.path.join(root, filename))
-    for root, dirs, files in os.walk(dota_minify_maps):
-        for filename in files:
-            os.remove(os.path.join(root, filename))
+    shutil.rmtree(dota_minify_maps)
     os.makedirs(os.path.join(minify_dir, "build"))
 
 
@@ -90,7 +88,9 @@ def getBlankFileExtensions(blank_files_dir):
 
 
 def get_available_localizations():
+    "Initializes `localization_dict` at startup"
     global localizations
+    # get available variables for text
     with open(mpaths.localization_file_dir, "r", encoding="utf-8") as file:
         localization_data = json.load(file)
     sub_headers = set()
@@ -98,6 +98,7 @@ def get_available_localizations():
         if isinstance(header, dict):
             sub_headers.update(header.keys())
     localizations = list(sub_headers)
+
     for key, value in localization_data.items():
         if key.endswith("var") == True:
             localization_dict[key] = value["EN"]
@@ -116,6 +117,7 @@ def change_localization(init=False):
                 locale = ui.get_value("lang_select")
                 with open(mpaths.locale_file_dir, "w") as file:
                     file.write(locale)
+
         for key, value in localization_data.items():
             locale = ui.get_value("lang_select")
             if key.endswith("var") == True:
@@ -143,6 +145,7 @@ def change_localization(init=False):
                         ui.configure_item(key, default_value=value["EN"])
                 with open(mpaths.locale_file_dir, "w") as file:
                     file.write(locale)
+
         for tag_id in ui.get_item_children("details_tags")[1]:
             tag = ui.get_item_alias(tag_id).removesuffix("_details_text_value_tag")
             mod_path = os.path.join(mpaths.mods_dir, tag)
@@ -156,6 +159,7 @@ def change_localization(init=False):
                 with open(note_path, "r", encoding="utf-8") as file:
                     data = file.read()
                 ui.configure_item(tag_id, default_value=data)
+
         global details_label_text_var
         global mod_selection_window_var
         details_label_text_var = localization_data["details_button_label_var"][locale]
@@ -171,30 +175,30 @@ def change_localization(init=False):
 
 
 def validate_map_file():
-    add_text_to_terminal(f"{localization_dict["checking_map_file_var"]}", "map_check_text_tag")
+    add_text_to_terminal(localization_dict["checking_map_file_var"], "map_check_text_tag")
 
     os.makedirs(mpaths.maps_dir, exist_ok=True)
 
-    if os.path.exists(mpaths.minify_map) == False:
-        shutil.copyfile(mpaths.dota_user_map_dir, mpaths.minify_map)
+    if os.path.exists(mpaths.minify_map_dir) == False:
+        shutil.copyfile(mpaths.dota_map_path, mpaths.minify_map_dir)
         add_text_to_terminal(
-            f"""{localization_dict["updating_map_file_terminal_text_var"]}""",
+            localization_dict["updating_map_file_terminal_text_var"],
             "map_update_text_tag",
         )
 
-    elif os.path.exists(mpaths.minify_map) and (
-        calculate_md5(mpaths.dota_user_map_dir) != calculate_md5(mpaths.minify_map)
+    elif os.path.exists(mpaths.minify_map_dir) and (
+        calculate_md5(mpaths.dota_map_path) != calculate_md5(mpaths.minify_map_dir)
     ):
         add_text_to_terminal(
-            f"""{localization_dict["updating_map_file_terminal_text_var"]}""",
+            localization_dict["updating_map_file_terminal_text_var"],
             "map_update_text_tag",
         )
-        os.remove(mpaths.minify_map)
-        shutil.copyfile(mpaths.dota_user_map_dir, mpaths.minify_map)
+        os.remove(mpaths.minify_map_dir)
+        shutil.copyfile(mpaths.dota_map_path, mpaths.minify_map_dir)
 
     else:
         add_text_to_terminal(
-            f"""{localization_dict["map_file_uptodate_terminal_text_var"]}""",
+            localization_dict["map_file_uptodate_terminal_text_var"],
             "map_up_to_date_text_tag",
         )
 
@@ -297,7 +301,7 @@ def write_locale(text):
 
 
 def calculate_md5(file_path):
-    """Calculates the MD5 hash of a file."""
+    "Calculates the MD5 hash of a file."
     md5_hash = hashlib.md5()
     with open(file_path, "rb") as file:
         for byte_block in iter(lambda: file.read(4096), b""):

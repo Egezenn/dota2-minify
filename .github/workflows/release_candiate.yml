@@ -1,0 +1,51 @@
+name: Release Candidate
+
+on:
+  workflow_dispatch:
+    inputs:
+      release_name:
+        description: "Name the release (RC)"
+        required: true
+        default: "Minify-v1.xxRCx"
+
+env:
+  RELEASE_NAME: ""
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Build executable with Nuitka
+        run: |
+          curl -s -L -o "cli-windows-x64.zip" "https://github.com/ValveResourceFormat/ValveResourceFormat/releases/latest/download/cli-windows-x64.zip"
+          Expand-Archive -Path ".\cli-windows-x64.zip" -DestinationPath ".\"
+          python -m nuitka --assume-yes-for-downloads --follow-imports --onefile --standalone --include-data-files=version=version --include-data-files=Source2Viewer-CLI.exe=Source2Viewer-CLI.exe --include-data-files=TinyEXR.Native.dll=TinyEXR.Native.dll --include-data-files=.\libSkiaSharp.dll=libSkiaSharp.dll --include-data-dir=./bin=bin --include-data-dir=./mods=mods --enable-plugin=tk-inter --windows-console-mode=disable --windows-icon-from-ico=bin/images/favicon.ico imgui.py
+          cd gui.dist
+          Rename-Item -Path "imgui.exe" -NewName "Minify.exe"
+          Compress-Archive -Path ".\*" -DestinationPath ".\..\${{ github.event.inputs.release_name }}.zip"
+          cd .\..\
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        with:
+          prerelease: true
+          tag_name: ${{ github.event.inputs.release_name }}
+          body: Built with workflows (Release candidate, might be broken)
+          files: "${{ github.event.inputs.release_name }}.zip"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

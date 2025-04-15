@@ -3,9 +3,9 @@
 *.vcss_c
 logs
 locale
-dpg.ini
 states.json
-bin/maps/dota.vpk
+bin/maps/
+mods/test
 
 ## Source2Viewer
 cli-*-*.*

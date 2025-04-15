@@ -47,7 +47,7 @@ jobs:
           Expand-Archive -Path ".\cli-windows-x64.zip" -DestinationPath ".\"
           python -m nuitka --assume-yes-for-downloads --follow-imports --onefile --standalone --include-data-files=version=version --include-data-files=Source2Viewer-CLI.exe=Source2Viewer-CLI.exe --include-data-files=TinyEXR.Native.dll=TinyEXR.Native.dll --include-data-files=.\libSkiaSharp.dll=libSkiaSharp.dll --include-data-dir=./bin=bin --include-data-dir=./mods=mods --windows-console-mode=disable --windows-icon-from-ico=bin/images/favicon.ico imgui.py
           cd gui.dist
-          Rename-Item -Path "gui.exe" -NewName "Minify.exe"
+          Rename-Item -Path "imgui.exe" -NewName "Minify.exe"
           Compress-Archive -Path ".\*" -DestinationPath ".\..\${{ github.event.inputs.release_name }}.zip"
           cd .\..\
 
