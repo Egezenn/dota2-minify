@@ -16,6 +16,7 @@ workshop_installed = False
 localizations = []
 locale = ""
 localization_dict = {}
+details_label_text_var = ""
 
 # ---------------------------------------------------------------------------- #
 #                                   Warnings                                   #
@@ -120,12 +121,12 @@ def change_localization(init=False):
         for key, value in localization_data.items():
             locale = ui.get_value("lang_select")
             if key.endswith("var") == True:
-                print(key)
-                if locale in localization_data[key]:
-                    localization_dict[key] = value[locale]
-                    ui.set_value(key, value=value[locale])
-                else:
-                    ui.set_value(key, value=value["EN"])
+                if ui.does_item_exist(key) == True:
+                    if locale in localization_data[key]:
+                        localization_dict[key] = value[locale]
+                        ui.set_value(key, value=value[locale])
+                    else:
+                        ui.set_value(key, value=value["EN"])
             if ui.does_item_exist(key) == True:
                 if (
                     key.endswith("var") == False
@@ -158,6 +159,15 @@ def change_localization(init=False):
                 with open(note_path, "r", encoding="utf-8") as file:
                     data = file.read()
                 ui.configure_item(tag_id, default_value=data)
+        global details_label_text_var
+        details_label_text_var = localization_data["details_button_label_var"][locale]
+        for id in ui.get_item_children("mod_menu")[1]:
+            for item in ui.get_item_children(id)[1]:
+                if ui.get_item_alias(item).endswith("_button_show_details_tag"):
+                    ui.configure_item(
+                        item,
+                        label=localization_data["details_button_label_var"][locale],
+                    )
 
 
 def validate_map_file():

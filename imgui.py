@@ -212,7 +212,7 @@ def create_checkboxes():
             small=True,
             indent=200,
             tag=f"{name}_button_show_details_tag",
-            label="Details",
+            label=f"{helper.details_label_text_var}",
             callback=show_details,
             user_data=f"{name}_details_window_tag",
         )

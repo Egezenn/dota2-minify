@@ -42,5 +42,9 @@
   "start_text_5_var": {
     "EN": "-> Create and maintain mods for this project",
     "RU": "-> Создавай и поддерживай моды для этого проекта"
+  },
+  "details_button_label_var":{
+    "EN": "Details",
+    "RU": "Подробнее"
   }
 }
