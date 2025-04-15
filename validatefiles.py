@@ -9,17 +9,17 @@ import mpaths
 
 def open_file_dialog():
     ui.add_file_dialog(
-        label="Select dota2.exe",
+        label="Select SteamLibrary",
         default_path=mpaths.steam_dir,
-        default_filename="dota2.exe",
+        default_filename="SteamLibrary",
         modal=False,
         tag="file_dialog_tag",
         callback=setFolder,
         cancel_callback=close_file_dialog,
-        width=500,
-        height=300,
+        width=400,
+        height=280,
+        pos=(0, 0),
     )
-    ui.add_file_extension(parent="file_dialog_tag", extension=".exe")
 
 
 def close_file_dialog():
@@ -66,7 +66,6 @@ class Requirements:
             "steamapps\\common\\dota 2 beta\\game\\bin\\win64\\dota2.exe",
         )
         normalized_dota2path = os.path.normpath(dota2path)
-
         if not os.path.exists(normalized_dota2path):
             self.toggle_flag = True
             helper.add_text_to_terminal(
