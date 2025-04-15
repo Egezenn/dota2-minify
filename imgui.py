@@ -179,6 +179,8 @@ def close():
 
 def unistall_popup_show():
     ui.configure_item("uninstall_popup", show=True)
+    time.sleep(0.02)
+    configure_uninstall_popup()
 
 
 def create_checkboxes():
@@ -236,7 +238,7 @@ def create_checkboxes():
         ui.add_text(
             source=f"{name}_details_text_value_tag",
             parent=f"{name}_details_window_tag",
-            wrap=486,
+            wrap=480,
         )
 
         current_box = name
@@ -891,31 +893,31 @@ def create_ui():
         no_collapse=True,
         no_close=True,
         no_saved_settings=True,
-        width=310,
-        height=100,
+        autosize=True,
         no_resize=True,
+        no_title_bar=True,
     )
-    ui.configure_item(
-        "uninstall_popup",
-        pos=(
-            ui.get_viewport_width() / 2 - ui.get_item_width("uninstall_popup") / 2,
-            ui.get_viewport_height() / 2 - ui.get_item_height("uninstall_popup") / 2,
-        ),
-    )
+    ui.add_group(tag="unistall_popup_text_wrapper", parent="uninstall_popup")
     ui.add_text(
         default_value="Remove all mods?",
-        parent="uninstall_popup",
-        indent=91,
+        parent="unistall_popup_text_wrapper",
+        tag="remove_mods_text_tag",
     )
     with ui.group(
-        parent="uninstall_popup", horizontal=True, horizontal_spacing=10, indent=42
+        parent="uninstall_popup",
+        tag="unistall_popup_button_wrapper",
+        horizontal=True,
+        horizontal_spacing=10,
     ):
         ui.add_button(
-            label="Confirm", tag="confirm_button", callback=uninstaller, width=100
+            label="Confirm",
+            tag="uninstall_confirm_button",
+            callback=uninstaller,
+            width=100,
         )
         ui.add_button(
             label="Cancel",
-            tag="cancel_button",
+            tag="uninstall_cancel_button",
             callback=hide_uninstall_popup,
             width=100,
         )
@@ -925,7 +927,7 @@ def create_ui():
         modal=False,
         pos=(0, 0),
         tag="mod_menu",
-        label="Mod Selection Menu",
+        label=f"{helper.mod_selection_window_var}",
         menubar=False,
         no_title_bar=False,
         no_move=True,
@@ -1023,6 +1025,38 @@ def configure_update_popup():
             ui.get_item_rect_size("update_popup")[1] / 2
             - ui.get_item_rect_size("update_popup_button_group")[1] / 2
             + 26,
+        ),
+    )
+
+
+def configure_uninstall_popup():
+    ui.configure_item(
+        "uninstall_popup",
+        pos=(
+            ui.get_viewport_width() / 2
+            - ui.get_item_rect_size("uninstall_popup")[0] / 2,
+            ui.get_viewport_height() / 2
+            - ui.get_item_rect_size("uninstall_popup")[1] / 2,
+        ),
+    )
+    ui.configure_item(
+        "unistall_popup_text_wrapper",
+        pos=(
+            ui.get_item_rect_size("uninstall_popup")[0] / 2
+            - ui.get_item_rect_size("unistall_popup_text_wrapper")[0] / 2,
+            ui.get_item_rect_size("uninstall_popup")[1] / 2
+            - ui.get_item_rect_size("unistall_popup_text_wrapper")[1] / 2
+            - 20,
+        ),
+    )
+    ui.configure_item(
+        "unistall_popup_button_wrapper",
+        pos=(
+            ui.get_item_rect_size("uninstall_popup")[0] / 2
+            - ui.get_item_rect_size("unistall_popup_button_wrapper")[0] / 2,
+            ui.get_item_rect_size("uninstall_popup")[1] / 2
+            - ui.get_item_rect_size("unistall_popup_button_wrapper")[1] / 2
+            + 10,
         ),
     )
 
@@ -1179,12 +1213,24 @@ def theme():
             ui.add_theme_color(ui.mvThemeCol_FrameBgHovered, (29, 29, 30, 255))
             ui.add_theme_color(ui.mvThemeCol_FrameBgActive, (29, 29, 30, 255))
 
+    with ui.theme() as popup_theme:
+        with ui.theme_component():
+            ui.add_theme_color(ui.mvThemeCol_Text, (0, 230, 230))
+            ui.add_theme_color(ui.mvThemeCol_Button, (29, 29, 30, 255))
+            ui.add_theme_color(ui.mvThemeCol_ButtonHovered, (17, 17, 18, 255))
+            ui.add_theme_color(ui.mvThemeCol_ButtonActive, (29, 29, 30, 255))
+            ui.add_theme_color(ui.mvThemeCol_FrameBg, (29, 29, 30, 255))
+            ui.add_theme_color(ui.mvThemeCol_FrameBgHovered, (29, 29, 30, 255))
+            ui.add_theme_color(ui.mvThemeCol_FrameBgActive, (29, 29, 30, 255))
+
     ui.bind_item_theme("button_patch", main_buttons_theme)
     ui.bind_item_theme("button_select_mods", main_buttons_theme)
     ui.bind_item_theme("button_uninstall", main_buttons_theme)
     ui.bind_item_theme("exit_button", close_button_theme)
     ui.bind_item_theme("mod_menu", mod_menu_theme)
     ui.bind_item_theme("top_bar", top_bar_theme)
+    ui.bind_item_theme("update_popup", popup_theme)
+    ui.bind_item_theme("uninstall_popup", popup_theme)
 
 
 # Creating_main_viewport

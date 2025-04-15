@@ -17,6 +17,7 @@ localizations = []
 locale = ""
 localization_dict = {}
 details_label_text_var = ""
+mod_selection_window_var = ""
 
 # ---------------------------------------------------------------------------- #
 #                                   Warnings                                   #
@@ -160,7 +161,10 @@ def change_localization(init=False):
                     data = file.read()
                 ui.configure_item(tag_id, default_value=data)
         global details_label_text_var
+        global mod_selection_window_var
         details_label_text_var = localization_data["details_button_label_var"][locale]
+        mod_selection_window_var = localization_data["mod_selection_window_var"][locale]
+        ui.configure_item("mod_menu", label=mod_selection_window_var)
         for id in ui.get_item_children("mod_menu")[1]:
             for item in ui.get_item_children(id)[1]:
                 if ui.get_item_alias(item).endswith("_button_show_details_tag"):

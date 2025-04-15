@@ -46,5 +46,33 @@
   "details_button_label_var":{
     "EN": "Details",
     "RU": "Подробнее"
+  },
+  "mod_selection_window_var":{
+    "EN": "Mod Selection Menu",
+    "RU": "Меню Выбора Модов"
+  },
+  "button_uninstall":{
+    "EN": "Uninstall",
+    "RU": "Удалить Моды"
+  },
+  "remove_mods_text_tag":{
+    "EN": "Remove all mods?",
+    "RU": "Удалить все моды?"
+  },
+  "uninstall_confirm_button":{
+    "EN": "Yes",
+    "RU": "Да"
+  },
+  "uninstall_cancel_button":{
+    "EN": "No",
+    "RU": "Нет"
+  },
+  "update_popup_yes_button":{
+    "EN": "Yes",
+    "RU": "Да"
+  },
+  "update_popup_no_button":{
+    "EN": "No",
+    "RU": "Нет"
   }
 }
