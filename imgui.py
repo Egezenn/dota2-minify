@@ -994,9 +994,9 @@ def create_base_ui():
     helper.get_available_localizations()
     create_ui()
     theme()
-    version_check()
     helper.change_localization(init=True)
-    time.sleep(0.02)  # if popup's sizes break, increase this value
+    version_check()
+    time.sleep(0.05)  # if popup's sizes break, increase this value
     configure_update_popup()
 
 
