@@ -11,10 +11,6 @@
     "EN": "Checking map file...",
     "RU": "Проверяем файл карты..."
   },
-  "minify_error_var": {
-    "EN": "Minify encountered errors. Check Minify\\logs\\warnings.txt for details.",
-    "RU": "Minify столкнулся с ошибками. Проверь Minify\\logs\\warnings.txt для подробностей."
-  },
   "update_popup_text_1_tag": {
     "EN": "New update is now available!",
     "RU": "Новое обновление доступно!"
@@ -74,5 +70,146 @@
   "update_popup_no_button":{
     "EN": "No",
     "RU": "Нет"
+  },
+  "installing_terminal_text_var":{
+    "EN":"-> Installing",
+    "RU":"-> Установка"
+  },
+  "extracting_terminal_text_var":{
+    "EN":"    Extracting: ",
+    "RU":"    Извлечение: "
+  },
+  "decompiling_terminal_text_var":{
+    "EN":"-> Decompiling",
+    "RU":"-> Декомпиляция"
+  },
+  "compiling_terminal_text_var":{
+    "EN":"-> Compiling",
+    "RU":"-> Компиляция"
+  },
+  "patching_terminal_text_var":{
+    "EN":"-> Patching",
+    "RU":"-> Применение патча"
+  },
+  "success_terminal_text_var":{
+    "EN":"Patch was successful!",
+    "RU":"Патч установлен успешно!"
+  },
+  "launch_option_text_var":{
+    "EN":"Remember to add '-language minify' to Dota 2 launch options",
+    "RU":"Не забудь добавить '-language minify' в параметры запуска Dota 2"
+  },
+  "failure_terminal_text_var":{
+    "EN":"Patching failed!",
+    "RU":"Ошибка при установке патча!"
+  },
+  "check_logs_terminal_text_var":{
+    "EN":"Check 'logs\\crashlog.txt' for more info.",
+    "RU":"Проверь 'logs\\crashlog.txt' для детальной информации."
+  },
+  "downloading_cli_terminal_text_var":{
+    "EN":"Downloading Source2Viewer-CLI...",
+    "RU":"Скачивание Source2Viewer-CLI..."
+  },
+  "downloaded_cli_terminal_text_var":{
+    "EN":"-> Downloaded ",
+    "RU":"-> Завершили скачивание "
+  },
+  "extracted_cli_terminal_text_var":{
+    "EN":"-> Extracted ",
+    "RU":"-> Завершена распаковка "
+  },
+  "no_instructions_cli_terminal_text_var":{
+    "EN":"Error: Instructions to download Source2Viewer binaries for your system is not available yet.",
+    "RU":"Ошибка: Инструкции для скачивания исходных файлов Source2Viewer для твоей системы еще не доступны."
+  },
+  "failed_to_start_terminal_text_var":{
+    "EN":"Failed to start!",
+    "RU":"Не удалось запустить!"
+  },
+  "check_crashlog_terminal_text_var":{
+    "EN":"Check 'logs\\crashlog.txt' for more info.",
+    "RU":"Проверь 'logs\\crashlog.txt' для детальной информации."
+  },
+  "mods_removed_terminal_text_var":{
+    "EN":"All Minify mods have been removed.",
+    "RU":"Все Minify моды были удалены."
+  },
+  "close_dota_terminal_text_var":{
+    "EN":"Please close Dota 2 first and then patch.",
+    "RU":"Пожалуйста сначала закрой Dota 2, после чего приступай к патчу."
+  },
+  "downloaded_latest_opendotaguides_terminal_text_var":{
+    "EN":"-> Downloaded latest OpenDotaGuides guides.",
+    "RU":"-> Скачали последние гайды OpenDotaGuides."
+  },
+  "replaced_guides_terminal_text_var":{
+    "EN":"-> Replaced default guides with OpenDotaGuides.",
+    "RU":"-> Заменили стандартные гайды на OpenDotaGuides."
+  },
+  "failed_to_download_opendotaguides_terminal_text_var":{
+    "EN":"-> Failed to download latest OpenDotaGuides.",
+    "RU":"-> Не удалось скачать последние OpenDotaGuides."
+  },
+  "minify_encountered_errors_terminal_text_var":{
+    "EN":"Minify encountered errors. Check Minify\\logs\\warnings.txt for details.",
+    "RU":"Minify столкнулся с ошибками. Проверь Minify\\logs\\warnings.txt для подробностей."
+  },
+  "updating_map_file_terminal_text_var":{
+    "EN":"-> Updating map file...",
+    "RU":"-> Обновляем файл карты..."
+  },
+  "map_file_uptodate_terminal_text_var":{
+    "EN":"-> Map file is up to date...",
+    "RU":"-> Файл карты актуален..."
+  },
+  "path_saved_terminal_text_var":{
+    "EN":"Path saved, please restart Minify",
+    "RU":"Путь сохранен, пожалуйста перезапусти Minify"
+  },
+  "path_canceled_terminal_text_var":{
+    "EN":"Canceled, you did not select a folder.",
+    "RU":"Отмена, ты не указал папку."
+  },
+  "no_steam_found_terminal_text_var":{
+    "EN":"Error: Steam is not installed on this system.",
+    "RU":"Ошибка: Steam не установлен на этой системе."
+  },
+  "no_dota_found_terminal_text_var":{
+    "EN":"Error: Dota 2 Not Found.",
+    "RU":"Ошибка: Dota 2 не найдена."
+  },
+  "please_select_path_terminal_text_var":{
+    "EN":"Please select the location of your 'SteamLibrary' folder, for example 'D:\\SteamLibrary'.",
+    "RU":"Пожалуйста укажи где находится папка 'SteamLibrary', например 'D:\\SteamLibrary'."
+  },
+  "error_please_close_dota_terminal_text_var":{
+    "EN":"Error: Please close Dota 2 and restart Minify.",
+    "RU":"Ошибка: Пожалуйста закрой Dota 2 и перезапусти Minify."
+  },
+  "error_no_cli_found_terminal_text_var":{
+    "EN":"Error: 'Source2Viewer-CLI.exe' not found.",
+    "RU":"Ошибка: 'Source2Viewer-CLI.exe' не найден."
+  },
+  "error_no_dll_found_terminal_text_var":{
+    "EN":"Error: 'libSkiaSharp.dll' not found.",
+    "RU":"Ошибка: 'libSkiaSharp.dll' не найден."
+  },
+  "error_no_workshop_tools_found_terminal_text_var":{
+    "EN":"Some mods have been unavailable because you don't have Workshop Tools installed.",
+    "RU":"Некоторые моды недоступны, так как Workshop Tools не установлены."
+  },
+  "error_no_files_folder_found_terminal_text_var":{
+    "EN":"Missing 'files' folder in ",
+    "RU":"Отсутсвует папка 'files' в "
+  },
+  "error_no_blacklist_txt_found_terminal_text_var":{
+    "EN":"Missing 'blacklist.txt' file in ",
+    "RU":"Отсутсвует файл 'blacklist.txt' в "
+  },
+  "error_no_styling_txt_found_terminal_text_var":{
+    "EN":"Missing 'styling.txt' file in ",
+    "RU":"Отсутсвует файл 'styling.txt' в "
   }
 }
+

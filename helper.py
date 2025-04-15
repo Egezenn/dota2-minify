@@ -34,9 +34,8 @@ def handleWarnings(logs_dir):
         with open(os.path.join(logs_dir, "warnings.txt"), "w") as file:
             for line in warnings:
                 file.write(line + "\n")
-            # print(f"{len(warnings)} error occured. Check logs\\warnings.txt for details.")
         add_text_to_terminal(
-            "Minify encountered errors. Check Minify\\logs\\warnings.txt for details.",
+            f"{localization_dict["minify_encountered_errors_terminal_text_var"]}",
             "minify_error_var",
         )
 
@@ -128,6 +127,11 @@ def change_localization(init=False):
                         ui.set_value(key, value=value[locale])
                     else:
                         ui.set_value(key, value=value["EN"])
+                else:
+                    if locale in localization_data[key]:
+                        localization_dict[key] = value[locale]
+                    else:
+                        localization_dict[key] = value["EN"]
             if ui.does_item_exist(key) == True:
                 if (
                     key.endswith("var") == False
@@ -183,18 +187,25 @@ def validate_map_file():
 
     if os.path.exists(mpaths.minify_map) == False:
         shutil.copyfile(mpaths.dota_user_map_dir, mpaths.minify_map)
-        add_text_to_terminal("""-> Updating map file...""", "map_update_text_tag")
+        add_text_to_terminal(
+            f"""{localization_dict["updating_map_file_terminal_text_var"]}""",
+            "map_update_text_tag",
+        )
 
     elif os.path.exists(mpaths.minify_map) and (
         calculate_md5(mpaths.dota_user_map_dir) != calculate_md5(mpaths.minify_map)
     ):
-        add_text_to_terminal("""-> Updating map file...""", "map_update_text_tag")
+        add_text_to_terminal(
+            f"""{localization_dict["updating_map_file_terminal_text_var"]}""",
+            "map_update_text_tag",
+        )
         os.remove(mpaths.minify_map)
         shutil.copyfile(mpaths.dota_user_map_dir, mpaths.minify_map)
 
     else:
         add_text_to_terminal(
-            """-> Map file is up to date...""", "map_up_to_date_text_tag"
+            f"""{localization_dict["map_file_uptodate_terminal_text_var"]}""",
+            "map_up_to_date_text_tag",
         )
 
 
@@ -202,7 +213,10 @@ def vpkExtractor(path, pak01_dir, build_dir):
     pak1 = vpk.open(pak01_dir)
     fullPath = os.path.join(build_dir, path)
     if not os.path.exists(fullPath):  # extract files from VPK only once
-        add_text_to_terminal(f"    extracting: {path}", f"extracting_{path}_tag")
+        add_text_to_terminal(
+            f"{localization_dict["extracting_terminal_text_var"]}{path}",
+            f"extracting_{path}_tag",
+        )
         path = path.replace(os.sep, "/")
         pakfile = pak1.get_file(path)
         pakfile.save(os.path.join(fullPath))

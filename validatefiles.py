@@ -33,11 +33,13 @@ def setFolder(sender, app_data):
         with open(mpaths.path_file, "w") as file:
             file.write(folder)
         helper.add_text_to_terminal(
-            "Path saved, please restart Minify", "path_saved_text_tag"
+            f"{helper.localization_dict["path_saved_terminal_text_var"]}",
+            "path_saved_text_tag",
         )
     else:
         helper.add_text_to_terminal(
-            "Canceled, you did not select a folder.", "canceled_path_text_tag"
+            f"{helper.localization_dict["path_canceled_terminal_text_var"]}",
+            "canceled_path_text_tag",
         )
 
 
@@ -53,10 +55,9 @@ class Requirements:
     def a_isSteamFound(self):
         if mpaths.steam_dir == "":
             mpaths.toggle_flag = True
-            ui.add_text(
-                default_value="Error: 'Steam is not installed on this system.",
-                tag="error_steam_not_found_text",
-                parent="terminal_window",
+            helper.add_text_to_terminal(
+                text=f"{helper.localization_dict["no_steam_found_terminal_text_var"]}",
+                tag="error_steam_not_found_text_tag",
             )
 
     def b_isDotaInstallFound(self):
@@ -68,14 +69,17 @@ class Requirements:
 
         if not os.path.exists(normalized_dota2path):
             self.toggle_flag = True
-            helper.add_text_to_terminal("Dota 2 Not Found", "dota_not_found_text")
             helper.add_text_to_terminal(
-                f'Dota 2 not found in\n\n"{normalized_dota2path}"\n\n',
-                "dota_not_found_text_2",
+                f"{helper.localization_dict["no_dota_found_terminal_text_var"]}",
+                "dota_not_found_text_1_tag",
             )
             helper.add_text_to_terminal(
-                f"""Please select the location of your "SteamLibrary" folder, for example "D:\\SteamLibrary".""",
-                "dota_not_found_text_3",
+                f'{helper.localization_dict["no_dota_found_path_terminal_text_var"]}\n\n"{normalized_dota2path}"\n\n',
+                "dota_not_found_text_2_tag",
+            )
+            helper.add_text_to_terminal(
+                f"""{helper.localization_dict["please_select_path_terminal_text_var"]}""",
+                "dota_not_found_text_3_tag",
             )
             open_file_dialog()
 
@@ -88,36 +92,33 @@ class Requirements:
     def d_isDotaRunning(self):
         if "dota2.exe" in (p.name() for p in psutil.process_iter()):
             self.toggle_flag = True
-            ui.add_text(
-                default_value="Error: Please close Dota 2 and restart Minify.",
-                tag="please_close_dota_text",
-                parent="terminal_window",
+            helper.add_text_to_terminal(
+                text=f"{helper.localization_dict["error_please_close_dota_terminal_text_var"]}",
+                tag="please_close_dota_text_tag",
             )
 
     def e_isSource2ViewerFound(self):
         if not os.path.exists(os.path.join(mpaths.minify_dir, "Source2Viewer-CLI.exe")):
             self.toggle_flag = True
-            ui.add_text(
-                default_value="Error: 'Source2Viewer-CLI.exe' not found, click Help for instructions.",
-                tag="error_s2v_not_found_text",
-                parent="terminal_window",
+            helper.add_text_to_terminal(
+                text=f"{helper.localization_dict["error_no_cli_found_terminal_text_var"]}",
+                tag="error_s2v_not_found_text_tag",
             )
 
     def f_isDllFound(self):
         if not os.path.exists(os.path.join(mpaths.minify_dir, "libSkiaSharp.dll")):
             self.toggle_flag = True
-            ui.add_text(
-                default_value="Error: 'libSkiaSharp.dll' not found, click Help for instructions.",
-                tag="error_libskiasharp.dll_not_found_text",
-                parent="terminal_window",
+            helper.add_text_to_terminal(
+                text=f"{helper.localization_dict["error_no_dll_found_terminal_text_var"]}",
+                tag="error_libskiasharp.dll_not_found_text_tag",
             )
 
     def g_isCompillerFound(self):
         if not os.path.exists(mpaths.resource_compiler):
             helper.workshop_installed = False
             helper.add_text_to_terminal(
-                """Some mods have been grayed out because you don't have Workshop Tools installed. Click Help for instructions.""",
-                "wst_not_found_text",
+                text=f"""{helper.localization_dict["error_no_workshop_tools_found_terminal_text_var"]}""",
+                tag="no_workshop_tools_found_text_tag",
             )
         else:
             helper.workshop_installed = True
@@ -128,24 +129,21 @@ class Requirements:
 
             if not os.path.exists(os.path.join(mod_path, "files")):
                 self.toggle_flag = True
-                ui.add_text(
-                    default_value=f"""Missing 'files' folder in 'mods/{format(folder)}'.""",
-                    tag="files_folder_not_found_text",
-                    parent="terminal_window",
+                helper.add_text_to_terminal(
+                    text=f"""{helper.localization_dict["error_no_files_folder_found_terminal_text_var"]}'mods/{format(folder)}'.""",
+                    tag="files_folder_not_found_text_tag",
                 )
 
             if not os.path.exists(os.path.join(mod_path, "blacklist.txt")):
                 self.toggle_flag = True
-                ui.add_text(
-                    default_value=f"""Missing 'blacklist.txt' folder in 'mods/{format(folder)}'.""",
-                    tag="blacklist_not_found_text",
-                    parent="terminal_window",
+                helper.add_text_to_terminal(
+                    text=f"""{helper.localization_dict["error_no_blacklist_txt_found_terminal_text_var"]}'mods/{format(folder)}'.""",
+                    tag="blacklist_not_found_text_tag",
                 )
 
             if not os.path.exists(os.path.join(mod_path, "styling.txt")):
                 self.toggle_flag = True
-                ui.add_text(
-                    default_value=f"""Missing 'styling.txt' folder in 'mods/{format(folder)}'.""",
-                    tag="blacklist_not_found_text",
-                    parent="terminal_window",
+                helper.add_text_to_terminal(
+                    text=f"""{helper.localization_dict["error_no_styling_txt_found_terminal_text_var"]}'mods/{format(folder)}'.""",
+                    tag="blacklist_not_found_text_tag",
                 )

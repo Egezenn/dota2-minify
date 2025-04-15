@@ -41,10 +41,6 @@ with ui.value_registry():
         default_value="Checking map file...", tag="checking_map_file_var"
     )
     ui.add_string_value(
-        default_value="Minify encountered errors. Check Minify\\logs\\warnings.txt for details.",
-        tag="minify_error_var",
-    )
-    ui.add_string_value(
         default_value="Want to contribute to the project's growth?",
         tag="start_text_1_var",
     )
@@ -270,7 +266,7 @@ def setupSystem():
         ):
             if platform.system() == "Windows":
                 helper.add_text_to_terminal(
-                    text="Downloading Source2Viewer-CLI...",
+                    text=f"{helper.localization_dict["downloading_cli_terminal_text_var"]}",
                     tag="downloading_s2v_cli_tag",
                 )
                 zip_name = "cli-windows-x64.zip"
@@ -280,18 +276,19 @@ def setupSystem():
                     with open(zip_path, "wb") as file:
                         file.write(response.content)
                     helper.add_text_to_terminal(
-                        text=f"-> Downloaded {zip_name}", tag="downloaded_text_tag"
+                        text=f"{helper.localization_dict["downloaded_cli_terminal_text_var"]}{zip_name}",
+                        tag="downloaded_text_tag",
                     )
                     shutil.unpack_archive(zip_path, mpaths.minify_dir, "zip")
                     os.remove(zip_path)
                     helper.add_text_to_terminal(
-                        text=f"-> Extracted {zip_name}", tag="extracted_text_tag"
+                        text=f"{helper.localization_dict["extracted_cli_terminal_text_var"]}{zip_name}",
+                        tag="extracted_text_tag",
                     )
             else:
-                ui.add_text(
-                    default_value="Error: Instructions to download Source2Viewer binaries for your system is not available yet, click Help for instructions.",
-                    parent="terminal_window",
-                    tag="error_cli_download_text",
+                helper.add_text_to_terminal(
+                    text=f"{helper.localization_dict["no_instructions_cli_terminal_text_var"]}",
+                    tag="error_cli_download_text_tag",
                 )
         for method in public_methods:
             getattr(x, method)()
@@ -302,15 +299,13 @@ def setupSystem():
         with open(os.path.join(mpaths.logs_dir, "crashlog.txt"), "w") as file:
             file.write(traceback.format_exc())
             lock_interaction()
-            ui.add_text(
-                default_value="Failed to start!",
-                parent="terminal_window",
-                tag="failed_to_start_text",
+            helper.add_text_to_terminal(
+                text=f"{helper.localization_dict["failed_to_start_terminal_text_var"]}",
+                tag="failed_to_start_text_tag",
             )
-            ui.add_text(
-                default_value="Check 'logs\\crashlog.txt' for more info.",
-                parent="terminal_window",
-                tag="check_logs_text",
+            helper.add_text_to_terminal(
+                text=f"{helper.localization_dict["check_crashlog_terminal_text_var"]}",
+                tag="check_logs_text_tag",
             )
 
 
@@ -329,7 +324,7 @@ def uninstaller():
     hide_uninstall_popup()
     clean_terminal()
     time.sleep(0.015)
-    # lock_interaction()
+    lock_interaction()
     # remove pak01_dir.vpk if it exists
     vpkPath = os.path.join(mpaths.dota_minify, "pak01_dir.vpk")
     if os.path.exists(vpkPath):
@@ -361,9 +356,10 @@ def uninstaller():
             "Unable to recover backed up default guides or the itembuilds directory is empty, verify files to get the default guides back"
         )
     helper.add_text_to_terminal(
-        text="All Minify mods have been removed.", tag="uninstaller_text_tag"
+        text=f"{helper.localization_dict["mods_removed_terminal_text_var"]}",
+        tag="uninstaller_text_tag",
     )
-    # unlock_interaction()
+    unlock_interaction()
 
 
 def clean_terminal():
@@ -384,11 +380,9 @@ def patcher():
     lock_interaction()
     clean_terminal()
     if "dota2.exe" in (p.name() for p in psutil.process_iter()):
-        ui.add_text(
-            default_value="Please close Dota 2 first and then patch.",
-            tag="close_dota_text",
-            parent="terminal_window",
-            wrap=400,
+        helper.add_text_to_terminal(
+            text=f"{helper.localization_dict["close_dota_terminal_text_var"]}",
+            tag="close_dota_text_tag",
         )
         return
 
@@ -427,7 +421,8 @@ def patcher():
                         ui.get_value(box) == True and checkboxes[box] == folder
                     ):  # step into folders that have ticked checkboxes only
                         helper.add_text_to_terminal(
-                            f"-> Installing {folder}", f"installing_{folder}_text"
+                            f"{helper.localization_dict["installing_terminal_text_var"]} {folder}",
+                            tag=f"istalling_{folder}_text_tag",
                         )
                         if (
                             checkboxes[box] == "Dark Terrain"
@@ -454,8 +449,8 @@ def patcher():
                                     with open(zip_path, "wb") as file:
                                         file.write(response.content)
                                     helper.add_text_to_terminal(
-                                        "-> Downloaded latest OpenDotaGuides guides.",
-                                        "downloaded_open_dota_guides_text",
+                                        f"{helper.localization_dict["downloaded_latest_opendotaguides_terminal_text_var"]}",
+                                        "downloaded_open_dota_guides_text_tag",
                                     )
                                     os.makedirs(
                                         os.path.join(mpaths.itembuilds_dir, "bkup"),
@@ -487,20 +482,20 @@ def patcher():
                                     shutil.rmtree(temp_dump_path)
                                     os.remove(zip_path)
                                     helper.add_text_to_terminal(
-                                        "-> Replaced default guides with OpenDotaGuides guides.",
-                                        "replaced_open_dota_guides_text",
+                                        f"{helper.localization_dict["replaced_guides_terminal_text_var"]}",
+                                        "replaced_open_dota_guides_text_tag",
                                     )
                                     if os.path.exists(zip_path):
                                         os.remove(zip_path)
                                 else:
                                     helper.add_text_to_terminal(
-                                        "-> Failed to download latest OpenDotaGuides guides.",
-                                        "failed_downloading_open_dota_guides",
+                                        f"{helper.localization_dict["failed_to_download_opendotaguides_terminal_text_var"]}",
+                                        "failed_downloading_open_dota_guides_text_tag",
                                     )
                             except:  # no connection
                                 helper.add_text_to_terminal(
-                                    "-> Failed to download latest OpenDotaGuides guides.",
-                                    "failed_downloading_open_dota_guides",
+                                    f"{helper.localization_dict["failed_to_download_opendotaguides_terminal_text_var"]}",
+                                    "failed_downloading_open_dota_guides_text_tag",
                                 )
                         # ----------------------------------- files ---------------------------------- #
                         # if files_total == 0:    pass
@@ -656,7 +651,10 @@ def patcher():
         # ---------------------------------- STEP 2 ---------------------------------- #
         # ------------------- Decompile all files in "build" folder ------------------ #
         # ---------------------------------------------------------------------------- #
-        helper.add_text_to_terminal("-> Decompiling", "decompiling_text")
+        helper.add_text_to_terminal(
+            f"{helper.localization_dict["decompiling_terminal_text_var"]}",
+            "decompiling_text",
+        )
         with open(os.path.join(mpaths.logs_dir, "Source2Viewer-CLI.txt"), "w") as file:
             subprocess.run(
                 [
@@ -673,7 +671,10 @@ def patcher():
         # ---------------------------------- STEP 3 ---------------------------------- #
         # -------- Check what .css files are in "build" folder and write mods -------- #
         # ---------------------------------------------------------------------------- #
-        helper.add_text_to_terminal("-> Patching", "patching_text")
+        helper.add_text_to_terminal(
+            f"{helper.localization_dict["patching_terminal_text_var"]}",
+            "patching_text_tag",
+        )
 
         for key, value in list(styling_dictionary.items()):
             construct2 = Path(value[0], value[1])
@@ -699,7 +700,10 @@ def patcher():
             with open(
                 os.path.join(mpaths.logs_dir, "resourcecompiler.txt"), "wb"
             ) as file:
-                helper.add_text_to_terminal("-> Compiling", "compiling_text")
+                helper.add_text_to_terminal(
+                    f"{helper.localization_dict["compiling_terminal_text_var"]}",
+                    "compiling_text",
+                )
                 sp_compiler = subprocess.run(
                     [
                         mpaths.resource_compiler,
@@ -725,16 +729,16 @@ def patcher():
         patching = False
 
         unlock_interaction()
-        helper.add_text_to_terminal("-> Done!", "done_text")
         helper.add_text_to_terminal(
             "-------------------------------------------------------", "spacer1_text"
         )
         helper.add_text_to_terminal(
-            "Remember to add '-language minify' to dota2 launch options",
-            "launch_option_text",
+            f"{helper.localization_dict["success_terminal_text_var"]}",
+            "success_text_tag",
         )
         helper.add_text_to_terminal(
-            "Click Help button below for instructions", "help_text"
+            f"{helper.localization_dict["launch_option_text_var"]}",
+            "launch_option_text",
         )
 
         helper.handleWarnings(mpaths.logs_dir)
@@ -744,12 +748,16 @@ def patcher():
             file.write(traceback.format_exc())
 
         patching = False
-        helper.add_text_to_terminal("Patching failed.", "patching_failed_text")
-        helper.add_text_to_terminal(
-            """Check 'logs\\crashlog.txt' for more info.""", "check_logs_text"
-        )
         helper.add_text_to_terminal(
             "-------------------------------------------------------", "spacer2_text"
+        )
+        helper.add_text_to_terminal(
+            f"{helper.localization_dict["failure_terminal_text_var"]}",
+            "patching_failed_text_tag",
+        )
+        helper.add_text_to_terminal(
+            f"""{helper.localization_dict["check_logs_terminal_text_var"]}""",
+            "check_logs_text_tag",
         )
         unlock_interaction()
 
@@ -1082,7 +1090,6 @@ def app_start2():
     t2.join()
     t3.join()
     create_checkboxes()
-    ui.show_style_editor()
     setupButtonState()
     start_text()
 
