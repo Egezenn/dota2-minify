@@ -37,23 +37,17 @@ styling_dictionary = {}
 ui.add_value_registry(tag="details_tags")
 
 with ui.value_registry():
-    ui.add_string_value(
-        default_value="Checking map file...", tag="checking_map_file_var"
-    )
+    ui.add_string_value(default_value="Checking map file...", tag="checking_map_file_var")
     ui.add_string_value(
         default_value="Want to contribute to the project's growth?",
         tag="start_text_1_var",
     )
-    ui.add_string_value(
-        default_value="-> Join our Discord community!", tag="start_text_2_var"
-    )
+    ui.add_string_value(default_value="-> Join our Discord community!", tag="start_text_2_var")
     ui.add_string_value(
         default_value="-> Share Minify with your friends and online groups",
         tag="start_text_3_var",
     )
-    ui.add_string_value(
-        default_value="-> Star the project on GitHub", tag="start_text_4_var"
-    )
+    ui.add_string_value(default_value="-> Star the project on GitHub", tag="start_text_4_var")
     ui.add_string_value(
         default_value="-> Create and maintain mods for this project",
         tag="start_text_5_var",
@@ -144,16 +138,13 @@ def drag_viewport(sender, app_data, user_data):
             or ui.is_item_hovered("terminal_window") == True
             or ui.is_item_hovered("top_bar") == True
             or ui.is_item_hovered("mod_menu") == True
-            or ui.get_item_alias(ui.get_active_window()).endswith("details_window_tag")
-            == True
+            or ui.get_item_alias(ui.get_active_window()).endswith("details_window_tag") == True
         ):  # Note: If local pos [1] < *Height_of_top_bar is buggy)
             drag_deltas = app_data
             viewport_current_pos = ui.get_viewport_pos()
             new_x_position = viewport_current_pos[0] + drag_deltas[1]
             new_y_position = viewport_current_pos[1] + drag_deltas[2]
-            new_y_position = max(
-                new_y_position, 0
-            )  # prevent the viewport to go off the top of the screen
+            new_y_position = max(new_y_position, 0)  # prevent the viewport to go off the top of the screen
             ui.set_viewport_pos([new_x_position, new_y_position])
 
 
@@ -183,9 +174,7 @@ def create_checkboxes():
     global checkboxes_state
     for index in range(len(mpaths.mods_folders)):
         name = mpaths.mods_folders[index]
-        ui.add_group(
-            parent="mod_menu", tag=f"{name}_group_tag", horizontal=True, width=300
-        )
+        ui.add_group(parent="mod_menu", tag=f"{name}_group_tag", horizontal=True, width=300)
         ui.add_checkbox(
             parent=f"{name}_group_tag",
             label=name,
@@ -253,10 +242,7 @@ def setupSystem():
     os.makedirs("logs", exist_ok=True)
     x = validatefiles.Requirements(checkboxes)
     public_methods = [
-        method
-        for method in dir(x)
-        if callable(getattr(x, method))
-        if not method.startswith("_")
+        method for method in dir(x) if callable(getattr(x, method)) if not method.startswith("_")
     ]  # private methods start with _
     try:
         if not (
@@ -336,9 +322,7 @@ def uninstaller():
         os.remove(mapPath)
 
     try:
-        with open(
-            os.path.join(mpaths.itembuilds_dir, "default_antimage.txt"), "r"
-        ) as file:
+        with open(os.path.join(mpaths.itembuilds_dir, "default_antimage.txt"), "r") as file:
             lines = file.readlines()
         if len(lines) >= 3:
             if "OpenDotaGuides" in lines[2]:
@@ -424,10 +408,7 @@ def patcher():
                             f"{helper.localization_dict["installing_terminal_text_var"]} {folder}",
                             tag=f"istalling_{folder}_text_tag",
                         )
-                        if (
-                            checkboxes[box] == "Dark Terrain"
-                            or checkboxes[box] == "Remove Foilage"
-                        ):
+                        if checkboxes[box] == "Dark Terrain" or checkboxes[box] == "Remove Foilage":
                             shutil.copytree(
                                 mpaths.maps_dir,
                                 os.path.join(
@@ -437,9 +418,7 @@ def patcher():
                                 dirs_exist_ok=True,
                             )
                         if checkboxes[box] == "OpenDotaGuides Guides":
-                            zip_path = os.path.join(
-                                mod_path, "files", "OpenDotaGuides.zip"
-                            )
+                            zip_path = os.path.join(mod_path, "files", "OpenDotaGuides.zip")
                             temp_dump_path = os.path.join(mod_path, "files", "temp")
                             if os.path.exists(zip_path):
                                 os.remove(zip_path)
@@ -460,9 +439,7 @@ def patcher():
                                         try:
                                             if name != "bkup":
                                                 os.rename(
-                                                    os.path.join(
-                                                        mpaths.itembuilds_dir, name
-                                                    ),
+                                                    os.path.join(mpaths.itembuilds_dir, name),
                                                     os.path.join(
                                                         mpaths.itembuilds_dir,
                                                         "bkup",
@@ -471,9 +448,7 @@ def patcher():
                                                 )
                                         except FileExistsError:
                                             pass  # backup was created and opendotaguides was replacing the guides already
-                                    shutil.unpack_archive(
-                                        zip_path, temp_dump_path, "zip"
-                                    )
+                                    shutil.unpack_archive(zip_path, temp_dump_path, "zip")
                                     for file in os.listdir(temp_dump_path):
                                         shutil.copy(
                                             os.path.join(temp_dump_path, file),
@@ -533,9 +508,7 @@ def patcher():
                                         continue
 
                                     elif line.startswith(">>"):
-                                        for path in helper.processBlacklistDir(
-                                            index, line, folder, mpaths.pak01_dir
-                                        ):
+                                        for path in helper.processBlacklistDir(index, line, folder, mpaths.pak01_dir):
                                             blacklist_data.append(path)
                                         continue
 
@@ -555,20 +528,12 @@ def patcher():
 
                                 # blacklist_dictionary["blacklist-key{}".format(index+1)] = path, extension
 
-                                if not os.path.exists(
-                                    os.path.join(mpaths.game_dir, os.path.dirname(path))
-                                ):
-                                    os.makedirs(
-                                        os.path.join(
-                                            mpaths.game_dir, os.path.dirname(path)
-                                        )
-                                    )
+                                if not os.path.exists(os.path.join(mpaths.game_dir, os.path.dirname(path))):
+                                    os.makedirs(os.path.join(mpaths.game_dir, os.path.dirname(path)))
 
                                 try:
                                     shutil.copy(
-                                        os.path.join(
-                                            mpaths.blank_files_dir, "blank{}"
-                                        ).format(extension),
+                                        os.path.join(mpaths.blank_files_dir, "blank{}").format(extension),
                                         os.path.join(mpaths.game_dir, path + extension),
                                     )
                                 except FileNotFoundError as exception:
@@ -606,9 +571,7 @@ def patcher():
                                     path = line[0].strip()
                                     style = line[1].strip()
 
-                                    styling_dictionary[
-                                        "styling-key{}".format(index + 1)
-                                    ] = (path, style)
+                                    styling_dictionary["styling-key{}".format(index + 1)] = (path, style)
 
                                 except Exception as exception:
                                     warnings.append(
@@ -618,16 +581,8 @@ def patcher():
                                         )  ###???
                                     )
 
-                                if not os.path.exists(
-                                    os.path.join(
-                                        mpaths.build_dir, os.path.dirname(path)
-                                    )
-                                ):
-                                    os.makedirs(
-                                        os.path.join(
-                                            mpaths.build_dir, os.path.dirname(path)
-                                        )
-                                    )
+                                if not os.path.exists(os.path.join(mpaths.build_dir, os.path.dirname(path))):
+                                    os.makedirs(os.path.join(mpaths.build_dir, os.path.dirname(path)))
 
                                 for key, value in list(styling_dictionary.items()):
                                     construct1 = Path(value[0], value[1])
@@ -679,9 +634,7 @@ def patcher():
         for key, value in list(styling_dictionary.items()):
             construct2 = Path(value[0], value[1])
 
-            with open(
-                os.path.join(mpaths.build_dir, construct2.path.css), "r+"
-            ) as file:
+            with open(os.path.join(mpaths.build_dir, construct2.path.css), "r+") as file:
                 if construct2.style not in file.read():
                     file.write("\n" + construct2.style.strip())
         # ---------------------------------- STEP 4 ---------------------------------- #
@@ -697,9 +650,7 @@ def patcher():
         # -------------- Compile content to game with resource compiler -------------- #
         # ---------------------------------------------------------------------------- #
         if helper.workshop_installed == True:
-            with open(
-                os.path.join(mpaths.logs_dir, "resourcecompiler.txt"), "wb"
-            ) as file:
+            with open(os.path.join(mpaths.logs_dir, "resourcecompiler.txt"), "wb") as file:
                 helper.add_text_to_terminal(
                     f"{helper.localization_dict["compiling_terminal_text_var"]}",
                     "compiling_text",
@@ -729,9 +680,7 @@ def patcher():
         patching = False
 
         unlock_interaction()
-        helper.add_text_to_terminal(
-            "-------------------------------------------------------", "spacer1_text"
-        )
+        helper.add_text_to_terminal("-------------------------------------------------------", "spacer1_text")
         helper.add_text_to_terminal(
             f"{helper.localization_dict["success_terminal_text_var"]}",
             "success_text_tag",
@@ -748,9 +697,7 @@ def patcher():
             file.write(traceback.format_exc())
 
         patching = False
-        helper.add_text_to_terminal(
-            "-------------------------------------------------------", "spacer2_text"
-        )
+        helper.add_text_to_terminal("-------------------------------------------------------", "spacer2_text")
         helper.add_text_to_terminal(
             f"{helper.localization_dict["failure_terminal_text_var"]}",
             "patching_failed_text_tag",
@@ -788,11 +735,7 @@ def start_text():
 
 def close_active_window():
     active_window = ui.get_item_alias(ui.get_active_window())
-    if (
-        active_window != "terminal_window"
-        and active_window != "primary_window"
-        and active_window != "top_bar"
-    ):
+    if active_window != "terminal_window" and active_window != "primary_window" and active_window != "top_bar":
         if active_window == "update_popup":
             delete_update_popup()
         else:
@@ -1008,28 +951,21 @@ def configure_update_popup():
     ui.configure_item(
         "popup_text_wraper_1",
         pos=(
-            ui.get_item_rect_size("update_popup")[0] / 2
-            - ui.get_item_rect_size("popup_text_wraper_1")[0] / 2,
-            ui.get_item_rect_size("update_popup")[1] / 2
-            - ui.get_item_rect_size("popup_text_wraper_1")[1] / 2
-            - 30,
+            ui.get_item_rect_size("update_popup")[0] / 2 - ui.get_item_rect_size("popup_text_wraper_1")[0] / 2,
+            ui.get_item_rect_size("update_popup")[1] / 2 - ui.get_item_rect_size("popup_text_wraper_1")[1] / 2 - 30,
         ),
     )
     ui.configure_item(
         "popup_text_wraper_2",
         pos=(
-            ui.get_item_rect_size("update_popup")[0] / 2
-            - ui.get_item_rect_size("popup_text_wraper_2")[0] / 2,
-            ui.get_item_rect_size("update_popup")[1] / 2
-            - ui.get_item_rect_size("popup_text_wraper_2")[1] / 2
-            - 8,
+            ui.get_item_rect_size("update_popup")[0] / 2 - ui.get_item_rect_size("popup_text_wraper_2")[0] / 2,
+            ui.get_item_rect_size("update_popup")[1] / 2 - ui.get_item_rect_size("popup_text_wraper_2")[1] / 2 - 8,
         ),
     )
     ui.configure_item(
         "update_popup_button_group",
         pos=(
-            ui.get_item_rect_size("update_popup")[0] / 2
-            - ui.get_item_rect_size("update_popup_button_group")[0] / 2,
+            ui.get_item_rect_size("update_popup")[0] / 2 - ui.get_item_rect_size("update_popup_button_group")[0] / 2,
             ui.get_item_rect_size("update_popup")[1] / 2
             - ui.get_item_rect_size("update_popup_button_group")[1] / 2
             + 26,
@@ -1041,10 +977,8 @@ def configure_uninstall_popup():
     ui.configure_item(
         "uninstall_popup",
         pos=(
-            ui.get_viewport_width() / 2
-            - ui.get_item_rect_size("uninstall_popup")[0] / 2,
-            ui.get_viewport_height() / 2
-            - ui.get_item_rect_size("uninstall_popup")[1] / 2,
+            ui.get_viewport_width() / 2 - ui.get_item_rect_size("uninstall_popup")[0] / 2,
+            ui.get_viewport_height() / 2 - ui.get_item_rect_size("uninstall_popup")[1] / 2,
         ),
     )
     ui.configure_item(
@@ -1106,18 +1040,14 @@ with ui.font_registry():
 
 # Adding mouse handler to ui registry
 with ui.handler_registry():
-    ui.add_mouse_drag_handler(
-        parent="top_bar", button=0, threshold=0.0, callback=drag_viewport
-    )
+    ui.add_mouse_drag_handler(parent="top_bar", button=0, threshold=0.0, callback=drag_viewport)
     ui.add_key_release_handler(0x20E, callback=close_active_window)
 
 width_discord, height_discord, channels_discord, data_discord = ui.load_image(
     f"{mpaths.img_dir}\\Discord-Symbol-White.png"
 )
 
-width_git, height_git, channels_git, data_git = ui.load_image(
-    f"{mpaths.img_dir}\\github-mark-white.png"
-)
+width_git, height_git, channels_git, data_git = ui.load_image(f"{mpaths.img_dir}\\github-mark-white.png")
 
 with ui.texture_registry(show=False):
     ui.add_static_texture(

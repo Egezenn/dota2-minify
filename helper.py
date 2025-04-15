@@ -60,9 +60,7 @@ def disableWorkshopMods(mods_dir, mods_folders, checkboxes):
                     ui.configure_item(box, enabled=False, default_value=False)
 
 
-def cleanFolders(
-    build_dir, logs_dir, content_dir, game_dir, minify_dir, dota_minify_maps
-):
+def cleanFolders(build_dir, logs_dir, content_dir, game_dir, minify_dir, dota_minify_maps):
     shutil.rmtree(build_dir, ignore_errors=True)
 
     for root, dirs, files in os.walk(logs_dir):
@@ -133,18 +131,12 @@ def change_localization(init=False):
                     else:
                         localization_dict[key] = value["EN"]
             if ui.does_item_exist(key) == True:
-                if (
-                    key.endswith("var") == False
-                    and ui.get_item_info(key).get("type") == "mvAppItemType::mvButton"
-                ):
+                if key.endswith("var") == False and ui.get_item_info(key).get("type") == "mvAppItemType::mvButton":
                     if locale in localization_data[key]:
                         ui.configure_item(key, label=value[locale])
                     else:  # default to english if the line isn't available on selected locale
                         ui.configure_item(key, label=value["EN"])
-                if (
-                    key.endswith("var") == False
-                    and ui.get_item_info(key).get("type") == "mvAppItemType::mvText"
-                ):
+                if key.endswith("var") == False and ui.get_item_info(key).get("type") == "mvAppItemType::mvText":
                     if locale in localization_data[key]:
                         ui.configure_item(key, default_value=value[locale])
                     else:
@@ -179,9 +171,7 @@ def change_localization(init=False):
 
 
 def validate_map_file():
-    add_text_to_terminal(
-        f"{localization_dict["checking_map_file_var"]}", "map_check_text_tag"
-    )
+    add_text_to_terminal(f"{localization_dict["checking_map_file_var"]}", "map_check_text_tag")
 
     os.makedirs(mpaths.maps_dir, exist_ok=True)
 
@@ -242,19 +232,13 @@ def urlValidator(url):
             content.append(line)
 
     except urllib.error.HTTPError as exception:
-        warnings.append(
-            "[{}]".format(type(exception).__name__) + f" Could not connect to -> " + url
-        )
+        warnings.append("[{}]".format(type(exception).__name__) + f" Could not connect to -> " + url)
 
     except ValueError as exception:
-        warnings.append(
-            "[{}]".format(type(exception).__name__) + f" Invalid URL -> " + url
-        )
+        warnings.append("[{}]".format(type(exception).__name__) + f" Invalid URL -> " + url)
 
     except urllib.error.URLError as exception:
-        warnings.append(
-            "[{}]".format(type(exception).__name__) + f" Invalid URL -> " + url
-        )
+        warnings.append("[{}]".format(type(exception).__name__) + f" Invalid URL -> " + url)
 
     return content
 
@@ -302,11 +286,7 @@ def processBlackList(index, line, folder, blank_file_extensions, pak01_dir):
                     )
 
             except TypeError as exception:
-                warnings.append(
-                    "[{}]".format(type(exception).__name__)
-                    + " Invalid data type in line -> "
-                    + str(line)
-                )
+                warnings.append("[{}]".format(type(exception).__name__) + " Invalid data type in line -> " + str(line))
 
     return data
 

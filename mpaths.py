@@ -3,9 +3,7 @@ import traceback
 import winreg
 
 try:
-    hkey = winreg.OpenKey(
-        winreg.HKEY_LOCAL_MACHINE, r"SOFTWARE\WOW6432Node\Valve\Steam"
-    )
+    hkey = winreg.OpenKey(winreg.HKEY_LOCAL_MACHINE, r"SOFTWARE\WOW6432Node\Valve\Steam")
 except Exception as exception:
     hkey = None
     with open(os.path.join(os.getcwd(), "logs\\registry.txt"), "w") as file:
@@ -25,11 +23,7 @@ except:
 
 # when dota2 is not inside Steam folder then set new steam directory from 'dota2path_minify.txt
 # this text file is created and set by the user in validatefiles.py during startup
-if not os.path.exists(
-    os.path.join(
-        steam_dir, "steamapps\\common\\dota 2 beta\\game\\bin\\win64\\dota2.exe"
-    )
-):
+if not os.path.exists(os.path.join(steam_dir, "steamapps\\common\\dota 2 beta\\game\\bin\\win64\\dota2.exe")):
     path_file = os.path.join(os.getcwd(), "dota2path_minify.txt")
 
     # make sure the text file exists
@@ -43,15 +37,13 @@ if not os.path.exists(
             steam_dir = line.strip()
 
 # links
-version_query = (
-    "https://raw.githubusercontent.com/Egezenn/dota2-minify/refs/heads/stable/version"
-)
+version_query = "https://raw.githubusercontent.com/Egezenn/dota2-minify/refs/heads/stable/version"
 discord = "https://discord.com/invite/2YDnqpbcKM"
 latest_release = "https://github.com/Egezenn/dota2-minify/releases/latest"
-v2f_latest_windows_x64 = "https://github.com/ValveResourceFormat/ValveResourceFormat/releases/latest/download/cli-windows-x64.zip"
-odg_latest = (
-    "https://github.com/Egezenn/OpenDotaGuides/releases/latest/download/itembuilds.zip"
+v2f_latest_windows_x64 = (
+    "https://github.com/ValveResourceFormat/ValveResourceFormat/releases/latest/download/cli-windows-x64.zip"
 )
+odg_latest = "https://github.com/Egezenn/OpenDotaGuides/releases/latest/download/itembuilds.zip"
 
 # minify project paths
 minify_dir = os.getcwd()
@@ -66,31 +58,15 @@ localization_file_dir = os.path.join(bin_dir, "localization.json")
 locale_file_dir = "locale"
 img_dir = os.path.join(bin_dir, "images")
 # dota2 paths
-content_dir = os.path.join(
-    steam_dir, "steamapps\\common\\dota 2 beta\\content\\dota_addons\\minify"
-)
-game_dir = os.path.join(
-    steam_dir, "steamapps\\common\\dota 2 beta\\game\\dota_addons\\minify"
-)
-resource_compiler = os.path.join(
-    steam_dir, "steamapps\\common\\dota 2 beta\\game\\bin\\win64\\resourcecompiler.exe"
-)
-pak01_dir = os.path.join(
-    steam_dir, "steamapps\\common\\dota 2 beta\\game\\dota\\pak01_dir.vpk"
-)
-itembuilds_dir = os.path.join(
-    steam_dir, "steamapps\\common\\dota 2 beta\\game\\dota\\itembuilds"
-)
-dota_user_map_dir = os.path.join(
-    steam_dir, "steamapps\\common\\dota 2 beta\\game\\dota\\maps\\dota.vpk"
-)
+content_dir = os.path.join(steam_dir, "steamapps\\common\\dota 2 beta\\content\\dota_addons\\minify")
+game_dir = os.path.join(steam_dir, "steamapps\\common\\dota 2 beta\\game\\dota_addons\\minify")
+resource_compiler = os.path.join(steam_dir, "steamapps\\common\\dota 2 beta\\game\\bin\\win64\\resourcecompiler.exe")
+pak01_dir = os.path.join(steam_dir, "steamapps\\common\\dota 2 beta\\game\\dota\\pak01_dir.vpk")
+itembuilds_dir = os.path.join(steam_dir, "steamapps\\common\\dota 2 beta\\game\\dota\\itembuilds")
+dota_user_map_dir = os.path.join(steam_dir, "steamapps\\common\\dota 2 beta\\game\\dota\\maps\\dota.vpk")
 minify_map = os.path.join(maps_dir, "dota.vpk")
-dota_minify_content = os.path.join(
-    steam_dir, "steamapps\\common\\dota 2 beta\\content\\dota_minify"
-)
-dota_minify = os.path.join(
-    steam_dir, "steamapps\\common\\dota 2 beta\\game\\dota_minify"
-)
+dota_minify_content = os.path.join(steam_dir, "steamapps\\common\\dota 2 beta\\content\\dota_minify")
+dota_minify = os.path.join(steam_dir, "steamapps\\common\\dota 2 beta\\game\\dota_minify")
 dota_minify_maps = os.path.join(dota_minify, "maps")
 
 mods_folders = []
