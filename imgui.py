@@ -302,8 +302,7 @@ def uninstaller():
         os.remove(vpkPath)
 
     # remove dota.vpk if it exists
-    if os.path.exists(mpaths.minify_dota_maps_output_path):
-        shutil.rmtree(mpaths.minify_dota_maps_output_path)
+    shutil.rmtree(mpaths.minify_dota_maps_output_path, ignore_errors=True)
 
     try:
         with open(os.path.join(mpaths.dota_itembuilds_path, "default_antimage.txt"), "r") as file:
@@ -438,7 +437,7 @@ def patcher():
                                             os.path.join(temp_dump_path, file),
                                             os.path.join(mpaths.dota_itembuilds_path, file),
                                         )
-                                    shutil.rmtree(temp_dump_path, ignore_errors=True)
+                                    shutil.rmtree(temp_dump_path)
                                     os.remove(zip_path)
                                     helper.add_text_to_terminal(
                                         helper.localization_dict["replaced_guides_terminal_text_var"],
