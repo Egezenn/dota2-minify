@@ -179,6 +179,10 @@
     "EN":"Error: Dota 2 Not Found.",
     "RU":"Ошибка: Dota 2 не найдена."
   },
+  "no_dota_found_path_terminal_text_var":{
+    "EN":"File not found in:",
+    "RU":"Файл не найден в:"
+  },
   "please_select_path_terminal_text_var":{
     "EN":"Please select the location of your 'SteamLibrary' folder, for example 'D:\\SteamLibrary'.",
     "RU":"Пожалуйста укажи где находится папка 'SteamLibrary', например 'D:\\SteamLibrary'."
