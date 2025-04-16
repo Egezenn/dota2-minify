@@ -7,6 +7,10 @@ on:
         description: "Name the release"
         required: true
         default: "Minify-v1.xx"
+      release_body:
+        description: "Description of the release"
+        required: true
+        default: "Built with workflows"
 
 env:
   RELEASE_NAME: ""
@@ -56,7 +60,7 @@ jobs:
         with:
           tag_name: ${{ github.event.inputs.release_name }}
           prerelease: true
-          body: Built with workflows
+          body: ${{ github.event.inputs.release_body }}
           files: "${{ github.event.inputs.release_name }}.zip"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

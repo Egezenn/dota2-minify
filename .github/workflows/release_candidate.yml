@@ -4,9 +4,13 @@ on:
   workflow_dispatch:
     inputs:
       release_name:
-        description: "Name the release (RC)"
+        description: "Name the release candidate"
         required: true
         default: "Minify-v1.xxRCx"
+      release_body:
+        description: "Description of the release candidate"
+        required: true
+        default: "Built with workflows (Release candidate, might be broken)"
 
 env:
   RELEASE_NAME: ""
@@ -45,7 +49,7 @@ jobs:
         with:
           prerelease: true
           tag_name: ${{ github.event.inputs.release_name }}
-          body: Built with workflows (Release candidate, might be broken)
+          body: ${{ github.event.inputs.release_body }}
           files: "${{ github.event.inputs.release_name }}.zip"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
