@@ -438,7 +438,7 @@ def patcher():
                                             os.path.join(temp_dump_path, file),
                                             os.path.join(mpaths.dota_itembuilds_path, file),
                                         )
-                                    shutil.rmtree(temp_dump_path)
+                                    shutil.rmtree(temp_dump_path, ignore_errors=True)
                                     os.remove(zip_path)
                                     helper.add_text_to_terminal(
                                         helper.localization_dict["replaced_guides_terminal_text_var"],

@@ -72,7 +72,7 @@ def cleanFolders(build_dir, logs_dir, content_dir, game_dir, minify_dir, dota_mi
     for root, dirs, files in os.walk(game_dir):
         for filename in files:
             os.remove(os.path.join(root, filename))
-    shutil.rmtree(dota_minify_maps)
+    shutil.rmtree(dota_minify_maps, ignore_errors=True)
     os.makedirs(os.path.join(minify_dir, "build"))
 
 
