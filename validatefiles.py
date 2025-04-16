@@ -12,13 +12,12 @@ def open_file_dialog():
         label="Select SteamLibrary",
         default_path=mpaths.steam_dir,
         default_filename="SteamLibrary",
-        modal=False,
+        modal=True,
         tag="file_dialog_tag",
         callback=setFolder,
         cancel_callback=close_file_dialog,
         width=400,
         height=280,
-        pos=(0, 0),
     )
 
 
