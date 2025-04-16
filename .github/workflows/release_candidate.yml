@@ -29,14 +29,6 @@ jobs:
         with:
           python-version: "3.13"
 
-      - name: Parse multiline description
-        shell: pwsh
-        run: |
-          $release_body = "${{ github.event.inputs.release_body }}" -replace '\\n', "`n"
-          echo "release_body<<EOF" >> $env:GITHUB_ENV
-          echo "$release_body" >> $env:GITHUB_ENV
-          echo "EOF" >> $env:GITHUB_ENV
-
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
