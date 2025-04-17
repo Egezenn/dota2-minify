@@ -4,6 +4,7 @@
 logs
 locale
 states.json
+dota2path_minify.txt
 bin/maps/
 mods/test
 

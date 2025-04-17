@@ -104,6 +104,10 @@ def get_available_localizations():
             localization_dict[key] = value["EN"]
 
 
+def close():
+    ui.stop_dearpygui()
+
+
 def change_localization(init=False):
     global locale
     with open(mpaths.localization_file_dir, "r", encoding="utf-8") as localization_file:
@@ -172,35 +176,6 @@ def change_localization(init=False):
                         item,
                         label=localization_data["details_button_label_var"][locale],
                     )
-
-
-def validate_map_file():
-    add_text_to_terminal(localization_dict["checking_map_file_var"], "map_check_text_tag")
-
-    os.makedirs(mpaths.maps_dir, exist_ok=True)
-
-    if os.path.exists(mpaths.minify_map_dir) == False:
-        shutil.copyfile(mpaths.dota_map_path, mpaths.minify_map_dir)
-        add_text_to_terminal(
-            localization_dict["updating_map_file_terminal_text_var"],
-            "map_update_text_tag",
-        )
-
-    elif os.path.exists(mpaths.minify_map_dir) and (
-        calculate_md5(mpaths.dota_map_path) != calculate_md5(mpaths.minify_map_dir)
-    ):
-        add_text_to_terminal(
-            localization_dict["updating_map_file_terminal_text_var"],
-            "map_update_text_tag",
-        )
-        os.remove(mpaths.minify_map_dir)
-        shutil.copyfile(mpaths.dota_map_path, mpaths.minify_map_dir)
-
-    else:
-        add_text_to_terminal(
-            localization_dict["map_file_uptodate_terminal_text_var"],
-            "map_up_to_date_text_tag",
-        )
 
 
 def vpkExtractor(path, pak01_dir, build_dir):

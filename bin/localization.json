@@ -8,8 +8,8 @@
     "RU": "Выбрать Моды"
   },
   "checking_map_file_var": {
-    "EN": "Checking map file...",
-    "RU": "Проверяем файл карты..."
+    "EN": "-> Checking map file...",
+    "RU": "-> Проверяем файл карты..."
   },
   "update_popup_text_1_tag": {
     "EN": "New update is now available!",
@@ -107,9 +107,9 @@
     "EN": "Check 'logs\\crashlog.txt' for more info.",
     "RU": "Проверь 'logs\\crashlog.txt' для детальной информации."
   },
-  "downloading_cli_terminal_text_var": {
-    "EN": "Downloading Source2Viewer-CLI...",
-    "RU": "Скачивание Source2Viewer-CLI..."
+  "downloading_cli_terminal_text_var":{
+    "EN":"-> Downloading Source2Viewer-CLI...",
+    "RU":"-> Скачивание Source2Viewer-CLI..."
   },
   "downloaded_cli_terminal_text_var": {
     "EN": "-> Downloaded ",
@@ -159,9 +159,9 @@
     "EN": "-> Updating map file...",
     "RU": "-> Обновляем файл карты..."
   },
-  "map_file_uptodate_terminal_text_var": {
-    "EN": "-> Map file is up to date...",
-    "RU": "-> Файл карты актуален..."
+  "map_file_uptodate_terminal_text_var":{
+    "EN":"-> Map file is up to date!",
+    "RU":"-> Файл карты актуален!"
   },
   "path_saved_terminal_text_var": {
     "EN": "Path saved, please restart Minify",

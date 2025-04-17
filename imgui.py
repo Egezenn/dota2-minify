@@ -96,7 +96,7 @@ def hide_uninstall_popup():
 
 def open_github_link_and_close_minify():
     open_github_link()  # behavior to download the latest release
-    close()
+    helper.close()
 
 
 def checkbox_state_save():
@@ -144,10 +144,6 @@ def open_github_link():
     helper.urlDispatcher(mpaths.latest_release)
 
 
-def close():
-    ui.stop_dearpygui()
-
-
 def uninstall_popup_show():
     ui.configure_item("uninstall_popup", show=True)
     time.sleep(0.02)
@@ -181,7 +177,7 @@ def create_checkboxes():
         ui.add_button(
             parent=f"{name}_group_tag",
             small=True,
-            indent=300,
+            indent=250,
             tag=f"{name}_button_show_details_tag",
             label=f"{helper.details_label_text_var}",
             callback=show_details,
@@ -711,12 +707,19 @@ def version_check():
 
 
 def start_text():
-    clean_terminal()
+    ui.add_text(
+        default_value="------------------------------------------------------------------",
+        parent="terminal_window",
+        tag="spacer_start_text_tag",
+    )
     ui.add_text(source="start_text_1_var", parent="terminal_window")
     ui.add_text(source="start_text_2_var", parent="terminal_window")
     ui.add_text(source="start_text_3_var", parent="terminal_window")
     ui.add_text(source="start_text_4_var", parent="terminal_window")
     ui.add_text(source="start_text_5_var", parent="terminal_window")
+    ui.add_text(default_value="", parent="terminal_window")
+    ui.add_text(default_value="", parent="terminal_window")
+    helper.scroll_to_terminal_end()
 
 
 def close_active_window():
@@ -759,7 +762,7 @@ def create_ui():
             parent="top_bar",
             tag="exit_button",
             label="Close",
-            callback=close,
+            callback=helper.close,
             height=28,
             width=60,
             pos=(440, 5),
@@ -1002,13 +1005,10 @@ def create_base_ui():
 def initiate_conditionals():
     setup_system_thread = threading.Thread(target=setupSystem)
     load_state_checkboxes_thread = threading.Thread(target=load_state_checkboxes)
-    validate_map_file_thread = threading.Thread(target=helper.validate_map_file)
     setup_system_thread.start()
     load_state_checkboxes_thread.start()
-    validate_map_file_thread.start()
     setup_system_thread.join()
     load_state_checkboxes_thread.join()
-    validate_map_file_thread.join()
     create_checkboxes()
     setupButtonState()
     start_text()

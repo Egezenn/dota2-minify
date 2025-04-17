@@ -2,27 +2,35 @@ import os
 
 import dearpygui.dearpygui as ui
 import psutil
+import time
 
 import helper
 import mpaths
 
 
 def open_file_dialog():
+    ui.configure_item("button_patch", enabled=False)
     ui.add_file_dialog(
         label="Select SteamLibrary",
-        default_path=mpaths.steam_dir,
         default_filename="SteamLibrary",
+        default_path="",
         modal=True,
         tag="file_dialog_tag",
         callback=setFolder,
         cancel_callback=close_file_dialog,
-        width=400,
-        height=280,
+        min_size=(480, 260),
+        directory_selector=True,
     )
 
 
 def close_file_dialog():
+    helper.add_text_to_terminal(
+        helper.localization_dict["path_canceled_terminal_text_var"],
+        "canceled_path_text_tag",
+    )
     ui.delete_item("file_dialog_tag")
+    time.sleep(3)
+    helper.close()
 
 
 def setFolder(sender, app_data):
@@ -35,11 +43,6 @@ def setFolder(sender, app_data):
         helper.add_text_to_terminal(
             helper.localization_dict["path_saved_terminal_text_var"],
             "path_saved_text_tag",
-        )
-    else:
-        helper.add_text_to_terminal(
-            helper.localization_dict["path_canceled_terminal_text_var"],
-            "canceled_path_text_tag",
         )
 
 
@@ -142,3 +145,39 @@ class Requirements:
                     text=f"{helper.localization_dict["error_no_styling_txt_found_terminal_text_var"]}'mods/{format(folder)}'.",
                     tag="blacklist_not_found_text_tag",
                 )
+
+    def validate_map_file(self):
+        helper.add_text_to_terminal(helper.localization_dict["checking_map_file_var"], "map_check_text_tag")
+
+        os.makedirs(mpaths.maps_dir, exist_ok=True)
+
+        if os.path.exists(mpaths.minify_map_dir) == False:
+            helper.shutil.copyfile(mpaths.dota_map_path, mpaths.minify_map_dir)
+            helper.add_text_to_terminal(
+                helper.localization_dict["updating_map_file_terminal_text_var"],
+                "map_update_text_tag",
+            )
+            helper.add_text_to_terminal(
+                helper.localization_dict["map_file_uptodate_terminal_text_var"],
+                "map_up_to_date_text_tag",
+            )
+
+        elif os.path.exists(mpaths.minify_map_dir) and (
+            helper.calculate_md5(mpaths.dota_map_path) != helper.calculate_md5(mpaths.minify_map_dir)
+        ):
+            helper.add_text_to_terminal(
+                helper.localization_dict["updating_map_file_terminal_text_var"],
+                "map_update_text_tag",
+            )
+            os.remove(mpaths.minify_map_dir)
+            helper.shutil.copyfile(mpaths.dota_map_path, mpaths.minify_map_dir)
+            helper.add_text_to_terminal(
+                helper.localization_dict["map_file_uptodate_terminal_text_var"],
+                "map_up_to_date_text_tag",
+            )
+
+        else:
+            helper.add_text_to_terminal(
+                helper.localization_dict["map_file_uptodate_terminal_text_var"],
+                "map_up_to_date_text_tag",
+            )
