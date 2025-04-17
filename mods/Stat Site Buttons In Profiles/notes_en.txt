@@ -1,3 +1,1 @@
-Adds Dotabuff links to the profiles of other players.
-
-Work-in-Progress
+Adds 3rd party website links to the profiles of other players.
