@@ -181,7 +181,7 @@ def create_checkboxes():
         ui.add_button(
             parent=f"{name}_group_tag",
             small=True,
-            indent=200,
+            indent=300,
             tag=f"{name}_button_show_details_tag",
             label=f"{helper.details_label_text_var}",
             callback=show_details,
@@ -457,8 +457,8 @@ def patcher():
                                 )
                         # ----------------------------------- files ---------------------------------- #
                         # if files_total == 0:    pass
-                        # elif files_total == 1:  print(f"    files: Found {files_total} file")
-                        # else:                   print(f"    files: Found {files_total} files")
+                        # elif files_total == 1:  print(f"   files: Found {files_total} file")
+                        # else:                   print(f"   files: Found {files_total} files")
                         shutil.copytree(
                             os.path.join(mod_path, "files"),
                             mpaths.minify_dota_compile_output_path,
@@ -505,7 +505,7 @@ def patcher():
                                                 f"[Invalid Extension] '{line}' in 'mods\\{folder}\\blacklist.txt' [line: {index+1}] does not end in one of the valid extensions -> {blank_file_extensions}"  ###???
                                             )
 
-                            # print(f"    blacklist.txt: Found {len(blacklist_data)} paths")
+                            # print(f"   blacklist.txt: Found {len(blacklist_data)} paths")
 
                             for index, line in enumerate(blacklist_data):
                                 line = line.strip()
@@ -552,7 +552,7 @@ def patcher():
                                     else:
                                         styling_data.append(line)
 
-                            # print(f"    styling.txt: Found styling.txt")
+                            # print(f"   styling.txt: Found styling.txt")
 
                             for index, line in enumerate(styling_data):
                                 try:
