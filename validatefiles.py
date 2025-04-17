@@ -24,6 +24,7 @@ def open_file_dialog():
 
 
 def close_file_dialog():
+    ui.configure_item("button_patch", enabled=False)
     helper.add_text_to_terminal(
         helper.localization_dict["path_canceled_terminal_text_var"],
         "canceled_path_text_tag",
@@ -34,6 +35,7 @@ def close_file_dialog():
 
 
 def setFolder(sender, app_data):
+    ui.configure_item("button_patch", enabled=False)
     folder = app_data["current_path"]
     print(folder)
 
@@ -44,6 +46,8 @@ def setFolder(sender, app_data):
             helper.localization_dict["path_saved_terminal_text_var"],
             "path_saved_text_tag",
         )
+    time.sleep(3)
+    helper.close()
 
 
 class Requirements:
