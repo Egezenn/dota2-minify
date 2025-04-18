@@ -1,3 +1,3 @@
-Simplifies every spell and item in the game except unnecessary ones, improves performance a lot and makes team fights less visually chaotic.
+Simplifies every spell and item in the game.
 
-* This only works for default spells right now, custom spell animations from skins are not modded.
+* Only modifies default spells

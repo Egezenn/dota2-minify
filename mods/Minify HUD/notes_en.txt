@@ -1,4 +1,5 @@
-Mod that let's you modify players HUD, using styling.txt
+Modifies in-game HUD 
 
-Mod requires Workshop Tools
-Mod is work in progress. 
+* Requires Workshop Tools
+
+WIP

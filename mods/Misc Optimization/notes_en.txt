@@ -1,10 +1,7 @@
-Removes many unneeded effects from the game to improve performance, a few examples are.
+Removes miscellaneous effects
 
 - Removes particle effects on buildings such as the glowing blue effects on fountain, outpost, base buildings..etc
-- Tower attack projectile/destruction particles 
+- Tower attack projectile/destruction particles
 - Effigies particles
 - Simplified illusions, helps with fps drops against heroes with many illusions suddenly appearing
-- hero loadouts, event emblems, glyph...etc
-
-If you want to see full list go to the link in.
-mods\Misc Optimization\blacklist.txt
+- Hero loadouts, event emblems, glyph and more

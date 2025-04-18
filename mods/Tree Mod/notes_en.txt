@@ -1,4 +1,3 @@
-Turns all trees to small circle bushes
+Turns all trees into small circle bushes
 
-- ONLY works on default terrain
-- shows juke paths and improves GPU performance since these trees use far less geometry then original ones.
+* Requires default terrain

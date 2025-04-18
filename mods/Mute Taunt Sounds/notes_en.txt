@@ -1,1 +1,1 @@
-Removes phrases and sounds of taunts.
+Removes sounds of taunts.

@@ -1,6 +1,5 @@
-Removes pings from alt+left click so other players can't annoy and distract you.
+Removes all pings
 
-If you want to remove the pings from the minimap as well open console in dota2 and type this
-
+If you want to remove the pings from the minimap as well, open the console and type these:
 dota_minimap_ping_duration 0
 dota_minimap_ping_tag_duration 0

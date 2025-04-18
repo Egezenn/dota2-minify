@@ -1,1 +1,1 @@
-- Mutes all the ambient sounds of the map, like fountain music, birds chirping, leaves noises ex.
+- Mutes all the ambient sounds of the map

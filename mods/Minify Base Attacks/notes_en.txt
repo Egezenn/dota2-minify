@@ -1,2 +1,1 @@
-Reduces particles on auto attacks of ranged heroes, they seem insignificant but actually have many particle effects and can cause more lag then spells with high attack speed heroes.
-Added this separately because some players might not like how they are less visible with this mod. Use this if you are desperate for fps.
+Reduces particles on auto attacks of ranged heroes.

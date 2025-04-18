@@ -1,2 +1,2 @@
->>sounds\teamfancontent
 >>sounds\misc\soundboard
+>>sounds\teamfancontent

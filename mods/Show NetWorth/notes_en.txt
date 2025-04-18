@@ -1,4 +1,1 @@
-Show your current networth in the quick stat
-
-- ONLY shows your current networth.
-- No target networth, LH or KDA as that dota plus feature is not available in the API.
+Shows your current networth in the quick stats panel.
