@@ -146,7 +146,7 @@ def open_github_link():
 
 def uninstall_popup_show():
     ui.configure_item("uninstall_popup", show=True)
-    time.sleep(0.02)
+    time.sleep(0.05)
     configure_uninstall_popup()
 
 
@@ -290,7 +290,7 @@ def setupButtonState():
 def uninstaller():
     hide_uninstall_popup()
     clean_terminal()
-    time.sleep(0.015)
+    time.sleep(0.05)
     lock_interaction()
     # remove pak01_dir.vpk if it exists
     vpkPath = os.path.join(mpaths.minify_dota_pak_output_path, "pak01_dir.vpk")
