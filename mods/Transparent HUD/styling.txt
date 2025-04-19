@@ -1,0 +1,67 @@
+panorama\styles\hud\dota_hud_ability_panel @@ .Reborn #AbilityBevel, #InvokerSpellCardButton, .CommonItemsTitle, #HUDSkinInventoryBG, #hero_statue, #PopularItems, #RequestSuggestion, #SimpleShopIcon, .StashVisible #stash_bg, .AbilityInsetShadowLeft, .AbilityInsetShadowRight, .TertiaryAbilityContainer, #RightSideHeroBlur, #unitbadge, #unitname { visibility: collapse; }
+
+panorama\styles\dotastyles @@ DOTAItemImage.Reborn #ButtonWell { background-img-opacity: 0; }
+panorama\styles\hud\dota_hud_inventory @@ .Reborn #inventory_items { background-img-opacity: 0; }
+panorama\styles\hud\dota_hud_quick_buy @@ .Reborn .ShopInRange #ShopButton { background-img-opacity: 0; }
+panorama\styles\hud\dota_hud_shop @@ #GuideFlyoutContainer, #GuidesButton, #HeightLimiterContainer { background-img-opacity: 0; }
+panorama\styles\hud\dota_hud_stat_branch @@ .LevelBG { background-img-opacity: 0; }
+panorama\styles\shop_item_combines @@ .ShowMainShop DOTAShopItemCombines { background-img-opacity: 0; }
+
+panorama\styles\hud\dota_hud_quick_buy @@ .Reborn #QuickBuyRows { background-image: none; }
+panorama\styles\hud\dota_hud_top_bar @@ .TopBarBackground, #TimeOfDayBG { background-image: none; }
+panorama\styles\hud\hud_reborn @@ #center_bg, #GlyphScanContainer, #left_flare, #minimap_block, #right_flare, #RoshanTimer, #shop_launcher_bg { background-image: none; }
+
+panorama\styles\dota_hud_netgraph @@ DOTANetGraph { background-color-opacity: 0; }
+panorama\styles\hud\dota_hud_inventory @@ #inventory_items { background-color-opacity: 0; }
+panorama\styles\hud\dota_hud_item_build @@ .BuildHeaderContainer { background-color-opacity: 0; }
+panorama\styles\hud\dota_hud_quick_buy @@ #StickyItemSlotContainer { background-color-opacity: 0; }
+panorama\styles\hud\dota_hud_shop @@ #ItemCombines { background-color-opacity: 0; }
+panorama\styles\hud\dota_hud_shop @@ #SearchBox { background-color-opacity: 0.3; }
+panorama\styles\hud\dota_hud_shop @@ #SearchTextEntry { background-color-opacity: 0; }
+panorama\styles\hud\dota_hud_shop @@ #ToggleMinimalShop { background-color-opacity: 0.2; }
+
+panorama\styles\hud\dota_hud_neutral_item_picker @@ .TooltipContents { background-color: none; box-shadow: none; }
+panorama\styles\hud\dota_hud_quick_stats @@ #QuickStatsContainer { background-color: none; }
+panorama\styles\hud\dota_hud_shop @@ #HeightLimiterContainer { background-color: none; }
+
+panorama\styles\dota_hud_netgraph @@ #LeftColumn Label { color: #FFFFFF; letter-spacing: 1px; font-size: 10px; }
+panorama\styles\dota_hud_netgraph @@ #RightColumn_1 Label, RightColumn_2 Label { color: #FFFFFF; }
+panorama\styles\dota_hud_radar_button @@ #ChargeCount { box-shadow: fill #00000000 0px 0px 0px 0px; }
+panorama\styles\dota_ui_shop_item @@ #QuickBuyRows #ItemImage { box-shadow: fill #00000000 0px 0px 0px 0px; }
+panorama\styles\hud\dota_hud_ability_panel @@ .InventoryItem.BackpackSlot #ItemImage { margin: 0px; }
+panorama\styles\hud\dota_hud_ability_panel @@ .Reborn .BackpackSlot #ButtonWell { box-shadow: inset #000 0px 0px 0px; }
+panorama\styles\hud\dota_hud_ability_panel @@ .Reborn .FiveAbilities #abilities #ButtonWell, Reborn .SixAbilities #abilities #ButtonWell { margin-bottom: 5px; }
+panorama\styles\hud\dota_hud_ability_panel @@ .Reborn .InventoryItem #ButtonSize { margin-left: 0px; margin-right: 0px, margin-top: 0px, margin-bottom: 0px; }
+panorama\styles\hud\dota_hud_ability_panel @@ .Reborn #center_block .InventoryItem.BackpackSlot, #ButtonSize { box-shadow: inset #000000aa 0px 0px 0px 0px; }
+panorama\styles\hud\dota_hud_health_mana @@ .Reborn #HealthManaContainer { margin-bottom: 0px; }
+panorama\styles\hud\dota_hud_health_mana @@ .Reborn #HealthProgress .ProgressBarRight { background-color: gradient( linear, 0% 0%, 0% 100%, from( #212121 ), color-stop( 0.2, #2e2e2e), color-stop( .5, #2e2e2e), to( #212121 ) ); background-color-opacity: 0.5; }
+panorama\styles\hud\dota_hud_health_mana @@ .Reborn #ManaProgress .ProgressBarRight { background-color: gradient( linear, 0% 0%, 0% 100%, from( #212121 ), color-stop( 0.2, #2e2e2e), color-stop( .5, #2e2e2e), to( #212121 ) ); background-color-opacity: 0.5; }
+panorama\styles\hud\dota_hud_inventory @@ .BackpackSlot { border-bottom: 0px; margin-left: 0px; margin-right: 0px; width: 60px; height: 40px; transform: translateX(-0px); }
+panorama\styles\hud\dota_hud_inventory @@ .Reborn #InventoryBG { background-image: none; border-bottom: 0px; }
+panorama\styles\hud\dota_hud_inventory @@ #inventory_backpack_list { margin-top: 104px; margin-left: 3px; }
+panorama\styles\hud\dota_hud_inventory @@ #inventory_list_container { margin-top: 6px; }
+panorama\styles\hud\dota_hud_inventory @@ #inventory_list2 { margin-top: -5px; }
+panorama\styles\hud\dota_hud_quick_buy @@ .Reborn #ShopButton { background-img-opacity: 0; box-shadow: #00000000 0px 0px 0px 0px; }
+panorama\styles\hud\dota_hud_quick_buy @@ .Reborn #ShopButton Label { text-shadow: 0px 0px 0px 0 #00000077; }
+panorama\styles\hud\dota_hud_quick_buy @@ #Hint { font-size: 0px; margin-left: 0px; margin-right: 0px; padding-top: 0px; visibility: collapse; }
+panorama\styles\hud\dota_hud_quick_buy @@ #ShopButton { margin-bottom: 10px; }
+panorama\styles\hud\dota_hud_quick_buy @@ #ShopButton { margin-bottom: 16px; }
+panorama\styles\hud\dota_hud_shop @@ .ShopItemsTab { border-top-left-radius: 0px; border-top-right-radius: 0px; margin-right: 0px; width: 132px; }
+panorama\styles\hud\dota_hud_shop @@ .ShopItemsTab:selected { border: 1px solid #000000; background-color-opacity: 0.2; }
+panorama\styles\hud\dota_hud_shop @@ .ShopLarge #SearchContainer { width: 365px; }
+panorama\styles\hud\dota_hud_shop @@ #CommonItems { background-img-opacity: 0; background-color-opacity: 0; }
+panorama\styles\hud\dota_hud_shop @@ #GridShopHeaders { padding-right: 0px; background-color-opacity: 0.2; }
+panorama\styles\hud\dota_hud_stat_branch @@ .StatBranchCenter { width: 405px; height: 270px; background-img-opacity: 0; background-color: #111111; }
+panorama\styles\hud\dota_hud_stat_branch @@ #BranchTitle, TooltipBranchTitle { margin-top: 10px; }
+panorama\styles\hud\dota_hud_stat_branch @@ #StatUpgradeOption { background-img-opacity: 0; background-color: #111111; border: 1px solid #121212; }
+panorama\styles\hud\dota_hud_top_bar @@ #TopBarRadiantPlayersContainer, #TopBarDirePlayersContainer { opacity: 0.6; }
+panorama\styles\hud\dota_hud_top_bar @@ DOTATopBarPlayer #HeroBadgeOverlay { opacity: 0; }
+panorama\styles\hud\hud_reborn @@ .MinimapExtraLarge #minimap { width: 318px; height: 318px; }
+panorama\styles\hud\hud_reborn @@ #AbilitiesAndStatBranch { margin-bottom: 42px; }
+panorama\styles\hud\hud_reborn @@ #inventory { margin-right: 102px; }
+panorama\styles\hud\hud_reborn @@ #inventory_composition_layer_container { margin-right: 40px; }
+panorama\styles\hud\hud_reborn @@ #inventory_tpscroll_slot, inventory_neutral_slot { box-shadow: fill #00000000 0px 0px 0px 0px; background-img-opacity: 0.5; }
+panorama\styles\hud\hud_reborn @@ #MenuButtons { margin-left: 0px; margin-top: 0px; }
+panorama\styles\hud\hud_reborn @@ #MenuButtons { opacity: 0.05; }
+panorama\styles\hud\hud_reborn @@ #MenuButtons:hover { opacity: 1; }
+panorama\styles\hud\hud_reborn @@ #MorphProgress { margin-bottom: 30px; }
