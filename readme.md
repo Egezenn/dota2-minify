@@ -36,8 +36,6 @@
     <img alt="ss2" src="bin/images/screenshot-2.jpg">
 </div>
 
-<hr>
-
 ## Is this safe to use?
 
 This project has been around for over 3 years with thousands of downloads and users. While binaries are offered for ease of use, anyone can compile it themselves.
@@ -95,7 +93,7 @@ Once you get comfortable with the workflow you can use Minify to easily patch la
 | [`Files`](https://github.com/Egezenn/dota2-minify/wiki/Minify#files)                | Compiled files you want to pack (Models, Meshes, Textures...etc)                              |
 | [`blacklist.txt`](https://github.com/Egezenn/dota2-minify/wiki/Minify#blacklisttxt) | _Paths_ to files to replace with blanks so they wont appear in game (Particles, Sounds...etc) |
 | [`styling.txt`](https://github.com/Egezenn/dota2-minify/wiki/Minify#stylingtxt)     | Custom CSS you want to apply to the Panorama (Interfaces, Layouts, HUD's...etc)               |
-| `notes.txt`                                                                         | Optionally include this file to have a details button beside your mod for users to read.      |
+| `notes_<local>.txt`                                                                         | Include this file to have a details button beside your mod for users to read.      |
 
 ## Thanks
 

@@ -86,8 +86,6 @@ class Requirements:
             open_file_dialog()
 
     def c_isMinifyFolderPresent(self):
-        if not os.path.exists(mpaths.minify_dota_content_path):
-            os.makedirs(mpaths.minify_dota_content_path)
         if not os.path.exists(mpaths.minify_dota_pak_output_path):
             os.makedirs(mpaths.minify_dota_pak_output_path)
 

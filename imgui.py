@@ -353,14 +353,7 @@ def patcher():
 
     try:
         # clean up previous patching data
-        helper.cleanFolders(
-            mpaths.build_dir,
-            mpaths.logs_dir,
-            mpaths.minify_dota_compile_input_path,
-            mpaths.minify_dota_compile_output_path,
-            mpaths.minify_dir,
-            mpaths.minify_dota_maps_output_path,
-        )
+        helper.cleanFolders()
 
         styling_dictionary = {}
         # blacklist_dictionary = {}
@@ -657,9 +650,12 @@ def patcher():
         # -------- Create VPK from game folder and save into Minify directory -------- #
         # ---------------------------------------------------------------------------- #
         newpak = vpk.new(mpaths.minify_dota_compile_output_path)
-        newpak.save(os.path.join(mpaths.minify_dota_pak_output_path, "pak01_dir.vpk"))
+        newpak.save(os.path.join(mpaths.minify_dota_pak_output_path, "pak66_dir.vpk"))
 
         patching = False
+
+        shutil.rmtree(mpaths.minify_dota_compile_input_path)
+        shutil.rmtree(mpaths.minify_dota_compile_output_path)
 
         unlock_interaction()
         helper.add_text_to_terminal("-------------------------------------------------------", "spacer1_text")

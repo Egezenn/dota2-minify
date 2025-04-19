@@ -60,20 +60,15 @@ def disableWorkshopMods(mods_dir, mods_folders, checkboxes):
                     ui.configure_item(box, enabled=False, default_value=False)
 
 
-def cleanFolders(build_dir, logs_dir, content_dir, game_dir, minify_dir, dota_minify_maps):
-    shutil.rmtree(build_dir, ignore_errors=True)
-
-    for root, dirs, files in os.walk(logs_dir):
+def cleanFolders():
+    shutil.rmtree(mpaths.build_dir, ignore_errors=True)
+    shutil.rmtree(mpaths.minify_dota_maps_output_path, ignore_errors=True)
+    for root, dirs, files in os.walk(mpaths.logs_dir):
         for filename in files:
             open(os.path.join(root, filename), "w").close()
-    for root, dirs, files in os.walk(content_dir):
-        for filename in files:
-            os.remove(os.path.join(root, filename))
-    for root, dirs, files in os.walk(game_dir):
-        for filename in files:
-            os.remove(os.path.join(root, filename))
-    shutil.rmtree(dota_minify_maps, ignore_errors=True)
-    os.makedirs(os.path.join(minify_dir, "build"))
+
+    os.makedirs(mpaths.build_dir)
+    os.makedirs(mpaths.minify_dota_compile_input_path)
 
 
 def urlDispatcher(url):

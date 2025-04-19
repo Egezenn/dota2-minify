@@ -2,6 +2,7 @@ panorama\styles\context_menus\context_menu_player @@ #MenuOptionsPanel { transit
 panorama\styles\friend_menu @@ #EditShowcaseButton { visibility: collapse; }
 panorama\styles\hero_loadout_background_images @@ #HeroLoadoutBackgroundImageContainer { visibility: collapse; }
 panorama\styles\hud\dota_hud_item_build @@ .ShopOpen #BuildTitleContainer, .EditorMode #BuildTitleContainer { visibility: collapse; } #Categories { padding-top: 0px; }
+panorama\styles\hud\dota_hud_versus_screen2 @@ DOTAHudVersusScreen2 { visibility: collapse; }
 panorama\styles\showcase\mini_showcase @@ .ShowcaseData { visibility: collapse; }
 panorama\styles\showcase\showcase_contents @@ #ShowcaseBackground, #ShowcaseForeground { visibility: collapse; }
 panorama\styles\ui_econ_set_preview @@ DOTAUIEconSetPreview.Use3DPreview #Preview3DItems { visibility: collapse; }
