@@ -1,6 +1,6 @@
-panorama\styles\hud\dota_hud_item_build @@ .ShopOpen .BuildHeaderContainer, .ShopOpen #BuildTitleContainer, .EditorMode #BuildTitleContainer { visibility: collapse; }
+panorama/styles/hud/dota_hud_item_build @@ .ShopOpen .BuildHeaderContainer, .ShopOpen #BuildTitleContainer, .EditorMode #BuildTitleContainer { visibility: collapse; }
 
-panorama\styles\hud\hud_reborn @@ #PortraitGroup { visibility: collapse; }
-panorama\styles\hud\hud_reborn @@ #stats_container_bg { background-color: none; }
+panorama/styles/hud/hud_reborn @@ #PortraitGroup { visibility: collapse; }
+panorama/styles/hud/hud_reborn @@ #stats_container_bg { background-color: none; }
 
-panorama\styles\dota_ui_shop_item @@ DOTAShopItem.MainShopItem.Popular { visibility: collapse; }
+panorama/styles/dota_ui_shop_item @@ DOTAShopItem.MainShopItem.Popular { visibility: collapse; }
