@@ -656,6 +656,7 @@ def patcher():
 
         shutil.rmtree(mpaths.minify_dota_compile_input_path)
         shutil.rmtree(mpaths.minify_dota_compile_output_path)
+        shutil.rmtree(mpaths.build_dir)
 
         unlock_interaction()
         helper.add_text_to_terminal("-------------------------------------------------------", "spacer1_text")
