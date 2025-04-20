@@ -293,7 +293,7 @@ def uninstaller():
     time.sleep(0.05)
     lock_interaction()
     # remove pak01_dir.vpk if it exists
-    vpkPath = os.path.join(mpaths.minify_dota_pak_output_path, "pak01_dir.vpk")
+    vpkPath = os.path.join(mpaths.minify_dota_pak_output_path, "pak66_dir.vpk")
     if os.path.exists(vpkPath):
         os.remove(vpkPath)
 

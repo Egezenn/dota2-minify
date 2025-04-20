@@ -67,8 +67,8 @@ def cleanFolders():
         for filename in files:
             open(os.path.join(root, filename), "w").close()
 
-    os.makedirs(mpaths.build_dir)
-    os.makedirs(mpaths.minify_dota_compile_input_path)
+    os.makedirs(mpaths.build_dir, exist_ok=True)
+    os.makedirs(mpaths.minify_dota_compile_input_path, exist_ok=True)
 
 
 def urlDispatcher(url):
