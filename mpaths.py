@@ -1,7 +1,6 @@
 import os
 import platform
 import traceback
-import winreg
 
 steam_dir = ""
 
@@ -9,6 +8,8 @@ steam_dir = ""
 def extract_regkey_steam():
     global steam_dir
     if platform.system() == "Windows":
+        import winreg
+        
         try:
             hkey = winreg.OpenKey(winreg.HKEY_LOCAL_MACHINE, r"SOFTWARE\WOW6432Node\Valve\Steam")
         except Exception as exception:
