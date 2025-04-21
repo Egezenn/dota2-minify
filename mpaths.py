@@ -1,40 +1,59 @@
 import os
+import platform
 import traceback
 import winreg
 
-try:
-    hkey = winreg.OpenKey(winreg.HKEY_LOCAL_MACHINE, r"SOFTWARE\WOW6432Node\Valve\Steam")
-except Exception as exception:
-    hkey = None
-    with open(os.path.join(os.getcwd(), "logs\\registry.txt"), "w") as file:
-        file.write(traceback.format_exc())
+steam_dir = ""
 
-try:
-    steam_path = winreg.QueryValueEx(hkey, "InstallPath")
-except:
-    steam_path = None
-    with open(os.path.join(os.getcwd(), "logs\\registry_query.txt"), "w") as file:
-        file.write(traceback.format_exc())
 
-try:
-    steam_dir = steam_path[0]
-except:
-    steam_dir = ""
+def extract_regkey_steam():
+    global steam_dir
+    if platform.system() == "Windows":
+        try:
+            hkey = winreg.OpenKey(winreg.HKEY_LOCAL_MACHINE, r"SOFTWARE\WOW6432Node\Valve\Steam")
+        except Exception as exception:
+            hkey = None
+            with open(os.path.join(os.getcwd(), "logs\\registry.txt"), "w") as file:
+                file.write(traceback.format_exc())
 
-# when dota2 is not inside Steam folder then set new steam directory from 'dota2path_minify.txt
-# this text file is created and set by the user in validatefiles.py during startup
-if not os.path.exists(os.path.join(steam_dir, "steamapps\\common\\dota 2 beta\\game\\bin\\win64\\dota2.exe")):
-    path_file = os.path.join(os.getcwd(), "dota2path_minify.txt")
+        try:
+            steam_path = winreg.QueryValueEx(hkey, "InstallPath")
+        except:
+            steam_path = None
+            with open(os.path.join(os.getcwd(), "logs\\registry_query.txt"), "w") as file:
+                file.write(traceback.format_exc())
 
-    # make sure the text file exists
-    if not os.path.exists(path_file):
-        with open(path_file, "a+") as file:
-            file.write("")
+        try:
+            steam_dir = steam_path[0]
+        except:
+            steam_dir = ""
 
-    # load the path from text file
-    with open(path_file, "r") as file:
-        for line in file:
-            steam_dir = line.strip()
+    else:
+        steam_dir = ""
+
+
+def handle_non_default_path():
+    global steam_dir
+    # when dota2 is not inside Steam folder then set new steam directory from 'dota2path_minify.txt
+    # this text file is created and set by the user in validatefiles.py during startup
+    if steam_dir and not os.path.exists(
+        os.path.join(steam_dir, "steamapps\\common\\dota 2 beta\\game\\bin\\win64\\dota2.exe")
+    ):
+        path_file = os.path.join(os.getcwd(), "dota2path_minify.txt")
+
+        # make sure the text file exists
+        if not os.path.exists(path_file):
+            with open(path_file, "a+") as file:
+                file.write("")
+
+        # load the path from text file
+        with open(path_file, "r") as file:
+            for line in file:
+                steam_dir = line.strip()
+
+
+extract_regkey_steam()
+handle_non_default_path()
 
 # links
 version_query = "https://raw.githubusercontent.com/Egezenn/dota2-minify/refs/heads/stable/version"

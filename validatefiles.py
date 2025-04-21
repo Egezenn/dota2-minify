@@ -1,8 +1,8 @@
 import os
+import time
 
 import dearpygui.dearpygui as ui
 import psutil
-import time
 
 import helper
 import mpaths
@@ -37,17 +37,22 @@ def close_file_dialog():
 def setFolder(sender, app_data):
     ui.configure_item("button_patch", enabled=False)
     folder = app_data["current_path"]
-    print(folder)
 
-    if folder:  # Check if the user selected a folder
+    if folder and os.path.exists(os.path.join(folder, "steamapps\\common\\dota 2 beta\\game\\bin\\win64\\dota2.exe")):
         with open(mpaths.path_file, "w") as file:
             file.write(folder)
+        mpaths.handle_non_default_path()
         helper.add_text_to_terminal(
             helper.localization_dict["path_saved_terminal_text_var"],
             "path_saved_text_tag",
         )
-    time.sleep(3)
-    helper.close()
+    else:
+        # TODO only store the value from file dialog callback
+        # then require an external button which will call this function
+        # if the path wrong (i.e in the case we end up in this block)
+        # show the file dialog and recursively call this function again
+        # may require the file dialog to not be modal?
+        helper.close()
 
 
 class Requirements:

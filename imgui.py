@@ -17,7 +17,6 @@ import helper
 import mpaths
 import validatefiles
 
-
 ui.create_context()
 
 version = None
@@ -290,7 +289,7 @@ def setupButtonState():
 
 def uninstaller():
     hide_uninstall_popup()
-    clean_terminal()
+    helper.clean_terminal()
     time.sleep(0.05)
     lock_interaction()
     # remove pak01_dir.vpk if it exists
@@ -326,10 +325,6 @@ def uninstaller():
     unlock_interaction()
 
 
-def clean_terminal():
-    ui.delete_item("terminal_window", children_only=True)
-
-
 def patcher_start():
     checkbox_state_save_thread = threading.Thread(target=checkbox_state_save)
     checkbox_state_save_thread.start()
@@ -342,7 +337,7 @@ def patcher_start():
 def patcher():
     global patching
     lock_interaction()
-    clean_terminal()
+    helper.clean_terminal()
     if "dota2.exe" in (p.name() for p in psutil.process_iter()):
         helper.add_text_to_terminal(
             text=helper.localization_dict["close_dota_terminal_text_var"],
@@ -722,11 +717,14 @@ def start_text():
 
 def close_active_window():
     active_window = ui.get_item_alias(ui.get_active_window())
-    if active_window != "terminal_window" and active_window != "primary_window" and active_window != "top_bar":
+    if active_window not in ["terminal_window", "primary_window", "top_bar"]:
         if active_window == "update_popup":
             delete_update_popup()
         else:
-            ui.configure_item(active_window, show=False)
+            try:
+                ui.configure_item(active_window, show=False)
+            except SystemError:
+                pass  # ?
 
 
 def create_ui():
@@ -758,6 +756,7 @@ def create_ui():
         )
         ui.add_image_button(
             "dev_texture_tag",
+            tag="dev",
             parent="top_bar",
             width=16,
             height=16,
@@ -1171,13 +1170,55 @@ def theme():
 
 
 def dev_mode():
-    ui.configure_viewport(item="main_viewport", resizable=True, width=1270, height=720)
+    # escape doesn't work, can't open it back
+    ui.configure_viewport(item="main_viewport", resizable=True, height=600, border=False)
     ui.configure_viewport(item="primary_window", resizable=True)
-    ui.show_style_editor()
-    ui.show_debug()
-    ui.show_font_manager()
-    ui.show_item_registry()
-    ui.show_metrics()
+    with ui.window(label="Ugly dev tools panel", pos=(0, 300), width=240, height=300):
+        ui.add_button(
+            label="Open Dota2 Minify folder",
+            callback=helper.open_dir,
+            user_data=os.path.join(mpaths.minify_dota_pak_output_path),
+        )
+        ui.add_button(
+            label="Open Dota2 folder",
+            callback=helper.open_dir,
+            user_data=os.path.join(mpaths.steam_dir, "steamapps\\common\\dota 2 beta"),
+        )
+        ui.add_button(
+            label="Open Minify folder",
+            callback=helper.open_dir,
+            user_data=os.path.join(mpaths.minify_dir),
+        )
+        ui.add_button(
+            label="Open Logs folder",
+            callback=helper.open_dir,
+            user_data=os.path.join(mpaths.logs_dir),
+        )
+        ui.add_spacer(width=0, height=20)
+        ui.add_button(
+            label="Select folder to compile",
+            callback=lambda: ui.show_item("compile_file_dialog"),
+        )
+        ui.add_file_dialog(
+            show=False,
+            modal=False,
+            min_size=(480, 260),
+            callback=helper.select_compile_dir,
+            tag="compile_file_dialog",
+            directory_selector=True,
+        )
+        ui.add_button(
+            label="Compile files from folder",
+            callback=helper.compile,
+        )
+        ui.add_spacer(width=0, height=20)
+        ui.add_button(label="Show style editor", callback=ui.show_style_editor)
+        ui.add_button(label="Show debug", callback=ui.show_debug)
+        ui.add_button(label="Show font manager", callback=ui.show_font_manager)
+        ui.add_button(label="Show item registry", callback=ui.show_item_registry)
+        ui.add_button(label="Show metrics", callback=ui.show_metrics)
+
+    ui.configure_item("dev", enabled=False)
 
 
 # Creating_main_viewport

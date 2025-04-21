@@ -2,6 +2,8 @@ import hashlib
 import json
 import os
 import shutil
+import subprocess
+import sys
 import time
 import urllib.error
 import webbrowser
@@ -18,6 +20,7 @@ locale = ""
 localization_dict = {}
 details_label_text_var = ""
 mod_selection_window_var = ""
+compile_path = ""
 
 # ---------------------------------------------------------------------------- #
 #                                   Warnings                                   #
@@ -97,6 +100,10 @@ def get_available_localizations():
     for key, value in localization_data.items():
         if key.endswith("var") == True:
             localization_dict[key] = value["EN"]
+
+
+def clean_terminal():
+    ui.delete_item("terminal_window", children_only=True)
 
 
 def close():
@@ -277,3 +284,66 @@ def calculate_md5(file_path):
         for byte_block in iter(lambda: file.read(4096), b""):
             md5_hash.update(byte_block)
     return md5_hash.hexdigest()
+
+
+def open_dir(sender, app_data, user_data):
+    path = user_data
+    if sys.platform == "win32":
+        os.startfile(user_data)
+    elif sys.platform == "darwin":
+        os.system(f'open "{user_data}"')
+    else:
+        os.system(f'xdg-open "{user_data}"')
+
+
+def compile(sender, app_data, user_data):
+    # try:
+    folder = compile_path
+    if folder:
+        clean_terminal()
+        compile_output_path = os.path.join(folder, "compiled")
+
+        shutil.rmtree(mpaths.minify_dota_compile_input_path, ignore_errors=True)
+        shutil.rmtree(compile_output_path, ignore_errors=True)
+        os.makedirs(mpaths.minify_dota_compile_input_path)
+
+        items = os.listdir(folder)
+        try:
+            items.remove("compiled")
+        except ValueError:
+            pass
+
+        for item in items:
+            if os.path.isdir(os.path.join(folder, item)):
+                shutil.copytree(os.path.join(folder, item), os.path.join(mpaths.minify_dota_compile_input_path, item))
+            else:
+                shutil.copy(os.path.join(folder, item), mpaths.minify_dota_compile_input_path)
+
+        subprocess.run(
+            [
+                mpaths.dota_resource_compiler_path,
+                "-i",
+                mpaths.minify_dota_compile_input_path + "/*",
+                "-r",
+            ],
+        )
+
+        shutil.copytree(os.path.join(mpaths.minify_dota_compile_output_path), compile_output_path)
+
+        shutil.rmtree(mpaths.minify_dota_compile_input_path, ignore_errors=True)
+        shutil.rmtree(mpaths.minify_dota_compile_output_path, ignore_errors=True)
+
+        add_text_to_terminal("Compiled successfully!", "")
+    else:
+        clean_terminal()
+        add_text_to_terminal("Select a folder first!", "")
+
+
+# except TypeError:
+#     clean_terminal()
+#     add_text_to_terminal("Select a folder first", "")
+
+
+def select_compile_dir(sender, app_data):
+    global compile_path
+    compile_path = app_data["current_path"]
