@@ -17,6 +17,7 @@ import helper
 import mpaths
 import validatefiles
 
+
 ui.create_context()
 
 version = None
@@ -755,6 +756,14 @@ def create_ui():
             pos=(87, 6),
             callback=open_github_link,
         )
+        ui.add_image_button(
+            "dev_texture_tag",
+            parent="top_bar",
+            width=16,
+            height=16,
+            pos=(115, 6),
+            callback=dev_mode,
+        )
         ui.add_button(
             parent="top_bar",
             tag="exit_button",
@@ -1032,6 +1041,8 @@ width_discord, height_discord, channels_discord, data_discord = ui.load_image(
 
 width_git, height_git, channels_git, data_git = ui.load_image(f"{mpaths.img_dir}\\github-mark-white.png")
 
+width_dev, height_dev, channels_dev, data_dev = ui.load_image(f"{mpaths.img_dir}\\cog-wheel.png")
+
 with ui.texture_registry(show=False):
     ui.add_static_texture(
         width=width_discord,
@@ -1044,6 +1055,12 @@ with ui.texture_registry(show=False):
         height=height_git,
         default_value=data_git,
         tag="git_texture_tag",
+    )
+    ui.add_static_texture(
+        width=width_dev,
+        height=height_dev,
+        default_value=data_dev,
+        tag="dev_texture_tag",
     )
 
 
@@ -1151,6 +1168,16 @@ def theme():
     ui.bind_item_theme("top_bar", top_bar_theme)
     ui.bind_item_theme("update_popup", popup_theme)
     ui.bind_item_theme("uninstall_popup", popup_theme)
+
+
+def dev_mode():
+    ui.configure_viewport(item="main_viewport", resizable=True, width=1270, height=720)
+    ui.configure_viewport(item="primary_window", resizable=True)
+    ui.show_style_editor()
+    ui.show_debug()
+    ui.show_font_manager()
+    ui.show_item_registry()
+    ui.show_metrics()
 
 
 # Creating_main_viewport

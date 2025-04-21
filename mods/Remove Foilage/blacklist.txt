@@ -42,7 +42,6 @@ materials/models/props_debris/neutral_creep_camp001.vmat_c
 materials/models/props_debris/rock_debris001.vmat_c
 materials/models/props_debris/skeleton001.vmat_c
 materials/models/props_debris/skull001.vmat_c
-materials/models/props_debris/spike001.vmat_c
 materials/models/props_debris/wood_001a.vmat_c
 materials/models/props_debris/wood_fence001_tintable.vmat_c
 materials/models/props_debris/wood_fence001.vmat_c
