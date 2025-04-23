@@ -91,8 +91,8 @@ class Requirements:
             open_file_dialog()
 
     def c_isMinifyFolderPresent(self):
-        if not os.path.exists(mpaths.minify_dota_pak_output_path):
-            os.makedirs(mpaths.minify_dota_pak_output_path)
+        os.makedirs(mpaths.minify_dota_content_path, exist_ok=True)
+        os.makedirs(mpaths.minify_dota_pak_output_path, exist_ok=True)
 
     def d_isDotaRunning(self):
         if "dota2.exe" in (p.name() for p in psutil.process_iter()):

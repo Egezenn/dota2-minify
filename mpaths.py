@@ -9,7 +9,7 @@ def extract_regkey_steam():
     global steam_dir
     if platform.system() == "Windows":
         import winreg
-        
+
         try:
             hkey = winreg.OpenKey(winreg.HKEY_LOCAL_MACHINE, r"SOFTWARE\WOW6432Node\Valve\Steam")
         except Exception as exception:
@@ -89,6 +89,8 @@ minify_dota_compile_output_path = os.path.join(steam_dir, "steamapps\\common\\do
 ### vpk destination
 minify_dota_pak_output_path = os.path.join(steam_dir, "steamapps\\common\\dota 2 beta\\game\\dota_minify")
 minify_dota_maps_output_path = os.path.join(minify_dota_pak_output_path, "maps")
+# required for tools to launch
+minify_dota_content_path = os.path.join(steam_dir, "steamapps\\common\\dota 2 beta\\content\\dota_minify")
 
 ## base game
 dota_pak01_path = os.path.join(steam_dir, "steamapps\\common\\dota 2 beta\\game\\dota\\pak01_dir.vpk")
