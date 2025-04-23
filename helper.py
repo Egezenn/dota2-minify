@@ -350,3 +350,19 @@ def compile(sender, app_data, user_data):
 def select_compile_dir(sender, app_data):
     global compile_path
     compile_path = app_data["current_path"]
+
+
+def lock_interaction():
+    ui.configure_item("button_patch", enabled=False)
+    ui.configure_item("button_select_mods", enabled=False)
+    ui.configure_item("button_uninstall", enabled=False)
+    ui.configure_item("exit_button", enabled=False)
+    print("locked")
+
+
+def unlock_interaction():
+    ui.configure_item("button_patch", enabled=True)
+    ui.configure_item("button_select_mods", enabled=True)
+    ui.configure_item("button_uninstall", enabled=True)
+    ui.configure_item("exit_button", enabled=True)
+    print("unlocked")

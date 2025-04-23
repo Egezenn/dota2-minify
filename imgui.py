@@ -12,6 +12,7 @@ import dearpygui.dearpygui as ui
 import psutil
 import requests
 import screeninfo
+import crossfiledialog
 import vpk
 
 import helper
@@ -30,7 +31,7 @@ except:
 
 
 patching = False
-checkboxes = {}
+
 checkboxes_state = {}
 blacklist_dictionary = {}
 styling_dictionary = {}
@@ -71,20 +72,6 @@ def save_state():
     checkbox_state_save()
 
 
-def lock_interaction():
-    ui.configure_item("button_patch", enabled=False)
-    ui.configure_item("button_select_mods", enabled=False)
-    ui.configure_item("button_uninstall", enabled=False)
-    ui.configure_item("exit_button", enabled=False)
-
-
-def unlock_interaction():
-    ui.configure_item("button_patch", enabled=True)
-    ui.configure_item("button_select_mods", enabled=True)
-    ui.configure_item("button_uninstall", enabled=True)
-    ui.configure_item("exit_button", enabled=True)
-
-
 def delete_update_popup():
     ui.configure_item("update_popup", show=False)
     ui.delete_item("update_popup")
@@ -102,7 +89,7 @@ def open_github_link_and_close_minify():
 
 def checkbox_state_save():
     global checkboxes_state
-    for box in checkboxes:
+    for box in validatefiles.checkboxes:
         checkboxes_state[box] = ui.get_value(box)
         with open("states.json", "w", encoding="utf-8") as file:
             json.dump(checkboxes_state, file, indent=4)
@@ -208,7 +195,7 @@ def create_checkboxes():
         )
 
         current_box = name
-        checkboxes[current_box] = name
+        validatefiles.checkboxes[current_box] = name
 
 
 def show_details(sender, app_data, user_data):
@@ -222,7 +209,7 @@ def update_popup_show():
 def setupSystem():
     os.makedirs("logs", exist_ok=True)
     # TODO do this.. normally
-    x = validatefiles.Requirements(checkboxes)
+    x = validatefiles.Requirements(validatefiles.checkboxes)
     public_methods = [
         method for method in dir(x) if callable(getattr(x, method)) if not method.startswith("_")
     ]  # private methods start with _
@@ -235,7 +222,7 @@ def setupSystem():
             if platform.system() == "Windows":
                 helper.add_text_to_terminal(
                     text=helper.localization_dict["downloading_cli_terminal_text_var"],
-                    tag="downloading_s2v_cli_tag",
+                    tag=f"{ui.generate_uuid()}",
                 )
                 zip_name = "cli-windows-x64.zip"
                 zip_path = os.path.join(mpaths.minify_dir, zip_name)
@@ -245,54 +232,51 @@ def setupSystem():
                         file.write(response.content)
                     helper.add_text_to_terminal(
                         text=f"{helper.localization_dict["downloaded_cli_terminal_text_var"]}{zip_name}",
-                        tag="downloaded_text_tag",
+                        tag=f"{ui.generate_uuid()}",
                     )
                     shutil.unpack_archive(zip_path, mpaths.minify_dir, "zip")
                     os.remove(zip_path)
                     helper.add_text_to_terminal(
                         text=f"{helper.localization_dict["extracted_cli_terminal_text_var"]}{zip_name}",
-                        tag="extracted_text_tag",
+                        tag=f"{ui.generate_uuid()}",
                     )
             else:
                 helper.add_text_to_terminal(
                     text=helper.localization_dict["no_instructions_cli_terminal_text_var"],
-                    tag="error_cli_download_text_tag",
+                    tag=f"{ui.generate_uuid()}",
                 )
         for method in public_methods:
             getattr(x, method)()
-            if x.toggle_flag == True:
-                lock_interaction()
-                break
     except Exception:
         with open(os.path.join(mpaths.logs_dir, "crashlog.txt"), "w") as file:
             file.write(traceback.format_exc())
-            lock_interaction()
+            helper.lock_interaction()
             helper.add_text_to_terminal(
                 text=helper.localization_dict["failed_to_start_terminal_text_var"],
-                tag="failed_to_start_text_tag",
+                tag=f"{ui.generate_uuid()}",
             )
             helper.add_text_to_terminal(
                 text=helper.localization_dict["check_crashlog_terminal_text_var"],
-                tag="check_logs_text_tag",
+                tag=f"{ui.generate_uuid()}",
             )
 
 
 def setupButtonState():
-    for box in checkboxes:
+    for box in validatefiles.checkboxes:
         if ui.get_value(box) == True:
             ui.configure_item("button_patch", enabled=True)
             break
         else:
             ui.configure_item("button_patch", enabled=False)
     if helper.workshop_installed == False:
-        helper.disableWorkshopMods(mpaths.mods_dir, mpaths.mods_folders, checkboxes)
+        helper.disableWorkshopMods(mpaths.mods_dir, mpaths.mods_folders, validatefiles.checkboxes)
 
 
 def uninstaller():
     hide_uninstall_popup()
     helper.clean_terminal()
     time.sleep(0.05)
-    lock_interaction()
+    helper.lock_interaction()
     # remove pak01_dir.vpk if it exists
     vpkPath = os.path.join(mpaths.minify_dota_pak_output_path, "pak66_dir.vpk")
     if os.path.exists(vpkPath):
@@ -323,7 +307,7 @@ def uninstaller():
         text=helper.localization_dict["mods_removed_terminal_text_var"],
         tag="uninstaller_text_tag",
     )
-    unlock_interaction()
+    helper.unlock_interaction()
 
 
 def patcher_start():
@@ -337,7 +321,7 @@ def patcher_start():
 
 def patcher():
     global patching
-    lock_interaction()
+    helper.lock_interaction()
     helper.clean_terminal()
     if "dota2.exe" in (p.name() for p in psutil.process_iter()):
         helper.add_text_to_terminal(
@@ -369,15 +353,18 @@ def patcher():
                 blacklist_txt = os.path.join(mod_path, "blacklist.txt")
                 styling_txt = os.path.join(mod_path, "styling.txt")
 
-                for box in checkboxes:
+                for box in validatefiles.checkboxes:
                     if (
-                        ui.get_value(box) == True and checkboxes[box] == folder
+                        ui.get_value(box) == True and validatefiles.checkboxes[box] == folder
                     ):  # step into folders that have ticked checkboxes only
                         helper.add_text_to_terminal(
                             f"{helper.localization_dict["installing_terminal_text_var"]} {folder}",
                             tag=f"istalling_{folder}_text_tag",
                         )
-                        if checkboxes[box] == "Dark Terrain" or checkboxes[box] == "Remove Foilage":
+                        if (
+                            validatefiles.checkboxes[box] == "Dark Terrain"
+                            or validatefiles.checkboxes[box] == "Remove Foilage"
+                        ):
                             shutil.copytree(
                                 mpaths.maps_dir,
                                 os.path.join(
@@ -386,7 +373,7 @@ def patcher():
                                 ),
                                 dirs_exist_ok=True,
                             )
-                        if checkboxes[box] == "OpenDotaGuides Guides":
+                        if validatefiles.checkboxes[box] == "OpenDotaGuides Guides":
                             zip_path = os.path.join(mod_path, "files", "OpenDotaGuides.zip")
                             temp_dump_path = os.path.join(mod_path, "files", "temp")
                             if os.path.exists(zip_path):
@@ -653,7 +640,7 @@ def patcher():
         shutil.rmtree(mpaths.minify_dota_compile_output_path)
         shutil.rmtree(mpaths.build_dir)
 
-        unlock_interaction()
+        helper.unlock_interaction()
         helper.add_text_to_terminal("-------------------------------------------------------", "spacer1_text")
         helper.add_text_to_terminal(
             helper.localization_dict["success_terminal_text_var"],
@@ -680,7 +667,7 @@ def patcher():
             helper.localization_dict["check_logs_terminal_text_var"],
             "check_logs_text_tag",
         )
-        unlock_interaction()
+        helper.unlock_interaction()
 
 
 def version_check():

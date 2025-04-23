@@ -2,7 +2,61 @@ import os
 import platform
 import traceback
 
+# links
+version_query = "https://raw.githubusercontent.com/Egezenn/dota2-minify/refs/heads/stable/version"
+discord = "https://discord.com/invite/2YDnqpbcKM"
+latest_release = "https://github.com/Egezenn/dota2-minify/releases/latest"
+s2v_latest_windows_x64 = (
+    "https://github.com/ValveResourceFormat/ValveResourceFormat/releases/latest/download/cli-windows-x64.zip"
+)
+odg_latest = "https://github.com/Egezenn/OpenDotaGuides/releases/latest/download/itembuilds.zip"
+
+# minify project paths
+minify_dir = os.getcwd()
+bin_dir = os.path.join(minify_dir, "bin")
+build_dir = os.path.join(minify_dir, "build")
+logs_dir = os.path.join(minify_dir, "logs")
+mods_dir = os.path.join(minify_dir, "mods")
+
+# bin
+blank_files_dir = os.path.join(bin_dir, "blank-files")
+maps_dir = os.path.join(bin_dir, "maps")
+img_dir = os.path.join(bin_dir, "images")
+minify_map_dir = os.path.join(maps_dir, "dota.vpk")
+localization_file_dir = os.path.join(bin_dir, "localization.json")
+locale_file_dir = "locale"
+
+mods_folders = []
+for mod in os.listdir(mods_dir):
+    mods_folders.append(mod)
+
+# dota2 paths
 steam_dir = ""
+## minify
+### resourcecompiler required dir
+minify_dota_compile_input_path = os.path.join(steam_dir, "steamapps\\common\\dota 2 beta\\content\\dota_addons\\minify")
+### compiled files from resourcefiles
+minify_dota_compile_output_path = os.path.join(steam_dir, "steamapps\\common\\dota 2 beta\\game\\dota_addons\\minify")
+### vpk destination
+minify_dota_pak_output_path = os.path.join(steam_dir, "steamapps\\common\\dota 2 beta\\game\\dota_minify")
+minify_dota_maps_output_path = os.path.join(minify_dota_pak_output_path, "maps")
+# required for tools to launch
+minify_dota_content_path = os.path.join(steam_dir, "steamapps\\common\\dota 2 beta\\content\\dota_minify")
+
+## base game
+dota2_executable = os.path.join(steam_dir, "steamapps\\common\\dota 2 beta\\game\\bin\\win64\\dota2.exe")
+dota2_tools_executable = os.path.join(steam_dir, "steamapps\\common\\dota 2 beta\\game\\bin\\win64\\dota2cfg.exe")
+dota_core_pak01_path = os.path.join(steam_dir, "steamapps\\common\\dota 2 beta\\game\\core\\pak01_dir.vpk")
+dota_pak01_path = os.path.join(steam_dir, "steamapps\\common\\dota 2 beta\\game\\dota\\pak01_dir.vpk")
+dota_itembuilds_path = os.path.join(steam_dir, "steamapps\\common\\dota 2 beta\\game\\dota\\itembuilds")
+dota_map_path = os.path.join(steam_dir, "steamapps\\common\\dota 2 beta\\game\\dota\\maps\\dota.vpk")
+dota_resource_compiler_path = os.path.join(
+    steam_dir, "steamapps\\common\\dota 2 beta\\game\\bin\\win64\\resourcecompiler.exe"
+)
+
+
+def print_steam_dir():
+    print(steam_dir)
 
 
 def extract_regkey_steam():
@@ -53,56 +107,57 @@ def handle_non_default_path():
                 steam_dir = line.strip()
 
 
+def recalculate_paths(path):
+    global steam_dir
+    global minify_dota_compile_input_path
+    global minify_dota_compile_output_path
+    global minify_dota_pak_output_path
+    global minify_dota_maps_output_path
+    global minify_dota_content_path
+    global dota2_executable
+    global dota2_tools_executable
+    global dota_core_pak01_path
+    global dota_pak01_path
+    global dota_itembuilds_path
+    global dota_map_path
+    global dota_resource_compiler_path
+
+    ## minify
+    steam_dir = path
+    ### resourcecompiler required dir
+    minify_dota_compile_input_path = os.path.join(path, "steamapps\\common\\dota 2 beta\\content\\dota_addons\\minify")
+    ### compiled files from resourcefiles
+    minify_dota_compile_output_path = os.path.join(path, "steamapps\\common\\dota 2 beta\\game\\dota_addons\\minify")
+    ### vpk destination
+    minify_dota_pak_output_path = os.path.join(path, "steamapps\\common\\dota 2 beta\\game\\dota_minify")
+    minify_dota_maps_output_path = os.path.join(minify_dota_pak_output_path, "maps")
+    # required for tools to launch
+    minify_dota_content_path = os.path.join(path, "steamapps\\common\\dota 2 beta\\content\\dota_minify")
+
+    ## base game
+    dota2_executable = os.path.join(path, "steamapps\\common\\dota 2 beta\\game\\bin\\win64\\dota2.exe")
+    dota2_tools_executable = os.path.join(path, "steamapps\\common\\dota 2 beta\\game\\bin\\win64\\dota2cfg.exe")
+    dota_core_pak01_path = os.path.join(path, "steamapps\\common\\dota 2 beta\\game\\core\\pak01_dir.vpk")
+    dota_pak01_path = os.path.join(path, "steamapps\\common\\dota 2 beta\\game\\dota\\pak01_dir.vpk")
+    dota_itembuilds_path = os.path.join(path, "steamapps\\common\\dota 2 beta\\game\\dota\\itembuilds")
+    dota_map_path = os.path.join(path, "steamapps\\common\\dota 2 beta\\game\\dota\\maps\\dota.vpk")
+    dota_resource_compiler_path = os.path.join(
+        path, "steamapps\\common\\dota 2 beta\\game\\bin\\win64\\resourcecompiler.exe"
+    )
+    print(steam_dir)
+    print(minify_dota_compile_input_path)
+    print(minify_dota_compile_output_path)
+    print(minify_dota_pak_output_path)
+    print(minify_dota_maps_output_path)
+    print(minify_dota_content_path)
+    print(dota2_executable)
+    print(dota2_tools_executable)
+    print(dota_core_pak01_path)
+    print(dota_pak01_path)
+    print(dota_itembuilds_path)
+    print(dota_map_path)
+    print(dota_resource_compiler_path)
+
+
 extract_regkey_steam()
 handle_non_default_path()
-
-# links
-version_query = "https://raw.githubusercontent.com/Egezenn/dota2-minify/refs/heads/stable/version"
-discord = "https://discord.com/invite/2YDnqpbcKM"
-latest_release = "https://github.com/Egezenn/dota2-minify/releases/latest"
-s2v_latest_windows_x64 = (
-    "https://github.com/ValveResourceFormat/ValveResourceFormat/releases/latest/download/cli-windows-x64.zip"
-)
-odg_latest = "https://github.com/Egezenn/OpenDotaGuides/releases/latest/download/itembuilds.zip"
-
-# minify project paths
-minify_dir = os.getcwd()
-bin_dir = os.path.join(minify_dir, "bin")
-build_dir = os.path.join(minify_dir, "build")
-logs_dir = os.path.join(minify_dir, "logs")
-mods_dir = os.path.join(minify_dir, "mods")
-
-# bin
-blank_files_dir = os.path.join(bin_dir, "blank-files")
-maps_dir = os.path.join(bin_dir, "maps")
-img_dir = os.path.join(bin_dir, "images")
-minify_map_dir = os.path.join(maps_dir, "dota.vpk")
-localization_file_dir = os.path.join(bin_dir, "localization.json")
-locale_file_dir = "locale"
-
-# dota2 paths
-## minify
-### resourcecompiler required dir
-minify_dota_compile_input_path = os.path.join(steam_dir, "steamapps\\common\\dota 2 beta\\content\\dota_addons\\minify")
-### compiled files from resourcefiles
-minify_dota_compile_output_path = os.path.join(steam_dir, "steamapps\\common\\dota 2 beta\\game\\dota_addons\\minify")
-### vpk destination
-minify_dota_pak_output_path = os.path.join(steam_dir, "steamapps\\common\\dota 2 beta\\game\\dota_minify")
-minify_dota_maps_output_path = os.path.join(minify_dota_pak_output_path, "maps")
-# required for tools to launch
-minify_dota_content_path = os.path.join(steam_dir, "steamapps\\common\\dota 2 beta\\content\\dota_minify")
-
-## base game
-dota2_executable = os.path.join(steam_dir, "steamapps\\common\\dota 2 beta\\game\\bin\\win64\\dota2.exe")
-dota2_tools_executable = os.path.join(steam_dir, "steamapps\\common\\dota 2 beta\\game\\bin\\win64\\dota2cfg.exe")
-dota_core_pak01_path = os.path.join(steam_dir, "steamapps\\common\\dota 2 beta\\game\\core\\pak01_dir.vpk")
-dota_pak01_path = os.path.join(steam_dir, "steamapps\\common\\dota 2 beta\\game\\dota\\pak01_dir.vpk")
-dota_itembuilds_path = os.path.join(steam_dir, "steamapps\\common\\dota 2 beta\\game\\dota\\itembuilds")
-dota_map_path = os.path.join(steam_dir, "steamapps\\common\\dota 2 beta\\game\\dota\\maps\\dota.vpk")
-dota_resource_compiler_path = os.path.join(
-    steam_dir, "steamapps\\common\\dota 2 beta\\game\\bin\\win64\\resourcecompiler.exe"
-)
-
-mods_folders = []
-for mod in os.listdir(mods_dir):
-    mods_folders.append(mod)
