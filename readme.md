@@ -17,7 +17,6 @@
 
   ![downloads](https://img.shields.io/github/downloads/Egezenn/dota2-minify/total?style=for-the-badge)
   ![downloads-latest](https://img.shields.io/github/downloads/Egezenn/dota2-minify/latest/total?style=for-the-badge)
-  ![size](https://img.shields.io/github/repo-size/Egezenn/dota2-minify?style=for-the-badge)
 
   ![commits-since](https://img.shields.io/github/commits-since/Egezenn/dota2-minify/latest?style=for-the-badge)
 
@@ -62,7 +61,7 @@ No one has ever been banned for these mods. This project strictly deals with VPK
 3. **Set Language for Steam**
 
    - Right-click on Dota2 in Steam and click **Properties**.
-   - **For English Dota2:** Add `-language minify` to your launch options. [See example image](https://i.imgur.com/KTfqXUg.jpeg).
+   - **For English Dota2:** Add `-language minify` to your launch options.
    - **For Other Languages:** Follow the [instructions here](https://github.com/Egezenn/dota2-minify/wiki/Minify#using-minify-with-a-different-language-in-dota2).
 
 4. **Start Dota 2**
@@ -70,13 +69,19 @@ No one has ever been banned for these mods. This project strictly deals with VPK
 
 ### Optional Setup
 
-**Compile from Source**: If you prefer compiling the project yourself [Click here for instructions](https://github.com/Egezenn/dota2-minify/wiki/Minify#compiling-minify)
+#### Using the project locally
 
-**External Binaries**: To get these files from the source `Source2Viewer-CLI.exe` and `libSkiaSharp.dll`:
+- `git clone https://github.com/Egezenn/dota2-minify`
+- `cd dota2-minify`
+- `python -m venv .venv`
+- `.venv\Scripts\activate.bat` or `.venv/bin/activate`
+- `pip install -r requirements.txt`
+- `python imgui.py`
 
-1. [Click here to go to SteamDatabase/ValveResourceFormat releases](https://github.com/SteamDatabase/ValveResourceFormat/releases/latest)
-2. Download `cli-windows-x64.zip`
-3. Extract both files into your Minify folder.
+#### Compilation from source
+
+For instructions, refer to [here](https://github.com/Egezenn/dota2-minify/wiki/Minify#compiling-minify).
+
 
 ## Developing Your Own Mods
 
@@ -89,12 +94,100 @@ Once you get comfortable with the workflow you can use Minify to easily patch la
 ## Minify File Structure [>> tutorial](https://github.com/Egezenn/dota2-minify/wiki/Minify)
 
 | Name                                                                                | Description                                                                                   |
-|-------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------|
+| ----------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------- |
 | [`Files`](https://github.com/Egezenn/dota2-minify/wiki/Minify#files)                | Compiled files you want to pack (Models, Meshes, Textures...etc)                              |
 | [`blacklist.txt`](https://github.com/Egezenn/dota2-minify/wiki/Minify#blacklisttxt) | _Paths_ to files to replace with blanks so they wont appear in game (Particles, Sounds...etc) |
 | [`styling.txt`](https://github.com/Egezenn/dota2-minify/wiki/Minify#stylingtxt)     | Custom CSS you want to apply to the Panorama (Interfaces, Layouts, HUD's...etc)               |
-| `notes_<local>.txt`                                                                         | Include this file to have a details button beside your mod for users to read.      |
+| `notes_<local>.txt`                                                                 | Include this file to have a details button beside your mod for users to read.                 |
+
 
 ## Thanks
 
 This project wouldn't be available without the work of the community. Thanks to everyone that has contributed to the project over [GitHub](https://github.com/Egezenn/dota2-minify/graphs/contributors) or [Discord](https://discord.com/invite/2YDnqpbcKM)!
+
+## Special thanks to
+
+### [robbyz512](https://github.com/robbyz512)
+
+Creation of the base project.
+
+<details>
+<summary>Mods</summary>
+
+- `Dark Terrain`
+- `Minify Base Attacks`
+- `Minify HUD`
+- `Minify Spells & Items`
+- `Misc Optimization`
+- `Mute Ambient Sounds`
+- `Mute Taunt Sounds`
+- `Mute Voice Line Sounds`
+- `Remove Foilage`
+- `Remove Pinging`
+- `Remove River`
+- `Remove Sprays`
+- `Remove Weather Effects`
+- `Tree Mod`
+
+</details>
+
+### [Egezenn](https://github.com/Egezenn)
+
+Taking over the maintainership of the project, implementing automated workflows, improving the functionality, Linux behavior and [more](https://github.com/Egezenn/dota2-minify/commits/main/?author=Egezenn).
+
+<details>
+<summary>Mods</summary>
+
+- `Mute Announcers`
+- [`OpenDotaGuides Guides`](https://github.com/Egezenn/OpenDotaGuides)
+- `Remove Laggy UI`
+- `Remove Main Menu Background`
+- `Stat Site Buttons In Profiles`
+- `Transparent HUD` improvements
+- Snippets in `User Styles`
+
+</details>
+
+### [ZerdacK](https://github.com/DotaModdingCommunity)
+
+Rewrite of the GUI, Russian translations, mod fixes and [more](https://github.com/Egezenn/dota2-minify/commits/main/?author=DotaModdingCommunity).
+
+<details>
+<summary>Mods</summary>
+
+- `Transparent HUD`
+
+</details>
+
+### [MeGaNeKoS](https://github.com/MeGaNeKoS)
+
+<details>
+<summary>Mods</summary>
+
+- `Dotabuff in Profiles` mod which has been refactored to `Stat Site Buttons In Profiles`
+- `Show NetWorth mod`
+
+</details>
+
+## Dependencies
+
+### Binaries
+
+[Python](https://www.python.org/) - Core language. Licensed under PSFL license.
+
+[Source 2 Viewer](https://github.com/ValveResourceFormat/ValveResourceFormat) - Used in decompilation of contents in paks. Licensed under MIT license.
+
+### Python packages
+
+[dearpygui](https://github.com/hoffstadt/DearPyGui) Used in the GUI. Licensed under MIT license.
+
+[Nuitka](https://nuitka.net/) Used in compilation of the binaries. Licensed under Apache-2.0 license.
+
+[psutil](https://github.com/giampaolo/psutil) Used in handling processes. Licensed under BSD-3-Clause license.
+
+[requests](https://github.com/psf/requests) Used in downloading/querying project's dependencies. Licensed under Apache-2.0 license.
+
+[screeninfo](https://github.com/rr-/screeninfo) Used in calculating initial position for the main window. Licensed under MIT license.
+
+[vpk](https://github.com/ValvePython/vpk) Used in creating and getting file content list in VPKs. Licensed under MIT license.
+
