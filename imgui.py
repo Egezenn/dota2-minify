@@ -11,6 +11,7 @@ from shutil import copytree, ignore_patterns
 import dearpygui.dearpygui as ui
 import psutil
 import requests
+import screeninfo
 import vpk
 
 import helper
@@ -562,8 +563,6 @@ def patcher():
                                     try:
                                         helper.vpkExtractor(
                                             f"{path_style[0]}.vcss_c",
-                                            mpaths.dota_pak01_path,
-                                            mpaths.build_dir,
                                         )
                                     except KeyError:
                                         warnings.append(
@@ -1171,30 +1170,65 @@ def theme():
 
 def dev_mode():
     # escape doesn't work, can't open it back
-    ui.configure_viewport(item="main_viewport", resizable=True, height=600, border=False)
+    ui.configure_viewport(item="main_viewport", resizable=True, height=600)
     ui.configure_viewport(item="primary_window", resizable=True)
-    with ui.window(label="Ugly dev tools panel", pos=(0, 300), width=240, height=300):
+    with ui.window(
+        label="Path and file opener",
+        pos=(0, 300),
+        width=240,
+        height=300,
+        no_resize=True,
+        no_move=True,
+        no_close=True,
+        no_collapse=True,
+    ):
         ui.add_button(
-            label="Open Dota2 Minify folder",
+            label="Path: Dota2 Minify",
             callback=helper.open_dir,
             user_data=os.path.join(mpaths.minify_dota_pak_output_path),
         )
         ui.add_button(
-            label="Open Dota2 folder",
+            label="File: Dota2 Minify pak66 VPK",
             callback=helper.open_dir,
-            user_data=os.path.join(mpaths.steam_dir, "steamapps\\common\\dota 2 beta"),
+            user_data=os.path.join(mpaths.minify_dota_pak_output_path, "pak66_dir.vpk"),
         )
+        ui.add_spacer(width=0, height=10)
         ui.add_button(
-            label="Open Minify folder",
+            label="Path: Minify",
             callback=helper.open_dir,
             user_data=os.path.join(mpaths.minify_dir),
         )
         ui.add_button(
-            label="Open Logs folder",
+            label="Path: Logs",
             callback=helper.open_dir,
             user_data=os.path.join(mpaths.logs_dir),
         )
-        ui.add_spacer(width=0, height=20)
+        ui.add_button(
+            label="Path: Dota2",
+            callback=helper.open_dir,
+            user_data=os.path.join(mpaths.steam_dir, "steamapps\\common\\dota 2 beta"),
+        )
+        ui.add_button(
+            label="File: Dota2 pak01 VPK",
+            callback=helper.open_dir,
+            user_data=mpaths.dota_pak01_path,
+        )
+        ui.add_button(
+            label="File: Dota2 pak01(core) VPK",
+            callback=helper.open_dir,
+            user_data=mpaths.dota_core_pak01_path,
+        )
+
+    with ui.window(
+        label="Tools",
+        pos=(240, 300),
+        width=253,
+        height=300,
+        no_resize=True,
+        no_move=True,
+        no_close=True,
+        no_collapse=True,
+    ):
         ui.add_button(
             label="Select folder to compile",
             callback=lambda: ui.show_item("compile_file_dialog"),
@@ -1211,21 +1245,23 @@ def dev_mode():
             label="Compile files from folder",
             callback=helper.compile,
         )
-        ui.add_spacer(width=0, height=20)
-        ui.add_button(label="Show style editor", callback=ui.show_style_editor)
-        ui.add_button(label="Show debug", callback=ui.show_debug)
-        ui.add_button(label="Show font manager", callback=ui.show_font_manager)
-        ui.add_button(label="Show item registry", callback=ui.show_item_registry)
-        ui.add_button(label="Show metrics", callback=ui.show_metrics)
-
     ui.configure_item("dev", enabled=False)
 
 
 # Creating_main_viewport
+widths = []
+heights = []
+
+for monitor in screeninfo.get_monitors():
+    widths.append(monitor.width)
+    heights.append(monitor.height)
+
 ui.create_viewport(
     title="Minify",
     height=300,
     width=494,
+    x_pos=min(widths) // 2 - 494 // 2,
+    y_pos=min(heights) // 2 - 300 // 2 - 40,
     resizable=False,
     decorated=False,
     vsync=True,

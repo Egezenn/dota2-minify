@@ -2,4 +2,5 @@ dearpygui
 Nuitka
 psutil
 requests
+screeninfo
 vpk

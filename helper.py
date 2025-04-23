@@ -180,9 +180,10 @@ def change_localization(init=False):
                     )
 
 
-def vpkExtractor(path, pak01_dir, build_dir):
-    pak1 = vpk.open(pak01_dir)
-    fullPath = os.path.join(build_dir, path)
+def vpkExtractor(path):
+    # TODO implement functionality to pull from
+    pak1 = vpk.open(mpaths.dota_pak01_path)
+    fullPath = os.path.join(mpaths.build_dir, path)
     if not os.path.exists(fullPath):  # extract files from VPK only once
         add_text_to_terminal(
             f"{localization_dict["extracting_terminal_text_var"]}{path}",
@@ -230,6 +231,7 @@ def processBlacklistDir(index, line, folder, pak01_dir):
     line = line.replace(os.sep, "/")
     pak1 = vpk.open(pak01_dir)
 
+    # TODO: optimize this, it's in 3 for loops
     for filepath in pak1:
         if filepath.startswith(line):
             data.append(filepath)
@@ -297,7 +299,6 @@ def open_dir(sender, app_data, user_data):
 
 
 def compile(sender, app_data, user_data):
-    # try:
     folder = compile_path
     if folder:
         clean_terminal()
@@ -337,11 +338,6 @@ def compile(sender, app_data, user_data):
     else:
         clean_terminal()
         add_text_to_terminal("Select a folder first!", "")
-
-
-# except TypeError:
-#     clean_terminal()
-#     add_text_to_terminal("Select a folder first", "")
 
 
 def select_compile_dir(sender, app_data):
