@@ -10,9 +10,10 @@ mods/test
 
 ## Source2Viewer
 cli-*-*.*
-Source2Viewer-CLI.exe
-libSkiaSharp.dll
+Source2Viewer-CLI*
+libSkiaSharp*
 TinyEXR.Native.dll
+libTinyEXR.Native.so
 
 # Dota2
 steam_appid.txt
