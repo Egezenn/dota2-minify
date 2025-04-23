@@ -1184,39 +1184,56 @@ def dev_mode():
     ):
         ui.add_button(
             label="Path: Dota2 Minify",
-            callback=helper.open_dir,
-            user_data=os.path.join(mpaths.minify_dota_pak_output_path),
+            callback=lambda: helper.open_dir(
+                os.path.join(mpaths.minify_dota_pak_output_path),
+            ),
         )
         ui.add_button(
             label="File: Dota2 Minify pak66 VPK",
-            callback=helper.open_dir,
-            user_data=os.path.join(mpaths.minify_dota_pak_output_path, "pak66_dir.vpk"),
+            callback=lambda: helper.open_dir(
+                os.path.join(mpaths.minify_dota_pak_output_path, "pak66_dir.vpk"),
+            ),
         )
         ui.add_spacer(width=0, height=10)
         ui.add_button(
             label="Path: Minify",
-            callback=helper.open_dir,
-            user_data=os.path.join(mpaths.minify_dir),
+            callback=lambda: helper.open_dir(
+                os.path.join(mpaths.minify_dir),
+            ),
         )
         ui.add_button(
             label="Path: Logs",
-            callback=helper.open_dir,
-            user_data=os.path.join(mpaths.logs_dir),
+            callback=lambda: helper.open_dir(
+                os.path.join(mpaths.logs_dir),
+            ),
         )
         ui.add_button(
             label="Path: Dota2",
-            callback=helper.open_dir,
-            user_data=os.path.join(mpaths.steam_dir, "steamapps\\common\\dota 2 beta"),
+            callback=lambda: helper.open_dir(
+                os.path.join(mpaths.steam_dir, "steamapps\\common\\dota 2 beta"),
+            ),
         )
         ui.add_button(
             label="File: Dota2 pak01 VPK",
-            callback=helper.open_dir,
-            user_data=mpaths.dota_pak01_path,
+            callback=lambda: helper.open_dir(
+                mpaths.dota_pak01_path,
+            ),
         )
         ui.add_button(
             label="File: Dota2 pak01(core) VPK",
-            callback=helper.open_dir,
-            user_data=mpaths.dota_core_pak01_path,
+            callback=lambda: helper.open_dir(
+                mpaths.dota_core_pak01_path,
+            ),
+        )
+        ui.add_spacer(width=0, height=10)
+        ui.add_button(
+            label="Executable: Dota2 Tools",
+            callback=lambda: helper.open_dir(mpaths.dota2_tools_executable, "-language minify -novid -console"),
+        )
+        ui.add_text("* Requires steam to be open")
+        ui.add_button(
+            label="Executable: Dota2",
+            callback=lambda: helper.open_dir(mpaths.dota2_executable, "-language minify -novid -console"),
         )
 
     with ui.window(

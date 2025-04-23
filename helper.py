@@ -288,14 +288,21 @@ def calculate_md5(file_path):
     return md5_hash.hexdigest()
 
 
-def open_dir(sender, app_data, user_data):
-    path = user_data
-    if sys.platform == "win32":
-        os.startfile(user_data)
-    elif sys.platform == "darwin":
-        os.system(f'open "{user_data}"')
+def open_dir(path, args=""):
+    if args:
+        if sys.platform == "win32":
+            os.startfile(path, arguments=args)
+        elif sys.platform == "darwin":
+            os.system(f'open "{path} {args}')
+        else:
+            os.system(f'xdg-open "{path} {args}')
     else:
-        os.system(f'xdg-open "{user_data}"')
+        if sys.platform == "win32":
+            os.startfile(path)
+        elif sys.platform == "darwin":
+            os.system(f'open "{path}"')
+        else:
+            os.system(f'xdg-open "{path}"')
 
 
 def compile(sender, app_data, user_data):

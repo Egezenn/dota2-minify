@@ -14,6 +14,9 @@ Source2Viewer-CLI.exe
 libSkiaSharp.dll
 TinyEXR.Native.dll
 
+# Dota2
+steam_appid.txt
+
 # Byte-compiled / optimized / DLL files
 __pycache__
 *.py[cod]

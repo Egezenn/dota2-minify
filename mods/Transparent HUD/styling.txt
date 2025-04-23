@@ -11,7 +11,7 @@ panorama/styles/hud/dota_hud_inventory @@ .Reborn #inventory_items { background-
 panorama/styles/hud/dota_hud_quick_buy @@ .Reborn .ShopInRange #ShopButton, .Reborn #QuickBuyRows { background-image: none; }
 panorama/styles/hud/dota_hud_shop @@ #GuideFlyoutContainer, #GuidesButton, #HeightLimiterContainer { background-image: none; }
 panorama/styles/hud/dota_hud_stash @@ .Reborn #stash_bg { background-image: none; }
-panorama/styles/hud/dota_hud_stat_branch @@ .EndCap, .BranchDescription { background-image: none; }
+panorama/styles/hud/dota_hud_stat_branch @@ .EndCap, .BranchDescription, .ShowStatBranchAsTooltip .StatBranchCenter { background-image: none; }
 panorama/styles/hud/dota_hud_top_bar @@ .TopBarBackground, #TimeOfDayBG { background-image: none; }
 panorama/styles/hud/hud_reborn @@ .UnitDead #center_bg, #center_bg, #GlyphScanContainer, #left_flare, #minimap_block, #right_flare, #RoshanTimer, #shop_launcher_bg, #PortraitBacker { background-image: none; }
 panorama/styles/shop_item_combines @@ .ShowMainShop DOTAShopItemCombines { background-image: none; }
@@ -33,9 +33,9 @@ panorama/styles/hud/dota_hud_scoreboard @@ DOTAScoreboardPlayer.LocalPlayer { ba
 panorama/styles/hud/dota_hud_stat_branch @@ .AltPressed .DescriptionDrawer.HasDescription,.DescriptionDrawer.HasDescription.DescriptionVisible { visibility: visible; }
 panorama/styles/hud/dota_hud_stat_branch @@ .BranchChoice .StatBonusLabel, .StatBonusDescription { color: #FFFFFF; }
 panorama/styles/hud/dota_hud_stat_branch @@ .BranchChoice.Disabled .StatBonusLabel, .StatBonusDescription { color: #AAAAAA; }
-panorama/styles/hud/dota_hud_stat_branch @@ .BranchDescription { background-color: #000000A0 }
+panorama/styles/hud/dota_hud_stat_branch @@ .BranchDescription { background-color: #000000A0; }
 panorama/styles/hud/dota_hud_stat_branch @@ .LevelBG, #StatUpgradeOption { background-image: none; background-color: none; }
-panorama/styles/hud/dota_hud_stat_branch @@ .StatBranchCenter { background-image: none; background-color: #00000080; }
+panorama/styles/hud/dota_hud_stat_branch @@ .StatBranchCenter { background-image: none; background-color: #000000C0; }
 panorama/styles/hud/dota_hud_stat_branch @@ #UpgradeStat, #StatUpgradeOption { border: 0; }
 panorama/styles/hud/dota_hud_stat_branch @@ DOTAStatBranch:not(.ShowStatBranchAsTooltip) #UpgradeStat.could_level_up #UpgradeStatBG, DOTAStatBranch:not(.ShowStatBranchAsTooltip) .BranchPair.BranchActive.RightBranchActive.LeftBranchActive, DOTAStatBranch:not(.ShowStatBranchAsTooltip) .BranchPair.LeftBranchActive:not(.RightBranchActive), DOTAStatBranch:not(.ShowStatBranchAsTooltip) .BranchPair.RightBranchActive:not(.LeftBranchActive) { background-image: none; background-color: #40251EC0; }
 
@@ -49,7 +49,7 @@ panorama/styles/dota_ui_shop_item @@ #QuickBuyRows #ItemImage { box-shadow: fill
 panorama/styles/hud/dota_hud_ability_panel @@ .InventoryItem.BackpackSlot #ItemImage { margin: 0px; }
 panorama/styles/hud/dota_hud_ability_panel @@ .Reborn .BackpackSlot #ButtonWell { box-shadow: inset #000 0px 0px 0px; }
 panorama/styles/hud/dota_hud_ability_panel @@ .Reborn .FiveAbilities #abilities #ButtonWell, .Reborn .SixAbilities #abilities #ButtonWell { margin-bottom: 5px; }
-panorama/styles/hud/dota_hud_ability_panel @@ .Reborn .InventoryItem #ButtonSize { margin-left: 0px; margin-right: 0px, margin-top: 0px, margin-bottom: 0px; }
+panorama/styles/hud/dota_hud_ability_panel @@ .Reborn .InventoryItem #ButtonSize { margin-left: 0px; margin-right: 0px; margin-top: 0px; margin-bottom: 0px; }
 panorama/styles/hud/dota_hud_ability_panel @@ .Reborn #center_block .InventoryItem.BackpackSlot, #ButtonSize { box-shadow: inset #000000aa 0px 0px 0px 0px; }
 
 panorama/styles/hud/dota_hud_health_mana @@ .Reborn #HealthManaContainer { margin-bottom: 0px; }

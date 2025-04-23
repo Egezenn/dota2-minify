@@ -93,6 +93,8 @@ minify_dota_maps_output_path = os.path.join(minify_dota_pak_output_path, "maps")
 minify_dota_content_path = os.path.join(steam_dir, "steamapps\\common\\dota 2 beta\\content\\dota_minify")
 
 ## base game
+dota2_executable = os.path.join(steam_dir, "steamapps\\common\\dota 2 beta\\game\\bin\\win64\\dota2.exe")
+dota2_tools_executable = os.path.join(steam_dir, "steamapps\\common\\dota 2 beta\\game\\bin\\win64\\dota2cfg.exe")
 dota_core_pak01_path = os.path.join(steam_dir, "steamapps\\common\\dota 2 beta\\game\\core\\pak01_dir.vpk")
 dota_pak01_path = os.path.join(steam_dir, "steamapps\\common\\dota 2 beta\\game\\dota\\pak01_dir.vpk")
 dota_itembuilds_path = os.path.join(steam_dir, "steamapps\\common\\dota 2 beta\\game\\dota\\itembuilds")
