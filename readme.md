@@ -74,7 +74,7 @@ No one has ever been banned for these mods. This project strictly deals with VPK
 - `git clone https://github.com/Egezenn/dota2-minify`
 - `cd dota2-minify`
 - `python -m venv .venv`
-- `.venv\Scripts\activate.bat` or `.venv/bin/activate`
+- `.venv\Scripts\activate.bat` or `source .venv/bin/activate`
 - `pip install -r requirements.txt`
 - `python imgui.py`
 
