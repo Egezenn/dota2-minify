@@ -1052,7 +1052,7 @@ with ui.font_registry():
 
 # Adding mouse handler to ui registry
 with ui.handler_registry():
-    ui.add_mouse_drag_handler(parent="top_bar", button=0, threshold=0.0, callback=drag_viewport)
+    ui.add_mouse_drag_handler(parent="top_bar", button=0, threshold=4, callback=drag_viewport)
     ui.add_key_release_handler(0x20E, callback=close_active_window)
 
 width_discord, height_discord, channels_discord, data_discord = ui.load_image(
