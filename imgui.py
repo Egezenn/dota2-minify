@@ -1316,6 +1316,8 @@ ui.set_frame_callback(1, callback=create_base_ui)  # On first frame execute app_
 
 
 # DearPyGyi Setup
+ui.set_viewport_small_icon("./bin/favicon.ico")
+ui.set_viewport_large_icon("./bin/favicon.ico")
 ui.setup_dearpygui()
 ui.show_viewport()
 ui.start_dearpygui()

@@ -31,8 +31,8 @@
 </div>
 
 <div align="center">
-    <img alt="ss1" src="bin/images/screenshot-1.jpg">
-    <img alt="ss2" src="bin/images/screenshot-2.jpg">
+    <a href="#"><img alt="ss1" src="bin/images/screenshot-1.jpg"></a>
+    <a href="#"><img alt="ss2" src="bin/images/screenshot-2.jpg"></a>
 </div>
 
 ## Is this safe to use?

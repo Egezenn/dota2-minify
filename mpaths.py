@@ -39,13 +39,14 @@ def get_steam_path():
 def handle_non_default_path():
     global steam_dir
     # when dota2 is not inside Steam folder OR host is not on windows, set new steam directory from 'dota2path_minify.txt
-    if not os.path.exists(path_file):
-        with open(path_file, "a+") as file:
-            file.write("")
+    if not steam_dir:
+        if not os.path.exists(path_file):
+            with open(path_file, "a+") as file:
+                file.write("")
 
-    with open(path_file, "r") as file:
-        for line in file:
-            steam_dir = os.path.normpath(line.strip())
+        with open(path_file, "r") as file:
+            for line in file:
+                steam_dir = os.path.normpath(line.strip())
 
     while not steam_dir or not (
         os.path.exists(
