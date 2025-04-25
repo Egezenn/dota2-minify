@@ -10,7 +10,7 @@ path_file = os.path.join(os.getcwd(), "dota2path_minify.txt")
 
 def get_steam_path():
     global steam_dir
-    if platform.system() == "TEST":
+    if platform.system() == "Windows":
         import winreg
 
         try:
