@@ -722,18 +722,16 @@ def version_check():
 
 
 def start_text():
-    ui.add_text(
-        default_value="------------------------------------------------------------------",
-        parent="terminal_window",
-        tag="spacer_start_text_tag",
-    )
     ui.add_text(source="start_text_1_var", parent="terminal_window")
     ui.add_text(source="start_text_2_var", parent="terminal_window")
     ui.add_text(source="start_text_3_var", parent="terminal_window")
     ui.add_text(source="start_text_4_var", parent="terminal_window")
     ui.add_text(source="start_text_5_var", parent="terminal_window")
-    ui.add_text(default_value="", parent="terminal_window")
-    ui.add_text(default_value="", parent="terminal_window")
+    ui.add_text(
+        default_value="------------------------------------------------------------------",
+        parent="terminal_window",
+        tag="spacer_start_text_tag",
+    )
     helper.scroll_to_terminal_end()
 
 
@@ -1022,6 +1020,7 @@ def configure_uninstall_popup():
 def create_base_ui():
     helper.get_available_localizations()
     create_ui()
+    start_text()
     theme()
     helper.change_localization(init=True)
     version_check()
@@ -1038,7 +1037,6 @@ def initiate_conditionals():
     load_state_checkboxes_thread.join()
     create_checkboxes()
     setupButtonState()
-    start_text()
 
 
 # Adding font to the ui registry
@@ -1057,10 +1055,10 @@ with ui.handler_registry():
     ui.add_key_release_handler(0x20E, callback=close_active_window)
 
 width_discord, height_discord, channels_discord, data_discord = ui.load_image(
-    os.path.join(mpaths.img_dir, "Discord-Symbol-White.png")
+    os.path.join(mpaths.img_dir, "Discord.png")
 )
 
-width_git, height_git, channels_git, data_git = ui.load_image(os.path.join(mpaths.img_dir, "github-mark-white.png"))
+width_git, height_git, channels_git, data_git = ui.load_image(os.path.join(mpaths.img_dir, "github.png"))
 
 width_dev, height_dev, channels_dev, data_dev = ui.load_image(os.path.join(mpaths.img_dir, "cog-wheel.png"))
 
