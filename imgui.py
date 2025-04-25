@@ -1283,6 +1283,12 @@ def dev_mode():
             label="Compile files from folder",
             callback=helper.compile,
         )
+        ui.add_spacer(width=0, height=140)
+        ui.add_text(
+            "* You won't be able use any of these (except opening paths) if you're not on Windows because Source2Viewer's GUI and Dota2 Tools aren't crossplatform.",
+            wrap=240,
+        )
+
     ui.configure_item("dev", enabled=False)
 
 
