@@ -1,4 +1,3 @@
-crossfiledialog
 dearpygui
 Nuitka
 psutil

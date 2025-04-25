@@ -599,15 +599,10 @@ def patcher():
             "decompiling_text",
         )
         with open(os.path.join(mpaths.logs_dir, "Source2Viewer-CLI.txt"), "w") as file:
-            s2v_executable = (
-                "Source2Viewer-CLI.exe"
-                if os.path.exists(os.path.join(mpaths.minify_dir, "Source2Viewer-CLI.exe"))
-                else "Source2Viewer-CLI"
-            )
             try:
                 subprocess.run(
                     [
-                        os.path.join(mpaths.minify_dir, s2v_executable),
+                        os.path.join(mpaths.minify_dir, mpaths.s2v_executable),
                         "--input",
                         "build",
                         "--recursive",

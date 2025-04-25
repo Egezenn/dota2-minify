@@ -1,14 +1,16 @@
 import os
 import platform
+import tkinter as tk
 import traceback
+from tkinter import messagebox, filedialog
 
 steam_dir = ""
 path_file = os.path.join(os.getcwd(), "dota2path_minify.txt")
 
 
-def extract_regkey_steam():
+def get_steam_path():
     global steam_dir
-    if platform.system() == "Windows":
+    if platform.system() == "TEST":
         import winreg
 
         try:
@@ -21,7 +23,7 @@ def extract_regkey_steam():
         try:
             steam_path = winreg.QueryValueEx(hkey, "InstallPath")
         except:
-            steam_path = None
+            steam_path = ""
             with open(os.path.join(os.getcwd(), "logs", "registry_query.txt"), "w") as file:
                 file.write(traceback.format_exc())
 
@@ -36,9 +38,16 @@ def extract_regkey_steam():
 
 def handle_non_default_path():
     global steam_dir
-    # when dota2 is not inside Steam folder then set new steam directory from 'dota2path_minify.txt
-    # this text file is created and set by the user in validatefiles.py during startup
-    if not (
+    # when dota2 is not inside Steam folder OR host is not on windows, set new steam directory from 'dota2path_minify.txt
+    if not os.path.exists(path_file):
+        with open(path_file, "a+") as file:
+            file.write("")
+
+    with open(path_file, "r") as file:
+        for line in file:
+            steam_dir = os.path.normpath(line.strip())
+
+    while not steam_dir or not (
         os.path.exists(
             os.path.join(steam_dir, "steamapps", "common", "dota 2 beta", "game", "bin", "win64", "dota2.exe")
         )
@@ -55,18 +64,31 @@ def handle_non_default_path():
             )
         )
     ):
-        # make sure the text file exists
-        if not os.path.exists(path_file):
-            with open(path_file, "a+") as file:
-                file.write("")
+        root = tk.Tk()
+        root.withdraw()
 
-        # load the path from text file
-        with open(path_file, "r") as file:
-            for line in file:
-                steam_dir = line.strip()
+        root.wm_attributes("-topmost", 1)  # Make sure root is topmost
+        choice = messagebox.askokcancel(
+            "Install Path Handler",
+            "We couldn't find your Dota2 install path, please select:\n\n"
+            "Your SteamLibrary folder if you have Dota2 installed elsewhere\n\n"
+            "Steam folder if your OS is not Windows and have Dota2 installed at the default path.",
+            parent=root,
+        )
+        root.lift()
+        root.focus_force()
+
+        if choice:
+            steam_dir = os.path.normpath(filedialog.askdirectory())
+            with open(path_file, "w") as file:
+                file.write(steam_dir)
+        else:
+            quit()
+
+        root.destroy()
 
 
-extract_regkey_steam()
+get_steam_path()
 handle_non_default_path()
 
 # links
@@ -101,6 +123,8 @@ img_dir = os.path.join(bin_dir, "images")
 minify_map_dir = os.path.join(maps_dir, "dota.vpk")
 localization_file_dir = os.path.join(bin_dir, "localization.json")
 locale_file_dir = "locale"
+s2v_executable = "Source2Viewer-CLI.exe" if platform.system() == "Windows" else "Source2Viewer-CLI"
+
 
 # dota2 paths
 ## minify

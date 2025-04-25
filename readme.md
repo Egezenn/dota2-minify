@@ -82,7 +82,6 @@ No one has ever been banned for these mods. This project strictly deals with VPK
 
 For instructions, refer to [here](https://github.com/Egezenn/dota2-minify/wiki/Minify#compiling-minify).
 
-
 ## Developing Your Own Mods
 
 You can create your own mods with Minify
@@ -99,7 +98,6 @@ Once you get comfortable with the workflow you can use Minify to easily patch la
 | [`blacklist.txt`](https://github.com/Egezenn/dota2-minify/wiki/Minify#blacklisttxt) | _Paths_ to files to replace with blanks so they wont appear in game (Particles, Sounds...etc) |
 | [`styling.txt`](https://github.com/Egezenn/dota2-minify/wiki/Minify#stylingtxt)     | Custom CSS you want to apply to the Panorama (Interfaces, Layouts, HUD's...etc)               |
 | `notes_<local>.txt`                                                                 | Include this file to have a details button beside your mod for users to read.                 |
-
 
 ## Thanks
 
@@ -133,7 +131,7 @@ Creation of the base project.
 
 ### [Egezenn](https://github.com/Egezenn)
 
-Taking over the maintainership of the project, implementing automated workflows, improving the functionality, Linux behavior and [more](https://github.com/Egezenn/dota2-minify/commits/main/?author=Egezenn).
+Taking over the maintainership of the project, implementing automated workflows, improving the functionality, Linux port and [more](https://github.com/Egezenn/dota2-minify/commits/main/?author=Egezenn).
 
 <details>
 <summary>Mods</summary>
@@ -190,4 +188,3 @@ Rewrite of the GUI, Russian translations, mod fixes and [more](https://github.co
 [screeninfo](https://github.com/rr-/screeninfo) Used in calculating initial position for the main window. Licensed under MIT license.
 
 [vpk](https://github.com/ValvePython/vpk) Used in creating and getting file content list in VPKs. Licensed under MIT license.
-
