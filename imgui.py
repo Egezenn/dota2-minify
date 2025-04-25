@@ -30,6 +30,7 @@ except:
 
 
 patching = False
+dev_mode_state = -1
 checkboxes = {}
 checkboxes_state = {}
 blacklist_dictionary = {}
@@ -1190,104 +1191,119 @@ def theme():
 
 
 def dev_mode():
-    # escape doesn't work, can't open it back
-    ui.configure_viewport(item="main_viewport", resizable=True, height=600)
-    ui.configure_viewport(item="primary_window", resizable=True)
-    with ui.window(
-        label="Path and file opener",
-        pos=(0, 300),
-        width=240,
-        height=300,
-        no_resize=True,
-        no_move=True,
-        no_close=True,
-        no_collapse=True,
-    ):
-        ui.add_button(
-            label="Path: Dota2 Minify",
-            callback=lambda: helper.open_dir(
-                os.path.join(mpaths.minify_dota_pak_output_path),
-            ),
-        )
-        ui.add_button(
-            label="File: Dota2 Minify pak66 VPK",
-            callback=lambda: helper.open_dir(
-                os.path.join(mpaths.minify_dota_pak_output_path, "pak66_dir.vpk"),
-            ),
-        )
-        ui.add_spacer(width=0, height=10)
-        ui.add_button(
-            label="Path: Minify",
-            callback=lambda: helper.open_dir(
-                os.path.join(mpaths.minify_dir),
-            ),
-        )
-        ui.add_button(
-            label="Path: Logs",
-            callback=lambda: helper.open_dir(
-                os.path.join(mpaths.logs_dir),
-            ),
-        )
-        ui.add_button(
-            label="Path: Dota2",
-            callback=lambda: helper.open_dir(os.path.join(mpaths.steam_dir, "steamapps", "common", "dota 2 beta")),
-        )
-        ui.add_button(
-            label="File: Dota2 pak01 VPK",
-            callback=lambda: helper.open_dir(
-                mpaths.dota_pak01_path,
-            ),
-        )
-        ui.add_button(
-            label="File: Dota2 pak01(core) VPK",
-            callback=lambda: helper.open_dir(
-                mpaths.dota_core_pak01_path,
-            ),
-        )
-        ui.add_spacer(width=0, height=10)
-        ui.add_button(
-            label="Executable: Dota2 Tools",
-            callback=lambda: helper.open_dir(mpaths.dota2_tools_executable, "-language minify -novid -console"),
-        )
-        ui.add_text("* Requires steam to be open")
-        ui.add_button(
-            label="Executable: Dota2",
-            callback=lambda: helper.open_dir(mpaths.dota2_executable, "-language minify -novid -console"),
-        )
+    global dev_mode_state
+    # escape triggers an error
+    if dev_mode_state == -1:
+        ui.configure_viewport(item="main_viewport", resizable=True, height=600)
+        ui.configure_viewport(item="primary_window", resizable=True)
+        with ui.window(
+            label="Path and file opener",
+            tag="opener",
+            pos=(0, 300),
+            width=240,
+            height=300,
+            no_resize=True,
+            no_move=True,
+            no_close=True,
+            no_collapse=True,
+        ):
+            ui.add_button(
+                label="Path: Dota2 Minify",
+                callback=lambda: helper.open_dir(
+                    os.path.join(mpaths.minify_dota_pak_output_path),
+                ),
+            )
+            ui.add_button(
+                label="File: Dota2 Minify pak66 VPK",
+                callback=lambda: helper.open_dir(
+                    os.path.join(mpaths.minify_dota_pak_output_path, "pak66_dir.vpk"),
+                ),
+            )
+            ui.add_spacer(width=0, height=10)
+            ui.add_button(
+                label="Path: Minify",
+                callback=lambda: helper.open_dir(
+                    os.path.join(mpaths.minify_dir),
+                ),
+            )
+            ui.add_button(
+                label="Path: Logs",
+                callback=lambda: helper.open_dir(
+                    os.path.join(mpaths.logs_dir),
+                ),
+            )
+            ui.add_button(
+                label="Path: Dota2",
+                callback=lambda: helper.open_dir(os.path.join(mpaths.steam_dir, "steamapps", "common", "dota 2 beta")),
+            )
+            ui.add_button(
+                label="File: Dota2 pak01 VPK",
+                callback=lambda: helper.open_dir(
+                    mpaths.dota_pak01_path,
+                ),
+            )
+            ui.add_button(
+                label="File: Dota2 pak01(core) VPK",
+                callback=lambda: helper.open_dir(
+                    mpaths.dota_core_pak01_path,
+                ),
+            )
+            ui.add_spacer(width=0, height=10)
+            ui.add_button(
+                label="Executable: Dota2 Tools",
+                callback=lambda: helper.open_dir(mpaths.dota2_tools_executable, "-language minify -novid -console"),
+            )
+            ui.add_text("* Requires steam to be open")
+            ui.add_button(
+                label="Executable: Dota2",
+                callback=lambda: helper.open_dir(mpaths.dota2_executable, "-language minify -novid -console"),
+            )
 
-    with ui.window(
-        label="Tools",
-        pos=(240, 300),
-        width=253,
-        height=300,
-        no_resize=True,
-        no_move=True,
-        no_close=True,
-        no_collapse=True,
-    ):
-        ui.add_button(
-            label="Select folder to compile",
-            callback=lambda: ui.show_item("compile_file_dialog"),
-        )
-        ui.add_file_dialog(
-            show=False,
-            modal=False,
-            min_size=(480, 260),
-            callback=helper.select_compile_dir,
-            tag="compile_file_dialog",
-            directory_selector=True,
-        )
-        ui.add_button(
-            label="Compile files from folder",
-            callback=helper.compile,
-        )
-        ui.add_spacer(width=0, height=140)
-        ui.add_text(
-            "* You won't be able use any of these (except opening paths) if you're not on Windows because Source2Viewer's GUI and Dota2 Tools aren't crossplatform.",
-            wrap=240,
-        )
+        with ui.window(
+            label="Tools",
+            tag="tools",
+            pos=(240, 300),
+            width=253,
+            height=300,
+            no_resize=True,
+            no_move=True,
+            no_close=True,
+            no_collapse=True,
+        ):
+            ui.add_button(
+                label="Select folder to compile",
+                callback=lambda: ui.show_item("compile_file_dialog"),
+            )
+            ui.add_file_dialog(
+                show=False,
+                modal=False,
+                min_size=(480, 260),
+                callback=helper.select_compile_dir,
+                tag="compile_file_dialog",
+                directory_selector=True,
+            )
+            ui.add_button(
+                label="Compile files from folder",
+                callback=helper.compile,
+            )
+            ui.add_spacer(width=0, height=140)
+            ui.add_text(
+                "* You won't be able use any of these (except opening paths) if you're not on Windows because Source2Viewer's GUI and Dota2 Tools aren't crossplatform.",
+                wrap=240,
+            )
+        dev_mode_state = 1
 
-    ui.configure_item("dev", enabled=False)
+    elif dev_mode_state == 0:
+        ui.configure_viewport(item="main_viewport", resizable=True, height=300)
+        ui.configure_item("opener", show=False)
+        ui.configure_item("tools", show=False)
+        dev_mode_state = 1
+
+    else:
+        ui.configure_viewport(item="main_viewport", resizable=True, height=600)
+        ui.configure_item("opener", show=True)
+        ui.configure_item("tools", show=True)
+        dev_mode_state = 0
 
 
 # Creating_main_viewport
