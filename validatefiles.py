@@ -14,7 +14,7 @@ class Requirements:
 
     def a_isSteamFound(self):
         if not mpaths.steam_dir:
-            mpaths.toggle_flag = True
+            self.toggle_flag = True
             helper.add_text_to_terminal(
                 text=helper.localization_dict["no_steam_found_terminal_text_var"],
                 tag="error_steam_not_found_text_tag",
@@ -79,7 +79,7 @@ class Requirements:
             )
 
     def f_isDllFound(self):
-        if not ((os.path.exists(mpaths.s2v_skia_path)) and (os.path.exists(mpaths.s2v_tinyexr_path))):
+        if not (os.path.exists(mpaths.s2v_skia_path)) and (os.path.exists(mpaths.s2v_tinyexr_path)):
             self.toggle_flag = True
             helper.add_text_to_terminal(
                 text=helper.localization_dict["error_no_dll_found_terminal_text_var"],

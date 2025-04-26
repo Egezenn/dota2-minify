@@ -231,8 +231,8 @@ def setupSystem():
     try:
         if not (
             os.path.exists(mpaths.s2v_executable_path)
-            or os.path.exists(mpaths.s2v_skia_path)
-            or os.path.exists(mpaths.s2v_tinyexr_path)
+            and os.path.exists(mpaths.s2v_skia_path)
+            and os.path.exists(mpaths.s2v_tinyexr_path)
         ):
             machine = platform.machine().lower()
             architecture = platform.architecture()[0]
