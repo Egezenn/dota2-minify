@@ -1,0 +1,3 @@
+Simplifica todas las habilidades y objetos del juego.
+
+* Solo modifica las habilidades predeterminadas

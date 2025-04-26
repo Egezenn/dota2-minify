@@ -1,221 +1,276 @@
 {
   "button_patch": {
     "EN": "Patch",
-    "RU": "Патч"
+    "RU": "Патч",
+    "ES": "Parchear"
   },
   "button_select_mods": {
     "EN": "Select Mods",
-    "RU": "Выбрать Моды"
+    "RU": "Выбрать Моды",
+    "ES": "Elegir Mods"
   },
   "checking_map_file_var": {
     "EN": "-> Checking map file...",
-    "RU": "-> Проверяем файл карты..."
+    "RU": "-> Проверяем файл карты...",
+    "ES": "-> Verificando el archivo del mapa..."
   },
   "update_popup_text_1_tag": {
     "EN": "New update is now available!",
-    "RU": "Новое обновление доступно!"
+    "RU": "Новое обновление доступно!",
+    "ES": "¡Una nueva actualización está disponible!"
   },
   "update_popup_text_2_tag": {
     "EN": "Would you like to go to the download page?",
-    "RU": "Перейти на страницу загрузки?"
+    "RU": "Перейти на страницу загрузки?",
+    "ES": "¿Te gustaría ir a la página de descarga?"
   },
   "start_text_1_var": {
     "EN": "Want to contribute to the project's growth?",
-    "RU": "Хочешь помочь проекту развиваться?"
+    "RU": "Хочешь помочь проекту развиваться?",
+    "ES": "¿Quieres contribuir al crecimiento del proyecto?"
   },
   "start_text_2_var": {
     "EN": "-> Join our Discord community!",
-    "RU": "-> Заходи в наше Дискорд сообщество!"
+    "RU": "-> Заходи в наше Дискорд сообщество!",
+    "ES": "-> ¡Únete a nuestra comunidad de Discord!"
   },
   "start_text_3_var": {
     "EN": "-> Share Minify with your friends and online groups",
-    "RU": "-> Делись Minify со своими друзьями и сообществами"
+    "RU": "-> Делись Minify со своими друзьями и сообществами",
+    "ES": "-> Comparte Minify con tus amigos y grupos en línea"
   },
   "start_text_4_var": {
     "EN": "-> Star the project on GitHub",
-    "RU": "-> Ставь звездочку проекту на GitHub"
+    "RU": "-> Ставь звездочку проекту на GitHub",
+    "ES": "-> Dale una estrella al proyecto en GitHub"
   },
   "start_text_5_var": {
     "EN": "-> Create and maintain mods for this project",
-    "RU": "-> Создавай и поддерживай моды для этого проекта"
+    "RU": "-> Создавай и поддерживай моды для этого проекта",
+    "ES": "-> Crea y mantén mods para este proyecto"
   },
   "details_button_label_var": {
     "EN": "Details",
-    "RU": "Подробнее"
+    "RU": "Подробнее",
+    "ES": "Detalles"
   },
   "mod_selection_window_var": {
     "EN": "Mod Selection Menu",
-    "RU": "Меню Выбора Модов"
+    "RU": "Меню Выбора Модов",
+    "ES": "Menú de Selección de Mods"
   },
   "button_uninstall": {
     "EN": "Uninstall",
-    "RU": "Удалить Моды"
+    "RU": "Удалить Моды",
+    "ES": "Desinstalar"
   },
   "remove_mods_text_tag": {
     "EN": "Remove all mods?",
-    "RU": "Удалить все моды?"
+    "RU": "Удалить все моды?",
+    "ES": "¿Eliminar todos los mods?"
   },
   "uninstall_confirm_button": {
     "EN": "Yes",
-    "RU": "Да"
+    "RU": "Да",
+    "ES": "Si"
   },
   "uninstall_cancel_button": {
     "EN": "No",
-    "RU": "Нет"
+    "RU": "Нет",
+    "ES": "No"
   },
   "update_popup_yes_button": {
     "EN": "Yes",
-    "RU": "Да"
+    "RU": "Да",
+    "ES": "Si"
   },
   "update_popup_no_button": {
     "EN": "No",
-    "RU": "Нет"
+    "RU": "Нет",
+    "ES": "No"
   },
   "installing_terminal_text_var": {
     "EN": "-> Installing",
-    "RU": "-> Установка"
+    "RU": "-> Установка",
+    "ES": "-> Instalando"
   },
   "extracting_terminal_text_var": {
     "EN": "   Extracting: ",
-    "RU": "   Извлечение: "
+    "RU": "   Извлечение: ",
+    "ES": "   Extrayendo: "
   },
   "decompiling_terminal_text_var": {
     "EN": "-> Decompiling",
-    "RU": "-> Декомпиляция"
+    "RU": "-> Декомпиляция",
+    "ES": "-> Descompilando"
   },
   "compiling_terminal_text_var": {
     "EN": "-> Compiling",
-    "RU": "-> Компиляция"
+    "RU": "-> Компиляция",
+    "ES": "-> Compilando"
   },
   "patching_terminal_text_var": {
     "EN": "-> Patching",
-    "RU": "-> Применение патча"
+    "RU": "-> Применение патча",
+    "ES": "-> Aplicando parche"
   },
   "success_terminal_text_var": {
     "EN": "Patch was successful!",
-    "RU": "Патч установлен успешно!"
+    "RU": "Патч установлен успешно!",
+    "ES": "¡El parche se aplicó con éxito!"
   },
   "launch_option_text_var": {
     "EN": "Remember to add '-language minify' to Dota 2 launch options",
-    "RU": "Не забудь добавить '-language minify' в параметры запуска Dota 2"
+    "RU": "Не забудь добавить '-language minify' в параметры запуска Dota 2",
+    "ES": "Recuerda agregar '-language minify' a las opciones de lanzamiento de Dota 2"
   },
   "failure_terminal_text_var": {
     "EN": "Patching failed!",
-    "RU": "Ошибка при установке патча!"
+    "RU": "Ошибка при установке патча!",
+    "ES": "¡Error al aplicar el parche!"
   },
   "check_logs_terminal_text_var": {
     "EN": "Check 'logs\\crashlog.txt' for more info.",
-    "RU": "Проверь 'logs\\crashlog.txt' для детальной информации."
+    "RU": "Проверь 'logs\\crashlog.txt' для детальной информации.",
+    "ES": "Revisa 'logs\\crashlog.txt' para más información."
   },
   "downloading_cli_terminal_text_var": {
     "EN": "-> Downloading Source2Viewer-CLI...",
-    "RU": "-> Скачивание Source2Viewer-CLI..."
+    "RU": "-> Скачивание Source2Viewer-CLI...",
+    "ES": "-> Descargando Source2Viewer-CLI..."
   },
   "downloaded_cli_terminal_text_var": {
     "EN": "-> Downloaded ",
-    "RU": "-> Завершили скачивание "
+    "RU": "-> Завершили скачивание ",
+    "ES": "-> Descargado "
   },
   "extracted_cli_terminal_text_var": {
     "EN": "-> Extracted ",
-    "RU": "-> Завершена распаковка "
+    "RU": "-> Завершена распаковка ",
+    "ES": "-> Extraído "
   },
   "no_instructions_cli_terminal_text_var": {
     "EN": "Error: Instructions to download Source2Viewer binaries for your system is not available yet.",
-    "RU": "Ошибка: Инструкции для скачивания исходных файлов Source2Viewer для твоей системы еще не доступны."
+    "RU": "Ошибка: Инструкции для скачивания исходных файлов Source2Viewer для твоей системы еще не доступны.",
+    "ES": "Error: Las instrucciones para descargar los binarios de Source2Viewer para tu sistema aún no están disponibles."
   },
   "failed_to_start_terminal_text_var": {
     "EN": "Failed to start!",
-    "RU": "Не удалось запустить!"
+    "RU": "Не удалось запустить!",
+    "ES": "¡No se pudo iniciar!"
   },
   "check_crashlog_terminal_text_var": {
     "EN": "Check 'logs\\crashlog.txt' for more info.",
-    "RU": "Проверь 'logs\\crashlog.txt' для детальной информации."
+    "RU": "Проверь 'logs\\crashlog.txt' для детальной информации.",
+    "ES": "Revisa 'logs\\crashlog.txt' para más información."
   },
   "mods_removed_terminal_text_var": {
     "EN": "All Minify mods have been removed.",
-    "RU": "Все Minify моды были удалены."
+    "RU": "Все Minify моды были удалены.",
+    "ES": "Se han eliminado todos los mods de Minify."
   },
   "close_dota_terminal_text_var": {
     "EN": "Please close Dota 2 first and then patch.",
-    "RU": "Пожалуйста сначала закрой Dota 2, после чего приступай к патчу."
+    "RU": "Пожалуйста сначала закрой Dota 2, после чего приступай к патчу.",
+    "ES": "Por favor, cierra Dota 2 primero y luego aplica el parche."
   },
   "downloaded_latest_opendotaguides_terminal_text_var": {
     "EN": "   Downloaded latest OpenDotaGuides guides.",
-    "RU": "   Скачали последние гайды OpenDotaGuides."
+    "RU": "   Скачали последние гайды OpenDotaGuides.",
+    "ES": "   Se descargaron las últimas guías de OpenDotaGuides."
   },
   "replaced_guides_terminal_text_var": {
     "EN": "   Replaced default guides with OpenDotaGuides.",
-    "RU": "   Заменили стандартные гайды на OpenDotaGuides."
+    "RU": "   Заменили стандартные гайды на OpenDotaGuides.",
+    "ES": "   Se reemplazaron las guías predeterminadas por OpenDotaGuides."
   },
   "failed_to_download_opendotaguides_terminal_text_var": {
     "EN": "-> Failed to download latest OpenDotaGuides.",
-    "RU": "-> Не удалось скачать последние OpenDotaGuides."
+    "RU": "-> Не удалось скачать последние OpenDotaGuides.",
+    "ES": "-> No se pudo descargar las últimas guías de OpenDotaGuides."
   },
   "minify_encountered_errors_terminal_text_var": {
     "EN": "Minify encountered errors. Check Minify\\logs\\warnings.txt for details.",
-    "RU": "Minify столкнулся с ошибками. Проверь Minify\\logs\\warnings.txt для подробностей."
+    "RU": "Minify столкнулся с ошибками. Проверь Minify\\logs\\warnings.txt для подробностей.",
+    "ES": "Minify encontró errores. Revisa Minify\\logs\\warnings.txt para más detalles."
   },
   "updating_map_file_terminal_text_var": {
     "EN": "-> Updating map file...",
-    "RU": "-> Обновляем файл карты..."
+    "RU": "-> Обновляем файл карты...",
+    "ES": "-> Actualizando el archivo del mapa..."
   },
   "map_file_uptodate_terminal_text_var": {
     "EN": "-> Map file is up to date!",
-    "RU": "-> Файл карты актуален!"
+    "RU": "-> Файл карты актуален!",
+    "ES": "-> ¡El archivo del mapa está actualizado!"
   },
   "path_saved_terminal_text_var": {
     "EN": "Path saved, please restart Minify",
-    "RU": "Путь сохранен, пожалуйста перезапусти Minify"
+    "RU": "Путь сохранен, пожалуйста перезапусти Minify",
+    "ES": "Ruta guardada, por favor reinicia Minify"
   },
   "path_canceled_terminal_text_var": {
     "EN": "Canceled, you did not select a folder.",
-    "RU": "Отмена, ты не указал папку."
+    "RU": "Отмена, ты не указал папку.",
+    "ES": "Cancelado, no seleccionaste una carpeta."
   },
   "no_steam_found_terminal_text_var": {
     "EN": "Error: Steam is not installed on this system.",
-    "RU": "Ошибка: Steam не установлен на этой системе."
+    "RU": "Ошибка: Steam не установлен на этой системе.",
+    "ES": "Error: Steam no está instalado en este sistema."
   },
   "no_dota_found_terminal_text_var": {
     "EN": "Error: Dota 2 Not Found.",
-    "RU": "Ошибка: Dota 2 не найдена."
+    "RU": "Ошибка: Dota 2 не найдена.",
+    "ES": "Error: Dota 2 no encontrado."
   },
   "no_dota_found_path_terminal_text_var": {
     "EN": "File not found in:",
-    "RU": "Файл не найден в:"
+    "RU": "Файл не найден в:",
+    "ES": "Archivo no encontrado en:"
   },
   "please_select_path_terminal_text_var": {
     "EN": "Please select the location of your 'SteamLibrary' folder, for example 'D:\\SteamLibrary'.",
-    "RU": "Пожалуйста укажи где находится папка 'SteamLibrary', например 'D:\\SteamLibrary'."
+    "RU": "Пожалуйста укажи где находится папка 'SteamLibrary', например 'D:\\SteamLibrary'.",
+    "ES": "Por favor selecciona la ubicación de tu carpeta 'SteamLibrary', por ejemplo 'D:\\SteamLibrary'."
   },
   "error_please_close_dota_terminal_text_var": {
     "EN": "Error: Please close Dota 2 and restart Minify.",
-    "RU": "Ошибка: Пожалуйста закрой Dota 2 и перезапусти Minify."
+    "RU": "Ошибка: Пожалуйста закрой Dota 2 и перезапусти Minify.",
+    "ES": "Error: Por favor cierra Dota 2 y reinicia Minify."
   },
   "error_no_cli_found_terminal_text_var": {
     "EN": "Error: 'Source2Viewer-CLI.exe' not found.",
-    "RU": "Ошибка: 'Source2Viewer-CLI.exe' не найден."
+    "RU": "Ошибка: 'Source2Viewer-CLI.exe' не найден.",
+    "ES": "Error: 'Source2Viewer-CLI.exe' no encontrado."
   },
   "error_no_dll_found_terminal_text_var": {
     "EN": "Error: 'libSkiaSharp.dll' not found.",
-    "RU": "Ошибка: 'libSkiaSharp.dll' не найден."
+    "RU": "Ошибка: 'libSkiaSharp.dll' не найден.",
+    "ES": "Error: 'libSkiaSharp.dll' no encontrado."
   },
   "error_no_workshop_tools_found_terminal_text_var": {
     "EN": "Some mods have been unavailable because you don't have Workshop Tools installed.",
-    "RU": "Некоторые моды недоступны, так как Workshop Tools не установлены."
+    "RU": "Некоторые моды недоступны, так как Workshop Tools не установлены.",
+    "ES": "Algunos mods no están disponibles porque no tienes instaladas las herramientas de Workshop."
   },
   "error_no_files_folder_found_terminal_text_var": {
     "EN": "Missing 'files' folder in ",
-    "RU": "Отсутсвует папка 'files' в "
+    "RU": "Отсутсвует папка 'files' в ",
+    "ES": "Falta la carpeta 'files' en "
   },
   "error_no_blacklist_txt_found_terminal_text_var": {
     "EN": "Missing 'blacklist.txt' file in ",
-    "RU": "Отсутсвует файл 'blacklist.txt' в "
+    "RU": "Отсутсвует файл 'blacklist.txt' в ",
+    "ES": "Falta el archivo 'blacklist.txt' en "
   },
   "error_no_styling_txt_found_terminal_text_var": {
     "EN": "Missing 'styling.txt' file in ",
-    "RU": "Отсутсвует файл 'styling.txt' в "
+    "RU": "Отсутсвует файл 'styling.txt' в ",
+    "ES": "Falta el archivo 'styling.txt' en "
   },
   "error_no_execution_permission_s2v_var": {
-    "EN": "Give execution permission to Source2Viewer!"
+    "EN": "Give execution permission to Source2Viewer!",
+    "ES": "¡Dale permiso de ejecución a Source2Viewer!"
   }
 }

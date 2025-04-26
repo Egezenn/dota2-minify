@@ -1,0 +1,3 @@
+Convierte todos los árboles en arbustos circulares pequeños.
+
+* Requiere el terreno predeterminado
