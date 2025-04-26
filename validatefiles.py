@@ -71,7 +71,7 @@ class Requirements:
             )
 
     def e_isSource2ViewerFound(self):
-        if not (os.path.exists(os.path.join(mpaths.s2v_executable_path))):
+        if not (os.path.exists(mpaths.s2v_executable_path)):
             self.toggle_flag = True
             helper.add_text_to_terminal(
                 text=helper.localization_dict["error_no_cli_found_terminal_text_var"],
