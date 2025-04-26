@@ -6,11 +6,12 @@ from tkinter import messagebox, filedialog
 
 steam_dir = ""
 path_file = os.path.join(os.getcwd(), "dota2path_minify.txt")
+OS = platform.system()
 
 
 def get_steam_path():
     global steam_dir
-    if platform.system() == "Windows":
+    if OS == "Windows":
         import winreg
 
         try:
@@ -124,8 +125,16 @@ img_dir = os.path.join(bin_dir, "images")
 minify_map_dir = os.path.join(maps_dir, "dota.vpk")
 localization_file_dir = os.path.join(bin_dir, "localization.json")
 locale_file_dir = "locale"
-s2v_executable = "Source2Viewer-CLI.exe" if platform.system() == "Windows" else "Source2Viewer-CLI"
-
+s2v_executable = "Source2Viewer-CLI.exe" if OS == "Windows" else "Source2Viewer-CLI"
+s2v_executable_path = os.path.join(minify_dir, s2v_executable)
+s2v_skia_path = (
+    os.path.join(minify_dir, "libSkiaSharp.dll") if OS == "Windows" else os.path.join(minify_dir, "libSkiaSharp.so")
+)
+s2v_tinyexr_path = (
+    os.path.join(minify_dir, "TinyEXR.Native.dll")
+    if OS == "Windows"
+    else os.path.join(minify_dir, "libTinyEXR.Native.so")
+)
 
 # dota2 paths
 ## minify

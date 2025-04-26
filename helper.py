@@ -118,7 +118,7 @@ def change_localization(init=False):
             if os.path.exists(mpaths.locale_file_dir):
                 with open(mpaths.locale_file_dir, "r") as file:
                     locale = file.readline()
-                    ui.configure_item("lang_select", default_value=f"{locale}")
+                    ui.configure_item("lang_select", default_value=locale)
             else:
                 locale = ui.get_value("lang_select")
                 with open(mpaths.locale_file_dir, "w") as file:
@@ -161,7 +161,7 @@ def change_localization(init=False):
                     data = file.read()
                 ui.configure_item(tag_id, default_value=data)
             else:
-                note_path = os.path.join(mod_path, f"notes_en.txt")
+                note_path = os.path.join(mod_path, "notes_en.txt")
                 with open(note_path, "r", encoding="utf-8") as file:
                     data = file.read()
                 ui.configure_item(tag_id, default_value=data)

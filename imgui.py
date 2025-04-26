@@ -2,6 +2,7 @@ import json
 import os
 import platform
 import shutil
+import stat
 import subprocess
 import threading
 import time
@@ -195,11 +196,11 @@ def create_checkboxes():
             no_resize=True,
             no_move=True,
             no_collapse=True,
-            label=f"{name}",
+            label=name,
         )
         ui.add_string_value(
             parent="details_tags",
-            default_value=f"{data}",
+            default_value=data,
             tag=f"{name}_details_text_value_tag",
         )
         ui.add_text(
@@ -229,21 +230,17 @@ def setupSystem():
     ]  # private methods start with _
     try:
         if not (
-            (
-                os.path.exists(os.path.join(mpaths.minify_dir, "Source2Viewer-CLI.exe"))
-                or os.path.exists(os.path.join(mpaths.minify_dir, "Source2Viewer-CLI"))
-            )
-            or os.path.exists(os.path.join(mpaths.minify_dir, "libSkiaSharp.dll"))
-            or os.path.exists(os.path.join(mpaths.minify_dir, "TinyEXR.Native.dll"))
+            os.path.exists(mpaths.s2v_executable_path)
+            or os.path.exists(mpaths.s2v_skia_path)
+            or os.path.exists(mpaths.s2v_tinyexr_path)
         ):
-            system = platform.system()
             machine = platform.machine().lower()
             architecture = platform.architecture()[0]
 
-            if system == "Windows":
+            if mpaths.OS == "Windows":
                 archive = mpaths.s2v_latest_windows_x64
 
-            elif system == "Linux":
+            elif mpaths.OS == "Linux":
                 if machine in ["arm", "aarch64"]:
                     if architecture == "64bit":
                         archive = mpaths.s2v_latest_linux_arm_x64
@@ -516,12 +513,10 @@ def patcher():
 
                                 # blacklist_dictionary["blacklist-key{}".format(index+1)] = path, extension
 
-                                if not os.path.exists(
-                                    os.path.join(mpaths.minify_dota_compile_output_path, os.path.dirname(path))
-                                ):
-                                    os.makedirs(
-                                        os.path.join(mpaths.minify_dota_compile_output_path, os.path.dirname(path))
-                                    )
+                                os.makedirs(
+                                    os.path.join(mpaths.minify_dota_compile_output_path, os.path.dirname(path)),
+                                    exist_ok=True,
+                                )
 
                                 try:
                                     shutil.copy(
@@ -573,8 +568,7 @@ def patcher():
                                         )  ###???
                                     )
 
-                                if not os.path.exists(os.path.join(mpaths.build_dir, os.path.dirname(path))):
-                                    os.makedirs(os.path.join(mpaths.build_dir, os.path.dirname(path)))
+                                os.makedirs(os.path.join(mpaths.build_dir, os.path.dirname(path)), exist_ok=True)
 
                                 for key, path_style in list(styling_dictionary.items()):
                                     try:
@@ -600,10 +594,13 @@ def patcher():
             "decompiling_text",
         )
         with open(os.path.join(mpaths.logs_dir, "Source2Viewer-CLI.txt"), "w") as file:
+            if mpaths.OS == "Linux" and not os.access(mpaths.s2v_executable_path, os.X_OK):
+                current_permissions = os.stat(mpaths.s2v_executable_path).st_mode
+                os.chmod(mpaths.s2v_executable, current_permissions | stat.S_IXUSR | stat.S_IXGRP | stat.S_IXOTH)
             try:
                 subprocess.run(
                     [
-                        os.path.join(mpaths.minify_dir, mpaths.s2v_executable),
+                        mpaths.s2v_executable_path,
                         "--input",
                         "build",
                         "--recursive",
@@ -893,7 +890,7 @@ def create_ui():
         modal=False,
         pos=(0, 0),
         tag="mod_menu",
-        label=f"{helper.mod_selection_window_var}",
+        label=helper.mod_selection_window_var,
         menubar=False,
         no_title_bar=False,
         no_move=True,
@@ -1042,11 +1039,11 @@ def initiate_conditionals():
 
 # Adding font to the ui registry
 with ui.font_registry():
-    with ui.font(f"{mpaths.bin_dir}/FiraMono-Medium.ttf", 14) as main_font:
+    with ui.font(os.path.join(mpaths.bin_dir, "FiraMono-Medium.ttf"), 14) as main_font:
         ui.add_font_range_hint(ui.mvFontRangeHint_Default)
         ui.add_font_range_hint(ui.mvFontRangeHint_Cyrillic)
         ui.bind_font(main_font)
-    with ui.font(f"{mpaths.bin_dir}/FiraMono-Medium.ttf", 16) as combo_font:
+    with ui.font(os.path.join(mpaths.bin_dir, "FiraMono-Medium.ttf"), 16) as combo_font:
         ui.add_font_range_hint(ui.mvFontRangeHint_Default)
         ui.add_font_range_hint(ui.mvFontRangeHint_Cyrillic)
 

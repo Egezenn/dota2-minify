@@ -1,5 +1,4 @@
 import os
-import platform
 import shutil
 
 import psutil
@@ -22,7 +21,7 @@ class Requirements:
             )
 
     def b_isDotaInstallFound(self):
-        if platform.system() == "Windows":
+        if mpaths.OS == "Windows":
             dota2path = os.path.normpath(
                 os.path.join(
                     mpaths.steam_dir,
@@ -35,7 +34,7 @@ class Requirements:
                     "dota2.exe",
                 )
             )
-        elif platform.system() == "Linux":
+        elif mpaths.OS == "Linux":
             dota2path = os.path.normpath(
                 os.path.join(
                     mpaths.steam_dir, "steamapps", "common", "dota 2 beta", "game", "bin", "linuxsteamrt64", "dota2"
@@ -72,10 +71,7 @@ class Requirements:
             )
 
     def e_isSource2ViewerFound(self):
-        if not (
-            os.path.exists(os.path.join(mpaths.minify_dir, "Source2Viewer-CLI.exe"))
-            or os.path.exists(os.path.join(mpaths.minify_dir, "Source2Viewer-CLI"))
-        ):
+        if not (os.path.exists(os.path.join(mpaths.s2v_executable_path))):
             self.toggle_flag = True
             helper.add_text_to_terminal(
                 text=helper.localization_dict["error_no_cli_found_terminal_text_var"],
@@ -83,20 +79,11 @@ class Requirements:
             )
 
     def f_isDllFound(self):
-        if not (
-            (
-                os.path.exists(os.path.join(mpaths.minify_dir, "libSkiaSharp.dll"))
-                or os.path.exists(os.path.join(mpaths.minify_dir, "libSkiaSharp.so"))
-            )
-            and (
-                os.path.exists(os.path.join(mpaths.minify_dir, "TinyEXR.Native.dll"))
-                or os.path.exists(os.path.join(mpaths.minify_dir, "libTinyEXR.Native.so"))
-            )
-        ):
+        if not ((os.path.exists(mpaths.s2v_skia_path)) and (os.path.exists(mpaths.s2v_tinyexr_path))):
             self.toggle_flag = True
             helper.add_text_to_terminal(
                 text=helper.localization_dict["error_no_dll_found_terminal_text_var"],
-                tag="error_libskiasharp.dll_not_found_text_tag",
+                tag="error_dlls_not_found_text_tag",
             )
 
     def g_isCompilerFound(self):
