@@ -94,7 +94,7 @@ get_steam_path()
 handle_non_default_path()
 
 # links
-version_query = "https://raw.githubusercontent.com/Egezenn/dota2-minify/refs/heads/stable/version"
+version_query = "https://raw.githubusercontent.com/Egezenn/dota2-minify/refs/heads/main/version"
 discord = "https://discord.com/invite/2YDnqpbcKM"
 latest_release = "https://github.com/Egezenn/dota2-minify/releases/latest"
 s2v_latest_windows_x64 = (
