@@ -1,0 +1,1 @@
+Muestra tu networth actual (oro total) en el panel de estadísticas rápidas.
