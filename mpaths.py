@@ -13,12 +13,23 @@ OS = platform.system()
 def find_library_from_file():
     global steam_dir
     path_from_txt = ""
-    with open(path_file, "r") as file:
-        for line in file:
-            path_from_txt = os.path.normpath(line.strip())
-    with open(os.path.join(steam_dir, "config", "libraryfolders.vdf"), "r", encoding="utf-8") as dump:
-        data = vdf.load(dump)
-        paths = get_steam_library_paths(data)
+
+    try:
+        with open(path_file, "r") as file:
+            for line in file:
+                path_from_txt = os.path.normpath(line.strip())
+    except Exception as error:
+        with open(os.path.join(logs_dir, "crashlog.txt"), "w") as file:
+            file.write(f"Error reading {path_file}: {error}")
+
+    try:
+        with open(os.path.join(steam_dir, "config", "libraryfolders.vdf"), "r", encoding="utf-8") as dump:
+            data = vdf.load(dump)
+            paths = get_steam_library_paths(data)
+    except Exception as error:
+        with open(os.path.join(logs_dir, "crashlog.txt"), "w") as file:
+            file.write(f"Error reading libraryfolders.vdf: {error}")
+
     for path in paths:
         if os.path.exists(
             os.path.join(path, "steamapps", "common", "dota 2 beta", "game", "bin", "win64", "dota2.exe")
