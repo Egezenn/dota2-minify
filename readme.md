@@ -191,6 +191,6 @@ Spanish translation.
 
 [screeninfo](https://github.com/rr-/screeninfo) Used in calculating initial position for the main window. Licensed under MIT license.
 
-[vpk](https://github.com/ValvePython/vpk) Used in creating and getting file content list in VPKs. Licensed under MIT license.
+[vdf](https://github.com/ValvePython/vdf) Used in serializing VDFs. Licensed under MIT license.
 
-[vdf](https://github.com/ValvePython/vdf) Used in serializing VDFs. Licensed under MIT license
+[vpk](https://github.com/ValvePython/vpk) Used in creating and getting file content list in VPKs. Licensed under MIT license.
