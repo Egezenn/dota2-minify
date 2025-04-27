@@ -93,12 +93,13 @@ def handle_non_default_path():
             with open(path_file, "a+") as file:
                 file.write("")
 
+        if OS == "Windows":
+            # read vdf from steam install path
+            find_library_from_file()
+
         with open(path_file, "r") as file:
             for line in file:
                 steam_dir = os.path.normpath(line.strip())
-
-        if OS == "Windows":
-            find_library_from_file()
 
     while not steam_dir or not (
         os.path.exists(
