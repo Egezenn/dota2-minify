@@ -18,6 +18,7 @@ class Requirements:
             helper.add_text_to_terminal(
                 text=helper.localization_dict["no_steam_found_terminal_text_var"],
                 tag="error_steam_not_found_text_tag",
+                type="error",
             )
 
     def b_isDotaInstallFound(self):
@@ -26,16 +27,17 @@ class Requirements:
         if not os.path.exists(dota2path):
             self.toggle_flag = True
             helper.add_text_to_terminal(
-                helper.localization_dict["no_dota_found_terminal_text_var"],
-                "dota_not_found_text_1_tag",
+                helper.localization_dict["no_dota_found_terminal_text_var"], "dota_not_found_text_1_tag", type="error"
             )
             helper.add_text_to_terminal(
                 f'{helper.localization_dict["no_dota_found_path_terminal_text_var"]}\n\n"{dota2path}"\n\n',
                 "dota_not_found_text_2_tag",
+                type="warning",
             )
             helper.add_text_to_terminal(
                 f"{helper.localization_dict["please_select_path_terminal_text_var"]}",
                 "dota_not_found_text_3_tag",
+                type="warning",
             )
 
     def c_isMinifyFolderPresent(self):
@@ -48,6 +50,7 @@ class Requirements:
             helper.add_text_to_terminal(
                 text=helper.localization_dict["error_please_close_dota_terminal_text_var"],
                 tag="please_close_dota_text_tag",
+                type="error",
             )
 
     def e_isSource2ViewerFound(self):
@@ -56,6 +59,7 @@ class Requirements:
             helper.add_text_to_terminal(
                 text=helper.localization_dict["error_no_cli_found_terminal_text_var"],
                 tag="error_s2v_not_found_text_tag",
+                type="error",
             )
 
     def f_isDllFound(self):
@@ -64,6 +68,7 @@ class Requirements:
             helper.add_text_to_terminal(
                 text=helper.localization_dict["error_no_dll_found_terminal_text_var"],
                 tag="error_dlls_not_found_text_tag",
+                type="error",
             )
 
     def g_isCompilerFound(self):
@@ -72,6 +77,7 @@ class Requirements:
             helper.add_text_to_terminal(
                 text=helper.localization_dict["error_no_workshop_tools_found_terminal_text_var"],
                 tag="no_workshop_tools_found_text_tag",
+                type="warning",
             )
         else:
             helper.workshop_installed = True
@@ -85,6 +91,7 @@ class Requirements:
                 helper.add_text_to_terminal(
                     text=f"{helper.localization_dict["error_no_files_folder_found_terminal_text_var"]}'mods/{format(folder)}'.",
                     tag="files_folder_not_found_text_tag",
+                    type="error",
                 )
 
             if not os.path.exists(os.path.join(mod_path, "blacklist.txt")):
@@ -92,6 +99,7 @@ class Requirements:
                 helper.add_text_to_terminal(
                     text=f"{helper.localization_dict["error_no_blacklist_txt_found_terminal_text_var"]}'mods/{format(folder)}'.",
                     tag="blacklist_not_found_text_tag",
+                    type="error",
                 )
 
             if not os.path.exists(os.path.join(mod_path, "styling.txt")):
@@ -99,6 +107,7 @@ class Requirements:
                 helper.add_text_to_terminal(
                     text=f"{helper.localization_dict["error_no_styling_txt_found_terminal_text_var"]}'mods/{format(folder)}'.",
                     tag="blacklist_not_found_text_tag",
+                    type="error",
                 )
 
     def validate_map_file(self):
@@ -115,6 +124,7 @@ class Requirements:
             helper.add_text_to_terminal(
                 helper.localization_dict["map_file_uptodate_terminal_text_var"],
                 "map_up_to_date_text_tag",
+                type="success",
             )
 
         elif os.path.exists(mpaths.minify_map_dir) and (

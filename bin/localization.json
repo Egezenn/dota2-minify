@@ -11,6 +11,12 @@
     "RU": "Выбрать Моды",
     "TR": "Modları seç"
   },
+  "button_exit": {
+    "EN": "Close",
+    "RU": "Закрыть",
+    "ES": "Close",
+    "TR": "Close"
+  },
   "checking_map_file_var": {
     "EN": "-> Checking map file...",
     "ES": "-> Verificando el archivo del mapa...",

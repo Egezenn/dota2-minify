@@ -38,8 +38,7 @@ def handleWarnings(logs_dir):
             for line in warnings:
                 file.write(line + "\n")
         add_text_to_terminal(
-            localization_dict["minify_encountered_errors_terminal_text_var"],
-            "minify_error_var",
+            localization_dict["minify_encountered_errors_terminal_text_var"], "minify_error_var", type="warning"
         )
 
 
@@ -48,8 +47,26 @@ def scroll_to_terminal_end():
     ui.set_y_scroll("terminal_window", ui.get_y_scroll_max("terminal_window"))
 
 
-def add_text_to_terminal(text, tag):
-    ui.add_text(default_value=text, parent="terminal_window", wrap=482, tag=tag)
+def add_text_to_terminal(text, tag: int | str | None = None, type: str | None = None):
+    kwargs = {}
+    if tag is not None:
+        kwargs["tag"] = tag
+    if type is not None:
+        if type == "error":
+            color = (255, 0, 0)
+
+        elif type == "warning":
+            color = (255, 255, 0)
+
+        elif type == "success":
+            color = (0, 255, 0)
+
+        else:
+            color = (0, 230, 230)
+
+        kwargs["color"] = color
+
+    ui.add_text(default_value=text, parent="terminal_window", wrap=482, **kwargs)
     scroll_to_terminal_end()
 
 

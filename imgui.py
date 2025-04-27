@@ -271,10 +271,7 @@ def setupSystem():
             else:
                 quit()
 
-            helper.add_text_to_terminal(
-                text=helper.localization_dict["downloading_cli_terminal_text_var"],
-                tag="downloading_s2v_cli_tag",
-            )
+            helper.add_text_to_terminal(text=helper.localization_dict["downloading_cli_terminal_text_var"])
             zip_name = archive.split("/")[-1]
             zip_path = os.path.join(mpaths.minify_dir, zip_name)
             response = requests.get(archive)
@@ -282,14 +279,12 @@ def setupSystem():
                 with open(zip_path, "wb") as file:
                     file.write(response.content)
                 helper.add_text_to_terminal(
-                    text=f"{helper.localization_dict["downloaded_cli_terminal_text_var"]}{zip_name}",
-                    tag="downloaded_text_tag",
+                    text=f"{helper.localization_dict["downloaded_cli_terminal_text_var"]}{zip_name}"
                 )
                 shutil.unpack_archive(zip_path, mpaths.minify_dir, "zip")
                 os.remove(zip_path)
                 helper.add_text_to_terminal(
-                    text=f"{helper.localization_dict["extracted_cli_terminal_text_var"]}{zip_name}",
-                    tag="extracted_text_tag",
+                    text=f"{helper.localization_dict["extracted_cli_terminal_text_var"]}{zip_name}"
                 )
 
         for method in public_methods:
@@ -305,10 +300,12 @@ def setupSystem():
             helper.add_text_to_terminal(
                 text=helper.localization_dict["failed_to_start_terminal_text_var"],
                 tag="failed_to_start_text_tag",
+                type="error",
             )
             helper.add_text_to_terminal(
                 text=helper.localization_dict["check_crashlog_terminal_text_var"],
                 tag="check_logs_text_tag",
+                type="error",
             )
 
 
@@ -376,8 +373,7 @@ def patcher():
     helper.clean_terminal()
     if "dota2.exe" in (p.name() for p in psutil.process_iter()):
         helper.add_text_to_terminal(
-            text=helper.localization_dict["close_dota_terminal_text_var"],
-            tag="close_dota_text_tag",
+            text=helper.localization_dict["close_dota_terminal_text_var"], tag="close_dota_text_tag", type="warning"
         )
         return
 
@@ -470,11 +466,13 @@ def patcher():
                                     helper.add_text_to_terminal(
                                         helper.localization_dict["failed_to_download_opendotaguides_terminal_text_var"],
                                         "failed_downloading_open_dota_guides_text_tag",
+                                        type="error",
                                     )
                             except:  # no connection
                                 helper.add_text_to_terminal(
                                     helper.localization_dict["failed_to_download_opendotaguides_terminal_text_var"],
                                     "failed_downloading_open_dota_guides_text_tag",
+                                    type="error",
                                 )
                         # ----------------------------------- files ---------------------------------- #
                         # if files_total == 0:    pass
@@ -635,6 +633,7 @@ def patcher():
                 helper.add_text_to_terminal(
                     helper.localization_dict["error_no_execution_permission_s2v_var"],
                     "error_no_execution_permission_s2v",
+                    type="error",
                 )
 
         # ---------------------------------- STEP 3 ---------------------------------- #
@@ -698,12 +697,10 @@ def patcher():
         unlock_interaction()
         helper.add_text_to_terminal("-------------------------------------------------------", "spacer1_text")
         helper.add_text_to_terminal(
-            helper.localization_dict["success_terminal_text_var"],
-            "success_text_tag",
+            helper.localization_dict["success_terminal_text_var"], "success_text_tag", type="success"
         )
         helper.add_text_to_terminal(
-            helper.localization_dict["launch_option_text_var"],
-            "launch_option_text",
+            helper.localization_dict["launch_option_text_var"], "launch_option_text", type="warning"
         )
 
         helper.handleWarnings(mpaths.logs_dir)
@@ -715,12 +712,10 @@ def patcher():
         patching = False
         helper.add_text_to_terminal("-------------------------------------------------------", "spacer2_text")
         helper.add_text_to_terminal(
-            helper.localization_dict["failure_terminal_text_var"],
-            "patching_failed_text_tag",
+            helper.localization_dict["failure_terminal_text_var"], "patching_failed_text_tag", type="error"
         )
         helper.add_text_to_terminal(
-            helper.localization_dict["check_logs_terminal_text_var"],
-            "check_logs_text_tag",
+            helper.localization_dict["check_logs_terminal_text_var"], "check_logs_text_tag", type="warning"
         )
         unlock_interaction()
 
@@ -804,7 +799,7 @@ def create_ui():
         )
         ui.add_button(
             parent="top_bar",
-            tag="exit_button",
+            tag="button_exit",
             label="Close",
             callback=helper.close,
             height=28,
@@ -1204,7 +1199,7 @@ def theme():
     ui.bind_item_theme("button_patch", main_buttons_theme)
     ui.bind_item_theme("button_select_mods", main_buttons_theme)
     ui.bind_item_theme("button_uninstall", main_buttons_theme)
-    ui.bind_item_theme("exit_button", close_button_theme)
+    ui.bind_item_theme("button_exit", close_button_theme)
     ui.bind_item_theme("mod_menu", mod_menu_theme)
     ui.bind_item_theme("top_bar", top_bar_theme)
     ui.bind_item_theme("update_popup", popup_theme)
