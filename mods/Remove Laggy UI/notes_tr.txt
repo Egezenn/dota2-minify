@@ -1,0 +1,1 @@
+Gecikmeli kullanıcı arayüzü bileşenlerini (vitrinler, kahraman önizlemeleri) kaldırır.

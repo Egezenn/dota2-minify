@@ -131,7 +131,7 @@ Creation of the base project.
 
 ### [Egezenn](https://github.com/Egezenn)
 
-Taking over the maintainership of the project, implementing automated workflows, improving the functionality, Linux port and [more](https://github.com/Egezenn/dota2-minify/commits/main/?author=Egezenn).
+Taking over the maintainership of the project, implementing automated workflows, improving the functionality, Linux port, Turkish translations and [more](https://github.com/Egezenn/dota2-minify/commits/main/?author=Egezenn).
 
 <details>
 <summary>Mods</summary>
@@ -166,6 +166,10 @@ Rewrite of the GUI, Russian translations, mod fixes and [more](https://github.co
 - `Show NetWorth mod`
 
 </details>
+
+### [otf31](https://github.com/otf31)
+
+Spanish translation.
 
 ## Dependencies
 

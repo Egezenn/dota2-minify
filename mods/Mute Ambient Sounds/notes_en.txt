@@ -1,1 +1,1 @@
-- Mutes all the ambient sounds of the map
+Mutes all the ambient sounds of the map

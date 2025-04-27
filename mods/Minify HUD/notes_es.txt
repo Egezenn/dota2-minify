@@ -1,5 +1,3 @@
 Modifica la interfaz del HUD dentro del juego
 
 * Requiere las herramientas del Workshop (Workshop Tools)
-
-(En desarrollo) WIP

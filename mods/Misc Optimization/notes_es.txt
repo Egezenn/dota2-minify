@@ -1,7 +1,7 @@
 Elimina múltiples efectos
 
 - Elimina efectos de partículas en estructuras como los brillos azules en la fuente, outpost, estructuras de la base, etc.
-- Partículas de ataque/destrucción de las torres
+- Partículas de ataque / destrucción de las torres
 - Partículas de efigies
-- Ilusiones simplificadas, ayuda a evitar caídas de FPS contra héroes que generan muchas ilusiones de repente
+- Ilusiones simplificadas
 - Equipamiento de héroes, emblemas de eventos, glifo y más

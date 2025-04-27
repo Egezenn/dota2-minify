@@ -2,4 +2,4 @@ Replaces default guides with the ones from OpenDotaGuides
 
 * Requires default builds to be selected to see them in-game
 
-- Source: https://github.com/Egezenn/OpenDotaGuides
+- Source: https://github.com/Egezenn/OpenDotaGuides/releases/latest

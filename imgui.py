@@ -1,3 +1,4 @@
+import ctypes
 import json
 import os
 import platform
@@ -8,7 +9,6 @@ import threading
 import time
 import traceback
 from shutil import copytree, ignore_patterns
-import ctypes
 
 import dearpygui.dearpygui as ui
 import psutil
@@ -1063,10 +1063,12 @@ with ui.font_registry():
     with ui.font(os.path.join(mpaths.bin_dir, "FiraMono-Medium.ttf"), 14) as main_font:
         ui.add_font_range_hint(ui.mvFontRangeHint_Default)
         ui.add_font_range_hint(ui.mvFontRangeHint_Cyrillic)
+        ui.add_font_range(0x0100, 0x017F)  # Turkish set
         ui.bind_font(main_font)
     with ui.font(os.path.join(mpaths.bin_dir, "FiraMono-Medium.ttf"), 16) as combo_font:
         ui.add_font_range_hint(ui.mvFontRangeHint_Default)
         ui.add_font_range_hint(ui.mvFontRangeHint_Cyrillic)
+        ui.add_font_range(0x0100, 0x017F)  # Turkish set
 
 # Adding mouse handler to ui registry
 with ui.handler_registry():

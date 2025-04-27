@@ -1,13 +1,17 @@
+import getpass
 import os
 import platform
 import tkinter as tk
 import traceback
-from tkinter import messagebox, filedialog
+from tkinter import filedialog, messagebox
+
 import vdf
 
 steam_dir = ""
 path_file = os.path.join(os.getcwd(), "dota2path_minify.txt")
 OS = platform.system()
+STEAM_DEFAULT_WIN = os.path.join("C:", "Program Files (x86)", "Steam")
+STEAM_DEFAULT_LINUX = os.path.join("/", "home", getpass.getuser(), ".local", "share", "Steam")
 
 
 def find_library_from_file():
@@ -93,10 +97,8 @@ def handle_non_default_path():
             for line in file:
                 steam_dir = os.path.normpath(line.strip())
 
-    if OS == "Windows" and not os.path.exists(
-        os.path.join(steam_dir, "steamapps", "common", "dota 2 beta", "game", "bin", "win64", "dota2.exe")
-    ):
-        find_library_from_file()
+        if OS == "Windows":
+            find_library_from_file()
 
     while not steam_dir or not (
         os.path.exists(

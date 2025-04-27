@@ -2,4 +2,4 @@
 
 * Не забудь выбрать стандартную сборку героя для отображения в игре
 
-- Источник: https://github.com/Egezenn/OpenDotaGuides
+- Источник: https://github.com/Egezenn/OpenDotaGuides/releases/latest

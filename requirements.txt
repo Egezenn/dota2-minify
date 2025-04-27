@@ -3,4 +3,5 @@ Nuitka
 psutil
 requests
 screeninfo
+vdf
 vpk

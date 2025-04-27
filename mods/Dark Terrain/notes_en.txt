@@ -5,7 +5,7 @@ Designed for visual clarity.
 
 - Makes all tiles gray/dark gray
 - Removes all foilage on the map
-- Fog lines, easily see fog border
+- Fog lines
 - Removed fog mist
 - Dark water
 - Custom team logos

@@ -1,0 +1,1 @@
+Ana menü arka planını kaldırır (son oynanan maçın kahramanı, maç ayrıntıları ve diğer kutular)
