@@ -8,6 +8,7 @@ import threading
 import time
 import traceback
 from shutil import copytree, ignore_patterns
+import ctypes
 
 import dearpygui.dearpygui as ui
 import psutil
@@ -69,6 +70,27 @@ class TextRedirector(object):
         self.widget.configure(state="disabled")
 
 
+def focus_window():
+    if platform.system() == "Windows":  # Works tested, but needs more tests, just to be sure
+        try:
+            hwnd = ctypes.windll.user32.FindWindowW(None, "Minify")
+            if hwnd != 0:
+                ctypes.windll.user32.ShowWindow(hwnd, 9)
+                ctypes.windll.user32.SetForegroundWindow(hwnd)
+        except Exception as error:
+            with open(os.path.join(mpaths.logs_dir, "crashlog.txt"), "w") as file:
+                file.write(f"Windows focus error: {error}")
+    else:  # For Linux only know this, not tested, but probably should work on debian and debian based distros
+        try:
+            subprocess.run(["wmctrl", "-a", "Minify"], check=True)
+        except FileNotFoundError:
+            with open(os.path.join(mpaths.logs_dir, "crashlog.txt"), "w") as file:
+                file.write("wmctrl not installed")
+        except subprocess.CalledProcessError as error:
+            with open(os.path.join(mpaths.logs_dir, "crashlog.txt"), "w") as file:
+                file.write(f"Linux focus error: {error}")
+
+
 def save_state():
     checkbox_state_save()
 
@@ -77,14 +99,12 @@ def lock_interaction():
     ui.configure_item("button_patch", enabled=False)
     ui.configure_item("button_select_mods", enabled=False)
     ui.configure_item("button_uninstall", enabled=False)
-    ui.configure_item("exit_button", enabled=False)
 
 
 def unlock_interaction():
     ui.configure_item("button_patch", enabled=True)
     ui.configure_item("button_select_mods", enabled=True)
     ui.configure_item("button_uninstall", enabled=True)
-    ui.configure_item("exit_button", enabled=True)
 
 
 def delete_update_popup():
@@ -1018,6 +1038,7 @@ def configure_uninstall_popup():
 def create_base_ui():
     helper.get_available_localizations()
     create_ui()
+    focus_window()
     start_text()
     theme()
     helper.change_localization(init=True)

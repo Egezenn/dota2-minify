@@ -3,6 +3,7 @@ import platform
 import tkinter as tk
 import traceback
 from tkinter import messagebox, filedialog
+import psutil
 
 steam_dir = ""
 path_file = os.path.join(os.getcwd(), "dota2path_minify.txt")
@@ -33,6 +34,59 @@ def get_steam_path():
         except:
             steam_dir = ""
 
+    else:
+        steam_dir = ""
+
+
+def check_for_steam_library():
+    global steam_dir
+    drives = []
+    found = []
+    steamapps = "steamapps"
+    if OS == "Windows" and not os.path.exists(
+        os.path.join(
+            steam_dir, "steamapps", "common", "dota 2 beta", "game", "bin", "win64", "dota2.exe"
+        )  # Checking if dota was found alredy
+    ):
+        for partition in psutil.disk_partitions(all=False):  # Getting all the drives
+            if "rw" in partition.opts.split(","):
+                drives.append(partition.mountpoint)
+        for drive in drives:
+            try:
+                with os.scandir(
+                    drive
+                ) as folders:  # Getting all the folders in first layer and checking them if library was installed in root of the drive
+                    for folder in folders:
+                        if folder.is_dir():
+                            if folder == steamapps:
+                                found.append(folder.path)
+                                print(f"Found - {folder.path}")
+                            try:
+                                with os.scandir(folder) as subfolders:  # Checking for "steamapps" folder in subfolders
+                                    for candidate in subfolders:
+                                        if candidate.is_dir():
+                                            print(f"Searching... {candidate.path}")
+                                            dir_name = candidate.name
+                                            if dir_name == steamapps:
+                                                found.append(folder.path)
+                                                print(f"Found - {folder.path}")
+                            except PermissionError:
+                                print(f"Permission denied accessing {folder}")
+                            except Exception as error:
+                                print(f"Error scanning {folder}: {error}")
+            except PermissionError:
+                print(f"Permission denied accessing {drive}")
+            except Exception as error:
+                print(f"Error scanning {drive}: {error}")
+        print("We found:")
+        for adress in found:  # checking all found results if dota is present(in case steamcmd present etc.)
+            print(adress)
+            if os.path.exists(
+                os.path.join(adress, "steamapps", "common", "dota 2 beta", "game", "bin", "win64", "dota2.exe")
+            ):
+                steam_dir = adress
+                print(f"Dota found in: {steam_dir}")
+                break
     else:
         steam_dir = ""
 
@@ -91,6 +145,7 @@ def handle_non_default_path():
 
 
 get_steam_path()
+# check_for_steam_library()
 handle_non_default_path()
 
 # links
