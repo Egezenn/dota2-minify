@@ -3,11 +3,39 @@ import platform
 import tkinter as tk
 import traceback
 from tkinter import messagebox, filedialog
-import psutil
+import vdf
 
 steam_dir = ""
 path_file = os.path.join(os.getcwd(), "dota2path_minify.txt")
 OS = platform.system()
+
+
+def find_library_from_file():
+    global steam_dir
+    path_from_txt = ""
+    with open(path_file, "r") as file:
+        for line in file:
+            path_from_txt = os.path.normpath(line.strip())
+    with open(os.path.join(steam_dir, "config", "libraryfolders.vdf"), "r", encoding="utf-8") as dump:
+        data = vdf.load(dump)
+        paths = get_steam_library_paths(data)
+    for path in paths:
+        if os.path.exists(
+            os.path.join(path, "steamapps", "common", "dota 2 beta", "game", "bin", "win64", "dota2.exe")
+        ):
+            steam_dir = path
+            if not os.path.exists(path_file) or path_from_txt == "":
+                with open(path_file, "w") as file:
+                    file.write(steam_dir)
+
+
+def get_steam_library_paths(vdf_data):
+    libraries = []
+    for folder_key in vdf_data.get("libraryfolders", {}):
+        folder = vdf_data["libraryfolders"][folder_key]
+        if "path" in folder:
+            libraries.append(folder["path"])
+    return libraries
 
 
 def get_steam_path():
@@ -38,63 +66,14 @@ def get_steam_path():
         steam_dir = ""
 
 
-def check_for_steam_library():
-    global steam_dir
-    drives = []
-    found = []
-    steamapps = "steamapps"
-    if OS == "Windows" and not os.path.exists(
-        os.path.join(
-            steam_dir, "steamapps", "common", "dota 2 beta", "game", "bin", "win64", "dota2.exe"
-        )  # Checking if dota was found alredy
-    ):
-        for partition in psutil.disk_partitions(all=False):  # Getting all the drives
-            if "rw" in partition.opts.split(","):
-                drives.append(partition.mountpoint)
-        for drive in drives:
-            try:
-                with os.scandir(
-                    drive
-                ) as folders:  # Getting all the folders in first layer and checking them if library was installed in root of the drive
-                    for folder in folders:
-                        if folder.is_dir():
-                            if folder == steamapps:
-                                found.append(folder.path)
-                                print(f"Found - {folder.path}")
-                            try:
-                                with os.scandir(folder) as subfolders:  # Checking for "steamapps" folder in subfolders
-                                    for candidate in subfolders:
-                                        if candidate.is_dir():
-                                            print(f"Searching... {candidate.path}")
-                                            dir_name = candidate.name
-                                            if dir_name == steamapps:
-                                                found.append(folder.path)
-                                                print(f"Found - {folder.path}")
-                            except PermissionError:
-                                print(f"Permission denied accessing {folder}")
-                            except Exception as error:
-                                print(f"Error scanning {folder}: {error}")
-            except PermissionError:
-                print(f"Permission denied accessing {drive}")
-            except Exception as error:
-                print(f"Error scanning {drive}: {error}")
-        print("We found:")
-        for adress in found:  # checking all found results if dota is present(in case steamcmd present etc.)
-            print(adress)
-            if os.path.exists(
-                os.path.join(adress, "steamapps", "common", "dota 2 beta", "game", "bin", "win64", "dota2.exe")
-            ):
-                steam_dir = adress
-                print(f"Dota found in: {steam_dir}")
-                break
-    else:
-        steam_dir = ""
-
-
 def handle_non_default_path():
     global steam_dir
     # when dota2 is not inside Steam folder OR host is not on windows, set new steam directory from 'dota2path_minify.txt
-    if not steam_dir:
+    if not os.path.exists(
+        os.path.join(steam_dir, "steamapps", "common", "dota 2 beta", "game", "bin", "win64", "dota2.exe")
+    ) or not os.path.exists(
+        os.path.join(steam_dir, "steamapps", "common", "dota 2 beta", "game", "bin", "linuxsteamrt64", "dota2")
+    ):
         if not os.path.exists(path_file):
             with open(path_file, "a+") as file:
                 file.write("")
@@ -102,6 +81,11 @@ def handle_non_default_path():
         with open(path_file, "r") as file:
             for line in file:
                 steam_dir = os.path.normpath(line.strip())
+
+    if OS == "Windows" and not os.path.exists(
+        os.path.join(steam_dir, "steamapps", "common", "dota 2 beta", "game", "bin", "win64", "dota2.exe")
+    ):
+        find_library_from_file()
 
     while not steam_dir or not (
         os.path.exists(
@@ -145,7 +129,6 @@ def handle_non_default_path():
 
 
 get_steam_path()
-# check_for_steam_library()
 handle_non_default_path()
 
 # links
