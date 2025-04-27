@@ -10,11 +10,19 @@ import vdf
 steam_dir = ""
 path_file = os.path.join(os.getcwd(), "dota2path_minify.txt")
 OS = platform.system()
-STEAM_DEFAULT_WIN = os.path.join("C:", "Program Files (x86)", "Steam")
-STEAM_DEFAULT_LINUX = os.path.join("/", "home", getpass.getuser(), ".local", "share", "Steam")
+STEAM_DEFAULT_INSTALLATION_PATH = (
+    os.path.join("C:", "Program Files (x86)", "Steam")
+    if OS == "Windows"
+    else os.path.join("/", "home", getpass.getuser(), ".local", "share", "Steam")
+)
+DOTA_EXECUTABLE_PATH = (
+    os.path.join("steamapps", "common", "dota 2 beta", "game", "bin", "win64", "dota2.exe")
+    if OS == "Windows"
+    else os.path.join("steamapps", "common", "dota 2 beta", "game", "bin", "linuxsteamrt64", "dota2")
+)
 
 
-def find_library_from_file():
+def find_library_from_vdf():
     global steam_dir
     path_from_txt = ""
 
@@ -27,30 +35,37 @@ def find_library_from_file():
             file.write(f"Error reading {path_file}: {error}")
 
     try:
-        with open(os.path.join(steam_dir, "config", "libraryfolders.vdf"), "r", encoding="utf-8") as dump:
-            data = vdf.load(dump)
-            paths = get_steam_library_paths(data)
+        if steam_dir:  # regkey found
+            with open(os.path.join(steam_dir, "config", "libraryfolders.vdf"), "r", encoding="utf-8") as dump:
+                data = vdf.load(dump)
+        else:  # try with defaults
+            with open(
+                os.path.join(STEAM_DEFAULT_INSTALLATION_PATH, "config", "libraryfolders.vdf"), "r", encoding="utf-8"
+            ) as dump:
+                data = vdf.load(dump)
+
+        paths = get_steam_library_paths(data)
+        for path in paths:
+            if os.path.exists(os.path.join(path, DOTA_EXECUTABLE_PATH)):
+                steam_dir = path
+                if not os.path.exists(path_file) or path_from_txt == "":
+                    with open(path_file, "w") as file:
+                        file.write(steam_dir)
+
     except Exception as error:
         with open(os.path.join(logs_dir, "crashlog.txt"), "w") as file:
             file.write(f"Error reading libraryfolders.vdf: {error}")
-
-    for path in paths:
-        if os.path.exists(
-            os.path.join(path, "steamapps", "common", "dota 2 beta", "game", "bin", "win64", "dota2.exe")
-        ):
-            steam_dir = path
-            if not os.path.exists(path_file) or path_from_txt == "":
-                with open(path_file, "w") as file:
-                    file.write(steam_dir)
+            steam_dir = ""
 
 
 def get_steam_library_paths(vdf_data):
-    libraries = []
+    paths = []
     for folder_key in vdf_data.get("libraryfolders", {}):
         folder = vdf_data["libraryfolders"][folder_key]
+        # could check if "apps" key has 570 in it and return only one path, would require tests though
         if "path" in folder:
-            libraries.append(folder["path"])
-    return libraries
+            paths.append(folder["path"])
+    return paths
 
 
 def get_steam_path():
@@ -84,40 +99,19 @@ def get_steam_path():
 def handle_non_default_path():
     global steam_dir
     # when dota2 is not inside Steam folder OR host is not on windows, set new steam directory from 'dota2path_minify.txt
-    if not os.path.exists(
-        os.path.join(steam_dir, "steamapps", "common", "dota 2 beta", "game", "bin", "win64", "dota2.exe")
-    ) or not os.path.exists(
-        os.path.join(steam_dir, "steamapps", "common", "dota 2 beta", "game", "bin", "linuxsteamrt64", "dota2")
-    ):
+    if not os.path.exists(os.path.join(steam_dir, DOTA_EXECUTABLE_PATH)):
         if not os.path.exists(path_file):
             with open(path_file, "a+") as file:
                 file.write("")
 
-        if OS == "Windows":
-            # read vdf from steam install path
-            find_library_from_file()
+        find_library_from_vdf()
 
         with open(path_file, "r") as file:
             for line in file:
                 steam_dir = os.path.normpath(line.strip())
 
-    while not steam_dir or not (
-        os.path.exists(
-            os.path.join(steam_dir, "steamapps", "common", "dota 2 beta", "game", "bin", "win64", "dota2.exe")
-        )
-        or os.path.exists(
-            os.path.join(
-                steam_dir,
-                "steamapps",
-                "common",
-                "dota 2 beta",
-                "game",
-                "bin",
-                "linuxsteamrt64",
-                "dota2",
-            )
-        )
-    ):
+    # last line of defense
+    while not steam_dir or not os.path.exists(os.path.join(steam_dir, DOTA_EXECUTABLE_PATH)):
         root = tk.Tk()
         root.withdraw()
 

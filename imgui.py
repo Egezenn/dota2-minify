@@ -297,6 +297,7 @@ def setupSystem():
             if x.toggle_flag == True:
                 lock_interaction()
                 break
+
     except Exception:
         with open(os.path.join(mpaths.logs_dir, "crashlog.txt"), "w") as file:
             file.write(traceback.format_exc())

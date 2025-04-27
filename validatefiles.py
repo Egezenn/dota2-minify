@@ -21,27 +21,7 @@ class Requirements:
             )
 
     def b_isDotaInstallFound(self):
-        if mpaths.OS == "Windows":
-            dota2path = os.path.normpath(
-                os.path.join(
-                    mpaths.steam_dir,
-                    "steamapps",
-                    "common",
-                    "dota 2 beta",
-                    "game",
-                    "bin",
-                    "win64",
-                    "dota2.exe",
-                )
-            )
-        elif mpaths.OS == "Linux":
-            dota2path = os.path.normpath(
-                os.path.join(
-                    mpaths.steam_dir, "steamapps", "common", "dota 2 beta", "game", "bin", "linuxsteamrt64", "dota2"
-                )
-            )
-        else:
-            quit()
+        dota2path = os.path.normpath(os.path.join(mpaths.steam_dir, mpaths.DOTA_EXECUTABLE_PATH))
 
         if not os.path.exists(dota2path):
             self.toggle_flag = True
