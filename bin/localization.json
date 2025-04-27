@@ -271,6 +271,7 @@
   },
   "error_no_execution_permission_s2v_var": {
     "EN": "Give execution permission to Source2Viewer!",
+    "RU": "Предоставь права на выполнение для Source2Viewer!",
     "ES": "¡Dale permiso de ejecución a Source2Viewer!"
   }
 }
