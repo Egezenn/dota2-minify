@@ -618,7 +618,7 @@ def patcher():
             try:
                 subprocess.run(
                     [
-                        os.path.join(os.getcwd(), mpaths.s2v_executable),
+                        os.path.join(".", mpaths.s2v_executable),
                         "--input",
                         "build",
                         "--recursive",
