@@ -250,7 +250,7 @@ def setupSystem():
     ]  # private methods start with _
     try:
         if not (
-            os.path.exists(mpaths.s2v_executable_path)
+            os.path.exists(mpaths.s2v_executable)
             and os.path.exists(mpaths.s2v_skia_path)
             and os.path.exists(mpaths.s2v_tinyexr_path)
         ):
@@ -272,19 +272,18 @@ def setupSystem():
                 quit()
 
             helper.add_text_to_terminal(text=helper.localization_dict["downloading_cli_terminal_text_var"])
-            zip_name = archive.split("/")[-1]
-            zip_path = os.path.join(mpaths.minify_dir, zip_name)
+            zip_path = archive.split("/")[-1]
             response = requests.get(archive)
             if response.status_code == 200:
                 with open(zip_path, "wb") as file:
                     file.write(response.content)
                 helper.add_text_to_terminal(
-                    text=f"{helper.localization_dict["downloaded_cli_terminal_text_var"]}{zip_name}"
+                    text=f"{helper.localization_dict["downloaded_cli_terminal_text_var"]}{zip_path}"
                 )
-                shutil.unpack_archive(zip_path, mpaths.minify_dir, "zip")
+                shutil.unpack_archive(zip_path, format="zip")
                 os.remove(zip_path)
                 helper.add_text_to_terminal(
-                    text=f"{helper.localization_dict["extracted_cli_terminal_text_var"]}{zip_name}"
+                    text=f"{helper.localization_dict["extracted_cli_terminal_text_var"]}{zip_path}"
                 )
 
         for method in public_methods:
@@ -448,7 +447,7 @@ def patcher():
                                                 )
                                         except FileExistsError:
                                             pass  # backup was created and opendotaguides was replacing the guides already
-                                    shutil.unpack_archive(zip_path, temp_dump_path, "zip")
+                                    shutil.unpack_archive(zip_path, temp_dump_path, format="zip")
                                     for file in os.listdir(temp_dump_path):
                                         shutil.copy(
                                             os.path.join(temp_dump_path, file),
@@ -613,13 +612,13 @@ def patcher():
             "decompiling_text",
         )
         with open(os.path.join(mpaths.logs_dir, "Source2Viewer-CLI.txt"), "w") as file:
-            if mpaths.OS == "Linux" and not os.access(mpaths.s2v_executable_path, os.X_OK):
-                current_permissions = os.stat(mpaths.s2v_executable_path).st_mode
+            if mpaths.OS == "Linux" and not os.access(mpaths.s2v_executable, os.X_OK):
+                current_permissions = os.stat(mpaths.s2v_executable).st_mode
                 os.chmod(mpaths.s2v_executable, current_permissions | stat.S_IXUSR | stat.S_IXGRP | stat.S_IXOTH)
             try:
                 subprocess.run(
                     [
-                        mpaths.s2v_executable_path,
+                        mpaths.s2v_executable,
                         "--input",
                         "build",
                         "--recursive",
@@ -1056,12 +1055,12 @@ def initiate_conditionals():
 
 # Adding font to the ui registry
 with ui.font_registry():
-    with ui.font(os.path.join(mpaths.bin_dir, "FiraMono-Medium.ttf"), 14) as main_font:
+    with ui.font(os.path.join("bin", "FiraMono-Medium.ttf"), 14) as main_font:
         ui.add_font_range_hint(ui.mvFontRangeHint_Default)
         ui.add_font_range_hint(ui.mvFontRangeHint_Cyrillic)
         ui.add_font_range(0x0100, 0x017F)  # Turkish set
         ui.bind_font(main_font)
-    with ui.font(os.path.join(mpaths.bin_dir, "FiraMono-Medium.ttf"), 16) as combo_font:
+    with ui.font(os.path.join("bin", "FiraMono-Medium.ttf"), 16) as combo_font:
         ui.add_font_range_hint(ui.mvFontRangeHint_Default)
         ui.add_font_range_hint(ui.mvFontRangeHint_Cyrillic)
         ui.add_font_range(0x0100, 0x017F)  # Turkish set
@@ -1239,7 +1238,7 @@ def dev_mode():
             ui.add_button(
                 label="Path: Minify",
                 callback=lambda: helper.open_dir(
-                    os.path.join(mpaths.minify_dir),
+                    os.getcwd(),
                 ),
             )
             ui.add_button(

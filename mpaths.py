@@ -158,11 +158,10 @@ s2v_latest_linux_arm_x64 = (
 odg_latest = "https://github.com/Egezenn/OpenDotaGuides/releases/latest/download/itembuilds.zip"
 
 # minify project paths
-minify_dir = os.getcwd()
-bin_dir = os.path.join(minify_dir, "bin")
-build_dir = os.path.join(minify_dir, "build")
-logs_dir = os.path.join(minify_dir, "logs")
-mods_dir = os.path.join(minify_dir, "mods")
+bin_dir = "bin"
+build_dir = "build"
+logs_dir = "logs"
+mods_dir = "mods"
 
 # bin
 blank_files_dir = os.path.join(bin_dir, "blank-files")
@@ -172,15 +171,9 @@ minify_map_dir = os.path.join(maps_dir, "dota.vpk")
 localization_file_dir = os.path.join(bin_dir, "localization.json")
 locale_file_dir = "locale"
 s2v_executable = "Source2Viewer-CLI.exe" if OS == "Windows" else "Source2Viewer-CLI"
-s2v_executable_path = os.path.join(minify_dir, s2v_executable)
-s2v_skia_path = (
-    os.path.join(minify_dir, "libSkiaSharp.dll") if OS == "Windows" else os.path.join(minify_dir, "libSkiaSharp.so")
-)
-s2v_tinyexr_path = (
-    os.path.join(minify_dir, "TinyEXR.Native.dll")
-    if OS == "Windows"
-    else os.path.join(minify_dir, "libTinyEXR.Native.so")
-)
+s2v_skia_path = "libSkiaSharp.dll" if OS == "Windows" else "libSkiaSharp.so"
+s2v_tinyexr_path = "TinyEXR.Native.dll" if OS == "Windows" else "libTinyEXR.Native.so"
+
 
 # dota2 paths
 ## minify
