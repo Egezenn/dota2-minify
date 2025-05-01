@@ -1,1 +1,3 @@
 Removes laggy UI components (showcases, hero previews).
+
+For better performance, you can also add the launch option "+map_enable_portrait_worlds 0"

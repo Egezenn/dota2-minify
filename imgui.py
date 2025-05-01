@@ -750,14 +750,11 @@ def start_text():
 
 def close_active_window():
     active_window = ui.get_item_alias(ui.get_active_window())
-    if active_window not in ["terminal_window", "primary_window", "top_bar"]:
+    if active_window not in ["terminal_window", "primary_window", "top_bar", "opener", "tools"]:
         if active_window == "update_popup":
             delete_update_popup()
         else:
-            try:
-                ui.configure_item(active_window, show=False)
-            except SystemError:
-                pass  # ?
+            ui.configure_item(active_window, show=False)
 
 
 def create_ui():
