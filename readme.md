@@ -163,7 +163,7 @@ Rewrite of the GUI, Russian translations, mod fixes and [more](https://github.co
 <details>
 <summary>Mods</summary>
 
-- `Dotabuff in Profiles` mod which has been refactored to [`Stat Site Buttons In Profiles`](./mods/Dotabuff%20in%20Profiles`)
+- `Dotabuff in Profiles` mod which has been refactored to [`Stat Site Buttons In Profiles`](./mods/Dotabuff%20in%20Profiles)
 - [`Show NetWorth`](./mods/Show%20NetWorth%20)
 
 </details>
