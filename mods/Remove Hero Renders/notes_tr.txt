@@ -1,3 +1,3 @@
-Gecikmeli kullanıcı arayüzü bileşenlerini (vitrinler, kahraman önizlemeleri) kaldırır.
+Kahraman önizlemelerini kaldırır.
 
 Daha iyi performans için "+map_enable_portrait_worlds 0" başlatma seçeneğini ekleyebilirsiniz.

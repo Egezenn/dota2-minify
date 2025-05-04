@@ -1,1 +1,0 @@
-Elimina componentes de la interfaz que generan lag (presentaciones, vistas previas de héroes).
