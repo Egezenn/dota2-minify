@@ -1,5 +1,5 @@
 # remove header of guides & edit button for extra space
-panorama/styles/hud/dota_hud_item_build @@ .ShopOpen .BuildHeaderContainer, .ShopOpen #BuildTitleContainer, .EditorMode #BuildTitleContainer { visibility: collapse; } .ShopOpen #BuildTitleContainer, .EditorMode #BuildTitleContainer { visibility: collapse; } #Categories { padding-top: 0px; }
+panorama/styles/hud/dota_hud_item_build @@ .ShopOpen .BuildHeaderContainer, .ShopOpen #BuildTitleContainer, .EditorMode #BuildTitleContainer, .ShopOpen #BuildTitleContainer, .EditorMode #BuildTitleContainer { visibility: collapse; } #Categories { padding-top: 0px; }
 
 # remove portraits
 panorama/styles/hud/hud_reborn @@ #PortraitGroup { visibility: collapse; } #stats_container_bg { background-color: none; }
