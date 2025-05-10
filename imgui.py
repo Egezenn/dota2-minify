@@ -28,7 +28,7 @@ try:
     with open("version", "r") as file:
         version = file.readline()
 except:
-    pass
+    version = ""
 
 
 patching = False
@@ -107,7 +107,9 @@ def unlock_interaction():
     ui.configure_item("button_uninstall", enabled=True)
 
 
-def delete_update_popup():
+def delete_update_popup(ignore=False):
+    if ignore:
+        os.remove("version")
     ui.configure_item("update_popup", show=False)
     ui.delete_item("update_popup")
     initiate_conditionals()
@@ -721,7 +723,7 @@ def patcher():
 
 def version_check():
     global version
-    if version is not None:
+    if version:
         try:
             response = requests.get(mpaths.version_query)
             if response.status_code == 200:
@@ -732,6 +734,7 @@ def version_check():
                     update_popup_show()
         except:  # no connection
             initiate_conditionals()
+            version = ""
 
 
 def start_text():
@@ -768,6 +771,15 @@ def create_ui():
             no_scrollbar=True,
             no_scroll_with_mouse=True,
         )
+        ui.add_combo(
+            parent="top_bar",
+            tag="lang_select",
+            items=(helper.localizations),
+            default_value="EN",
+            width=50,
+            pos=(5, 6),
+            callback=helper.change_localization,
+        )
         ui.add_image_button(
             "discord_texture_tag",
             parent="top_bar",
@@ -793,6 +805,10 @@ def create_ui():
             pos=(115, 6),
             callback=dev_mode,
         )
+        ui.add_text(
+            title,
+            pos=(240, 5),
+        )
         ui.add_button(
             parent="top_bar",
             tag="button_exit",
@@ -802,15 +818,7 @@ def create_ui():
             width=60,
             pos=(440, 5),
         )
-        ui.add_combo(
-            parent="top_bar",
-            tag="lang_select",
-            items=(helper.localizations),
-            default_value="EN",
-            width=50,
-            pos=(5, 6),
-            callback=helper.change_localization,
-        )
+
         ui.bind_item_font("lang_select", combo_font)
         with ui.group(horizontal=True):
             with ui.group(pos=(391, 29)):
@@ -956,6 +964,13 @@ def create_ui():
             tag="update_popup_yes_button",
         )
         ui.add_button(
+            label="Ignore updates",
+            width=120,
+            height=24,
+            callback=lambda: delete_update_popup(ignore=True),
+            tag="update_popup_ignore_button",
+        )
+        ui.add_button(
             label="No",
             width=120,
             height=24,
@@ -1072,7 +1087,6 @@ width_discord, height_discord, channels_discord, data_discord = ui.load_image(
 )
 
 width_git, height_git, channels_git, data_git = ui.load_image(os.path.join(mpaths.img_dir, "github.png"))
-
 width_dev, height_dev, channels_dev, data_dev = ui.load_image(os.path.join(mpaths.img_dir, "cog-wheel.png"))
 
 with ui.texture_registry(show=False):
@@ -1326,8 +1340,10 @@ for monitor in screeninfo.get_monitors():
     widths.append(monitor.width)
     heights.append(monitor.height)
 
+title = f"Minify {version}" if version else "Minify"
+
 ui.create_viewport(
-    title="Minify",
+    title=title,
     height=300,
     width=494,
     x_pos=min(widths) // 2 - 494 // 2,

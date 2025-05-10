@@ -107,6 +107,12 @@
     "RU": "Да",
     "TR": "Evet"
   },
+  "update_popup_ignore_button": {
+    "EN": "Ignore",
+    "ES": "Ignorar",
+    "RU": "Игнорируйте",
+    "TR": "Yoksay"
+  },
   "update_popup_no_button": {
     "EN": "No",
     "ES": "No",
