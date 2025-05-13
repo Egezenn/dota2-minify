@@ -2,6 +2,7 @@ import hashlib
 import json
 import os
 import shutil
+import stat
 import subprocess
 import sys
 import time
@@ -81,8 +82,7 @@ def disableWorkshopMods(mods_dir, mods_folders, checkboxes):
 
 
 def cleanFolders():
-    shutil.rmtree(mpaths.build_dir, ignore_errors=True)
-    shutil.rmtree(mpaths.minify_dota_maps_output_path, ignore_errors=True)
+    rmtrees(mpaths.build_dir, mpaths.minify_dota_maps_output_path)
     for root, dirs, files in os.walk(mpaths.logs_dir):
         for filename in files:
             open(os.path.join(root, filename), "w").close()
@@ -328,8 +328,7 @@ def compile(sender, app_data, user_data):
         clean_terminal()
         compile_output_path = os.path.join(folder, "compiled")
 
-        shutil.rmtree(mpaths.minify_dota_compile_input_path, ignore_errors=True)
-        shutil.rmtree(compile_output_path, ignore_errors=True)
+        rmtrees(mpaths.minify_dota_compile_input_path, compile_output_path)
         os.makedirs(mpaths.minify_dota_compile_input_path)
 
         items = os.listdir(folder)
@@ -355,8 +354,7 @@ def compile(sender, app_data, user_data):
 
         shutil.copytree(os.path.join(mpaths.minify_dota_compile_output_path), compile_output_path)
 
-        shutil.rmtree(mpaths.minify_dota_compile_input_path, ignore_errors=True)
-        shutil.rmtree(mpaths.minify_dota_compile_output_path, ignore_errors=True)
+        rmtrees(mpaths.minify_dota_compile_input_path, mpaths.minify_dota_compile_output_path)
 
         add_text_to_terminal("Compiled successfully!", "")
     else:
@@ -367,3 +365,19 @@ def compile(sender, app_data, user_data):
 def select_compile_dir(sender, app_data):
     global compile_path
     compile_path = app_data["current_path"]
+
+
+def rmtrees(*paths):
+    "Superset of `shutil.rmtree` to handle permissions and take in list of paths."
+    for path in paths:
+        try:
+            shutil.rmtree(path)
+        except PermissionError:
+            if mpaths.OS == "Windows":
+                os.chmod(path, stat.S_IWRITE)
+            else:
+                os.chmod(path, os.stat(path).st_mode | stat.S_IWUSR)
+            shutil.rmtree(path)
+            warnings.append(f"Forced deletion of: {path}")
+        except FileNotFoundError:
+            warnings.append(f"Skipped deletion of: {path}")

@@ -3,7 +3,6 @@ import json
 import os
 import platform
 import shutil
-import stat
 import subprocess
 import threading
 import time
@@ -122,32 +121,6 @@ def hide_uninstall_popup():
 def open_github_link_and_close_minify():
     open_github_link()  # behavior to download the latest release
     helper.close()
-
-
-def handle_readonly(func, path, exc):
-    # 1. Make the file/directory writable
-    if os.name == "nt":  # Windows
-        os.chmod(path, stat.S_IWRITE)
-    else:  # Linux/Mac
-        os.chmod(path, os.stat(path).st_mode | stat.S_IWUSR)
-
-    # 2. RETRY THE OPERATION
-    func(path)
-
-
-def cleanup_dota_compile_input_path():
-    path = mpaths.minify_dota_compile_input_path
-    shutil.rmtree(path, onexc=handle_readonly)  # Pass function reference, not result
-
-
-def cleanup_dota_compile_output_path():
-    path = mpaths.minify_dota_compile_output_path
-    shutil.rmtree(path, onexc=handle_readonly)
-
-
-def cleanup_build_dir():
-    path = mpaths.build_dir
-    shutil.rmtree(path, onexc=handle_readonly)
 
 
 def checkbox_state_save():
@@ -358,7 +331,7 @@ def uninstaller():
         os.remove(vpkPath)
 
     # remove dota.vpk if it exists
-    shutil.rmtree(mpaths.minify_dota_maps_output_path, ignore_errors=True)
+    helper.rmtrees(mpaths.minify_dota_maps_output_path)
 
     try:
         with open(os.path.join(mpaths.dota_itembuilds_path, "default_antimage.txt"), "r") as file:
@@ -412,7 +385,6 @@ def patcher():
 
         styling_dictionary = {}
         # blacklist_dictionary = {}
-        warnings = []
 
         blank_file_extensions = helper.getBlankFileExtensions(
             mpaths.blank_files_dir
@@ -481,7 +453,7 @@ def patcher():
                                             os.path.join(temp_dump_path, file),
                                             os.path.join(mpaths.dota_itembuilds_path, file),
                                         )
-                                    shutil.rmtree(temp_dump_path)
+                                    helper.rmtrees(temp_dump_path)
                                     os.remove(zip_path)
                                     helper.add_text_to_terminal(
                                         helper.localization_dict["replaced_guides_terminal_text_var"],
@@ -547,7 +519,7 @@ def patcher():
                                         if line.endswith(tuple(blank_file_extensions)):
                                             blacklist_data.append(line)
                                         else:
-                                            warnings.append(
+                                            helper.warnings.append(
                                                 f"[Invalid Extension] '{line}' in 'mods\\{folder}\\blacklist.txt' [line: {index+1}] does not end in one of the valid extensions -> {blank_file_extensions}"  ###???
                                             )
 
@@ -570,7 +542,7 @@ def patcher():
                                         os.path.join(mpaths.minify_dota_compile_output_path, path + extension),
                                     )
                                 except FileNotFoundError as exception:
-                                    warnings.append(
+                                    helper.warnings.append(
                                         f"[Invalid Extension] '{line}' in 'mods\\{os.path.basename(mod_path)}\\blacklist.txt' does not end in one of the valid extensions -> {blank_file_extensions}"  ###???
                                     )
 
@@ -586,7 +558,7 @@ def patcher():
                                 for line in lines:
                                     line = line.strip()
 
-                                    if line.startswith("#") or line.isspace():
+                                    if line.startswith("#") or line == "":
                                         continue
 
                                     elif line.startswith("@@"):
@@ -607,11 +579,11 @@ def patcher():
                                     styling_dictionary["styling-key{}".format(index + 1)] = (path, style)
 
                                 except Exception as exception:
-                                    warnings.append(
+                                    helper.warnings.append(
                                         "[{}]".format(type(exception).__name__)
                                         + " Could not validate '{}' in --> 'mods\\{}\\styling.txt' [line: {}]".format(
                                             line, folder, index + 1
-                                        )  ###???
+                                        )
                                     )
 
                                 os.makedirs(os.path.join(mpaths.build_dir, os.path.dirname(path)), exist_ok=True)
@@ -622,16 +594,16 @@ def patcher():
                                             f"{path_style[0]}.vcss_c",
                                         )
                                     except KeyError:
-                                        warnings.append(
+                                        helper.warnings.append(
                                             "Path does not exist in VPK -> '{}', error in 'mods\\{}\\styling.txt'".format(
                                                 f"{path_style[0]}.vcss_c", folder
-                                            )  ###???
+                                            )
                                         )
                                         del styling_dictionary[key]
 
             except Exception as exception:
                 exceptiondata = traceback.format_exc().splitlines()
-                warnings.append(exceptiondata[-1])
+                helper.warnings.append(exceptiondata[-1])
         # ---------------------------------- STEP 2 ---------------------------------- #
         # ------------------- Decompile all files in "build" folder ------------------ #
         # ---------------------------------------------------------------------------- #
@@ -717,9 +689,7 @@ def patcher():
 
         patching = False
 
-        cleanup_dota_compile_input_path()
-        cleanup_dota_compile_output_path()
-        cleanup_build_dir()
+        helper.rmtrees(mpaths.minify_dota_compile_input_path, mpaths.minify_dota_compile_output_path, mpaths.build_dir)
 
         unlock_interaction()
         helper.add_text_to_terminal("-------------------------------------------------------", "spacer1_text")

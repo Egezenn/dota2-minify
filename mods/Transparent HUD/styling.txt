@@ -28,7 +28,6 @@ panorama/styles/hud/hud_reborn @@ #stragiint, #stats_container_bg { background-c
 
 panorama/styles/hud/dota_hud_scoreboard @@ #Background { background-image: none; background-color: #00000040; box-shadow: #00000040 0px 0px 8px 0px; } DOTAScoreboardPlayer.LocalPlayer { background-color: #00000080; }
 
-
 panorama/styles/hud/dota_hud_stat_branch @@ .AltPressed .DescriptionDrawer.HasDescription,.DescriptionDrawer.HasDescription.DescriptionVisible { visibility: visible; } .BranchChoice .StatBonusLabel, .StatBonusDescription { color: #FFFFFF; } .BranchChoice.Disabled .StatBonusLabel, .StatBonusDescription { color: #AAAAAA; } .BranchDescription { background-color: #000000A0; } .LevelBG, #StatUpgradeOption { background-image: none; background-color: none; } .StatBranchCenter { background-image: none; background-color: #000000C0; } #UpgradeStat, #StatUpgradeOption { border: 0; } DOTAStatBranch:not(.ShowStatBranchAsTooltip) #UpgradeStat.could_level_up #UpgradeStatBG, DOTAStatBranch:not(.ShowStatBranchAsTooltip) .BranchPair.BranchActive.RightBranchActive.LeftBranchActive, DOTAStatBranch:not(.ShowStatBranchAsTooltip) .BranchPair.LeftBranchActive:not(.RightBranchActive), DOTAStatBranch:not(.ShowStatBranchAsTooltip) .BranchPair.RightBranchActive:not(.LeftBranchActive) { background-image: none; background-color: #40251EC0; }
 
 panorama/styles/dota_hud_netgraph @@ #LeftColumn Label { color: #FFFFFF; letter-spacing: 1px; font-size: 10px; } #RightColumn_1 Label, #RightColumn_2 Label { color: #FFFFFF; }
