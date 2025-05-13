@@ -124,6 +124,32 @@ def open_github_link_and_close_minify():
     helper.close()
 
 
+def handle_readonly(func, path, exc):
+    # 1. Make the file/directory writable
+    if os.name == "nt":  # Windows
+        os.chmod(path, stat.S_IWRITE)
+    else:  # Linux/Mac
+        os.chmod(path, os.stat(path).st_mode | stat.S_IWUSR)
+
+    # 2. RETRY THE OPERATION
+    func(path)
+
+
+def cleanup_dota_compile_input_path():
+    path = mpaths.minify_dota_compile_input_path
+    shutil.rmtree(path, onexc=handle_readonly)  # Pass function reference, not result
+
+
+def cleanup_dota_compile_output_path():
+    path = mpaths.minify_dota_compile_output_path
+    shutil.rmtree(path, onexc=handle_readonly)
+
+
+def cleanup_build_dir():
+    path = mpaths.build_dir
+    shutil.rmtree(path, onexc=handle_readonly)
+
+
 def checkbox_state_save():
     global checkboxes_state
     for box in checkboxes:
@@ -691,9 +717,9 @@ def patcher():
 
         patching = False
 
-        shutil.rmtree(mpaths.minify_dota_compile_input_path)
-        shutil.rmtree(mpaths.minify_dota_compile_output_path)
-        shutil.rmtree(mpaths.build_dir)
+        cleanup_dota_compile_input_path()
+        cleanup_dota_compile_output_path()
+        cleanup_build_dir()
 
         unlock_interaction()
         helper.add_text_to_terminal("-------------------------------------------------------", "spacer1_text")
