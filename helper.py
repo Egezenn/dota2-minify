@@ -251,8 +251,8 @@ def processBlacklistDir(index, line, folder):
     line = line.replace(">>", "")
     line = line.replace(os.sep, "/")
 
-    if mpaths.OS == "Windows":
-        # TODO: tidy up this garbage
+    if mpaths.OS == "Windows" and mpaths.architecture == "64bit":
+        # TODO: tidy up this garbage & implement switches
         global pak1_contents_file_init
         if not os.path.exists(mpaths.rg_path):
             response = requests.get(mpaths.rg_latest_windows_x64)

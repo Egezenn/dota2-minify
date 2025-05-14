@@ -256,15 +256,12 @@ def setupSystem():
             and os.path.exists(mpaths.s2v_skia_path)
             and os.path.exists(mpaths.s2v_tinyexr_path)
         ):
-            machine = platform.machine().lower()
-            architecture = platform.architecture()[0]
-
             if mpaths.OS == "Windows":
                 archive = mpaths.s2v_latest_windows_x64
 
             elif mpaths.OS == "Linux":
-                if machine in ["arm", "aarch64"]:
-                    if architecture == "64bit":
+                if mpaths.machine in ["arm", "aarch64"]:
+                    if mpaths.architecture == "64bit":
                         archive = mpaths.s2v_latest_linux_arm_x64
                     else:
                         archive = mpaths.s2v_latest_linux_arm

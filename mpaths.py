@@ -10,6 +10,8 @@ import vdf
 steam_dir = ""
 path_file = os.path.join(os.getcwd(), "dota2path_minify.txt")
 OS = platform.system()
+machine = platform.machine().lower()
+architecture = platform.architecture()[0]
 STEAM_DEFAULT_INSTALLATION_PATH = (
     os.path.join("C:\\", "Program Files (x86)", "Steam")
     if OS == "Windows"
