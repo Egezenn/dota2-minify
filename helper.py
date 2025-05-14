@@ -1,6 +1,7 @@
 import hashlib
 import json
 import os
+import re
 import shutil
 import stat
 import subprocess
@@ -283,12 +284,15 @@ def processBlacklistDir(index, line, folder):
             pattern = r"(.*) CRC:.*"
             replacement = r"\1"
 
+            start = time.perf_counter()
             with open(os.path.join(mpaths.bin_dir, "pak1contents.txt"), "w") as file:
                 for extract_line in extract.stdout.splitlines():
                     new_line = re.sub(pattern, replacement, extract_line.rstrip())
                     file.write(new_line + "\n")
             pak1_contents_file_init = True
+            print(f"    {(time.perf_counter()-start):.6f}s for creation of cache file")
 
+        start = time.perf_counter()
         lines = subprocess.run(
             [
                 mpaths.rg_path,
@@ -304,6 +308,8 @@ def processBlacklistDir(index, line, folder):
         )
         data = lines.stdout.splitlines()
         data.pop(0)
+        print(f"    {(time.perf_counter()-start):.6f}s ripgrep tree find for {line}")
+
         return data
 
     else:

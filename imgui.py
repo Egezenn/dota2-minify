@@ -407,7 +407,7 @@ def patcher():
                     ):  # step into folders that have ticked checkboxes only
                         helper.add_text_to_terminal(
                             f"{helper.localization_dict["installing_terminal_text_var"]} {folder}",
-                            tag=f"istalling_{folder}_text_tag",
+                            tag=f"installing_{folder}_text_tag",
                         )
                         if checkboxes[box] == "Dark Terrain" or checkboxes[box] == "Remove Foilage":
                             shutil.copytree(
@@ -523,6 +523,7 @@ def patcher():
 
                             # print(f"   blacklist.txt: Found {len(blacklist_data)} paths")
 
+                            start = time.perf_counter()
                             for index, line in enumerate(blacklist_data):
                                 line = line.strip()
                                 path, extension = os.path.splitext(line)
@@ -534,7 +535,7 @@ def patcher():
                                     exist_ok=True,
                                 )
 
-                                try:
+                                try:  # another bottleneck
                                     shutil.copy(
                                         os.path.join(mpaths.blank_files_dir, "blank{}").format(extension),
                                         os.path.join(mpaths.minify_dota_compile_output_path, path + extension),
@@ -545,6 +546,8 @@ def patcher():
                                     )
 
                             blacklist_data = []
+                            print(f"    {(time.perf_counter()-start):.6f}s filecopy")
+
                         # --------------------------------- styling.txt --------------------------------- #
                         if os.stat(styling_txt).st_size == 0:
                             pass
@@ -598,14 +601,14 @@ def patcher():
                                             )
                                         )
                                         del styling_dictionary[key]
-                end = time.perf_counter()
-                print(f"{(end-start):.6f}s for {folder}")
+                print(f"--> {(time.perf_counter()-start):.6f}s for {folder}\n")
             except Exception as exception:
                 exceptiondata = traceback.format_exc().splitlines()
                 helper.warnings.append(exceptiondata[-1])
         # ---------------------------------- STEP 2 ---------------------------------- #
         # ------------------- Decompile all files in "build" folder ------------------ #
         # ---------------------------------------------------------------------------- #
+        start = time.perf_counter()
         helper.add_text_to_terminal(
             helper.localization_dict["decompiling_terminal_text_var"],
             "decompiling_text",
@@ -633,7 +636,7 @@ def patcher():
                     "error_no_execution_permission_s2v",
                     type="error",
                 )
-
+        print(f"--> {(time.perf_counter()-start):.6f}s for decompilation\n")
         # ---------------------------------- STEP 3 ---------------------------------- #
         # -------- Check what .css files are in "build" folder and write mods -------- #
         # ---------------------------------------------------------------------------- #
@@ -658,6 +661,7 @@ def patcher():
         # ---------------------------------- step 5 ---------------------------------- #
         # -------------- Compile content to game with resource compiler -------------- #
         # ---------------------------------------------------------------------------- #
+        start = time.perf_counter()
         if helper.workshop_installed == True:
             with open(os.path.join(mpaths.logs_dir, "resourcecompiler.txt"), "wb") as file:
                 helper.add_text_to_terminal(
@@ -680,15 +684,18 @@ def patcher():
                 if sp_compiler.stderr != b"":
                     decoded_err = sp_compiler.stderr.decode("utf-8")
                     raise Exception(decoded_err)
+        print(f"--> {(time.perf_counter()-start):.6f}s for compilation\n")
         # ---------------------------------- STEP 6 ---------------------------------- #
         # -------- Create VPK from game folder and save into Minify directory -------- #
         # ---------------------------------------------------------------------------- #
+        start = time.perf_counter()
         newpak = vpk.new(mpaths.minify_dota_compile_output_path)
         newpak.save(os.path.join(mpaths.minify_dota_pak_output_path, "pak66_dir.vpk"))
 
         patching = False
 
         helper.rmtrees(mpaths.minify_dota_compile_input_path, mpaths.minify_dota_compile_output_path, mpaths.build_dir)
+        print(f"--> {(time.perf_counter()-start):.6f}s for pak creation&cleanup\n")
 
         unlock_interaction()
         helper.add_text_to_terminal("-------------------------------------------------------", "spacer1_text")
