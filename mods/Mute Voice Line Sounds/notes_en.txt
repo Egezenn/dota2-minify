@@ -1,0 +1,4 @@
+- Mutes all DotaPlus Hero chatwheel sounds
+https://liquipedia.net/dota2/Chat_Wheel/Dota_Plus
+- Mutes all other DotaPlus chatwheel sounds
+- Mutes all voice lines from battlepasses

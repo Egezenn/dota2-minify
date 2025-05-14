@@ -1,0 +1,3 @@
+Nehirlerle ilgili her şeyi kaldırır
+
+Nehri şişe öğeleriyle boyamak, yürüme ses efektleri, parçacık sıçrama efektleri dahil.

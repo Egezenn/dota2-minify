@@ -1,0 +1,13 @@
+Görsel netlik için tasarlanmıştır.
+
+* Varsayılan dota2 arazisini kullanmalısınız
+* Dota2 ayarlarınızdaki video seçeneklerinde çimi kapalı konuma getirmelisiniz
+
+- Tüm karoları gri / koyu gri yapar
+- Haritadaki tüm objeleri kaldırır
+- Sis çizgileri
+- Sis pusu kaldırıldı
+- Koyu su
+- Özel takım logoları
+- Özel dükkan sahipleri
+- Harita temasına uyacak diğer çeşitli doku iyileştirmeleri

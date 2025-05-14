@@ -1,0 +1,3 @@
+Minifies the in-game HUD 
+
+* Requires Workshop Tools

@@ -1,0 +1,1 @@
+Reduce las partículas en los ataques automáticos de los héroes a distancia.

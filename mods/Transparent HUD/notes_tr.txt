@@ -1,0 +1,4 @@
+Oyun içi HUD öğelerinin çoğunu şeffaf hale getirir, bazı gereksiz özellikleri kaldırır.
+
+* Varsayılan oyun içi HUD'ı gerektirir
+* Çoğunlukla tamamlandı

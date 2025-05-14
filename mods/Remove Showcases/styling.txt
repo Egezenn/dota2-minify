@@ -1,0 +1,4 @@
+panorama/styles/context_menus/context_menu_player @@ #MenuOptionsPanel { transition-duration: 0s; }
+panorama/styles/friend_menu @@ #EditShowcaseButton { visibility: collapse; }
+panorama/styles/showcase/mini_showcase @@ .ShowcaseData { visibility: collapse; }
+panorama/styles/showcase/showcase_contents @@ #ShowcaseBackground, #ShowcaseForeground { visibility: collapse; }

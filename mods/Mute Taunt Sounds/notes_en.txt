@@ -1,0 +1,1 @@
+Mutes the sounds of taunts.

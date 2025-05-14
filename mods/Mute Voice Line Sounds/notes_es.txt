@@ -1,0 +1,4 @@
+- Elimina todos los sonidos de la rueda de chat de héroes de DotaPlus
+- https://liquipedia.net/dota2/Chat_Wheel/Dota_Plus
+- Elimina todos los demás sonidos de la rueda de chat de DotaPlus
+- Elimina todas las líneas de voz de los pases de batalla

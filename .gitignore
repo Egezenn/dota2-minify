@@ -1,0 +1,38 @@
+# Minify
+*.css
+*.vcss_c
+logs
+locale
+states.json
+dota2path_minify.txt
+bin/maps/
+mods/test
+
+## Source2Viewer
+cli-*-*.*
+Source2Viewer-CLI*
+libSkiaSharp*
+TinyEXR.Native.dll
+libTinyEXR.Native.so
+
+# Dota2
+steam_appid.txt
+
+# Byte-compiled / optimized / DLL files
+__pycache__
+*.py[cod]
+*$py.class
+*.exe
+nuitka
+*.build
+*.dist
+nuitka*
+
+# Environments
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/

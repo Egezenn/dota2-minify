@@ -1,0 +1,1 @@
+@@https://raw.githubusercontent.com/Egezenn/dota2-minify/refs/heads/data/remove-pinging-blacklist.txt

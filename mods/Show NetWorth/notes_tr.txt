@@ -1,0 +1,1 @@
+Hızlı istatistikler panelinde mevcut net değerinizi gösterir.

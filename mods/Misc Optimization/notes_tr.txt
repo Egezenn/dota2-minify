@@ -1,0 +1,7 @@
+Çeşitli efektleri kaldırır
+
+- Fountain, outpost, base binalarındaki parlayan mavi efektler gibi binalardaki parçacık efektlerini kaldırır..vb
+- Kule saldırısı mermi / yıkım parçacıkları
+- Effigy parçacıkları
+- Basitleştirilmiş ilüzyonlar
+- Kahraman yüklemeleri, etkinlik amblemleri, glif ve daha fazlası
