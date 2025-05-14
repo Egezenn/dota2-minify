@@ -369,6 +369,7 @@ def patcher_start():
 
 
 def patcher():
+    global_start = time.perf_counter()
     global patching
     lock_interaction()
     helper.clean_terminal()
@@ -602,6 +603,7 @@ def patcher():
                                         )
                                         del styling_dictionary[key]
                 print(f"--> {(time.perf_counter()-start):.6f}s for {folder}\n")
+
             except Exception as exception:
                 exceptiondata = traceback.format_exc().splitlines()
                 helper.warnings.append(exceptiondata[-1])
@@ -638,8 +640,9 @@ def patcher():
                 )
         print(f"--> {(time.perf_counter()-start):.6f}s for decompilation\n")
         # ---------------------------------- STEP 3 ---------------------------------- #
-        # -------- Check what .css files are in "build" folder and write mods -------- #
+        # ---------------------------- CSS resourcecompile --------------------------- #
         # ---------------------------------------------------------------------------- #
+        start = time.perf_counter()
         helper.add_text_to_terminal(
             helper.localization_dict["patching_terminal_text_var"],
             "patching_text_tag",
@@ -649,19 +652,14 @@ def patcher():
             with open(os.path.join(mpaths.build_dir, f"{path_style[0]}.css"), "r+") as file:
                 if path_style[1] not in file.read():
                     file.write("\n" + path_style[1])
-        # ---------------------------------- STEP 4 ---------------------------------- #
-        # -----------------  Move uncompiled files in build to content --------------- #
-        # ---------------------------------------------------------------------------- #
+
         copytree(
             mpaths.build_dir,
             mpaths.minify_dota_compile_input_path,
             dirs_exist_ok=True,
             ignore=ignore_patterns("*.vcss_c"),
         )
-        # ---------------------------------- step 5 ---------------------------------- #
-        # -------------- Compile content to game with resource compiler -------------- #
-        # ---------------------------------------------------------------------------- #
-        start = time.perf_counter()
+
         if helper.workshop_installed == True:
             with open(os.path.join(mpaths.logs_dir, "resourcecompiler.txt"), "wb") as file:
                 helper.add_text_to_terminal(
@@ -707,6 +705,7 @@ def patcher():
         )
 
         helper.handleWarnings(mpaths.logs_dir)
+        print(f"\n\n{(time.perf_counter()-global_start):.6f}s for entire patch\n")
 
     except Exception:
         with open(os.path.join(mpaths.logs_dir, "crashlog.txt"), "w") as file:
