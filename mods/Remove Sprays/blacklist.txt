@@ -1,2 +1,1 @@
 >>particles/sprays
-sounds/misc/spraypaint.vsnd_c

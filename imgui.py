@@ -395,6 +395,7 @@ def patcher():
 
         for folder in mpaths.mods_folders:
             try:
+                start = time.perf_counter()
                 mod_path = os.path.join(mpaths.mods_dir, folder)
                 # files_total = sum([len(files) for r, d, files in os.walk(os.path.join(mod_path, 'files'))])
                 blacklist_txt = os.path.join(mod_path, "blacklist.txt")
@@ -489,7 +490,6 @@ def patcher():
                             pass
                         else:
                             with open(blacklist_txt) as file:
-
                                 lines = file.readlines()
 
                                 for index, line in enumerate(lines):
@@ -508,10 +508,10 @@ def patcher():
                                             blacklist_data.append(path)
 
                                     elif line.startswith(">>"):
-                                        for path in helper.processBlacklistDir(
-                                            index, line, folder, mpaths.dota_pak01_path
-                                        ):
+                                        for path in helper.processBlacklistDir(index, line, folder):
                                             blacklist_data.append(path)
+
+                                    # TODO: grep behavior
 
                                     else:
                                         if line.endswith(tuple(blank_file_extensions)):
@@ -598,7 +598,8 @@ def patcher():
                                             )
                                         )
                                         del styling_dictionary[key]
-
+                end = time.perf_counter()
+                print(f"{(end-start):.6f}s for {folder}")
             except Exception as exception:
                 exceptiondata = traceback.format_exc().splitlines()
                 helper.warnings.append(exceptiondata[-1])

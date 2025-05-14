@@ -7,9 +7,11 @@ import subprocess
 import time
 import urllib.error
 import webbrowser
+import zipfile
 from urllib.request import urlopen
 
 import dearpygui.dearpygui as ui
+import requests
 import vpk
 
 import mpaths
@@ -22,6 +24,7 @@ details_label_text_var = ""
 mod_selection_window_var = ""
 compile_path = ""
 pak1_contents = vpk.open(mpaths.dota_pak01_path)
+pak1_contents_file_init = False
 
 # ---------------------------------------------------------------------------- #
 #                                   Warnings                                   #
@@ -243,21 +246,78 @@ def urlValidator(url):
 
 
 def processBlacklistDir(index, line, folder):
-    global pak1_contents
     data = []
     line = line.replace(">>", "")
     line = line.replace(os.sep, "/")
 
-    for filepath in pak1_contents:
-        if filepath.startswith(line):
-            data.append(filepath)
+    if mpaths.OS == "Windows":
+        # TODO: tidy up this garbage
+        global pak1_contents_file_init
+        if not os.path.exists(mpaths.rg_path):
+            response = requests.get(mpaths.rg_latest_windows_x64)
+            zip_path = mpaths.rg_latest_windows_x64.split("/")[-1]
+            response = requests.get(mpaths.rg_latest_windows_x64)
+            if response.status_code == 200:
+                with open(zip_path, "wb") as file:
+                    file.write(response.content)
+                add_text_to_terminal(text="-> Downloaded ripgrep")
+                with zipfile.ZipFile(zip_path, "r") as zip_ref:
+                    zip_ref.extract(zip_path[:-4] + "/" + mpaths.rg_path)
+                os.rename(os.path.join(zip_path[:-4], mpaths.rg_path), mpaths.rg_path)
+                rmtrees(zip_path[:-4])
+                os.remove(zip_path)
+                add_text_to_terminal(text="-> Extracted ripgrep")
 
-    if not data:
-        warnings.append(
-            f"[Directory Not Found] Could not find '{line}' in pak01_dir.vpk -> mods\\{folder}\\blacklist.txt [line: {index+1}]"
+        if not pak1_contents_file_init:
+            # check hash or creation date of pak1contents later on to not do this all the time?
+            extract = subprocess.run(
+                [
+                    mpaths.s2v_executable,
+                    "-i",
+                    mpaths.dota_pak01_path,
+                    "-l",
+                ],
+                capture_output=True,
+                text=True,
+            )
+            pattern = r"(.*) CRC:.*"
+            replacement = r"\1"
+
+            with open(os.path.join(mpaths.bin_dir, "pak1contents.txt"), "w") as file:
+                for extract_line in extract.stdout.splitlines():
+                    new_line = re.sub(pattern, replacement, extract_line.rstrip())
+                    file.write(new_line + "\n")
+            pak1_contents_file_init = True
+
+        lines = subprocess.run(
+            [
+                mpaths.rg_path,
+                "--no-filename",
+                "--no-line-number",
+                "--color=never",
+                line,
+                mpaths.dota_pak01_path,
+                os.path.join(mpaths.bin_dir, "pak1contents.txt"),
+            ],
+            capture_output=True,
+            text=True,
         )
+        data = lines.stdout.splitlines()
+        data.pop(0)
+        return data
 
-    return data
+    else:
+        global pak1_contents
+        for filepath in pak1_contents:
+            if filepath.startswith(line):
+                data.append(filepath)
+
+        if not data:
+            warnings.append(
+                f"[Directory Not Found] Could not find '{line}' in pak01_dir.vpk -> mods\\{folder}\\blacklist.txt [line: {index+1}]"
+            )
+
+        return data
 
 
 def processBlackList(index, line, folder, blank_file_extensions):
