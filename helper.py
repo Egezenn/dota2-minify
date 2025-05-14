@@ -4,7 +4,6 @@ import os
 import shutil
 import stat
 import subprocess
-import sys
 import time
 import urllib.error
 import webbrowser
@@ -22,6 +21,7 @@ localization_dict = {}
 details_label_text_var = ""
 mod_selection_window_var = ""
 compile_path = ""
+pak1_contents = vpk.open(mpaths.dota_pak01_path)
 
 # ---------------------------------------------------------------------------- #
 #                                   Warnings                                   #
@@ -198,8 +198,8 @@ def change_localization(init=False):
 
 
 def vpkExtractor(path):
-    # TODO implement functionality to pull from
-    pak1 = vpk.open(mpaths.dota_pak01_path)
+    global pak1_contents
+    # TODO implement functionality to pull from core
     fullPath = os.path.join(mpaths.build_dir, path)
     if not os.path.exists(fullPath):  # extract files from VPK only once
         add_text_to_terminal(
@@ -207,7 +207,7 @@ def vpkExtractor(path):
             f"extracting_{path}_tag",
         )
         path = path.replace(os.sep, "/")
-        pakfile = pak1.get_file(path)
+        pakfile = pak1_contents.get_file(path)
         pakfile.save(os.path.join(fullPath))
 
 
@@ -242,14 +242,13 @@ def urlValidator(url):
     return content
 
 
-def processBlacklistDir(index, line, folder, pak01_dir):
+def processBlacklistDir(index, line, folder):
+    global pak1_contents
     data = []
     line = line.replace(">>", "")
     line = line.replace(os.sep, "/")
-    pak1 = vpk.open(pak01_dir)
 
-    # TODO: optimize this, it's in 3 for loops
-    for filepath in pak1:
+    for filepath in pak1_contents:
         if filepath.startswith(line):
             data.append(filepath)
 
@@ -261,7 +260,7 @@ def processBlacklistDir(index, line, folder, pak01_dir):
     return data
 
 
-def processBlackList(index, line, folder, blank_file_extensions, pak01_dir):
+def processBlackList(index, line, folder, blank_file_extensions):
     data = []
 
     if line.startswith("@@"):
@@ -269,11 +268,11 @@ def processBlackList(index, line, folder, blank_file_extensions, pak01_dir):
 
         for line in content:
 
-            if line.startswith("#"):
+            if line.startswith("#") or line == "":
                 continue
 
             if line.startswith(">>"):
-                for path in processBlacklistDir(index, line, folder, pak01_dir):
+                for path in processBlacklistDir(index, line, folder):
                     data.append(path)
                 continue
 
@@ -307,16 +306,16 @@ def calculate_md5(file_path):
 
 def open_dir(path, args=""):
     if args:
-        if sys.platform == "win32":
+        if mpaths.OS == "Windows":
             os.startfile(path, arguments=args)
-        elif sys.platform == "darwin":
+        elif mpaths.OS == "Darwin":
             os.system(f'open "{path} {args}')
         else:
             os.system(f'xdg-open "{path} {args}')
     else:
-        if sys.platform == "win32":
+        if mpaths.OS == "Windows":
             os.startfile(path)
-        elif sys.platform == "darwin":
+        elif mpaths.OS == "Darwin":
             os.system(f'open "{path}"')
         else:
             os.system(f'xdg-open "{path}"')

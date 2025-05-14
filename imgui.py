@@ -3,6 +3,7 @@ import json
 import os
 import platform
 import shutil
+import stat
 import subprocess
 import threading
 import time
@@ -494,7 +495,7 @@ def patcher():
                                 for index, line in enumerate(lines):
                                     line = line.strip()
 
-                                    if line.startswith("#") or line.isspace():
+                                    if line.startswith("#") or line == "":
                                         continue
 
                                     elif line.startswith("@@"):
@@ -503,17 +504,14 @@ def patcher():
                                             line,
                                             folder,
                                             blank_file_extensions,
-                                            mpaths.dota_pak01_path,
                                         ):
                                             blacklist_data.append(path)
-                                        continue
 
                                     elif line.startswith(">>"):
                                         for path in helper.processBlacklistDir(
                                             index, line, folder, mpaths.dota_pak01_path
                                         ):
                                             blacklist_data.append(path)
-                                        continue
 
                                     else:
                                         if line.endswith(tuple(blank_file_extensions)):
