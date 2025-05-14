@@ -1,3 +1,0 @@
-Oyun içi arayüzü küçültür
-
-* Atölye araçlarını gerektirir

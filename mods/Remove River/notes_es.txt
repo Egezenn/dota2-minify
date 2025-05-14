@@ -1,3 +1,0 @@
-Elimina todo lo relacionado con los ríos
-
-Incluyendo el efecto visual del agua, efectos de sonido al caminar y efectos de salpicadura de partículas.

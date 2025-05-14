@@ -1,2 +1,0 @@
-Mutes announcers & killstreak lines.
-Заглушает комментаторов и звуки киллстриков.

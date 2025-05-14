@@ -1,3 +1,0 @@
-Kahraman önizlemelerini kaldırır.
-
-Daha iyi performans için "+map_enable_portrait_worlds 0" başlatma seçeneğini ekleyebilirsiniz.

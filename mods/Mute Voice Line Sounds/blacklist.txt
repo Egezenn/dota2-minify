@@ -1,1 +1,0 @@
-@@https://raw.githubusercontent.com/Egezenn/dota2-minify/refs/heads/data/mute-voiceline-sounds-blacklist.txt

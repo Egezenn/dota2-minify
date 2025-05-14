@@ -1,1 +1,0 @@
-Aceptar automáticamente la partida después de 5 segundos.

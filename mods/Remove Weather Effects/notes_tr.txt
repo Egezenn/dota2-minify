@@ -1,3 +1,0 @@
-Hava durumu öğelerinden ve "cl_weather" konsol komutundan tüm hava durumu efektlerini kaldırır.
-
-https://liquipedia.net/dota2/Weather_Effects

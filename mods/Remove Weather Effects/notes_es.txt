@@ -1,3 +1,0 @@
-Elimina todos los efectos climáticos tanto de los ítems de clima como del comando de consola "cl_weather".
-
-https://liquipedia.net/dota2/Weather_Effects

@@ -1,3 +1,0 @@
-Buraya kendi stillerinizi ekleyin veya mevcut parçacıkları değiştirin / kaldırın.
-
-Bu stillerin bazıları istenmeyebilir, dikkatli bir şekilde etkinleştirin.

@@ -1,1 +1,0 @@
-Removes main menu background (last played match's hero, match details and other boxes)
