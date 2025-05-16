@@ -393,7 +393,7 @@ def patcher():
 
         for folder in mpaths.mods_folders:
             try:
-                start = time.perf_counter()
+                mod_start = time.perf_counter()
                 mod_path = os.path.join(mpaths.mods_dir, folder)
                 # files_total = sum([len(files) for r, d, files in os.walk(os.path.join(mod_path, 'files'))])
                 blacklist_txt = os.path.join(mod_path, "blacklist.txt")
@@ -516,7 +516,7 @@ def patcher():
                                             blacklist_data.append(line)
                                         else:
                                             helper.warnings.append(
-                                                f"[Invalid Extension] '{line}' in 'mods\\{folder}\\blacklist.txt' [line: {index+1}] does not end in one of the valid extensions -> {blank_file_extensions}"  ###???
+                                                f"[Invalid Extension] '{line}' in 'mods\\{folder}\\blacklist.txt' [line: {index+1}] does not end in one of the valid extensions -> {blank_file_extensions}"
                                             )
 
                             # print(f"   blacklist.txt: Found {len(blacklist_data)} paths")
@@ -540,7 +540,7 @@ def patcher():
                                     )
                                 except FileNotFoundError as exception:
                                     helper.warnings.append(
-                                        f"[Invalid Extension] '{line}' in 'mods\\{os.path.basename(mod_path)}\\blacklist.txt' does not end in one of the valid extensions -> {blank_file_extensions}"  ###???
+                                        f"[Invalid Extension] '{line}' in 'mods\\{os.path.basename(mod_path)}\\blacklist.txt' does not end in one of the valid extensions -> {blank_file_extensions}"
                                     )
 
                             blacklist_data = []
@@ -599,7 +599,7 @@ def patcher():
                                             )
                                         )
                                         del styling_dictionary[key]
-                print(f"--> {(time.perf_counter()-start):.6f}s for {folder}\n")
+                print(f"--> {(time.perf_counter()-mod_start):.6f}s for {folder}\n")
 
             except Exception as exception:
                 exceptiondata = traceback.format_exc().splitlines()

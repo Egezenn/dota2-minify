@@ -314,9 +314,11 @@ def processBlacklistDir(index, line, folder):
 
     else:
         global pak1_contents
+        start = time.perf_counter()
         for filepath in pak1_contents:
             if filepath.startswith(line):
                 data.append(filepath)
+        print(f"    {(time.perf_counter()-start):.6f}s python tree find for {line}")
 
         if not data:
             warnings.append(
