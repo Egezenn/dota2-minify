@@ -702,7 +702,7 @@ def patcher():
         )
 
         helper.handleWarnings(mpaths.logs_dir)
-        print(f"\n\n{(time.perf_counter()-global_start):.6f}s for entire patch\n")
+        print(f"\n\n{(time.perf_counter()-global_start):.6f}s for the entire patch\n")
 
     except Exception:
         with open(os.path.join(mpaths.logs_dir, "crashlog.txt"), "w") as file:
