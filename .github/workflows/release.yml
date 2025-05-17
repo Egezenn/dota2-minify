@@ -6,11 +6,7 @@ on:
       release_name:
         description: "Name the release"
         required: true
-        default: "Minify-v1.xx"
-      release_body:
-        description: "Description of the release"
-        required: true
-        default: "Built with workflows"
+        default: "Minify-v1.xx.x"
 
 env:
   RELEASE_NAME: ""
@@ -40,6 +36,16 @@ jobs:
         with:
           commit_message: "Version change"
 
+      - name: Initialize commit body
+        shell: pwsh
+        run: |
+          $latestTagCommitSha = git rev-list --tags --max-count=1
+          $gitLog = git log "${latestTagCommitSha}..HEAD" --pretty="format:- [%s](https://github.com/Egezenn/dota2-minify/commit/%H) - @%an"
+          Set-Content -Path "commit_log.md" -Value $gitLog -Encoding UTF8
+          $currentLog = Get-Content -Path commit_log.md -Raw
+          $logWithHeader = "Built with workflows" + $currentLog
+          Set-Content -Path commit_log.md -Value $logWithHeader
+
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
@@ -47,9 +53,7 @@ jobs:
 
       - name: Build executable with Nuitka
         run: |
-          curl -s -L -o "cli-windows-x64.zip" "https://github.com/ValveResourceFormat/ValveResourceFormat/releases/latest/download/cli-windows-x64.zip"
-          Expand-Archive -Path ".\cli-windows-x64.zip" -DestinationPath ".\"
-          python -m nuitka --assume-yes-for-downloads --follow-imports --standalone --include-data-files=version=version --include-data-files=Source2Viewer-CLI.exe=Source2Viewer-CLI.exe --include-data-files=TinyEXR.Native.dll=TinyEXR.Native.dll --include-data-files=.\libSkiaSharp.dll=libSkiaSharp.dll --include-data-dir=./bin=bin --include-data-dir=./mods=mods --enable-plugin=tk-inter --windows-console-mode=disable --windows-icon-from-ico=bin/images/favicon.ico --enable-plugin=tk-inter --output-filename=Minify imgui.py
+          python -m nuitka --assume-yes-for-downloads --follow-imports --standalone --include-data-files=version=version --include-data-dir=./bin=bin --include-data-dir=./mods=mods --enable-plugin=tk-inter --windows-console-mode=disable --windows-icon-from-ico=bin/images/favicon.ico --enable-plugin=tk-inter --output-filename=Minify imgui.py
           cd imgui.dist
           Compress-Archive -Path ".\*" -DestinationPath ".\..\${{ github.event.inputs.release_name }}.zip"
           cd .\..\
@@ -58,7 +62,11 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           tag_name: ${{ github.event.inputs.release_name }}
-          body: ${{ github.event.inputs.release_body }}
+          body_path: commit_log.md
           files: "${{ github.event.inputs.release_name }}.zip"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Print SHA
+        shell: pwsh
+        run: (Get-FileHash -Path ${{github.event.inputs.release_name}}.zip).Hash
