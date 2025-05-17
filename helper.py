@@ -195,10 +195,7 @@ def change_localization(init=False):
         for id in ui.get_item_children("mod_menu")[1]:
             for item in ui.get_item_children(id)[1]:
                 if ui.get_item_alias(item).endswith("_button_show_details_tag"):
-                    ui.configure_item(
-                        item,
-                        label=localization_data["details_button_label_var"][locale],
-                    )
+                    ui.configure_item(item, label=localization_data["details_button_label_var"][locale])
 
 
 def vpkExtractor(path):
@@ -206,10 +203,7 @@ def vpkExtractor(path):
     # TODO implement functionality to pull from core
     fullPath = os.path.join(mpaths.build_dir, path)
     if not os.path.exists(fullPath):  # extract files from VPK only once
-        add_text_to_terminal(
-            f"{localization_dict["extracting_terminal_text_var"]}{path}",
-            f"extracting_{path}_tag",
-        )
+        add_text_to_terminal(f"{localization_dict["extracting_terminal_text_var"]}{path}", f"extracting_{path}_tag")
         path = path.replace(os.sep, "/")
         pakfile = pak1_contents.get_file(path)
         pakfile.save(os.path.join(fullPath))
@@ -416,7 +410,7 @@ def compile(sender, app_data, user_data):
                 "-i",
                 mpaths.minify_dota_compile_input_path + "/*",
                 "-r",
-            ],
+            ]
         )
 
         shutil.copytree(os.path.join(mpaths.minify_dota_compile_output_path), compile_output_path)

@@ -29,10 +29,10 @@ jobs:
         shell: pwsh
         run: |
           $latestTagCommitSha = git rev-list --tags --max-count=1
-          $gitLog = git log "${latestTagCommitSha}..HEAD" --pretty="format:- [%s](https://github.com/Egezenn/dota2-minify/commit/%H) - @%an"
+          $gitLog = git log "$($latestTagCommitSha)..HEAD" --pretty="format:- [%s](https://github.com/Egezenn/dota2-minify/commit/%H) - @%an"
           Set-Content -Path "commit_log.md" -Value $gitLog -Encoding UTF8
           $currentLog = Get-Content -Path commit_log.md -Raw
-          $logWithHeader = "Built with workflows (Release candidate, might be broken)" + $currentLog
+          $logWithHeader = "Built with workflows (Release candidate, might be broken)`n" + $currentLog
           Set-Content -Path commit_log.md -Value $logWithHeader
 
       - name: Install dependencies
@@ -57,6 +57,6 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Print sha
+      - name: Print SHA
         shell: pwsh
         run: (Get-FileHash -Path ${{github.event.inputs.release_name}}.zip).Hash
