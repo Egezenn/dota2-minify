@@ -1,0 +1,71 @@
+name: Bug report
+description: Create a bug report
+title: "[BUG] "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: Thanks for your efforts!
+
+  - type: input
+    id: minify-version
+    attributes:
+      label: Minify Version
+      description: What's your Minify version?
+      placeholder: 1.xx.x | 1.xx.xRCx | commit-sha
+    validations:
+      required: true
+
+  - type: textarea
+    id: bug-description
+    attributes:
+      label: Bug description
+      description: Describe the bug
+      placeholder: Bug description
+    validations:
+      required: true
+
+  - type: dropdown
+    id: platform
+    attributes:
+      label: Platform
+      description: What is your operating system?
+      options:
+        - Windows 11
+        - Windows 10
+        - Windows 8.x
+        - Linux
+        - Other (specify)
+      default: 0
+    validations:
+      required: true
+
+  - type: dropdown
+    id: architecture
+    attributes:
+      label: What is your system architecture?
+      options:
+        - x64 (64-bit)
+        - x86 (32-bit)
+        - ARM
+        - Other (specify)
+      default: 0
+    validations:
+      required: true
+
+  - type: textarea
+    id: mods
+    attributes:
+      label: Mods
+      description: What mods were you using? Paste your `states.json` file
+      render: json
+    validations:
+      required: true
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs
+      description: Have you recieved a crashlog? If so, paste here
+    validations:
+      required: false
