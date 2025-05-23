@@ -163,7 +163,7 @@ Rewrite of the GUI, Russian translations, mod fixes and [more](https://github.co
 <details>
 <summary>Mods</summary>
 
-- `Dotabuff in Profiles` mod which has been refactored to [`Stat Site Buttons In Profiles`](./mods/Dotabuff%20in%20Profiles)
+- `Dotabuff in Profiles` mod which has been refactored to [`Stat Site Buttons In Profiles`](./mods/Stat%20Site%20Buttons%20In%20Profiles)
 - [`Show NetWorth`](./mods/Show%20NetWorth%20)
 
 </details>
@@ -195,3 +195,7 @@ Spanish translation.
 [vdf](https://github.com/ValvePython/vdf) Used in serializing VDFs. Licensed under MIT license.
 
 [vpk](https://github.com/ValvePython/vpk) Used in creating and getting file content list in VPKs. Licensed under MIT license.
+
+## License
+
+Contents of this repository are licensed under [GPL-3.0](LICENSE), however some files in `mods/*/files` may contain files that originate from Dota2 itself, with or without modifications to them.

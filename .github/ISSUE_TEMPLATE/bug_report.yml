@@ -20,7 +20,7 @@ body:
     id: bug-description
     attributes:
       label: Bug description
-      description: Describe the bug
+      description: Describe the bug (screenshots are appreciated!)
       placeholder: Bug description
     validations:
       required: true
