@@ -4,7 +4,6 @@ Görsel netlik için tasarlanmıştır.
 * Dota2 ayarlarınızdaki video seçeneklerinde çimi kapalı konuma getirmelisiniz
 
 - Tüm karoları gri / koyu gri yapar
-- Haritadaki tüm objeleri kaldırır
 - Sis çizgileri
 - Sis pusu kaldırıldı
 - Koyu su

@@ -118,8 +118,7 @@ class Requirements:
         if os.path.exists(mpaths.minify_map_dir) == False:
             shutil.copyfile(mpaths.dota_map_path, mpaths.minify_map_dir)
             helper.add_text_to_terminal(
-                helper.localization_dict["updating_map_file_terminal_text_var"],
-                "map_update_text_tag",
+                helper.localization_dict["updating_map_file_terminal_text_var"], "map_update_text_tag"
             )
             helper.add_text_to_terminal(
                 helper.localization_dict["map_file_uptodate_terminal_text_var"],
@@ -131,18 +130,15 @@ class Requirements:
             helper.calculate_md5(mpaths.dota_map_path) != helper.calculate_md5(mpaths.minify_map_dir)
         ):
             helper.add_text_to_terminal(
-                helper.localization_dict["updating_map_file_terminal_text_var"],
-                "map_update_text_tag",
+                helper.localization_dict["updating_map_file_terminal_text_var"], "map_update_text_tag"
             )
             os.remove(mpaths.minify_map_dir)
             helper.shutil.copyfile(mpaths.dota_map_path, mpaths.minify_map_dir)
             helper.add_text_to_terminal(
-                helper.localization_dict["map_file_uptodate_terminal_text_var"],
-                "map_up_to_date_text_tag",
+                helper.localization_dict["map_file_uptodate_terminal_text_var"], "map_up_to_date_text_tag"
             )
 
         else:
             helper.add_text_to_terminal(
-                helper.localization_dict["map_file_uptodate_terminal_text_var"],
-                "map_up_to_date_text_tag",
+                helper.localization_dict["map_file_uptodate_terminal_text_var"], "map_up_to_date_text_tag"
             )

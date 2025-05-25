@@ -62,3 +62,7 @@ jobs:
           files: "${{ github.event.inputs.release_name }}.zip"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Print SHA
+        shell: pwsh
+        run: (Get-FileHash -Path ${{github.event.inputs.release_name}}.zip).Hash

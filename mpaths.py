@@ -10,6 +10,8 @@ import vdf
 steam_dir = ""
 path_file = os.path.join(os.getcwd(), "dota2path_minify.txt")
 OS = platform.system()
+machine = platform.machine().lower()
+architecture = platform.architecture()[0]
 STEAM_DEFAULT_INSTALLATION_PATH = (
     os.path.join("C:\\", "Program Files (x86)", "Steam")
     if OS == "Windows"
@@ -155,7 +157,11 @@ s2v_latest_linux_arm = (
 s2v_latest_linux_arm_x64 = (
     "https://github.com/ValveResourceFormat/ValveResourceFormat/releases/latest/download/cli-linux-arm64.zip"
 )
+rg_latest_windows_x64 = (  # need manual version updates for archives
+    "https://github.com/BurntSushi/ripgrep/releases/download/14.1.1/ripgrep-14.1.1-x86_64-pc-windows-msvc.zip"
+)
 odg_latest = "https://github.com/Egezenn/OpenDotaGuides/releases/latest/download/itembuilds.zip"
+
 
 # minify project paths
 bin_dir = "bin"
@@ -173,6 +179,7 @@ locale_file_dir = "locale"
 s2v_executable = "Source2Viewer-CLI.exe" if OS == "Windows" else "Source2Viewer-CLI"
 s2v_skia_path = "libSkiaSharp.dll" if OS == "Windows" else "libSkiaSharp.so"
 s2v_tinyexr_path = "TinyEXR.Native.dll" if OS == "Windows" else "libTinyEXR.Native.so"
+rg_path = "rg.exe"
 
 
 # dota2 paths

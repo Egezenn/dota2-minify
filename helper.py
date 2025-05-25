@@ -1,15 +1,18 @@
 import hashlib
 import json
 import os
+import re
 import shutil
 import stat
 import subprocess
 import time
 import urllib.error
 import webbrowser
+import zipfile
 from urllib.request import urlopen
 
 import dearpygui.dearpygui as ui
+import requests
 import vpk
 
 import mpaths
@@ -22,6 +25,7 @@ details_label_text_var = ""
 mod_selection_window_var = ""
 compile_path = ""
 pak1_contents = vpk.open(mpaths.dota_pak01_path)
+pak1_contents_file_init = False
 
 # ---------------------------------------------------------------------------- #
 #                                   Warnings                                   #
@@ -191,10 +195,7 @@ def change_localization(init=False):
         for id in ui.get_item_children("mod_menu")[1]:
             for item in ui.get_item_children(id)[1]:
                 if ui.get_item_alias(item).endswith("_button_show_details_tag"):
-                    ui.configure_item(
-                        item,
-                        label=localization_data["details_button_label_var"][locale],
-                    )
+                    ui.configure_item(item, label=localization_data["details_button_label_var"][locale])
 
 
 def vpkExtractor(path):
@@ -202,10 +203,7 @@ def vpkExtractor(path):
     # TODO implement functionality to pull from core
     fullPath = os.path.join(mpaths.build_dir, path)
     if not os.path.exists(fullPath):  # extract files from VPK only once
-        add_text_to_terminal(
-            f"{localization_dict["extracting_terminal_text_var"]}{path}",
-            f"extracting_{path}_tag",
-        )
+        add_text_to_terminal(f"{localization_dict["extracting_terminal_text_var"]}{path}", f"extracting_{path}_tag")
         path = path.replace(os.sep, "/")
         pakfile = pak1_contents.get_file(path)
         pakfile.save(os.path.join(fullPath))
@@ -243,21 +241,85 @@ def urlValidator(url):
 
 
 def processBlacklistDir(index, line, folder):
-    global pak1_contents
     data = []
     line = line.replace(">>", "")
     line = line.replace(os.sep, "/")
 
-    for filepath in pak1_contents:
-        if filepath.startswith(line):
-            data.append(filepath)
+    if mpaths.OS == "Windows" and mpaths.architecture == "64bit":
+        # TODO: tidy up this garbage & implement switches
+        global pak1_contents_file_init
+        if not os.path.exists(mpaths.rg_path):
+            response = requests.get(mpaths.rg_latest_windows_x64)
+            zip_path = mpaths.rg_latest_windows_x64.split("/")[-1]
+            response = requests.get(mpaths.rg_latest_windows_x64)
+            if response.status_code == 200:
+                with open(zip_path, "wb") as file:
+                    file.write(response.content)
+                add_text_to_terminal(text="-> Downloaded ripgrep")
+                with zipfile.ZipFile(zip_path, "r") as zip_ref:
+                    zip_ref.extract(zip_path[:-4] + "/" + mpaths.rg_path)
+                os.rename(os.path.join(zip_path[:-4], mpaths.rg_path), mpaths.rg_path)
+                rmtrees(zip_path[:-4])
+                os.remove(zip_path)
+                add_text_to_terminal(text="-> Extracted ripgrep")
 
-    if not data:
-        warnings.append(
-            f"[Directory Not Found] Could not find '{line}' in pak01_dir.vpk -> mods\\{folder}\\blacklist.txt [line: {index+1}]"
+        if not pak1_contents_file_init:
+            # check hash or creation date of pak1contents later on to not do this all the time?
+            extract = subprocess.run(
+                [
+                    mpaths.s2v_executable,
+                    "-i",
+                    mpaths.dota_pak01_path,
+                    "-l",
+                ],
+                capture_output=True,
+                text=True,
+            )
+            pattern = r"(.*) CRC:.*"
+            replacement = r"\1"
+
+            start = time.perf_counter()
+            with open(os.path.join(mpaths.bin_dir, "pak1contents.txt"), "w") as file:
+                for extract_line in extract.stdout.splitlines():
+                    new_line = re.sub(pattern, replacement, extract_line.rstrip())
+                    file.write(new_line + "\n")
+            pak1_contents_file_init = True
+            print(f"    {(time.perf_counter()-start):.6f}s for creation of cache file")
+
+        start = time.perf_counter()
+        lines = subprocess.run(
+            [
+                mpaths.rg_path,
+                "--no-filename",
+                "--no-line-number",
+                "--color=never",
+                line,
+                mpaths.dota_pak01_path,
+                os.path.join(mpaths.bin_dir, "pak1contents.txt"),
+            ],
+            capture_output=True,
+            text=True,
         )
+        data = lines.stdout.splitlines()
+        data.pop(0)
+        print(f"    {(time.perf_counter()-start):.6f}s ripgrep tree find for {line}")
 
-    return data
+        return data
+
+    else:
+        global pak1_contents
+        start = time.perf_counter()
+        for filepath in pak1_contents:
+            if filepath.startswith(line):
+                data.append(filepath)
+        print(f"    {(time.perf_counter()-start):.6f}s python tree find for {line}")
+
+        if not data:
+            warnings.append(
+                f"[Directory Not Found] Could not find '{line}' in pak01_dir.vpk -> mods\\{folder}\\blacklist.txt [line: {index+1}]"
+            )
+
+        return data
 
 
 def processBlackList(index, line, folder, blank_file_extensions):
@@ -348,7 +410,7 @@ def compile(sender, app_data, user_data):
                 "-i",
                 mpaths.minify_dota_compile_input_path + "/*",
                 "-r",
-            ],
+            ]
         )
 
         shutil.copytree(os.path.join(mpaths.minify_dota_compile_output_path), compile_output_path)

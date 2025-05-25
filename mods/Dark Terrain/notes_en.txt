@@ -4,7 +4,6 @@ Designed for visual clarity.
 * Must turn OFF grass in video options in your dota2 settings
 
 - Makes all tiles gray/dark gray
-- Removes all foilage on the map
 - Fog lines
 - Removed fog mist
 - Dark water

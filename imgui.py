@@ -42,20 +42,11 @@ ui.add_value_registry(tag="details_tags")
 
 with ui.value_registry():
     ui.add_string_value(default_value="Checking map file...", tag="checking_map_file_var")
-    ui.add_string_value(
-        default_value="Want to contribute to the project's growth?",
-        tag="start_text_1_var",
-    )
+    ui.add_string_value(default_value="Want to contribute to the project's growth?", tag="start_text_1_var")
     ui.add_string_value(default_value="-> Join our Discord community!", tag="start_text_2_var")
-    ui.add_string_value(
-        default_value="-> Share Minify with your friends and online groups",
-        tag="start_text_3_var",
-    )
+    ui.add_string_value(default_value="-> Share Minify with your friends and online groups", tag="start_text_3_var")
     ui.add_string_value(default_value="-> Star the project on GitHub", tag="start_text_4_var")
-    ui.add_string_value(
-        default_value="-> Create and maintain mods for this project",
-        tag="start_text_5_var",
-    )
+    ui.add_string_value(default_value="-> Create and maintain mods for this project", tag="start_text_5_var")
 
 
 class TextRedirector(object):
@@ -181,11 +172,7 @@ def create_checkboxes():
         name = mpaths.mods_folders[index]
         ui.add_group(parent="mod_menu", tag=f"{name}_group_tag", horizontal=True, width=300)
         ui.add_checkbox(
-            parent=f"{name}_group_tag",
-            label=name,
-            tag=name,
-            default_value=False,
-            callback=setupButtonState,
+            parent=f"{name}_group_tag", label=name, tag=name, default_value=False, callback=setupButtonState
         )
         for key in checkboxes_state.keys():
             if key == name:
@@ -220,16 +207,8 @@ def create_checkboxes():
             no_collapse=True,
             label=name,
         )
-        ui.add_string_value(
-            parent="details_tags",
-            default_value=data,
-            tag=f"{name}_details_text_value_tag",
-        )
-        ui.add_text(
-            source=f"{name}_details_text_value_tag",
-            parent=f"{name}_details_window_tag",
-            wrap=480,
-        )
+        ui.add_string_value(parent="details_tags", default_value=data, tag=f"{name}_details_text_value_tag")
+        ui.add_text(source=f"{name}_details_text_value_tag", parent=f"{name}_details_window_tag", wrap=480)
 
         current_box = name
         checkboxes[current_box] = name
@@ -256,15 +235,12 @@ def setupSystem():
             and os.path.exists(mpaths.s2v_skia_path)
             and os.path.exists(mpaths.s2v_tinyexr_path)
         ):
-            machine = platform.machine().lower()
-            architecture = platform.architecture()[0]
-
             if mpaths.OS == "Windows":
                 archive = mpaths.s2v_latest_windows_x64
 
             elif mpaths.OS == "Linux":
-                if machine in ["arm", "aarch64"]:
-                    if architecture == "64bit":
+                if mpaths.machine in ["arm", "aarch64"]:
+                    if mpaths.architecture == "64bit":
                         archive = mpaths.s2v_latest_linux_arm_x64
                     else:
                         archive = mpaths.s2v_latest_linux_arm
@@ -353,8 +329,7 @@ def uninstaller():
             "Unable to recover backed up default guides or the itembuilds directory is empty, verify files to get the default guides back"
         )
     helper.add_text_to_terminal(
-        text=helper.localization_dict["mods_removed_terminal_text_var"],
-        tag="uninstaller_text_tag",
+        text=helper.localization_dict["mods_removed_terminal_text_var"], tag="uninstaller_text_tag"
     )
     unlock_interaction()
 
@@ -369,6 +344,7 @@ def patcher_start():
 
 
 def patcher():
+    global_start = time.perf_counter()
     global patching
     lock_interaction()
     helper.clean_terminal()
@@ -395,6 +371,7 @@ def patcher():
 
         for folder in mpaths.mods_folders:
             try:
+                mod_start = time.perf_counter()
                 mod_path = os.path.join(mpaths.mods_dir, folder)
                 # files_total = sum([len(files) for r, d, files in os.walk(os.path.join(mod_path, 'files'))])
                 blacklist_txt = os.path.join(mod_path, "blacklist.txt")
@@ -406,15 +383,12 @@ def patcher():
                     ):  # step into folders that have ticked checkboxes only
                         helper.add_text_to_terminal(
                             f"{helper.localization_dict["installing_terminal_text_var"]} {folder}",
-                            tag=f"istalling_{folder}_text_tag",
+                            tag=f"installing_{folder}_text_tag",
                         )
                         if checkboxes[box] == "Dark Terrain" or checkboxes[box] == "Remove Foilage":
                             shutil.copytree(
                                 mpaths.maps_dir,
-                                os.path.join(
-                                    mpaths.minify_dota_pak_output_path,
-                                    os.path.basename(mpaths.maps_dir),
-                                ),
+                                os.path.join(mpaths.minify_dota_pak_output_path, os.path.basename(mpaths.maps_dir)),
                                 dirs_exist_ok=True,
                             )
                         if checkboxes[box] == "OpenDotaGuides Guides":
@@ -431,20 +405,13 @@ def patcher():
                                         helper.localization_dict["downloaded_latest_opendotaguides_terminal_text_var"],
                                         "downloaded_open_dota_guides_text_tag",
                                     )
-                                    os.makedirs(
-                                        os.path.join(mpaths.dota_itembuilds_path, "bkup"),
-                                        exist_ok=True,
-                                    )
+                                    os.makedirs(os.path.join(mpaths.dota_itembuilds_path, "bkup"), exist_ok=True)
                                     for name in os.listdir(mpaths.dota_itembuilds_path):
                                         try:
                                             if name != "bkup":
                                                 os.rename(
                                                     os.path.join(mpaths.dota_itembuilds_path, name),
-                                                    os.path.join(
-                                                        mpaths.dota_itembuilds_path,
-                                                        "bkup",
-                                                        name,
-                                                    ),
+                                                    os.path.join(mpaths.dota_itembuilds_path, "bkup", name),
                                                 )
                                         except FileExistsError:
                                             pass  # backup was created and opendotaguides was replacing the guides already
@@ -489,7 +456,6 @@ def patcher():
                             pass
                         else:
                             with open(blacklist_txt) as file:
-
                                 lines = file.readlines()
 
                                 for index, line in enumerate(lines):
@@ -499,30 +465,26 @@ def patcher():
                                         continue
 
                                     elif line.startswith("@@"):
-                                        for path in helper.processBlackList(
-                                            index,
-                                            line,
-                                            folder,
-                                            blank_file_extensions,
-                                        ):
+                                        for path in helper.processBlackList(index, line, folder, blank_file_extensions):
                                             blacklist_data.append(path)
 
                                     elif line.startswith(">>"):
-                                        for path in helper.processBlacklistDir(
-                                            index, line, folder, mpaths.dota_pak01_path
-                                        ):
+                                        for path in helper.processBlacklistDir(index, line, folder):
                                             blacklist_data.append(path)
+
+                                    # TODO: regexp behavior
 
                                     else:
                                         if line.endswith(tuple(blank_file_extensions)):
                                             blacklist_data.append(line)
                                         else:
                                             helper.warnings.append(
-                                                f"[Invalid Extension] '{line}' in 'mods\\{folder}\\blacklist.txt' [line: {index+1}] does not end in one of the valid extensions -> {blank_file_extensions}"  ###???
+                                                f"[Invalid Extension] '{line}' in 'mods\\{folder}\\blacklist.txt' [line: {index+1}] does not end in one of the valid extensions -> {blank_file_extensions}"
                                             )
 
                             # print(f"   blacklist.txt: Found {len(blacklist_data)} paths")
 
+                            start = time.perf_counter()
                             for index, line in enumerate(blacklist_data):
                                 line = line.strip()
                                 path, extension = os.path.splitext(line)
@@ -534,17 +496,19 @@ def patcher():
                                     exist_ok=True,
                                 )
 
-                                try:
+                                try:  # another bottleneck
                                     shutil.copy(
                                         os.path.join(mpaths.blank_files_dir, "blank{}").format(extension),
                                         os.path.join(mpaths.minify_dota_compile_output_path, path + extension),
                                     )
                                 except FileNotFoundError as exception:
                                     helper.warnings.append(
-                                        f"[Invalid Extension] '{line}' in 'mods\\{os.path.basename(mod_path)}\\blacklist.txt' does not end in one of the valid extensions -> {blank_file_extensions}"  ###???
+                                        f"[Invalid Extension] '{line}' in 'mods\\{os.path.basename(mod_path)}\\blacklist.txt' does not end in one of the valid extensions -> {blank_file_extensions}"
                                     )
 
                             blacklist_data = []
+                            print(f"    {(time.perf_counter()-start):.6f}s filecopy")
+
                         # --------------------------------- styling.txt --------------------------------- #
                         if os.stat(styling_txt).st_size == 0:
                             pass
@@ -588,9 +552,7 @@ def patcher():
 
                                 for key, path_style in list(styling_dictionary.items()):
                                     try:
-                                        helper.vpkExtractor(
-                                            f"{path_style[0]}.vcss_c",
-                                        )
+                                        helper.vpkExtractor(f"{path_style[0]}.vcss_c")
                                     except KeyError:
                                         helper.warnings.append(
                                             "Path does not exist in VPK -> '{}', error in 'mods\\{}\\styling.txt'".format(
@@ -598,6 +560,7 @@ def patcher():
                                             )
                                         )
                                         del styling_dictionary[key]
+                print(f"--> {(time.perf_counter()-mod_start):.6f}s for {folder}\n")
 
             except Exception as exception:
                 exceptiondata = traceback.format_exc().splitlines()
@@ -605,10 +568,8 @@ def patcher():
         # ---------------------------------- STEP 2 ---------------------------------- #
         # ------------------- Decompile all files in "build" folder ------------------ #
         # ---------------------------------------------------------------------------- #
-        helper.add_text_to_terminal(
-            helper.localization_dict["decompiling_terminal_text_var"],
-            "decompiling_text",
-        )
+        start = time.perf_counter()
+        helper.add_text_to_terminal(helper.localization_dict["decompiling_terminal_text_var"], "decompiling_text")
         with open(os.path.join(mpaths.logs_dir, "Source2Viewer-CLI.txt"), "w") as file:
             if mpaths.OS == "Linux" and not os.access(mpaths.s2v_executable, os.X_OK):
                 current_permissions = os.stat(mpaths.s2v_executable).st_mode
@@ -632,37 +593,28 @@ def patcher():
                     "error_no_execution_permission_s2v",
                     type="error",
                 )
-
+        print(f"--> {(time.perf_counter()-start):.6f}s for decompilation\n")
         # ---------------------------------- STEP 3 ---------------------------------- #
-        # -------- Check what .css files are in "build" folder and write mods -------- #
+        # ---------------------------- CSS resourcecompile --------------------------- #
         # ---------------------------------------------------------------------------- #
-        helper.add_text_to_terminal(
-            helper.localization_dict["patching_terminal_text_var"],
-            "patching_text_tag",
-        )
+        start = time.perf_counter()
+        helper.add_text_to_terminal(helper.localization_dict["patching_terminal_text_var"], "patching_text_tag")
 
         for key, path_style in list(styling_dictionary.items()):
             with open(os.path.join(mpaths.build_dir, f"{path_style[0]}.css"), "r+") as file:
                 if path_style[1] not in file.read():
                     file.write("\n" + path_style[1])
-        # ---------------------------------- STEP 4 ---------------------------------- #
-        # -----------------  Move uncompiled files in build to content --------------- #
-        # ---------------------------------------------------------------------------- #
+
         copytree(
             mpaths.build_dir,
             mpaths.minify_dota_compile_input_path,
             dirs_exist_ok=True,
             ignore=ignore_patterns("*.vcss_c"),
         )
-        # ---------------------------------- step 5 ---------------------------------- #
-        # -------------- Compile content to game with resource compiler -------------- #
-        # ---------------------------------------------------------------------------- #
+
         if helper.workshop_installed == True:
             with open(os.path.join(mpaths.logs_dir, "resourcecompiler.txt"), "wb") as file:
-                helper.add_text_to_terminal(
-                    helper.localization_dict["compiling_terminal_text_var"],
-                    "compiling_text",
-                )
+                helper.add_text_to_terminal(helper.localization_dict["compiling_terminal_text_var"], "compiling_text")
                 sp_compiler = subprocess.run(
                     [
                         mpaths.dota_resource_compiler_path,
@@ -679,15 +631,18 @@ def patcher():
                 if sp_compiler.stderr != b"":
                     decoded_err = sp_compiler.stderr.decode("utf-8")
                     raise Exception(decoded_err)
+        print(f"--> {(time.perf_counter()-start):.6f}s for compilation\n")
         # ---------------------------------- STEP 6 ---------------------------------- #
         # -------- Create VPK from game folder and save into Minify directory -------- #
         # ---------------------------------------------------------------------------- #
+        start = time.perf_counter()
         newpak = vpk.new(mpaths.minify_dota_compile_output_path)
         newpak.save(os.path.join(mpaths.minify_dota_pak_output_path, "pak66_dir.vpk"))
 
         patching = False
 
         helper.rmtrees(mpaths.minify_dota_compile_input_path, mpaths.minify_dota_compile_output_path, mpaths.build_dir)
+        print(f"--> {(time.perf_counter()-start):.6f}s for pak creation&cleanup\n")
 
         unlock_interaction()
         helper.add_text_to_terminal("-------------------------------------------------------", "spacer1_text")
@@ -699,6 +654,7 @@ def patcher():
         )
 
         helper.handleWarnings(mpaths.logs_dir)
+        print(f"\n\n{(time.perf_counter()-global_start):.6f}s for the entire patch\n")
 
     except Exception:
         with open(os.path.join(mpaths.logs_dir, "crashlog.txt"), "w") as file:
@@ -758,12 +714,7 @@ def create_ui():
     with ui.window(tag="primary_window", no_close=True, no_title_bar=True):
         ui.set_primary_window("primary_window", True)
         ui.add_child_window(
-            tag="top_bar",
-            pos=(-5, -5),
-            height=30,
-            width=499,
-            no_scrollbar=True,
-            no_scroll_with_mouse=True,
+            tag="top_bar", pos=(-5, -5), height=30, width=499, no_scrollbar=True, no_scroll_with_mouse=True
         )
         ui.add_combo(
             parent="top_bar",
@@ -775,65 +726,25 @@ def create_ui():
             callback=helper.change_localization,
         )
         ui.add_image_button(
-            "discord_texture_tag",
-            parent="top_bar",
-            width=21,
-            height=16,
-            pos=(55, 7),
-            callback=open_discord_link,
+            "discord_texture_tag", parent="top_bar", width=21, height=16, pos=(55, 7), callback=open_discord_link
         )
         ui.add_image_button(
-            "git_texture_tag",
-            parent="top_bar",
-            width=18,
-            height=18,
-            pos=(87, 6),
-            callback=open_github_link,
+            "git_texture_tag", parent="top_bar", width=18, height=18, pos=(87, 6), callback=open_github_link
         )
         ui.add_image_button(
-            "dev_texture_tag",
-            tag="dev",
-            parent="top_bar",
-            width=16,
-            height=16,
-            pos=(115, 6),
-            callback=dev_mode,
+            "dev_texture_tag", tag="dev", parent="top_bar", width=16, height=16, pos=(115, 6), callback=dev_mode
         )
-        ui.add_text(
-            title,
-            pos=(240, 5),
-        )
+        ui.add_text(title, pos=(240, 5))
         ui.add_button(
-            parent="top_bar",
-            tag="button_exit",
-            label="Close",
-            callback=helper.close,
-            height=28,
-            width=60,
-            pos=(440, 5),
+            parent="top_bar", tag="button_exit", label="Close", callback=helper.close, height=28, width=60, pos=(440, 5)
         )
 
         ui.bind_item_font("lang_select", combo_font)
         with ui.group(horizontal=True):
             with ui.group(pos=(391, 29)):
-                ui.add_button(
-                    tag="button_patch",
-                    label="Patch",
-                    width=92,
-                    callback=patcher_start,
-                )
-                ui.add_button(
-                    tag="button_select_mods",
-                    label="Select Mods",
-                    width=92,
-                    callback=open_mod_menu,
-                )
-                ui.add_button(
-                    tag="button_uninstall",
-                    label="Uninstall",
-                    width=92,
-                    callback=uninstall_popup_show,
-                )
+                ui.add_button(tag="button_patch", label="Patch", width=92, callback=patcher_start)
+                ui.add_button(tag="button_select_mods", label="Select Mods", width=92, callback=open_mod_menu)
+                ui.add_button(tag="button_uninstall", label="Uninstall", width=92, callback=uninstall_popup_show)
             with ui.group(pos=(-45, 4)):
                 ui.add_text(
                     r"""
@@ -841,7 +752,7 @@ def create_ui():
         /\ "-./  \  /\ \  /\ "-.\ \  /\ \  /\  ___\/\ \_\ \  
         \ \ \-./\ \ \ \ \ \ \ \-.  \ \ \ \ \ \  __\\ \____ \ 
          \ \_\ \ \_\ \ \_\ \ \_\\"\_\ \ \_\ \ \_\_/ \/\_____\
-          \/_/  \/_/  \/_/  \/_/ \/_/  \/_/  \/_/    \/_____/""",
+          \/_/  \/_/  \/_/  \/_/ \/_/  \/_/  \/_/    \/_____/"""
                 )
         # Creating log terminal
         with ui.group():
@@ -875,29 +786,12 @@ def create_ui():
         no_title_bar=True,
     )
     ui.add_group(tag="uninstall_popup_text_wrapper", parent="uninstall_popup")
-    ui.add_text(
-        default_value="Remove all mods?",
-        parent="uninstall_popup_text_wrapper",
-        tag="remove_mods_text_tag",
-    )
+    ui.add_text(default_value="Remove all mods?", parent="uninstall_popup_text_wrapper", tag="remove_mods_text_tag")
     with ui.group(
-        parent="uninstall_popup",
-        tag="uninstall_popup_button_wrapper",
-        horizontal=True,
-        horizontal_spacing=10,
+        parent="uninstall_popup", tag="uninstall_popup_button_wrapper", horizontal=True, horizontal_spacing=10
     ):
-        ui.add_button(
-            label="Confirm",
-            tag="uninstall_confirm_button",
-            callback=uninstaller,
-            width=100,
-        )
-        ui.add_button(
-            label="Cancel",
-            tag="uninstall_cancel_button",
-            callback=hide_uninstall_popup,
-            width=100,
-        )
+        ui.add_button(label="Confirm", tag="uninstall_confirm_button", callback=uninstaller, width=100)
+        ui.add_button(label="Cancel", tag="uninstall_cancel_button", callback=hide_uninstall_popup, width=100)
 
     # Creating mod selection menu as popup/modal
     ui.add_window(
@@ -944,18 +838,9 @@ def create_ui():
         tag="update_popup_text_2_tag",
         indent=1,
     )
-    with ui.group(
-        parent="update_popup",
-        tag="update_popup_button_group",
-        horizontal=True,
-        horizontal_spacing=20,
-    ):
+    with ui.group(parent="update_popup", tag="update_popup_button_group", horizontal=True, horizontal_spacing=20):
         ui.add_button(
-            label="Yes",
-            width=120,
-            height=24,
-            callback=open_github_link_and_close_minify,
-            tag="update_popup_yes_button",
+            label="Yes", width=120, height=24, callback=open_github_link_and_close_minify, tag="update_popup_yes_button"
         )
         ui.add_button(
             label="Ignore updates",
@@ -964,13 +849,7 @@ def create_ui():
             callback=lambda: delete_update_popup(ignore=True),
             tag="update_popup_ignore_button",
         )
-        ui.add_button(
-            label="No",
-            width=120,
-            height=24,
-            callback=delete_update_popup,
-            tag="update_popup_no_button",
-        )
+        ui.add_button(label="No", width=120, height=24, callback=delete_update_popup, tag="update_popup_no_button")
 
 
 def configure_update_popup():
@@ -1085,23 +964,10 @@ width_dev, height_dev, channels_dev, data_dev = ui.load_image(os.path.join(mpath
 
 with ui.texture_registry(show=False):
     ui.add_static_texture(
-        width=width_discord,
-        height=height_discord,
-        default_value=data_discord,
-        tag="discord_texture_tag",
+        width=width_discord, height=height_discord, default_value=data_discord, tag="discord_texture_tag"
     )
-    ui.add_static_texture(
-        width=width_git,
-        height=height_git,
-        default_value=data_git,
-        tag="git_texture_tag",
-    )
-    ui.add_static_texture(
-        width=width_dev,
-        height=height_dev,
-        default_value=data_dev,
-        tag="dev_texture_tag",
-    )
+    ui.add_static_texture(width=width_git, height=height_git, default_value=data_git, tag="git_texture_tag")
+    ui.add_static_texture(width=width_dev, height=height_dev, default_value=data_dev, tag="dev_texture_tag")
 
 
 def theme():
@@ -1229,44 +1095,22 @@ def dev_mode():
         ):
             ui.add_button(
                 label="Path: Dota2 Minify",
-                callback=lambda: helper.open_dir(
-                    os.path.join(mpaths.minify_dota_pak_output_path),
-                ),
+                callback=lambda: helper.open_dir(os.path.join(mpaths.minify_dota_pak_output_path)),
             )
             ui.add_button(
                 label="File: Dota2 Minify pak66 VPK",
-                callback=lambda: helper.open_dir(
-                    os.path.join(mpaths.minify_dota_pak_output_path, "pak66_dir.vpk"),
-                ),
+                callback=lambda: helper.open_dir(os.path.join(mpaths.minify_dota_pak_output_path, "pak66_dir.vpk")),
             )
             ui.add_spacer(width=0, height=10)
-            ui.add_button(
-                label="Path: Minify",
-                callback=lambda: helper.open_dir(
-                    os.getcwd(),
-                ),
-            )
-            ui.add_button(
-                label="Path: Logs",
-                callback=lambda: helper.open_dir(
-                    os.path.join(mpaths.logs_dir),
-                ),
-            )
+            ui.add_button(label="Path: Minify", callback=lambda: helper.open_dir(os.getcwd()))
+            ui.add_button(label="Path: Logs", callback=lambda: helper.open_dir(os.path.join(mpaths.logs_dir)))
             ui.add_button(
                 label="Path: Dota2",
                 callback=lambda: helper.open_dir(os.path.join(mpaths.steam_dir, "steamapps", "common", "dota 2 beta")),
             )
+            ui.add_button(label="File: Dota2 pak01 VPK", callback=lambda: helper.open_dir(mpaths.dota_pak01_path))
             ui.add_button(
-                label="File: Dota2 pak01 VPK",
-                callback=lambda: helper.open_dir(
-                    mpaths.dota_pak01_path,
-                ),
-            )
-            ui.add_button(
-                label="File: Dota2 pak01(core) VPK",
-                callback=lambda: helper.open_dir(
-                    mpaths.dota_core_pak01_path,
-                ),
+                label="File: Dota2 pak01(core) VPK", callback=lambda: helper.open_dir(mpaths.dota_core_pak01_path)
             )
             ui.add_spacer(width=0, height=10)
             ui.add_button(
@@ -1290,10 +1134,7 @@ def dev_mode():
             no_close=True,
             no_collapse=True,
         ):
-            ui.add_button(
-                label="Select folder to compile",
-                callback=lambda: ui.show_item("compile_file_dialog"),
-            )
+            ui.add_button(label="Select folder to compile", callback=lambda: ui.show_item("compile_file_dialog"))
             ui.add_file_dialog(
                 show=False,
                 modal=False,
@@ -1302,10 +1143,7 @@ def dev_mode():
                 tag="compile_file_dialog",
                 directory_selector=True,
             )
-            ui.add_button(
-                label="Compile files from folder",
-                callback=helper.compile,
-            )
+            ui.add_button(label="Compile files from folder", callback=helper.compile)
             ui.add_spacer(width=0, height=140)
             ui.add_text(
                 "* You won't be able use any of these (except opening paths) if you're not on Windows because Source2Viewer's GUI and Dota2 Tools aren't crossplatform.",
