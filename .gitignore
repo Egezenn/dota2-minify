@@ -3,7 +3,7 @@
 *.vcss_c
 logs
 locale
-states.json
+mods.json
 dota2path_minify.txt
 bin/maps/
 bin/pak1contents.txt

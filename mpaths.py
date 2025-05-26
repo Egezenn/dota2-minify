@@ -214,3 +214,9 @@ dota_resource_compiler_path = os.path.join(
 mods_folders = []
 for mod in os.listdir(mods_dir):
     mods_folders.append(mod)
+
+# Rubberband fix to always do blacklists at last for them to make overwrites
+blacklist_mods_start_or_name = ["Mute", "Remove", "Minify Base Attacks", "Minify Spells & Items", "Misc Optimization"]
+to_move = [s for s in mods_folders if any(s.startswith(word) for word in blacklist_mods_start_or_name)]
+others = [s for s in mods_folders if not any(s.startswith(word) for word in blacklist_mods_start_or_name)]
+mods_folders = others + to_move

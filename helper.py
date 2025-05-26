@@ -299,7 +299,6 @@ def processBlacklistDir(index, line, folder):
             capture_output=True,
             text=True,
         )
-        print(lines.stdout.splitlines())
         data = lines.stdout.splitlines()
         data.pop(0)
         return data

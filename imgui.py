@@ -125,14 +125,14 @@ def checkbox_state_save():
     global checkboxes_state
     for box in checkboxes:
         checkboxes_state[box] = ui.get_value(box)
-        with open("states.json", "w", encoding="utf-8") as file:
+        with open("mods.json", "w", encoding="utf-8") as file:
             json.dump(checkboxes_state, file, indent=4)
 
 
 def load_state_checkboxes():
     global checkboxes_state
     try:
-        with open("states.json", "r", encoding="utf-8") as file:
+        with open("mods.json", "r", encoding="utf-8") as file:
             checkboxes_state = json.load(file)
     except FileNotFoundError:
         pass
@@ -619,7 +619,7 @@ def patcher():
                         "-r",
                     ],
                     stdout=subprocess.PIPE,
-                    stderr=subprocess.PIPE,
+                    stderr=subprocess.PIPE,  # TODO compiler complains if minify_dota_compile_input_path is empty
                 )
                 if sp_compiler.stdout != b"":
                     file.write(sp_compiler.stdout)

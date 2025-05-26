@@ -57,7 +57,7 @@ body:
     id: mods
     attributes:
       label: Mods
-      description: What mods were you using? Paste your `states.json` file
+      description: What mods were you using? Paste your `mods.json` file
       render: json
     validations:
       required: true
