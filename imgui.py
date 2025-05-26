@@ -374,7 +374,7 @@ def patcher():
         blacklist_data = []  # path from every blacklist.txt
         styling_data = []  # path and style from every styling.txt
 
-        for folder in mpaths.mods_folders:
+        for folder in mpaths.mods_compilation_order:
             try:
                 mod_path = os.path.join(mpaths.mods_dir, folder)
                 # files_total = sum([len(files) for r, d, files in os.walk(os.path.join(mod_path, 'files'))])
@@ -630,6 +630,8 @@ def patcher():
         # ---------------------------------- STEP 6 ---------------------------------- #
         # -------- Create VPK from game folder and save into Minify directory -------- #
         # ---------------------------------------------------------------------------- #
+        with open(os.path.join(mpaths.minify_dota_compile_output_path, "minify.txt"), "w") as file:
+            pass
         newpak = vpk.new(mpaths.minify_dota_compile_output_path)
         newpak.save(os.path.join(mpaths.minify_dota_pak_output_path, "pak66_dir.vpk"))
 
