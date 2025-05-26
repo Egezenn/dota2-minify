@@ -374,7 +374,7 @@ def patcher():
         blacklist_data = []  # path from every blacklist.txt
         styling_data = []  # path and style from every styling.txt
 
-        for folder in mpaths.mods_compilation_order:
+        for folder in mpaths.mods_folder_compilation_order:
             try:
                 mod_path = os.path.join(mpaths.mods_dir, folder)
                 # files_total = sum([len(files) for r, d, files in os.walk(os.path.join(mod_path, 'files'))])

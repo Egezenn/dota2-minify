@@ -6,3 +6,10 @@ panorama/styles/hud/hud_reborn @@ #PortraitGroup { visibility: collapse; } #stat
 
 # weird background on hero badges for hero previews
 panorama/styles/dashboard_page_hero_new_v2 @@ #HeroBadge { visibility: collapse; }
+
+# remove stat filters from search
+panorama/styles/hud/dota_hud_shop_search_results @@ #SearchResultsStatToggles { visibility: collapse; }
+
+# WIP remove popular items
+# panorama/styles/hud/dota_hud_item_build @@ DOTAHUDShop #Categories > DOTAHUDItemBuildCategory { visibility: collapse; }
+# panorama/styles/dota_ui_shop_item @@ .MainShopItem.Popular { visibility: collapse; }
