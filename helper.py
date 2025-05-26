@@ -35,16 +35,17 @@ pak1_contents_file_init = False
 warnings = []
 
 
-def handleWarnings(logs_dir):
+def handleWarnings(logs_dir, print_warnings):
     global warnings
 
     if len(warnings) != 0:
         with open(os.path.join(logs_dir, "warnings.txt"), "w") as file:
             for line in warnings:
                 file.write(line + "\n")
-        add_text_to_terminal(
-            localization_dict["minify_encountered_errors_terminal_text_var"], "minify_error_var", type="warning"
-        )
+        if print_warnings:
+            add_text_to_terminal(
+                localization_dict["minify_encountered_errors_terminal_text_var"], "minify_error_var", type="warning"
+            )
 
 
 def scroll_to_terminal_end():
@@ -79,10 +80,10 @@ def disableWorkshopMods(mods_dir, mods_folders, checkboxes):
     for folder in mods_folders:
         mod_path = os.path.join(mods_dir, folder)
         styling_txt = os.path.join(mod_path, "styling.txt")
-        for box in checkboxes:
-            if checkboxes[box] == folder:
-                if os.stat(styling_txt).st_size != 0:
-                    ui.configure_item(box, enabled=False, default_value=False)
+    for box in checkboxes:
+        if checkboxes[box] == folder:
+            if os.stat(styling_txt).st_size != 0:
+                ui.configure_item(box, enabled=False, default_value=False)
 
 
 def cleanFolders():

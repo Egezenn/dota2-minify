@@ -6,7 +6,8 @@
       "type": "debugpy",
       "request": "launch",
       "program": "imgui.py",
-      "console": "integratedTerminal"
+      "console": "integratedTerminal",
+      "args": ["warnings"]
     }
   ]
 }

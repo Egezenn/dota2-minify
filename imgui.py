@@ -5,10 +5,10 @@ import platform
 import shutil
 import stat
 import subprocess
+import sys
 import threading
 import time
 import traceback
-from shutil import copytree, ignore_patterns
 
 import dearpygui.dearpygui as ui
 import psutil
@@ -19,6 +19,12 @@ import vpk
 import helper
 import mpaths
 import validatefiles
+
+
+if len(sys.argv) > 1:
+    print_warnings = True if sys.argv[1] == "warnings" else False
+else:
+    print_warnings = False
 
 ui.create_context()
 
@@ -318,7 +324,6 @@ def uninstaller():
                 for name in os.listdir(mpaths.dota_itembuilds_path):
                     if name != "bkup":
                         os.remove(os.path.join(mpaths.dota_itembuilds_path, name))
-                # print(os.path.join(mpaths.itembuilds_dir, "bkup"))
                 for name in os.listdir(os.path.join(mpaths.dota_itembuilds_path, "bkup")):
                     os.rename(
                         os.path.join(mpaths.dota_itembuilds_path, "bkup", name),
@@ -449,7 +454,7 @@ def patcher():
                             os.path.join(mod_path, "files"),
                             mpaths.minify_dota_compile_output_path,
                             dirs_exist_ok=True,
-                            ignore=ignore_patterns("*.gitkeep"),
+                            ignore=shutil.ignore_patterns("*.gitkeep"),
                         )
                         # ------------------------------- blacklist.txt ------------------------------ #
                         if os.stat(blacklist_txt).st_size == 0:
@@ -605,11 +610,11 @@ def patcher():
                 if path_style[1] not in file.read():
                     file.write("\n" + path_style[1])
 
-        copytree(
+        shutil.copytree(
             mpaths.build_dir,
             mpaths.minify_dota_compile_input_path,
             dirs_exist_ok=True,
-            ignore=ignore_patterns("*.vcss_c"),
+            ignore=shutil.ignore_patterns("*.vcss_c"),
         )
 
         if helper.workshop_installed == True:
@@ -653,7 +658,7 @@ def patcher():
             helper.localization_dict["launch_option_text_var"], "launch_option_text", type="warning"
         )
 
-        helper.handleWarnings(mpaths.logs_dir)
+        helper.handleWarnings(mpaths.logs_dir, print_warnings)
         print(f"\n\n{(time.perf_counter()-global_start):.6f}s for the entire patch\n")
 
     except Exception:
