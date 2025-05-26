@@ -243,13 +243,15 @@ def urlValidator(url):
 
 def processBlacklistDir(index, line, folder):
     data = []
-    line = line.replace(">>", "")
-    line = line.replace(os.sep, "/")
+    # artifact of the past, all blacklists use / now
+    line = line.replace(os.sep, "/") if line.startswith(">>") else line
 
     if mpaths.OS == "Windows" and mpaths.architecture == "64bit":
-        # TODO: tidy up this garbage & implement switches
+        line = line[2:] if line.startswith(">>") or line.startswith("**") else line
         global pak1_contents_file_init
+
         if not os.path.exists(mpaths.rg_path):
+            # TODO switch up the archive links & behavior
             response = requests.get(mpaths.rg_latest_windows_x64)
             zip_path = mpaths.rg_latest_windows_x64.split("/")[-1]
             response = requests.get(mpaths.rg_latest_windows_x64)
@@ -279,15 +281,12 @@ def processBlacklistDir(index, line, folder):
             pattern = r"(.*) CRC:.*"
             replacement = r"\1"
 
-            start = time.perf_counter()
             with open(os.path.join(mpaths.bin_dir, "pak1contents.txt"), "w") as file:
                 for extract_line in extract.stdout.splitlines():
                     new_line = re.sub(pattern, replacement, extract_line.rstrip())
                     file.write(new_line + "\n")
             pak1_contents_file_init = True
-            print(f"    {(time.perf_counter()-start):.6f}s for creation of cache file")
 
-        start = time.perf_counter()
         lines = subprocess.run(
             [
                 mpaths.rg_path,
@@ -295,25 +294,22 @@ def processBlacklistDir(index, line, folder):
                 "--no-line-number",
                 "--color=never",
                 line,
-                mpaths.dota_pak01_path,
                 os.path.join(mpaths.bin_dir, "pak1contents.txt"),
             ],
             capture_output=True,
             text=True,
         )
+        print(lines.stdout.splitlines())
         data = lines.stdout.splitlines()
         data.pop(0)
-        print(f"    {(time.perf_counter()-start):.6f}s ripgrep tree find for {line}")
-
         return data
 
-    else:
+    elif not line.startswith("**"):
         global pak1_contents
-        start = time.perf_counter()
+        line = line[2:] if line.startswith(">>") else line
         for filepath in pak1_contents:
             if filepath.startswith(line):
                 data.append(filepath)
-        print(f"    {(time.perf_counter()-start):.6f}s python tree find for {line}")
 
         if not data:
             warnings.append(
@@ -334,7 +330,7 @@ def processBlackList(index, line, folder, blank_file_extensions):
             if line.startswith("#") or line == "":
                 continue
 
-            if line.startswith(">>"):
+            if line.startswith(">>") or line.startswith("**"):
                 for path in processBlacklistDir(index, line, folder):
                     data.append(path)
                 continue

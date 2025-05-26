@@ -178,7 +178,9 @@ Spanish translation.
 
 [Python](https://www.python.org/) - Core language. Licensed under PSFL license.
 
-[Source 2 Viewer](https://github.com/ValveResourceFormat/ValveResourceFormat) - Used in decompilation of contents in paks. Licensed under MIT license.
+[Source 2 Viewer](https://github.com/ValveResourceFormat/ValveResourceFormat) - Used in decompilation of contents in paks and listing of them. Licensed under MIT license.
+
+[ripgrep](https://github.com/BurntSushi/ripgrep) - Used in dynamic blacklist generation. Licensed under Unlicense and MIT licenses.
 
 ### Python packages
 

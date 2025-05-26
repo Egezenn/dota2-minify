@@ -241,6 +241,7 @@ def setupSystem():
             and os.path.exists(mpaths.s2v_skia_path)
             and os.path.exists(mpaths.s2v_tinyexr_path)
         ):
+            # TODO move archive link selection to mpaths
             if mpaths.OS == "Windows":
                 archive = mpaths.s2v_latest_windows_x64
 
@@ -253,7 +254,7 @@ def setupSystem():
                 else:
                     archive = mpaths.s2v_latest_linux_x64
             else:
-                quit()
+                raise Exception("Unsupported platform!")
 
             helper.add_text_to_terminal(text=helper.localization_dict["downloading_cli_terminal_text_var"])
             zip_path = archive.split("/")[-1]
@@ -349,7 +350,6 @@ def patcher_start():
 
 
 def patcher():
-    global_start = time.perf_counter()
     global patching
     lock_interaction()
     helper.clean_terminal()
@@ -376,7 +376,6 @@ def patcher():
 
         for folder in mpaths.mods_folders:
             try:
-                mod_start = time.perf_counter()
                 mod_path = os.path.join(mpaths.mods_dir, folder)
                 # files_total = sum([len(files) for r, d, files in os.walk(os.path.join(mod_path, 'files'))])
                 blacklist_txt = os.path.join(mod_path, "blacklist.txt")
@@ -473,11 +472,9 @@ def patcher():
                                         for path in helper.processBlackList(index, line, folder, blank_file_extensions):
                                             blacklist_data.append(path)
 
-                                    elif line.startswith(">>"):
+                                    elif line.startswith(">>") or line.startswith("**"):
                                         for path in helper.processBlacklistDir(index, line, folder):
                                             blacklist_data.append(path)
-
-                                    # TODO: regexp behavior
 
                                     else:
                                         if line.endswith(tuple(blank_file_extensions)):
@@ -489,7 +486,6 @@ def patcher():
 
                             # print(f"   blacklist.txt: Found {len(blacklist_data)} paths")
 
-                            start = time.perf_counter()
                             for index, line in enumerate(blacklist_data):
                                 line = line.strip()
                                 path, extension = os.path.splitext(line)
@@ -512,7 +508,6 @@ def patcher():
                                     )
 
                             blacklist_data = []
-                            print(f"    {(time.perf_counter()-start):.6f}s filecopy")
 
                         # --------------------------------- styling.txt --------------------------------- #
                         if os.stat(styling_txt).st_size == 0:
@@ -565,7 +560,6 @@ def patcher():
                                             )
                                         )
                                         del styling_dictionary[key]
-                print(f"--> {(time.perf_counter()-mod_start):.6f}s for {folder}\n")
 
             except Exception as exception:
                 exceptiondata = traceback.format_exc().splitlines()
@@ -573,7 +567,6 @@ def patcher():
         # ---------------------------------- STEP 2 ---------------------------------- #
         # ------------------- Decompile all files in "build" folder ------------------ #
         # ---------------------------------------------------------------------------- #
-        start = time.perf_counter()
         helper.add_text_to_terminal(helper.localization_dict["decompiling_terminal_text_var"], "decompiling_text")
         with open(os.path.join(mpaths.logs_dir, "Source2Viewer-CLI.txt"), "w") as file:
             if mpaths.OS == "Linux" and not os.access(mpaths.s2v_executable, os.X_OK):
@@ -598,11 +591,9 @@ def patcher():
                     "error_no_execution_permission_s2v",
                     type="error",
                 )
-        print(f"--> {(time.perf_counter()-start):.6f}s for decompilation\n")
         # ---------------------------------- STEP 3 ---------------------------------- #
         # ---------------------------- CSS resourcecompile --------------------------- #
         # ---------------------------------------------------------------------------- #
-        start = time.perf_counter()
         helper.add_text_to_terminal(helper.localization_dict["patching_terminal_text_var"], "patching_text_tag")
 
         for key, path_style in list(styling_dictionary.items()):
@@ -636,18 +627,15 @@ def patcher():
                 if sp_compiler.stderr != b"":
                     decoded_err = sp_compiler.stderr.decode("utf-8")
                     raise Exception(decoded_err)
-        print(f"--> {(time.perf_counter()-start):.6f}s for compilation\n")
         # ---------------------------------- STEP 6 ---------------------------------- #
         # -------- Create VPK from game folder and save into Minify directory -------- #
         # ---------------------------------------------------------------------------- #
-        start = time.perf_counter()
         newpak = vpk.new(mpaths.minify_dota_compile_output_path)
         newpak.save(os.path.join(mpaths.minify_dota_pak_output_path, "pak66_dir.vpk"))
 
         patching = False
 
         helper.rmtrees(mpaths.minify_dota_compile_input_path, mpaths.minify_dota_compile_output_path, mpaths.build_dir)
-        print(f"--> {(time.perf_counter()-start):.6f}s for pak creation&cleanup\n")
 
         unlock_interaction()
         helper.add_text_to_terminal("-------------------------------------------------------", "spacer1_text")
@@ -659,7 +647,6 @@ def patcher():
         )
 
         helper.handleWarnings(mpaths.logs_dir, print_warnings)
-        print(f"\n\n{(time.perf_counter()-global_start):.6f}s for the entire patch\n")
 
     except Exception:
         with open(os.path.join(mpaths.logs_dir, "crashlog.txt"), "w") as file:
