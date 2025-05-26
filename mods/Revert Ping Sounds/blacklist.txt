@@ -1,0 +1,2 @@
+sounds/ui/ping_attack_layer.vsnd_c
+sounds/ui/ping_warning_layer.vsnd_c

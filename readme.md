@@ -121,7 +121,7 @@ Creation of the base project.
 - [`Mute Taunt Sounds`](./mods/Mute%20Taunt%20Sounds)
 - [`Mute Voice Line Sounds`](./mods/Mute%20Voice%20Line%20Sounds)
 - [`Remove Foilage`](./mods/Remove%20Foilage)
-- [`Remove Pinging`](./mods/Remove%20Pinging)
+- [`Remove Pings`](./mods/Remove%20Pings)
 - [`Remove River`](./mods/Remove%20River)
 - [`Remove Sprays`](./mods/Remove%20Sprays)
 - [`Remove Weather Effects`](./mods/Remove%20Weather%20Effects)
@@ -141,6 +141,7 @@ Taking over the maintainership of the project, implementing automated workflows,
 - [`Remove Hero Renders`](./mods/Remove%20Hero%20Renders)
 - [`Remove Main Menu Background`](./mods/Remove%20Main%20Menu%20Background)
 - [`Remove Showcases`](./mods/Remove%20Showcases)
+- [`Revert Ping Sounds`](./mods/Revert%20Ping%20Sounds)
 - [`Stat Site Buttons In Profiles`](./mods/Stat%20Site%20Buttons%20In%20Profiles)
 - [`Transparent HUD`](./mods/Transparent%20HUD/) improvements
 - Snippets in [`User Styles`](./mods/User%20Styles)

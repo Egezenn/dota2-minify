@@ -1,0 +1,6 @@
+Reverts pings sounds to their pre-7.39 sounds.
+
+New sounds are replaced to:
+- ping_heart = ping
+- ping_enemy_ward = ping_warning
+- ping_need_ward = ping
