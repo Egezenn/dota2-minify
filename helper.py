@@ -45,6 +45,7 @@ def scroll_to_terminal_end():
     ui.set_y_scroll("terminal_window", ui.get_y_scroll_max("terminal_window"))
 
 
+# TODO revise
 def add_text_to_terminal(text, tag: int | str | None = None, type: str | None = None):
     kwargs = {}
     if tag is not None:
@@ -342,20 +343,23 @@ def calculate_md5(file_path):
 
 
 def open_dir(path, args=""):
-    if args:
-        if mpaths.OS == "Windows":
-            os.startfile(path, arguments=args)
-        elif mpaths.OS == "Darwin":
-            os.system(f'open "{path} {args}')
+    try:
+        if args:
+            if mpaths.OS == "Windows":
+                os.startfile(path, arguments=args)
+            elif mpaths.OS == "Darwin":
+                os.system(f'open "{path} {args}')
+            else:
+                os.system(f'xdg-open "{path} {args}')
         else:
-            os.system(f'xdg-open "{path} {args}')
-    else:
-        if mpaths.OS == "Windows":
-            os.startfile(path)
-        elif mpaths.OS == "Darwin":
-            os.system(f'open "{path}"')
-        else:
-            os.system(f'xdg-open "{path}"')
+            if mpaths.OS == "Windows":
+                os.startfile(path)
+            elif mpaths.OS == "Darwin":
+                os.system(f'open "{path}"')
+            else:
+                os.system(f'xdg-open "{path}"')
+    except FileNotFoundError:
+        add_text_to_terminal(f"{path}{localization_dict["open_dir_fail_text_var"]}", type="error")
 
 
 def compile(sender, app_data, user_data):

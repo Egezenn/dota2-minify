@@ -349,5 +349,8 @@
   },
   "compile_no_folder_text_var": {
     "EN": "Select a folder first!"
+  },
+  "open_dir_fail_text_var": {
+    "EN": " doesn't exist!"
   }
 }
