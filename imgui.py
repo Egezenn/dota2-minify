@@ -625,7 +625,10 @@ def patcher():
         # ---------------------------------------------------------------------------- #
         # insert metadata to pak
         shutil.copy("mods.json", os.path.join(mpaths.minify_dota_compile_output_path, "minify_mods.json"))
-        shutil.copy("version", os.path.join(mpaths.minify_dota_compile_output_path, "minify_version.txt"))
+        try:
+            shutil.copy("version", os.path.join(mpaths.minify_dota_compile_output_path, "minify_version.txt"))
+        except FileNotFoundError:
+            pass
         newpak = vpk.new(mpaths.minify_dota_compile_output_path)
         newpak.save(os.path.join(mpaths.minify_dota_pak_output_path, "pak66_dir.vpk"))
 
@@ -671,6 +674,9 @@ def version_check():
         except:  # no connection
             initiate_conditionals()
             version = ""
+    else:
+        initiate_conditionals()
+        version = ""
 
 
 def start_text():
