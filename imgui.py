@@ -623,8 +623,9 @@ def patcher():
         # ---------------------------------- STEP 6 ---------------------------------- #
         # -------- Create VPK from game folder and save into Minify directory -------- #
         # ---------------------------------------------------------------------------- #
-        with open(os.path.join(mpaths.minify_dota_compile_output_path, "minify.txt"), "w") as file:
-            pass
+        # insert metadata to pak
+        shutil.copy("mods.json", os.path.join(mpaths.minify_dota_compile_output_path, "minify_mods.json"))
+        shutil.copy("version", os.path.join(mpaths.minify_dota_compile_output_path, "minify_version.txt"))
         newpak = vpk.new(mpaths.minify_dota_compile_output_path)
         newpak.save(os.path.join(mpaths.minify_dota_pak_output_path, "pak66_dir.vpk"))
 
