@@ -267,7 +267,7 @@ def processBlacklistDir(index, line, folder):
 
         lines = subprocess.run(
             [
-                os.path.join(".", mpaths.rg_path),
+                os.path.join(".", mpaths.rg_executable),
                 "--no-filename",
                 "--no-line-number",
                 "--color=never",

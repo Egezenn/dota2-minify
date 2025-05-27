@@ -252,8 +252,11 @@ def setupSystem():
                 shutil.unpack_archive(zip_path, format="zip")
                 os.remove(zip_path)
                 helper.add_text_to_terminal(f"{helper.localization_dict["extracted_cli_terminal_text_var"]}{zip_path}")
+                if mpaths.OS == "Linux" and not os.access(mpaths.s2v_executable, os.X_OK):
+                    current_permissions = os.stat(mpaths.s2v_executable).st_mode
+                    os.chmod(mpaths.s2v_executable, current_permissions | stat.S_IXUSR | stat.S_IXGRP | stat.S_IXOTH)
 
-        if not os.path.exists(mpaths.rg_path):
+        if not os.path.exists(mpaths.rg_executable):
             helper.add_text_to_terminal(helper.localization_dict["downloading_ripgrep_terminal_text_var"])
             archive_path = mpaths.rg_latest.split("/")[-1]
             archive_name = archive_path[:-4] if archive_path[-4:] == ".zip" else archive_path[:-7]
@@ -267,16 +270,19 @@ def setupSystem():
                 )
                 if archive_extension == ".zip":
                     with zipfile.ZipFile(archive_path, "r") as zip_ref:
-                        zip_ref.extract(archive_name + "/" + mpaths.rg_path)
+                        zip_ref.extract(archive_name + "/" + mpaths.rg_executable)
                 else:
                     with tarfile.open(archive_path, "r:gz") as tar:
                         tar.extractall()
-                os.rename(os.path.join(archive_name, mpaths.rg_path), mpaths.rg_path)
+                os.rename(os.path.join(archive_name, mpaths.rg_executable), mpaths.rg_executable)
                 helper.rmtrees(archive_name)
                 os.remove(archive_path)
                 helper.add_text_to_terminal(
                     f"{helper.localization_dict["extracted_cli_terminal_text_var"]}{archive_path}"
                 )
+                if mpaths.OS == "Linux" and not os.access(mpaths.rg_executable, os.X_OK):
+                    current_permissions = os.stat(mpaths.s2v_executable).st_mode
+                    os.chmod(mpaths.s2v_executable, current_permissions | stat.S_IXUSR | stat.S_IXGRP | stat.S_IXOTH)
 
         for method in public_methods:
             getattr(x, method)()
@@ -562,9 +568,6 @@ def patcher():
         # ---------------------------------------------------------------------------- #
         helper.add_text_to_terminal(helper.localization_dict["decompiling_terminal_text_var"], "decompiling_text")
         with open(os.path.join(mpaths.logs_dir, "Source2Viewer-CLI.txt"), "w") as file:
-            if mpaths.OS == "Linux" and not os.access(mpaths.s2v_executable, os.X_OK):
-                current_permissions = os.stat(mpaths.s2v_executable).st_mode
-                os.chmod(mpaths.s2v_executable, current_permissions | stat.S_IXUSR | stat.S_IXGRP | stat.S_IXOTH)
             try:
                 subprocess.run(
                     [

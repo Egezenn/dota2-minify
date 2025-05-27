@@ -211,7 +211,7 @@ locale_file_dir = "locale"
 s2v_executable = "Source2Viewer-CLI.exe" if OS == "Windows" else "Source2Viewer-CLI"
 s2v_skia_path = "libSkiaSharp.dll" if OS == "Windows" else "libSkiaSharp.so"
 s2v_tinyexr_path = "TinyEXR.Native.dll" if OS == "Windows" else "libTinyEXR.Native.so"
-rg_path = "rg.exe" if OS == "Windows" else "rg"
+rg_executable = "rg.exe" if OS == "Windows" else "rg"
 
 
 # dota2 paths
