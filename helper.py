@@ -248,7 +248,7 @@ def processBlacklistDir(index, line, folder):
             # check hash or creation date of pak1contents later on to not do this all the time?
             extract = subprocess.run(
                 [
-                    mpaths.s2v_executable,
+                    os.path.join(".", mpaths.s2v_executable),
                     "-i",
                     mpaths.dota_pak01_path,
                     "-l",
@@ -267,7 +267,7 @@ def processBlacklistDir(index, line, folder):
 
         lines = subprocess.run(
             [
-                mpaths.rg_path,
+                os.path.join(".", mpaths.rg_path),
                 "--no-filename",
                 "--no-line-number",
                 "--color=never",
