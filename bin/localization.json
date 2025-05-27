@@ -185,6 +185,9 @@
     "RU": "-> Завершили скачивание ",
     "TR": "-> Yüklendi "
   },
+  "downloading_ripgrep_terminal_text_var": {
+    "EN": "-> Downloading ripgrep..."
+  },
   "extracted_cli_terminal_text_var": {
     "EN": "-> Extracted ",
     "ES": "-> Extraído ",
@@ -340,5 +343,11 @@
     "ES": "¡Dale permiso de ejecución a Source2Viewer!",
     "RU": "Предоставь права на выполнение для Source2Viewer!",
     "TR": "Source2Viewer'a çalıştırma yetkisi ver!"
+  },
+  "compile_successful_text_var": {
+    "EN": "Compiled successfully!"
+  },
+  "compile_no_folder_text_var": {
+    "EN": "Select a folder first!"
   }
 }

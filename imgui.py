@@ -6,9 +6,11 @@ import shutil
 import stat
 import subprocess
 import sys
+import tarfile
 import threading
 import time
 import traceback
+import zipfile
 
 import dearpygui.dearpygui as ui
 import psutil
@@ -19,7 +21,6 @@ import vpk
 import helper
 import mpaths
 import validatefiles
-
 
 if len(sys.argv) > 1:
     print_warnings = True if sys.argv[1] == "warnings" else False
@@ -117,7 +118,7 @@ def hide_uninstall_popup():
 
 
 def open_github_link_and_close_minify():
-    open_github_link()  # behavior to download the latest release
+    open_github_link()  # TODO updater behavior
     helper.close()
 
 
@@ -241,34 +242,40 @@ def setupSystem():
             and os.path.exists(mpaths.s2v_skia_path)
             and os.path.exists(mpaths.s2v_tinyexr_path)
         ):
-            # TODO move archive link selection to mpaths
-            if mpaths.OS == "Windows":
-                archive = mpaths.s2v_latest_windows_x64
-
-            elif mpaths.OS == "Linux":
-                if mpaths.machine in ["arm", "aarch64"]:
-                    if mpaths.architecture == "64bit":
-                        archive = mpaths.s2v_latest_linux_arm_x64
-                    else:
-                        archive = mpaths.s2v_latest_linux_arm
-                else:
-                    archive = mpaths.s2v_latest_linux_x64
-            else:
-                raise Exception("Unsupported platform!")
-
-            helper.add_text_to_terminal(text=helper.localization_dict["downloading_cli_terminal_text_var"])
-            zip_path = archive.split("/")[-1]
-            response = requests.get(archive)
+            helper.add_text_to_terminal(helper.localization_dict["downloading_cli_terminal_text_var"])
+            zip_path = mpaths.s2v_latest.split("/")[-1]
+            response = requests.get(mpaths.s2v_latest)
             if response.status_code == 200:
                 with open(zip_path, "wb") as file:
                     file.write(response.content)
-                helper.add_text_to_terminal(
-                    text=f"{helper.localization_dict["downloaded_cli_terminal_text_var"]}{zip_path}"
-                )
+                helper.add_text_to_terminal(f"{helper.localization_dict["downloaded_cli_terminal_text_var"]}{zip_path}")
                 shutil.unpack_archive(zip_path, format="zip")
                 os.remove(zip_path)
+                helper.add_text_to_terminal(f"{helper.localization_dict["extracted_cli_terminal_text_var"]}{zip_path}")
+
+        if not os.path.exists(mpaths.rg_path):
+            helper.add_text_to_terminal(helper.localization_dict["downloading_ripgrep_terminal_text_var"])
+            archive_path = mpaths.rg_latest.split("/")[-1]
+            archive_name = archive_path[:-4] if archive_path[-4:] == ".zip" else archive_path[:-7]
+            archive_extension = archive_path[-4:] if archive_path[-4:] == ".zip" else archive_path[-7:]
+            response = requests.get(mpaths.rg_latest)
+            if response.status_code == 200:
+                with open(archive_path, "wb") as file:
+                    file.write(response.content)
                 helper.add_text_to_terminal(
-                    text=f"{helper.localization_dict["extracted_cli_terminal_text_var"]}{zip_path}"
+                    f"{helper.localization_dict["downloaded_cli_terminal_text_var"]}{archive_path}"
+                )
+                if archive_extension == ".zip":
+                    with zipfile.ZipFile(archive_path, "r") as zip_ref:
+                        zip_ref.extract(archive_name + "/" + mpaths.rg_path)
+                else:
+                    with tarfile.open(archive_path, "r:gz") as tar:
+                        tar.extractall()
+                os.rename(os.path.join(archive_name, mpaths.rg_path), mpaths.rg_path)
+                helper.rmtrees(archive_name)
+                os.remove(archive_path)
+                helper.add_text_to_terminal(
+                    f"{helper.localization_dict["extracted_cli_terminal_text_var"]}{archive_path}"
                 )
 
         for method in public_methods:
@@ -282,14 +289,14 @@ def setupSystem():
             file.write(traceback.format_exc())
             lock_interaction()
             helper.add_text_to_terminal(
-                text=helper.localization_dict["failed_to_start_terminal_text_var"],
-                tag="failed_to_start_text_tag",
-                type="error",
+                helper.localization_dict["failed_to_start_terminal_text_var"],
+                "failed_to_start_text_tag",
+                "error",
             )
             helper.add_text_to_terminal(
-                text=helper.localization_dict["check_crashlog_terminal_text_var"],
-                tag="check_logs_text_tag",
-                type="error",
+                helper.localization_dict["check_crashlog_terminal_text_var"],
+                "check_logs_text_tag",
+                "error",
             )
 
 
@@ -309,7 +316,7 @@ def uninstaller():
     helper.clean_terminal()
     time.sleep(0.05)
     lock_interaction()
-    # remove pak01_dir.vpk if it exists
+    # TODO make use of the included minify.txt at root
     vpkPath = os.path.join(mpaths.minify_dota_pak_output_path, "pak66_dir.vpk")
     if os.path.exists(vpkPath):
         os.remove(vpkPath)
@@ -334,9 +341,7 @@ def uninstaller():
         helper.warnings.append(
             "Unable to recover backed up default guides or the itembuilds directory is empty, verify files to get the default guides back"
         )
-    helper.add_text_to_terminal(
-        text=helper.localization_dict["mods_removed_terminal_text_var"], tag="uninstaller_text_tag"
-    )
+    helper.add_text_to_terminal(helper.localization_dict["mods_removed_terminal_text_var"], "uninstaller_text_tag")
     unlock_interaction()
 
 
@@ -355,14 +360,13 @@ def patcher():
     helper.clean_terminal()
     if "dota2.exe" in (p.name() for p in psutil.process_iter()):
         helper.add_text_to_terminal(
-            text=helper.localization_dict["close_dota_terminal_text_var"], tag="close_dota_text_tag", type="warning"
+            helper.localization_dict["close_dota_terminal_text_var"], "close_dota_text_tag", "warning"
         )
         return
 
     patching = True
 
     try:
-        # clean up previous patching data
         helper.cleanFolders()
 
         styling_dictionary = {}
@@ -377,7 +381,6 @@ def patcher():
         for folder in mpaths.mods_folder_compilation_order:
             try:
                 mod_path = os.path.join(mpaths.mods_dir, folder)
-                # files_total = sum([len(files) for r, d, files in os.walk(os.path.join(mod_path, 'files'))])
                 blacklist_txt = os.path.join(mod_path, "blacklist.txt")
                 styling_txt = os.path.join(mod_path, "styling.txt")
 
@@ -437,18 +440,14 @@ def patcher():
                                     helper.add_text_to_terminal(
                                         helper.localization_dict["failed_to_download_opendotaguides_terminal_text_var"],
                                         "failed_downloading_open_dota_guides_text_tag",
-                                        type="error",
+                                        "error",
                                     )
                             except:  # no connection
                                 helper.add_text_to_terminal(
                                     helper.localization_dict["failed_to_download_opendotaguides_terminal_text_var"],
                                     "failed_downloading_open_dota_guides_text_tag",
-                                    type="error",
+                                    "error",
                                 )
-                        # ----------------------------------- files ---------------------------------- #
-                        # if files_total == 0:    pass
-                        # elif files_total == 1:  print(f"   files: Found {files_total} file")
-                        # else:                   print(f"   files: Found {files_total} files")
                         shutil.copytree(
                             os.path.join(mod_path, "files"),
                             mpaths.minify_dota_compile_output_path,
@@ -484,20 +483,16 @@ def patcher():
                                                 f"[Invalid Extension] '{line}' in 'mods\\{folder}\\blacklist.txt' [line: {index+1}] does not end in one of the valid extensions -> {blank_file_extensions}"
                                             )
 
-                            # print(f"   blacklist.txt: Found {len(blacklist_data)} paths")
-
                             for index, line in enumerate(blacklist_data):
                                 line = line.strip()
                                 path, extension = os.path.splitext(line)
-
-                                # blacklist_dictionary["blacklist-key{}".format(index+1)] = path, extension
 
                                 os.makedirs(
                                     os.path.join(mpaths.minify_dota_compile_output_path, os.path.dirname(path)),
                                     exist_ok=True,
                                 )
 
-                                try:  # another bottleneck
+                                try:  # TODO faster filecopy?
                                     shutil.copy(
                                         os.path.join(mpaths.blank_files_dir, "blank{}").format(extension),
                                         os.path.join(mpaths.minify_dota_compile_output_path, path + extension),
@@ -529,8 +524,6 @@ def patcher():
                                         continue
                                     else:
                                         styling_data.append(line)
-
-                            # print(f"   styling.txt: Found styling.txt")
 
                             for index, line in enumerate(styling_data):
                                 try:
@@ -589,7 +582,7 @@ def patcher():
                 helper.add_text_to_terminal(
                     helper.localization_dict["error_no_execution_permission_s2v_var"],
                     "error_no_execution_permission_s2v",
-                    type="error",
+                    "error",
                 )
         # ---------------------------------- STEP 3 ---------------------------------- #
         # ---------------------------- CSS resourcecompile --------------------------- #
@@ -619,7 +612,7 @@ def patcher():
                         "-r",
                     ],
                     stdout=subprocess.PIPE,
-                    stderr=subprocess.PIPE,  # TODO compiler complains if minify_dota_compile_input_path is empty
+                    stderr=subprocess.PIPE,  # compiler complains if minify_dota_compile_input_path is empty
                 )
                 if sp_compiler.stdout != b"":
                     file.write(sp_compiler.stdout)
@@ -642,11 +635,9 @@ def patcher():
         unlock_interaction()
         helper.add_text_to_terminal("-------------------------------------------------------", "spacer1_text")
         helper.add_text_to_terminal(
-            helper.localization_dict["success_terminal_text_var"], "success_text_tag", type="success"
+            helper.localization_dict["success_terminal_text_var"], "success_text_tag", "success"
         )
-        helper.add_text_to_terminal(
-            helper.localization_dict["launch_option_text_var"], "launch_option_text", type="warning"
-        )
+        helper.add_text_to_terminal(helper.localization_dict["launch_option_text_var"], "launch_option_text", "warning")
 
         helper.handleWarnings(mpaths.logs_dir, print_warnings)
 
@@ -657,10 +648,10 @@ def patcher():
         patching = False
         helper.add_text_to_terminal("-------------------------------------------------------", "spacer2_text")
         helper.add_text_to_terminal(
-            helper.localization_dict["failure_terminal_text_var"], "patching_failed_text_tag", type="error"
+            helper.localization_dict["failure_terminal_text_var"], "patching_failed_text_tag", "error"
         )
         helper.add_text_to_terminal(
-            helper.localization_dict["check_logs_terminal_text_var"], "check_logs_text_tag", type="warning"
+            helper.localization_dict["check_logs_terminal_text_var"], "check_logs_text_tag", "warning"
         )
         unlock_interaction()
 
@@ -1072,7 +1063,6 @@ def theme():
 
 def dev_mode():
     global dev_mode_state
-    # escape triggers an error
     if dev_mode_state == -1:
         ui.configure_viewport(item="main_viewport", resizable=True, height=600)
         ui.configure_viewport(item="primary_window", resizable=True)
@@ -1183,7 +1173,6 @@ ui.create_viewport(
 ui.set_frame_callback(1, callback=create_base_ui)  # On first frame execute app_start
 
 
-# DearPyGyi Setup
 ui.set_viewport_small_icon("./bin/favicon.ico")
 ui.set_viewport_large_icon("./bin/favicon.ico")
 ui.setup_dearpygui()

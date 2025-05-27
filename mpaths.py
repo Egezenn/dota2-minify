@@ -144,23 +144,55 @@ handle_non_default_path()
 # links
 version_query = "https://raw.githubusercontent.com/Egezenn/dota2-minify/refs/heads/main/version"
 discord = "https://discord.com/invite/2YDnqpbcKM"
-latest_release = "https://github.com/Egezenn/dota2-minify/releases/latest"
-s2v_latest_windows_x64 = (
-    "https://github.com/ValveResourceFormat/ValveResourceFormat/releases/latest/download/cli-windows-x64.zip"
-)
-s2v_latest_linux_x64 = (
-    "https://github.com/ValveResourceFormat/ValveResourceFormat/releases/latest/download/cli-linux-x64.zip"
-)
-s2v_latest_linux_arm = (
-    "https://github.com/ValveResourceFormat/ValveResourceFormat/releases/latest/download/cli-linux-arm.zip"
-)
-s2v_latest_linux_arm_x64 = (
-    "https://github.com/ValveResourceFormat/ValveResourceFormat/releases/latest/download/cli-linux-arm64.zip"
-)
-rg_latest_windows_x64 = (  # need manual version updates for archives
-    "https://github.com/BurntSushi/ripgrep/releases/download/14.1.1/ripgrep-14.1.1-x86_64-pc-windows-msvc.zip"
-)
+latest_release = "https://github.com/Egezenn/dota2-minify/releases"
 odg_latest = "https://github.com/Egezenn/OpenDotaGuides/releases/latest/download/itembuilds.zip"
+
+# source2viewer install
+if OS == "Windows":
+    s2v_latest = (
+        "https://github.com/ValveResourceFormat/ValveResourceFormat/releases/latest/download/cli-windows-x64.zip"
+    )
+elif OS == "Linux":
+    if machine in ["aarch64", "arm64"]:
+        s2v_latest = (
+            "https://github.com/ValveResourceFormat/ValveResourceFormat/releases/latest/download/cli-linux-arm64.zip"
+        )
+    elif machine in ["armv7l", "arm"]:
+        s2v_latest = (
+            "https://github.com/ValveResourceFormat/ValveResourceFormat/releases/latest/download/cli-linux-arm.zip"
+        )
+    elif architecture == "64bit":
+        s2v_latest = (
+            "https://github.com/ValveResourceFormat/ValveResourceFormat/releases/latest/download/cli-linux-x64.zip"
+        )
+else:
+    raise Exception("Unsupported Source2Viewer platform!")
+
+# ripgrep install
+if OS == "Windows":
+    if architecture == "64bit":
+        rg_latest = (
+            "https://github.com/BurntSushi/ripgrep/releases/download/14.1.1/ripgrep-14.1.1-x86_64-pc-windows-msvc.zip"
+        )
+    else:
+        rg_latest = (
+            "https://github.com/BurntSushi/ripgrep/releases/download/14.1.1/ripgrep-14.1.1-i686-pc-windows-msvc.zip"
+        )
+elif OS == "Linux":
+    if machine in ["aarch64", "arm64"]:
+        rg_latest = "https://github.com/BurntSushi/ripgrep/releases/download/14.1.1/ripgrep-14.1.1-aarch64-unknown-linux-gnu.tar.gz"
+    elif machine in ["armv7l", "arm"]:
+        rg_latest = "https://github.com/BurntSushi/ripgrep/releases/download/14.1.1/ripgrep-14.1.1-armv7-unknown-linux-gnueabihf.tar.gz"
+    elif machine == "ppc64":  # unlikely
+        rg_latest = "https://github.com/BurntSushi/ripgrep/releases/download/14.1.1/ripgrep-14.1.1-powerpc64-unknown-linux-gnu.tar.gz"
+    elif machine == "s390x":  # unlikely
+        rg_latest = "https://github.com/BurntSushi/ripgrep/releases/download/14.1.1/ripgrep-14.1.1-s390x-unknown-linux-gnu.tar.gz"
+    elif architecture == "64bit":
+        rg_latest = "https://github.com/BurntSushi/ripgrep/releases/download/14.1.1/ripgrep-14.1.1-x86_64-unknown-linux-musl.tar.gz"
+    elif architecture == "32bit":
+        rg_latest = "https://github.com/BurntSushi/ripgrep/releases/download/14.1.1/ripgrep-14.1.1-i686-unknown-linux-gnu.tar.gz"
+else:
+    raise Exception("Unsupported ripgrep platform!")
 
 
 # minify project paths
@@ -179,7 +211,7 @@ locale_file_dir = "locale"
 s2v_executable = "Source2Viewer-CLI.exe" if OS == "Windows" else "Source2Viewer-CLI"
 s2v_skia_path = "libSkiaSharp.dll" if OS == "Windows" else "libSkiaSharp.so"
 s2v_tinyexr_path = "TinyEXR.Native.dll" if OS == "Windows" else "libTinyEXR.Native.so"
-rg_path = "rg.exe"  # TODO make switch based on platforms
+rg_path = "rg.exe" if OS == "Windows" else "rg"
 
 
 # dota2 paths

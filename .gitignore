@@ -9,14 +9,15 @@ bin/maps/
 bin/pak1contents.txt
 mods/test
 
-## Source2Viewer
+## Dependencies
 cli-*-*.*
 Source2Viewer-CLI*
 libSkiaSharp*
 TinyEXR.Native.dll
 libTinyEXR.Native.so
+rg*
 
-# Dota2
+## Dota2
 steam_appid.txt
 
 # Byte-compiled / optimized / DLL files

@@ -2,7 +2,14 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "imgui",
+      "name": "gui",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "imgui.py",
+      "console": "integratedTerminal"
+    },
+    {
+      "name": "gui w warnings",
       "type": "debugpy",
       "request": "launch",
       "program": "imgui.py",

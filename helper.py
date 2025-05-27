@@ -8,11 +8,9 @@ import subprocess
 import time
 import urllib.error
 import webbrowser
-import zipfile
 from urllib.request import urlopen
 
 import dearpygui.dearpygui as ui
-import requests
 import vpk
 
 import mpaths
@@ -24,14 +22,8 @@ localization_dict = {}
 details_label_text_var = ""
 mod_selection_window_var = ""
 compile_path = ""
-pak1_contents = vpk.open(mpaths.dota_pak01_path)
+pak1_contents = vpk.open(mpaths.dota_pak01_path)  # debugger complains because of 350k elements
 pak1_contents_file_init = False
-
-# ---------------------------------------------------------------------------- #
-#                                   Warnings                                   #
-# ---------------------------------------------------------------------------- #
-# Output can be passed here to display as warnings at the end of patching.
-
 warnings = []
 
 
@@ -44,7 +36,7 @@ def handleWarnings(logs_dir, print_warnings):
                 file.write(line + "\n")
         if print_warnings:
             add_text_to_terminal(
-                localization_dict["minify_encountered_errors_terminal_text_var"], "minify_error_var", type="warning"
+                localization_dict["minify_encountered_errors_terminal_text_var"], "minify_error_var", "warning"
             )
 
 
@@ -132,6 +124,8 @@ def close():
     ui.stop_dearpygui()
 
 
+# TODO fix a crash where if a mod doesn't have the selected locales notes
+# TODO also revise this
 def change_localization(init=False):
     global locale
     with open(mpaths.localization_file_dir, "r", encoding="utf-8") as localization_file:
@@ -246,25 +240,9 @@ def processBlacklistDir(index, line, folder):
     # artifact of the past, all blacklists use / now
     line = line.replace(os.sep, "/") if line.startswith(">>") else line
 
-    if mpaths.OS == "Windows" and mpaths.architecture == "64bit":
+    try:
         line = line[2:] if line.startswith(">>") or line.startswith("**") else line
         global pak1_contents_file_init
-
-        if not os.path.exists(mpaths.rg_path):
-            # TODO switch up the archive links & behavior
-            response = requests.get(mpaths.rg_latest_windows_x64)
-            zip_path = mpaths.rg_latest_windows_x64.split("/")[-1]
-            response = requests.get(mpaths.rg_latest_windows_x64)
-            if response.status_code == 200:
-                with open(zip_path, "wb") as file:
-                    file.write(response.content)
-                add_text_to_terminal(text="-> Downloaded ripgrep")
-                with zipfile.ZipFile(zip_path, "r") as zip_ref:
-                    zip_ref.extract(zip_path[:-4] + "/" + mpaths.rg_path)
-                os.rename(os.path.join(zip_path[:-4], mpaths.rg_path), mpaths.rg_path)
-                rmtrees(zip_path[:-4])
-                os.remove(zip_path)
-                add_text_to_terminal(text="-> Extracted ripgrep")
 
         if not pak1_contents_file_init:
             # check hash or creation date of pak1contents later on to not do this all the time?
@@ -303,19 +281,20 @@ def processBlacklistDir(index, line, folder):
         data.pop(0)
         return data
 
-    elif not line.startswith("**"):
-        global pak1_contents
-        line = line[2:] if line.startswith(">>") else line
-        for filepath in pak1_contents:
-            if filepath.startswith(line):
-                data.append(filepath)
+    except:
+        if not line.startswith("**"):
+            global pak1_contents
+            line = line[2:] if line.startswith(">>") else line
+            for filepath in pak1_contents:
+                if filepath.startswith(line):
+                    data.append(filepath)
 
-        if not data:
-            warnings.append(
-                f"[Directory Not Found] Could not find '{line}' in pak01_dir.vpk -> mods\\{folder}\\blacklist.txt [line: {index+1}]"
-            )
+            if not data:
+                warnings.append(
+                    f"[Directory Not Found] Could not find '{line}' in pak01_dir.vpk -> mods\\{folder}\\blacklist.txt [line: {index+1}]"
+                )
 
-        return data
+            return data
 
 
 def processBlackList(index, line, folder, blank_file_extensions):
@@ -413,10 +392,10 @@ def compile(sender, app_data, user_data):
 
         rmtrees(mpaths.minify_dota_compile_input_path, mpaths.minify_dota_compile_output_path)
 
-        add_text_to_terminal("Compiled successfully!", "")
+        add_text_to_terminal(localization_dict["compile_successful_text_var"])
     else:
         clean_terminal()
-        add_text_to_terminal("Select a folder first!", "")
+        add_text_to_terminal(localization_dict["compile_no_folder_text_var"])
 
 
 def select_compile_dir(sender, app_data):
