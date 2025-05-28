@@ -125,7 +125,7 @@ Creation of the base project.
 
 ### [Egezenn](https://github.com/Egezenn)
 
-Taking over the maintainership of the project, implementing automated workflows, improving the functionality, Linux port, Turkish translations and [more](https://github.com/Egezenn/dota2-minify/commits/main/?author=Egezenn).
+Taking over the maintainership of the project, implementing automated workflows, improving the functionality, Linux port, RegExp functionality for blacklists, Turkish translations and [more](https://github.com/Egezenn/dota2-minify/commits/main/?author=Egezenn).
 
 <details>
 <summary>Mods</summary>
