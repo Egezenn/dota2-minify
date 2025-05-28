@@ -27,17 +27,16 @@ pak1_contents_file_init = False
 warnings = []
 
 
-def handleWarnings(logs_dir, print_warnings):
+def handleWarnings(logs_dir):
     global warnings
 
     if len(warnings) != 0:
         with open(os.path.join(logs_dir, "warnings.txt"), "w") as file:
             for line in warnings:
                 file.write(line + "\n")
-        if print_warnings:
-            add_text_to_terminal(
-                localization_dict["minify_encountered_errors_terminal_text_var"], "minify_error_var", "warning"
-            )
+        add_text_to_terminal(
+            localization_dict["minify_encountered_errors_terminal_text_var"], "minify_error_var", "warning"
+        )
 
 
 def scroll_to_terminal_end():
@@ -342,7 +341,7 @@ def calculate_md5(file_path):
     return md5_hash.hexdigest()
 
 
-def open_dir(path, args=""):
+async def open_dir(path, args=""):
     try:
         if args:
             if mpaths.OS == "Windows":
@@ -382,15 +381,16 @@ def compile(sender, app_data, user_data):
                 shutil.copytree(os.path.join(folder, item), os.path.join(mpaths.minify_dota_compile_input_path, item))
             else:
                 shutil.copy(os.path.join(folder, item), mpaths.minify_dota_compile_input_path)
-
-        subprocess.run(
-            [
-                mpaths.dota_resource_compiler_path,
-                "-i",
-                mpaths.minify_dota_compile_input_path + "/*",
-                "-r",
-            ]
-        )
+        with open(os.path.join(mpaths.logs_dir, "Source2Viewer-CLI.txt"), "w") as file:
+            subprocess.run(
+                [
+                    mpaths.dota_resource_compiler_path,
+                    "-i",
+                    mpaths.minify_dota_compile_input_path + "/*",
+                    "-r",
+                ],
+                stdout=file,
+            )
 
         shutil.copytree(os.path.join(mpaths.minify_dota_compile_output_path), compile_output_path)
 
@@ -418,6 +418,6 @@ def rmtrees(*paths):
             else:
                 os.chmod(path, os.stat(path).st_mode | stat.S_IWUSR)
             shutil.rmtree(path)
-            warnings.append(f"Forced deletion of: {path}")
+            print(f"Forced deletion of: {path}")
         except FileNotFoundError:
-            warnings.append(f"Skipped deletion of: {path}")
+            print(f"Skipped deletion of: {path}")

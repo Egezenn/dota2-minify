@@ -57,7 +57,7 @@ body:
     id: mods
     attributes:
       label: Mods
-      description: What mods were you using? Paste your `mods.json` file
+      description: What mods were you using? Paste your `config/mods.json` file
       render: json
     validations:
       required: true
@@ -66,6 +66,6 @@ body:
     id: logs
     attributes:
       label: Logs
-      description: Have you recieved a crashlog? If so, paste here
+      description: Have you recieved a crashlog? If so, paste your `logs/crashlog.txt` here
     validations:
       required: false

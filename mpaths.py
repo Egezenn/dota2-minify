@@ -1,3 +1,5 @@
+"All the necessary file paths & links"
+
 import getpass
 import os
 import platform
@@ -8,7 +10,6 @@ from tkinter import filedialog, messagebox
 import vdf
 
 steam_dir = ""
-path_file = os.path.join(os.getcwd(), "dota2path_minify.txt")
 OS = platform.system()
 machine = platform.machine().lower()
 architecture = platform.architecture()[0]
@@ -29,12 +30,12 @@ def find_library_from_vdf():
     path_from_txt = ""
 
     try:
-        with open(path_file, "r") as file:
+        with open(path_file_dir, "r") as file:
             for line in file:
                 path_from_txt = os.path.normpath(line.strip())
     except Exception as error:
         with open(os.path.join(logs_dir, "crashlog.txt"), "w") as file:
-            file.write(f"Error reading {path_file}: {error}")
+            file.write(f"Error reading {path_file_dir}: {error}")
 
     try:
         if steam_dir:  # regkey found
@@ -50,8 +51,8 @@ def find_library_from_vdf():
         for path in paths:
             if os.path.exists(os.path.join(path, DOTA_EXECUTABLE_PATH)):
                 steam_dir = path
-                if not os.path.exists(path_file) or path_from_txt == "":
-                    with open(path_file, "w") as file:
+                if not os.path.exists(path_file_dir) or path_from_txt == "":
+                    with open(path_file_dir, "w") as file:
                         file.write(steam_dir)
 
     except Exception as error:
@@ -102,13 +103,13 @@ def handle_non_default_path():
     global steam_dir
     # when dota2 is not inside Steam folder OR host is not on windows, set new steam directory from 'dota2path_minify.txt
     if not os.path.exists(os.path.join(steam_dir, DOTA_EXECUTABLE_PATH)):
-        if not os.path.exists(path_file):
-            with open(path_file, "a+") as file:
+        if not os.path.exists(path_file_dir):
+            with open(path_file_dir, "a+") as file:
                 file.write("")
 
         find_library_from_vdf()
 
-        with open(path_file, "r") as file:
+        with open(path_file_dir, "r") as file:
             for line in file:
                 steam_dir = os.path.normpath(line.strip())
 
@@ -130,7 +131,7 @@ def handle_non_default_path():
 
         if choice:
             steam_dir = os.path.normpath(filedialog.askdirectory())
-            with open(path_file, "w") as file:
+            with open(path_file_dir, "w") as file:
                 file.write(steam_dir)
         else:
             quit()
@@ -149,10 +150,16 @@ odg_latest = "https://github.com/Egezenn/OpenDotaGuides/releases/latest/download
 
 # source2viewer install
 if OS == "Windows":
+    s2v_executable = "Source2Viewer-CLI.exe"
+    s2v_skia_path = "libSkiaSharp.dll"
+    s2v_tinyexr_path = "TinyEXR.Native.dll"
     s2v_latest = (
         "https://github.com/ValveResourceFormat/ValveResourceFormat/releases/latest/download/cli-windows-x64.zip"
     )
 elif OS == "Linux":
+    s2v_executable = "Source2Viewer-CLI"
+    s2v_skia_path = "libSkiaSharp.so"
+    s2v_tinyexr_path = "libTinyEXR.Native.so"
     if machine in ["aarch64", "arm64"]:
         s2v_latest = (
             "https://github.com/ValveResourceFormat/ValveResourceFormat/releases/latest/download/cli-linux-arm64.zip"
@@ -170,6 +177,7 @@ else:
 
 # ripgrep install
 if OS == "Windows":
+    rg_executable = "rg.exe"
     if architecture == "64bit":
         rg_latest = (
             "https://github.com/BurntSushi/ripgrep/releases/download/14.1.1/ripgrep-14.1.1-x86_64-pc-windows-msvc.zip"
@@ -179,6 +187,7 @@ if OS == "Windows":
             "https://github.com/BurntSushi/ripgrep/releases/download/14.1.1/ripgrep-14.1.1-i686-pc-windows-msvc.zip"
         )
 elif OS == "Linux":
+    rg_executable = "rg"
     if machine in ["aarch64", "arm64"]:
         rg_latest = "https://github.com/BurntSushi/ripgrep/releases/download/14.1.1/ripgrep-14.1.1-aarch64-unknown-linux-gnu.tar.gz"
     elif machine in ["armv7l", "arm"]:
@@ -200,6 +209,7 @@ bin_dir = "bin"
 build_dir = "build"
 logs_dir = "logs"
 mods_dir = "mods"
+config_dir = "config"
 
 # bin
 blank_files_dir = os.path.join(bin_dir, "blank-files")
@@ -207,11 +217,10 @@ maps_dir = os.path.join(bin_dir, "maps")
 img_dir = os.path.join(bin_dir, "images")
 minify_map_dir = os.path.join(maps_dir, "dota.vpk")
 localization_file_dir = os.path.join(bin_dir, "localization.json")
-locale_file_dir = "locale"
-s2v_executable = "Source2Viewer-CLI.exe" if OS == "Windows" else "Source2Viewer-CLI"
-s2v_skia_path = "libSkiaSharp.dll" if OS == "Windows" else "libSkiaSharp.so"
-s2v_tinyexr_path = "TinyEXR.Native.dll" if OS == "Windows" else "libTinyEXR.Native.so"
-rg_executable = "rg.exe" if OS == "Windows" else "rg"
+locale_file_dir = os.path.join(config_dir, "locale")
+version_file_dir = "version"
+mods_file_dir = os.path.join(config_dir, "mods.json")
+path_file_dir = os.path.join(config_dir, "dota2path_minify.txt")
 
 
 # dota2 paths

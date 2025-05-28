@@ -8,9 +8,9 @@
 
 <div align="center">
 
+  [![discord](https://img.shields.io/badge/Discord-%237289DA.svg?style=for-the-badge&logo=discord&logoColor=white)](https://discord.com/invite/2YDnqpbcKM)
+  [![github-wiki](https://img.shields.io/badge/github_wiki-%23000000.svg?style=for-the-badge&logo=github)](https://github.com/Egezenn/dota2-minify/wiki)
   ![license](https://img.shields.io/github/license/Egezenn/dota2-minify?style=for-the-badge)
-  <a href="https://discord.com/invite/2YDnqpbcKM"><img alt="badge" src="https://img.shields.io/badge/Discord-%237289DA.svg?style=for-the-badge&logo=discord&logoColor=white"></a>
-  <a href="https://github.com/Egezenn/dota2-minify/wiki"><img alt="badge" src="https://img.shields.io/badge/github_wiki-%23000000.svg?style=for-the-badge&logo=github"></a>
 
   ![latest-release](https://img.shields.io/github/v/release/Egezenn/dota2-minify?style=for-the-badge)
   ![build-state](https://img.shields.io/github/actions/workflow/status/Egezenn/dota2-minify/release.yml?style=for-the-badge)
@@ -18,17 +18,11 @@
   ![downloads](https://img.shields.io/github/downloads/Egezenn/dota2-minify/total?style=for-the-badge)
   ![downloads-latest](https://img.shields.io/github/downloads/Egezenn/dota2-minify/latest/total?style=for-the-badge)
 
-  ![commits-since](https://img.shields.io/github/commits-since/Egezenn/dota2-minify/latest?style=for-the-badge)
-
 </div>
 
-**<h3 align="center">All in one smart patcher for Dota2 to install all types of mods</h3>**
+<h3 align="center">All in one smart patcher for Dota2 to install all types of mods</h3>
 
-**<h3 align="center">Updated to 7.38!</h3>**
-
-<div align="center">
-  ✔️500+ Spells Simplified • ✔️8,000+ files modded • ✔️Boost FPS • ✔️ Creator Toolkit
-</div>
+<h3 align="center">Updated to 7.39!</h3>
 
 <div align="center">
     <a href="#"><img alt="ss1" src="bin/images/screenshot-1.jpg"></a>

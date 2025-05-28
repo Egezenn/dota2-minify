@@ -7,14 +7,6 @@
       "request": "launch",
       "program": "imgui.py",
       "console": "integratedTerminal"
-    },
-    {
-      "name": "gui w warnings",
-      "type": "debugpy",
-      "request": "launch",
-      "program": "imgui.py",
-      "console": "integratedTerminal",
-      "args": ["warnings"]
     }
   ]
 }

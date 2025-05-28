@@ -8,6 +8,7 @@ dota2path_minify.txt
 bin/maps/
 bin/pak1contents.txt
 mods/test
+config
 
 ## Dependencies
 cli-*-*.*
