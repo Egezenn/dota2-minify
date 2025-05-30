@@ -139,8 +139,15 @@ def handle_non_default_path():
         root.destroy()
 
 
+def overwrite_ensurance_hack(list_of_words, list):
+    to_move = [s for s in list if any(s.startswith(word) for word in list_of_words)]
+    others = [s for s in list if not any(s.startswith(word) for word in list_of_words)]
+    return others + to_move
+
+
 get_steam_path()
 handle_non_default_path()
+
 
 # links
 version_query = "https://raw.githubusercontent.com/Egezenn/dota2-minify/refs/heads/main/version"
@@ -257,7 +264,7 @@ for mod in os.listdir(mods_dir):
     mods_folders.append(mod)
 
 # Rubberband fix to always do blacklists at last for them to make overwrites
-blacklist_mods_start_or_name = ["Mute", "Remove", "Minify Base Attacks", "Minify Spells & Items", "Misc Optimization"]
-to_move = [s for s in mods_folders if any(s.startswith(word) for word in blacklist_mods_start_or_name)]
-others = [s for s in mods_folders if not any(s.startswith(word) for word in blacklist_mods_start_or_name)]
-mods_folder_compilation_order = others + to_move
+mods_folder_compilation_order = overwrite_ensurance_hack(
+    ["Mute", "Remove", "Minify Base Attacks", "Minify Spells & Items", "Misc Optimization"], mods_folders
+)
+mods_folder_compilation_order = overwrite_ensurance_hack(["Hide ALL", "Remove ALL", "Mute ALL"], mods_folders)

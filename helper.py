@@ -23,7 +23,6 @@ details_label_text_var = ""
 mod_selection_window_var = ""
 compile_path = ""
 pak1_contents = vpk.open(mpaths.dota_pak01_path)  # debugger complains because of 350k elements
-pak1_contents_file_init = False
 warnings = []
 
 
@@ -237,64 +236,30 @@ def urlValidator(url):
 
 def processBlacklistDir(index, line, folder):
     data = []
-    # artifact of the past, all blacklists use / now
-    line = line.replace(os.sep, "/") if line.startswith(">>") else line
 
-    try:
-        line = line[2:] if line.startswith(">>") or line.startswith("**") else line
-        global pak1_contents_file_init
+    line = line[2:] if line.startswith(">>") or line.startswith("**") else line
 
-        if not pak1_contents_file_init:
-            # check hash or creation date of pak1contents later on to not do this all the time?
-            extract = subprocess.run(
-                [
-                    os.path.join(".", mpaths.s2v_executable),
-                    "-i",
-                    mpaths.dota_pak01_path,
-                    "-l",
-                ],
-                capture_output=True,
-                text=True,
-            )
-            pattern = r"(.*) CRC:.*"
-            replacement = r"\1"
+    lines = subprocess.run(
+        [
+            os.path.join(".", mpaths.rg_executable),
+            "--no-filename",
+            "--no-line-number",
+            "--color=never",
+            line,
+            os.path.join(mpaths.bin_dir, "pak1contents.txt"),
+        ],
+        capture_output=True,
+        text=True,
+    )
+    data = lines.stdout.splitlines()
+    data.pop(0)
 
-            with open(os.path.join(mpaths.bin_dir, "pak1contents.txt"), "w") as file:
-                for extract_line in extract.stdout.splitlines():
-                    new_line = re.sub(pattern, replacement, extract_line.rstrip())
-                    file.write(new_line + "\n")
-            pak1_contents_file_init = True
-
-        lines = subprocess.run(
-            [
-                os.path.join(".", mpaths.rg_executable),
-                "--no-filename",
-                "--no-line-number",
-                "--color=never",
-                line,
-                os.path.join(mpaths.bin_dir, "pak1contents.txt"),
-            ],
-            capture_output=True,
-            text=True,
+    if not data:
+        warnings.append(
+            f"[Directory Not Found] Could not find '{line}' in pak01_dir.vpk -> mods\\{folder}\\blacklist.txt [line: {index+1}]"
         )
-        data = lines.stdout.splitlines()
-        data.pop(0)
-        return data
 
-    except:
-        if not line.startswith("**"):
-            global pak1_contents
-            line = line[2:] if line.startswith(">>") else line
-            for filepath in pak1_contents:
-                if filepath.startswith(line):
-                    data.append(filepath)
-
-            if not data:
-                warnings.append(
-                    f"[Directory Not Found] Could not find '{line}' in pak01_dir.vpk -> mods\\{folder}\\blacklist.txt [line: {index+1}]"
-                )
-
-            return data
+    return data
 
 
 def processBlackList(index, line, folder, blank_file_extensions):

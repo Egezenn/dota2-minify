@@ -1,4 +1,5 @@
 import os
+import re
 import shutil
 import subprocess
 import time
@@ -12,6 +13,8 @@ import vpk
 import helper
 import mpaths
 import utils_gui
+
+pak1_contents_file_init = False
 
 
 def patcher():
@@ -118,8 +121,31 @@ def patcher():
                         if os.stat(blacklist_txt).st_size == 0:
                             pass
                         else:
+                            global pak1_contents_file_init
+                            if not pak1_contents_file_init:
+                                # check hash or creation date of pak1contents later on to not do this all the time?
+                                extract = subprocess.run(
+                                    [
+                                        os.path.join(".", mpaths.s2v_executable),
+                                        "-i",
+                                        mpaths.dota_pak01_path,
+                                        "-l",
+                                    ],
+                                    capture_output=True,
+                                    text=True,
+                                )
+                                pattern = r"(.*) CRC:.*"
+                                replacement = r"\1"
+
+                                with open(os.path.join(mpaths.bin_dir, "pak1contents.txt"), "w") as file:
+                                    for extract_line in extract.stdout.splitlines():
+                                        new_line = re.sub(pattern, replacement, extract_line.rstrip())
+                                        file.write(new_line + "\n")
+                                pak1_contents_file_init = True
+
                             with open(blacklist_txt) as file:
                                 lines = file.readlines()
+                                blacklist_data_exclusions = []
 
                                 for index, line in enumerate(lines):
                                     line = line.strip()
@@ -135,6 +161,9 @@ def patcher():
                                         for path in helper.processBlacklistDir(index, line, folder):
                                             blacklist_data.append(path)
 
+                                    elif line.startswith("--"):
+                                        blacklist_data_exclusions.append(line[2:])
+
                                     else:
                                         if line.endswith(tuple(blank_file_extensions)):
                                             blacklist_data.append(line)
@@ -142,6 +171,19 @@ def patcher():
                                             helper.warnings.append(
                                                 f"[Invalid Extension] '{line}' in 'mods\\{folder}\\blacklist.txt' [line: {index+1}] does not end in one of the valid extensions -> {blank_file_extensions}"
                                             )
+
+                            for exclusion in blacklist_data_exclusions:
+                                # try:
+                                if exclusion in blacklist_data:
+                                    blacklist_data.remove(exclusion)
+                                else:
+                                    print(
+                                        f"[Unnecessary Exclusion] '{exclusion}' in '{folder}' is not necessary, the mod doesn't include this file."
+                                    )
+                                # except ValueError:
+                                # helper.warnings.append(
+                                # )
+                            print(f"{folder}'s blacklist replaced {len(blacklist_data)} files!")
 
                             for index, line in enumerate(blacklist_data):
                                 line = line.strip()
@@ -163,6 +205,7 @@ def patcher():
                                     )
 
                             blacklist_data = []
+                            blacklist_data_exclusions = []
 
                         # --------------------------------- styling.txt --------------------------------- #
                         if os.stat(styling_txt).st_size == 0:
@@ -244,7 +287,9 @@ def patcher():
         # ---------------------------------- STEP 3 ---------------------------------- #
         # ---------------------------- CSS resourcecompile --------------------------- #
         # ---------------------------------------------------------------------------- #
-        helper.add_text_to_terminal(helper.localization_dict["patching_terminal_text_var"], "patching_text_tag")
+        helper.add_text_to_terminal(
+            helper.localization_dict["compiling_resource_terminal_text_var"], "compiling_resourcecompiler_text_tag"
+        )
 
         for key, path_style in list(styling_dictionary.items()):
             with open(os.path.join(mpaths.build_dir, f"{path_style[0]}.css"), "r+") as file:

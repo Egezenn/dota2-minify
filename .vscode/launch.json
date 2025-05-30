@@ -7,6 +7,13 @@
       "request": "launch",
       "program": "imgui.py",
       "console": "integratedTerminal"
+    },
+    {
+      "name": "gui console",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "imgui.py",
+      "console": "internalConsole"
     }
   ]
 }

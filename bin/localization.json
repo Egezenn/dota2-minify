@@ -132,22 +132,16 @@
     "TR": "   çıkartılıyor: "
   },
   "decompiling_terminal_text_var": {
-    "EN": "-> Decompiling",
-    "ES": "-> Descompilando",
-    "RU": "-> Декомпиляция",
-    "TR": "-> Çözümleniyor"
+    "EN": "-> Decompiling extracted files via Source2Viewer"
   },
   "compiling_terminal_text_var": {
-    "EN": "-> Compiling",
-    "ES": "-> Compilando",
-    "RU": "-> Компиляция",
-    "TR": "-> Derleniyor"
+    "EN": "-> Compiling VPK",
+    "ES": "-> Compilando VPK",
+    "RU": "-> Компиляция VPK",
+    "TR": "-> VPK Derleniyor"
   },
-  "patching_terminal_text_var": {
-    "EN": "-> Patching",
-    "ES": "-> Aplicando parche",
-    "RU": "-> Применение патча",
-    "TR": "-> Yamalanıyor"
+  "compiling_resource_terminal_text_var": {
+    "EN": "-> Compiling extracted files via resourcecompiler"
   },
   "success_terminal_text_var": {
     "EN": "Patch was successful!",
