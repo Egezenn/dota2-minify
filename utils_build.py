@@ -303,7 +303,7 @@ def patcher():
             ignore=shutil.ignore_patterns("*.vcss_c"),
         )
 
-        if helper.workshop_installed == True:
+        if helper.workshop_installed:
             with open(os.path.join(mpaths.logs_dir, "resourcecompiler.txt"), "wb") as file:
                 helper.add_text_to_terminal(helper.localization_dict["compiling_terminal_text_var"], "compiling_text")
                 sp_compiler = subprocess.run(

@@ -206,7 +206,7 @@ def setupButtonState():
             break
         else:
             ui.configure_item("button_patch", enabled=False)
-    if helper.workshop_installed == False:
+    if not helper.workshop_installed:
         helper.disableWorkshopMods(mpaths.mods_dir, mpaths.mods_folders, checkboxes)
 
 

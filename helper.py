@@ -71,10 +71,10 @@ def disableWorkshopMods(mods_dir, mods_folders, checkboxes):
     for folder in mods_folders:
         mod_path = os.path.join(mods_dir, folder)
         styling_txt = os.path.join(mod_path, "styling.txt")
-    for box in checkboxes:
-        if checkboxes[box] == folder:
-            if os.stat(styling_txt).st_size != 0:
-                ui.configure_item(box, enabled=False, default_value=False)
+        for box in checkboxes:
+            if checkboxes[box] == folder:
+                if os.stat(styling_txt).st_size != 0:
+                    ui.configure_item(box, enabled=False, default_value=False)
 
 
 def cleanFolders():
