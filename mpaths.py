@@ -24,6 +24,24 @@ DOTA_EXECUTABLE_PATH = (
     else os.path.join("steamapps", "common", "dota 2 beta", "game", "bin", "linuxsteamrt64", "dota2")
 )
 
+# minify project paths
+bin_dir = "bin"
+build_dir = "build"
+logs_dir = "logs"
+mods_dir = "mods"
+config_dir = "config"
+
+# bin
+blank_files_dir = os.path.join(bin_dir, "blank-files")
+img_dir = os.path.join(bin_dir, "images")
+localization_file_dir = os.path.join(bin_dir, "localization.json")
+maps_dir = os.path.join(bin_dir, "maps")
+minify_map_dir = os.path.join(maps_dir, "dota.vpk")
+locale_file_dir = os.path.join(config_dir, "locale")
+mods_file_dir = os.path.join(config_dir, "mods.json")
+path_file_dir = os.path.join(config_dir, "dota2path_minify.txt")
+version_file_dir = "version"
+
 
 def find_library_from_vdf():
     global steam_dir
@@ -209,25 +227,6 @@ elif OS == "Linux":
         rg_latest = "https://github.com/BurntSushi/ripgrep/releases/download/14.1.1/ripgrep-14.1.1-i686-unknown-linux-gnu.tar.gz"
 else:
     raise Exception("Unsupported ripgrep platform!")
-
-
-# minify project paths
-bin_dir = "bin"
-build_dir = "build"
-logs_dir = "logs"
-mods_dir = "mods"
-config_dir = "config"
-
-# bin
-blank_files_dir = os.path.join(bin_dir, "blank-files")
-maps_dir = os.path.join(bin_dir, "maps")
-img_dir = os.path.join(bin_dir, "images")
-minify_map_dir = os.path.join(maps_dir, "dota.vpk")
-localization_file_dir = os.path.join(bin_dir, "localization.json")
-locale_file_dir = os.path.join(config_dir, "locale")
-version_file_dir = "version"
-mods_file_dir = os.path.join(config_dir, "mods.json")
-path_file_dir = os.path.join(config_dir, "dota2path_minify.txt")
 
 
 # dota2 paths
