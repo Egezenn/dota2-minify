@@ -108,7 +108,7 @@ Creation of the base project.
 
 - [`Dark Terrain`](./mods/Dark%20Terrain)
 - [`Minify Base Attacks`](./mods/Minify%20Base%20Attacks)
-- [`Minify HUD`](./mods/Minify%20HUD)
+- [`Reposition & Rescale HUD`](./mods/Reposition%20&%20Rescale%20HUD/)
 - [`Minify Spells & Items`](./mods/Minify%20Spells%20&%20Items)
 - [`Misc Optimization`](./mods/Misc%20Optimization)
 - [`Mute Ambient Sounds`](./mods/Mute%20Ambient%20Sounds)
