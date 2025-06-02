@@ -10,6 +10,9 @@ panorama/styles/dashboard_page_hero_new_v2 @@ #HeroBadge { visibility: collapse;
 # remove stat filters from search
 panorama/styles/hud/dota_hud_shop_search_results @@ #SearchResultsStatToggles { visibility: collapse; }
 
+# remove hero movies on hero card hover, badges still show tho
+panorama/styles/tooltips/tooltip_hero_card @@ #MainContents { visibility: collapse; }
+
 # WIP remove popular items
-# panorama/styles/hud/dota_hud_item_build @@ DOTAHUDShop #Categories > DOTAHUDItemBuildCategory { visibility: collapse; }
-# panorama/styles/dota_ui_shop_item @@ .MainShopItem.Popular { visibility: collapse; }
+# panorama/styles/dota_ui_shop_item @@ DOTAShopItem.Popular.SideShopItem.MainShopItem { visibility: collapse; }
+# panorama/styles/hud/dota_hud_item_build @@ DOTAShopItem.Popular.SideShopItem.MainShopItem { visibility: collapse; }

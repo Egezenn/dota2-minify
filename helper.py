@@ -1,7 +1,6 @@
 import hashlib
 import json
 import os
-import re
 import shutil
 import stat
 import subprocess
@@ -22,7 +21,7 @@ localization_dict = {}
 details_label_text_var = ""
 mod_selection_window_var = ""
 compile_path = ""
-pak1_contents = vpk.open(mpaths.dota_pak01_path)  # debugger complains because of 350k elements
+pak1_contents = vpk.open(mpaths.dota_pak01_path)  # TODO open only at patch
 warnings = []
 
 

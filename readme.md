@@ -74,7 +74,7 @@ No one has ever been banned for these mods. This project strictly deals with VPK
 
 #### Compilation from source
 
-For instructions, refer to [here](https://github.com/Egezenn/dota2-minify/wiki/Minify#compiling-minify).
+For instructions, refer to the [wiki](https://github.com/Egezenn/dota2-minify/wiki/Minify#compiling-minify).
 
 ## Developing Your Own Mods
 

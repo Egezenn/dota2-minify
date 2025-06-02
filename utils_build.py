@@ -123,7 +123,7 @@ def patcher():
                         else:
                             global pak1_contents_file_init
                             if not pak1_contents_file_init:
-                                # check hash or creation date of pak1contents later on to not do this all the time?
+                                # TODO check pak01 hash, log it & run this only if it's different
                                 extract = subprocess.run(
                                     [
                                         os.path.join(".", mpaths.s2v_executable),

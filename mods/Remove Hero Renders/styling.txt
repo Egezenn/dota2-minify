@@ -1,3 +1,6 @@
 panorama/styles/hero_loadout_background_images @@ #HeroLoadoutBackgroundImageContainer { visibility: collapse; }
 panorama/styles/hud/dota_hud_versus_screen2 @@ DOTAHudVersusScreen2 { visibility: collapse; }
 panorama/styles/ui_econ_set_preview @@ DOTAUIEconSetPreview.Use3DPreview #Preview3DItems { visibility: collapse; }
+
+panorama/styles/dashboard_page_collection @@ DOTACollectionPage,DOTACollectionPageHeroes,DOTACollectionPageGlobal,DOTACollectionPageGlobalWorldItems,DOTACollectionPageGlobalInterfaceItems,DOTACollectionPageTreasury,DOTACollectionPageShards,DOTACollectionPageBrowse,DOTACollectionPageBundles,DOTACollectionPageFeatured { background-image: none; }
+panorama/styles/hero_slot_item_picker_loadout @@ .IsFullSetPicker #FullSetSlotThumbnail { visibility: collapse; } DOTAHeroSlotItemPickerLoadout.IsActive { width: 100% }
