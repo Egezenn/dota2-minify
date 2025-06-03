@@ -6,7 +6,7 @@ on:
       release_name:
         description: "Name the release candidate"
         required: true
-        default: "Minify-v1.xxRCx"
+        default: "Minify-v1.xxrcx"
       release_body:
         description: "Description of the release candidate"
         required: true

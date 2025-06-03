@@ -12,7 +12,7 @@ body:
     attributes:
       label: Minify Version
       description: What's your Minify version?
-      placeholder: 1.xx.x | 1.xx.xRCx | commit-sha
+      placeholder: 1.xx.x | 1.xx.xrcx | commit-sha
     validations:
       required: true
 
@@ -57,15 +57,11 @@ body:
     id: mods
     attributes:
       label: Mods
-      description: What mods were you using? Paste your `config/mods.json` file
+      description: Is this related to a mod? If so, what mods were you using? Paste your `config/mods.json` file
       render: json
-    validations:
-      required: true
 
   - type: textarea
     id: logs
     attributes:
       label: Logs
       description: Have you recieved a crashlog? If so, paste your `logs/crashlog.txt` here
-    validations:
-      required: false
