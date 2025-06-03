@@ -31,6 +31,14 @@ logs_dir = "logs"
 mods_dir = "mods"
 config_dir = "config"
 
+
+def create_dir(*paths):
+    for path in paths:
+        os.makedirs(path, exist_ok=True)
+
+
+create_dirs(logs_dir, config_dir)
+
 # bin
 blank_files_dir = os.path.join(bin_dir, "blank-files")
 img_dir = os.path.join(bin_dir, "images")
