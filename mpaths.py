@@ -32,7 +32,7 @@ mods_dir = "mods"
 config_dir = "config"
 
 
-def create_dir(*paths):
+def create_dirs(*paths):
     for path in paths:
         os.makedirs(path, exist_ok=True)
 
