@@ -1,3 +1,5 @@
+--particles/units/heroes/hero_batrider/batrider_firefly_path.vpcf_c
+**particles/units/heroes/hero_batrider/batrider_.*firefly.*\.vpcf_c
 particles/econ/items/monkey_king/mk_ti9_immortal_army_cast_burst.vpcf_c
 particles/econ/items/monkey_king/mk_ti9_immortal_army_cast_dark.vpcf_c.vpcf_c
 particles/econ/items/monkey_king/mk_ti9_immortal_army_cast_hair.vpcf_c
@@ -179,6 +181,11 @@ particles/items_fx/necronomicon_spawn_warrior_fleck.vpcf_c
 particles/items_fx/necronomicon_spawn_warrior_magic.vpcf_c
 particles/items_fx/necronomicon_spawn_warrior_smoke.vpcf_c
 particles/items_fx/necronomicon_spawn_warrior_swirl.vpcf_c
+particles/items_fx/power_treads_buff.vpcf_c
+particles/items_fx/power_treads_swap_attributes_effect_base_burst.vpcf_c
+particles/items_fx/power_treads_swap_attributes_effect_radial.vpcf_c
+particles/items_fx/power_treads_swap_attributes_effect.vpcf_c
+particles/items_fx/power_treads_swap_attributes_fire_pop.vpcf_c
 particles/items_fx/seeds_of_serenity_beam.vpcf_c
 particles/items_fx/seeds_of_serenity_cast_splash_v2.vpcf_c
 particles/items_fx/seeds_of_serenity_cast_splash.vpcf_c
@@ -925,8 +932,6 @@ particles/units/heroes/hero_bane/enfeeble_shell_b.vpcf_c
 particles/units/heroes/hero_bane/enfeeble_sphere_mini.vpcf_c
 particles/units/heroes/hero_bane/enfeeble_sphere_small.vpcf_c
 particles/units/heroes/hero_batrider/batrider_clouds.vpcf_c
-**particles/units/heroes/hero_batrider/batrider_.*firefly.*\.vpcf_c
---particles/units/heroes/hero_batrider/batrider_firefly_path.vpcf_c
 particles/units/heroes/hero_batrider/batrider_flamebreak_explosion_a.vpcf_c
 particles/units/heroes/hero_batrider/batrider_flamebreak_explosion_b.vpcf_c
 particles/units/heroes/hero_batrider/batrider_flamebreak_explosion_c.vpcf_c
