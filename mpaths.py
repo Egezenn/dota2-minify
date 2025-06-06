@@ -144,9 +144,9 @@ def handle_non_default_path():
         root = tk.Tk()
         root.withdraw()
 
-        root.wm_attributes("-topmost", 1)  # Make sure root is topmost
+        root.wm_attributes("-topmost", 1)
         choice = messagebox.askokcancel(
-            "Install Path Handler",
+            "Minify Install Path Handler",
             "We couldn't find your Dota2 install path, please select:\n\n"
             "Your SteamLibrary folder if you have Dota2 installed elsewhere\n\n"
             "Steam folder if your OS is not Windows and have Dota2 installed at the default path.",
