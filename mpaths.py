@@ -11,8 +11,8 @@ import vdf
 
 steam_dir = ""
 OS = platform.system()
-machine = platform.machine().lower()
-architecture = platform.architecture()[0]
+MACHINE = platform.machine().lower()
+ARCHITECTURE = platform.architecture()[0]
 STEAM_DEFAULT_INSTALLATION_PATH = (
     os.path.join("C:\\", "Program Files (x86)", "Steam")
     if OS == "Windows"
@@ -182,59 +182,60 @@ latest_release = "https://github.com/Egezenn/dota2-minify/releases"
 odg_latest = "https://github.com/Egezenn/OpenDotaGuides/releases/latest/download/itembuilds.zip"
 
 # source2viewer install
-if OS == "Windows":
-    s2v_executable = "Source2Viewer-CLI.exe"
-    s2v_skia_path = "libSkiaSharp.dll"
-    s2v_tinyexr_path = "TinyEXR.Native.dll"
-    s2v_latest = (
-        "https://github.com/ValveResourceFormat/ValveResourceFormat/releases/latest/download/cli-windows-x64.zip"
-    )
-elif OS == "Linux":
-    s2v_executable = "Source2Viewer-CLI"
-    s2v_skia_path = "libSkiaSharp.so"
-    s2v_tinyexr_path = "libTinyEXR.Native.so"
-    if machine in ["aarch64", "arm64"]:
+try:
+    if OS == "Windows":
+        s2v_executable = "Source2Viewer-CLI.exe"
+        s2v_skia_path = "libSkiaSharp.dll"
+        s2v_tinyexr_path = "TinyEXR.Native.dll"
         s2v_latest = (
-            "https://github.com/ValveResourceFormat/ValveResourceFormat/releases/latest/download/cli-linux-arm64.zip"
+            "https://github.com/ValveResourceFormat/ValveResourceFormat/releases/latest/download/cli-windows-x64.zip"
         )
-    elif machine in ["armv7l", "arm"]:
-        s2v_latest = (
-            "https://github.com/ValveResourceFormat/ValveResourceFormat/releases/latest/download/cli-linux-arm.zip"
-        )
-    elif architecture == "64bit":
-        s2v_latest = (
-            "https://github.com/ValveResourceFormat/ValveResourceFormat/releases/latest/download/cli-linux-x64.zip"
-        )
-else:
-    raise Exception("Unsupported Source2Viewer platform!")
-
-# ripgrep install
-if OS == "Windows":
-    rg_executable = "rg.exe"
-    if architecture == "64bit":
-        rg_latest = (
-            "https://github.com/BurntSushi/ripgrep/releases/download/14.1.1/ripgrep-14.1.1-x86_64-pc-windows-msvc.zip"
-        )
+    elif OS == "Linux":
+        s2v_executable = "Source2Viewer-CLI"
+        s2v_skia_path = "libSkiaSharp.so"
+        s2v_tinyexr_path = "libTinyEXR.Native.so"
+        if MACHINE in ["aarch64", "arm64"]:
+            s2v_latest = "https://github.com/ValveResourceFormat/ValveResourceFormat/releases/latest/download/cli-linux-arm64.zip"
+        elif MACHINE in ["armv7l", "arm"]:
+            s2v_latest = (
+                "https://github.com/ValveResourceFormat/ValveResourceFormat/releases/latest/download/cli-linux-arm.zip"
+            )
+        elif ARCHITECTURE == "64bit":
+            s2v_latest = (
+                "https://github.com/ValveResourceFormat/ValveResourceFormat/releases/latest/download/cli-linux-x64.zip"
+            )
     else:
-        rg_latest = (
-            "https://github.com/BurntSushi/ripgrep/releases/download/14.1.1/ripgrep-14.1.1-i686-pc-windows-msvc.zip"
-        )
-elif OS == "Linux":
-    rg_executable = "rg"
-    if machine in ["aarch64", "arm64"]:
-        rg_latest = "https://github.com/BurntSushi/ripgrep/releases/download/14.1.1/ripgrep-14.1.1-aarch64-unknown-linux-gnu.tar.gz"
-    elif machine in ["armv7l", "arm"]:
-        rg_latest = "https://github.com/BurntSushi/ripgrep/releases/download/14.1.1/ripgrep-14.1.1-armv7-unknown-linux-gnueabihf.tar.gz"
-    elif machine == "ppc64":  # unlikely
-        rg_latest = "https://github.com/BurntSushi/ripgrep/releases/download/14.1.1/ripgrep-14.1.1-powerpc64-unknown-linux-gnu.tar.gz"
-    elif machine == "s390x":  # unlikely
-        rg_latest = "https://github.com/BurntSushi/ripgrep/releases/download/14.1.1/ripgrep-14.1.1-s390x-unknown-linux-gnu.tar.gz"
-    elif architecture == "64bit":
-        rg_latest = "https://github.com/BurntSushi/ripgrep/releases/download/14.1.1/ripgrep-14.1.1-x86_64-unknown-linux-musl.tar.gz"
-    elif architecture == "32bit":
-        rg_latest = "https://github.com/BurntSushi/ripgrep/releases/download/14.1.1/ripgrep-14.1.1-i686-unknown-linux-gnu.tar.gz"
-else:
-    raise Exception("Unsupported ripgrep platform!")
+        raise Exception("Unsupported Source2Viewer platform!")
+
+    # ripgrep install
+    if OS == "Windows":
+        rg_executable = "rg.exe"
+        if ARCHITECTURE == "64bit":
+            rg_latest = "https://github.com/BurntSushi/ripgrep/releases/download/14.1.1/ripgrep-14.1.1-x86_64-pc-windows-msvc.zip"
+        else:
+            rg_latest = (
+                "https://github.com/BurntSushi/ripgrep/releases/download/14.1.1/ripgrep-14.1.1-i686-pc-windows-msvc.zip"
+            )
+    elif OS == "Linux":
+        rg_executable = "rg"
+        if MACHINE in ["aarch64", "arm64"]:
+            rg_latest = "https://github.com/BurntSushi/ripgrep/releases/download/14.1.1/ripgrep-14.1.1-aarch64-unknown-linux-gnu.tar.gz"
+        elif MACHINE in ["armv7l", "arm"]:
+            rg_latest = "https://github.com/BurntSushi/ripgrep/releases/download/14.1.1/ripgrep-14.1.1-armv7-unknown-linux-gnueabihf.tar.gz"
+        elif MACHINE == "ppc64":  # unlikely
+            rg_latest = "https://github.com/BurntSushi/ripgrep/releases/download/14.1.1/ripgrep-14.1.1-powerpc64-unknown-linux-gnu.tar.gz"
+        elif MACHINE == "s390x":  # unlikely
+            rg_latest = "https://github.com/BurntSushi/ripgrep/releases/download/14.1.1/ripgrep-14.1.1-s390x-unknown-linux-gnu.tar.gz"
+        elif ARCHITECTURE == "64bit":
+            rg_latest = "https://github.com/BurntSushi/ripgrep/releases/download/14.1.1/ripgrep-14.1.1-x86_64-unknown-linux-musl.tar.gz"
+        elif ARCHITECTURE == "32bit":
+            rg_latest = "https://github.com/BurntSushi/ripgrep/releases/download/14.1.1/ripgrep-14.1.1-i686-unknown-linux-gnu.tar.gz"
+    else:
+        raise Exception("Unsupported ripgrep platform!")
+
+except Exception as error:
+    with open(os.path.join(logs_dir, "crashlog.txt"), "w") as file:
+        file.write(f"Unsupported configuration ({OS}/{MACHINE}/{ARCHITECTURE})\n{error}")
 
 
 # dota2 paths

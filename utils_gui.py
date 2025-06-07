@@ -227,7 +227,7 @@ def show_details(sender, app_data, user_data):
 
 
 def focus_window():
-    if mpaths.OS == "Windows":  # Works tested, but needs more tests, just to be sure
+    if mpaths.OS == "Windows":
         try:
             hwnd = ctypes.windll.user32.FindWindowW(None, "Minify")
             if hwnd != 0:
@@ -236,7 +236,7 @@ def focus_window():
         except Exception as error:
             with open(os.path.join(mpaths.logs_dir, "crashlog.txt"), "w") as file:
                 file.write(f"Windows focus error: {error}")
-    else:  # For Linux only know this, not tested, but probably should work on debian and debian based distros
+    else:
         try:
             subprocess.run(["wmctrl", "-a", "Minify"], check=True)
         except FileNotFoundError:
