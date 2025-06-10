@@ -510,7 +510,7 @@ def dev_mode():
             ui.add_button(
                 label="Executable: Dota2 Tools",
                 callback=lambda: asyncio.run(
-                    helper.open_dir(mpaths.dota2_tools_executable, "-language minify -novid -console")
+                    helper.open_dir(mpaths.dota2_tools_executable, "-addon a -language minify -novid -console")
                 ),
             )
             ui.add_text("* Requires steam to be open")

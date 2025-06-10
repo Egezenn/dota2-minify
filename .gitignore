@@ -1,41 +1,40 @@
 # Minify
-*.css
-*.vcss_c
-logs
-locale
-mods.json
-dota2path_minify.txt
 bin/maps/
 bin/pak1contents.txt
-mods/test
+build
 config
+dota2path_minify.txt
+locale
+logs
+mods.json
+mods/test
 
 ## Dependencies
 cli-*-*.*
-Source2Viewer-CLI*
 libSkiaSharp*
-TinyEXR.Native.dll
 libTinyEXR.Native.so
 rg*
+Source2Viewer-CLI*
+TinyEXR.Native.dll
 
 ## Dota2
 steam_appid.txt
 
 # Byte-compiled / optimized / DLL files
 __pycache__
-*.py[cod]
-*$py.class
-*.exe
-nuitka
 *.build
 *.dist
+*.exe
+*.py[cod]
+*$py.class
+nuitka
 nuitka*
 
 # Environments
 .env
 .venv
-env/
-venv/
-ENV/
 env.bak/
+env/
+ENV/
 venv.bak/
+venv/

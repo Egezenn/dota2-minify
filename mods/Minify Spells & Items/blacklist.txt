@@ -1,3 +1,7 @@
+--particles/units/heroes/hero_batrider/batrider_firefly_path_b.vpcf_c
+--particles/units/heroes/hero_batrider/batrider_firefly_path_c.vpcf_c
+--particles/units/heroes/hero_batrider/batrider_firefly_path_d.vpcf_c
+--particles/units/heroes/hero_batrider/batrider_firefly_path_f.vpcf_c
 --particles/units/heroes/hero_batrider/batrider_firefly_path.vpcf_c
 **particles/units/heroes/hero_batrider/batrider_.*firefly.*\.vpcf_c
 particles/econ/items/monkey_king/mk_ti9_immortal_army_cast_burst.vpcf_c
