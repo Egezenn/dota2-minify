@@ -150,10 +150,10 @@
     "TR": "Yama başarılı!"
   },
   "launch_option_text_var": {
-    "EN": "Remember to add '-language minify' to Dota 2 launch options",
-    "ES": "Recuerda agregar '-language minify' a las opciones de lanzamiento de Dota 2",
-    "RU": "Не забудь добавить '-language minify' в параметры запуска Dota 2",
-    "TR": "Dota2 komutlarına '-language minify' eklemeyi unutmayın"
+    "EN": "Remember to add '-language {}' to Dota 2 launch options",
+    "ES": "Recuerda agregar '-language {}' a las opciones de lanzamiento de Dota 2",
+    "RU": "Не забудь добавить '-language {}' в параметры запуска Dota 2",
+    "TR": "Dota2 komutlarına '-language {}' eklemeyi unutmayın"
   },
   "failure_terminal_text_var": {
     "EN": "Patching failed!",

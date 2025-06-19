@@ -1,6 +1,6 @@
 # Minify
 bin/maps/
-bin/pak1contents.txt
+bin/gamepakcontents.txt
 build
 config
 dota2path_minify.txt

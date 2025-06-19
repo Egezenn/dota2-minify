@@ -14,15 +14,15 @@ import vpk
 
 import mpaths
 
-workshop_installed = False
-localizations = []
+compile_path = ""
+details_label_text_var = ""
 locale = ""
 localization_dict = {}
-details_label_text_var = ""
+localizations = []
 mod_selection_window_var = ""
-compile_path = ""
-pak1_contents = vpk.open(mpaths.dota_pak01_path)  # TODO open only at patch
+output_path = mpaths.minify_dota_pak_output_path
 warnings = []
+workshop_installed = False
 
 
 def handleWarnings(logs_dir):
@@ -38,7 +38,7 @@ def handleWarnings(logs_dir):
 
 
 def scroll_to_terminal_end():
-    time.sleep(0.02)
+    time.sleep(0.05)
     ui.set_y_scroll("terminal_window", ui.get_y_scroll_max("terminal_window"))
 
 
@@ -77,7 +77,6 @@ def disableWorkshopMods(mods_dir, mods_folders, checkboxes):
 
 
 def cleanFolders():
-    rmtrees(mpaths.build_dir, mpaths.minify_dota_maps_output_path)
     for root, dirs, files in os.walk(mpaths.logs_dir):
         for filename in files:
             open(os.path.join(root, filename), "w").close()
@@ -190,15 +189,18 @@ def change_localization(init=False):
                 if ui.get_item_alias(item).endswith("_button_show_details_tag"):
                     ui.configure_item(item, label=localization_data["details_button_label_var"][locale])
 
+def change_output_path():
+    global output_path
+    selection = ui.get_value("output_select")
+    output_path = [lang for lang in mpaths.minify_dota_possible_language_output_paths if selection in lang][0]
 
-def vpkExtractor(path):
-    global pak1_contents
+def vpkExtractor(vpk_to_extract_from, path):
     # TODO implement functionality to pull from core
     fullPath = os.path.join(mpaths.build_dir, path)
     if not os.path.exists(fullPath):  # extract files from VPK only once
         add_text_to_terminal(f"{localization_dict["extracting_terminal_text_var"]}{path}", f"extracting_{path}_tag")
         path = path.replace(os.sep, "/")
-        pakfile = pak1_contents.get_file(path)
+        pakfile = vpk_to_extract_from.get_file(path)
         pakfile.save(os.path.join(fullPath))
 
 
@@ -213,7 +215,7 @@ def urlValidator(url):
                 line = "".join(line)
             except UnicodeDecodeError as exception:
                 warnings.append(
-                    "[{}]".format(type(exception).__name__)
+                    f"[{type(exception).__name__}]"
                     + " Cannot decode -> "
                     + str(line)
                     + " Make sure your URL is using a 'utf-8' charset"
@@ -222,13 +224,13 @@ def urlValidator(url):
             content.append(line)
 
     except urllib.error.HTTPError as exception:
-        warnings.append("[{}]".format(type(exception).__name__) + f" Could not connect to -> " + url)
+        warnings.append(f"[{type(exception).__name__}]" + f" Could not connect to -> " + url)
 
     except ValueError as exception:
-        warnings.append("[{}]".format(type(exception).__name__) + f" Invalid URL -> " + url)
+        warnings.append(f"[{type(exception).__name__}]" + f" Invalid URL -> " + url)
 
     except urllib.error.URLError as exception:
-        warnings.append("[{}]".format(type(exception).__name__) + f" Invalid URL -> " + url)
+        warnings.append(f"[{type(exception).__name__}]" + f" Invalid URL -> " + url)
 
     return content
 
@@ -245,7 +247,7 @@ def processBlacklistDir(index, line, folder):
             "--no-line-number",
             "--color=never",
             line,
-            os.path.join(mpaths.bin_dir, "pak1contents.txt"),
+            os.path.join(mpaths.bin_dir, "gamepakcontents.txt"),
         ],
         capture_output=True,
         text=True,
@@ -286,7 +288,7 @@ def processBlackList(index, line, folder, blank_file_extensions):
                     )
 
             except TypeError as exception:
-                warnings.append("[{}]".format(type(exception).__name__) + " Invalid data type in line -> " + str(line))
+                warnings.append(f"[{type(exception).__name__}]" + " Invalid data type in line -> " + str(line))
 
     return data
 

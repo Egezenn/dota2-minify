@@ -1,8 +1,3 @@
 Add your own / modify & remove existing style snippets here.
 
 These snippets might not be desirable for the majority, enable with caution.
-
-* Files are from the core pak, will turn them into styling later on,
-- popup_manager.vcss_c -> removes dims & blurs
-- popups_shared.vcss_c -> removes generic popup panels (includes the exit popup, use alt+f4)
-- tooltip_base.vcss_c -> removes badges on hero card hover

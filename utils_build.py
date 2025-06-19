@@ -14,7 +14,7 @@ import helper
 import mpaths
 import utils_gui
 
-pak1_contents_file_init = False
+game_contents_file_init = False
 
 
 def patcher():
@@ -40,6 +40,8 @@ def patcher():
         )  # list of extensions in bin/blank-files
         blacklist_data = []  # path from every blacklist.txt
         styling_data = []  # path and style from every styling.txt
+        dota_pak_contents = vpk.open(mpaths.dota_game_pak_path)
+        core_pak_contents = vpk.open(mpaths.dota_core_pak_path)
 
         for folder in mpaths.mods_folder_compilation_order:
             try:
@@ -55,12 +57,13 @@ def patcher():
                             f"{helper.localization_dict["installing_terminal_text_var"]} {folder}",
                             tag=f"installing_{folder}_text_tag",
                         )
-                        if utils_gui.checkboxes[box] == "Dark Terrain" or utils_gui.checkboxes[box] == "Remove Foilage":
-                            shutil.copytree(
-                                mpaths.maps_dir,
-                                os.path.join(mpaths.minify_dota_pak_output_path, os.path.basename(mpaths.maps_dir)),
-                                dirs_exist_ok=True,
-                            )
+                        shutil.copytree(
+                            os.path.join(mod_path, "files"),
+                            mpaths.minify_dota_compile_output_path,
+                            dirs_exist_ok=True,
+                            ignore=shutil.ignore_patterns("*.gitkeep"),
+                        )
+                        # ------------------------------- odg ------------------------------ #
                         if utils_gui.checkboxes[box] == "OpenDotaGuides Guides":
                             zip_path = os.path.join(mod_path, "files", "OpenDotaGuides.zip")
                             temp_dump_path = os.path.join(mod_path, "files", "temp")
@@ -111,24 +114,18 @@ def patcher():
                                     "failed_downloading_open_dota_guides_text_tag",
                                     "error",
                                 )
-                        shutil.copytree(
-                            os.path.join(mod_path, "files"),
-                            mpaths.minify_dota_compile_output_path,
-                            dirs_exist_ok=True,
-                            ignore=shutil.ignore_patterns("*.gitkeep"),
-                        )
                         # ------------------------------- blacklist.txt ------------------------------ #
                         if os.stat(blacklist_txt).st_size == 0:
                             pass
                         else:
-                            global pak1_contents_file_init
-                            if not pak1_contents_file_init:
+                            global game_contents_file_init
+                            if not game_contents_file_init:
                                 # TODO check pak01 hash, log it & run this only if it's different
                                 extract = subprocess.run(
                                     [
                                         os.path.join(".", mpaths.s2v_executable),
                                         "-i",
-                                        mpaths.dota_pak01_path,
+                                        mpaths.dota_game_pak_path,
                                         "-l",
                                     ],
                                     capture_output=True,
@@ -137,11 +134,11 @@ def patcher():
                                 pattern = r"(.*) CRC:.*"
                                 replacement = r"\1"
 
-                                with open(os.path.join(mpaths.bin_dir, "pak1contents.txt"), "w") as file:
+                                with open(os.path.join(mpaths.bin_dir, "gamepakcontents.txt"), "w") as file:
                                     for extract_line in extract.stdout.splitlines():
                                         new_line = re.sub(pattern, replacement, extract_line.rstrip())
                                         file.write(new_line + "\n")
-                                pak1_contents_file_init = True
+                                game_contents_file_init = True
 
                             with open(blacklist_txt) as file:
                                 lines = file.readlines()
@@ -173,16 +170,12 @@ def patcher():
                                             )
 
                             for exclusion in blacklist_data_exclusions:
-                                # try:
                                 if exclusion in blacklist_data:
                                     blacklist_data.remove(exclusion)
                                 else:
                                     print(
                                         f"[Unnecessary Exclusion] '{exclusion}' in '{folder}' is not necessary, the mod doesn't include this file."
                                     )
-                                # except ValueError:
-                                # helper.warnings.append(
-                                # )
                             print(f"{folder}'s blacklist replaced {len(blacklist_data)} files!")
 
                             for index, line in enumerate(blacklist_data):
@@ -194,9 +187,9 @@ def patcher():
                                     exist_ok=True,
                                 )
 
-                                try:  # TODO faster filecopy?
+                                try:  # TODO parallelize filecopy if and when blacklists get bigger
                                     shutil.copy(
-                                        os.path.join(mpaths.blank_files_dir, "blank{}").format(extension),
+                                        os.path.join(mpaths.blank_files_dir, f"blank{extension}"),
                                         os.path.join(mpaths.minify_dota_compile_output_path, path + extension),
                                     )
                                 except FileNotFoundError as exception:
@@ -234,28 +227,30 @@ def patcher():
                                     path = line[0].strip()
                                     style = line[1].strip()
 
-                                    styling_dictionary["styling-key{}".format(index + 1)] = (path, style)
+                                    styling_dictionary[f"styling-key{index + 1}"] = (path, style)
 
                                 except Exception as exception:
                                     helper.warnings.append(
-                                        "[{}]".format(type(exception).__name__)
-                                        + " Could not validate '{}' in --> 'mods\\{}\\styling.txt' [line: {}]".format(
-                                            line, folder, index + 1
-                                        )
+                                        f"[{type(exception).__name__}]"
+                                        + f" Could not validate '{line}' in --> 'mods\\{folder}\\styling.txt' [line: {index + 1}]"
                                     )
 
-                                os.makedirs(os.path.join(mpaths.build_dir, os.path.dirname(path)), exist_ok=True)
-
-                                for key, path_style in list(styling_dictionary.items()):
-                                    try:
-                                        helper.vpkExtractor(f"{path_style[0]}.vcss_c")
-                                    except KeyError:
-                                        helper.warnings.append(
-                                            "Path does not exist in VPK -> '{}', error in 'mods\\{}\\styling.txt'".format(
-                                                f"{path_style[0]}.vcss_c", folder
-                                            )
-                                        )
-                                        del styling_dictionary[key]
+                            for key, path_style in list(styling_dictionary.items()):
+                                sanitized_path = (
+                                    path_style[0][1:] if path_style[0].startswith("!") else path_style[0]
+                                )  # horrible hack
+                                os.makedirs(
+                                    os.path.join(mpaths.build_dir, os.path.dirname(sanitized_path)), exist_ok=True
+                                )
+                                try:
+                                    if path_style[0].startswith("!"):  # hhack
+                                        helper.vpkExtractor(core_pak_contents, f"{sanitized_path}.vcss_c")  # hhack
+                                    else:
+                                        helper.vpkExtractor(dota_pak_contents, f"{sanitized_path}.vcss_c")
+                                except KeyError:
+                                    helper.warnings.append(
+                                        f"Path does not exist in VPK -> '{sanitized_path}.vcss_c', error in 'mods\\{folder}\\styling.txt'"
+                                    )
 
             except Exception as exception:
                 exceptiondata = traceback.format_exc().splitlines()
@@ -292,7 +287,8 @@ def patcher():
         )
 
         for key, path_style in list(styling_dictionary.items()):
-            with open(os.path.join(mpaths.build_dir, f"{path_style[0]}.css"), "r+") as file:
+            sanitized_path = path_style[0][1:] if path_style[0].startswith("!") else path_style[0]  # hhack
+            with open(os.path.join(mpaths.build_dir, f"{sanitized_path}.css"), "r+") as file:
                 if path_style[1] not in file.read():
                     file.write("\n" + path_style[1])
 
@@ -331,10 +327,12 @@ def patcher():
             shutil.copy(
                 mpaths.version_file_dir, os.path.join(mpaths.minify_dota_compile_output_path, "minify_version.txt")
             )
-        except FileNotFoundError:
+        except FileNotFoundError:  # update ignore
             pass
+
+        os.makedirs(helper.output_path, exist_ok=True)
         newpak = vpk.new(mpaths.minify_dota_compile_output_path)
-        newpak.save(os.path.join(mpaths.minify_dota_pak_output_path, "pak66_dir.vpk"))
+        newpak.save(os.path.join(helper.output_path, "pak66_dir.vpk"))
 
         patching = False
 
@@ -343,9 +341,15 @@ def patcher():
         utils_gui.unlock_interaction()
         helper.add_text_to_terminal("-------------------------------------------------------", "spacer1_text")
         helper.add_text_to_terminal(
-            helper.localization_dict["success_terminal_text_var"], "success_text_tag", "success"
+            helper.localization_dict["success_terminal_text_var"],
+            "success_text_tag",
+            "success",
         )
-        helper.add_text_to_terminal(helper.localization_dict["launch_option_text_var"], "launch_option_text", "warning")
+        helper.add_text_to_terminal(
+            helper.localization_dict["launch_option_text_var"].format(ui.get_value("output_select")),
+            "launch_option_text",
+            "warning",
+        )
 
         helper.handleWarnings(mpaths.logs_dir)
 
@@ -369,14 +373,21 @@ def uninstaller():
     helper.clean_terminal()
     time.sleep(0.05)
     utils_gui.lock_interaction()
-    # TODO make use of the included minify.txt at root
-    vpkPath = os.path.join(mpaths.minify_dota_pak_output_path, "pak66_dir.vpk")
-    if os.path.exists(vpkPath):
-        os.remove(vpkPath)
 
-    # remove dota.vpk if it exists
-    helper.rmtrees(mpaths.minify_dota_maps_output_path)
+    # smart uninstall
+    pak_pattern = r"^pak\d{2}_dir\.vpk$"
+    for dir in mpaths.minify_dota_possible_language_output_paths:
+        if os.path.isdir(dir):
+            for item in os.listdir(dir):
+                if os.path.isfile(os.path.join(dir, item)) and re.fullmatch(pak_pattern, item):
+                    pak_contents = vpk.open(os.path.join(dir, item))
+                    try:
+                        if pak_contents.get_file("minify_mods.json"):
+                            os.remove(os.path.join(dir, item))
+                    except KeyError:
+                        pass
 
+    # odg
     try:
         with open(os.path.join(mpaths.dota_itembuilds_path, "default_antimage.txt"), "r") as file:
             lines = file.readlines()

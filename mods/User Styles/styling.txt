@@ -13,6 +13,15 @@ panorama/styles/hud/dota_hud_shop_search_results @@ #SearchResultsStatToggles { 
 # remove hero movies on hero card hover
 panorama/styles/tooltips/tooltip_hero_card @@ #MainContents { visibility: collapse; }
 
+# removes dims & blurs
+!panorama/styles/popups/popup_manager @@ #BlurBackground, #DimBackground { visibility: collapse; }
+
+# removes generic popup panels (includes the exit popup, use alt+f4)
+!panorama/styles/popups/popups_shared @@ #AbandonGamePopup { visibility: visible; } PopupGeneric.PopupPanel { visibility: collapse; }
+
+# removes badges on hero card hover
+!panorama/styles/tooltips/tooltip_base @@ DOTATooltipHeroCard#HeroCardTooltip.TooltipVisible { visibility: collapse; }
+
 # WIP remove popular items
 # panorama/styles/dota_ui_shop_item @@ DOTAShopItem.Popular.SideShopItem.MainShopItem { visibility: collapse; }
 # panorama/styles/hud/dota_hud_item_build @@ DOTAShopItem.Popular.SideShopItem.MainShopItem { visibility: collapse; }

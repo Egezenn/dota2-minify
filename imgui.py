@@ -72,9 +72,19 @@ def create_ui():
             pos=(115, 6),
             callback=utils_gui.dev_mode,
         )
-        ui.add_text(utils_gui.title, pos=(240, 5))
+        ui.add_text("Language:", pos=(138, 3))
+        ui.add_combo(
+            parent="top_bar",
+            tag="output_select",
+            items=(mpaths.minify_output_list),
+            default_value="minify",
+            width=95,
+            pos=(210, 8),
+            callback=helper.change_output_path,
+        )
+        ui.add_text(utils_gui.title, pos=(320, 3))
         ui.add_button(
-            parent="top_bar", tag="button_exit", label="Close", callback=helper.close, height=28, width=60, pos=(440, 5)
+            parent="top_bar", tag="button_exit", label="Close", callback=helper.close, height=28, width=60, pos=(440, 4)
         )
 
         ui.bind_item_font("lang_select", combo_font)
@@ -206,7 +216,7 @@ def create_base_ui():
     utils_gui.theme()
     helper.change_localization(init=True)
     utils_gui.version_check()
-    time.sleep(0.05)  # if popup's sizes break, increase this value
+    time.sleep(0.05)
     utils_gui.configure_update_popup()
 
 

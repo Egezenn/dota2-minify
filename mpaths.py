@@ -16,7 +16,7 @@ ARCHITECTURE = platform.architecture()[0]
 STEAM_DEFAULT_INSTALLATION_PATH = (
     os.path.join("C:\\", "Program Files (x86)", "Steam")
     if OS == "Windows"
-    else os.path.join("/", "home", getpass.getuser(), ".local", "share", "Steam")
+    else os.path.join("/", "home", getpass.getuser(), ".local", "share", "Steam")  # may vary from packaging
 )
 DOTA_EXECUTABLE_PATH = (
     os.path.join("steamapps", "common", "dota 2 beta", "game", "bin", "win64", "dota2.exe")
@@ -43,8 +43,6 @@ create_dirs(logs_dir, config_dir)
 blank_files_dir = os.path.join(bin_dir, "blank-files")
 img_dir = os.path.join(bin_dir, "images")
 localization_file_dir = os.path.join(bin_dir, "localization.json")
-maps_dir = os.path.join(bin_dir, "maps")
-minify_map_dir = os.path.join(maps_dir, "dota.vpk")
 locale_file_dir = os.path.join(config_dir, "locale")
 mods_file_dir = os.path.join(config_dir, "mods.json")
 path_file_dir = os.path.join(config_dir, "dota2path_minify.txt")
@@ -249,18 +247,78 @@ minify_dota_compile_output_path = os.path.join(
     steam_dir, "steamapps", "common", "dota 2 beta", "game", "dota_addons", "minify"
 )
 ### vpk destination
+minify_dota_pak_possible_output_path = os.path.join(steam_dir, "steamapps", "common", "dota 2 beta", "game")
 minify_dota_pak_output_path = os.path.join(steam_dir, "steamapps", "common", "dota 2 beta", "game", "dota_minify")
-minify_dota_maps_output_path = os.path.join(minify_dota_pak_output_path, "maps")
+minify_dota_possible_language_output_paths = [
+    os.path.join(steam_dir, "steamapps", "common", "dota 2 beta", "game", "dota_minify"),
+    os.path.join(steam_dir, "steamapps", "common", "dota 2 beta", "game", "dota_brazilian"),
+    os.path.join(steam_dir, "steamapps", "common", "dota 2 beta", "game", "dota_bulgarian"),
+    os.path.join(steam_dir, "steamapps", "common", "dota 2 beta", "game", "dota_czech"),
+    os.path.join(steam_dir, "steamapps", "common", "dota 2 beta", "game", "dota_danish"),
+    os.path.join(steam_dir, "steamapps", "common", "dota 2 beta", "game", "dota_dutch"),
+    os.path.join(steam_dir, "steamapps", "common", "dota 2 beta", "game", "dota_finnish"),
+    os.path.join(steam_dir, "steamapps", "common", "dota 2 beta", "game", "dota_french"),
+    os.path.join(steam_dir, "steamapps", "common", "dota 2 beta", "game", "dota_german"),
+    os.path.join(steam_dir, "steamapps", "common", "dota 2 beta", "game", "dota_greek"),
+    os.path.join(steam_dir, "steamapps", "common", "dota 2 beta", "game", "dota_hungarian"),
+    os.path.join(steam_dir, "steamapps", "common", "dota 2 beta", "game", "dota_italian"),
+    os.path.join(steam_dir, "steamapps", "common", "dota 2 beta", "game", "dota_japanese"),
+    os.path.join(steam_dir, "steamapps", "common", "dota 2 beta", "game", "dota_koreana"),
+    os.path.join(steam_dir, "steamapps", "common", "dota 2 beta", "game", "dota_latam"),
+    os.path.join(steam_dir, "steamapps", "common", "dota 2 beta", "game", "dota_norwegian"),
+    os.path.join(steam_dir, "steamapps", "common", "dota 2 beta", "game", "dota_polish"),
+    os.path.join(steam_dir, "steamapps", "common", "dota 2 beta", "game", "dota_portuguese"),
+    os.path.join(steam_dir, "steamapps", "common", "dota 2 beta", "game", "dota_romanian"),
+    os.path.join(steam_dir, "steamapps", "common", "dota 2 beta", "game", "dota_russian"),
+    os.path.join(steam_dir, "steamapps", "common", "dota 2 beta", "game", "dota_schinese"),
+    os.path.join(steam_dir, "steamapps", "common", "dota 2 beta", "game", "dota_spanish"),
+    os.path.join(steam_dir, "steamapps", "common", "dota 2 beta", "game", "dota_swedish"),
+    os.path.join(steam_dir, "steamapps", "common", "dota 2 beta", "game", "dota_tchinese"),
+    os.path.join(steam_dir, "steamapps", "common", "dota 2 beta", "game", "dota_thai"),
+    os.path.join(steam_dir, "steamapps", "common", "dota 2 beta", "game", "dota_turkish"),
+    os.path.join(steam_dir, "steamapps", "common", "dota 2 beta", "game", "dota_ukrainian"),
+    os.path.join(steam_dir, "steamapps", "common", "dota 2 beta", "game", "dota_vietnamese"),
+]
 # required for tools to launch
 minify_dota_content_path = os.path.join(steam_dir, "steamapps", "common", "dota 2 beta", "content", "dota_minify")
+minify_output_list = [
+    "minify",
+    "brazilian",
+    "bulgarian",
+    "czech",
+    "danish",
+    "dutch",
+    "finnish",
+    "french",
+    "german",
+    "greek",
+    "hungarian",
+    "italian",
+    "japanese",
+    "koreana",
+    "latam",
+    "norwegian",
+    "polish",
+    "portuguese",
+    "romanian",
+    "russian",
+    "schinese",
+    "spanish",
+    "swedish",
+    "tchinese",
+    "thai",
+    "turkish",
+    "ukrainian",
+    "vietnamese",
+]
 
 ## base game
 dota2_executable = os.path.join(steam_dir, "steamapps", "common", "dota 2 beta", "game", "bin", "win64", "dota2.exe")
 dota2_tools_executable = os.path.join(
     steam_dir, "steamapps", "common", "dota 2 beta", "game", "bin", "win64", "dota2cfg.exe"
 )
-dota_core_pak01_path = os.path.join(steam_dir, "steamapps", "common", "dota 2 beta", "game", "core", "pak01_dir.vpk")
-dota_pak01_path = os.path.join(steam_dir, "steamapps", "common", "dota 2 beta", "game", "dota", "pak01_dir.vpk")
+dota_game_pak_path = os.path.join(steam_dir, "steamapps", "common", "dota 2 beta", "game", "dota", "pak01_dir.vpk")
+dota_core_pak_path = os.path.join(steam_dir, "steamapps", "common", "dota 2 beta", "game", "core", "pak01_dir.vpk")
 dota_itembuilds_path = os.path.join(steam_dir, "steamapps", "common", "dota 2 beta", "game", "dota", "itembuilds")
 dota_map_path = os.path.join(steam_dir, "steamapps", "common", "dota 2 beta", "game", "dota", "maps", "dota.vpk")
 dota_resource_compiler_path = os.path.join(

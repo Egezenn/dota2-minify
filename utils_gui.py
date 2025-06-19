@@ -52,7 +52,7 @@ def version_check():
 
 def initiate_conditionals():
     setup_system_thread = threading.Thread(target=setupSystem)
-    load_state_checkboxes_thread = threading.Thread(target=load_state_checkboxes)
+    load_state_checkboxes_thread = threading.Thread(target=load_checkboxes_state)
     setup_system_thread.start()
     load_state_checkboxes_thread.start()
     setup_system_thread.join()
@@ -142,7 +142,7 @@ def setupSystem():
             )
 
 
-def load_state_checkboxes():
+def load_checkboxes_state():
     global checkboxes_state
     try:
         with open(mpaths.mods_file_dir, "r", encoding="utf-8") as file:
@@ -214,12 +214,16 @@ def lock_interaction():
     ui.configure_item("button_patch", enabled=False)
     ui.configure_item("button_select_mods", enabled=False)
     ui.configure_item("button_uninstall", enabled=False)
+    ui.configure_item("lang_select", enabled=False)
+    ui.configure_item("output_select", enabled=False)
 
 
 def unlock_interaction():
     ui.configure_item("button_patch", enabled=True)
     ui.configure_item("button_select_mods", enabled=True)
     ui.configure_item("button_uninstall", enabled=True)
+    ui.configure_item("lang_select", enabled=True)
+    ui.configure_item("output_select", enabled=True)
 
 
 def show_details(sender, app_data, user_data):
@@ -500,11 +504,11 @@ def dev_mode():
                 ),
             )
             ui.add_button(
-                label="File: Dota2 pak01 VPK", callback=lambda: asyncio.run(helper.open_dir(mpaths.dota_pak01_path))
+                label="File: Dota2 pak01 VPK", callback=lambda: asyncio.run(helper.open_dir(mpaths.dota_game_pak_path))
             )
             ui.add_button(
                 label="File: Dota2 pak01(core) VPK",
-                callback=lambda: asyncio.run(helper.open_dir(mpaths.dota_core_pak01_path)),
+                callback=lambda: asyncio.run(helper.open_dir(mpaths.dota_core_pak_path)),
             )
             ui.add_spacer(width=0, height=10)
             ui.add_button(
