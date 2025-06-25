@@ -46,12 +46,6 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Packages on Linux
-        if: matrix.os == 'ubuntu-latest'
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y patchelf tk
-
       - name: Build executable with Nuitka
         run: python -m nuitka --assume-yes-for-downloads --follow-imports --standalone --include-data-files=version=version --include-data-dir=./bin=bin --include-data-dir=./mods=mods --enable-plugin=tk-inter --windows-console-mode=disable --windows-icon-from-ico=bin/images/favicon.ico --enable-plugin=tk-inter --output-filename=Minify imgui.py
 
