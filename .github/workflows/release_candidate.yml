@@ -12,15 +12,15 @@ on:
         required: true
         default: "Built with workflows (Release candidate, might be broken)"
 
-env:
-  RELEASE_NAME: ""
-
 permissions:
   contents: write
 
 jobs:
   build:
-    runs-on: windows-latest
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [windows-latest, ubuntu-latest]
 
     steps:
       - uses: actions/checkout@v4
@@ -34,23 +34,53 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Build executable with Nuitka
+      - name: Packages on Linux
+        if: matrix.os == 'ubuntu-latest'
         run: |
-          python -m nuitka --assume-yes-for-downloads --follow-imports --standalone --include-data-files=version=version --include-data-dir=./bin=bin --include-data-dir=./mods=mods --enable-plugin=tk-inter --windows-console-mode=disable --windows-icon-from-ico=bin/images/favicon.ico --enable-plugin=tk-inter --output-filename=Minify imgui.py
-          cd imgui.dist
-          Compress-Archive -Path ".\*" -DestinationPath ".\..\${{ github.event.inputs.release_name }}.zip"
-          cd .\..\
+          sudo apt-get update
+          sudo apt-get install -y patchelf tk
 
-      - name: Create Release
+      - name: Build executable with Nuitka
+        run: python -m nuitka --assume-yes-for-downloads --follow-imports --standalone --include-data-files=version=version --include-data-dir=./bin=bin --include-data-dir=./mods=mods --enable-plugin=tk-inter --windows-console-mode=disable --windows-icon-from-ico=bin/images/favicon.ico --enable-plugin=tk-inter --output-filename=Minify imgui.py
+
+      - name: Archiving (Windows)
+        if: matrix.os == 'windows-latest'
+        run: |
+          cd imgui.dist
+          Compress-Archive -Path ".\*" -DestinationPath ".\..\${{ github.event.inputs.release_name }}-windows.zip"
+          cd .\..\
+      - name: Archiving (Linux)
+        if: matrix.os == 'ubuntu-latest'
+        run: |
+          cd imgui.dist
+          zip -qr  "../${{ github.event.inputs.release_name }}-linux.zip" ./*
+          cd ..
+
+      - name: Create Release (Windows)
+        if: matrix.os == 'windows-latest'
         uses: softprops/action-gh-release@v1
         with:
           prerelease: true
           tag_name: ${{ github.event.inputs.release_name }}
           body: ${{ github.event.inputs.release_body }}
-          files: "${{ github.event.inputs.release_name }}.zip"
+          files: "${{ github.event.inputs.release_name }}-windows.zip"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Create Release (Linux)
+        if: matrix.os == 'ubuntu-latest'
+        uses: softprops/action-gh-release@v1
+        with:
+          prerelease: true
+          tag_name: ${{ github.event.inputs.release_name }}
+          body: ${{ github.event.inputs.release_body }}
+          files: "${{ github.event.inputs.release_name }}-linux.zip"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Print SHA
+      - name: Windows Print SHA
+        if: matrix.os == 'windows-latest'
         shell: pwsh
-        run: (Get-FileHash -Path ${{github.event.inputs.release_name}}.zip).Hash
+        run: (Get-FileHash -Path ${{github.event.inputs.release_name}}-windows.zip).Hash
+      - name: Linux Print SHA
+        if: matrix.os == 'ubuntu-latest'
+        run: sha256sum ${{github.event.inputs.release_name}}-linux.zip | awk '{ print $1 }'

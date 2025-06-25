@@ -346,5 +346,9 @@
   },
   "open_dir_fail_text_var": {
     "EN": " doesn't exist!"
+  },
+  "language_select": {
+    "EN": "Language:",
+    "TR": "Dil:"
   }
 }

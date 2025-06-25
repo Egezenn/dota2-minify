@@ -72,7 +72,7 @@ def create_ui():
             pos=(115, 6),
             callback=utils_gui.dev_mode,
         )
-        ui.add_text("Language:", pos=(138, 3))
+        ui.add_text(tag="language_select", pos=(138, 3))
         ui.add_combo(
             parent="top_bar",
             tag="output_select",

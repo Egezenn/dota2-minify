@@ -45,18 +45,18 @@ No one has ever been banned for these mods. This project strictly deals with VPK
     - These tools enable HUD/Interface mods. **Skip this step if you don't need them.**
     - Right-click on Dota 2 in Steam.
     - Select **Properties** > **DLC**.
-    - Install **"Dota 2 Workshop Tools DLC"**.
+    - Install **"Dota 2 Workshop Tools DLC"**. (If you're on Linux you need to force the use of `Proton Experimental`, relaunch steam if you still don't see the DLC)
 
 2. **Run Minify**
 
    - Extract the ZIP file.
-   - Run `Minify.exe` and patch with the mods you want to use.
+   - Run `Minify` executable and patch with the mods you want to use.
 
 3. **Set Language for Steam**
 
    - Right-click on Dota2 in Steam and click **Properties**.
    - **For English Dota2:** Add `-language minify` to your launch options.
-   - **For Other Languages:** Follow the [instructions here](https://github.com/Egezenn/dota2-minify/wiki/Minify#using-minify-with-a-different-language-in-dota2).
+   - **For Other Languages:** Select the language you want to patch with on the top bar and add `-language language_id`
 
 4. **Start Dota 2**
      - Launch Dota2 and enjoy!
@@ -64,6 +64,8 @@ No one has ever been banned for these mods. This project strictly deals with VPK
 ### Optional Setup
 
 #### Using the project locally
+
+Prerequisites are `git` and`python`. (also `tk` for tkinter and `patchelf` to compile via nuitka on Linux)
 
 - `git clone https://github.com/Egezenn/dota2-minify`
 - `cd dota2-minify`
@@ -125,7 +127,7 @@ Creation of the base project.
 
 ### [Egezenn](https://github.com/Egezenn)
 
-Taking over the maintainership of the project, implementing automated workflows, improving the functionality, Linux port, RegExp functionality for blacklists, Turkish translations and [more](https://github.com/Egezenn/dota2-minify/commits/main/?author=Egezenn).
+Taking over the maintainership of the project, implementing automated workflows, various improvements, full Linux port, RegExp blacklists, Turkish translations and [more](https://github.com/Egezenn/dota2-minify/commits/main/?author=Egezenn).
 
 <details>
 <summary>Mods</summary>

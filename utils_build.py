@@ -315,9 +315,11 @@ def patcher():
                 if sp_compiler.stdout != b"":
                     file.write(sp_compiler.stdout)
 
-                if sp_compiler.stderr != b"":
-                    decoded_err = sp_compiler.stderr.decode("utf-8")
-                    raise Exception(decoded_err)
+                # compilers always be complaining
+                # if sp_compiler.stderr != b"":
+                #     decoded_err = sp_compiler.stderr.decode("utf-8")
+                #     raise Exception(decoded_err)
+
         # ---------------------------------- STEP 6 ---------------------------------- #
         # -------- Create VPK from game folder and save into Minify directory -------- #
         # ---------------------------------------------------------------------------- #
