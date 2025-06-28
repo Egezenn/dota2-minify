@@ -339,16 +339,20 @@
     "TR": "Source2Viewer'a çalıştırma yetkisi ver!"
   },
   "compile_successful_text_var": {
-    "EN": "Compiled successfully!"
+    "EN": "Compiled successfully!",
+    "RU": "Компиляция успешна!"
   },
   "compile_no_folder_text_var": {
-    "EN": "Select a folder first!"
+    "EN": "Select a folder first!",
+    "RU": "Сначала выбери папку!"
   },
   "open_dir_fail_text_var": {
-    "EN": " doesn't exist!"
+    "EN": " doesn't exist!",
+    "RU": " не существует!"
   },
   "language_select": {
     "EN": "Language:",
+    "RU": "Язык:",
     "TR": "Dil:"
   }
 }

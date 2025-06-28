@@ -1,2 +1,3 @@
 Убирает все погодные эффекты от предметов которые её изменяют и от "cl_weather" консольной команды.
+
 https://liquipedia.net/dota2/Weather_Effects
