@@ -16,7 +16,7 @@ permissions:
   contents: write
 
 jobs:
-  build-windows:
+  build:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
