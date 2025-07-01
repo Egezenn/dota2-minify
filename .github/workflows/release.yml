@@ -66,7 +66,6 @@ jobs:
         if: matrix.os == 'windows-latest'
         uses: softprops/action-gh-release@v1
         with:
-          prerelease: true
           tag_name: ${{ github.event.inputs.release_name }}
           body: ${{ github.event.inputs.release_body }}
           files: "${{ github.event.inputs.release_name }}-windows.zip"
@@ -76,7 +75,6 @@ jobs:
         if: matrix.os == 'ubuntu-latest'
         uses: softprops/action-gh-release@v1
         with:
-          prerelease: true
           tag_name: ${{ github.event.inputs.release_name }}
           body: ${{ github.event.inputs.release_body }}
           files: "${{ github.event.inputs.release_name }}-linux.zip"
