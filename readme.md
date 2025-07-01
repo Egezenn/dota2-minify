@@ -45,27 +45,32 @@ No one has ever been banned for these mods. This project strictly deals with VPK
     - These tools enable HUD/Interface mods. **Skip this step if you don't need them.**
     - Right-click on Dota 2 in Steam.
     - Select **Properties** > **DLC**.
-    - Install **"Dota 2 Workshop Tools DLC"**. (If you're on Linux you need to force the use of `Proton Experimental`, relaunch steam if you still don't see the DLC)
+      - On Linux, you need to force the use of `Proton Experimental` and have `wine` package installed. Relaunch steam if you still don't see the DLC.
+    - Install `Dota 2 Workshop Tools DLC`.
 
 2. **Run Minify**
 
    - Extract the ZIP file.
    - Run `Minify` executable and patch with the mods you want to use.
 
-3. **Set Language for Steam**
+3. **Setting the language argument for Dota2 on Steam**
 
    - Right-click on Dota2 in Steam and click **Properties**.
-   - **For English Dota2:** Add `-language minify` to your launch options.
+   - **For English:** Add `-language minify` to your launch options.
    - **For Other Languages:** Select the language you want to patch with on the top bar and add `-language language_id`
 
 4. **Start Dota 2**
      - Launch Dota2 and enjoy!
+> [!WARNING]
+> **For people using Minify on Linux with workshop tools!**
+> 
+> After patching go back to using a `Steam Runtime` as you'll not be able to queue games with `Proton Experimental`.
 
 ### Optional Setup
 
 #### Using the project locally
 
-Prerequisites are `git` and`python`. (also `tk` for tkinter and `patchelf` to compile via nuitka on Linux)
+Prerequisites are `git` and`python`. (also `tk` for tkinter, `wine` for workshop tools executables and `patchelf` to compile via nuitka on Linux)
 
 - `git clone https://github.com/Egezenn/dota2-minify`
 - `cd dota2-minify`

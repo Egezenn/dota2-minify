@@ -189,10 +189,12 @@ def change_localization(init=False):
                 if ui.get_item_alias(item).endswith("_button_show_details_tag"):
                     ui.configure_item(item, label=localization_data["details_button_label_var"][locale])
 
+
 def change_output_path():
     global output_path
     selection = ui.get_value("output_select")
     output_path = [lang for lang in mpaths.minify_dota_possible_language_output_paths if selection in lang][0]
+
 
 def vpkExtractor(vpk_to_extract_from, path):
     # TODO implement functionality to pull from core
@@ -379,10 +381,7 @@ def rmtrees(*paths):
         try:
             shutil.rmtree(path)
         except PermissionError:
-            if mpaths.OS == "Windows":
-                os.chmod(path, stat.S_IWRITE)
-            else:
-                os.chmod(path, os.stat(path).st_mode | stat.S_IWUSR)
+            os.chmod(path, stat.S_IWUSR)
             shutil.rmtree(path)
             print(f"Forced deletion of: {path}")
         except FileNotFoundError:

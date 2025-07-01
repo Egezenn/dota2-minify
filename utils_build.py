@@ -302,20 +302,23 @@ def patcher():
         if helper.workshop_installed:
             with open(os.path.join(mpaths.logs_dir, "resourcecompiler.txt"), "wb") as file:
                 helper.add_text_to_terminal(helper.localization_dict["compiling_terminal_text_var"], "compiling_text")
-                sp_compiler = subprocess.run(
-                    [
-                        mpaths.dota_resource_compiler_path,
-                        "-i",
-                        mpaths.minify_dota_compile_input_path + "/*",
-                        "-r",
-                    ],
+                command = [
+                    mpaths.dota_resource_compiler_path,
+                    "-i",
+                    mpaths.minify_dota_compile_input_path + "/*",
+                    "-r",
+                ]
+                if mpaths.OS == "Linux":
+                    command.insert(0, "wine")
+
+                rescomp = subprocess.run(
+                    command,
                     stdout=subprocess.PIPE,
                     stderr=subprocess.PIPE,  # compiler complains if minify_dota_compile_input_path is empty
                 )
-                if sp_compiler.stdout != b"":
-                    file.write(sp_compiler.stdout)
+                if rescomp.stdout != b"":
+                    file.write(rescomp.stdout)
 
-                # compilers always be complaining
                 # if sp_compiler.stderr != b"":
                 #     decoded_err = sp_compiler.stderr.decode("utf-8")
                 #     raise Exception(decoded_err)
