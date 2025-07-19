@@ -168,10 +168,17 @@ def handle_non_default_path():
         root.destroy()
 
 
-def overwrite_ensurance_hack(list_of_words, list):
-    to_move = [s for s in list if any(s.startswith(word) for word in list_of_words)]
-    others = [s for s in list if not any(s.startswith(word) for word in list_of_words)]
-    return others + to_move
+def overwrite_ensurance_hack(list_of_string_patterns, strings):
+    matched, unmatched = [[], []]
+    for string in strings:
+        for pattern in list_of_string_patterns:
+            if string.startswith(pattern):
+                matched.append(string)
+                break
+        if string not in [*unmatched, *matched]:
+            unmatched.append(string)
+
+    return [*unmatched, *matched]
 
 
 get_steam_path()
@@ -338,4 +345,3 @@ for mod in os.listdir(mods_dir):
 mods_folder_compilation_order = overwrite_ensurance_hack(
     ["Mute", "Remove", "Minify Base Attacks", "Minify Spells & Items", "Misc Optimization"], mods_folders
 )
-mods_folder_compilation_order = overwrite_ensurance_hack(["Hide ALL", "Remove ALL", "Mute ALL"], mods_folders)
