@@ -9,6 +9,7 @@ import dearpygui.dearpygui as ui
 import psutil
 import requests
 import vpk
+import vdf
 
 import helper
 import mpaths
@@ -39,6 +40,12 @@ def patcher():
         styling_data = []  # path and style from every styling.txt
         dota_pak_contents = vpk.open(mpaths.dota_game_pak_path)
         core_pak_contents = vpk.open(mpaths.dota_core_pak_path)
+
+        with open(mpaths.dota_gameinfo_branchspecific_path, "r", encoding="utf-8") as f:
+            data = vdf.load(f)
+        data["GameInfo"]["Panorama"]["PreprocessResources"] = "0"
+        with open(mpaths.dota_gameinfo_branchspecific_path, "w", encoding="utf-8") as f:
+            vdf.dump(data, f)
 
         for folder in mpaths.mods_folder_compilation_order:
             try:
@@ -337,6 +344,10 @@ def patcher():
         newpak.save(os.path.join(helper.output_path, "pak66_dir.vpk"))
 
         helper.rmtrees(mpaths.minify_dota_compile_input_path, mpaths.minify_dota_compile_output_path, mpaths.build_dir)
+
+        data["GameInfo"]["Panorama"]["PreprocessResources"] = "1"
+        with open(mpaths.dota_gameinfo_branchspecific_path, "w", encoding="utf-8") as f:
+            vdf.dump(data, f)
 
         utils_gui.unlock_interaction()
         helper.add_text_to_terminal("-------------------------------------------------------", "spacer1_text")

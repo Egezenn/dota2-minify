@@ -337,6 +337,10 @@ dota_map_path = os.path.join(steam_dir, "steamapps", "common", "dota 2 beta", "g
 dota_resource_compiler_path = os.path.join(
     steam_dir, "steamapps", "common", "dota 2 beta", "game", "bin", "win64", "resourcecompiler.exe"
 )
+dota_gameinfo_branchspecific_path = os.path.join(
+    steam_dir, "steamapps", "common", "dota 2 beta", "game", "dota", "gameinfo_branchspecific.gi"
+)
+
 
 mods_folders = []
 for mod in os.listdir(mods_dir):
