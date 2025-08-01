@@ -10,7 +10,6 @@ import webbrowser
 from urllib.request import urlopen
 
 import dearpygui.dearpygui as ui
-import vpk
 
 import mpaths
 
@@ -197,7 +196,6 @@ def change_output_path():
 
 
 def vpkExtractor(vpk_to_extract_from, path):
-    # TODO implement functionality to pull from core
     fullPath = os.path.join(mpaths.build_dir, path)
     if not os.path.exists(fullPath):  # extract files from VPK only once
         add_text_to_terminal(f"{localization_dict["extracting_terminal_text_var"]}{path}", f"extracting_{path}_tag")

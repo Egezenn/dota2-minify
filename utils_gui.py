@@ -8,19 +8,20 @@ import subprocess
 import tarfile
 import threading
 import time
-import traceback
 import zipfile
+
 import dearpygui.dearpygui as ui
+import psutil
 import requests
 
 import helper
 import mpaths
-import validatefiles
 
-version = None
-checkboxes_state = {}
 checkboxes = {}
+checkboxes_state = {}
 dev_mode_state = -1
+gui_lock = False
+version = None
 
 try:
     with open(mpaths.version_file_dir, "r") as file:
@@ -67,11 +68,9 @@ def update_popup_show():
 
 def setupSystem():
     os.makedirs("logs", exist_ok=True)
-    # TODO do this.. normally
-    x = validatefiles.Requirements(checkboxes)
-    public_methods = [
-        method for method in dir(x) if callable(getattr(x, method)) if not method.startswith("_")
-    ]  # private methods start with _
+    isDotaRunning()
+    verifyMods()
+    isCompilerFound()
     try:
         if not (
             os.path.exists(mpaths.s2v_executable)
@@ -120,15 +119,12 @@ def setupSystem():
                     current_permissions = os.stat(mpaths.s2v_executable).st_mode
                     os.chmod(mpaths.s2v_executable, current_permissions | stat.S_IXUSR | stat.S_IXGRP | stat.S_IXOTH)
 
-        for method in public_methods:
-            getattr(x, method)()
-            if x.toggle_flag == True:
-                lock_interaction()
-                break
+        if gui_lock:
+            lock_interaction()
 
-    except Exception:
+    except Exception as e:
         with open(os.path.join(mpaths.logs_dir, "crashlog.txt"), "w") as file:
-            file.write(traceback.format_exc())
+            file.write(f"{type(e).__name__}: {str(e)}")
             lock_interaction()
             helper.add_text_to_terminal(
                 helper.localization_dict["failed_to_start_terminal_text_var"],
@@ -597,3 +593,57 @@ def configure_update_popup():
             + 26,
         ),
     )
+
+
+def isDotaRunning():
+    if "dota2.exe" in (p.name() for p in psutil.process_iter()):
+        global gui_lock
+        gui_lock = True
+        helper.add_text_to_terminal(
+            helper.localization_dict["error_please_close_dota_terminal_text_var"],
+            "please_close_dota_text_tag",
+            "error",
+        )
+
+
+def isCompilerFound():
+    if not os.path.exists(mpaths.dota_resource_compiler_path):
+        helper.workshop_installed = False
+        helper.add_text_to_terminal(
+            helper.localization_dict["error_no_workshop_tools_found_terminal_text_var"],
+            "no_workshop_tools_found_text_tag",
+            "warning",
+        )
+    else:
+        helper.workshop_installed = True
+
+
+# TODO disable the mod that is invalid & continue
+def verifyMods():
+    global gui_lock
+    for folder in mpaths.mods_folders:
+        mod_path = os.path.join(mpaths.mods_dir, folder)
+
+        if not os.path.exists(os.path.join(mod_path, "files")):
+            gui_lock = True
+            helper.add_text_to_terminal(
+                f"{helper.localization_dict["error_no_files_folder_found_terminal_text_var"]}'mods/{folder}'.",
+                "files_folder_not_found_text_tag",
+                "error",
+            )
+
+        if not os.path.exists(os.path.join(mod_path, "blacklist.txt")):
+            gui_lock = True
+            helper.add_text_to_terminal(
+                f"{helper.localization_dict["error_no_blacklist_txt_found_terminal_text_var"]}'mods/{folder}'.",
+                "blacklist_not_found_text_tag",
+                "error",
+            )
+
+        if not os.path.exists(os.path.join(mod_path, "styling.txt")):
+            gui_lock = True
+            helper.add_text_to_terminal(
+                f"{helper.localization_dict["error_no_styling_txt_found_terminal_text_var"]}'mods/{folder}'.",
+                "blacklist_not_found_text_tag",
+                "error",
+            )

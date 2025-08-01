@@ -24,6 +24,7 @@ DOTA_EXECUTABLE_PATH = (
     if OS == "Windows"
     else os.path.join("steamapps", "common", "dota 2 beta", "game", "bin", "linuxsteamrt64", "dota2")
 )
+# launchers for dota2 won't work as it presumes native version, doesn't really matter
 DOTA_EXECUTABLE_PATH_FALLBACK = os.path.join("steamapps", "common", "dota 2 beta", "game", "bin", "win64", "dota2.exe")
 
 # minify project paths

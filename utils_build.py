@@ -18,7 +18,6 @@ game_contents_file_init = False
 
 
 def patcher():
-    global patching
     utils_gui.lock_interaction()
     helper.clean_terminal()
     if "dota2.exe" in (p.name() for p in psutil.process_iter()):
@@ -26,8 +25,6 @@ def patcher():
             helper.localization_dict["close_dota_terminal_text_var"], "close_dota_text_tag", "warning"
         )
         return
-
-    patching = True
 
     try:
         helper.cleanFolders()
@@ -339,8 +336,6 @@ def patcher():
         newpak = vpk.new(mpaths.minify_dota_compile_output_path)
         newpak.save(os.path.join(helper.output_path, "pak66_dir.vpk"))
 
-        patching = False
-
         helper.rmtrees(mpaths.minify_dota_compile_input_path, mpaths.minify_dota_compile_output_path, mpaths.build_dir)
 
         utils_gui.unlock_interaction()
@@ -362,7 +357,6 @@ def patcher():
         with open(os.path.join(mpaths.logs_dir, "crashlog.txt"), "w") as file:
             file.write(traceback.format_exc())
 
-        patching = False
         helper.add_text_to_terminal("-------------------------------------------------------", "spacer2_text")
         helper.add_text_to_terminal(
             helper.localization_dict["failure_terminal_text_var"], "patching_failed_text_tag", "error"

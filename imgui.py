@@ -13,7 +13,6 @@ import utils_gui
 
 ui.create_context()
 
-patching = False
 blacklist_dictionary = {}
 styling_dictionary = {}
 
