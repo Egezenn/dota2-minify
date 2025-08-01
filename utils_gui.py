@@ -34,7 +34,7 @@ title = f"Minify {version}" if version else "Minify"
 
 def version_check():
     global version
-    if version:
+    if version and not "rc" in version:
         try:
             response = requests.get(mpaths.version_query)
             if response.status_code == 200:
