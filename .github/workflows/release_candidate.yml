@@ -6,11 +6,7 @@ on:
       release_name:
         description: "Name the release candidate"
         required: true
-        default: "Minify-v1.xxrcx"
-      release_body:
-        description: "Description of the release candidate"
-        required: true
-        default: "Built with workflows (Release candidate, might be broken)"
+        default: "Minify-v1.xx.xrcx"
 
 permissions:
   contents: write
@@ -64,7 +60,6 @@ jobs:
         with:
           prerelease: true
           tag_name: ${{ github.event.inputs.release_name }}
-          body: ${{ github.event.inputs.release_body }}
           files: "${{ github.event.inputs.release_name }}-windows.zip"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -74,7 +69,6 @@ jobs:
         with:
           prerelease: true
           tag_name: ${{ github.event.inputs.release_name }}
-          body: ${{ github.event.inputs.release_body }}
           files: "${{ github.event.inputs.release_name }}-linux.zip"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
