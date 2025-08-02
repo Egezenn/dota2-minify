@@ -1,1 +1,1 @@
-Automatically accepts a match after 5 seconds
+Automatically accepts a match after 10 seconds
