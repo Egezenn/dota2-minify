@@ -50,10 +50,14 @@ def patcher():
                     original_line = line
                     modified_line = line.replace("1", "0")
                     break
-            data[line_index] = modified_line
-            f.seek(0)
-            f.truncate()
-            f.writelines(data)
+            try:
+                data[line_index] = modified_line
+                f.seek(0)
+                f.truncate()
+                f.writelines(data)
+                preproc_fix = True
+            except UnboundLocalError:
+                preproc_fix = False
 
         for folder in mpaths.mods_folder_compilation_order:
             try:
@@ -353,9 +357,10 @@ def patcher():
 
         helper.rmtrees(mpaths.minify_dota_compile_input_path, mpaths.minify_dota_compile_output_path, mpaths.build_dir)
 
-        with open(mpaths.dota_gameinfo_branchspecific_path, "w", encoding="utf-8") as f:
-            data[line_index] = original_line
-            f.writelines(data)
+        if preproc_fix:
+            with open(mpaths.dota_gameinfo_branchspecific_path, "w", encoding="utf-8") as f:
+                data[line_index] = original_line
+                f.writelines(data)
 
         utils_gui.unlock_interaction()
         helper.add_text_to_terminal("-------------------------------------------------------", "spacer1_text")
