@@ -9,7 +9,6 @@ import dearpygui.dearpygui as ui
 import psutil
 import requests
 import vpk
-import vdf
 
 import helper
 import mpaths
@@ -31,7 +30,6 @@ def patcher():
         helper.cleanFolders()
 
         styling_dictionary = {}
-        # blacklist_dictionary = {}
 
         blank_file_extensions = helper.getBlankFileExtensions(
             mpaths.blank_files_dir
@@ -42,22 +40,22 @@ def patcher():
         core_pak_contents = vpk.open(mpaths.dota_core_pak_path)
 
         # rescomp fix
-        with open(mpaths.dota_gameinfo_branchspecific_path, "r+", encoding="utf-8") as f:
-            data = f.readlines()
-            for i, line in enumerate(data):
-                if "PreprocessResources" in line:
-                    line_index = i
-                    original_line = line
-                    modified_line = line.replace("1", "0")
-                    break
-            try:
-                data[line_index] = modified_line
-                f.seek(0)
-                f.truncate()
-                f.writelines(data)
-                preproc_fix = True
-            except UnboundLocalError:
-                preproc_fix = False
+        # with open(mpaths.dota_gameinfo_branchspecific_path, "r+", encoding="utf-8") as f:
+        #     data = f.readlines()
+        #     for i, line in enumerate(data):
+        #         if "PreprocessResources" in line:
+        #             line_index = i
+        #             original_line = line
+        #             modified_line = line.replace("1", "0")
+        #             break
+        #     try:
+        #         data[line_index] = modified_line
+        #         f.seek(0)
+        #         f.truncate()
+        #         f.writelines(data)
+        #         preproc_fix = True
+        #     except UnboundLocalError:
+        #         preproc_fix = False
 
         for folder in mpaths.mods_folder_compilation_order:
             try:
@@ -357,10 +355,10 @@ def patcher():
 
         helper.rmtrees(mpaths.minify_dota_compile_input_path, mpaths.minify_dota_compile_output_path, mpaths.build_dir)
 
-        if preproc_fix:
-            with open(mpaths.dota_gameinfo_branchspecific_path, "w", encoding="utf-8") as f:
-                data[line_index] = original_line
-                f.writelines(data)
+        # if preproc_fix:
+        #     with open(mpaths.dota_gameinfo_branchspecific_path, "w", encoding="utf-8") as f:
+        #         data[line_index] = original_line
+        #         f.writelines(data)
 
         utils_gui.unlock_interaction()
         helper.add_text_to_terminal("-------------------------------------------------------", "spacer1_text")
@@ -369,6 +367,7 @@ def patcher():
             "success_text_tag",
             "success",
         )
+        # TODO: Use strings like this, without fstrings
         helper.add_text_to_terminal(
             helper.localization_dict["launch_option_text_var"].format(ui.get_value("output_select")),
             "launch_option_text",

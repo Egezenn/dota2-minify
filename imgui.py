@@ -13,7 +13,6 @@ import utils_gui
 
 ui.create_context()
 
-blacklist_dictionary = {}
 styling_dictionary = {}
 
 ui.add_value_registry(tag="details_tags")

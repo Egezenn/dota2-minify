@@ -4,8 +4,8 @@ import getpass
 import os
 import platform
 import tkinter as tk
-import traceback
 from tkinter import filedialog, messagebox
+import traceback
 
 import vdf
 
@@ -258,6 +258,10 @@ minify_dota_compile_input_path = os.path.join(
 ### compiled files from resourcefiles
 minify_dota_compile_output_path = os.path.join(
     steam_dir, "steamapps", "common", "dota 2 beta", "game", "dota_addons", "minify"
+)
+### required dir for tools
+minify_dota_tools_required_path = os.path.join(
+    steam_dir, "steamapps", "common", "dota 2 beta", "content", "dota_minify"
 )
 ### vpk destination
 minify_dota_pak_possible_output_path = os.path.join(steam_dir, "steamapps", "common", "dota 2 beta", "game")

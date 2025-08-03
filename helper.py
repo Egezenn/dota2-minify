@@ -6,8 +6,8 @@ import stat
 import subprocess
 import time
 import urllib.error
-import webbrowser
 from urllib.request import urlopen
+import webbrowser
 
 import dearpygui.dearpygui as ui
 
@@ -307,7 +307,10 @@ def calculate_md5(file_path):
     return md5_hash.hexdigest()
 
 
+# TODO: open as detached
 async def open_dir(path, args=""):
+    if path == mpaths.dota2_tools_executable:
+        os.makedirs(mpaths.minify_dota_tools_required_path, exist_ok=True)
     try:
         if args:
             if mpaths.OS == "Windows":
@@ -329,10 +332,15 @@ async def open_dir(path, args=""):
 
 def compile(sender, app_data, user_data):
     folder = compile_path
-    if folder:
-        clean_terminal()
-        compile_output_path = os.path.join(folder, "compiled")
+    compile_output_path = os.path.join(folder, "compiled")
+    clean_terminal()
 
+    if not folder and os.path.exists(os.path.join(mpaths.config_dir, "custom")):
+        add_text_to_terminal(localization_dict["compile_fallback_folder_usage_text_var"])
+        folder = os.path.join(mpaths.config_dir, "custom")
+        compile_output_path = os.path.join(mpaths.config_dir, "compiled")
+
+    if folder:
         rmtrees(mpaths.minify_dota_compile_input_path, compile_output_path)
         os.makedirs(mpaths.minify_dota_compile_input_path)
 
@@ -361,10 +369,10 @@ def compile(sender, app_data, user_data):
         shutil.copytree(os.path.join(mpaths.minify_dota_compile_output_path), compile_output_path)
 
         rmtrees(mpaths.minify_dota_compile_input_path, mpaths.minify_dota_compile_output_path)
+        os.makedirs(mpaths.minify_dota_tools_required_path, exist_ok=True)
 
         add_text_to_terminal(localization_dict["compile_successful_text_var"])
     else:
-        clean_terminal()
         add_text_to_terminal(localization_dict["compile_no_folder_text_var"])
 
 
