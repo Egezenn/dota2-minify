@@ -513,7 +513,7 @@ def dev_mode():
                     helper.open_dir(mpaths.dota2_tools_executable, "-addon a -language minify -novid -console")
                 ),
             )
-            ui.add_text("* Requires steam to be open")
+            ui.add_text("^ Requires steam to be open")
             ui.add_button(
                 label="Executable: Dota2",
                 callback=lambda: asyncio.run(
@@ -532,7 +532,7 @@ def dev_mode():
             no_close=True,
             no_collapse=True,
         ):
-            ui.add_button(label="Select folder to compile", callback=lambda: ui.show_item("compile_file_dialog"))
+            ui.add_button(label="Select path to compile", callback=lambda: ui.show_item("compile_file_dialog"))
             ui.add_file_dialog(
                 show=False,
                 modal=False,
@@ -541,10 +541,13 @@ def dev_mode():
                 tag="compile_file_dialog",
                 directory_selector=True,
             )
-            ui.add_button(label="Compile files from folder", callback=helper.compile)
-            ui.add_spacer(width=0, height=140)
+            ui.add_button(label="Compile path from path", callback=helper.compile)
+            ui.add_spacer(width=0, height=10)
+            ui.add_button(label="Clean all language paths", callback=helper.clean_lang_dirs)
+            ui.add_text("^ Re-verify your files!")
+            ui.add_spacer(width=0, height=95)
             ui.add_text(
-                "* You won't be able use any of these (except opening paths) if you're not on Windows because Source2Viewer's GUI and Dota2 Tools aren't crossplatform.",
+                "* Do note that some of these will not work if you're not on Windows because Source2Viewer's GUI and Dota2 Tools aren't crossplatform.",
                 wrap=240,
             )
         dev_mode_state = 1
@@ -627,7 +630,7 @@ def verifyMods():
         if not os.path.exists(os.path.join(mod_path, "files")):
             gui_lock = True
             helper.add_text_to_terminal(
-                f"{helper.localization_dict["error_no_files_folder_found_terminal_text_var"]}'mods/{folder}'.",
+                f"{helper.localization_dict["error_no_files_path_found_terminal_text_var"]}'mods/{folder}'.",
                 "files_folder_not_found_text_tag",
                 "error",
             )

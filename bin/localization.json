@@ -248,11 +248,11 @@
     "RU": "Некоторые моды недоступны, так как Workshop Tools не установлены.",
     "TR": "Atölye araçları yüklü olmadığı için bazı modlar kullanılamıyor."
   },
-  "error_no_files_folder_found_terminal_text_var": {
-    "EN": "Missing 'files' folder in ",
+  "error_no_files_path_found_terminal_text_var": {
+    "EN": "Missing 'files' path in ",
     "ES": "Falta la carpeta 'files' en ",
     "RU": "Отсутсвует папка 'files' в ",
-    "TR": "Burada 'files' klasörü eksik "
+    "TR": "Burada 'files' dizini eksik "
   },
   "error_no_blacklist_txt_found_terminal_text_var": {
     "EN": "Missing 'blacklist.txt' file in ",
@@ -276,20 +276,24 @@
     "EN": "Compiled successfully!",
     "RU": "Компиляция успешна!"
   },
-  "compile_no_folder_text_var": {
-    "EN": "Select a folder first!",
+  "compile_no_path_text_var": {
+    "EN": "Select a path first!",
     "RU": "Сначала выбери папку!"
   },
   "open_dir_fail_text_var": {
     "EN": " doesn't exist!",
     "RU": " не существует!"
   },
-  "compile_fallback_folder_usage_text_var": {
-    "EN": "No folder selected, using default path."
+  "compile_fallback_path_usage_text_var": {
+    "EN": "No path selected, using default path."
   },
   "language_select": {
     "EN": "Language:",
     "RU": "Язык:",
     "TR": "Dil:"
+  },
+  "clean_lang_dirs_text_var": {
+    "EN": "Deleted path {}",
+    "TR": "{} silindi"
   }
 }

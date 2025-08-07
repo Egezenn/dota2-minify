@@ -336,7 +336,7 @@ def compile(sender, app_data, user_data):
     clean_terminal()
 
     if not folder and os.path.exists(os.path.join(mpaths.config_dir, "custom")):
-        add_text_to_terminal(localization_dict["compile_fallback_folder_usage_text_var"])
+        add_text_to_terminal(localization_dict["compile_fallback_path_usage_text_var"])
         folder = os.path.join(mpaths.config_dir, "custom")
         compile_output_path = os.path.join(mpaths.config_dir, "compiled")
 
@@ -373,7 +373,7 @@ def compile(sender, app_data, user_data):
 
         add_text_to_terminal(localization_dict["compile_successful_text_var"])
     else:
-        add_text_to_terminal(localization_dict["compile_no_folder_text_var"])
+        add_text_to_terminal(localization_dict["compile_no_path_text_var"])
 
 
 def select_compile_dir(sender, app_data):
@@ -392,3 +392,11 @@ def rmtrees(*paths):
             print(f"Forced deletion of: {path}")
         except FileNotFoundError:
             print(f"Skipped deletion of: {path}")
+
+
+def clean_lang_dirs():
+    clean_terminal()
+    for path in mpaths.minify_dota_possible_language_output_paths:
+        if os.path.isdir(path):
+            rmtrees(path)
+            add_text_to_terminal(localization_dict["clean_lang_dirs_text_var"].format(path))

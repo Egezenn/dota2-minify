@@ -1,0 +1,9 @@
+materials/blends/dire_lava_tint_00.vmat_c
+materials/blends/dire_lava.vmat_c
+materials/models/effects/fountain_dire_01.vmat_c
+materials/models/effects/fountain_radiant_00.vmat_c
+materials/models/effects/fountain_waterfall_00.vmat_c
+materials/models/effects/radiant_lightrays.vmat_c
+materials/models/effects/water_edges_00.vmat_c
+models/effects/waterfall_contact_radial_01.vmdl_c
+models/effects/waterfall_pour_splash_00.vmdl_c
