@@ -1,0 +1,15 @@
+[project]
+name = "dota2-minify"
+version = "1.11.1"
+description = "Dota2 Mod Patcher & Toolkit for everyone to use mods easily"
+readme = "readme.md"
+requires-python = ">=3.13"
+dependencies = [
+    "dearpygui>=2.1.0",
+    "nuitka>=2.7.12",
+    "psutil>=7.0.0",
+    "requests>=2.32.4",
+    "screeninfo>=0.8.1",
+    "vdf>=3.4",
+    "vpk>=1.4.0",
+]

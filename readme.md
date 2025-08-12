@@ -31,9 +31,9 @@
 
 ## Is this safe to use?
 
-This project has been around for over 3 years with thousands of downloads and users. While binaries are offered for ease of use, anyone can compile it themselves.
+This project has been around for over 4 years with thousands of downloads and users. While binaries are offered for ease of use, anyone can compile it themselves.
 
-No one has ever been banned for these mods. This project strictly deals with VPK modifications and not hacking related things like memory/file manipulation. It is utilizing Valve's approved methods (VPK loading) for creating assets, as documented on the [official Valve Wiki](https://developer.valvesoftware.com/wiki/VPK). Historically Valve has only disabled assets from loading and never punished modders. The worst thing that can happen is a mod stops working and that's it.
+No one has ever been banned for these mods. This project strictly deals with VPK modifications and not hacking concepts like memory/file manipulation. It's utilizing Valve's approved methods (VPK loading) for creating assets, as documented on the [official Valve Wiki](https://developer.valvesoftware.com/wiki/VPK). Historically Valve has only disabled assets from loading and never punished modders. The worst thing that can happen is a mod stops working and that's it.
 
 ## Installation
 
@@ -51,7 +51,7 @@ No one has ever been banned for these mods. This project strictly deals with VPK
 2. **Run Minify**
 
    - Extract the ZIP file.
-   - Run `Minify` executable and patch with the mods you want to use.
+   - Run `Minify` executable and patch with the mods and the language you want to use.
 
 3. **Setting the language argument for Dota2 on Steam**
 
@@ -61,23 +61,21 @@ No one has ever been banned for these mods. This project strictly deals with VPK
 
 4. **Start Dota 2**
      - Launch Dota2 and enjoy!
+
 > [!WARNING]
 > **For people using Minify on Linux with workshop tools!**
 > 
-> After patching go back to using a `Steam Runtime` as you'll not be able to queue games with `Proton Experimental`.
+> After patching, extract your workshop tools using the `Gearcog button` > `Extract workshop tools` (this is for later use so that you won't have to switch back and forth again) and go back to using a `Steam Runtime` as you'll not be able to queue games with `Proton Experimental`.
 
 ### Optional Setup
 
 #### Using the project locally
 
-Prerequisites are `git` and`python`. (also `tk` for tkinter, `wine` for workshop tools executables and `patchelf` to compile via nuitka on Linux)
+Prerequisites are `git`, `python` and `uv`. (also `tk` for tkinter, `wine` for workshop tools executables and `patchelf` to compile via nuitka on Linux)
 
 - `git clone https://github.com/Egezenn/dota2-minify`
 - `cd dota2-minify`
-- `python -m venv .venv`
-- `.venv\Scripts\activate.bat` or `source .venv/bin/activate`
-- `pip install -r requirements.txt`
-- `python imgui.py`
+- `uv run imgui.py`
 
 #### Compilation from source
 
@@ -94,11 +92,11 @@ Once you get comfortable with the workflow you can use Minify to easily patch la
 ## Minify File Structure [>> tutorial](https://github.com/Egezenn/dota2-minify/wiki/Minify)
 
 | Name                                                                                | Description                                                                                   |
-| ----------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------- |
+|-------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------|
 | [`Files`](https://github.com/Egezenn/dota2-minify/wiki/Minify#files)                | Compiled files you want to pack (Models, Meshes, Textures...etc)                              |
 | [`blacklist.txt`](https://github.com/Egezenn/dota2-minify/wiki/Minify#blacklisttxt) | _Paths_ to files to replace with blanks so they wont appear in game (Particles, Sounds...etc) |
 | [`styling.txt`](https://github.com/Egezenn/dota2-minify/wiki/Minify#stylingtxt)     | Custom CSS you want to apply to the Panorama (Interfaces, Layouts, HUD's...etc)               |
-| `notes_<local>.txt`                                                                 | Include this file to have a details button beside your mod for users to read.                 |
+| `notes_<language>.txt`                                                              | Include this file to have a details button beside your mod for users to read.                 |
 
 ## Thanks
 

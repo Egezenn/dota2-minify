@@ -45,20 +45,22 @@ create_dirs(logs_dir, config_dir)
 # bin
 blank_files_dir = os.path.join(bin_dir, "blank-files")
 img_dir = os.path.join(bin_dir, "images")
-localization_file_dir = os.path.join(bin_dir, "localization.json")
 locale_file_dir = os.path.join(config_dir, "locale")
+localization_file_dir = os.path.join(bin_dir, "localization.json")
 mods_file_dir = os.path.join(config_dir, "mods.json")
 path_file_dir = os.path.join(config_dir, "dota2path_minify.txt")
+rescomp_override_dir = os.path.join(bin_dir, "rescomproot")
 version_file_dir = "version"
+
+rescomp_override = True if os.path.exists(rescomp_override_dir) else False
 
 
 def find_library_from_vdf():
     global steam_dir
-    path_from_txt = ""
 
     try:
         with open(path_file_dir, "r") as file:
-            path_from_txt = os.path.normpath(file.readline().strip())
+            steam_dir = os.path.normpath(file.readline().strip())
     except Exception as error:
         with open(os.path.join(logs_dir, "crashlog.txt"), "w") as file:
             file.write(f"Error reading {path_file_dir}: {error}")
@@ -138,7 +140,6 @@ def handle_non_default_path():
 
         with open(path_file_dir, "r") as file:
             steam_dir = os.path.normpath(file.readline().strip())
-            print(steam_dir)
 
     # last line of defense
     while not steam_dir or (
@@ -341,9 +342,21 @@ dota_map_path = os.path.join(steam_dir, "steamapps", "common", "dota 2 beta", "g
 dota_resource_compiler_path = os.path.join(
     steam_dir, "steamapps", "common", "dota 2 beta", "game", "bin", "win64", "resourcecompiler.exe"
 )
-dota_gameinfo_branchspecific_path = os.path.join(
-    steam_dir, "steamapps", "common", "dota 2 beta", "game", "dota", "gameinfo_branchspecific.gi"
-)
+
+dota_tools_paths = [
+    os.path.join(steam_dir, "steamapps", "common", "dota 2 beta", "game", "bin"),
+    os.path.join(steam_dir, "steamapps", "common", "dota 2 beta", "game", "core"),
+    os.path.join(steam_dir, "steamapps", "common", "dota 2 beta", "game", "dota", "bin"),
+    os.path.join(steam_dir, "steamapps", "common", "dota 2 beta", "game", "dota", "tools"),
+    os.path.join(steam_dir, "steamapps", "common", "dota 2 beta", "game", "dota", "gameinfo.gi"),
+]
+dota_tools_extraction_paths = [
+    os.path.join(rescomp_override_dir, "game", "bin"),
+    os.path.join(rescomp_override_dir, "game", "core"),
+    os.path.join(rescomp_override_dir, "game", "dota", "bin"),
+    os.path.join(rescomp_override_dir, "game", "dota", "tools"),
+    os.path.join(rescomp_override_dir, "game", "dota", "gameinfo.gi"),
+]
 
 
 mods_folders = []

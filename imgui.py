@@ -207,6 +207,7 @@ def create_ui():
 
 
 def create_base_ui():
+    utils_gui.recalc_rescomp_dirs()
     helper.get_available_localizations()
     create_ui()
     utils_gui.focus_window()

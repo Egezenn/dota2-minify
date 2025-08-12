@@ -293,20 +293,6 @@ def processBlackList(index, line, folder, blank_file_extensions):
     return data
 
 
-def write_locale(text):
-    with open("locale.txt", "w") as file:
-        file.write(text)
-
-
-def calculate_md5(file_path):
-    "Calculates the MD5 hash of a file."
-    md5_hash = hashlib.md5()
-    with open(file_path, "rb") as file:
-        for byte_block in iter(lambda: file.read(4096), b""):
-            md5_hash.update(byte_block)
-    return md5_hash.hexdigest()
-
-
 # TODO: open as detached
 async def open_dir(path, args=""):
     if path == mpaths.dota2_tools_executable:
@@ -341,7 +327,7 @@ def compile(sender, app_data, user_data):
         compile_output_path = os.path.join(mpaths.config_dir, "compiled")
 
     if folder:
-        rmtrees(mpaths.minify_dota_compile_input_path, compile_output_path)
+        remove_path(mpaths.minify_dota_compile_input_path, compile_output_path)
         os.makedirs(mpaths.minify_dota_compile_input_path)
 
         items = os.listdir(folder)
@@ -368,7 +354,7 @@ def compile(sender, app_data, user_data):
 
         shutil.copytree(os.path.join(mpaths.minify_dota_compile_output_path), compile_output_path)
 
-        rmtrees(mpaths.minify_dota_compile_input_path, mpaths.minify_dota_compile_output_path)
+        remove_path(mpaths.minify_dota_compile_input_path, mpaths.minify_dota_compile_output_path)
         os.makedirs(mpaths.minify_dota_tools_required_path, exist_ok=True)
 
         add_text_to_terminal(localization_dict["compile_successful_text_var"])
@@ -381,22 +367,17 @@ def select_compile_dir(sender, app_data):
     compile_path = app_data["current_path"]
 
 
-def rmtrees(*paths):
-    "Superset of `shutil.rmtree` to handle permissions and take in list of paths."
+def remove_path(*paths):
+    "Superset of `shutil.rmtree` to handle permissions and take in list of paths and also delete files."
     for path in paths:
         try:
-            shutil.rmtree(path)
+            if os.path.isdir(path):
+                shutil.rmtree(path)
+            else:
+                os.remove(path)
         except PermissionError:
             os.chmod(path, stat.S_IWUSR)
             shutil.rmtree(path)
             print(f"Forced deletion of: {path}")
         except FileNotFoundError:
             print(f"Skipped deletion of: {path}")
-
-
-def clean_lang_dirs():
-    clean_terminal()
-    for path in mpaths.minify_dota_possible_language_output_paths:
-        if os.path.isdir(path):
-            rmtrees(path)
-            add_text_to_terminal(localization_dict["clean_lang_dirs_text_var"].format(path))

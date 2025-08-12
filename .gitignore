@@ -10,6 +10,7 @@ mods.json
 mods/test
 
 ## Dependencies
+bin/rescomproot
 cli-*-*.*
 libSkiaSharp*
 libTinyEXR.Native.so

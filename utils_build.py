@@ -39,24 +39,6 @@ def patcher():
         dota_pak_contents = vpk.open(mpaths.dota_game_pak_path)
         core_pak_contents = vpk.open(mpaths.dota_core_pak_path)
 
-        # rescomp fix
-        # with open(mpaths.dota_gameinfo_branchspecific_path, "r+", encoding="utf-8") as f:
-        #     data = f.readlines()
-        #     for i, line in enumerate(data):
-        #         if "PreprocessResources" in line:
-        #             line_index = i
-        #             original_line = line
-        #             modified_line = line.replace("1", "0")
-        #             break
-        #     try:
-        #         data[line_index] = modified_line
-        #         f.seek(0)
-        #         f.truncate()
-        #         f.writelines(data)
-        #         preproc_fix = True
-        #     except UnboundLocalError:
-        #         preproc_fix = False
-
         for folder in mpaths.mods_folder_compilation_order:
             try:
                 mod_path = os.path.join(mpaths.mods_dir, folder)
@@ -108,7 +90,7 @@ def patcher():
                                             os.path.join(temp_dump_path, file),
                                             os.path.join(mpaths.dota_itembuilds_path, file),
                                         )
-                                    helper.rmtrees(temp_dump_path)
+                                    helper.remove_path(temp_dump_path)
                                     os.remove(zip_path)
                                     helper.add_text_to_terminal(
                                         helper.localization_dict["replaced_guides_terminal_text_var"],
@@ -353,12 +335,9 @@ def patcher():
         newpak = vpk.new(mpaths.minify_dota_compile_output_path)
         newpak.save(os.path.join(helper.output_path, "pak66_dir.vpk"))
 
-        helper.rmtrees(mpaths.minify_dota_compile_input_path, mpaths.minify_dota_compile_output_path, mpaths.build_dir)
-
-        # if preproc_fix:
-        #     with open(mpaths.dota_gameinfo_branchspecific_path, "w", encoding="utf-8") as f:
-        #         data[line_index] = original_line
-        #         f.writelines(data)
+        helper.remove_path(
+            mpaths.minify_dota_compile_input_path, mpaths.minify_dota_compile_output_path, mpaths.build_dir
+        )
 
         utils_gui.unlock_interaction()
         helper.add_text_to_terminal("-------------------------------------------------------", "spacer1_text")
@@ -429,3 +408,12 @@ def uninstaller():
         )
     helper.add_text_to_terminal(helper.localization_dict["mods_removed_terminal_text_var"], "uninstaller_text_tag")
     utils_gui.unlock_interaction()
+
+
+def clean_lang_dirs():
+    helper.clean_terminal()
+    uninstaller()
+    for path in mpaths.minify_dota_possible_language_output_paths:
+        if os.path.isdir(path):
+            helper.remove_path(path)
+            helper.add_text_to_terminal(helper.localization_dict["clean_lang_dirs_text_var"].format(path))

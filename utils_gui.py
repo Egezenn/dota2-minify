@@ -16,6 +16,7 @@ import requests
 
 import helper
 import mpaths
+import utils_build
 
 checkboxes = {}
 checkboxes_state = {}
@@ -110,7 +111,7 @@ def setupSystem():
                     with tarfile.open(archive_path, "r:gz") as tar:
                         tar.extractall()
                 os.rename(os.path.join(archive_name, mpaths.rg_executable), mpaths.rg_executable)
-                helper.rmtrees(archive_name)
+                helper.remove_path(archive_name)
                 os.remove(archive_path)
                 helper.add_text_to_terminal(
                     f"{helper.localization_dict["extracted_cli_terminal_text_var"]}{archive_path}"
@@ -543,9 +544,10 @@ def dev_mode():
             )
             ui.add_button(label="Compile path from path", callback=helper.compile)
             ui.add_spacer(width=0, height=10)
-            ui.add_button(label="Clean all language paths", callback=helper.clean_lang_dirs)
-            ui.add_text("^ Re-verify your files!")
-            ui.add_spacer(width=0, height=95)
+            ui.add_button(label="Clean all language paths", callback=utils_build.clean_lang_dirs)
+            ui.add_text("^ Verify your files!")
+            ui.add_spacer(width=0, height=10)
+            ui.add_button(label="Extract workshop tools", callback=extract_workshop_tools)
             ui.add_text(
                 "* Do note that some of these will not work if you're not on Windows because Source2Viewer's GUI and Dota2 Tools aren't crossplatform.",
                 wrap=240,
@@ -650,3 +652,41 @@ def verifyMods():
                 "blacklist_not_found_text_tag",
                 "error",
             )
+
+
+def recalc_rescomp_dirs():
+    if mpaths.rescomp_override:
+        mpaths.minify_dota_compile_input_path = os.path.join(
+            mpaths.rescomp_override_dir, "content", "dota_addons", "minify"
+        )
+        mpaths.minify_dota_compile_output_path = os.path.join(
+            mpaths.rescomp_override_dir, "game", "dota_addons", "minify"
+        )
+        mpaths.dota_resource_compiler_path = os.path.join(
+            mpaths.rescomp_override_dir, "game", "bin", "win64", "resourcecompiler.exe"
+        )
+
+
+def extract_workshop_tools():
+    helper.clean_terminal()
+    helper.remove_path(mpaths.rescomp_override_dir)
+    fails = 0
+
+    for i, path in enumerate(mpaths.dota_tools_paths):
+        if os.path.exists(path):
+            if os.path.isdir(path):
+                shutil.copytree(path, mpaths.dota_tools_extraction_paths[i])
+            else:
+                shutil.copy(path, mpaths.rescomp_override_dir[i])
+
+        else:
+            helper.add_text_to_terminal(helper.localization_dict["extraction_of_failed_text_var"].format(path))
+            fails += 1
+
+    if not fails:
+        recalc_rescomp_dirs()
+        setupButtonState()
+        if os.path.exists(mpaths.dota_resource_compiler_path):
+            helper.add_text_to_terminal(helper.localization_dict["extracted_text_var"])
+        else:
+            helper.add_text_to_terminal(helper.localization_dict["extraction_of_failed_text_var"].format(path))

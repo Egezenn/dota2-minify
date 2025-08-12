@@ -295,5 +295,13 @@
   "clean_lang_dirs_text_var": {
     "EN": "Deleted path {}",
     "TR": "{} silindi"
+  },
+  "extracted_text_var": {
+    "EN": "Workshop tools have been extracted!",
+    "TR": "Atölye araçları çekildi!"
+  },
+  "extraction_of_failed_text_var": {
+    "EN": "Unable to extract {}, path or file does not exist!",
+    "TR": "{} çekilemedi, dizin veya dosya bulunamadı!"
   }
 }
