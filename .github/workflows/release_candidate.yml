@@ -26,7 +26,6 @@ jobs:
           python-version: "3.13"
 
       - name: Set version
-        if: matrix.os == 'windows-latest'
         shell: pwsh
         run: |
           $releaseName = "${{ github.event.inputs.release_name }}"

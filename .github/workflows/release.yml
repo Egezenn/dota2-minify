@@ -16,7 +16,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [windows-latest, ubuntu-latest]
+        os: [ubuntu-latest, windows-latest]
 
     steps:
       - uses: actions/checkout@v4
@@ -26,14 +26,14 @@ jobs:
           python-version: "3.13"
 
       - name: Set version
-        if: matrix.os == 'windows-latest'
+        if: matrix.os == 'ubuntu-latest'
         shell: pwsh
         run: |
           $releaseName = "${{ github.event.inputs.release_name }}"
           $version = $releaseName.Substring(8)
           Set-Content -Path "version" -Value $version -NoNewline
       - uses: stefanzweifel/git-auto-commit-action@v5
-        if: matrix.os == 'windows-latest'
+        if: matrix.os == 'ubuntu-latest'
         with:
           commit_message: "Version change"
 
