@@ -22,6 +22,9 @@ panorama/styles/tooltips/tooltip_hero_card @@ #MainContents { visibility: collap
 # removes badges on hero card hover
 !panorama/styles/tooltips/tooltip_base @@ DOTATooltipHeroCard#HeroCardTooltip.TooltipVisible { visibility: collapse; }
 
+# custom background 
+panorama/styles/dashboard @@ DOTADashboard, #DashboardCore,#DashboardOverlay,#DashboardForeground { background-image: url("s2r://panorama/images/loadingscreens/ti11_magma/loadingscreen.vtex"); }
+
 # WIP remove popular items
 # panorama/styles/dota_ui_shop_item @@ DOTAShopItem.Popular.SideShopItem.MainShopItem { visibility: collapse; }
 # panorama/styles/hud/dota_hud_item_build @@ DOTAShopItem.Popular.SideShopItem.MainShopItem { visibility: collapse; }

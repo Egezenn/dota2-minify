@@ -352,6 +352,7 @@ def compile(sender, app_data, user_data):
                 stdout=file,
             )
 
+        os.makedirs(mpaths.minify_dota_compile_output_path, exist_ok=True)
         shutil.copytree(os.path.join(mpaths.minify_dota_compile_output_path), compile_output_path)
 
         remove_path(mpaths.minify_dota_compile_input_path, mpaths.minify_dota_compile_output_path)

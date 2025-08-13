@@ -542,7 +542,7 @@ def dev_mode():
                 tag="compile_file_dialog",
                 directory_selector=True,
             )
-            ui.add_button(label="Compile path from path", callback=helper.compile)
+            ui.add_button(label="Compile items from path", callback=helper.compile)
             ui.add_spacer(width=0, height=10)
             ui.add_button(label="Clean all language paths", callback=utils_build.clean_lang_dirs)
             ui.add_text("^ Verify your files!")
@@ -677,7 +677,7 @@ def extract_workshop_tools():
             if os.path.isdir(path):
                 shutil.copytree(path, mpaths.dota_tools_extraction_paths[i])
             else:
-                shutil.copy(path, mpaths.rescomp_override_dir[i])
+                shutil.copy(path, mpaths.dota_tools_extraction_paths[i])
 
         else:
             helper.add_text_to_terminal(helper.localization_dict["extraction_of_failed_text_var"].format(path))
