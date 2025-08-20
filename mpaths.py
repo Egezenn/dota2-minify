@@ -360,7 +360,7 @@ dota_tools_extraction_paths = [
 
 
 mods_folders = []
-for mod in os.listdir(mods_dir):
+for mod in sorted(os.listdir(mods_dir)):
     mods_folders.append(mod)
 
 # Rubberband fix to always do blacklists at last for them to make overwrites
