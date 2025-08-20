@@ -141,7 +141,7 @@ Taking over the maintainership of the project, implementing automated workflows,
 - [`Remove Main Menu Background`](./mods/Remove%20Main%20Menu%20Background)
 - [`Remove Showcases`](./mods/Remove%20Showcases)
 - [`Revert Ping Sounds`](./mods/Revert%20Ping%20Sounds)
-- [`Stat Site Buttons In Profiles`](./mods/Stat%20Site%20Buttons%20In%20Profiles)
+- [`Stat Site Buttons`](./mods/Stat%20Site%20Buttons)
 - [`Transparent HUD`](./mods/Transparent%20HUD/) improvements
 - Snippets in [`User Styles`](./mods/User%20Styles)
 
@@ -163,8 +163,17 @@ Rewrite of the GUI, Russian translations, mod fixes and [more](https://github.co
 <details>
 <summary>Mods</summary>
 
-- `Dotabuff in Profiles` mod which has been refactored to [`Stat Site Buttons In Profiles`](./mods/Stat%20Site%20Buttons%20In%20Profiles)
+- [`Auto Accept Match`](./mods/Auto%20Accept%20Match)
 - [`Show NetWorth`](./mods/Show%20NetWorth%20)
+
+</details>
+
+### [yujin sharingan](https://discord.com/users/234341830647480321)
+
+<details>
+<summary>Mods</summary>
+
+- `Dotabuff in Profiles` mod which has been refactored to [`Stat Site Buttons`](./mods/Stat%20Site%20Buttons%20In%20Profiles)
 
 </details>
 
