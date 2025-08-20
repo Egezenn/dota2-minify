@@ -548,6 +548,9 @@ def dev_mode():
             ui.add_text("^ Verify your files!")
             ui.add_spacer(width=0, height=10)
             ui.add_button(label="Extract workshop tools", callback=extract_workshop_tools)
+            ui.add_spacer(width=0, height=10)
+            ui.add_button(label="Create a blank mod", callback=utils_build.create_blank_mod)
+            ui.add_spacer(width=0, height=10)
             ui.add_text(
                 "* Do note that some of these will not work if you're not on Windows because Source2Viewer's GUI and Dota2 Tools aren't crossplatform.",
                 wrap=240,

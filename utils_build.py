@@ -417,3 +417,15 @@ def clean_lang_dirs():
         if os.path.isdir(path):
             helper.remove_path(path)
             helper.add_text_to_terminal(helper.localization_dict["clean_lang_dirs_text_var"].format(path))
+
+
+def create_blank_mod():
+    mod_name = "_test"
+    helper.remove_path(os.path.join(mpaths.mods_dir, mod_name))
+    os.mkdir(os.path.join(mpaths.mods_dir, mod_name))
+    os.mkdir(os.path.join(mpaths.mods_dir, mod_name, "files"))
+    open(os.path.join(mpaths.mods_dir, mod_name, "files", ".gitkeep"), "w").close()
+    for locale in helper.localizations:
+        open(os.path.join(mpaths.mods_dir, mod_name, f"notes_{locale.lower()}.txt"), "w").close()
+    open(os.path.join(mpaths.mods_dir, mod_name, "blacklist.txt"), "w").close()
+    open(os.path.join(mpaths.mods_dir, mod_name, "styling.txt"), "w").close()

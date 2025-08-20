@@ -7,7 +7,7 @@ dota2path_minify.txt
 locale
 logs
 mods.json
-mods/test
+mods/_*
 
 ## Dependencies
 bin/rescomproot
