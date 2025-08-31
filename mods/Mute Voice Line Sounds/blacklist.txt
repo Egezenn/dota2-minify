@@ -1,6 +1,3 @@
 >>sounds/misc/soundboard
->>sounds/misc/soundboard/crownfall
->>sounds/misc/soundboard/ti10_truesight
->>sounds/misc/soundboard/ti11
->>sounds/misc/soundboard/ti12
 >>sounds/teamfancontent
+>>sounds/talentcontent

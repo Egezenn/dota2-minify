@@ -365,5 +365,6 @@ for mod in sorted(os.listdir(mods_dir)):
 
 # Rubberband fix to always do blacklists at last for them to make overwrites
 mods_folder_compilation_order = overwrite_ensurance_hack(
-    ["Mute", "Remove", "Minify Base Attacks", "Minify Spells & Items", "Misc Optimization"], mods_folders
+    ["Mute", "Remove", "Minify Base Attacks", "Minify Spells & Items", "Misc Optimization", "User Styles", "_"],
+    mods_folders,
 )
