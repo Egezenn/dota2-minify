@@ -1,0 +1,1 @@
+﻿Dil değişikliği açılır penceresini otomatik olarak onaylar ve yeniden başlatma uyarısını engeller.
