@@ -8,6 +8,7 @@ import time
 import urllib.error
 from urllib.request import urlopen
 import webbrowser
+import xml.etree.ElementTree as ET
 
 import dearpygui.dearpygui as ui
 
@@ -195,13 +196,72 @@ def change_output_path():
     output_path = [lang for lang in mpaths.minify_dota_possible_language_output_paths if selection in lang][0]
 
 
-def vpkExtractor(vpk_to_extract_from, path):
-    fullPath = os.path.join(mpaths.build_dir, path)
-    if not os.path.exists(fullPath):  # extract files from VPK only once
-        add_text_to_terminal(f"{localization_dict["extracting_terminal_text_var"]}{path}", f"extracting_{path}_tag")
-        path = path.replace(os.sep, "/")
-        pakfile = vpk_to_extract_from.get_file(path)
-        pakfile.save(os.path.join(fullPath))
+def vpkExtractor(vpk_to_extract_from, paths):
+    if isinstance(paths, str):
+        paths = [paths]
+    for path in paths:
+        fullPath = os.path.join(mpaths.build_dir, path)
+        if not os.path.exists(fullPath):  # extract files from VPK only once
+            add_text_to_terminal(
+                f"{localization_dict['extracting_terminal_text_var']}{path}",
+                f"extracting_{path}_tag",
+            )
+            vpk_path = path.replace(os.sep, "/")
+            pakfile = vpk_to_extract_from.get_file(vpk_path)
+            os.makedirs(os.path.dirname(fullPath), exist_ok=True)
+            pakfile.save(fullPath)
+
+
+def apply_xml_modifications(xml_file, modifications):
+    tree = ET.parse(xml_file)
+    root = tree.getroot()
+
+    for mod in modifications:
+        action = mod.get("action")
+
+        if action == "add_script":
+            scripts = root.find("scripts")
+            if scripts is None:
+                scripts = ET.Element("scripts")
+                root.insert(0, scripts)
+            include = ET.SubElement(scripts, "include")
+            include.set("src", mod.get("src", ""))
+
+        elif action == "set_attribute":
+            tag = mod.get("tag")
+            element = root.find(f".//{tag}")
+            if element is None:
+                element = root.find(f".//*[@id='{tag}']")
+            if element is not None:
+                element.set(mod.get("attribute"), mod.get("value"))
+
+    tree.write(xml_file)
+
+
+def build_minify_menu(menus):
+    minify_section_xml = """
+<Panel class="SettingsSectionContainer" section="#minify" icon="s2r://panorama/images/control_icons/24px/check.vsvg">
+  <Panel class="SettingsSectionTitleContainer LeftRightFlow">
+    <Image class="SettingsSectionTitleIcon" texturewidth="48px" textureheight="48px" scaling="stretch-to-fit-preserve-aspect" src="s2r://panorama/images/control_icons/24px/check.vsvg" />
+    <Label class="SettingsSectionTitle" text="Minify" />
+  </Panel>
+</Panel>
+"""
+
+    minify_section = ET.fromstring(minify_section_xml)
+    for menu in menus:
+        menu_element = ET.fromstring(menu)
+        minify_section.append(menu_element)
+
+    settings_path = os.path.join(
+        mpaths.build_dir, "panorama", "layout", "popups", "popup_settings_reborn.xml"
+    )
+    tree = ET.parse(settings_path)
+    root = tree.getroot()
+    settings_body = root.find(".//PopupSettingsRebornSettingsBody")
+    if settings_body is not None:
+        settings_body.append(minify_section)
+        tree.write(settings_path)
 
 
 def urlValidator(url):
