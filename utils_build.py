@@ -1,3 +1,4 @@
+import json
 import os
 import re
 import shutil
@@ -39,12 +40,19 @@ def patcher():
         styling_data = []  # path and style from every styling.txt
         dota_pak_contents = vpk.open(mpaths.dota_game_pak_path)
         core_pak_contents = vpk.open(mpaths.dota_core_pak_path)
+        dota_extracts = set()
+        core_extracts = set()
+
+        mod_menus = []
+        xml_modifications = {}
 
         for folder in mpaths.mods_folder_compilation_order:
             try:
                 mod_path = os.path.join(mpaths.mods_dir, folder)
                 blacklist_txt = os.path.join(mod_path, "blacklist.txt")
                 styling_txt = os.path.join(mod_path, "styling.txt")
+                menu_xml = os.path.join(mod_path, "menu.xml")
+                xml_mod_file = os.path.join(mod_path, "xml_mod.json")
 
                 for box in utils_gui.checkboxes:
                     if (
@@ -60,6 +68,16 @@ def patcher():
                             dirs_exist_ok=True,
                             ignore=shutil.ignore_patterns("*.gitkeep"),
                         )
+
+                        if os.path.exists(menu_xml):
+                            with open(menu_xml, "r", encoding="utf-8") as file:
+                                mod_menus.append(file.read())
+
+                        if os.path.exists(xml_mod_file):
+                            with open(xml_mod_file, "r", encoding="utf-8") as file:
+                                mod_xml = json.load(file)
+                            for path, mods in mod_xml.items():
+                                xml_modifications.setdefault(path, []).extend(mods)
                         # ------------------------------- odg ------------------------------ #
                         if utils_gui.checkboxes[box] == "OpenDotaGuides Guides":
                             zip_path = os.path.join(mod_path, "files", "OpenDotaGuides.zip")
@@ -240,10 +258,10 @@ def patcher():
                                     os.path.join(mpaths.build_dir, os.path.dirname(sanitized_path)), exist_ok=True
                                 )
                                 try:
-                                    if path_style[0].startswith("!"):  # hhack
-                                        helper.vpkExtractor(core_pak_contents, f"{sanitized_path}.vcss_c")  # hhack
+                                    if path_style[0].startswith("!"):
+                                        core_extracts.add(f"{sanitized_path}.vcss_c")
                                     else:
-                                        helper.vpkExtractor(dota_pak_contents, f"{sanitized_path}.vcss_c")
+                                        dota_extracts.add(f"{sanitized_path}.vcss_c")
                                 except KeyError:
                                     helper.warnings.append(
                                         f"Path does not exist in VPK -> '{sanitized_path}.vcss_c', error in 'mods\\{folder}\\styling.txt'"
@@ -252,6 +270,15 @@ def patcher():
             except Exception as exception:
                 exceptiondata = traceback.format_exc().splitlines()
                 helper.warnings.append(exceptiondata[-1])
+        if mod_menus:
+            dota_extracts.add("panorama/layout/popups/popup_settings_reborn.vxml_c")
+        for path in xml_modifications.keys():
+            compiled = path.replace(".xml", ".vxml_c")
+            dota_extracts.add(compiled)
+
+        helper.vpkExtractor(core_pak_contents, list(core_extracts))
+        helper.vpkExtractor(dota_pak_contents, list(dota_extracts))
+
         # ---------------------------------- STEP 2 ---------------------------------- #
         # ------------------- Decompile all files in "build" folder ------------------ #
         # ---------------------------------------------------------------------------- #
@@ -276,6 +303,13 @@ def patcher():
                     "error_no_execution_permission_s2v",
                     "error",
                 )
+
+        if mod_menus:
+            helper.build_minify_menu(mod_menus)
+        for path, mods in xml_modifications.items():
+            helper.apply_xml_modifications(
+                os.path.join(mpaths.build_dir, path), mods
+            )
         # ---------------------------------- STEP 3 ---------------------------------- #
         # ---------------------------- CSS resourcecompile --------------------------- #
         # ---------------------------------------------------------------------------- #

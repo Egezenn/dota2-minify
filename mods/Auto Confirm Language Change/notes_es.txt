@@ -1,0 +1,1 @@
+﻿Confirma automáticamente el cuadro de diálogo de cambio de idioma para evitar el reinicio.
