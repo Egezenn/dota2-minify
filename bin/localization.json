@@ -243,7 +243,7 @@
     "TR": "Hata: Lütfen Dota 2'yi kapatın ve Minify'ı yeniden başlatın."
   },
   "error_no_workshop_tools_found_terminal_text_var": {
-    "EN": "Some mods have been unavailable because you don't have Workshop Tools installed.",
+    "EN": "Some mods have been disabled because have Workshop Tools aren't installed.",
     "ES": "Algunos mods no están disponibles porque no tienes instaladas las herramientas de Workshop.",
     "RU": "Некоторые моды недоступны, так как Workshop Tools не установлены.",
     "TR": "Atölye araçları yüklü olmadığı için bazı modlar kullanılamıyor."

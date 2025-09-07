@@ -6,6 +6,7 @@ import time
 import traceback
 
 import dearpygui.dearpygui as ui
+import playsound3  # chimes are from pixabay.com/sound-effects/chime-74910/
 import psutil
 import requests
 import vpk
@@ -354,6 +355,7 @@ def patcher():
         )
 
         helper.handleWarnings(mpaths.logs_dir)
+        playsound3.playsound(os.path.join(mpaths.sounds_dir, "success.wav"))
 
     except Exception:
         with open(os.path.join(mpaths.logs_dir, "crashlog.txt"), "w") as file:
@@ -367,6 +369,7 @@ def patcher():
             helper.localization_dict["check_logs_terminal_text_var"], "check_logs_text_tag", "warning"
         )
         utils_gui.unlock_interaction()
+        playsound3.playsound(os.path.join(mpaths.sounds_dir, "fail.wav"))
 
 
 def uninstaller():

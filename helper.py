@@ -341,7 +341,7 @@ def compile(sender, app_data, user_data):
                 shutil.copytree(os.path.join(folder, item), os.path.join(mpaths.minify_dota_compile_input_path, item))
             else:
                 shutil.copy(os.path.join(folder, item), mpaths.minify_dota_compile_input_path)
-        with open(os.path.join(mpaths.logs_dir, "Source2Viewer-CLI.txt"), "w") as file:
+        with open(os.path.join(mpaths.logs_dir, "resourcecompiler.txt"), "w") as file:
             subprocess.run(
                 [
                     mpaths.dota_resource_compiler_path,

@@ -45,6 +45,7 @@ create_dirs(logs_dir, config_dir)
 # bin
 blank_files_dir = os.path.join(bin_dir, "blank-files")
 img_dir = os.path.join(bin_dir, "images")
+sounds_dir = os.path.join(bin_dir, "sounds")
 locale_file_dir = os.path.join(config_dir, "locale")
 localization_file_dir = os.path.join(bin_dir, "localization.json")
 mods_file_dir = os.path.join(config_dir, "mods.json")

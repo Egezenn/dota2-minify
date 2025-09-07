@@ -11,8 +11,9 @@ panorama/styles/tooltips/tooltip_hero_card @@ #MainContents { visibility: collap
 !panorama/styles/popups/popup_manager @@ #BlurBackground, #DimBackground { visibility: collapse; }
 
 # custom background 
-panorama/styles/dashboard @@ DOTADashboard, #DashboardCore,#DashboardOverlay,#DashboardForeground { background-image: url("s2r://panorama/images/loadingscreens/international_2025_ls_4/loadingscreen.vtex"); background-repeat: no-repeat; background-size: 100% 100%; }
+panorama/styles/dashboard @@ DOTADashboard, #DashboardCore,#DashboardOverlay,#DashboardForeground { background-image: url("s2r://panorama/images/loadingscreens/international_2025_ls_3/loadingscreen.vtex"); background-repeat: no-repeat; background-size: 100% 100%; }
 panorama/styles/showcase/showcase_background @@ #BackgroundImage { visibility: collapse; }
+panorama/styles/hud/dota_hud_pregame @@ .LowVisualQuality #PregameBGStatic { background-image: url("s2r://panorama/images/loadingscreens/international_2025_ls_3/loadingscreen.vtex"); background-repeat: no-repeat; background-size: 100% 100%; }
 
 # remove dota+ ad banner from last matches
 panorama/styles/dashboard_page_profile_hero_stats @@ #DotaPlusStatsBanner { visibility: collapse; }
