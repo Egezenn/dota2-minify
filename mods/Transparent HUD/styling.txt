@@ -26,7 +26,7 @@ panorama/styles/hud/dota_hud_quick_stats @@ #QuickStatsContainer { background-co
 panorama/styles/hud/dota_hud_scoreboard @@ DOTAScoreboardPlayer { background-color: none; }
 panorama/styles/hud/dota_hud_shop @@ #HeightLimiterContainer, #ItemCombines, #SearchTextEntry, #NewPlayerShopConsumables, #TeamItems, #SearchAndButtonsContainer, .ShopItemsTab { background-color: none; }
 panorama/styles/hud/hud_reborn @@ #stragiint, #stats_container_bg { background-color: none; }
-panorama/styles/popups/popup_settings_reborn @@ .SettingsContainer, #SettingsNavigationContainer { background-color: #00000080; }
+panorama/styles/popups/popup_settings_reborn @@ .SettingsContainer, #SettingsNavigationContainer { background-color: #000000D0; }
 
 
 panorama/styles/dota_hud_netgraph @@ #LeftColumn Label { color: #FFFFFF; letter-spacing: 1px; font-size: 10px; } #RightColumn_1 Label, #RightColumn_2 Label { color: #FFFFFF; }
