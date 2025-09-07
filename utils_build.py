@@ -45,6 +45,7 @@ def patcher():
 
         mod_menus = []
         xml_modifications = {}
+        base_mods_applied = False
 
         for folder in mpaths.mods_folder_compilation_order:
             try:
@@ -57,17 +58,18 @@ def patcher():
                 for box in utils_gui.checkboxes:
                     if (
                         ui.get_value(box) == True and utils_gui.checkboxes[box] == folder
-                    ):  # step into folders that have ticked checkboxes only
+                    ) or (folder == "base" and not base_mods_applied):  # step into folders that have ticked checkboxes only
+                        base_mods_applied = True if folder == "base" else False
                         helper.add_text_to_terminal(
-                            f"{helper.localization_dict["installing_terminal_text_var"]} {folder}",
-                            tag=f"installing_{folder}_text_tag",
+                            f"{helper.localization_dict["installing_terminal_text_var"]} {folder}"
                         )
-                        shutil.copytree(
-                            os.path.join(mod_path, "files"),
-                            mpaths.minify_dota_compile_output_path,
-                            dirs_exist_ok=True,
-                            ignore=shutil.ignore_patterns("*.gitkeep"),
-                        )
+                        if os.path.exists(os.path.join(mod_path, "files")):
+                            shutil.copytree(
+                                os.path.join(mod_path, "files"),
+                                mpaths.minify_dota_compile_output_path,
+                                dirs_exist_ok=True,
+                                ignore=shutil.ignore_patterns("*.gitkeep"),
+                            )
 
                         if os.path.exists(menu_xml):
                             with open(menu_xml, "r", encoding="utf-8") as file:
@@ -130,7 +132,7 @@ def patcher():
                                     "error",
                                 )
                         # ------------------------------- blacklist.txt ------------------------------ #
-                        if os.stat(blacklist_txt).st_size == 0:
+                        if not os.path.exists(blacklist_txt):
                             pass
                         else:
                             global game_contents_file_init
@@ -216,7 +218,7 @@ def patcher():
                             blacklist_data_exclusions = []
 
                         # --------------------------------- styling.txt --------------------------------- #
-                        if os.stat(styling_txt).st_size == 0:
+                        if not os.path.exists(styling_txt):
                             pass
                         else:
                             with open(styling_txt) as file:

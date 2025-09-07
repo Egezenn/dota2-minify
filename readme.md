@@ -164,6 +164,7 @@ Rewrite of the GUI, Russian translations, mod fixes and [more](https://github.co
 <summary>Mods</summary>
 
 - [`Auto Accept Match`](./mods/Auto%20Accept%20Match)
+- [`Auto Language Dialog Accept`](./mods/base/files/panorama/scripts/minify_auto_language_dialog_accept.vjs_c)
 - [`Show NetWorth`](./mods/Show%20NetWorth%20)
 
 </details>

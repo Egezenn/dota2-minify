@@ -239,7 +239,7 @@ def apply_xml_modifications(xml_file, modifications):
 
 
 def build_minify_menu(menus):
-    minify_section_xml = """
+    minify_section_xml = r"""
 <Panel class="SettingsSectionContainer" section="#minify" icon="s2r://panorama/images/control_icons/24px/check.vsvg">
   <Panel class="SettingsSectionTitleContainer LeftRightFlow">
     <Image class="SettingsSectionTitleIcon" texturewidth="48px" textureheight="48px" scaling="stretch-to-fit-preserve-aspect" src="s2r://panorama/images/control_icons/24px/check.vsvg" />

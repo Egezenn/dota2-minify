@@ -1,1 +1,0 @@
-Automatically confirms the language change popup to suppress the restart prompt.
