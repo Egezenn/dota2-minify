@@ -336,7 +336,7 @@ def apply_xml_modifications(xml_file, modifications):
 
 
 def build_minify_menu(menus):
-    minify_section_xml = """
+    minify_section_xml = r"""
 <Panel class="SettingsSectionContainer" section="#minify" icon="s2r://panorama/images/control_icons/24px/check.vsvg">
   <Panel class="SettingsSectionTitleContainer LeftRightFlow">
     <Image class="SettingsSectionTitleIcon" texturewidth="48px" textureheight="48px" scaling="stretch-to-fit-preserve-aspect" src="s2r://panorama/images/control_icons/24px/check.vsvg" />
@@ -498,7 +498,7 @@ def compile(sender, app_data, user_data):
                 shutil.copytree(os.path.join(folder, item), os.path.join(mpaths.minify_dota_compile_input_path, item))
             else:
                 shutil.copy(os.path.join(folder, item), mpaths.minify_dota_compile_input_path)
-        with open(os.path.join(mpaths.logs_dir, "Source2Viewer-CLI.txt"), "w") as file:
+        with open(os.path.join(mpaths.logs_dir, "resourcecompiler.txt"), "w") as file:
             subprocess.run(
                 [
                     mpaths.dota_resource_compiler_path,

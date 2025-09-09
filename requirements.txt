@@ -1,5 +1,6 @@
 dearpygui
 Nuitka
+playsound3
 psutil
 requests
 screeninfo

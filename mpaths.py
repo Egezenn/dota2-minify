@@ -45,6 +45,7 @@ create_dirs(logs_dir, config_dir)
 # bin
 blank_files_dir = os.path.join(bin_dir, "blank-files")
 img_dir = os.path.join(bin_dir, "images")
+sounds_dir = os.path.join(bin_dir, "sounds")
 locale_file_dir = os.path.join(config_dir, "locale")
 localization_file_dir = os.path.join(bin_dir, "localization.json")
 mods_file_dir = os.path.join(config_dir, "mods.json")
@@ -359,9 +360,10 @@ dota_tools_extraction_paths = [
 ]
 
 
-mods_folders = []
-for mod in sorted(os.listdir(mods_dir)):
-    mods_folders.append(mod)
+mods_folders = sorted(os.listdir(mods_dir))
+i = mods_folders.index("base")
+mods_folders.pop(i)
+mods_folders.insert(0, "base")
 
 # Rubberband fix to always do blacklists at last for them to make overwrites
 mods_folder_compilation_order = overwrite_ensurance_hack(

@@ -1,7 +1,6 @@
 Designed for visual clarity.
 
 * Must have default dota2 terrain equipped
-* Must turn OFF grass in video options in your dota2 settings
 
 - Makes all tiles gray/dark gray
 - Fog lines

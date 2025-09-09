@@ -1,7 +1,6 @@
 Görsel netlik için tasarlanmıştır.
 
 * Varsayılan dota2 arazisini kullanmalısınız
-* Dota2 ayarlarınızdaki video seçeneklerinde çimi kapalı konuma getirmelisiniz
 
 - Tüm karoları gri / koyu gri yapar
 - Sis çizgileri

@@ -70,7 +70,6 @@ def update_popup_show():
 def setupSystem():
     os.makedirs("logs", exist_ok=True)
     isDotaRunning()
-    verifyMods()
     isCompilerFound()
     try:
         if not (
@@ -150,6 +149,8 @@ def load_checkboxes_state():
 
 def create_checkboxes():
     global checkboxes_state
+    visually_available_mods = mpaths.mods_folders
+    visually_available_mods.remove("base")
     for index in range(len(mpaths.mods_folders)):
         name = mpaths.mods_folders[index]
         ui.add_group(parent="mod_menu", tag=f"{name}_group_tag", horizontal=True, width=300)
@@ -624,37 +625,6 @@ def isCompilerFound():
         )
     else:
         helper.workshop_installed = True
-
-
-# TODO disable the mod that is invalid & continue
-def verifyMods():
-    global gui_lock
-    for folder in mpaths.mods_folders:
-        mod_path = os.path.join(mpaths.mods_dir, folder)
-
-        if not os.path.exists(os.path.join(mod_path, "files")):
-            gui_lock = True
-            helper.add_text_to_terminal(
-                f"{helper.localization_dict["error_no_files_path_found_terminal_text_var"]}'mods/{folder}'.",
-                "files_folder_not_found_text_tag",
-                "error",
-            )
-
-        if not os.path.exists(os.path.join(mod_path, "blacklist.txt")):
-            gui_lock = True
-            helper.add_text_to_terminal(
-                f"{helper.localization_dict["error_no_blacklist_txt_found_terminal_text_var"]}'mods/{folder}'.",
-                "blacklist_not_found_text_tag",
-                "error",
-            )
-
-        if not os.path.exists(os.path.join(mod_path, "styling.txt")):
-            gui_lock = True
-            helper.add_text_to_terminal(
-                f"{helper.localization_dict["error_no_styling_txt_found_terminal_text_var"]}'mods/{folder}'.",
-                "blacklist_not_found_text_tag",
-                "error",
-            )
 
 
 def recalc_rescomp_dirs():

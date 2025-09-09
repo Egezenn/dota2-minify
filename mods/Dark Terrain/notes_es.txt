@@ -1,7 +1,6 @@
 Diseñado para claridad visual.
 
 * Debes de tener equipado el mapa predeterminado.
-* Debes DESACTIVAR el césped en las opciones de video en la configuración.
 
 - Convierte todas las baldosas en gris/gris oscuro
 - Líneas de niebla visibles, permite ver claramente el borde de la niebla
