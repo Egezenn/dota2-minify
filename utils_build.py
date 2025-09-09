@@ -271,6 +271,7 @@ def patcher():
                 helper.warnings.append(exceptiondata[-1])
         if mod_menus:
             dota_extracts.add("panorama/layout/popups/popup_settings_reborn.vxml_c")
+        # Extract XMLs to be modified (assume they are in game VPK)
         for path in xml_modifications.keys():
             compiled = path.replace(".xml", ".vxml_c")
             dota_extracts.add(compiled)

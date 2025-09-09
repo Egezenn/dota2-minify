@@ -213,19 +213,49 @@ def vpkExtractor(vpk_to_extract_from, paths):
 
 
 def apply_xml_modifications(xml_file, modifications):
+    if not os.path.exists(xml_file):
+        warnings.append(f"[Missing XML] '{xml_file}' not found; skipping modifications")
+        return
     tree = ET.parse(xml_file)
     root = tree.getroot()
+
+    def find_by_id(node, node_id):
+        return node.find(f".//*[@id='{node_id}']")
+
+    def find_with_parent_by_id(node, node_id):
+        # Returns (element, parent) or (None, None)
+        for parent in node.iter():
+            for child in list(parent):
+                if child.get("id") == node_id:
+                    return child, parent
+        # root itself
+        if node.get("id") == node_id:
+            return node, None
+        return None, None
+
+    def ensure_unique_include(container_tag, src_value):
+        container = root.find(container_tag)
+        if container is None:
+            container = ET.Element(container_tag)
+            # put styles/scripts at the top for readability
+            root.insert(0, container)
+        # de-duplicate
+        for inc in container.findall("include"):
+            if inc.get("src") == src_value:
+                return  # already present
+        include = ET.SubElement(container, "include")
+        include.set("src", src_value)
 
     for mod in modifications:
         action = mod.get("action")
 
         if action == "add_script":
-            scripts = root.find("scripts")
-            if scripts is None:
-                scripts = ET.Element("scripts")
-                root.insert(0, scripts)
-            include = ET.SubElement(scripts, "include")
-            include.set("src", mod.get("src", ""))
+            src = mod.get("src", "")
+            ensure_unique_include("scripts", src)
+
+        elif action == "add_style_include":
+            src = mod.get("src", "")
+            ensure_unique_include("styles", src)
 
         elif action == "set_attribute":
             tag = mod.get("tag")
@@ -233,9 +263,76 @@ def apply_xml_modifications(xml_file, modifications):
             if element is None:
                 element = root.find(f".//*[@id='{tag}']")
             if element is not None:
-                element.set(mod.get("attribute"), mod.get("value"))
+                attr = mod.get("attribute")
+                val = mod.get("value")
+                if attr is not None and val is not None:
+                    element.set(attr, val)
 
-    tree.write(xml_file)
+        elif action == "add_child":
+            parent_id = mod.get("parent_id")
+            xml_snippet = mod.get("xml", "")
+            if parent_id and xml_snippet:
+                parent_elem = find_by_id(root, parent_id)
+                if parent_elem is not None:
+                    try:
+                        child = ET.fromstring(xml_snippet)
+                        parent_elem.append(child)
+                    except ET.ParseError as e:
+                        warnings.append(f"[XML ParseError] add_child -> {e}")
+                else:
+                    warnings.append(f"[add_child] parent id '{parent_id}' not found in {os.path.basename(xml_file)}")
+
+        elif action == "move_into":
+            target_id = mod.get("target_id")
+            new_parent_id = mod.get("new_parent_id")
+            if target_id and new_parent_id:
+                elem, old_parent = find_with_parent_by_id(root, target_id)
+                new_parent = find_by_id(root, new_parent_id)
+                if elem is not None and new_parent is not None:
+                    if old_parent is not None:
+                        old_parent.remove(elem)
+                    new_parent.append(elem)
+                else:
+                    if elem is None:
+                        warnings.append(f"[move_into] target id '{target_id}' not found in {os.path.basename(xml_file)}")
+                    if new_parent is None:
+                        warnings.append(f"[move_into] new_parent id '{new_parent_id}' not found in {os.path.basename(xml_file)}")
+
+        elif action == "insert_after":
+            target_id = mod.get("target_id")
+            xml_snippet = mod.get("xml", "")
+            if target_id and xml_snippet:
+                target, parent = find_with_parent_by_id(root, target_id)
+                if target is not None and parent is not None:
+                    try:
+                        new_elem = ET.fromstring(xml_snippet)
+                        idx = list(parent).index(target)
+                        parent.insert(idx + 1, new_elem)
+                    except ET.ParseError as e:
+                        warnings.append(f"[XML ParseError] insert_after -> {e}")
+                else:
+                    warnings.append(f"[insert_after] target id '{target_id}' not found in {os.path.basename(xml_file)}")
+
+        elif action == "insert_before":
+            target_id = mod.get("target_id")
+            xml_snippet = mod.get("xml", "")
+            if target_id and xml_snippet:
+                target, parent = find_with_parent_by_id(root, target_id)
+                if target is not None and parent is not None:
+                    try:
+                        new_elem = ET.fromstring(xml_snippet)
+                        idx = list(parent).index(target)
+                        parent.insert(idx, new_elem)
+                    except ET.ParseError as e:
+                        warnings.append(f"[XML ParseError] insert_before -> {e}")
+                else:
+                    warnings.append(f"[insert_before] target id '{target_id}' not found in {os.path.basename(xml_file)}")
+
+    try:
+        tree.write(xml_file, encoding="utf-8")
+    except TypeError:
+        # Older Python may not accept encoding for ElementTree.write in text mode
+        tree.write(xml_file)
 
 
 def build_minify_menu(menus):

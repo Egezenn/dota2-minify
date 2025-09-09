@@ -1,0 +1,1 @@
+Fixes and repopulates the Unit Query HUD panel.
