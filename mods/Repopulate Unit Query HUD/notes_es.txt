@@ -1,0 +1,1 @@
+﻿Corrige y vuelve a poblar el panel de consulta de unidad del HUD.
