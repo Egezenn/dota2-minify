@@ -1,4 +1,4 @@
-Reverts pings sounds to their pre-7.39 sounds.
+Reverts pings sounds to their pre-7.39 patch sounds.
 
 New sounds are replaced to:
 - ping_heart = ping

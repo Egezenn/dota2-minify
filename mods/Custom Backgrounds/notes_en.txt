@@ -1,0 +1,3 @@
+Replaces main menu background, player showcase background and pick screen background.
+
+* Main menu only gets replaced if "Remove Main Menu Background" mod is enabled.

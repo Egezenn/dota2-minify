@@ -1,0 +1,3 @@
+Ana menü arka planını, oyuncu vitrin arka planını ve seçim ekranı arka planını değiştirir.
+
+* Ana menü, yalnızca “Remove Main Menu Background" modu etkinleştirildiğinde değiştirilir.

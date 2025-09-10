@@ -1,3 +1,4 @@
+**materials/nature/card_grass.*
 maps/journey_assets/props/foliage/bush_journey_00.vmdl_c
 maps/journey_assets/props/foliage/bush_journey_01.vmdl_c
 maps/journey_assets/props/foliage/plant_journey_002.vmdl_c

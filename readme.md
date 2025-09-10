@@ -135,8 +135,10 @@ Taking over the maintainership of the project, implementing automated workflows,
 <details>
 <summary>Mods</summary>
 
+- [`Custom Backgrounds`](./mods/Custom%20Backgrounds)
 - [`Mute Announcers`](./mods/Mute%20Announcers)
 - [`OpenDotaGuides Guides`](./mods/OpenDotaGuides%20Guides) - [Project](https://github.com/Egezenn/OpenDotaGuides)
+- [`Remove Hero Card Clutter`](./mods/Remove%20Hero%20Card%20Clutter)
 - [`Remove Hero Renders`](./mods/Remove%20Hero%20Renders)
 - [`Remove Main Menu Background`](./mods/Remove%20Main%20Menu%20Background)
 - [`Remove Showcases`](./mods/Remove%20Showcases)
@@ -165,6 +167,7 @@ Rewrite of the GUI, Russian translations, mod fixes and [more](https://github.co
 
 - [`Auto Accept Match`](./mods/Auto%20Accept%20Match)
 - [`Auto Language Dialog Accept`](./mods/base/files/panorama/scripts/minify_auto_language_dialog_accept.vjs_c)
+- [`Repopulate Unit Query HUD`](./mods/Repopulate%20Unit%20Query%20HUD)
 - [`Show NetWorth`](./mods/Show%20NetWorth%20)
 
 </details>

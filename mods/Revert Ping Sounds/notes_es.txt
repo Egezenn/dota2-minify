@@ -1,0 +1,6 @@
+Restablece los sonidos de los pings a los que tenían antes del parche 7.39.
+
+Los nuevos sonidos se sustituyen por:
+- ping_heart = ping
+- ping_enemy_ward = ping_warning
+- ping_need_ward = ping

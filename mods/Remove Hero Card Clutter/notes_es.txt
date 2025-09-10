@@ -1,0 +1,2 @@
+Aumenta el tamaño de las cartas de héroe.
+Elimina las animaciones de héroe que aparecen al pasar el cursor por encima de las cartas, las insignias y la fila de héroes similares.

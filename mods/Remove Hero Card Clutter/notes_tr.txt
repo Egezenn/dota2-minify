@@ -1,0 +1,2 @@
+Kahraman kartlarını büyütür.
+Kartların üzerine gelindiğinde görünen kahraman filmlerini, rozetleri ve benzer kahraman satırını kaldırır.

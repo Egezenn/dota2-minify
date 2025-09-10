@@ -1,0 +1,3 @@
+panorama/styles/dashboard @@ DOTADashboard, #DashboardCore,#DashboardOverlay,#DashboardForeground { background-image: url("s2r://panorama/images/loadingscreens/international_2025_ls_3/loadingscreen.vtex"); background-repeat: no-repeat; background-size: 100% 100%; }
+panorama/styles/showcase/showcase_background @@ #BackgroundImage { visibility: collapse; }
+panorama/styles/hud/dota_hud_pregame @@ .LowVisualQuality #PregameBGStatic { background-image: url("s2r://panorama/images/loadingscreens/international_2025_ls_3/loadingscreen.vtex"); background-repeat: no-repeat; background-size: 100% 100%; }

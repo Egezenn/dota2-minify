@@ -1,1 +1,3 @@
-Kahraman önizlemelerini kaldırır.
+Kahraman önizlemelerini ve kullanıcı arayüzünden görüntüleri kaldırır.
+
+Konsol değişkeni “map_enable_portrait_worlds 0” da aynı amaca hizmet eder, ancak MVP ekranlarında takılıp kalırsınız.

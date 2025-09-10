@@ -1,1 +1,1 @@
-Elimina el fondo del menú principal (héroe de la última partida jugada, detalles de la partida)
+Elimina el fondo del menú principal.
