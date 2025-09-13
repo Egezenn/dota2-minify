@@ -50,20 +50,21 @@ jobs:
         run: |
           Copy-Item -Path "bin" -Destination "dist/Minify/bin" -Recurse
           Copy-Item -Path "mods" -Destination "dist/Minify/mods" -Recurse
-          Copy-Item -Path "version" -Destination "dist/Minify/version" -Recurse
-          cd dist/Minify
+          Copy-Item -Path "version" -Destination "dist/Minify/version"
 
       - name: Archiving (Windows)
         if: matrix.os == 'windows-latest'
         run: |
-          Compress-Archive -Path ".\*" -DestinationPath "../../${{ github.event.inputs.release_name }}-windows.zip"
-          cd .\..\..\
+          Set-Location dist\Minify
+          Compress-Archive -Path ".\*" -DestinationPath "..\..\${{ github.event.inputs.release_name }}-windows.zip"
+          Set-Location .\..\..\
       - name: Archiving (Linux)
         shell: pwsh
         if: matrix.os == 'ubuntu-latest'
         run: |
-          Compress-Archive -Path ".\*" -DestinationPath ".\..\..\${{ github.event.inputs.release_name }}-linux.zip"
-          cd ../..
+          Set-Location dist/Minify
+          Compress-Archive -Path "./*" -DestinationPath "./../../${{ github.event.inputs.release_name }}-linux.zip"
+          Set-Location ../..
 
       - name: Create Release (Windows)
         if: matrix.os == 'windows-latest'
