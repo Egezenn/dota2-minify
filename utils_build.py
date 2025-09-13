@@ -1,15 +1,16 @@
+import importlib
 import json
 import os
 import re
 import shutil
 import subprocess
+import sys
 import time
 import traceback
 
 import dearpygui.dearpygui as ui
 import playsound3  # chimes are from pixabay.com/sound-effects/chime-74910/
 import psutil
-import requests
 import vpk
 
 import helper
@@ -31,34 +32,34 @@ def patcher():
     try:
         helper.cleanFolders()
 
-        styling_dictionary = {}
-
         blank_file_extensions = helper.getBlankFileExtensions(
             mpaths.blank_files_dir
         )  # list of extensions in bin/blank-files
-        blacklist_data = []  # path from every blacklist.txt
-        styling_data = []  # path and style from every styling.txt
         dota_pak_contents = vpk.open(mpaths.dota_game_pak_path)
         core_pak_contents = vpk.open(mpaths.dota_core_pak_path)
         dota_extracts = set()
         core_extracts = set()
 
-        mod_menus = []
-        xml_modifications = {}
         base_mods_applied = False
+        blacklist_data = []  # path from every blacklist.txt
+        mod_menus = []
+        styling_data = []  # path and style from every styling.txt
+        styling_dictionary = {}
+        xml_modifications = {}
 
-        for folder in mpaths.mods_folder_compilation_order:
+        for folder in mpaths.mods_folder_application_order:
             try:
                 mod_path = os.path.join(mpaths.mods_dir, folder)
                 blacklist_txt = os.path.join(mod_path, "blacklist.txt")
                 styling_txt = os.path.join(mod_path, "styling.txt")
                 menu_xml = os.path.join(mod_path, "menu.xml")
                 xml_mod_file = os.path.join(mod_path, "xml_mod.json")
+                script_file = os.path.join(mod_path, "script.py")
 
                 for box in utils_gui.checkboxes:
-                    if (
-                        ui.get_value(box) == True and utils_gui.checkboxes[box] == folder
-                    ) or (folder == "base" and not base_mods_applied):  # step into folders that have ticked checkboxes only
+                    if (ui.get_value(box) == True and utils_gui.checkboxes[box] == folder) or (
+                        folder == "base" and not base_mods_applied
+                    ):  # step into folders that have ticked checkboxes only
                         base_mods_applied = True if folder == "base" else False
                         helper.add_text_to_terminal(
                             f"{helper.localization_dict["installing_terminal_text_var"]} {folder}"
@@ -80,64 +81,37 @@ def patcher():
                                 mod_xml = json.load(file)
                             for path, mods in mod_xml.items():
                                 xml_modifications.setdefault(path, []).extend(mods)
-                        # ------------------------------- odg ------------------------------ #
-                        if utils_gui.checkboxes[box] == "OpenDotaGuides Guides":
-                            zip_path = os.path.join(mod_path, "files", "OpenDotaGuides.zip")
-                            temp_dump_path = os.path.join(mod_path, "files", "temp")
-                            if os.path.exists(zip_path):
-                                os.remove(zip_path)
-                            try:
-                                response = requests.get(mpaths.odg_latest)
-                                if response.status_code == 200:
-                                    with open(zip_path, "wb") as file:
-                                        file.write(response.content)
-                                    helper.add_text_to_terminal(
-                                        helper.localization_dict["downloaded_latest_opendotaguides_terminal_text_var"],
-                                        "downloaded_open_dota_guides_text_tag",
-                                    )
-                                    os.makedirs(os.path.join(mpaths.dota_itembuilds_path, "bkup"), exist_ok=True)
-                                    for name in os.listdir(mpaths.dota_itembuilds_path):
-                                        try:
-                                            if name != "bkup":
-                                                os.rename(
-                                                    os.path.join(mpaths.dota_itembuilds_path, name),
-                                                    os.path.join(mpaths.dota_itembuilds_path, "bkup", name),
-                                                )
-                                        except FileExistsError:
-                                            pass  # backup was created and opendotaguides was replacing the guides already
-                                    shutil.unpack_archive(zip_path, temp_dump_path, format="zip")
-                                    for file in os.listdir(temp_dump_path):
-                                        shutil.copy(
-                                            os.path.join(temp_dump_path, file),
-                                            os.path.join(mpaths.dota_itembuilds_path, file),
-                                        )
-                                    helper.remove_path(temp_dump_path)
-                                    os.remove(zip_path)
-                                    helper.add_text_to_terminal(
-                                        helper.localization_dict["replaced_guides_terminal_text_var"],
-                                        "replaced_open_dota_guides_text_tag",
-                                    )
-                                    if os.path.exists(zip_path):
-                                        os.remove(zip_path)
-                                else:
-                                    helper.add_text_to_terminal(
-                                        helper.localization_dict["failed_to_download_opendotaguides_terminal_text_var"],
-                                        "failed_downloading_open_dota_guides_text_tag",
-                                        "error",
-                                    )
-                            except:  # no connection
+                        # ------------------------------- scripting support ------------------------------ #
+                        # TODO: adjust placement?
+                        if os.path.exists(script_file):
+                            if mod_path not in sys.path:
+                                sys.path.insert(0, mod_path)
+                            script = importlib.import_module("script")
+                            if hasattr(script, "main"):
                                 helper.add_text_to_terminal(
-                                    helper.localization_dict["failed_to_download_opendotaguides_terminal_text_var"],
-                                    "failed_downloading_open_dota_guides_text_tag",
-                                    "error",
+                                    helper.localization_dict["script_execution_text_var"].format(folder),
                                 )
+                                try:
+                                    script.main()
+                                    helper.add_text_to_terminal(
+                                        helper.localization_dict["script_success_text_var"].format(folder),
+                                        None,
+                                        "success",
+                                    )
+                                except:
+                                    helper.add_text_to_terminal(
+                                        helper.localization_dict["script_fail_text_var"].format(folder), None, "error"
+                                    )
+                            else:
+                                helper.add_text_to_terminal(
+                                    helper.localization_dict["script_no_main_text_var"].format(folder), None, "warning"
+                                )
+                            sys.path.remove(mod_path)
                         # ------------------------------- blacklist.txt ------------------------------ #
-                        if not os.path.exists(blacklist_txt):
-                            pass
-                        else:
+                        if os.path.exists(blacklist_txt):
                             global game_contents_file_init
                             if not game_contents_file_init:
-                                # TODO check pak01 hash, log it & run this only if it's different
+                                # TODO: check pak01 hash, log it & run this only if it's different
                                 extract = subprocess.run(
                                     [
                                         os.path.join(".", mpaths.s2v_executable),
@@ -204,7 +178,7 @@ def patcher():
                                     exist_ok=True,
                                 )
 
-                                try:  # TODO parallelize filecopy if and when blacklists get bigger
+                                try:  # TODO: parallelize filecopy if and when blacklists get bigger
                                     shutil.copy(
                                         os.path.join(mpaths.blank_files_dir, f"blank{extension}"),
                                         os.path.join(mpaths.minify_dota_compile_output_path, path + extension),
@@ -218,9 +192,7 @@ def patcher():
                             blacklist_data_exclusions = []
 
                         # --------------------------------- styling.txt --------------------------------- #
-                        if not os.path.exists(styling_txt):
-                            pass
-                        else:
+                        if os.path.exists(styling_txt):
                             with open(styling_txt) as file:
 
                                 lines = file.readlines()
@@ -279,6 +251,7 @@ def patcher():
             compiled = path.replace(".xml", ".vxml_c")
             dota_extracts.add(compiled)
 
+        helper.add_text_to_terminal(helper.localization_dict["starting_extraction_text_var"])
         helper.vpkExtractor(core_pak_contents, list(core_extracts))
         helper.vpkExtractor(dota_pak_contents, list(dota_extracts))
 
@@ -303,16 +276,13 @@ def patcher():
             except PermissionError:
                 helper.add_text_to_terminal(
                     helper.localization_dict["error_no_execution_permission_s2v_var"],
-                    "error_no_execution_permission_s2v",
                     "error",
                 )
 
         if mod_menus:
             helper.build_minify_menu(mod_menus)
         for path, mods in xml_modifications.items():
-            helper.apply_xml_modifications(
-                os.path.join(mpaths.build_dir, path), mods
-            )
+            helper.apply_xml_modifications(os.path.join(mpaths.build_dir, path), mods)
         # ---------------------------------- STEP 3 ---------------------------------- #
         # ---------------------------- CSS resourcecompile --------------------------- #
         # ---------------------------------------------------------------------------- #
@@ -428,6 +398,7 @@ def uninstaller():
                     except KeyError:
                         pass
 
+    # TODO: implement mod specific uninstall instructions without relying on base code
     # odg
     try:
         with open(os.path.join(mpaths.dota_itembuilds_path, "default_antimage.txt"), "r") as file:
@@ -442,6 +413,7 @@ def uninstaller():
                         os.path.join(mpaths.dota_itembuilds_path, "bkup", name),
                         os.path.join(mpaths.dota_itembuilds_path, name),
                     )
+                helper.remove_path(os.path.join(mpaths.dota_itembuilds_path, "bkup"))
     except FileNotFoundError:
         helper.warnings.append(
             "Unable to recover backed up default guides or the itembuilds directory is empty, verify files to get the default guides back"
@@ -461,11 +433,87 @@ def clean_lang_dirs():
 
 def create_blank_mod():
     mod_name = "_test"
-    helper.remove_path(os.path.join(mpaths.mods_dir, mod_name))
-    os.mkdir(os.path.join(mpaths.mods_dir, mod_name))
-    os.mkdir(os.path.join(mpaths.mods_dir, mod_name, "files"))
-    open(os.path.join(mpaths.mods_dir, mod_name, "files", ".gitkeep"), "w").close()
+    path_to_mod = os.path.join(mpaths.mods_dir, mod_name)
+
+    blacklist_template = r"""# This file is a list of path to files used to override those with blanks.
+# Supported file types are can be found in `bin/blank-files`.
+
+# A list of all the files (from the game pak) can be found in `bin/gamepakcontents.txt`.
+
+# Syntax for this file starting from the line beginning is as follows:
+# `#`: Comments
+# `>>`: Directories
+# `**`: RegExp patterns
+# `--`: Exclusions (for when you want to exclude specific files from bulk additions)
+# `@@`: Links to raw data
+
+# After that with no blank spaces you put the path to the file you want to override.
+# path/to/file
+
+# particles/base_attacks/ranged_goodguy_launch.vpcf_c
+# >>particles/sprays
+# **taunt.*\.vsnd_c
+# @@link-to-url
+"""
+    styling_template = r"""# This file is a list of CSS paths and styling that will be appended to them.
+# By the nature of this method modifications done here may break the original XML or CSS that gets updated resulting in a bad layout.
+# In such cases, a repatch is required.
+
+# If you encounter errors while patching, it's most likely that your CSS is invalid or the path is wrong.
+
+# For Source 2 flavored CSS properties, refer to: https://developer.valvesoftware.com/wiki/Dota_2_Workshop_Tools/Panorama/CSS_Properties
+# To live inspect the layout, open the workshop tools and press F6 and select the element you'd like to select from the XML.
+
+# Syntax for this file starting from the line beginning is as follows:
+# `#`: Comments 
+# `!`: By default, the file is pulled from `dota 2 beta/game/dota/pak01_dir.vpk`.
+#      However to change this behavior and pull files from `dota 2 beta/game/core/pak01_dir.vpk`, you can use this.
+# `@@`: Links to raw data
+
+# path/to/file_without_extension @@ #example_id { property: value; }
+"""
+    script_template = r"""# This script template can be run both manually and from minify.
+# You are able to use packages and modules from minify (you need an activated environment from the minify root or running with the tool `uv` can automatically handle this.)
+import os
+import sys
+
+current_dir = os.path.dirname(os.path.abspath(__file__))
+minify_root = os.path.abspath(os.path.join(current_dir, os.pardir, os.pardir))
+if minify_root not in sys.path:
+    sys.path.insert(0, minify_root)
+
+# Any package or module native to minify can be imported here
+# import requests
+#
+# import mpaths
+# ...
+
+
+def main():
+    pass
+    # Code specific to your mod goes here, minify will try to execute this block.
+    # If any exceptions occur, it'll be written to `logs/warnings.txt`
+
+
+if __name__ == "__main__":
+    main()
+"""
+    mod_menu_template = r""
+    xml_mod_template = r"{}"
+
+    helper.remove_path(path_to_mod)
+    os.mkdir(path_to_mod)
+    os.mkdir(os.path.join(path_to_mod, "files"))
+    open(os.path.join(path_to_mod, "files", ".gitkeep"), "w").close()
     for locale in helper.localizations:
-        open(os.path.join(mpaths.mods_dir, mod_name, f"notes_{locale.lower()}.txt"), "w").close()
-    open(os.path.join(mpaths.mods_dir, mod_name, "blacklist.txt"), "w").close()
-    open(os.path.join(mpaths.mods_dir, mod_name, "styling.txt"), "w").close()
+        open(os.path.join(path_to_mod, f"notes_{locale.lower()}.txt"), "w").close()
+    with open(os.path.join(path_to_mod, "blacklist.txt"), "w") as file:
+        file.write(blacklist_template)
+    with open(os.path.join(path_to_mod, "styling.txt"), "w") as file:
+        file.write(styling_template)
+    with open(os.path.join(path_to_mod, "script.py"), "w") as file:
+        file.write(script_template)
+    with open(os.path.join(path_to_mod, "menu.xml"), "w") as file:
+        file.write(mod_menu_template)
+    with open(os.path.join(path_to_mod, "xml_mod.json"), "w") as file:
+        file.write(xml_mod_template)

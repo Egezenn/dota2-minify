@@ -164,11 +164,20 @@ def create_checkboxes():
                 else:
                     ui.configure_item(name, default_value=checkboxes_state[name])
         mod_path = os.path.join(mpaths.mods_dir, name)
-        notes_txt = os.path.join(mod_path, f"notes_{helper.locale.lower()}.txt")
-        with open(notes_txt, "r", encoding="utf-8") as file:
-            data = file.read()
+        try:
+            if os.path.exists(os.path.join(mod_path, f"notes_{helper.locale.lower()}.txt")):
+                notes_txt = os.path.join(mod_path, f"notes_{helper.locale.lower()}.txt")
+            else:
+                notes_txt = os.path.join(mod_path, "notes_en.txt")
+            with open(notes_txt, "r", encoding="utf-8") as file:
+                data = file.read()
+        except FileNotFoundError:
+            data = ""
+            helper.add_text_to_terminal(
+                helper.localization_dict["no_notes_found_text_var"].format(name), None, "warning"
+            )
 
-        data2 = f"{name}_details_window_tag"
+        tag_data = f"{name}_details_window_tag"
         ui.add_button(
             parent=f"{name}_group_tag",
             small=True,
@@ -176,11 +185,11 @@ def create_checkboxes():
             tag=f"{name}_button_show_details_tag",
             label=f"{helper.details_label_text_var}",
             callback=show_details,
-            user_data=f"{name}_details_window_tag",
+            user_data=tag_data,
         )
 
         ui.add_window(
-            tag=f"{name}_details_window_tag",
+            tag=tag_data,
             pos=(0, 0),
             show=False,
             width=494,
@@ -191,7 +200,7 @@ def create_checkboxes():
             label=name,
         )
         ui.add_string_value(parent="details_tags", default_value=data, tag=f"{name}_details_text_value_tag")
-        ui.add_text(source=f"{name}_details_text_value_tag", parent=f"{name}_details_window_tag", wrap=480)
+        ui.add_text(source=f"{name}_details_text_value_tag", parent=tag_data, wrap=480)
 
         current_box = name
         checkboxes[current_box] = name
@@ -262,7 +271,7 @@ def hide_uninstall_popup():
 
 
 def open_github_link_and_close_minify():
-    open_github_link()  # TODO updater behavior
+    open_github_link()  # TODO: updater behavior
     helper.close()
 
 

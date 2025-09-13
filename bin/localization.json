@@ -125,6 +125,9 @@
     "RU": "-> Установка",
     "TR": "-> Yükleniyor"
   },
+  "starting_extraction_text_var": {
+    "EN": "-> Beginning to extract CSS files"
+  },
   "extracting_terminal_text_var": {
     "EN": "   Extracting: ",
     "ES": "   Extrayendo: ",
@@ -212,23 +215,17 @@
     "RU": "Пожалуйста сначала закрой Dota 2, после чего приступай к патчу.",
     "TR": "Lütfen önce Dota 2'yi kapatın ve sonra yamalama işlemini gerçekleştirin."
   },
-  "downloaded_latest_opendotaguides_terminal_text_var": {
-    "EN": "   Downloaded latest OpenDotaGuides guides.",
-    "ES": "   Se descargaron las últimas guías de OpenDotaGuides.",
-    "RU": "   Скачали последние гайды OpenDotaGuides.",
-    "TR": "   Güncel OpenDotaGuides rehberleri indirildi."
+  "script_execution_text_var": {
+    "EN": "   Executing {} script."
   },
-  "replaced_guides_terminal_text_var": {
-    "EN": "   Replaced default guides with OpenDotaGuides.",
-    "ES": "   Se reemplazaron las guías predeterminadas por OpenDotaGuides.",
-    "RU": "   Заменили стандартные гайды на OpenDotaGuides.",
-    "TR": "   Varsayılan rehberler OpenDotaGuides rehberleri ile değiştirildi."
+  "script_success_text_var": {
+    "EN": "   Successfully executed {} script."
   },
-  "failed_to_download_opendotaguides_terminal_text_var": {
-    "EN": "-> Failed to download latest OpenDotaGuides.",
-    "ES": "-> No se pudo descargar las últimas guías de OpenDotaGuides.",
-    "RU": "-> Не удалось скачать последние OpenDotaGuides.",
-    "TR": "-> Güncel OpenDotaGuides arşivleri indirilemedi."
+  "script_fail_text_var": {
+    "EN": "   Failed to execute {} script."
+  },
+  "script_no_main_text_var": {
+    "EN": "   {} script has no main function!"
   },
   "minify_encountered_errors_terminal_text_var": {
     "EN": "Minify encountered errors. Check Minify\\logs\\warnings.txt for details.",
@@ -303,5 +300,8 @@
   "extraction_of_failed_text_var": {
     "EN": "Unable to extract {}, path or file does not exist!",
     "TR": "{} çekilemedi, dizin veya dosya bulunamadı!"
+  },
+  "no_notes_found_text_var": {
+    "EN": "An English note or a note in your locale couldn't be found in the mod {}"
   }
 }

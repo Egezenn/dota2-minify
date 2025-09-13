@@ -28,8 +28,8 @@ __pycache__
 *.exe
 *.py[cod]
 *$py.class
-nuitka
-nuitka*
+dist
+*.spec
 
 # Environments
 .env

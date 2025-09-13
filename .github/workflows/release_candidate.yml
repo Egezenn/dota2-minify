@@ -16,7 +16,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [windows-latest, ubuntu-latest]
+        os: [ubuntu-latest, windows-latest]
 
     steps:
       - uses: actions/checkout@v4
@@ -38,20 +38,27 @@ jobs:
           pip install -r requirements.txt
 
       - name: Build executable with Nuitka
-        run: python -m nuitka --assume-yes-for-downloads --follow-imports --standalone --include-data-files=version=version --include-data-dir=./bin=bin --include-data-dir=./mods=mods --enable-plugin=tk-inter --windows-console-mode=disable --windows-icon-from-ico=bin/images/favicon.ico --enable-plugin=tk-inter --output-filename=Minify imgui.py
+        run: pyinstaller --noconsole --icon=bin/images/favicon.ico --name=Minify --hidden-import=tkinter imgui.py
+
+      - name: Move project dependencies
+        shell: pwsh
+        run: |
+          Copy-Item -Path "bin" -Destination "dist/Minify/bin" -Recurse
+          Copy-Item -Path "mods" -Destination "dist/Minify/mods" -Recurse
+          Copy-Item -Path "version" -Destination "dist/Minify/version" -Recurse
+          cd dist/Minify
 
       - name: Archiving (Windows)
         if: matrix.os == 'windows-latest'
         run: |
-          cd imgui.dist
-          Compress-Archive -Path ".\*" -DestinationPath ".\..\${{ github.event.inputs.release_name }}-windows.zip"
-          cd .\..\
+          Compress-Archive -Path ".\*" -DestinationPath "../../${{ github.event.inputs.release_name }}-windows.zip"
+          cd .\..\..\
       - name: Archiving (Linux)
+        shell: pwsh
         if: matrix.os == 'ubuntu-latest'
         run: |
-          cd imgui.dist
-          zip -qr  "../${{ github.event.inputs.release_name }}-linux.zip" ./*
-          cd ..
+          Compress-Archive -Path ".\*" -DestinationPath ".\..\..\${{ github.event.inputs.release_name }}-linux.zip"
+          cd ../..
 
       - name: Create Release (Windows)
         if: matrix.os == 'windows-latest'
@@ -71,11 +78,3 @@ jobs:
           files: "${{ github.event.inputs.release_name }}-linux.zip"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Windows Print SHA
-        if: matrix.os == 'windows-latest'
-        shell: pwsh
-        run: (Get-FileHash -Path ${{github.event.inputs.release_name}}-windows.zip).Hash
-      - name: Linux Print SHA
-        if: matrix.os == 'ubuntu-latest'
-        run: sha256sum ${{github.event.inputs.release_name}}-linux.zip | awk '{ print $1 }'

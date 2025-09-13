@@ -366,7 +366,7 @@ mods_folders.pop(i)
 mods_folders.insert(0, "base")
 
 # Rubberband fix to always do blacklists at last for them to make overwrites
-mods_folder_compilation_order = overwrite_ensurance_hack(
+mods_folder_application_order = overwrite_ensurance_hack(
     ["Mute", "Remove", "Minify Base Attacks", "Minify Spells & Items", "Misc Optimization", "User Styles", "_"],
     mods_folders,
 )

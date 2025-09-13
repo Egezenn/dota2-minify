@@ -8,15 +8,15 @@
 
 <div align="center">
 
-  [![discord](https://img.shields.io/badge/Discord-%237289DA.svg?style=for-the-badge&logo=discord&logoColor=white)](https://discord.com/invite/2YDnqpbcKM)
-  [![github-wiki](https://img.shields.io/badge/github_wiki-%23000000.svg?style=for-the-badge&logo=github)](https://github.com/Egezenn/dota2-minify/wiki)
-  ![license](https://img.shields.io/github/license/Egezenn/dota2-minify?style=for-the-badge)
+[![discord](https://img.shields.io/badge/Discord-%237289DA.svg?style=for-the-badge&logo=discord&logoColor=white)](https://discord.com/invite/2YDnqpbcKM)
+[![github-wiki](https://img.shields.io/badge/github_wiki-%23000000.svg?style=for-the-badge&logo=github)](https://github.com/Egezenn/dota2-minify/wiki)
+![license](https://img.shields.io/github/license/Egezenn/dota2-minify?style=for-the-badge)
 
-  ![latest-release](https://img.shields.io/github/v/release/Egezenn/dota2-minify?style=for-the-badge)
-  ![build-state](https://img.shields.io/github/actions/workflow/status/Egezenn/dota2-minify/release.yml?style=for-the-badge)
+![latest-release](https://img.shields.io/github/v/release/Egezenn/dota2-minify?style=for-the-badge)
+![build-state](https://img.shields.io/github/actions/workflow/status/Egezenn/dota2-minify/release.yml?style=for-the-badge)
 
-  ![downloads](https://img.shields.io/github/downloads/Egezenn/dota2-minify/total?style=for-the-badge)
-  ![downloads-latest](https://img.shields.io/github/downloads/Egezenn/dota2-minify/latest/total?style=for-the-badge)
+![downloads](https://img.shields.io/github/downloads/Egezenn/dota2-minify/total?style=for-the-badge)
+![downloads-latest](https://img.shields.io/github/downloads/Egezenn/dota2-minify/latest/total?style=for-the-badge)
 
 </div>
 
@@ -25,9 +25,41 @@
 <h3 align="center">Updated to 7.39!</h3>
 
 <div align="center">
-    <a href="#"><img alt="ss1" src="bin/images/screenshot-1.jpg"></a>
-    <a href="#"><img alt="ss2" src="bin/images/screenshot-2.jpg"></a>
+    <a href="#"><img alt="ss1" src="assets/screenshot-1.jpg"></a>
+    <a href="#"><img alt="ss2" src="assets/screenshot-2.jpg"></a>
 </div>
+
+## Table of contents
+
+- [Dota2 Minify](#dota2-minify)
+  - [Table of contents](#table-of-contents)
+  - [Is this safe to use?](#is-this-safe-to-use)
+  - [Installation](#installation)
+    - [Community mods](#community-mods)
+    - [Optional Setup](#optional-setup)
+      - [Using the project locally](#using-the-project-locally)
+      - [Compilation from source](#compilation-from-source)
+  - [Developing mods](#developing-mods)
+    - [Mod files and explanations](#mod-files-and-explanations)
+      - [`files` directory](#files-directory)
+      - [`blacklist.txt`](#blacklisttxt)
+      - [`styling.txt`](#stylingtxt)
+      - [`script.py`](#scriptpy)
+      - [`xml_mod.json`](#xml_modjson)
+      - [`menu.xml`](#menuxml)
+    - [Tools of the trade](#tools-of-the-trade)
+  - [Thanks](#thanks)
+  - [Special thanks to](#special-thanks-to)
+    - [robbyz512](#robbyz512)
+    - [Egezenn](#egezenn)
+    - [ZerdacK](#zerdack)
+    - [MeGaNeKoS](#meganekos)
+    - [yujin sharingan](#yujin-sharingan)
+    - [otf31](#otf31)
+  - [Dependencies](#dependencies)
+    - [Binaries](#binaries)
+    - [Python packages](#python-packages)
+  - [License](#license)
 
 ## Is this safe to use?
 
@@ -41,31 +73,40 @@ No one has ever been banned for these mods. This project strictly deals with VPK
 
    - [Click here to download the latest Minify release](https://github.com/Egezenn/dota2-minify/releases/latest)
 
-    **(Optional) Install Dota 2 Workshop Tools DLC**
-    - These tools enable HUD/Interface mods. **Skip this step if you don't need them.**
-    - Right-click on Dota 2 in Steam.
-    - Select **Properties** > **DLC**.
-      - On Linux, you need to force the use of `Proton Experimental` and have `wine` package installed. Relaunch steam if you still don't see the DLC.
-    - Install `Dota 2 Workshop Tools DLC`.
+     **(Optional) Install Dota 2 Workshop Tools DLC**
+
+   - These tools enable HUD/Interface mods. **Skip this step if you don't need them.**
+   - Right-click on Dota 2 in Steam.
+   - Select **Properties** > **DLC**.
+     - On Linux, you need to force the use of `Proton Experimental` and have `wine` package installed. Relaunch steam if you still don't see the DLC.
+   - Install `Dota 2 Workshop Tools DLC`.
 
 2. **Run Minify**
 
    - Extract the ZIP file.
    - Run `Minify` executable and patch with the mods and the language you want to use.
 
+     <a href="#"><img alt="language-instruction-1" src="assets/language-instruction-1.png"></a>
+     <a href="#"><img alt="language-instruction-2" src="assets/language-instruction-2.png"></a>
+
 3. **Setting the language argument for Dota2 on Steam**
 
    - Right-click on Dota2 in Steam and click **Properties**.
    - **For English:** Add `-language minify` to your launch options.
    - **For Other Languages:** Select the language you want to patch with on the top bar and add `-language language_id`
+     <a href="#"><img alt="language-instruction-3" src="assets/language-instruction-3.png"></a>
 
 4. **Start Dota 2**
-     - Launch Dota2 and enjoy!
+   - Launch Dota2 and enjoy!
 
 > [!WARNING]
-> **For people using Minify on Linux with workshop tools!**
-> 
+> For people using Minify on Linux with workshop tools!
+>
 > After patching, extract your workshop tools using the `Gearcog button` > `Extract workshop tools` (this is for later use so that you won't have to switch back and forth again) and go back to using a `Steam Runtime` as you'll not be able to queue games with `Proton Experimental`.
+
+### Community mods
+
+In our [Discord server](https://discord.com/invite/2YDnqpbcKM) we have a forum in which you can find more mods!
 
 ### Optional Setup
 
@@ -79,24 +120,131 @@ Prerequisites are `git`, `python` and `uv`. (also `tk` for tkinter, `wine` for w
 
 #### Compilation from source
 
-For instructions, refer to the [wiki](https://github.com/Egezenn/dota2-minify/wiki/Minify#compiling-minify).
+For instructions, refer to the [workflow](https://github.com/Egezenn/dota2-minify/blob/main/.github/workflows/release.yml).
 
-## Developing Your Own Mods
+## Developing mods
 
-You can create your own mods with Minify
+Minify has a programmatical approach to most modifications to keep everything minimal and simple. If there isn't a method available for your needs, you can always upload your mod files in `mods/<mod_name>/files` to be directly included into the pak minify is going to create or include a python script to accomodate specific behavior.
 
-[The wiki](https://github.com/Egezenn/dota2-minify/wiki/Dota2-Modding-Tutorials) will teach you the basics of working with steam files and more.
+### Mod files and explanations
 
-Once you get comfortable with the workflow you can use Minify to easily patch latest files from Dota2 and always have your mods updated.
+```plaintext
+mods
+├── <mod_name>
+│   ├── files
+│   │   ├── <path_to_file_in_pak>
+│   │   ├── <...>
+│   │   └── <...>
+│   ├── blacklist.txt
+│   ├── menu.xml
+│   ├── notes_<language>.txt
+│   ├── script.py
+│   ├── styling.txt
+│   └── xml_mod.json
+```
 
-## Minify File Structure [>> tutorial](https://github.com/Egezenn/dota2-minify/wiki/Minify)
+> [!WARNING]
+> It's not required to have all these files and directories
+>
+> With the version 1.12 you aren't required to keep blank files in your mod's contents anymore. Only include the files needed and delete the rest.
 
-| Name                                                                                | Description                                                                                   |
-|-------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------|
-| [`Files`](https://github.com/Egezenn/dota2-minify/wiki/Minify#files)                | Compiled files you want to pack (Models, Meshes, Textures...etc)                              |
-| [`blacklist.txt`](https://github.com/Egezenn/dota2-minify/wiki/Minify#blacklisttxt) | _Paths_ to files to replace with blanks so they wont appear in game (Particles, Sounds...etc) |
-| [`styling.txt`](https://github.com/Egezenn/dota2-minify/wiki/Minify#stylingtxt)     | Custom CSS you want to apply to the Panorama (Interfaces, Layouts, HUD's...etc)               |
-| `notes_<language>.txt`                                                              | Include this file to have a details button beside your mod for users to read.                 |
+> [!TIP]
+> Mods have applicaton order based on their names. (_until we have a better solution_)
+>
+> For blacklist mods which replace stuff, add `Mute` or `Remove` words in front of the mod, it'll patch them last to resolve any conflicts.
+
+#### `files` directory
+
+This directory will include any files put here into the pak that minify is going to create. These files should be compiled.
+
+If not specifically protected by Dota2 these files will override any game content. This also applies for the rest of the modification methods available.
+
+#### `blacklist.txt`
+
+This file is a list of path to files used to override those with blanks.
+Supported file types are can be found in [`bin/blank-files`](bin/blank-files).
+
+A list of all the files (from the game pak) can be found in [`bin/gamepakcontents.txt`](bin/gamepakcontents.txt).
+
+Syntax for this file starting from the line beginning is as follows:  
+`#`: Comments  
+`>>`: Directories  
+`**`: RegExp patterns  
+`--`: Exclusions (for when you want to exclude specific files from bulk additions)  
+`@@`: Links to raw data
+
+After that with no blank spaces you put the path to the file you want to override.
+`path/to/file`
+
+```plaintext
+particles/base_attacks/ranged_goodguy_launch.vpcf_c
+>>particles/sprays
+**taunt.*\.vsnd_c
+@@link-to-url
+```
+
+#### `styling.txt`
+
+This file is a list of CSS paths and styling that will be appended to them.  
+By the nature of this method modifications done here may break the original XML or CSS that gets updated resulting in a bad layout.  
+In such cases, a repatch is required.
+
+If you encounter errors while patching, it's most likely that your CSS is invalid or the path is wrong.
+
+For Source 2 flavored CSS properties, refer to: [Valve Developer Community Wiki](https://developer.valvesoftware.com/wiki/Dota_2_Workshop_Tools/Panorama/CSS_Properties).  
+To live inspect the layout, open the workshop tools and press <kbd>F6</kbd> and select the element you'd like to select from the XML.
+
+Syntax for this file starting from the line beginning is as follows:  
+`#`: Comments  
+`!`: By default, the file is pulled from `dota 2 beta/game/dota/pak01_dir.vpk`.  
+However to change this behavior and pull files from `dota 2 beta/game/core/pak01_dir.vpk`, you can use this.
+`@@`: Links to raw data
+
+`path/to/vcss_file_without_extension @@ #example_id { property: value; }`
+
+#### `script.py`
+
+If and when there is a specific behavior to be automated you can include a python script along with your mod. You can find the template below.
+
+```python
+# This script template can be run both manually and from minify.
+# You are able to use packages and modules from minify (you need an activated environment from the minify root or running with the tool `uv` can automatically handle this.)
+import os
+import sys
+
+current_dir = os.path.dirname(os.path.abspath(__file__))
+minify_root = os.path.abspath(os.path.join(current_dir, os.pardir, os.pardir))
+if minify_root not in sys.path:
+    sys.path.insert(0, minify_root)
+
+# Any package or module native to minify can be imported here
+# import requests
+#
+# import mpaths
+# ...
+
+
+def main():
+    pass
+    # Code specific to your mod goes here, minify will try to execute this block.
+    # If any exceptions occur, it'll be written to `logs/warnings.txt`
+
+
+if __name__ == "__main__":
+    main()
+```
+
+#### `xml_mod.json`
+
+_to be written_
+
+#### `menu.xml`
+
+_to be written_
+
+### Tools of the trade
+
+_to be written_
 
 ## Thanks
 
@@ -162,6 +310,8 @@ Rewrite of the GUI, Russian translations, mod fixes and [more](https://github.co
 
 ### [MeGaNeKoS](https://github.com/MeGaNeKoS)
 
+XML mod behavior and Minify mod settings section.
+
 <details>
 <summary>Mods</summary>
 
@@ -197,19 +347,16 @@ Spanish translation.
 
 ### Python packages
 
-[dearpygui](https://github.com/hoffstadt/DearPyGui) Used in the GUI. Licensed under MIT license.
-
-[Nuitka](https://nuitka.net/) Used in compilation of the binaries. Licensed under Apache-2.0 license.
-
-[psutil](https://github.com/giampaolo/psutil) Used in handling processes. Licensed under BSD-3-Clause license.
-
-[requests](https://github.com/psf/requests) Used in downloading/querying project's dependencies. Licensed under Apache-2.0 license.
-
-[screeninfo](https://github.com/rr-/screeninfo) Used in calculating initial position for the main window. Licensed under MIT license.
-
-[vdf](https://github.com/ValvePython/vdf) Used in serializing VDFs. Licensed under MIT license.
-
-[vpk](https://github.com/ValvePython/vpk) Used in creating and getting file content list in VPKs. Licensed under MIT license.
+| Name                                                 | Usage                                            | License              |
+| ---------------------------------------------------- | :----------------------------------------------- | -------------------- |
+| [dearpygui](https://github.com/hoffstadt/DearPyGui)  | GUI                                              | MIT license          |
+| [Nuitka](https://nuitka.net/)                        | Compilation of the binaries                      | Apache-2.0 license   |
+| [psutil](https://github.com/giampaolo/psutil)        | Handling processes                               | BSD-3-Clause license |
+| [playsound3](https://github.com/szmikler/playsound3) | Playing sounds                                   | MIT license          |
+| [requests](https://github.com/psf/requests)          | Downloading/querying project's dependencies      | Apache-2.0 license   |
+| [screeninfo](https://github.com/rr-/screeninfo)      | Calculating initial position for the main window | MIT license          |
+| [vdf](https://github.com/ValvePython/vdf)            | Serializing VDFs                                 | MIT license          |
+| [vpk](https://github.com/ValvePython/vpk)            | Creating and getting file content list in VPKs   | MIT license          |
 
 ## License
 

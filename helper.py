@@ -1,4 +1,3 @@
-import hashlib
 import json
 import os
 import shutil
@@ -42,7 +41,7 @@ def scroll_to_terminal_end():
     ui.set_y_scroll("terminal_window", ui.get_y_scroll_max("terminal_window"))
 
 
-# TODO revise
+# TODO: revise
 def add_text_to_terminal(text, tag: int | str | None = None, type: str | None = None):
     kwargs = {}
     if tag is not None:
@@ -121,8 +120,7 @@ def close():
     ui.stop_dearpygui()
 
 
-# TODO fix a crash where if a mod doesn't have the selected locales notes
-# TODO also revise this
+# TODO: also revise this
 def change_localization(init=False):
     global locale
     with open(mpaths.localization_file_dir, "r", encoding="utf-8") as localization_file:
@@ -169,16 +167,18 @@ def change_localization(init=False):
             tag = ui.get_item_alias(tag_id).removesuffix("_details_text_value_tag")
             mod_path = os.path.join(mpaths.mods_dir, tag)
             note_path = os.path.join(mod_path, f"notes_{locale}.txt")
-            if os.path.exists(note_path):
-                with open(note_path, "r", encoding="utf-8") as file:
-                    data = file.read()
-                ui.configure_item(tag_id, default_value=data)
-            else:
-                note_path = os.path.join(mod_path, "notes_en.txt")
-                with open(note_path, "r", encoding="utf-8") as file:
-                    data = file.read()
-                ui.configure_item(tag_id, default_value=data)
-
+            try:
+                if os.path.exists(note_path):
+                    with open(note_path, "r", encoding="utf-8") as file:
+                        data = file.read()
+                    ui.configure_item(tag_id, default_value=data)
+                else:
+                    note_path = os.path.join(mod_path, "notes_en.txt")
+                    with open(note_path, "r", encoding="utf-8") as file:
+                        data = file.read()
+                    ui.configure_item(tag_id, default_value=data)
+            except FileNotFoundError:
+                data = ""
         global details_label_text_var
         global mod_selection_window_var
         details_label_text_var = localization_data["details_button_label_var"][locale]
@@ -294,9 +294,13 @@ def apply_xml_modifications(xml_file, modifications):
                     new_parent.append(elem)
                 else:
                     if elem is None:
-                        warnings.append(f"[move_into] target id '{target_id}' not found in {os.path.basename(xml_file)}")
+                        warnings.append(
+                            f"[move_into] target id '{target_id}' not found in {os.path.basename(xml_file)}"
+                        )
                     if new_parent is None:
-                        warnings.append(f"[move_into] new_parent id '{new_parent_id}' not found in {os.path.basename(xml_file)}")
+                        warnings.append(
+                            f"[move_into] new_parent id '{new_parent_id}' not found in {os.path.basename(xml_file)}"
+                        )
 
         elif action == "insert_after":
             target_id = mod.get("target_id")
@@ -326,7 +330,9 @@ def apply_xml_modifications(xml_file, modifications):
                     except ET.ParseError as e:
                         warnings.append(f"[XML ParseError] insert_before -> {e}")
                 else:
-                    warnings.append(f"[insert_before] target id '{target_id}' not found in {os.path.basename(xml_file)}")
+                    warnings.append(
+                        f"[insert_before] target id '{target_id}' not found in {os.path.basename(xml_file)}"
+                    )
 
     try:
         tree.write(xml_file, encoding="utf-8")
@@ -346,19 +352,20 @@ def build_minify_menu(menus):
 """
 
     minify_section = ET.fromstring(minify_section_xml)
-    for menu in menus:
-        menu_element = ET.fromstring(menu)
+    try:
+        for menu in menus:
+            menu_element = ET.fromstring(menu)
         minify_section.append(menu_element)
 
-    settings_path = os.path.join(
-        mpaths.build_dir, "panorama", "layout", "popups", "popup_settings_reborn.xml"
-    )
-    tree = ET.parse(settings_path)
-    root = tree.getroot()
-    settings_body = root.find(".//PopupSettingsRebornSettingsBody")
-    if settings_body is not None:
-        settings_body.append(minify_section)
-        tree.write(settings_path)
+        settings_path = os.path.join(mpaths.build_dir, "panorama", "layout", "popups", "popup_settings_reborn.xml")
+        tree = ET.parse(settings_path)
+        root = tree.getroot()
+        settings_body = root.find(".//PopupSettingsRebornSettingsBody")
+        if settings_body is not None:
+            settings_body.append(minify_section)
+            tree.write(settings_path)
+    except ET.ParseError:
+        pass
 
 
 def urlValidator(url):

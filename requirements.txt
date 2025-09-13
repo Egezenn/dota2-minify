@@ -1,7 +1,7 @@
 dearpygui
-Nuitka
 playsound3
 psutil
+pyinstaller
 requests
 screeninfo
 vdf

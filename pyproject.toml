@@ -6,9 +6,9 @@ readme = "readme.md"
 requires-python = ">=3.13"
 dependencies = [
     "dearpygui>=2.1.0",
-    "nuitka>=2.7.12",
     "playsound3>=3.2.6",
     "psutil>=7.0.0",
+    "pyinstaller>=6.16.0",
     "requests>=2.32.4",
     "screeninfo>=0.8.1",
     "vdf>=3.4",
