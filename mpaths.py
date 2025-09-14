@@ -1,6 +1,7 @@
 "All the necessary file paths & links"
 
 import getpass
+import sys
 import os
 import platform
 import traceback
@@ -63,6 +64,17 @@ def create_dirs(*paths):
 
 create_dirs(logs_dir, config_dir)
 
+# If running from a macOS .app bundle built by PyInstaller, data files live under Contents/Resources
+try:
+    if OS == "Darwin" and getattr(sys, "frozen", False):
+        app_dir = os.path.dirname(sys.executable)
+        resources_dir = os.path.normpath(os.path.join(app_dir, os.pardir, "Resources"))
+        if os.path.exists(os.path.join(resources_dir, "bin", "localization.json")):
+            bin_dir = os.path.join(resources_dir, "bin")
+            mods_dir = os.path.join(resources_dir, "mods")
+except Exception:
+    pass
+
 # bin
 blank_files_dir = os.path.join(bin_dir, "blank-files")
 img_dir = os.path.join(bin_dir, "images")
@@ -71,7 +83,24 @@ locale_file_dir = os.path.join(config_dir, "locale")
 localization_file_dir = os.path.join(bin_dir, "localization.json")
 mods_file_dir = os.path.join(config_dir, "mods.json")
 path_file_dir = os.path.join(config_dir, "dota2path_minify.txt")
-rescomp_override_dir = os.path.join(bin_dir, "rescomproot")
+
+# Store heavy extracted tools outside the app/repo directory to avoid huge bundles
+def _get_user_data_root():
+    try:
+        if OS == "Windows":
+            base = os.getenv("LOCALAPPDATA") or os.path.expanduser("~\\AppData\\Local")
+            return os.path.join(base, "Minify")
+        elif OS == "Darwin":
+            return os.path.join(os.path.expanduser("~"), "Library", "Application Support", "Minify")
+        else:
+            return os.path.join(os.path.expanduser("~/.local/share"), "minify")
+    except Exception:
+        return os.path.abspath("logs")  # fallback
+
+user_data_root = _get_user_data_root()
+os.makedirs(user_data_root, exist_ok=True)
+
+rescomp_override_dir = os.path.join(user_data_root, "rescomproot")
 version_file_dir = "version"
 
 rescomp_override = True if os.path.exists(rescomp_override_dir) else False
@@ -430,10 +459,21 @@ dota_tools_extraction_paths = [
 ]
 
 
-mods_folders = sorted(os.listdir(mods_dir))
-i = mods_folders.index("base")
-mods_folders.pop(i)
-mods_folders.insert(0, "base")
+try:
+    if not os.path.isdir(mods_dir):
+        raise FileNotFoundError(mods_dir)
+    mods_folders = sorted(os.listdir(mods_dir))
+except Exception:
+    # Fallback to a minimal list to avoid crashing at import time
+    mods_folders = ["base"]
+
+if "base" in mods_folders:
+    try:
+        i = mods_folders.index("base")
+        mods_folders.pop(i)
+        mods_folders.insert(0, "base")
+    except ValueError:
+        pass
 
 # Rubberband fix to always do blacklists at last for them to make overwrites
 mods_folder_application_order = overwrite_ensurance_hack(
