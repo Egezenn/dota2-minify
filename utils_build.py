@@ -23,9 +23,21 @@ game_contents_file_init = False
 def patcher():
     utils_gui.lock_interaction()
     helper.clean_terminal()
-    if "dota2.exe" in (p.name() for p in psutil.process_iter()):
+    target = "dota2.exe" if mpaths.OS == "Windows" else "dota2"
+    running = False
+    for p in psutil.process_iter(attrs=["name"]):
+        try:
+            name = p.info.get("name") or ""
+            if name == target:
+                running = True
+                break
+        except (psutil.NoSuchProcess, psutil.AccessDenied, psutil.ZombieProcess):
+            continue
+    if running:
         helper.add_text_to_terminal(
-            helper.localization_dict["close_dota_terminal_text_var"], "close_dota_text_tag", "warning"
+            helper.localization_dict["close_dota_terminal_text_var"],
+            "close_dota_text_tag",
+            "warning",
         )
         return
 
@@ -62,7 +74,7 @@ def patcher():
                     ):  # step into folders that have ticked checkboxes only
                         base_mods_applied = True if folder == "base" else False
                         helper.add_text_to_terminal(
-                            f"{helper.localization_dict["installing_terminal_text_var"]} {folder}"
+                            f"{helper.localization_dict['installing_terminal_text_var']} {folder}"
                         )
                         if os.path.exists(os.path.join(mod_path, "files")):
                             shutil.copytree(
@@ -100,11 +112,15 @@ def patcher():
                                     )
                                 except:
                                     helper.add_text_to_terminal(
-                                        helper.localization_dict["script_fail_text_var"].format(folder), None, "error"
+                                        helper.localization_dict["script_fail_text_var"].format(folder),
+                                        None,
+                                        "error",
                                     )
                             else:
                                 helper.add_text_to_terminal(
-                                    helper.localization_dict["script_no_main_text_var"].format(folder), None, "warning"
+                                    helper.localization_dict["script_no_main_text_var"].format(folder),
+                                    None,
+                                    "warning",
                                 )
                             sys.path.remove(mod_path)
                         # ------------------------------- blacklist.txt ------------------------------ #
@@ -125,7 +141,10 @@ def patcher():
                                 pattern = r"(.*) CRC:.*"
                                 replacement = r"\1"
 
-                                with open(os.path.join(mpaths.bin_dir, "gamepakcontents.txt"), "w") as file:
+                                with open(
+                                    os.path.join(mpaths.bin_dir, "gamepakcontents.txt"),
+                                    "w",
+                                ) as file:
                                     for extract_line in extract.stdout.splitlines():
                                         new_line = re.sub(pattern, replacement, extract_line.rstrip())
                                         file.write(new_line + "\n")
@@ -174,14 +193,20 @@ def patcher():
                                 path, extension = os.path.splitext(line)
 
                                 os.makedirs(
-                                    os.path.join(mpaths.minify_dota_compile_output_path, os.path.dirname(path)),
+                                    os.path.join(
+                                        mpaths.minify_dota_compile_output_path,
+                                        os.path.dirname(path),
+                                    ),
                                     exist_ok=True,
                                 )
 
                                 try:  # TODO: parallelize filecopy if and when blacklists get bigger
                                     shutil.copy(
                                         os.path.join(mpaths.blank_files_dir, f"blank{extension}"),
-                                        os.path.join(mpaths.minify_dota_compile_output_path, path + extension),
+                                        os.path.join(
+                                            mpaths.minify_dota_compile_output_path,
+                                            path + extension,
+                                        ),
                                     )
                                 except FileNotFoundError as exception:
                                     helper.warnings.append(
@@ -216,7 +241,10 @@ def patcher():
                                     path = line[0].strip()
                                     style = line[1].strip()
 
-                                    styling_dictionary[f"styling-key{index + 1}"] = (path, style)
+                                    styling_dictionary[f"styling-key{index + 1}"] = (
+                                        path,
+                                        style,
+                                    )
 
                                 except Exception as exception:
                                     helper.warnings.append(
@@ -229,7 +257,11 @@ def patcher():
                                     path_style[0][1:] if path_style[0].startswith("!") else path_style[0]
                                 )  # horrible hack
                                 os.makedirs(
-                                    os.path.join(mpaths.build_dir, os.path.dirname(sanitized_path)), exist_ok=True
+                                    os.path.join(
+                                        mpaths.build_dir,
+                                        os.path.dirname(sanitized_path),
+                                    ),
+                                    exist_ok=True,
                                 )
                                 try:
                                     if path_style[0].startswith("!"):
@@ -258,7 +290,10 @@ def patcher():
         # ---------------------------------- STEP 2 ---------------------------------- #
         # ------------------- Decompile all files in "build" folder ------------------ #
         # ---------------------------------------------------------------------------- #
-        helper.add_text_to_terminal(helper.localization_dict["decompiling_terminal_text_var"], "decompiling_text")
+        helper.add_text_to_terminal(
+            helper.localization_dict["decompiling_terminal_text_var"],
+            "decompiling_text",
+        )
         with open(os.path.join(mpaths.logs_dir, "Source2Viewer-CLI.txt"), "w") as file:
             try:
                 subprocess.run(
@@ -287,7 +322,8 @@ def patcher():
         # ---------------------------- CSS resourcecompile --------------------------- #
         # ---------------------------------------------------------------------------- #
         helper.add_text_to_terminal(
-            helper.localization_dict["compiling_resource_terminal_text_var"], "compiling_resourcecompiler_text_tag"
+            helper.localization_dict["compiling_resource_terminal_text_var"],
+            "compiling_resourcecompiler_text_tag",
         )
 
         for key, path_style in list(styling_dictionary.items()):
@@ -305,7 +341,10 @@ def patcher():
 
         if helper.workshop_installed:
             with open(os.path.join(mpaths.logs_dir, "resourcecompiler.txt"), "wb") as file:
-                helper.add_text_to_terminal(helper.localization_dict["compiling_terminal_text_var"], "compiling_text")
+                helper.add_text_to_terminal(
+                    helper.localization_dict["compiling_terminal_text_var"],
+                    "compiling_text",
+                )
                 command = [
                     mpaths.dota_resource_compiler_path,
                     "-i",
@@ -331,10 +370,14 @@ def patcher():
         # -------- Create VPK from game folder and save into Minify directory -------- #
         # ---------------------------------------------------------------------------- #
         # insert metadata to pak
-        shutil.copy(mpaths.mods_file_dir, os.path.join(mpaths.minify_dota_compile_output_path, "minify_mods.json"))
+        shutil.copy(
+            mpaths.mods_file_dir,
+            os.path.join(mpaths.minify_dota_compile_output_path, "minify_mods.json"),
+        )
         try:
             shutil.copy(
-                mpaths.version_file_dir, os.path.join(mpaths.minify_dota_compile_output_path, "minify_version.txt")
+                mpaths.version_file_dir,
+                os.path.join(mpaths.minify_dota_compile_output_path, "minify_version.txt"),
             )
         except FileNotFoundError:  # update ignore
             pass
@@ -344,7 +387,9 @@ def patcher():
         newpak.save(os.path.join(helper.output_path, "pak66_dir.vpk"))
 
         helper.remove_path(
-            mpaths.minify_dota_compile_input_path, mpaths.minify_dota_compile_output_path, mpaths.build_dir
+            mpaths.minify_dota_compile_input_path,
+            mpaths.minify_dota_compile_output_path,
+            mpaths.build_dir,
         )
 
         utils_gui.unlock_interaction()
@@ -370,10 +415,14 @@ def patcher():
 
         helper.add_text_to_terminal("-------------------------------------------------------", "spacer2_text")
         helper.add_text_to_terminal(
-            helper.localization_dict["failure_terminal_text_var"], "patching_failed_text_tag", "error"
+            helper.localization_dict["failure_terminal_text_var"],
+            "patching_failed_text_tag",
+            "error",
         )
         helper.add_text_to_terminal(
-            helper.localization_dict["check_logs_terminal_text_var"], "check_logs_text_tag", "warning"
+            helper.localization_dict["check_logs_terminal_text_var"],
+            "check_logs_text_tag",
+            "warning",
         )
         utils_gui.unlock_interaction()
         playsound3.playsound(os.path.join(mpaths.sounds_dir, "fail.wav"))
@@ -418,7 +467,10 @@ def uninstaller():
         helper.warnings.append(
             "Unable to recover backed up default guides or the itembuilds directory is empty, verify files to get the default guides back"
         )
-    helper.add_text_to_terminal(helper.localization_dict["mods_removed_terminal_text_var"], "uninstaller_text_tag")
+    helper.add_text_to_terminal(
+        helper.localization_dict["mods_removed_terminal_text_var"],
+        "uninstaller_text_tag",
+    )
     utils_gui.unlock_interaction()
 
 

@@ -3,8 +3,6 @@
 import getpass
 import os
 import platform
-import tkinter as tk
-from tkinter import filedialog, messagebox
 import traceback
 
 import vdf
@@ -13,19 +11,42 @@ steam_dir = ""
 OS = platform.system()
 MACHINE = platform.machine().lower()
 ARCHITECTURE = platform.architecture()[0]
-STEAM_DEFAULT_INSTALLATION_PATH = (
-    os.path.join("C:\\", "Program Files (x86)", "Steam")
-    if OS == "Windows"
-    else os.path.join("/", "home", getpass.getuser(), ".local", "share", "Steam")  # may vary from packaging
-)
-# assuming steam runtimes on linux
-DOTA_EXECUTABLE_PATH = (
-    os.path.join("steamapps", "common", "dota 2 beta", "game", "bin", "win64", "dota2.exe")
-    if OS == "Windows"
-    else os.path.join("steamapps", "common", "dota 2 beta", "game", "bin", "linuxsteamrt64", "dota2")
-)
+
+# assuming steam runtimes on linux / darwin
+if OS == "Linux":
+    DOTA_EXECUTABLE_PATH = os.path.join("steamapps", "common", "dota 2 beta", "game", "bin", "linuxsteamrt64", "dota2")
+    STEAM_DEFAULT_INSTALLATION_PATH = os.path.join("/", "home", getpass.getuser(), ".local", "share", "Steam")
+elif OS == "Darwin":
+    DOTA_EXECUTABLE_PATH = os.path.join(
+        "steamapps",
+        "common",
+        "dota 2 beta",
+        "game",
+        "bin",
+        "osx64",
+        "dota2.app",
+        "Contents",
+        "MacOS",
+        "dota2",
+    )
+    STEAM_DEFAULT_INSTALLATION_PATH = os.path.join(os.path.expanduser("~"), "Library", "Application Support", "Steam")
+else:
+    DOTA_EXECUTABLE_PATH = os.path.join("steamapps", "common", "dota 2 beta", "game", "bin", "win64", "dota2.exe")
+    STEAM_DEFAULT_INSTALLATION_PATH = os.path.join("C:\\", "Program Files (x86)", "Steam")
+
+DOTA_TOOLS_EXECUTABLE_PATH = os.path.join("steamapps", "common", "dota 2 beta", "game", "bin", "win64", "dota2cfg.exe")
+
 # launchers for dota2 won't work as it presumes native version, doesn't really matter
-DOTA_EXECUTABLE_PATH_FALLBACK = os.path.join("steamapps", "common", "dota 2 beta", "game", "bin", "win64", "dota2.exe")
+if OS == "Windows":
+    DOTA_EXECUTABLE_PATH_FALLBACK = os.path.join(
+        "steamapps", "common", "dota 2 beta", "game", "bin", "win64", "dota2.exe"
+    )
+elif OS == "Darwin":
+    DOTA_EXECUTABLE_PATH_FALLBACK = DOTA_EXECUTABLE_PATH
+else:
+    DOTA_EXECUTABLE_PATH_FALLBACK = os.path.join(
+        "steamapps", "common", "dota 2 beta", "game", "bin", "linuxsteamrt64", "dota2"
+    )
 
 # minify project paths
 bin_dir = "bin"
@@ -63,16 +84,22 @@ def find_library_from_vdf():
         with open(path_file_dir, "r") as file:
             steam_dir = os.path.normpath(file.readline().strip())
     except Exception as error:
-        with open(os.path.join(logs_dir, "crashlog.txt"), "w") as file:
+        with open(os.path.join(logs_dir, "warnings.txt"), "w") as file:
             file.write(f"Error reading {path_file_dir}: {error}")
 
     try:
         if steam_dir and steam_dir != ".":  # regkey found
-            with open(os.path.join(steam_dir, "config", "libraryfolders.vdf"), "r", encoding="utf-8") as dump:
+            with open(
+                os.path.join(steam_dir, "config", "libraryfolders.vdf"),
+                "r",
+                encoding="utf-8",
+            ) as dump:
                 data = vdf.load(dump)
         else:  # try with defaults
             with open(
-                os.path.join(STEAM_DEFAULT_INSTALLATION_PATH, "config", "libraryfolders.vdf"), "r", encoding="utf-8"
+                os.path.join(STEAM_DEFAULT_INSTALLATION_PATH, "config", "libraryfolders.vdf"),
+                "r",
+                encoding="utf-8",
             ) as dump:
                 data = vdf.load(dump)
 
@@ -86,7 +113,7 @@ def find_library_from_vdf():
                     file.write(steam_dir)
 
     except Exception as error:
-        with open(os.path.join(logs_dir, "crashlog.txt"), "w") as file:
+        with open(os.path.join(logs_dir, "warnings.txt"), "w") as file:
             file.write(f"Error reading libraryfolders.vdf: {error}")
             steam_dir = ""
 
@@ -147,28 +174,41 @@ def handle_non_default_path():
         not os.path.exists(os.path.join(steam_dir, DOTA_EXECUTABLE_PATH))
         and not os.path.exists(os.path.join(steam_dir, DOTA_EXECUTABLE_PATH_FALLBACK))
     ):
-        root = tk.Tk()
-        root.withdraw()
+        # Try to prompt with tkinter if available; otherwise, write guidance and break
+        try:
+            import tkinter as tk  # type: ignore
+            from tkinter import filedialog, messagebox  # type: ignore
 
-        root.wm_attributes("-topmost", 1)
-        choice = messagebox.askokcancel(
-            "Minify Install Path Handler",
-            "We couldn't find your Dota2 install path, please select:\n\n"
-            "Your SteamLibrary folder if you have Dota2 installed elsewhere\n\n"
-            "Steam folder if your OS is not Windows and have Dota2 installed at the default path.",
-            parent=root,
-        )
-        root.lift()
-        root.focus_force()
+            root = tk.Tk()
+            root.withdraw()
 
-        if choice:
-            steam_dir = os.path.normpath(filedialog.askdirectory())
-            with open(path_file_dir, "w") as file:
-                file.write(steam_dir)
-        else:
-            quit()
+            root.wm_attributes("-topmost", 1)
+            choice = messagebox.askokcancel(
+                "Minify Install Path Handler",
+                "We couldn't find your Dota2 install path, please select:\n\n"
+                "Your SteamLibrary folder if you have Dota2 installed elsewhere\n\n"
+                "Steam folder if your OS is not Windows and have Dota2 installed at the default path.",
+                parent=root,
+            )
+            root.lift()
+            root.focus_force()
 
-        root.destroy()
+            if choice:
+                steam_dir = os.path.normpath(filedialog.askdirectory())
+                with open(path_file_dir, "w") as file:
+                    file.write(steam_dir)
+            else:
+                quit()
+
+            root.destroy()
+        except Exception:
+            # No tkinter available or failed to prompt. Create a hint and break to avoid import-time crash.
+            with open(os.path.join(logs_dir, "crashlog.txt"), "w") as file:
+                file.write(
+                    "Could not open directory picker. Set your Steam library path in 'config/dota2path_minify.txt' and restart Minify.\n"
+                    f"Expected something like: {STEAM_DEFAULT_INSTALLATION_PATH}\n"
+                )
+            break
 
 
 def overwrite_ensurance_hack(list_of_string_patterns, strings):
@@ -217,6 +257,16 @@ try:
             s2v_latest = (
                 "https://github.com/ValveResourceFormat/ValveResourceFormat/releases/latest/download/cli-linux-x64.zip"
             )
+    elif OS == "Darwin":
+        s2v_executable = "Source2Viewer-CLI"
+        s2v_skia_path = "libSkiaSharp.dylib"
+        s2v_tinyexr_path = "libTinyEXR.Native.dylib"
+        if MACHINE in ["aarch64", "arm64"]:
+            s2v_latest = "https://github.com/ValveResourceFormat/ValveResourceFormat/releases/latest/download/cli-macos-arm64.zip"
+        else:
+            s2v_latest = (
+                "https://github.com/ValveResourceFormat/ValveResourceFormat/releases/latest/download/cli-macos-x64.zip"
+            )
     else:
         raise Exception("Unsupported Source2Viewer platform!")
 
@@ -243,6 +293,12 @@ try:
             rg_latest = "https://github.com/BurntSushi/ripgrep/releases/download/14.1.1/ripgrep-14.1.1-x86_64-unknown-linux-musl.tar.gz"
         elif ARCHITECTURE == "32bit":
             rg_latest = "https://github.com/BurntSushi/ripgrep/releases/download/14.1.1/ripgrep-14.1.1-i686-unknown-linux-gnu.tar.gz"
+    elif OS == "Darwin":
+        rg_executable = "rg"
+        if MACHINE in ["aarch64", "arm64"]:
+            rg_latest = "https://github.com/BurntSushi/ripgrep/releases/download/14.1.1/ripgrep-14.1.1-aarch64-apple-darwin.tar.gz"
+        else:
+            rg_latest = "https://github.com/BurntSushi/ripgrep/releases/download/14.1.1/ripgrep-14.1.1-x86_64-apple-darwin.tar.gz"
     else:
         raise Exception("Unsupported ripgrep platform!")
 
@@ -332,16 +388,30 @@ minify_output_list = [
 ]
 
 ## base game
-dota2_executable = os.path.join(steam_dir, "steamapps", "common", "dota 2 beta", "game", "bin", "win64", "dota2.exe")
-dota2_tools_executable = os.path.join(
-    steam_dir, "steamapps", "common", "dota 2 beta", "game", "bin", "win64", "dota2cfg.exe"
-)
+if OS == "Windows":
+    dota2_executable = os.path.join(steam_dir, DOTA_EXECUTABLE_PATH)
+    dota2_tools_executable = os.path.join(steam_dir, DOTA_TOOLS_EXECUTABLE_PATH)
+elif OS == "Linux":
+    dota2_executable = os.path.join(steam_dir, DOTA_EXECUTABLE_PATH)
+    # tools launcher path kept as Windows for extraction override flow
+    dota2_tools_executable = os.path.join(steam_dir, DOTA_TOOLS_EXECUTABLE_PATH)
+elif OS == "Darwin":
+    dota2_executable = os.path.join(steam_dir, DOTA_EXECUTABLE_PATH)
+    # tools not available on macOS; keep Windows placeholder
+    dota2_tools_executable = os.path.join(steam_dir, DOTA_TOOLS_EXECUTABLE_PATH)
 dota_game_pak_path = os.path.join(steam_dir, "steamapps", "common", "dota 2 beta", "game", "dota", "pak01_dir.vpk")
 dota_core_pak_path = os.path.join(steam_dir, "steamapps", "common", "dota 2 beta", "game", "core", "pak01_dir.vpk")
 dota_itembuilds_path = os.path.join(steam_dir, "steamapps", "common", "dota 2 beta", "game", "dota", "itembuilds")
 dota_map_path = os.path.join(steam_dir, "steamapps", "common", "dota 2 beta", "game", "dota", "maps", "dota.vpk")
 dota_resource_compiler_path = os.path.join(
-    steam_dir, "steamapps", "common", "dota 2 beta", "game", "bin", "win64", "resourcecompiler.exe"
+    steam_dir,
+    "steamapps",
+    "common",
+    "dota 2 beta",
+    "game",
+    "bin",
+    "win64",
+    "resourcecompiler.exe",
 )
 
 dota_tools_paths = [
@@ -367,6 +437,14 @@ mods_folders.insert(0, "base")
 
 # Rubberband fix to always do blacklists at last for them to make overwrites
 mods_folder_application_order = overwrite_ensurance_hack(
-    ["Mute", "Remove", "Minify Base Attacks", "Minify Spells & Items", "Misc Optimization", "User Styles", "_"],
+    [
+        "Mute",
+        "Remove",
+        "Minify Base Attacks",
+        "Minify Spells & Items",
+        "Misc Optimization",
+        "User Styles",
+        "_",
+    ],
     mods_folders,
 )

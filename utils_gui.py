@@ -85,15 +85,22 @@ def setupSystem():
             if response.status_code == 200:
                 with open(zip_path, "wb") as file:
                     file.write(response.content)
-                helper.add_text_to_terminal(f"{helper.localization_dict["downloaded_cli_terminal_text_var"]}{zip_path}")
+                helper.add_text_to_terminal(f"{helper.localization_dict['downloaded_cli_terminal_text_var']}{zip_path}")
                 shutil.unpack_archive(zip_path, format="zip")
                 os.remove(zip_path)
-                helper.add_text_to_terminal(f"{helper.localization_dict["extracted_cli_terminal_text_var"]}{zip_path}")
-                if mpaths.OS == "Linux" and not os.access(mpaths.s2v_executable, os.X_OK):
+                helper.add_text_to_terminal(f"{helper.localization_dict['extracted_cli_terminal_text_var']}{zip_path}")
+                if mpaths.OS in ("Linux", "Darwin") and not os.access(mpaths.s2v_executable, os.X_OK):
                     current_permissions = os.stat(mpaths.s2v_executable).st_mode
-                    os.chmod(mpaths.s2v_executable, current_permissions | stat.S_IXUSR | stat.S_IXGRP | stat.S_IXOTH)
+                    os.chmod(
+                        mpaths.s2v_executable,
+                        current_permissions | stat.S_IXUSR | stat.S_IXGRP | stat.S_IXOTH,
+                    )
 
-        if not os.path.exists(mpaths.rg_executable):
+        # Prefer system-installed ripgrep when available
+        rg_on_path = shutil.which(mpaths.rg_executable) or shutil.which("rg.exe") or shutil.which("rg")
+        if rg_on_path:
+            mpaths.rg_executable = rg_on_path
+        elif not os.path.exists(mpaths.rg_executable):
             helper.add_text_to_terminal(helper.localization_dict["downloading_ripgrep_terminal_text_var"])
             archive_path = mpaths.rg_latest.split("/")[-1]
             archive_name = archive_path[:-4] if archive_path[-4:] == ".zip" else archive_path[:-7]
@@ -103,7 +110,7 @@ def setupSystem():
                 with open(archive_path, "wb") as file:
                     file.write(response.content)
                 helper.add_text_to_terminal(
-                    f"{helper.localization_dict["downloaded_cli_terminal_text_var"]}{archive_path}"
+                    f"{helper.localization_dict['downloaded_cli_terminal_text_var']}{archive_path}"
                 )
                 if archive_extension == ".zip":
                     with zipfile.ZipFile(archive_path, "r") as zip_ref:
@@ -111,15 +118,21 @@ def setupSystem():
                 else:
                     with tarfile.open(archive_path, "r:gz") as tar:
                         tar.extractall()
-                os.rename(os.path.join(archive_name, mpaths.rg_executable), mpaths.rg_executable)
+                os.rename(
+                    os.path.join(archive_name, mpaths.rg_executable),
+                    mpaths.rg_executable,
+                )
                 helper.remove_path(archive_name)
                 os.remove(archive_path)
                 helper.add_text_to_terminal(
-                    f"{helper.localization_dict["extracted_cli_terminal_text_var"]}{archive_path}"
+                    f"{helper.localization_dict['extracted_cli_terminal_text_var']}{archive_path}"
                 )
-                if mpaths.OS == "Linux" and not os.access(mpaths.rg_executable, os.X_OK):
-                    current_permissions = os.stat(mpaths.s2v_executable).st_mode
-                    os.chmod(mpaths.s2v_executable, current_permissions | stat.S_IXUSR | stat.S_IXGRP | stat.S_IXOTH)
+                if mpaths.OS in ("Linux", "Darwin") and not os.access(mpaths.rg_executable, os.X_OK):
+                    current_permissions = os.stat(mpaths.rg_executable).st_mode
+                    os.chmod(
+                        mpaths.rg_executable,
+                        current_permissions | stat.S_IXUSR | stat.S_IXGRP | stat.S_IXOTH,
+                    )
 
         if gui_lock:
             lock_interaction()
@@ -155,7 +168,11 @@ def create_checkboxes():
         name = visually_available_mods[index]
         ui.add_group(parent="mod_menu", tag=f"{name}_group_tag", horizontal=True, width=300)
         ui.add_checkbox(
-            parent=f"{name}_group_tag", label=name, tag=name, default_value=False, callback=setupButtonState
+            parent=f"{name}_group_tag",
+            label=name,
+            tag=name,
+            default_value=False,
+            callback=setupButtonState,
         )
         for key in checkboxes_state.keys():
             if key == name:
@@ -174,7 +191,9 @@ def create_checkboxes():
         except FileNotFoundError:
             data = ""
             helper.add_text_to_terminal(
-                helper.localization_dict["no_notes_found_text_var"].format(name), None, "warning"
+                helper.localization_dict["no_notes_found_text_var"].format(name),
+                None,
+                "warning",
             )
 
         tag_data = f"{name}_details_window_tag"
@@ -199,7 +218,11 @@ def create_checkboxes():
             no_collapse=True,
             label=name,
         )
-        ui.add_string_value(parent="details_tags", default_value=data, tag=f"{name}_details_text_value_tag")
+        ui.add_string_value(
+            parent="details_tags",
+            default_value=data,
+            tag=f"{name}_details_text_value_tag",
+        )
         ui.add_text(source=f"{name}_details_text_value_tag", parent=tag_data, wrap=480)
 
         current_box = name
@@ -362,7 +385,13 @@ def start_text():
 
 def close_active_window():
     active_window = ui.get_item_alias(ui.get_active_window())
-    if active_window not in ["terminal_window", "primary_window", "top_bar", "opener", "tools"]:
+    if active_window not in [
+        "terminal_window",
+        "primary_window",
+        "top_bar",
+        "opener",
+        "tools",
+    ]:
         if active_window == "update_popup":
             delete_update_popup()
         else:
@@ -493,43 +522,42 @@ def dev_mode():
         ):
             ui.add_button(
                 label="Path: Dota2 Minify",
-                callback=lambda: asyncio.run(helper.open_dir(os.path.join(mpaths.minify_dota_pak_output_path))),
+                callback=lambda: helper.open_dir(os.path.join(mpaths.minify_dota_pak_output_path)),
             )
             ui.add_button(
                 label="File: Dota2 Minify pak66 VPK",
-                callback=lambda: asyncio.run(
-                    helper.open_dir(os.path.join(mpaths.minify_dota_pak_output_path, "pak66_dir.vpk"))
-                ),
+                callback=lambda: helper.open_dir(os.path.join(mpaths.minify_dota_pak_output_path, "pak66_dir.vpk")),
             )
             ui.add_spacer(width=0, height=10)
             ui.add_button(label="Path: Minify", callback=lambda: helper.open_dir(os.getcwd()))
-            ui.add_button(label="Path: Logs", callback=lambda: helper.open_dir(os.path.join(mpaths.logs_dir)))
             ui.add_button(
-                label="Path: Dota2",
-                callback=lambda: asyncio.run(
-                    helper.open_dir(os.path.join(mpaths.steam_dir, "steamapps", "common", "dota 2 beta"))
-                ),
+                label="Path: Logs",
+                callback=lambda: helper.open_dir(os.path.join(mpaths.logs_dir)),
             )
             ui.add_button(
-                label="File: Dota2 pak01 VPK", callback=lambda: asyncio.run(helper.open_dir(mpaths.dota_game_pak_path))
+                label="Path: Dota2",
+                callback=lambda: helper.open_dir(os.path.join(mpaths.steam_dir, "steamapps", "common", "dota 2 beta")),
+            )
+            ui.add_button(
+                label="File: Dota2 pak01 VPK",
+                callback=lambda: helper.open_dir(mpaths.dota_game_pak_path),
             )
             ui.add_button(
                 label="File: Dota2 pak01(core) VPK",
-                callback=lambda: asyncio.run(helper.open_dir(mpaths.dota_core_pak_path)),
+                callback=lambda: helper.open_dir(mpaths.dota_core_pak_path),
             )
             ui.add_spacer(width=0, height=10)
             ui.add_button(
                 label="Executable: Dota2 Tools",
-                callback=lambda: asyncio.run(
-                    helper.open_dir(mpaths.dota2_tools_executable, "-addon a -language minify -novid -console")
+                callback=lambda: helper.open_dir(
+                    mpaths.dota2_tools_executable,
+                    "-addon a -language minify -novid -console",
                 ),
             )
             ui.add_text("^ Requires steam to be open")
             ui.add_button(
                 label="Executable: Dota2",
-                callback=lambda: asyncio.run(
-                    helper.open_dir(mpaths.dota2_executable, "-language minify -novid -console")
-                ),
+                callback=lambda: helper.open_dir(mpaths.dota2_executable, "-language minify -novid -console"),
             )
 
         with ui.window(
@@ -543,7 +571,10 @@ def dev_mode():
             no_close=True,
             no_collapse=True,
         ):
-            ui.add_button(label="Select path to compile", callback=lambda: ui.show_item("compile_file_dialog"))
+            ui.add_button(
+                label="Select path to compile",
+                callback=lambda: ui.show_item("compile_file_dialog"),
+            )
             ui.add_file_dialog(
                 show=False,
                 modal=False,
@@ -614,7 +645,17 @@ def configure_update_popup():
 
 
 def isDotaRunning():
-    if "dota2.exe" in (p.name() for p in psutil.process_iter()):
+    target = "dota2.exe" if mpaths.OS == "Windows" else "dota2"
+    running = False
+    for p in psutil.process_iter(attrs=["name"]):
+        try:
+            name = p.info.get("name") or ""
+            if name == target:
+                running = True
+                break
+        except (psutil.NoSuchProcess, psutil.AccessDenied, psutil.ZombieProcess):
+            continue
+    if running:
         global gui_lock
         gui_lock = True
         helper.add_text_to_terminal(
