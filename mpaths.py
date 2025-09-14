@@ -67,7 +67,7 @@ def find_library_from_vdf():
             file.write(f"Error reading {path_file_dir}: {error}")
 
     try:
-        if steam_dir:  # regkey found
+        if steam_dir and steam_dir != ".":  # regkey found
             with open(os.path.join(steam_dir, "config", "libraryfolders.vdf"), "r", encoding="utf-8") as dump:
                 data = vdf.load(dump)
         else:  # try with defaults

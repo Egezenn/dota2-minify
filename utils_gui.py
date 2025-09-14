@@ -23,6 +23,8 @@ checkboxes_state = {}
 dev_mode_state = -1
 gui_lock = False
 version = None
+visually_available_mods = mpaths.mods_folders
+visually_available_mods.remove("base")
 
 try:
     with open(mpaths.version_file_dir, "r") as file:
@@ -148,11 +150,9 @@ def load_checkboxes_state():
 
 
 def create_checkboxes():
-    global checkboxes_state
-    visually_available_mods = mpaths.mods_folders
-    visually_available_mods.remove("base")
-    for index in range(len(mpaths.mods_folders)):
-        name = mpaths.mods_folders[index]
+    global checkboxes_state, visually_available_mods
+    for index in range(len(visually_available_mods)):
+        name = visually_available_mods[index]
         ui.add_group(parent="mod_menu", tag=f"{name}_group_tag", horizontal=True, width=300)
         ui.add_checkbox(
             parent=f"{name}_group_tag", label=name, tag=name, default_value=False, callback=setupButtonState

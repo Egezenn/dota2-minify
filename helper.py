@@ -71,7 +71,7 @@ def disableWorkshopMods(mods_dir, mods_folders, checkboxes):
         styling_txt = os.path.join(mod_path, "styling.txt")
         for box in checkboxes:
             if checkboxes[box] == folder:
-                if os.stat(styling_txt).st_size != 0:
+                if os.path.exists(styling_txt):
                     ui.configure_item(box, enabled=False, default_value=False)
 
 
@@ -179,8 +179,7 @@ def change_localization(init=False):
                     ui.configure_item(tag_id, default_value=data)
             except FileNotFoundError:
                 data = ""
-        global details_label_text_var
-        global mod_selection_window_var
+        global details_label_text_var, mod_selection_window_var
         details_label_text_var = localization_data["details_button_label_var"][locale]
         mod_selection_window_var = localization_data["mod_selection_window_var"][locale]
         ui.configure_item("mod_menu", label=mod_selection_window_var)
