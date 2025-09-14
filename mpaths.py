@@ -11,22 +11,11 @@ steam_dir = ""
 OS = platform.system()
 MACHINE = platform.machine().lower()
 ARCHITECTURE = platform.architecture()[0]
-STEAM_DEFAULT_INSTALLATION_PATH = (
-    os.path.join("C:\\", "Program Files (x86)", "Steam")
-    if OS == "Windows"
-    else os.path.join(os.path.expanduser("~"), "Library", "Application Support", "Steam")
-    if OS == "Darwin"
-    else os.path.join("/", "home", getpass.getuser(), ".local", "share", "Steam")  # may vary from packaging
-)
+
 # assuming steam runtimes on linux / darwin
-if OS == "Windows":
-    DOTA_EXECUTABLE_PATH = os.path.join(
-        "steamapps", "common", "dota 2 beta", "game", "bin", "win64", "dota2.exe"
-    )
-elif OS == "Linux":
-    DOTA_EXECUTABLE_PATH = os.path.join(
-        "steamapps", "common", "dota 2 beta", "game", "bin", "linuxsteamrt64", "dota2"
-    )
+if OS == "Linux":
+    DOTA_EXECUTABLE_PATH = os.path.join("steamapps", "common", "dota 2 beta", "game", "bin", "linuxsteamrt64", "dota2")
+    STEAM_DEFAULT_INSTALLATION_PATH = os.path.join("/", "home", getpass.getuser(), ".local", "share", "Steam")
 elif OS == "Darwin":
     DOTA_EXECUTABLE_PATH = os.path.join(
         "steamapps",
@@ -40,10 +29,12 @@ elif OS == "Darwin":
         "MacOS",
         "dota2",
     )
+    STEAM_DEFAULT_INSTALLATION_PATH = os.path.join(os.path.expanduser("~"), "Library", "Application Support", "Steam")
 else:
-    DOTA_EXECUTABLE_PATH = os.path.join(
-        "steamapps", "common", "dota 2 beta", "game", "bin", "win64", "dota2.exe"
-    )
+    DOTA_EXECUTABLE_PATH = os.path.join("steamapps", "common", "dota 2 beta", "game", "bin", "win64", "dota2.exe")
+    STEAM_DEFAULT_INSTALLATION_PATH = os.path.join("C:\\", "Program Files (x86)", "Steam")
+
+DOTA_TOOLS_EXECUTABLE_PATH = os.path.join("steamapps", "common", "dota 2 beta", "game", "bin", "win64", "dota2cfg.exe")
 
 # launchers for dota2 won't work as it presumes native version, doesn't really matter
 if OS == "Windows":
@@ -93,16 +84,22 @@ def find_library_from_vdf():
         with open(path_file_dir, "r") as file:
             steam_dir = os.path.normpath(file.readline().strip())
     except Exception as error:
-        with open(os.path.join(logs_dir, "crashlog.txt"), "w") as file:
+        with open(os.path.join(logs_dir, "warnings.txt"), "w") as file:
             file.write(f"Error reading {path_file_dir}: {error}")
 
     try:
         if steam_dir and steam_dir != ".":  # regkey found
-            with open(os.path.join(steam_dir, "config", "libraryfolders.vdf"), "r", encoding="utf-8") as dump:
+            with open(
+                os.path.join(steam_dir, "config", "libraryfolders.vdf"),
+                "r",
+                encoding="utf-8",
+            ) as dump:
                 data = vdf.load(dump)
         else:  # try with defaults
             with open(
-                os.path.join(STEAM_DEFAULT_INSTALLATION_PATH, "config", "libraryfolders.vdf"), "r", encoding="utf-8"
+                os.path.join(STEAM_DEFAULT_INSTALLATION_PATH, "config", "libraryfolders.vdf"),
+                "r",
+                encoding="utf-8",
             ) as dump:
                 data = vdf.load(dump)
 
@@ -116,7 +113,7 @@ def find_library_from_vdf():
                     file.write(steam_dir)
 
     except Exception as error:
-        with open(os.path.join(logs_dir, "crashlog.txt"), "w") as file:
+        with open(os.path.join(logs_dir, "warnings.txt"), "w") as file:
             file.write(f"Error reading libraryfolders.vdf: {error}")
             steam_dir = ""
 
@@ -267,7 +264,9 @@ try:
         if MACHINE in ["aarch64", "arm64"]:
             s2v_latest = "https://github.com/ValveResourceFormat/ValveResourceFormat/releases/latest/download/cli-macos-arm64.zip"
         else:
-            s2v_latest = "https://github.com/ValveResourceFormat/ValveResourceFormat/releases/latest/download/cli-macos-x64.zip"
+            s2v_latest = (
+                "https://github.com/ValveResourceFormat/ValveResourceFormat/releases/latest/download/cli-macos-x64.zip"
+            )
     else:
         raise Exception("Unsupported Source2Viewer platform!")
 
@@ -390,44 +389,29 @@ minify_output_list = [
 
 ## base game
 if OS == "Windows":
-    dota2_executable = os.path.join(
-        steam_dir, "steamapps", "common", "dota 2 beta", "game", "bin", "win64", "dota2.exe"
-    )
-    dota2_tools_executable = os.path.join(
-        steam_dir, "steamapps", "common", "dota 2 beta", "game", "bin", "win64", "dota2cfg.exe"
-    )
+    dota2_executable = os.path.join(steam_dir, DOTA_EXECUTABLE_PATH)
+    dota2_tools_executable = os.path.join(steam_dir, DOTA_TOOLS_EXECUTABLE_PATH)
 elif OS == "Linux":
-    dota2_executable = os.path.join(
-        steam_dir, "steamapps", "common", "dota 2 beta", "game", "bin", "linuxsteamrt64", "dota2"
-    )
+    dota2_executable = os.path.join(steam_dir, DOTA_EXECUTABLE_PATH)
     # tools launcher path kept as Windows for extraction override flow
-    dota2_tools_executable = os.path.join(
-        steam_dir, "steamapps", "common", "dota 2 beta", "game", "bin", "win64", "dota2cfg.exe"
-    )
+    dota2_tools_executable = os.path.join(steam_dir, DOTA_TOOLS_EXECUTABLE_PATH)
 elif OS == "Darwin":
-    dota2_executable = os.path.join(
-        steam_dir,
-        "steamapps",
-        "common",
-        "dota 2 beta",
-        "game",
-        "bin",
-        "osx64",
-        "dota2.app",
-        "Contents",
-        "MacOS",
-        "dota2",
-    )
+    dota2_executable = os.path.join(steam_dir, DOTA_EXECUTABLE_PATH)
     # tools not available on macOS; keep Windows placeholder
-    dota2_tools_executable = os.path.join(
-        steam_dir, "steamapps", "common", "dota 2 beta", "game", "bin", "win64", "dota2cfg.exe"
-    )
+    dota2_tools_executable = os.path.join(steam_dir, DOTA_TOOLS_EXECUTABLE_PATH)
 dota_game_pak_path = os.path.join(steam_dir, "steamapps", "common", "dota 2 beta", "game", "dota", "pak01_dir.vpk")
 dota_core_pak_path = os.path.join(steam_dir, "steamapps", "common", "dota 2 beta", "game", "core", "pak01_dir.vpk")
 dota_itembuilds_path = os.path.join(steam_dir, "steamapps", "common", "dota 2 beta", "game", "dota", "itembuilds")
 dota_map_path = os.path.join(steam_dir, "steamapps", "common", "dota 2 beta", "game", "dota", "maps", "dota.vpk")
 dota_resource_compiler_path = os.path.join(
-    steam_dir, "steamapps", "common", "dota 2 beta", "game", "bin", "win64", "resourcecompiler.exe"
+    steam_dir,
+    "steamapps",
+    "common",
+    "dota 2 beta",
+    "game",
+    "bin",
+    "win64",
+    "resourcecompiler.exe",
 )
 
 dota_tools_paths = [
@@ -453,6 +437,14 @@ mods_folders.insert(0, "base")
 
 # Rubberband fix to always do blacklists at last for them to make overwrites
 mods_folder_application_order = overwrite_ensurance_hack(
-    ["Mute", "Remove", "Minify Base Attacks", "Minify Spells & Items", "Misc Optimization", "User Styles", "_"],
+    [
+        "Mute",
+        "Remove",
+        "Minify Base Attacks",
+        "Minify Spells & Items",
+        "Misc Optimization",
+        "User Styles",
+        "_",
+    ],
     mods_folders,
 )

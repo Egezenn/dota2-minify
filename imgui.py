@@ -19,11 +19,20 @@ ui.add_value_registry(tag="details_tags")
 
 with ui.value_registry():
     ui.add_string_value(default_value="Checking map file...", tag="checking_map_file_var")
-    ui.add_string_value(default_value="Want to contribute to the project's growth?", tag="start_text_1_var")
+    ui.add_string_value(
+        default_value="Want to contribute to the project's growth?",
+        tag="start_text_1_var",
+    )
     ui.add_string_value(default_value="-> Join our Discord community!", tag="start_text_2_var")
-    ui.add_string_value(default_value="-> Share Minify with your friends and online groups", tag="start_text_3_var")
+    ui.add_string_value(
+        default_value="-> Share Minify with your friends and online groups",
+        tag="start_text_3_var",
+    )
     ui.add_string_value(default_value="-> Star the project on GitHub", tag="start_text_4_var")
-    ui.add_string_value(default_value="-> Create and maintain mods for this project", tag="start_text_5_var")
+    ui.add_string_value(
+        default_value="-> Create and maintain mods for this project",
+        tag="start_text_5_var",
+    )
 
 
 def patcher_start():
@@ -39,7 +48,12 @@ def create_ui():
     with ui.window(tag="primary_window", no_close=True, no_title_bar=True):
         ui.set_primary_window("primary_window", True)
         ui.add_child_window(
-            tag="top_bar", pos=(-5, -5), height=30, width=499, no_scrollbar=True, no_scroll_with_mouse=True
+            tag="top_bar",
+            pos=(-5, -5),
+            height=30,
+            width=499,
+            no_scrollbar=True,
+            no_scroll_with_mouse=True,
         )
         ui.add_combo(
             parent="top_bar",
@@ -59,7 +73,12 @@ def create_ui():
             callback=utils_gui.open_discord_link,
         )
         ui.add_image_button(
-            "git_texture_tag", parent="top_bar", width=18, height=18, pos=(87, 6), callback=utils_gui.open_github_link
+            "git_texture_tag",
+            parent="top_bar",
+            width=18,
+            height=18,
+            pos=(87, 6),
+            callback=utils_gui.open_github_link,
         )
         ui.add_image_button(
             "dev_texture_tag",
@@ -82,16 +101,30 @@ def create_ui():
         )
         ui.add_text(utils_gui.title, pos=(320, 3))
         ui.add_button(
-            parent="top_bar", tag="button_exit", label="Close", callback=helper.close, height=28, width=60, pos=(440, 4)
+            parent="top_bar",
+            tag="button_exit",
+            label="Close",
+            callback=helper.close,
+            height=28,
+            width=60,
+            pos=(440, 4),
         )
 
         ui.bind_item_font("lang_select", combo_font)
         with ui.group(horizontal=True):
             with ui.group(pos=(391, 29)):
                 ui.add_button(tag="button_patch", label="Patch", width=92, callback=patcher_start)
-                ui.add_button(tag="button_select_mods", label="Select Mods", width=92, callback=utils_gui.open_mod_menu)
                 ui.add_button(
-                    tag="button_uninstall", label="Uninstall", width=92, callback=utils_gui.uninstall_popup_show
+                    tag="button_select_mods",
+                    label="Select Mods",
+                    width=92,
+                    callback=utils_gui.open_mod_menu,
+                )
+                ui.add_button(
+                    tag="button_uninstall",
+                    label="Uninstall",
+                    width=92,
+                    callback=utils_gui.uninstall_popup_show,
                 )
             with ui.group(pos=(-45, 4)):
                 ui.add_text(
@@ -134,12 +167,29 @@ def create_ui():
         no_title_bar=True,
     )
     ui.add_group(tag="uninstall_popup_text_wrapper", parent="uninstall_popup")
-    ui.add_text(default_value="Remove all mods?", parent="uninstall_popup_text_wrapper", tag="remove_mods_text_tag")
+    ui.add_text(
+        default_value="Remove all mods?",
+        parent="uninstall_popup_text_wrapper",
+        tag="remove_mods_text_tag",
+    )
     with ui.group(
-        parent="uninstall_popup", tag="uninstall_popup_button_wrapper", horizontal=True, horizontal_spacing=10
+        parent="uninstall_popup",
+        tag="uninstall_popup_button_wrapper",
+        horizontal=True,
+        horizontal_spacing=10,
     ):
-        ui.add_button(label="Confirm", tag="uninstall_confirm_button", callback=utils_build.uninstaller, width=100)
-        ui.add_button(label="Cancel", tag="uninstall_cancel_button", callback=utils_gui.hide_uninstall_popup, width=100)
+        ui.add_button(
+            label="Confirm",
+            tag="uninstall_confirm_button",
+            callback=utils_build.uninstaller,
+            width=100,
+        )
+        ui.add_button(
+            label="Cancel",
+            tag="uninstall_cancel_button",
+            callback=utils_gui.hide_uninstall_popup,
+            width=100,
+        )
 
     # Creating mod selection menu as popup/modal
     ui.add_window(
@@ -186,7 +236,12 @@ def create_ui():
         tag="update_popup_text_2_tag",
         indent=1,
     )
-    with ui.group(parent="update_popup", tag="update_popup_button_group", horizontal=True, horizontal_spacing=20):
+    with ui.group(
+        parent="update_popup",
+        tag="update_popup_button_group",
+        horizontal=True,
+        horizontal_spacing=20,
+    ):
         ui.add_button(
             label="Yes",
             width=120,
@@ -202,7 +257,11 @@ def create_ui():
             tag="update_popup_ignore_button",
         )
         ui.add_button(
-            label="No", width=120, height=24, callback=utils_gui.delete_update_popup, tag="update_popup_no_button"
+            label="No",
+            width=120,
+            height=24,
+            callback=utils_gui.delete_update_popup,
+            tag="update_popup_no_button",
         )
 
 
@@ -245,10 +304,23 @@ width_dev, height_dev, channels_dev, data_dev = ui.load_image(os.path.join(mpath
 
 with ui.texture_registry(show=False):
     ui.add_static_texture(
-        width=width_discord, height=height_discord, default_value=data_discord, tag="discord_texture_tag"
+        width=width_discord,
+        height=height_discord,
+        default_value=data_discord,
+        tag="discord_texture_tag",
     )
-    ui.add_static_texture(width=width_git, height=height_git, default_value=data_git, tag="git_texture_tag")
-    ui.add_static_texture(width=width_dev, height=height_dev, default_value=data_dev, tag="dev_texture_tag")
+    ui.add_static_texture(
+        width=width_git,
+        height=height_git,
+        default_value=data_git,
+        tag="git_texture_tag",
+    )
+    ui.add_static_texture(
+        width=width_dev,
+        height=height_dev,
+        default_value=data_dev,
+        tag="dev_texture_tag",
+    )
 
 
 # Creating_main_viewport

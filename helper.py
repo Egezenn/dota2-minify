@@ -1,5 +1,6 @@
 import json
 import os
+import shlex
 import shutil
 import stat
 import subprocess
@@ -28,11 +29,13 @@ def handleWarnings(logs_dir):
     global warnings
 
     if len(warnings) != 0:
-        with open(os.path.join(logs_dir, "warnings.txt"), "w") as file:
+        with open(os.path.join(logs_dir, "warnings.txt"), "a") as file:
             for line in warnings:
                 file.write(line + "\n")
         add_text_to_terminal(
-            localization_dict["minify_encountered_errors_terminal_text_var"], "minify_error_var", "warning"
+            localization_dict["minify_encountered_errors_terminal_text_var"],
+            "minify_error_var",
+            "warning",
         )
 
 
@@ -186,7 +189,10 @@ def change_localization(init=False):
         for id in ui.get_item_children("mod_menu")[1]:
             for item in ui.get_item_children(id)[1]:
                 if ui.get_item_alias(item).endswith("_button_show_details_tag"):
-                    ui.configure_item(item, label=localization_data["details_button_label_var"][locale])
+                    ui.configure_item(
+                        item,
+                        label=localization_data["details_button_label_var"][locale],
+                    )
 
 
 def change_output_path():
@@ -356,7 +362,13 @@ def build_minify_menu(menus):
             menu_element = ET.fromstring(menu)
         minify_section.append(menu_element)
 
-        settings_path = os.path.join(mpaths.build_dir, "panorama", "layout", "popups", "popup_settings_reborn.xml")
+        settings_path = os.path.join(
+            mpaths.build_dir,
+            "panorama",
+            "layout",
+            "popups",
+            "popup_settings_reborn.xml",
+        )
         tree = ET.parse(settings_path)
         root = tree.getroot()
         settings_body = root.find(".//PopupSettingsRebornSettingsBody")
@@ -463,42 +475,39 @@ def open_dir(path, args=""):
     - Files: on macOS, reveal in Finder to avoid "no app" errors; otherwise try default handler.
     - Executables: launch via subprocess (Windows uses startfile).
     """
-    import shlex
+
     if path == mpaths.dota2_tools_executable:
         os.makedirs(mpaths.minify_dota_tools_required_path, exist_ok=True)
     try:
-        # Normalize path
-        target = path
-
         # If args are provided and target is executable, prefer launching directly
         if args:
             if mpaths.OS == "Windows":
-                os.startfile(target, arguments=args)
+                os.startfile(path, arguments=args)
                 return
             # POSIX: launch executable directly when possible
-            if os.access(target, os.X_OK) and os.path.isfile(target):
-                cmd = [target] + shlex.split(args)
+            if os.access(path, os.X_OK) and os.path.isfile(path):
+                cmd = [path] + shlex.split(args)
                 subprocess.Popen(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
                 return
             # Non-executables with args: fall back to opening container directory
-            target = os.path.dirname(target) or "."
+            path = os.path.dirname(path) or "."
 
         # No args path open
-        if os.path.isdir(target):
+        if os.path.isdir(path):
             if mpaths.OS == "Windows":
-                os.startfile(target)
+                os.startfile(path)
             elif mpaths.OS == "Darwin":
-                subprocess.run(["open", target])
+                subprocess.run(["open", path])
             else:
-                subprocess.run(["xdg-open", target])
+                subprocess.run(["xdg-open", path])
         else:
             if mpaths.OS == "Windows":
-                os.startfile(target)
+                os.startfile(path)
             elif mpaths.OS == "Darwin":
                 # Reveal the file in Finder to avoid missing-app association errors
-                subprocess.run(["open", "-R", target])
+                subprocess.run(["open", "-R", path])
             else:
-                subprocess.run(["xdg-open", target])
+                subprocess.run(["xdg-open", path])
     except FileNotFoundError:
         add_text_to_terminal(f"{path}{localization_dict['open_dir_fail_text_var']}", type="error")
 
@@ -525,7 +534,10 @@ def compile(sender, app_data, user_data):
 
         for item in items:
             if os.path.isdir(os.path.join(folder, item)):
-                shutil.copytree(os.path.join(folder, item), os.path.join(mpaths.minify_dota_compile_input_path, item))
+                shutil.copytree(
+                    os.path.join(folder, item),
+                    os.path.join(mpaths.minify_dota_compile_input_path, item),
+                )
             else:
                 shutil.copy(os.path.join(folder, item), mpaths.minify_dota_compile_input_path)
         with open(os.path.join(mpaths.logs_dir, "resourcecompiler.txt"), "w") as file:
@@ -542,7 +554,10 @@ def compile(sender, app_data, user_data):
         os.makedirs(mpaths.minify_dota_compile_output_path, exist_ok=True)
         shutil.copytree(os.path.join(mpaths.minify_dota_compile_output_path), compile_output_path)
 
-        remove_path(mpaths.minify_dota_compile_input_path, mpaths.minify_dota_compile_output_path)
+        remove_path(
+            mpaths.minify_dota_compile_input_path,
+            mpaths.minify_dota_compile_output_path,
+        )
         os.makedirs(mpaths.minify_dota_tools_required_path, exist_ok=True)
 
         add_text_to_terminal(localization_dict["compile_successful_text_var"])
