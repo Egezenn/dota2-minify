@@ -456,27 +456,51 @@ def processBlackList(index, line, folder, blank_file_extensions):
     return data
 
 
-# TODO: open as detached
-async def open_dir(path, args=""):
+def open_dir(path, args=""):
+    """Open a directory/file or launch an executable with optional args.
+
+    - Directories: open in system file manager.
+    - Files: on macOS, reveal in Finder to avoid "no app" errors; otherwise try default handler.
+    - Executables: launch via subprocess (Windows uses startfile).
+    """
+    import shlex
     if path == mpaths.dota2_tools_executable:
         os.makedirs(mpaths.minify_dota_tools_required_path, exist_ok=True)
     try:
+        # Normalize path
+        target = path
+
+        # If args are provided and target is executable, prefer launching directly
         if args:
             if mpaths.OS == "Windows":
-                os.startfile(path, arguments=args)
+                os.startfile(target, arguments=args)
+                return
+            # POSIX: launch executable directly when possible
+            if os.access(target, os.X_OK) and os.path.isfile(target):
+                cmd = [target] + shlex.split(args)
+                subprocess.Popen(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+                return
+            # Non-executables with args: fall back to opening container directory
+            target = os.path.dirname(target) or "."
+
+        # No args path open
+        if os.path.isdir(target):
+            if mpaths.OS == "Windows":
+                os.startfile(target)
             elif mpaths.OS == "Darwin":
-                os.system(f'open "{path} {args}')
+                subprocess.run(["open", target])
             else:
-                os.system(f'xdg-open "{path} {args}')
+                subprocess.run(["xdg-open", target])
         else:
             if mpaths.OS == "Windows":
-                os.startfile(path)
+                os.startfile(target)
             elif mpaths.OS == "Darwin":
-                os.system(f'open "{path}"')
+                # Reveal the file in Finder to avoid missing-app association errors
+                subprocess.run(["open", "-R", target])
             else:
-                os.system(f'xdg-open "{path}"')
+                subprocess.run(["xdg-open", target])
     except FileNotFoundError:
-        add_text_to_terminal(f"{path}{localization_dict["open_dir_fail_text_var"]}", type="error")
+        add_text_to_terminal(f"{path}{localization_dict['open_dir_fail_text_var']}", type="error")
 
 
 def compile(sender, app_data, user_data):

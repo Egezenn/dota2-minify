@@ -39,3 +39,8 @@ env/
 ENV/
 venv.bak/
 venv/
+
+
+#Ignore vscode AI rules
+.github/instructions/codacy.instructions.md
+.DS_Store

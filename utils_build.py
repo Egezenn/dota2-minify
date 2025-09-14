@@ -23,7 +23,17 @@ game_contents_file_init = False
 def patcher():
     utils_gui.lock_interaction()
     helper.clean_terminal()
-    if "dota2.exe" in (p.name() for p in psutil.process_iter()):
+    target = "dota2.exe" if mpaths.OS == "Windows" else "dota2"
+    running = False
+    for p in psutil.process_iter(attrs=["name"]):
+        try:
+            name = p.info.get("name") or ""
+            if name == target:
+                running = True
+                break
+        except (psutil.NoSuchProcess, psutil.AccessDenied, psutil.ZombieProcess):
+            continue
+    if running:
         helper.add_text_to_terminal(
             helper.localization_dict["close_dota_terminal_text_var"], "close_dota_text_tag", "warning"
         )
@@ -62,7 +72,7 @@ def patcher():
                     ):  # step into folders that have ticked checkboxes only
                         base_mods_applied = True if folder == "base" else False
                         helper.add_text_to_terminal(
-                            f"{helper.localization_dict["installing_terminal_text_var"]} {folder}"
+                            f"{helper.localization_dict['installing_terminal_text_var']} {folder}"
                         )
                         if os.path.exists(os.path.join(mod_path, "files")):
                             shutil.copytree(
