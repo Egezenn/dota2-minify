@@ -17,6 +17,7 @@ libTinyEXR.Native.so
 rg*
 Source2Viewer-CLI*
 TinyEXR.Native.dll
+libTinyEXR.Native.dylib
 
 ## Dota2
 steam_appid.txt
@@ -44,4 +45,3 @@ venv/
 #Ignore vscode AI rules
 .github/instructions/codacy.instructions.md
 .DS_Store
-libTinyEXR.Native.dylib
