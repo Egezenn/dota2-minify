@@ -265,16 +265,16 @@ def focus_window():
                 ctypes.windll.user32.ShowWindow(hwnd, 9)
                 ctypes.windll.user32.SetForegroundWindow(hwnd)
         except Exception as error:
-            with open(os.path.join(mpaths.logs_dir, "crashlog.txt"), "w") as file:
+            with open(os.path.join(mpaths.logs_dir, "warnings.txt"), "w") as file:
                 file.write(f"Windows focus error: {error}")
     else:
         try:
             subprocess.run(["wmctrl", "-a", "Minify"], check=True)
         except FileNotFoundError:
-            with open(os.path.join(mpaths.logs_dir, "crashlog.txt"), "w") as file:
+            with open(os.path.join(mpaths.logs_dir, "warnings.txt"), "w") as file:
                 file.write("wmctrl not installed")
         except subprocess.CalledProcessError as error:
-            with open(os.path.join(mpaths.logs_dir, "crashlog.txt"), "w") as file:
+            with open(os.path.join(mpaths.logs_dir, "warnings.txt"), "w") as file:
                 file.write(f"Linux focus error: {error}")
 
 
