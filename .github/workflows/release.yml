@@ -7,6 +7,10 @@ on:
         description: "Name the release"
         required: true
         default: "Minify-v1.xx.x"
+      use_self_hosted_macos:
+        description: "Also build on self-hosted macOS runner (if available)"
+        required: false
+        default: "false"
 
 permissions:
   contents: write
@@ -16,7 +20,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-latest, windows-latest]
+        os: [ubuntu-latest, windows-latest, macos-latest]
 
     steps:
       - uses: actions/checkout@v4
@@ -25,13 +29,20 @@ jobs:
         with:
           python-version: "3.13"
 
-      - name: Set version
+      - name: Set version (Linux)
         if: matrix.os == 'ubuntu-latest'
         shell: pwsh
         run: |
           $releaseName = "${{ github.event.inputs.release_name }}"
           $version = $releaseName.Substring(8)
           Set-Content -Path "version" -Value $version -NoNewline
+      - name: Set version (macOS)
+        if: matrix.os == 'macos-latest'
+        shell: bash
+        run: |
+          releaseName="${{ github.event.inputs.release_name }}"
+          version="${releaseName#Minify-}"
+          printf "%s" "$version" > version
       - uses: stefanzweifel/git-auto-commit-action@v5
         if: matrix.os == 'ubuntu-latest'
         with:
@@ -42,29 +53,38 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Build executable with Nuitka
+      - name: Build executable (Windows/Linux)
+        if: matrix.os != 'macos-latest'
         run: pyinstaller --noconsole --icon=bin/images/favicon.ico --name=Minify --hidden-import=tkinter imgui.py
+      - name: Build executable (macOS)
+        if: matrix.os == 'macos-latest'
+        run: pyinstaller Minify.spec
 
-      - name: Move project dependencies
+      - name: Move project dependencies (Windows/Linux)
+        if: matrix.os != 'macos-latest'
         shell: pwsh
         run: |
-          Copy-Item -Path "bin" -Destination "dist/Minify/bin" -Recurse
+          Copy-Item -Path "bin" -Destination "dist/Minify/bin" -Recurse -Exclude "rescomproot","gamepakcontents.txt"
           Copy-Item -Path "mods" -Destination "dist/Minify/mods" -Recurse
           Copy-Item -Path "version" -Destination "dist/Minify/version"
+      # macOS bundle already contains data via Minify.spec
 
       - name: Archiving (Windows)
         if: matrix.os == 'windows-latest'
         run: |
-          Set-Location dist\Minify
-          Compress-Archive -Path ".\*" -DestinationPath "..\..\${{ github.event.inputs.release_name }}-windows.zip"
-          Set-Location .\..\..\
+          Compress-Archive -Path "dist/Minify" -DestinationPath "${{ github.event.inputs.release_name }}-windows.zip"
       - name: Archiving (Linux)
         shell: pwsh
         if: matrix.os == 'ubuntu-latest'
         run: |
-          Set-Location dist/Minify
-          Compress-Archive -Path "./*" -DestinationPath "./../../${{ github.event.inputs.release_name }}-linux.zip"
-          Set-Location ../..
+          Compress-Archive -Path "dist/Minify" -DestinationPath "${{ github.event.inputs.release_name }}-linux.zip"
+      - name: Archiving (macOS)
+        if: matrix.os == 'macos-latest'
+        shell: bash
+        run: |
+          set -euo pipefail
+          # Use ditto to preserve app bundle structure
+          ditto -c -k --sequesterRsrc --keepParent "dist/Minify.app" "${{ github.event.inputs.release_name }}-macos.zip"
 
       - name: Create Release (Windows)
         if: matrix.os == 'windows-latest'
@@ -80,5 +100,52 @@ jobs:
         with:
           tag_name: ${{ github.event.inputs.release_name }}
           files: "${{ github.event.inputs.release_name }}-linux.zip"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Create Release (macOS)
+        if: matrix.os == 'macos-latest'
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ github.event.inputs.release_name }}
+          files: "${{ github.event.inputs.release_name }}-macos.zip"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  build_selfhosted_macos:
+    if: ${{ github.event.inputs.use_self_hosted_macos == 'true' }}
+    runs-on: [self-hosted, macOS]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Set version (self-hosted macOS)
+        shell: bash
+        run: |
+          releaseName="${{ github.event.inputs.release_name }}"
+          version="${releaseName#Minify-}"
+          printf "%s" "$version" > version
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Build app (self-hosted macOS)
+        run: pyinstaller Minify.spec
+
+      - name: Archiving (self-hosted macOS)
+        shell: bash
+        run: |
+          set -euo pipefail
+          ditto -c -k --sequesterRsrc --keepParent "dist/Minify.app" "${{ github.event.inputs.release_name }}-macos-selfhosted.zip"
+
+      - name: Create Release (self-hosted macOS)
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ github.event.inputs.release_name }}
+          files: "${{ github.event.inputs.release_name }}-macos-selfhosted.zip"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
