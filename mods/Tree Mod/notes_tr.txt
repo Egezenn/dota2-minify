@@ -1,3 +1,0 @@
-Tüm ağaçları küçük yuvarlak çalılara dönüştürür
-
-* Varsayılan araziyi gerektirir

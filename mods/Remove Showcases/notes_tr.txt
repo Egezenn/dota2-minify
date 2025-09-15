@@ -1,1 +1,0 @@
-Profil vitrinlerini ve animasyonları kaldırır.

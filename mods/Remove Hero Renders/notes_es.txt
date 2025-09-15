@@ -1,3 +1,0 @@
-Elimina las vistas previas de los héroes y las representaciones de la interfaz de usuario.
-
-La variable de consola "map_enable_portrait_worlds 0" logra el mismo objetivo, pero te quedarás atascado en las pantallas MVP.

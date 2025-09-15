@@ -1,3 +1,0 @@
-Fixes and repopulates the Unit Query HUD panel that was released in patch 7.00.
-
-Available with the console variable "dota_hud_new_query_panel 1".

@@ -1,1 +1,0 @@
-X saniye gecikmeden sonra eşleşme iletişim kutusunu otomatik olarak kabul eder. Gecikme, ayarlar panelinden ayarlanabilir.

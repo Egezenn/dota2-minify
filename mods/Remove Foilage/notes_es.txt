@@ -1,3 +1,0 @@
-Elimina todos los arbustos, flores, rocas y cualquier otro objeto del suelo, dejando solo las baldosas.
-
-* Debes de tener equipado el terreno predeterminado en el inventario

@@ -1,3 +1,0 @@
-Add your own / modify & remove existing style snippets here.
-
-These snippets might not be desirable for the majority, enable with caution.

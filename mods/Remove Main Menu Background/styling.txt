@@ -1,2 +1,0 @@
-panorama/styles/dashboard_background_manager @@ DOTADashboardBackgroundManager:not(.Hidden) { visibility: collapse; }
-panorama/styles/dashboard_page_home @@ #FrontpageContents { visibility: collapse; }

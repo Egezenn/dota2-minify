@@ -1,1 +1,0 @@
-Oyun içi HUD'nin bazı özelliklerini yeniden konumlandırır ve ölçeklendirir.

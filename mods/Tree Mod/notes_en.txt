@@ -1,3 +1,0 @@
-Turns all trees into small circle bushes
-
-* Requires default terrain

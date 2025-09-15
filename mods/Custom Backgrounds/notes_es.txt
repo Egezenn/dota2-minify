@@ -1,3 +1,0 @@
-Reemplaza el fondo del menú principal, el fondo de la vitrina del jugador y el fondo de la pantalla de selección.
-
-* El menú principal solo se reemplaza si se habilita la opción "Remove Main Menu Background".

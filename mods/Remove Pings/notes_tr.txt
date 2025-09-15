@@ -1,5 +1,0 @@
-Pingleri kaldırır
-
-Eğer pingleri minimapten da kaldırmak istiyorsanız, konsolu açın ve şunları yazın:
-dota_minimap_ping_duration 0
-dota_minimap_ping_tag_duration 0

@@ -31,7 +31,6 @@ __pycache__
 *$py.class
 dist
 *.spec
-!Minify.spec
 
 # Environments
 .env

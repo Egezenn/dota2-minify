@@ -1,1 +1,0 @@
-**(particles/ui_mouseactions/.*|sounds/ui/)(ping_.*|ping)\.(vsnd_c|vpcf_c)

@@ -1,4 +1,0 @@
-**sounds/misc/soundboard.*\.vsnd_c
-**sounds/teamfancontent.*\.vsnd_c
-**sounds/talentcontent.*\.vsnd_c
-**sounds/vo/vengefulspirit/imperia_crownfall_boss.*\.vsnd_c

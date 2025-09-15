@@ -1,3 +1,0 @@
-﻿7.00 yamasında yayınlanan Birim Sorgulama HUD panelini düzeltir ve yeniden doldurur.
-
-Konsol değişkeni “dota_hud_new_query_panel 1” ile kullanılabilir.
