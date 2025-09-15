@@ -120,7 +120,9 @@ Prerequisites are `git`, `python` and `uv`. (also `tk` for tkinter, `wine` for w
 
 #### Compilation from source
 
-For instructions, refer to the [workflow](https://github.com/Egezenn/dota2-minify/blob/main/.github/workflows/release.yml).
+For automated CI steps, refer to the [workflow](https://github.com/Egezenn/dota2-minify/blob/main/.github/workflows/release.yml).
+
+- macOS manual build: see `docs/BUILD-macos.md` for step‑by‑step instructions.
 
 ## Developing mods
 

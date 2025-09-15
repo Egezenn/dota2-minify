@@ -1,6 +1,16 @@
 import os
+import sys
 import threading
 import time
+
+# Ensure working directory is the app directory so relative paths like 'bin/' work
+try:
+    if getattr(sys, "frozen", False):  # Running from PyInstaller bundle
+        os.chdir(os.path.dirname(sys.executable))
+    else:
+        os.chdir(os.path.dirname(os.path.abspath(__file__)))
+except Exception:
+    pass
 
 import dearpygui.dearpygui as ui
 import screeninfo
@@ -110,7 +120,8 @@ def create_ui():
             pos=(440, 4),
         )
 
-        ui.bind_item_font("lang_select", combo_font)
+        if combo_font:
+            ui.bind_item_font("lang_select", combo_font)
         with ui.group(horizontal=True):
             with ui.group(pos=(391, 29)):
                 ui.add_button(tag="button_patch", label="Patch", width=92, callback=patcher_start)
@@ -279,28 +290,49 @@ def create_base_ui():
 
 
 # Adding font to the ui registry
-with ui.font_registry():
-    with ui.font(os.path.join("bin", "FiraMono-Medium.ttf"), 14) as main_font:
-        ui.add_font_range_hint(ui.mvFontRangeHint_Default)
-        ui.add_font_range_hint(ui.mvFontRangeHint_Cyrillic)
-        ui.add_font_range(0x0100, 0x017F)  # Turkish set
-        ui.bind_font(main_font)
-    with ui.font(os.path.join("bin", "FiraMono-Medium.ttf"), 16) as combo_font:
-        ui.add_font_range_hint(ui.mvFontRangeHint_Default)
-        ui.add_font_range_hint(ui.mvFontRangeHint_Cyrillic)
-        ui.add_font_range(0x0100, 0x017F)  # Turkish set
+main_font = None
+combo_font = None
+font_path = os.path.join("bin", "FiraMono-Medium.ttf")
+try:
+    with ui.font_registry():
+        if os.path.exists(font_path):
+            with ui.font(font_path, 14) as main_font:
+                ui.add_font_range_hint(ui.mvFontRangeHint_Default)
+                ui.add_font_range_hint(ui.mvFontRangeHint_Cyrillic)
+                ui.add_font_range(0x0100, 0x017F)  # Turkish set
+                ui.bind_font(main_font)
+            with ui.font(font_path, 16) as combo_font:
+                ui.add_font_range_hint(ui.mvFontRangeHint_Default)
+                ui.add_font_range_hint(ui.mvFontRangeHint_Cyrillic)
+                ui.add_font_range(0x0100, 0x017F)  # Turkish set
+        else:
+            # Fallback to default DearPyGui font if not bundled
+            pass
+except Exception:
+    # Ignore font loading errors and continue with defaults
+    main_font = None
+    combo_font = None
 
 # Adding mouse handler to ui registry
 with ui.handler_registry():
     ui.add_mouse_drag_handler(parent="top_bar", button=0, threshold=4, callback=utils_gui.drag_viewport)
     ui.add_key_release_handler(0x20E, callback=utils_gui.close_active_window)
 
-width_discord, height_discord, channels_discord, data_discord = ui.load_image(
+def _safe_load_image(path):
+    try:
+        if os.path.exists(path):
+            return ui.load_image(path)
+    except Exception:
+        pass
+    # 1x1 opaque white placeholder (RGBA)
+    return 1, 1, 4, [255, 255, 255, 255]
+
+width_discord, height_discord, channels_discord, data_discord = _safe_load_image(
     os.path.join(mpaths.img_dir, "Discord.png")
 )
 
-width_git, height_git, channels_git, data_git = ui.load_image(os.path.join(mpaths.img_dir, "github.png"))
-width_dev, height_dev, channels_dev, data_dev = ui.load_image(os.path.join(mpaths.img_dir, "cog-wheel.png"))
+width_git, height_git, channels_git, data_git = _safe_load_image(os.path.join(mpaths.img_dir, "github.png"))
+width_dev, height_dev, channels_dev, data_dev = _safe_load_image(os.path.join(mpaths.img_dir, "cog-wheel.png"))
 
 with ui.texture_registry(show=False):
     ui.add_static_texture(
@@ -347,8 +379,9 @@ ui.create_viewport(
 ui.set_frame_callback(1, callback=create_base_ui)  # On first frame execute app_start
 
 
-ui.set_viewport_small_icon("./bin/favicon.ico")
-ui.set_viewport_large_icon("./bin/favicon.ico")
+if os.path.exists("./bin/favicon.ico"):
+    ui.set_viewport_small_icon("./bin/favicon.ico")
+    ui.set_viewport_large_icon("./bin/favicon.ico")
 ui.setup_dearpygui()
 ui.show_viewport()
 ui.start_dearpygui()

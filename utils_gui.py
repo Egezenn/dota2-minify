@@ -23,8 +23,9 @@ checkboxes_state = {}
 dev_mode_state = -1
 gui_lock = False
 version = None
-visually_available_mods = mpaths.mods_folders
-visually_available_mods.remove("base")
+visually_available_mods = mpaths.mods_folders.copy()
+if "base" in visually_available_mods:
+    visually_available_mods.remove("base")
 
 try:
     with open(mpaths.version_file_dir, "r") as file:
