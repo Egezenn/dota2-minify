@@ -1,0 +1,1 @@
+Automatically accepts the match dialog after X seconds of delay. Delay is adjustable through settings panel.

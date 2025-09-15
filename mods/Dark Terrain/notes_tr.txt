@@ -1,0 +1,11 @@
+Görsel netlik için tasarlanmıştır.
+
+* Varsayılan dota2 arazisini kullanmalısınız
+
+- Tüm karoları gri / koyu gri yapar
+- Sis çizgileri
+- Sis pusu kaldırıldı
+- Koyu su
+- Özel takım logoları
+- Özel dükkan sahipleri
+- Harita temasına uyacak diğer çeşitli doku iyileştirmeleri

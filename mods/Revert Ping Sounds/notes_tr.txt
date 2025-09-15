@@ -1,0 +1,6 @@
+Ping seslerini 7.39 yaması öncesindeki seslere geri döndürür.
+
+Yeni sesler şu şekilde değiştirilir:
+- ping_heart = ping
+- ping_enemy_ward = ping_warning
+- ping_need_ward = ping

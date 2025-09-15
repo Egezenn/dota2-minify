@@ -1,0 +1,3 @@
+Removes all the bushes, flowers, rocks and any other ground props so you just have tiles.
+
+* Must have default terrain equipped in your inventory

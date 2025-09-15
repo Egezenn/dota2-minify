@@ -1,0 +1,3 @@
+Hace transparentes la mayoría de los elementos del HUD del juego y elimina algunas funciones no útiles.
+
+* Requiere el HUD por defecto

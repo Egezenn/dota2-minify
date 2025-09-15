@@ -1,0 +1,26 @@
+{
+  "panorama/layout/hud/dota_hud_query_unit.xml": [
+    { "action": "add_style_include", "src": "s2r://panorama/styles/hud/dota_hud_query_unit_overrides.vcss_c" },
+    { "action": "insert_before", "target_id": "BuybackContainer", "xml": "\u003cPanel id=\"HeaderLeft\" hittest=\"false\" /\u003e" },
+    { "action": "move_into", "target_id": "NameAndGold", "new_parent_id": "HeaderLeft" },
+    { "action": "add_child", "parent_id": "HeaderLeft", "xml": "\u003cDOTAInnateDisplay class=\"FacetInnateDisplay QueryUnit\" /\u003e" },
+    { "action": "insert_after", "target_id": "abilities", "xml": "\u003cPanel id=\"AbilitiesRow\" class=\"LeftRightFlow\" hittest=\"false\" /\u003e" },
+    { "action": "move_into", "target_id": "abilities", "new_parent_id": "AbilitiesRow" },
+    { "action": "insert_after", "target_id": "abilities", "xml": "\u003cDOTAAghsStatusDisplay id=\"AghsStatusContainer\" class=\"QueryUnit\" onmouseover=\"DOTAShowAghsStatusDisplayTooltip()\" onmouseout=\"DOTAHideAghsStatusDisplayTooltip()\" /\u003e" },
+    { "action": "add_child", "parent_id": "stats_container", "xml": "\u003cPanel id=\"stats_block\" hittest=\"false\" /\u003e" },
+    { "action": "move_into", "target_id": "stats", "new_parent_id": "stats_block" },
+    { "action": "move_into", "target_id": "stragiint", "new_parent_id": "stats_block" }
+  ],
+  "panorama/layout/hud/dota_hud_str_agi_int.xml": [
+    {
+      "action": "add_style_include",
+      "src": "s2r://panorama/styles/hud/dota_hud_str_agi_int_overrides.vcss_c"
+    }
+  ],
+  "panorama/layout/hud/tooltip_unit_damage_armor.xml": [
+    {
+      "action": "add_style_include",
+      "src": "s2r://panorama/styles/hud/tooltip_unit_damage_armor_overrides.vcss_c"
+    }
+  ]
+}

@@ -1,0 +1,4 @@
+- Прячет и заглушает все фразы героев DotaPlus в чат-колесе
+https://liquipedia.net/dota2/Chat_Wheel/Dota_Plus
+- Заглушает все остальные звуки DotaPlus
+- Заглушает все реплики из BattlePass

@@ -1,0 +1,5 @@
+panorama/styles/hero_grid_new @@ .HeroCard #HeroImage { margin: 0px 4px 4px 0px; }
+panorama/styles/tooltips/tooltip_hero_card @@ #MainContents { visibility: collapse; }
+panorama/styles/hero_grid_new @@ #HeroBadgeStatus { visibility: collapse; }
+!panorama/styles/tooltips/tooltip_base @@ DOTATooltipHeroCard#HeroCardTooltip.TooltipVisible { visibility: collapse; }
+panorama/styles/hud/hud_simple_hero_description @@ .SimilarHeroes { visibility: collapse; }

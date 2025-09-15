@@ -7,10 +7,6 @@ on:
         description: "Name the release"
         required: true
         default: "Minify-v1.xx.x"
-      use_self_hosted_macos:
-        description: "Also build on self-hosted macOS runner (if available)"
-        required: false
-        default: "false"
 
 permissions:
   contents: write
@@ -60,6 +56,14 @@ jobs:
         if: matrix.os == 'macos-latest'
         run: pyinstaller Minify.spec
 
+      - name: Bundle app contents (macOS)
+        if: matrix.os == 'macos-latest'
+        shell: bash
+        run: |
+          rsync -a --exclude rescomproot --exclude gamepakcontents.txt bin/ dist/Minify.app/Contents/MacOS/bin/
+          rsync -a mods/ dist/Minify.app/Contents/MacOS/mods/
+          cp version dist/Minify.app/Contents/MacOS/version
+
       - name: Move project dependencies (Windows/Linux)
         if: matrix.os != 'macos-latest'
         shell: pwsh
@@ -67,7 +71,7 @@ jobs:
           Copy-Item -Path "bin" -Destination "dist/Minify/bin" -Recurse -Exclude "rescomproot","gamepakcontents.txt"
           Copy-Item -Path "mods" -Destination "dist/Minify/mods" -Recurse
           Copy-Item -Path "version" -Destination "dist/Minify/version"
-      # macOS bundle already contains data via Minify.spec
+
       - name: Archiving (Windows)
         if: matrix.os == 'windows-latest'
         run: |

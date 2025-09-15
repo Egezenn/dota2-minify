@@ -1,0 +1,5 @@
+Заменяет стандартные гайды, на гайды из OpenDotaGuides guides от Egezenn
+
+* Не забудь выбрать стандартную сборку героя для отображения в игре
+
+- Источник: https://github.com/Egezenn/OpenDotaGuides/releases/latest
