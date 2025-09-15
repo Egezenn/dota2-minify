@@ -1,7 +1,7 @@
 # Minify
 bin/maps/
 bin/gamepakcontents.txt
-build
+vpk_build
 config
 dota2path_minify.txt
 locale
@@ -10,7 +10,7 @@ mods.json
 mods/_*
 
 ## Dependencies
-bin/rescomproot
+bin/rescomproot*
 cli-*-*.*
 libSkiaSharp*
 libTinyEXR.Native.so
@@ -23,13 +23,13 @@ steam_appid.txt
 
 # Byte-compiled / optimized / DLL files
 __pycache__
+build
 *.build
 *.dist
 *.exe
 *.py[cod]
 *$py.class
 dist
-*.spec
 
 # Environments
 .env

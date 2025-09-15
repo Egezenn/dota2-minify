@@ -1,4 +1,3 @@
-import asyncio
 import ctypes
 import json
 import os
@@ -236,8 +235,6 @@ def setupButtonState():
             break
         else:
             ui.configure_item("button_patch", enabled=False)
-    if not helper.workshop_installed:
-        helper.disableWorkshopMods(mpaths.mods_dir, mpaths.mods_folders, checkboxes)
 
 
 def lock_interaction():
@@ -708,7 +705,6 @@ def extract_workshop_tools():
 
     if not fails:
         recalc_rescomp_dirs()
-        setupButtonState()
         if os.path.exists(mpaths.dota_resource_compiler_path):
             helper.add_text_to_terminal(helper.localization_dict["extracted_text_var"])
         else:

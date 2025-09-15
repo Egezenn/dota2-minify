@@ -54,6 +54,7 @@
     - [Egezenn](#egezenn)
     - [ZerdacK](#zerdack)
     - [MeGaNeKoS](#meganekos)
+    - [sadesguy](#sadesguy)
     - [yujin sharingan](#yujin-sharingan)
     - [otf31](#otf31)
   - [Dependencies](#dependencies)
@@ -112,7 +113,7 @@ In our [Discord server](https://discord.com/invite/2YDnqpbcKM) we have a forum i
 
 #### Using the project locally
 
-Prerequisites are `git`, `python` and `uv`. (also `tk` for tkinter, `wine` for workshop tools executables and `patchelf` to compile via nuitka on Linux)
+Prerequisites are `git`, `python` and `uv`. (also `tk` for tkinter and `wine` for workshop tools executables)
 
 - `git clone https://github.com/Egezenn/dota2-minify`
 - `cd dota2-minify`
@@ -139,6 +140,9 @@ mods
 │   ├── menu.xml
 │   ├── notes_<language>.txt
 │   ├── script.py
+│   ├── script_after_decompile.py
+│   ├── script_after_recompile.py
+│   ├── script_uninstall.py
 │   ├── styling.txt
 │   └── xml_mod.json
 ```
@@ -157,7 +161,7 @@ mods
 
 This directory will include any files put here into the pak that minify is going to create. These files should be compiled.
 
-If not specifically protected by Dota2 these files will override any game content. This also applies for the rest of the modification methods available.
+If not specifically protected by Dota2, these files will override any game content. This also applies for the rest of the modification methods available.
 
 #### `blacklist.txt`
 
@@ -197,7 +201,7 @@ To live inspect the layout, open the workshop tools and press <kbd>F6</kbd> and 
 Syntax for this file starting from the line beginning is as follows:  
 `#`: Comments  
 `!`: By default, the file is pulled from `dota 2 beta/game/dota/pak01_dir.vpk`.  
-However to change this behavior and pull files from `dota 2 beta/game/core/pak01_dir.vpk`, you can use this.
+However to change this behavior and pull files from `dota 2 beta/game/core/pak01_dir.vpk`, you can use this.  
 `@@`: Links to raw data
 
 `path/to/vcss_file_without_extension @@ #example_id { property: value; }`
@@ -205,6 +209,8 @@ However to change this behavior and pull files from `dota 2 beta/game/core/pak01
 #### `script.py`
 
 If and when there is a specific behavior to be automated you can include a python script along with your mod. You can find the template below.
+
+Appending `_initial, _after_decompile, _after_recompile, _uninstall` to your script's name will adjust when it'll be executed. Thus giving you the full control of how your mod can be handled. By default it executes while iterating over each mod when you are patching.
 
 ```python
 # This script template can be run both manually and from minify.
@@ -278,7 +284,7 @@ Creation of the base project.
 
 ### [Egezenn](https://github.com/Egezenn)
 
-Taking over the maintainership of the project, implementing automated workflows, various improvements, full Linux port, RegExp blacklists, Turkish translations and [more](https://github.com/Egezenn/dota2-minify/commits/main/?author=Egezenn).
+Taking over the maintainership of the project, implementing automated workflows, various improvements, full Linux port, RegExp blacklists, scripting support, Turkish translations and [more](https://github.com/Egezenn/dota2-minify/commits/main/?author=Egezenn).
 
 <details>
 <summary>Mods</summary>
@@ -322,6 +328,10 @@ XML mod behavior and Minify mod settings section.
 
 </details>
 
+### [sadesguy](https://github.com/sadesguy)
+
+MacOS port and workflow.
+
 ### [yujin sharingan](https://discord.com/users/234341830647480321)
 
 <details>
@@ -347,16 +357,16 @@ Spanish translation.
 
 ### Python packages
 
-| Name                                                 | Usage                                            | License              |
-| ---------------------------------------------------- | :----------------------------------------------- | -------------------- |
-| [dearpygui](https://github.com/hoffstadt/DearPyGui)  | GUI                                              | MIT license          |
-| [Nuitka](https://nuitka.net/)                        | Compilation of the binaries                      | Apache-2.0 license   |
-| [psutil](https://github.com/giampaolo/psutil)        | Handling processes                               | BSD-3-Clause license |
-| [playsound3](https://github.com/szmikler/playsound3) | Playing sounds                                   | MIT license          |
-| [requests](https://github.com/psf/requests)          | Downloading/querying project's dependencies      | Apache-2.0 license   |
-| [screeninfo](https://github.com/rr-/screeninfo)      | Calculating initial position for the main window | MIT license          |
-| [vdf](https://github.com/ValvePython/vdf)            | Serializing VDFs                                 | MIT license          |
-| [vpk](https://github.com/ValvePython/vpk)            | Creating and getting file content list in VPKs   | MIT license          |
+| Name                                                 | Usage                                            | License                                                                                                       |
+| ---------------------------------------------------- | :----------------------------------------------- | ------------------------------------------------------------------------------------------------------------- |
+| [dearpygui](https://github.com/hoffstadt/DearPyGui)  | GUI                                              | [MIT license](https://github.com/hoffstadt/DearPyGui/blob/master/LICENSE)                                     |
+| [playsound3](https://github.com/szmikler/playsound3) | Playing sounds                                   | [MIT license](https://github.com/szmikler/playsound3/blob/main/LICENSE)                                       |
+| [psutil](https://github.com/giampaolo/psutil)        | Handling processes                               | [BSD-3-Clause license](https://github.com/giampaolo/psutil/blob/master/LICENSE)                               |
+| [PyInstaller](https://pyinstaller.org)               | Compilation of the binaries                      | [GPLv2 or later + additional properties](https://github.com/pyinstaller/pyinstaller/blob/develop/COPYING.txt) |
+| [requests](https://github.com/psf/requests)          | Downloading/querying project's dependencies      | [Apache-2.0 license](https://github.com/psf/requests/blob/main/LICENSE)                                       |
+| [screeninfo](https://github.com/rr-/screeninfo)      | Calculating initial position for the main window | [MIT license](https://github.com/rr-/screeninfo/blob/master/LICENSE.md)                                       |
+| [vdf](https://github.com/ValvePython/vdf)            | Serializing VDFs                                 | [MIT license](https://github.com/ValvePython/vdf/blob/master/LICENSE)                                         |
+| [vpk](https://github.com/ValvePython/vpk)            | Creating and getting file content list in VPKs   | [MIT license](https://github.com/ValvePython/vpk/blob/master/LICENSE)                                         |
 
 ## License
 

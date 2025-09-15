@@ -1,3 +1,4 @@
+import importlib.util
 import json
 import os
 import shlex
@@ -8,7 +9,6 @@ import time
 import urllib.error
 from urllib.request import urlopen
 import webbrowser
-import xml.etree.ElementTree as ET
 
 import dearpygui.dearpygui as ui
 
@@ -68,14 +68,18 @@ def add_text_to_terminal(text, tag: int | str | None = None, type: str | None = 
     scroll_to_terminal_end()
 
 
-def disableWorkshopMods(mods_dir, mods_folders, checkboxes):
-    for folder in mods_folders:
-        mod_path = os.path.join(mods_dir, folder)
-        styling_txt = os.path.join(mod_path, "styling.txt")
-        for box in checkboxes:
-            if checkboxes[box] == folder:
-                if os.path.exists(styling_txt):
-                    ui.configure_item(box, enabled=False, default_value=False)
+def disableWorkshopMods(checkboxes):
+    if not workshop_installed:
+        for folder in mpaths.mods_folders:
+            mod_path = os.path.join(mpaths.mods_dir, folder)
+            worskhop_required_modification_methods = ["styling.txt", "menu.xml", "xml_mod.json"]
+
+            for box in checkboxes:
+                if checkboxes[box] == folder:
+                    for method_file in worskhop_required_modification_methods:
+                        if os.path.exists(os.path.join(mod_path, method_file)):
+                            ui.configure_item(box, enabled=False, default_value=False)
+                            break
 
 
 def cleanFolders():
@@ -201,184 +205,6 @@ def change_output_path():
     output_path = [lang for lang in mpaths.minify_dota_possible_language_output_paths if selection in lang][0]
 
 
-def vpkExtractor(vpk_to_extract_from, paths):
-    if isinstance(paths, str):
-        paths = [paths]
-    for path in paths:
-        fullPath = os.path.join(mpaths.build_dir, path)
-        if not os.path.exists(fullPath):  # extract files from VPK only once
-            add_text_to_terminal(
-                f"{localization_dict['extracting_terminal_text_var']}{path}",
-                f"extracting_{path}_tag",
-            )
-            vpk_path = path.replace(os.sep, "/")
-            pakfile = vpk_to_extract_from.get_file(vpk_path)
-            os.makedirs(os.path.dirname(fullPath), exist_ok=True)
-            pakfile.save(fullPath)
-
-
-def apply_xml_modifications(xml_file, modifications):
-    if not os.path.exists(xml_file):
-        warnings.append(f"[Missing XML] '{xml_file}' not found; skipping modifications")
-        return
-    tree = ET.parse(xml_file)
-    root = tree.getroot()
-
-    def find_by_id(node, node_id):
-        return node.find(f".//*[@id='{node_id}']")
-
-    def find_with_parent_by_id(node, node_id):
-        # Returns (element, parent) or (None, None)
-        for parent in node.iter():
-            for child in list(parent):
-                if child.get("id") == node_id:
-                    return child, parent
-        # root itself
-        if node.get("id") == node_id:
-            return node, None
-        return None, None
-
-    def ensure_unique_include(container_tag, src_value):
-        container = root.find(container_tag)
-        if container is None:
-            container = ET.Element(container_tag)
-            # put styles/scripts at the top for readability
-            root.insert(0, container)
-        # de-duplicate
-        for inc in container.findall("include"):
-            if inc.get("src") == src_value:
-                return  # already present
-        include = ET.SubElement(container, "include")
-        include.set("src", src_value)
-
-    for mod in modifications:
-        action = mod.get("action")
-
-        if action == "add_script":
-            src = mod.get("src", "")
-            ensure_unique_include("scripts", src)
-
-        elif action == "add_style_include":
-            src = mod.get("src", "")
-            ensure_unique_include("styles", src)
-
-        elif action == "set_attribute":
-            tag = mod.get("tag")
-            element = root.find(f".//{tag}")
-            if element is None:
-                element = root.find(f".//*[@id='{tag}']")
-            if element is not None:
-                attr = mod.get("attribute")
-                val = mod.get("value")
-                if attr is not None and val is not None:
-                    element.set(attr, val)
-
-        elif action == "add_child":
-            parent_id = mod.get("parent_id")
-            xml_snippet = mod.get("xml", "")
-            if parent_id and xml_snippet:
-                parent_elem = find_by_id(root, parent_id)
-                if parent_elem is not None:
-                    try:
-                        child = ET.fromstring(xml_snippet)
-                        parent_elem.append(child)
-                    except ET.ParseError as e:
-                        warnings.append(f"[XML ParseError] add_child -> {e}")
-                else:
-                    warnings.append(f"[add_child] parent id '{parent_id}' not found in {os.path.basename(xml_file)}")
-
-        elif action == "move_into":
-            target_id = mod.get("target_id")
-            new_parent_id = mod.get("new_parent_id")
-            if target_id and new_parent_id:
-                elem, old_parent = find_with_parent_by_id(root, target_id)
-                new_parent = find_by_id(root, new_parent_id)
-                if elem is not None and new_parent is not None:
-                    if old_parent is not None:
-                        old_parent.remove(elem)
-                    new_parent.append(elem)
-                else:
-                    if elem is None:
-                        warnings.append(
-                            f"[move_into] target id '{target_id}' not found in {os.path.basename(xml_file)}"
-                        )
-                    if new_parent is None:
-                        warnings.append(
-                            f"[move_into] new_parent id '{new_parent_id}' not found in {os.path.basename(xml_file)}"
-                        )
-
-        elif action == "insert_after":
-            target_id = mod.get("target_id")
-            xml_snippet = mod.get("xml", "")
-            if target_id and xml_snippet:
-                target, parent = find_with_parent_by_id(root, target_id)
-                if target is not None and parent is not None:
-                    try:
-                        new_elem = ET.fromstring(xml_snippet)
-                        idx = list(parent).index(target)
-                        parent.insert(idx + 1, new_elem)
-                    except ET.ParseError as e:
-                        warnings.append(f"[XML ParseError] insert_after -> {e}")
-                else:
-                    warnings.append(f"[insert_after] target id '{target_id}' not found in {os.path.basename(xml_file)}")
-
-        elif action == "insert_before":
-            target_id = mod.get("target_id")
-            xml_snippet = mod.get("xml", "")
-            if target_id and xml_snippet:
-                target, parent = find_with_parent_by_id(root, target_id)
-                if target is not None and parent is not None:
-                    try:
-                        new_elem = ET.fromstring(xml_snippet)
-                        idx = list(parent).index(target)
-                        parent.insert(idx, new_elem)
-                    except ET.ParseError as e:
-                        warnings.append(f"[XML ParseError] insert_before -> {e}")
-                else:
-                    warnings.append(
-                        f"[insert_before] target id '{target_id}' not found in {os.path.basename(xml_file)}"
-                    )
-
-    try:
-        tree.write(xml_file, encoding="utf-8")
-    except TypeError:
-        # Older Python may not accept encoding for ElementTree.write in text mode
-        tree.write(xml_file)
-
-
-def build_minify_menu(menus):
-    minify_section_xml = r"""
-<Panel class="SettingsSectionContainer" section="#minify" icon="s2r://panorama/images/control_icons/24px/check.vsvg">
-  <Panel class="SettingsSectionTitleContainer LeftRightFlow">
-    <Image class="SettingsSectionTitleIcon" texturewidth="48px" textureheight="48px" scaling="stretch-to-fit-preserve-aspect" src="s2r://panorama/images/control_icons/24px/check.vsvg" />
-    <Label class="SettingsSectionTitle" text="Minify" />
-  </Panel>
-</Panel>
-"""
-
-    minify_section = ET.fromstring(minify_section_xml)
-    try:
-        for menu in menus:
-            menu_element = ET.fromstring(menu)
-        minify_section.append(menu_element)
-
-        settings_path = os.path.join(
-            mpaths.build_dir,
-            "panorama",
-            "layout",
-            "popups",
-            "popup_settings_reborn.xml",
-        )
-        tree = ET.parse(settings_path)
-        root = tree.getroot()
-        settings_body = root.find(".//PopupSettingsRebornSettingsBody")
-        if settings_body is not None:
-            settings_body.append(minify_section)
-            tree.write(settings_path)
-    except ET.ParseError:
-        pass
-
-
 def urlValidator(url):
     content = []
     url = url.replace("@@", "")
@@ -408,64 +234,6 @@ def urlValidator(url):
         warnings.append(f"[{type(exception).__name__}]" + f" Invalid URL -> " + url)
 
     return content
-
-
-def processBlacklistDir(index, line, folder):
-    data = []
-
-    line = line[2:] if line.startswith(">>") or line.startswith("**") else line
-
-    lines = subprocess.run(
-        [
-            os.path.join(".", mpaths.rg_executable),
-            "--no-filename",
-            "--no-line-number",
-            "--color=never",
-            line,
-            os.path.join(mpaths.bin_dir, "gamepakcontents.txt"),
-        ],
-        capture_output=True,
-        text=True,
-    )
-    data = lines.stdout.splitlines()
-    data.pop(0)
-
-    if not data:
-        warnings.append(
-            f"[Directory Not Found] Could not find '{line}' in pak01_dir.vpk -> mods\\{folder}\\blacklist.txt [line: {index+1}]"
-        )
-
-    return data
-
-
-def processBlackList(index, line, folder, blank_file_extensions):
-    data = []
-
-    if line.startswith("@@"):
-        content = urlValidator(line)
-
-        for line in content:
-
-            if line.startswith("#") or line == "":
-                continue
-
-            if line.startswith(">>") or line.startswith("**"):
-                for path in processBlacklistDir(index, line, folder):
-                    data.append(path)
-                continue
-
-            try:
-                if line.endswith(tuple(blank_file_extensions)):
-                    data.append(line)
-                else:
-                    warnings.append(
-                        f"[Invalid Extension] '{line}' in 'mods\\{folder}\\blacklist.txt' [line: {index+1}] does not end in one of the valid extensions -> {blank_file_extensions}"
-                    )
-
-            except TypeError as exception:
-                warnings.append(f"[{type(exception).__name__}]" + " Invalid data type in line -> " + str(line))
-
-    return data
 
 
 def open_dir(path, args=""):
@@ -584,3 +352,38 @@ def remove_path(*paths):
             print(f"Forced deletion of: {path}")
         except FileNotFoundError:
             print(f"Skipped deletion of: {path}")
+
+
+def exec_script(script_path, mod_name, order_name):
+    if os.path.exists(script_path):
+        module_name = mod_name.replace(" ", "").lower() + f"_{order_name}_script"
+        spec = importlib.util.spec_from_file_location(module_name, script_path)
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
+
+        main_func = getattr(module, "main", None)
+        if callable(main_func):
+            if order_name != "initial":
+                add_text_to_terminal(
+                    localization_dict["script_execution_text_var"].format(mod_name, order_name),
+                )
+            main_func()
+            if order_name != "initial":
+                add_text_to_terminal(
+                    localization_dict["script_success_text_var"].format(mod_name, order_name),
+                    None,
+                    "success",
+                )
+        else:
+            add_text_to_terminal(
+                localization_dict["script_no_main_text_var"].format(mod_name, order_name),
+                None,
+                "warning",
+            )
+
+
+def bulk_exec_script(order_name):
+    bulk_name = f"script_{order_name}.py"
+    for root, dirs, files in os.walk(mpaths.mods_dir):
+        if bulk_name in files:
+            exec_script(os.path.join(root, bulk_name), os.path.basename(root), order_name)

@@ -1,1 +1,1 @@
-X saniye gecikmeden sonra eşleşme iletişim kutusunu otomatik olarak kabul eder. Gecikme, ayarlar panelinden ayarlanabilir.
+X saniye gecikmeden sonra eşleşme iletişim kutusunu otomatik olarak kabul eder. Gecikme, ayarlar panelinden ayarlanabilir. Atölye araçları yüklü değilse varsayılan değer 10'dur.

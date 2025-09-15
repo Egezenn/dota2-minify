@@ -216,16 +216,13 @@
     "TR": "Lütfen önce Dota 2'yi kapatın ve sonra yamalama işlemini gerçekleştirin."
   },
   "script_execution_text_var": {
-    "EN": "   Executing {} script."
+    "EN": "   Executing {} script on step \"{}\"."
   },
   "script_success_text_var": {
-    "EN": "   Successfully executed {} script."
-  },
-  "script_fail_text_var": {
-    "EN": "   Failed to execute {} script."
+    "EN": "   Successfully executed {} \"{}\" script."
   },
   "script_no_main_text_var": {
-    "EN": "   {} script has no main function!"
+    "EN": "   {} \"{}\" script has no main function!"
   },
   "minify_encountered_errors_terminal_text_var": {
     "EN": "Minify encountered errors. Check Minify\\logs\\warnings.txt for details.",

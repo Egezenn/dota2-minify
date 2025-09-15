@@ -50,7 +50,7 @@ else:
 
 # minify project paths
 bin_dir = "bin"
-build_dir = "build"
+build_dir = "vpk_build"
 logs_dir = "logs"
 mods_dir = "mods"
 config_dir = "config"
@@ -232,7 +232,6 @@ handle_non_default_path()
 version_query = "https://raw.githubusercontent.com/Egezenn/dota2-minify/refs/heads/main/version"
 discord = "https://discord.com/invite/2YDnqpbcKM"
 latest_release = "https://github.com/Egezenn/dota2-minify/releases"
-odg_latest = "https://github.com/Egezenn/OpenDotaGuides/releases/latest/download/itembuilds.zip"
 
 # source2viewer install
 try:

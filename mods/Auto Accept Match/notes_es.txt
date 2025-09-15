@@ -1,1 +1,1 @@
-Acepta automáticamente el cuadro de diálogo de coincidencia tras X segundos de retraso. El retraso se puede ajustar a través del panel de configuración.
+Acepta automáticamente el cuadro de diálogo de coincidencia tras X segundos de retraso. El retraso se puede ajustar a través del panel de configuración. El valor predeterminado es 10 si no se han instalado las herramientas del taller.
