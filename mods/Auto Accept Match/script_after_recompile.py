@@ -18,7 +18,9 @@ def main():
     if not helper.workshop_installed:
         response = requests.get(before_workshop_req)
         if response.status_code == 200:
-            os.makedirs(mpaths.minify_dota_compile_output_path, "panoroma", "layout", "popups")
+            os.makedirs(
+                os.path.join(mpaths.minify_dota_compile_output_path, "panoroma", "layout", "popups"), exist_ok=True
+            )
             with open(
                 os.path.join(
                     mpaths.minify_dota_compile_output_path, "panoroma", "layout", "popups", "popup_accept_match.vxml_c"
