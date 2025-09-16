@@ -88,7 +88,11 @@ def patcher():
 
                         if os.path.exists(menu_xml):
                             with open(menu_xml, "r", encoding="utf-8") as file:
-                                mod_menus.append(file.read())
+                                data = file.read()
+                                if data[:7] == r"<Panel ":
+                                    mod_menus.append(data)
+                                else:
+                                    helper.warnings.append(f"Improper mod menu on {folder}!")
 
                         if os.path.exists(xml_mod_file):
                             with open(xml_mod_file, "r", encoding="utf-8") as file:
@@ -249,6 +253,7 @@ def patcher():
             except Exception as exception:
                 exceptiondata = traceback.format_exc().splitlines()
                 helper.warnings.append(exceptiondata[-1])
+
         if mod_menus:
             dota_extracts.add("panorama/layout/popups/popup_settings_reborn.vxml_c")
         # Extract XMLs to be modified (assume they are in game VPK)
@@ -272,11 +277,11 @@ def patcher():
                     [
                         os.path.join(".", mpaths.s2v_executable),
                         "--input",
-                        "build",
+                        mpaths.build_dir,
                         "--recursive",
                         "--vpk_decompile",
                         "--output",
-                        "build",
+                        mpaths.build_dir,
                     ],
                     stdout=file,
                 )
@@ -607,7 +612,7 @@ def build_minify_menu(menus):
         if settings_body is not None:
             settings_body.append(minify_section)
             tree.write(settings_path)
-    except ET.ParseError:
+    except ET.ParseError as e:
         helper.warnings.append(f"[XML ParseError] -> {e}")
 
 

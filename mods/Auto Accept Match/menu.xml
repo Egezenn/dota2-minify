@@ -2,11 +2,11 @@
   <Label class="SettingsSectionSubtitle" text="Auto Accept" />
   <Panel class="SettingsSectionColumnContainer FilledBackground">
     <Panel class="SettingsSectionColumn">
-      <Label class="SettingsSubLabel" text="Auto-accept delay (seconds, 31 disables, 0 instant)" />
+      <Label class="SettingsSubLabel" text="Auto-accept delay (seconds, 40 disabled, 0 instant)" />
       <DOTASettingsSlider
             convar="dota_replay_manager_download_simultaneous_requests"
             min="0"
-            max="31"
+            max="40"
             increment="1"
             displayprecision="0" />
     </Panel>
