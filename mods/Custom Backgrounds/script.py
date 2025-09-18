@@ -12,6 +12,8 @@ from PIL import Image
 
 import mpaths
 
+img_available = False
+
 
 for file in sorted(os.listdir(current_dir)):
     if file.endswith((".png", ".jpg", ".jpeg", ".webm")):
