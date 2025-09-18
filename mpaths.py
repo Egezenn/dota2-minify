@@ -37,16 +37,8 @@ else:
 DOTA_TOOLS_EXECUTABLE_PATH = os.path.join("steamapps", "common", "dota 2 beta", "game", "bin", "win64", "dota2cfg.exe")
 
 # launchers for dota2 won't work as it presumes native version, doesn't really matter
-if OS == "Windows":
-    DOTA_EXECUTABLE_PATH_FALLBACK = os.path.join(
-        "steamapps", "common", "dota 2 beta", "game", "bin", "win64", "dota2.exe"
-    )
-elif OS == "Darwin":
-    DOTA_EXECUTABLE_PATH_FALLBACK = DOTA_EXECUTABLE_PATH
-else:
-    DOTA_EXECUTABLE_PATH_FALLBACK = os.path.join(
-        "steamapps", "common", "dota 2 beta", "game", "bin", "linuxsteamrt64", "dota2"
-    )
+DOTA_EXECUTABLE_PATH_FALLBACK = os.path.join("steamapps", "common", "dota 2 beta", "game", "bin", "win64", "dota2.exe")
+
 
 # minify project paths
 bin_dir = "bin"
@@ -174,10 +166,9 @@ def handle_non_default_path():
         not os.path.exists(os.path.join(steam_dir, DOTA_EXECUTABLE_PATH))
         and not os.path.exists(os.path.join(steam_dir, DOTA_EXECUTABLE_PATH_FALLBACK))
     ):
-        # Try to prompt with tkinter if available; otherwise, write guidance and break
         try:
-            import tkinter as tk  # type: ignore
-            from tkinter import filedialog, messagebox  # type: ignore
+            import tkinter as tk
+            from tkinter import filedialog, messagebox
 
             root = tk.Tk()
             root.withdraw()
@@ -197,14 +188,15 @@ def handle_non_default_path():
                 steam_dir = os.path.normpath(filedialog.askdirectory())
                 with open(path_file_dir, "w") as file:
                     file.write(steam_dir)
+                print(steam_dir)
             else:
                 quit()
 
             root.destroy()
-        except Exception:
-            # No tkinter available or failed to prompt. Create a hint and break to avoid import-time crash.
+        except Exception as e:
             with open(os.path.join(logs_dir, "crashlog.txt"), "w") as file:
                 file.write(
+                    f"{type(e).__name__}: {str(e)}"
                     "Could not open directory picker. Set your Steam library path in 'config/dota2path_minify.txt' and restart Minify.\n"
                     f"Expected something like: {STEAM_DEFAULT_INSTALLATION_PATH}\n"
                 )
