@@ -7,7 +7,42 @@ dota2path_minify.txt
 locale
 logs
 mods.json
-mods/_*
+mods/*
+
+## In-repo mods
+!mods/Auto Accept Match
+!mods/base
+!mods/Custom Backgrounds
+mods/Custom Backgrounds/*.png
+mods/Custom Backgrounds/*.jpg
+mods/Custom Backgrounds/*.jpeg
+mods/Custom Backgrounds/*.webm
+!mods/Dark Terrain
+!mods/Minify Base Attacks
+!mods/Minify Spells & Items
+!mods/Misc Optimization
+!mods/Mute Ambient Sounds
+!mods/Mute Announcers
+!mods/Mute Taunt Sounds
+!mods/Mute Voice Line Sounds
+!mods/OpenDotaGuides Guides
+!mods/Remove Foilage
+!mods/Remove Hero Card Clutter
+!mods/Remove Hero Renders
+!mods/Remove Main Menu Background
+!mods/Remove Pings
+!mods/Remove River
+!mods/Remove Showcases
+!mods/Remove Sprays
+!mods/Remove Weather Effects
+!mods/Repopulate Unit Query HUD
+!mods/Reposition & Rescale HUD
+!mods/Revert Ping Sounds
+!mods/Show NetWorth
+!mods/Stat Site Buttons
+!mods/Transparent HUD
+!mods/Tree Mod
+!mods/User Styles
 
 ## Dependencies
 bin/rescomproot*
@@ -42,5 +77,5 @@ venv/
 
 
 #Ignore vscode AI rules
-.github/instructions/codacy.instructions.md
+.github/instructions/
 .DS_Store

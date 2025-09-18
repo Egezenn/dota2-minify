@@ -25,11 +25,11 @@ warnings = []
 workshop_installed = False
 
 
-def handleWarnings(logs_dir):
+def handleWarnings():
     global warnings
 
     if len(warnings) != 0:
-        with open(os.path.join(logs_dir, "warnings.txt"), "a") as file:
+        with open(warning_log_path := os.path.join(mpaths.logs_dir, "warnings.txt"), "a") as file:
             for line in warnings:
                 file.write(line + "\n")
         add_text_to_terminal(
@@ -37,6 +37,7 @@ def handleWarnings(logs_dir):
             "minify_error_var",
             "warning",
         )
+        open_thing(os.path.join(warning_log_path))
 
 
 def scroll_to_terminal_end():
@@ -236,14 +237,7 @@ def urlValidator(url):
     return content
 
 
-def open_dir(path, args=""):
-    """Open a directory/file or launch an executable with optional args.
-
-    - Directories: open in system file manager.
-    - Files: on macOS, reveal in Finder to avoid "no app" errors; otherwise try default handler.
-    - Executables: launch via subprocess (Windows uses startfile).
-    """
-
+def open_thing(path, args=""):
     if path == mpaths.dota2_tools_executable:
         os.makedirs(mpaths.minify_dota_tools_required_path, exist_ok=True)
     try:
@@ -375,6 +369,7 @@ def exec_script(script_path, mod_name, order_name):
                     "success",
                 )
         else:
+            warnings.append(localization_dict["script_no_main_text_var"].format(mod_name, order_name))
             add_text_to_terminal(
                 localization_dict["script_no_main_text_var"].format(mod_name, order_name),
                 None,

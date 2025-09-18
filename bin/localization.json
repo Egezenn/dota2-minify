@@ -191,11 +191,8 @@
     "RU": "-> Завершена распаковка ",
     "TR": "-> Çıkartıldı "
   },
-  "failed_to_start_terminal_text_var": {
-    "EN": "Failed to start!",
-    "ES": "¡No se pudo iniciar!",
-    "RU": "Не удалось запустить!",
-    "TR": "Başlatılamadı!"
+  "failed_download_retrying_terminal_text_var": {
+    "EN": "Failed to download, retrying."
   },
   "check_crashlog_terminal_text_var": {
     "EN": "Check 'logs\\crashlog.txt' for more info.",

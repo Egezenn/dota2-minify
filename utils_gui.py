@@ -72,6 +72,10 @@ def setupSystem():
     os.makedirs("logs", exist_ok=True)
     isDotaRunning()
     isCompilerFound()
+    download_dependencies()
+
+
+def download_dependencies():
     try:
         if not (
             os.path.exists(mpaths.s2v_executable)
@@ -141,15 +145,11 @@ def setupSystem():
             file.write(f"{type(e).__name__}: {str(e)}")
             lock_interaction()
             helper.add_text_to_terminal(
-                helper.localization_dict["failed_to_start_terminal_text_var"],
-                "failed_to_start_text_tag",
+                helper.localization_dict["failed_download_retrying_terminal_text_var"],
+                None,
                 "error",
             )
-            helper.add_text_to_terminal(
-                helper.localization_dict["check_crashlog_terminal_text_var"],
-                "check_logs_text_tag",
-                "error",
-            )
+        return download_dependencies()
 
 
 def load_checkboxes_state():
@@ -519,34 +519,36 @@ def dev_mode():
         ):
             ui.add_button(
                 label="Path: Dota2 Minify",
-                callback=lambda: helper.open_dir(os.path.join(mpaths.minify_dota_pak_output_path)),
+                callback=lambda: helper.open_thing(os.path.join(mpaths.minify_dota_pak_output_path)),
             )
             ui.add_button(
                 label="File: Dota2 Minify pak66 VPK",
-                callback=lambda: helper.open_dir(os.path.join(mpaths.minify_dota_pak_output_path, "pak66_dir.vpk")),
+                callback=lambda: helper.open_thing(os.path.join(mpaths.minify_dota_pak_output_path, "pak66_dir.vpk")),
             )
             ui.add_spacer(width=0, height=10)
-            ui.add_button(label="Path: Minify", callback=lambda: helper.open_dir(os.getcwd()))
+            ui.add_button(label="Path: Minify", callback=lambda: helper.open_thing(os.getcwd()))
             ui.add_button(
                 label="Path: Logs",
-                callback=lambda: helper.open_dir(os.path.join(mpaths.logs_dir)),
+                callback=lambda: helper.open_thing(os.path.join(mpaths.logs_dir)),
             )
             ui.add_button(
                 label="Path: Dota2",
-                callback=lambda: helper.open_dir(os.path.join(mpaths.steam_dir, "steamapps", "common", "dota 2 beta")),
+                callback=lambda: helper.open_thing(
+                    os.path.join(mpaths.steam_dir, "steamapps", "common", "dota 2 beta")
+                ),
             )
             ui.add_button(
                 label="File: Dota2 pak01 VPK",
-                callback=lambda: helper.open_dir(mpaths.dota_game_pak_path),
+                callback=lambda: helper.open_thing(mpaths.dota_game_pak_path),
             )
             ui.add_button(
                 label="File: Dota2 pak01(core) VPK",
-                callback=lambda: helper.open_dir(mpaths.dota_core_pak_path),
+                callback=lambda: helper.open_thing(mpaths.dota_core_pak_path),
             )
             ui.add_spacer(width=0, height=10)
             ui.add_button(
                 label="Executable: Dota2 Tools",
-                callback=lambda: helper.open_dir(
+                callback=lambda: helper.open_thing(
                     mpaths.dota2_tools_executable,
                     "-addon a -language minify -novid -console",
                 ),
@@ -554,7 +556,7 @@ def dev_mode():
             ui.add_text("^ Requires steam to be open")
             ui.add_button(
                 label="Executable: Dota2",
-                callback=lambda: helper.open_dir(mpaths.dota2_executable, "-language minify -novid -console"),
+                callback=lambda: helper.open_thing(mpaths.dota2_executable, "-language minify -novid -console"),
             )
 
         with ui.window(

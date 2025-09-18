@@ -314,22 +314,18 @@ def patcher():
             mpaths.build_dir,
             mpaths.minify_dota_compile_input_path,
             dirs_exist_ok=True,
-            ignore=shutil.ignore_patterns("*.vcss_c"),
+            ignore=shutil.ignore_patterns("*.vcss_c", "*.vxml_c"),
         )
 
         if helper.workshop_installed:
             with open(os.path.join(mpaths.logs_dir, "resourcecompiler.txt"), "wb") as file:
-                helper.add_text_to_terminal(
-                    helper.localization_dict["compiling_terminal_text_var"],
-                    "compiling_text",
-                )
                 command = [
                     mpaths.dota_resource_compiler_path,
                     "-i",
                     mpaths.minify_dota_compile_input_path + "/*",
                     "-r",
                 ]
-                if mpaths.OS == "Linux":
+                if mpaths.OS != "Windows":
                     command.insert(0, "wine")
 
                 rescomp = subprocess.run(
@@ -363,6 +359,10 @@ def patcher():
 
         os.makedirs(helper.output_path, exist_ok=True)
         newpak = vpk.new(mpaths.minify_dota_compile_output_path)
+        helper.add_text_to_terminal(
+            helper.localization_dict["compiling_terminal_text_var"],
+            "compiling_text",
+        )
         newpak.save(os.path.join(helper.output_path, "pak66_dir.vpk"))
 
         helper.remove_path(
@@ -385,12 +385,13 @@ def patcher():
             "warning",
         )
 
-        helper.handleWarnings(mpaths.logs_dir)
+        helper.handleWarnings()
         threading.Thread(target=lambda: playsound3.playsound(os.path.join(mpaths.sounds_dir, "success.wav"))).start()
 
     except Exception:
-        with open(os.path.join(mpaths.logs_dir, "crashlog.txt"), "w") as file:
+        with open(crashlog_path := os.path.join(mpaths.logs_dir, "crashlog.txt"), "w") as file:
             file.write(traceback.format_exc())
+        helper.open_thing(crashlog_path)
 
         helper.add_text_to_terminal("-------------------------------------------------------", "spacer2_text")
         helper.add_text_to_terminal(
