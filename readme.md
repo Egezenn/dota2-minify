@@ -360,6 +360,7 @@ Spanish translation.
 | Name                                                 | Usage                                            | License                                                                                                       |
 | ---------------------------------------------------- | :----------------------------------------------- | ------------------------------------------------------------------------------------------------------------- |
 | [dearpygui](https://github.com/hoffstadt/DearPyGui)  | GUI                                              | [MIT license](https://github.com/hoffstadt/DearPyGui/blob/master/LICENSE)                                     |
+| [pillow](https://github.com/python-pillow/Pillow)    | Image conversions                                | [MIT-CMU License](https://github.com/python-pillow/Pillow/blob/main/LICENSE)                                  |
 | [playsound3](https://github.com/szmikler/playsound3) | Playing sounds                                   | [MIT license](https://github.com/szmikler/playsound3/blob/main/LICENSE)                                       |
 | [psutil](https://github.com/giampaolo/psutil)        | Handling processes                               | [BSD-3-Clause license](https://github.com/giampaolo/psutil/blob/master/LICENSE)                               |
 | [PyInstaller](https://pyinstaller.org)               | Compilation of the binaries                      | [GPLv2 or later + additional properties](https://github.com/pyinstaller/pyinstaller/blob/develop/COPYING.txt) |

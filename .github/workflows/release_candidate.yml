@@ -55,16 +55,25 @@ jobs:
 
       - name: Move project dependencies
         shell: pwsh
+        if: matrix.os == 'windows-latest'
         run: |
-          Copy-Item -Path "bin" -Destination "dist/Minify/bin" -Recurse
-          Copy-Item -Path "mods" -Destination "dist/Minify/mods" -Recurse
-          Copy-Item -Path "version" -Destination "dist/Minify/version"
-          Copy-Item -Path ".venv/lib/python3.13/site-packages/PIL" -Destination "dist/Minify/_internal/PIL" -Recurse
+          Copy-Item -Path "bin" -Destination "dist\Minify\bin" -Recurse
+          Copy-Item -Path "mods" -Destination "dist\Minify\mods" -Recurse
+          Copy-Item -Path "version" -Destination "dist\Minify\version"
+          Copy-Item -Path "readme.md" -Destination "dist\Minify\readme.md"
+          Copy-Item -Path ".venv\lib\site-packages\PIL" -Destination "dist\Minify\_internal\PIL" -Recurse
+          Copy-Item -Path ".venv\lib\site-packages\pillow.libs" -Destination "dist\Minify\_internal\pillow.libs" -Recurse
 
       - name: Move project dependencies
         shell: pwsh
         if: matrix.os == 'ubuntu-latest'
-        run: Copy-Item -Path ".venv/lib/python3.13/site-packages/pillow.libs" -Destination "dist/Minify/_internal/pillow.libs" -Recurse
+        run: |
+          Copy-Item -Path "bin" -Destination "dist/Minify/bin" -Recurse
+          Copy-Item -Path "mods" -Destination "dist/Minify/mods" -Recurse
+          Copy-Item -Path "version" -Destination "dist/Minify/version"
+          Copy-Item -Path "readme.md" -Destination "dist/Minify/readme.md"
+          Copy-Item -Path ".venv/lib/python3.13/site-packages/PIL" -Destination "dist/Minify/_internal/PIL" -Recurse
+          Copy-Item -Path ".venv/lib/python3.13/site-packages/pillow.libs" -Destination "dist/Minify/_internal/pillow.libs" -Recurse
 
       - name: Archiving (Windows)
         if: matrix.os == 'windows-latest'
