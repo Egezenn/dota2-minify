@@ -39,16 +39,14 @@ jobs:
 
       - name: Make and activate virtual environment (Windows)
         if: matrix.os == 'windows-latest'
-        shell: pwsh
         run: |
           python -m venv .venv
-          .\.venv\Scripts\Activate.ps1
+          .\.venv\Scripts\activate
       - name: Make and activate virtual environment (Linux)
-        if: matrix.os == 'windows-latest'
-        shell: pwsh
+        if: matrix.os == 'ubuntu-latest'
         run: |
           python -m venv .venv
-          ./.venv/Scripts/Activate.ps1
+          source ./.venv/bin/activate
 
       - name: Install dependencies
         run: |
@@ -58,7 +56,7 @@ jobs:
       - name: Build executable
         run: pyinstaller --noconsole --icon=bin/images/favicon.ico --name=Minify --hidden-import=tkinter --hidden-import=PIL imgui.py
 
-      - name: Move project dependencies
+      - name: Move project dependencies (Windows)
         shell: pwsh
         if: matrix.os == 'windows-latest'
         run: |
@@ -66,10 +64,9 @@ jobs:
           Copy-Item -Path "mods" -Destination "dist\Minify\mods" -Recurse
           Copy-Item -Path "version" -Destination "dist\Minify\version"
           Copy-Item -Path "readme.md" -Destination "dist\Minify\readme.md"
-          Copy-Item -Path ".venv\lib\site-packages\PIL" -Destination "dist\Minify\_internal\PIL" -Recurse
-          Copy-Item -Path ".venv\lib\site-packages\pillow.libs" -Destination "dist\Minify\_internal\pillow.libs" -Recurse
+          Copy-Item -Path "C:\hostedtoolcache\windows\Python\3.13.7\x64\Lib\site-packages\PIL" -Destination "dist\Minify\_internal\PIL" -Recurse
 
-      - name: Move project dependencies
+      - name: Move project dependencies (Linux)
         shell: pwsh
         if: matrix.os == 'ubuntu-latest'
         run: |
@@ -77,13 +74,8 @@ jobs:
           Copy-Item -Path "mods" -Destination "dist/Minify/mods" -Recurse
           Copy-Item -Path "version" -Destination "dist/Minify/version"
           Copy-Item -Path "readme.md" -Destination "dist/Minify/readme.md"
-          Copy-Item -Path ".venv/lib/python3.13/site-packages/PIL" -Destination "dist/Minify/_internal/PIL" -Recurse
-          Copy-Item -Path ".venv/lib/python3.13/site-packages/pillow.libs" -Destination "dist/Minify/_internal/pillow.libs" -Recurse
-
-      - name: Move project dependencies
-        shell: pwsh
-        if: matrix.os == 'ubuntu-latest'
-        run: Copy-Item -Path ".venv/lib/python3.13/site-packages/pillow.libs" -Destination "dist/Minify/_internal/pillow.libs" -Recurse
+          Copy-Item -Path "/opt/hostedtoolcache/Python/3.13.7/x64/lib/python3.13/site-packages/PIL" -Destination "dist/Minify/_internal/PIL" -Recurse
+          Copy-Item -Path "/opt/hostedtoolcache/Python/3.13.7/x64/lib/python3.13/site-packages/pillow.libs" -Destination "dist/Minify/_internal/pillow.libs" -Recurse
 
       - name: Archiving (Windows)
         if: matrix.os == 'windows-latest'
