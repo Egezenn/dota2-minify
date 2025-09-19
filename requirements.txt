@@ -1,4 +1,5 @@
 dearpygui
+pillow
 playsound3
 psutil
 pyinstaller
