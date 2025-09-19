@@ -266,7 +266,6 @@ def create_ui():
 
 
 def create_base_ui():
-    helper.disableWorkshopMods(utils_gui.checkboxes)
     utils_gui.recalc_rescomp_dirs()
     helper.get_available_localizations()
     create_ui()
@@ -275,6 +274,7 @@ def create_base_ui():
     utils_gui.theme()
     helper.change_localization(init=True)
     utils_gui.version_check()
+    helper.disableWorkshopMods(utils_gui.checkboxes)
     time.sleep(0.05)
     utils_gui.configure_update_popup()
     helper.bulk_exec_script("initial")

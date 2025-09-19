@@ -37,13 +37,26 @@ jobs:
         with:
           commit_message: "Version change"
 
+      - name: Make and activate virtual environment (Windows)
+        if: matrix.os == 'windows-latest'
+        shell: pwsh
+        run: |
+          python -m venv .venv
+          .\.venv\Scripts\Activate.ps1
+      - name: Make and activate virtual environment (Linux)
+        if: matrix.os == 'windows-latest'
+        shell: pwsh
+        run: |
+          python -m venv .venv
+          ./.venv/Scripts/Activate.ps1
+
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
       - name: Build executable
-        run: pyinstaller --noconsole --icon=bin/images/favicon.ico --name=Minify --hidden-import=tkinter imgui.py
+        run: pyinstaller --noconsole --icon=bin/images/favicon.ico --name=Minify --hidden-import=tkinter --hidden-import=PIL imgui.py
 
       - name: Move project dependencies
         shell: pwsh
@@ -51,6 +64,12 @@ jobs:
           Copy-Item -Path "bin" -Destination "dist/Minify/bin" -Recurse
           Copy-Item -Path "mods" -Destination "dist/Minify/mods" -Recurse
           Copy-Item -Path "version" -Destination "dist/Minify/version"
+          Copy-Item -Path ".venv/lib/python3.13/site-packages/PIL" -Destination "dist/Minify/_internal/PIL" -Recurse
+
+      - name: Move project dependencies
+        shell: pwsh
+        if: matrix.os == 'ubuntu-latest'
+        run: Copy-Item -Path ".venv/lib/python3.13/site-packages/pillow.libs" -Destination "dist/Minify/_internal/pillow.libs" -Recurse
 
       - name: Archiving (Windows)
         if: matrix.os == 'windows-latest'
