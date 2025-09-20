@@ -16,7 +16,7 @@ mods/*
 mods/Custom Backgrounds/*.png
 mods/Custom Backgrounds/*.jpg
 mods/Custom Backgrounds/*.jpeg
-mods/Custom Backgrounds/*.webm
+mods/Custom Backgrounds/*.webp
 !mods/Dark Terrain
 !mods/Minify Base Attacks
 !mods/Minify Spells & Items

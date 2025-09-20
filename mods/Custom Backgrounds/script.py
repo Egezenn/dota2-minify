@@ -36,13 +36,12 @@ def main():
 """
             if not filepath.endswith(".png"):
                 if (magick_path := shutil.which("magick")) is not None:
-                    subprocess.call(f"{magick_path} {filepath} background.png", shell=True)
-                    filepath = "background.png"
-            else:
-                helper.add_text_to_terminal(
-                    warning := f"imagemagick is not available on path, unable to convert {file}"
-                )
-                helper.warnings.append(warning)
+                    subprocess.run([magick_path, filepath, filepath := os.path.join(current_dir, "background.png")])
+                else:
+                    helper.add_text_to_terminal(
+                        warning := f"imagemagick is not available on path, unable to convert {file}"
+                    )
+                    helper.warnings.append(warning)
 
             if filepath.endswith(".png"):
                 os.makedirs(
