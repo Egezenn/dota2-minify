@@ -58,24 +58,11 @@ jobs:
 
       - name: Move project dependencies (Windows)
         shell: pwsh
-        if: matrix.os == 'windows-latest'
         run: |
           Copy-Item -Path "bin" -Destination "dist\Minify\bin" -Recurse
           Copy-Item -Path "mods" -Destination "dist\Minify\mods" -Recurse
           Copy-Item -Path "version" -Destination "dist\Minify\version"
           Copy-Item -Path "readme.md" -Destination "dist\Minify\readme.md"
-          Copy-Item -Path "C:\hostedtoolcache\windows\Python\3.13.7\x64\Lib\site-packages\PIL" -Destination "dist\Minify\_internal\PIL" -Recurse
-
-      - name: Move project dependencies (Linux)
-        shell: pwsh
-        if: matrix.os == 'ubuntu-latest'
-        run: |
-          Copy-Item -Path "bin" -Destination "dist/Minify/bin" -Recurse
-          Copy-Item -Path "mods" -Destination "dist/Minify/mods" -Recurse
-          Copy-Item -Path "version" -Destination "dist/Minify/version"
-          Copy-Item -Path "readme.md" -Destination "dist/Minify/readme.md"
-          Copy-Item -Path "/opt/hostedtoolcache/Python/3.13.7/x64/lib/python3.13/site-packages/PIL" -Destination "dist/Minify/_internal/PIL" -Recurse
-          Copy-Item -Path "/opt/hostedtoolcache/Python/3.13.7/x64/lib/python3.13/site-packages/pillow.libs" -Destination "dist/Minify/_internal/pillow.libs" -Recurse
 
       - name: Archiving (Windows)
         if: matrix.os == 'windows-latest'

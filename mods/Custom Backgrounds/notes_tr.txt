@@ -2,4 +2,4 @@ Ana menü arka planını, oyuncu vitrin arka planını ve seçim ekranı arka pl
 
 Atölye araçlarınız varsa, mod klasörüne bir resim bırakabilirsiniz ve bu resim arka plan olarak kullanılacaktır.
 
-* Ana menü, yalnızca “Remove Main Menu Background" modu etkinleştirildiğinde değiştirilir.
+*Görüntünüz png formatında değilse ve dönüştürülmesi gerekiyorsa, yol değişkeninizde “magick” yardımcı programına ihtiyacınız var.

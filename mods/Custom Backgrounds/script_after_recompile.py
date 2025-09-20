@@ -22,8 +22,11 @@ def main():
     if helper.workshop_installed:
         global img_available
         if img_available:
-            os.remove(
-                os.path.join(
-                    mpaths.minify_dota_compile_output_path, "panorama", "images", "backgrounds", "imgref.vxml_c"
+            try:
+                os.remove(
+                    os.path.join(
+                        mpaths.minify_dota_compile_output_path, "panorama", "images", "backgrounds", "imgref.vxml_c"
+                    )
                 )
-            )
+            except:
+                pass

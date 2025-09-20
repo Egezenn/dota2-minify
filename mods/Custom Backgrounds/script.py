@@ -1,5 +1,6 @@
 import os
 import shutil
+import subprocess
 import sys
 
 current_dir = os.path.dirname(os.path.abspath(__file__))
@@ -8,16 +9,15 @@ if minify_root not in sys.path:
     sys.path.insert(0, minify_root)
 
 
-from PIL import Image
-
-import mpaths
 import helper
+import mpaths
+
 
 img_available = False
 
 
 for file in sorted(os.listdir(current_dir)):
-    if file.endswith((".png", ".jpg", ".jpeg", ".webm")):
+    if file.endswith((".png", ".jpg", ".jpeg", ".webp")):
         img_available = True
         break
 
@@ -34,18 +34,25 @@ def main():
     </Panel>
 </root>
 """
-            if not file.endswith(".png"):
-                img = Image.open()
-                img.save(filepath := os.path.join(current_dir, "background.png"))
+            if not filepath.endswith(".png"):
+                if (magick_path := shutil.which("magick")) is not None:
+                    subprocess.call(f"{magick_path} {filepath} background.png", shell=True)
+                    filepath = "background.png"
+            else:
+                helper.add_text_to_terminal(
+                    warning := f"imagemagick is not available on path, unable to convert {file}"
+                )
+                helper.warnings.append(warning)
 
-            os.makedirs(
-                compile_location := os.path.join(
-                    mpaths.minify_dota_compile_input_path, "panorama", "images", "backgrounds"
-                ),
-                exist_ok=True,
-            )
+            if filepath.endswith(".png"):
+                os.makedirs(
+                    compile_location := os.path.join(
+                        mpaths.minify_dota_compile_input_path, "panorama", "images", "backgrounds"
+                    ),
+                    exist_ok=True,
+                )
 
-            shutil.copy(filepath, os.path.join(compile_location, "background.png"))
+                shutil.copy(filepath, os.path.join(compile_location, "background.png"))
 
-            with open(os.path.join(compile_location, "imgref.xml"), "w") as xml:
-                xml.write(xml_template)
+                with open(os.path.join(compile_location, "imgref.xml"), "w") as xml:
+                    xml.write(xml_template)

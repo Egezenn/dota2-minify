@@ -2,4 +2,4 @@ Reemplaza el fondo del menú principal, el fondo de la vitrina del jugador y el 
 
 Si tienes herramientas de taller, puedes soltar una imagen en la carpeta mod y se utilizará como fondo.
 
-* El menú principal solo se reemplaza si se habilita la opción "Remove Main Menu Background".
+*Necesitas la utilidad "magick" en tu variable de ruta si tu imagen no es un png y necesita ser convertida.

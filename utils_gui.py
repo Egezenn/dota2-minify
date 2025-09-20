@@ -100,7 +100,7 @@ def download_dependencies():
                     )
 
         # Prefer system-installed ripgrep when available
-        rg_on_path = shutil.which(mpaths.rg_executable) or shutil.which("rg.exe") or shutil.which("rg")
+        rg_on_path = shutil.which(mpaths.rg_executable)
         if rg_on_path:
             mpaths.rg_executable = rg_on_path
         elif not os.path.exists(mpaths.rg_executable):

@@ -2,4 +2,4 @@ Replaces main menu background, player showcase background and pick screen backgr
 
 If you have workshop tools you can drop an image to the mod folder and it will use that for the background.
 
-* Main menu only gets replaced if "Remove Main Menu Background" mod is enabled.
+You need "magick" utility on your path variable if your image isn't a png and needs to be converted.
