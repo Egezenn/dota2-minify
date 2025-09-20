@@ -16,7 +16,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-latest, windows-latest]
+        os: [windows-latest, ubuntu-latest]
 
     steps:
       - uses: actions/checkout@v4
@@ -51,7 +51,7 @@ jobs:
       - name: Build executable
         run: pyinstaller --noconsole --icon=bin/images/favicon.ico --name=Minify --hidden-import=tkinter --hidden-import=PIL imgui.py
 
-      - name: Move project dependencies (Windows)
+      - name: Move project dependencies
         shell: pwsh
         run: |
           Copy-Item -Path "bin" -Destination "dist\Minify\bin" -Recurse
