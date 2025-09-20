@@ -25,7 +25,7 @@ warnings = []
 workshop_installed = False
 
 
-def handleWarnings():
+def handle_warnings():
     global warnings
 
     if len(warnings) != 0:
@@ -69,7 +69,7 @@ def add_text_to_terminal(text, tag: int | str | None = None, type: str | None = 
     scroll_to_terminal_end()
 
 
-def disableWorkshopMods(checkboxes):
+def disable_workshop_mods(checkboxes):
     if not workshop_installed:
         for folder in mpaths.mods_folders:
             mod_path = os.path.join(mpaths.mods_dir, folder)
@@ -83,7 +83,7 @@ def disableWorkshopMods(checkboxes):
                             break
 
 
-def cleanFolders():
+def clean_folders():
     for root, dirs, files in os.walk(mpaths.logs_dir):
         for filename in files:
             open(os.path.join(root, filename), "w").close()
@@ -92,13 +92,13 @@ def cleanFolders():
     os.makedirs(mpaths.minify_dota_compile_input_path, exist_ok=True)
 
 
-def urlDispatcher(url):
+def url_dispatcher(url):
     webbrowser.open(url)
 
 
-def getBlankFileExtensions(blank_files_dir):
+def get_blank_file_extensions():
     extensions = []
-    for file in os.listdir(blank_files_dir):
+    for file in os.listdir(mpaths.blank_files_dir):
         extensions.append(os.path.splitext(file)[1])
     return extensions
 

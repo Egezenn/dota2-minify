@@ -395,14 +395,7 @@ dota_core_pak_path = os.path.join(steam_dir, "steamapps", "common", "dota 2 beta
 dota_itembuilds_path = os.path.join(steam_dir, "steamapps", "common", "dota 2 beta", "game", "dota", "itembuilds")
 dota_map_path = os.path.join(steam_dir, "steamapps", "common", "dota 2 beta", "game", "dota", "maps", "dota.vpk")
 dota_resource_compiler_path = os.path.join(
-    steam_dir,
-    "steamapps",
-    "common",
-    "dota 2 beta",
-    "game",
-    "bin",
-    "win64",
-    "resourcecompiler.exe",
+    steam_dir, "steamapps", "common", "dota 2 beta", "game", "bin", "win64", "resourcecompiler.exe"
 )
 
 dota_tools_paths = [

@@ -54,24 +54,24 @@ def version_check():
 
 
 def initiate_conditionals():
-    setup_system_thread = threading.Thread(target=setupSystem)
+    setup_system_thread = threading.Thread(target=setup_system)
     load_state_checkboxes_thread = threading.Thread(target=load_checkboxes_state)
     setup_system_thread.start()
     load_state_checkboxes_thread.start()
     setup_system_thread.join()
     load_state_checkboxes_thread.join()
     create_checkboxes()
-    setupButtonState()
+    setup_button_state()
 
 
 def update_popup_show():
     ui.configure_item("update_popup", show=True)
 
 
-def setupSystem():
+def setup_system():
     os.makedirs("logs", exist_ok=True)
-    isDotaRunning()
-    isCompilerFound()
+    is_dota_running()
+    is_compiler_found()
     download_dependencies()
 
 
@@ -171,7 +171,7 @@ def create_checkboxes():
             label=name,
             tag=name,
             default_value=False,
-            callback=setupButtonState,
+            callback=setup_button_state,
         )
         for key in checkboxes_state.keys():
             if key == name:
@@ -228,7 +228,7 @@ def create_checkboxes():
         checkboxes[current_box] = name
 
 
-def setupButtonState():
+def setup_button_state():
     for box in checkboxes:
         if ui.get_value(box):
             ui.configure_item("button_patch", enabled=True)
@@ -323,11 +323,11 @@ def open_mod_menu():
 
 
 def open_discord_link():
-    helper.urlDispatcher(mpaths.discord)
+    helper.url_dispatcher(mpaths.discord)
 
 
 def open_github_link():
-    helper.urlDispatcher(mpaths.latest_release)
+    helper.url_dispatcher(mpaths.latest_release)
 
 
 def uninstall_popup_show():
@@ -643,7 +643,7 @@ def configure_update_popup():
     )
 
 
-def isDotaRunning():
+def is_dota_running():
     target = "dota2.exe" if mpaths.OS == "Windows" else "dota2"
     running = False
     for p in psutil.process_iter(attrs=["name"]):
@@ -664,7 +664,7 @@ def isDotaRunning():
         )
 
 
-def isCompilerFound():
+def is_compiler_found():
     if not os.path.exists(mpaths.dota_resource_compiler_path):
         helper.workshop_installed = False
         helper.add_text_to_terminal(
@@ -717,5 +717,6 @@ def bulk_exec_script(order_name):
     bulk_name = f"script_{order_name}.py"
     for root, dirs, files in os.walk(mpaths.mods_dir):
         if bulk_name in files:
+            # TODO: pull the file from pak66 to check if it was enabled
             if order_name in ["initial", "uninstall"] or ui.get_value(checkboxes[os.path.basename(root)]):
                 helper.exec_script(os.path.join(root, bulk_name), os.path.basename(root), order_name)
