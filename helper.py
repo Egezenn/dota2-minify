@@ -375,10 +375,3 @@ def exec_script(script_path, mod_name, order_name):
                 None,
                 "warning",
             )
-
-
-def bulk_exec_script(order_name):
-    bulk_name = f"script_{order_name}.py"
-    for root, dirs, files in os.walk(mpaths.mods_dir):
-        if bulk_name in files:
-            exec_script(os.path.join(root, bulk_name), os.path.basename(root), order_name)

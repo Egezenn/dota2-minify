@@ -277,7 +277,7 @@ def create_base_ui():
     helper.disableWorkshopMods(utils_gui.checkboxes)
     time.sleep(0.05)
     utils_gui.configure_update_popup()
-    helper.bulk_exec_script("initial")
+    utils_gui.bulk_exec_script("initial")
 
 
 # Adding font to the ui registry

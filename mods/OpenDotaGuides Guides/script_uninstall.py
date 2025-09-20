@@ -29,6 +29,9 @@ def main():
         helper.add_text_to_terminal(
             "Unable to recover backed up default guides or the itembuilds directory is empty, verify files to get the default guides back"
         )
+        helper.warnings.append(
+            "Unable to recover backed up default guides or the itembuilds directory is empty, verify files to get the default guides back"
+        )
 
 
 if __name__ == "__main__":

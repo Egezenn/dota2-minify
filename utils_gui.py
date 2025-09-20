@@ -230,7 +230,7 @@ def create_checkboxes():
 
 def setupButtonState():
     for box in checkboxes:
-        if ui.get_value(box) == True:
+        if ui.get_value(box):
             ui.configure_item("button_patch", enabled=True)
             break
         else:
@@ -711,3 +711,11 @@ def extract_workshop_tools():
             helper.add_text_to_terminal(helper.localization_dict["extracted_text_var"])
         else:
             helper.add_text_to_terminal(helper.localization_dict["extraction_of_failed_text_var"].format(path))
+
+
+def bulk_exec_script(order_name):
+    bulk_name = f"script_{order_name}.py"
+    for root, dirs, files in os.walk(mpaths.mods_dir):
+        if bulk_name in files:
+            if order_name in ["initial", "uninstall"] or ui.get_value(checkboxes[os.path.basename(root)]):
+                helper.exec_script(os.path.join(root, bulk_name), os.path.basename(root), order_name)

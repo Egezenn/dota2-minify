@@ -70,7 +70,7 @@ def patcher():
                 files_dir = os.path.join(mod_path, "files")
 
                 for box in utils_gui.checkboxes:
-                    if (ui.get_value(box) == True and utils_gui.checkboxes[box] == folder) or (
+                    if (ui.get_value(box) and utils_gui.checkboxes[box] == folder) or (
                         folder == "base" and not base_mods_applied
                     ):  # step into folders that have ticked checkboxes only
                         base_mods_applied = True if folder == "base" else False
@@ -295,7 +295,7 @@ def patcher():
             build_minify_menu(mod_menus)
         for path, mods in xml_modifications.items():
             apply_xml_modifications(os.path.join(mpaths.build_dir, path), mods)
-        helper.bulk_exec_script("after_decompile")
+        utils_gui.bulk_exec_script("after_decompile")
         # ---------------------------------- STEP 3 ---------------------------------- #
         # ---------------------------- CSS resourcecompile --------------------------- #
         # ---------------------------------------------------------------------------- #
@@ -339,7 +339,7 @@ def patcher():
                 # if sp_compiler.stderr != b"":
                 #     decoded_err = sp_compiler.stderr.decode("utf-8")
                 #     raise Exception(decoded_err)
-        helper.bulk_exec_script("after_recompile")
+        utils_gui.bulk_exec_script("after_recompile")
 
         # ---------------------------------- STEP 6 ---------------------------------- #
         # -------- Create VPK from game folder and save into Minify directory -------- #
@@ -427,7 +427,7 @@ def uninstaller():
                     except KeyError:
                         pass
 
-    helper.bulk_exec_script("uninstall")
+    utils_gui.bulk_exec_script("uninstall")
     helper.add_text_to_terminal(
         helper.localization_dict["mods_removed_terminal_text_var"],
         "uninstaller_text_tag",
