@@ -322,9 +322,9 @@ XML mod behavior and Minify mod settings section.
 <summary>Mods</summary>
 
 - [`Auto Accept Match`](./mods/Auto%20Accept%20Match)
-- [`Auto Language Dialog Accept`](./mods/base/files/panorama/scripts/minify_auto_language_dialog_accept.vjs_c)
+- [`Auto Language Dialog Accept`](./mods/base/files/panorama/scripts/popup_generic.vjs_c)
 - [`Repopulate Unit Query HUD`](./mods/Repopulate%20Unit%20Query%20HUD)
-- [`Show NetWorth`](./mods/Show%20NetWorth%20)
+- [`Show NetWorth`](./mods/Show%20NetWorth)
 
 </details>
 
@@ -337,7 +337,7 @@ MacOS port and workflow.
 <details>
 <summary>Mods</summary>
 
-- `Dotabuff in Profiles` mod which has been refactored to [`Stat Site Buttons`](./mods/Stat%20Site%20Buttons%20In%20Profiles)
+- `Dotabuff in Profiles` mod which has been refactored to [`Stat Site Buttons`](./mods/Stat%20Site%20Buttons)
 
 </details>
 

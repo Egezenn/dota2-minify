@@ -26,16 +26,14 @@ panorama/styles/hud/dota_hud_quick_stats @@ #QuickStatsContainer { background-co
 panorama/styles/hud/dota_hud_scoreboard @@ DOTAScoreboardPlayer { background-color: none; }
 panorama/styles/hud/dota_hud_shop @@ #HeightLimiterContainer, #ItemCombines, #SearchTextEntry, #NewPlayerShopConsumables, #TeamItems, #SearchAndButtonsContainer, .ShopItemsTab { background-color: none; }
 panorama/styles/hud/hud_reborn @@ #stragiint, #stats_container_bg { background-color: none; }
-panorama/styles/popups/popup_settings_reborn @@ .SettingsContainer, #SettingsNavigationContainer { background-color: #000000D0; }
 
+panorama/styles/dota_hud_radar_button @@ #ChargeCount { box-shadow: fill #00000000 0px 0px 0px 0px; }
+panorama/styles/dota_ui_shop_item @@ #QuickBuyRows #ItemImage { box-shadow: fill #00000000 0px 0px 0px 0px; }
+panorama/styles/hud/dota_hud_stash @@ .Reborn #stash_bg { background-image: none; background-color: #00000040; }
 
 panorama/styles/dota_hud_netgraph @@ #LeftColumn Label { color: #FFFFFF; letter-spacing: 1px; font-size: 10px; } #RightColumn_1 Label, #RightColumn_2 Label { color: #FFFFFF; }
 
-panorama/styles/dota_hud_radar_button @@ #ChargeCount { box-shadow: fill #00000000 0px 0px 0px 0px; }
-
-panorama/styles/dota_ui_shop_item @@ #QuickBuyRows #ItemImage { box-shadow: fill #00000000 0px 0px 0px 0px; }
-
-panorama/styles/hud/dota_hud_ability_panel @@ .InventoryItem.BackpackSlot #ItemImage { margin: 0px; } .Reborn .BackpackSlot #ButtonWell { box-shadow: inset #000 0px 0px 0px; } .Reborn .FiveAbilities #abilities #ButtonWell, .Reborn .SixAbilities #abilities #ButtonWell { margin-bottom: 5px; } .Reborn .InventoryItem #ButtonSize { margin-left: 0px; margin-right: 0px; margin-top: 0px; margin-bottom: 0px; } .Reborn #center_block .InventoryItem.BackpackSlot, #ButtonSize { box-shadow: inset #000000aa 0px 0px 0px 0px; }
+panorama/styles/hud/dota_hud_ability_panel @@ .InventoryItem.BackpackSlot #ItemImage { margin: 0px; } .Reborn .BackpackSlot #ButtonWell { box-shadow: inset #000 0px 0px 0px; } .Reborn .FiveAbilities #abilities #ButtonWell, .Reborn .SixAbilities #abilities #ButtonWell { margin-bottom: 5px; } .Reborn .InventoryItem #ButtonSize { margin-left: 0px; margin-right: 0px; margin-top: 0px; margin-bottom: 0px; } .Reborn #center_block .InventoryItem.BackpackSlot, #ButtonSize { box-shadow: inset #000000AA 0px 0px 0px 0px; }
 
 panorama/styles/hud/dota_hud_health_mana @@ .Reborn #HealthManaContainer { margin-bottom: 0px; } .Reborn #HealthProgress .ProgressBarRight { background-color: gradient( linear, 0% 0%, 0% 100%, from( #212121 ), color-stop( 0.2, #2e2e2e), color-stop( .5, #2e2e2e), to( #212121 ) ); background-color-opacity: 0.5; } .Reborn #ManaProgress .ProgressBarRight { background-color: gradient( linear, 0% 0%, 0% 100%, from( #212121 ), color-stop( 0.2, #2e2e2e), color-stop( .5, #2e2e2e), to( #212121 ) ); background-color-opacity: 0.5; }
 
@@ -47,9 +45,7 @@ panorama/styles/hud/dota_hud_scoreboard @@ #Background { background-image: none;
 
 panorama/styles/hud/dota_hud_shop @@ .ShopItemsTab { border-top-left-radius: 0px; border-top-right-radius: 0px; margin-right: 0px; width: 132px; } .ShopItemsTab:selected { border: 1px solid #000000; background-color-opacity: 0.2; } #CommonItems { background-img-opacity: 0; background-color-opacity: 0; } #GridShopHeaders { padding-right: 0px; background-color-opacity: 0.2; } #Main, #GuideFlyout, #SearchBox { background-color: #00000080; } #GuideFlyout { border-radius: 16px 0px 0px 16px; }
 
-panorama/styles/hud/dota_hud_stash @@ .Reborn #stash_bg { background-image: none; background-color: #00000040; }
-
-panorama/styles/hud/dota_hud_stat_branch @@ .AltPressed .DescriptionDrawer.HasDescription,.DescriptionDrawer.HasDescription.DescriptionVisible { visibility: visible; } .BranchChoice .StatBonusLabel, .StatBonusDescription { color: #FFFFFF; } .BranchChoice.Disabled .StatBonusLabel, .StatBonusDescription { color: #AAAAAA; } .BranchDescription { background-color: #000000A0; } .LevelBG, #StatUpgradeOption { background-image: none; background-color: none; } .StatBranchCenter { background-image: none; background-color: #000000C0; } #UpgradeStat, #StatUpgradeOption { border: 0; } DOTAStatBranch:not(.ShowStatBranchAsTooltip) #UpgradeStat.could_level_up #UpgradeStatBG, DOTAStatBranch:not(.ShowStatBranchAsTooltip) .BranchPair.BranchActive.RightBranchActive.LeftBranchActive, DOTAStatBranch:not(.ShowStatBranchAsTooltip) .BranchPair.LeftBranchActive:not(.RightBranchActive), DOTAStatBranch:not(.ShowStatBranchAsTooltip) .BranchPair.RightBranchActive:not(.LeftBranchActive) { background-image: none; background-color: #40251EC0; }
+panorama/styles/hud/dota_hud_stat_branch @@ .AltPressed .DescriptionDrawer.HasDescription,.DescriptionDrawer.HasDescription.DescriptionVisible { visibility: visible; } .BranchChoice .StatBonusLabel, .StatBonusDescription { color: #FFFFFF; } .BranchChoice.Disabled .StatBonusLabel, .StatBonusDescription { color: #AAAAAA; } .BranchDescription { background-color: #000000A0; } .LevelBG, #StatUpgradeOption { background-image: none; background-color: none; } .StatBranchCenter { background-image: none; background-color: #000000D8; } #UpgradeStat, #StatUpgradeOption { border: 0; } DOTAStatBranch:not(.ShowStatBranchAsTooltip) #UpgradeStat.could_level_up #UpgradeStatBG, DOTAStatBranch:not(.ShowStatBranchAsTooltip) .BranchPair.BranchActive.RightBranchActive.LeftBranchActive, DOTAStatBranch:not(.ShowStatBranchAsTooltip) .BranchPair.LeftBranchActive:not(.RightBranchActive), DOTAStatBranch:not(.ShowStatBranchAsTooltip) .BranchPair.RightBranchActive:not(.LeftBranchActive) { background-image: none; background-color: #40251EC0; }
 
 panorama/styles/hud/dota_hud_top_bar @@ #TopBarRadiantPlayersContainer, #TopBarDirePlayersContainer { opacity: 0.6; } DOTATopBarPlayer #HeroBadgeOverlay { opacity: 0; }
 
@@ -57,14 +53,15 @@ panorama/styles/hud/dota_hud_xp @@ #CircularXPProgressBlur { opacity: 0; }
 
 panorama/styles/hud/hud_reborn @@ #center_bg { height: 155px; margin-left: 10px; margin-right: 60px; background-color: #00000040; border-radius: 32px 32px 0px 0px; } .MinimapExtraLarge #minimap { width: 318px; height: 318px; } #AbilitiesAndStatBranch { margin-bottom: 42px; } #inventory { margin-right: 102px; } #inventory_composition_layer_container { margin-right: 40px; } #inventory_tpscroll_slot, #inventory_neutral_slot { box-shadow: fill #00000000 0px 0px 0px 0px; background-img-opacity: 0.5; } #MenuButtons { margin-left: 0px; margin-top: 0px; opacity: 0.25; } #MenuButtons:hover { opacity: 1; } #MorphProgress { margin-bottom: 30px; }
 
-panorama/styles/tooltips/tooltip_ability @@ #Contents.AbilityContents { background-color: #000000D0; } #stats_container_bg { border-right: 0; }
+panorama/styles/popups/popup_settings_reborn @@ .SettingsContainer, #SettingsNavigationContainer { background-color: #000000D8; }
 !panorama/styles/tooltips/tooltip_base @@ #Contents { background-color: #00000040; border: 0; }
-panorama/styles/tooltips/tooltip_innate @@ .FacetContainer, .InnateContainer { background-color: #000000D0; } DOTAFacetDetails#FacetDetails { background-color: none; }
-panorama/styles/tooltips/tooltip_radar @@ DOTATooltipRadar #Contents { background-color: #000000D0; }
-panorama/styles/hud/tooltip_glyph @@ DOTATooltipGlyph #Contents { background-color: #000000D0; }
-panorama/styles/tooltips/tooltip_roshantimer @@ #Contents.RoshanTimerContents { background-color: #000000D0; }
-panorama/styles/hud/tooltip_unit_damage_armor @@ DOTATooltipUnitDamageArmor #Contents { background-color: #000000D0; } #AttackContainer, #DefenseContainer { background-color: none; border: 0; }
-panorama/styles/tooltips/tooltip_aghs_status @@ #TopSection, #AghsTooltipConnecter, #BottomSection { background-color: #000000D0; background-image: none; }
-panorama/styles/tooltips/tooltip_neutral_crafting @@ #Contents { background-color: #000000D0; }
-panorama/styles/hud/tooltip_gold @@ DOTATooltipGold #Contents { background-color: #000000D0; }
-panorama/styles/hud/dota_hud_scoreboard @@ #TeamInventoryBackground, .SharedUnitControl#SharedUnitControl, DOTASharedContent#SharedContent, #ScoreboardCoaches { background-color: #000000D0; background-image: none; box-shadow: none; }
+panorama/styles/tooltips/tooltip_ability @@ #Contents.AbilityContents { background-color: #000000D8; } #stats_container_bg { border-right: 0; }
+panorama/styles/tooltips/tooltip_innate @@ .FacetContainer, .InnateContainer { background-color: #000000D8; } DOTAFacetDetails#FacetDetails { background-color: none; }
+panorama/styles/tooltips/tooltip_radar @@ DOTATooltipRadar #Contents { background-color: #000000D8; }
+panorama/styles/hud/tooltip_glyph @@ DOTATooltipGlyph #Contents { background-color: #000000D8; }
+panorama/styles/tooltips/tooltip_roshantimer @@ #Contents.RoshanTimerContents { background-color: #000000D8; }
+panorama/styles/hud/tooltip_unit_damage_armor @@ DOTATooltipUnitDamageArmor #Contents { background-color: #000000D8; } #AttackContainer, #DefenseContainer { background-color: none; border: 0; }
+panorama/styles/tooltips/tooltip_aghs_status @@ #TopSection, #AghsTooltipConnecter, #BottomSection { background-color: #000000D8; background-image: none; }
+panorama/styles/tooltips/tooltip_neutral_crafting @@ #Contents { background-color: #000000D8; }
+panorama/styles/hud/tooltip_gold @@ DOTATooltipGold #Contents { background-color: #000000D8; }
+panorama/styles/hud/dota_hud_scoreboard @@ #TeamInventoryBackground, .SharedUnitControl#SharedUnitControl, DOTASharedContent#SharedContent, #ScoreboardCoaches { background-color: #000000D8; background-image: none; box-shadow: none; }

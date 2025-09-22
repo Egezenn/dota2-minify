@@ -1,3 +1,4 @@
+from ctypes import WinError
 import importlib.util
 import json
 import os
@@ -334,18 +335,30 @@ def select_compile_dir(sender, app_data):
 
 def remove_path(*paths):
     "Superset of `shutil.rmtree` to handle permissions and take in list of paths and also delete files."
-    for path in paths:
-        try:
-            if os.path.isdir(path):
+    try:
+        for path in paths:
+            try:
+                if os.path.isdir(path):
+                    shutil.rmtree(path)
+                else:
+                    os.remove(path)
+            except PermissionError:
+                os.chmod(path, stat.S_IWUSR)
                 shutil.rmtree(path)
-            else:
-                os.remove(path)
-        except PermissionError:
-            os.chmod(path, stat.S_IWUSR)
-            shutil.rmtree(path)
-            print(f"Forced deletion of: {path}")
-        except FileNotFoundError:
-            print(f"Skipped deletion of: {path}")
+                print(f"Forced deletion of: {path}")
+            except FileNotFoundError:
+                print(f"Skipped deletion of: {path}")
+
+    except WinError:
+        for dir, dirnames, filenames in os.walk(path):
+            current_dir_mode = os.stat(dir).st_mode
+            os.chmod(dir, current_dir_mode | stat.S_IWUSR)
+
+            for filename in filenames:
+                filepath = os.path.join(dir, filename)
+                current_file_mode = os.stat(filepath).st_mode
+                os.chmod(filepath, current_file_mode | stat.S_IWUSR)
+        return remove_path(*paths)
 
 
 def exec_script(script_path, mod_name, order_name):
