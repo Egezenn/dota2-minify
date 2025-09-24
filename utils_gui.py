@@ -717,6 +717,6 @@ def bulk_exec_script(order_name):
     bulk_name = f"script_{order_name}.py"
     for root, dirs, files in os.walk(mpaths.mods_dir):
         if bulk_name in files:
-            # TODO: pull the file from pak66 to check if it was enabled
+            # TODO: pull the file from pak66 to check if it was enabled for uninstallers
             if order_name in ["initial", "uninstall"] or ui.get_value(checkboxes[os.path.basename(root)]):
                 helper.exec_script(os.path.join(root, bulk_name), os.path.basename(root), order_name)

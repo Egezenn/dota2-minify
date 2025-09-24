@@ -129,10 +129,13 @@
     "EN": "-> Beginning to extract CSS files"
   },
   "extracting_terminal_text_var": {
-    "EN": "   Extracting: ",
-    "ES": "   Extrayendo: ",
-    "RU": "   Извлечение: ",
-    "TR": "   çıkartılıyor: "
+    "EN": "   Extracting: {}",
+    "ES": "   Extrayendo: {}",
+    "RU": "   Извлечение: {}",
+    "TR": "   Çıkartılıyor: {}"
+  },
+  "replacing_terminal_text_var": {
+    "EN": "   Replacing {} -> {}"
   },
   "decompiling_terminal_text_var": {
     "EN": "-> Decompiling extracted files via Source2Viewer"

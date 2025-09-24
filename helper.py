@@ -1,4 +1,3 @@
-from ctypes import WinError
 import importlib.util
 import json
 import os
@@ -14,6 +13,10 @@ import webbrowser
 import dearpygui.dearpygui as ui
 
 import mpaths
+
+if mpaths.OS == "Windows":
+    from ctypes import WinError
+
 
 compile_path = ""
 details_label_text_var = ""
@@ -207,7 +210,7 @@ def change_output_path():
     output_path = [lang for lang in mpaths.minify_dota_possible_language_output_paths if selection in lang][0]
 
 
-def urlValidator(url):
+def url_validator(url):
     content = []
     url = url.replace("@@", "")
 
@@ -342,23 +345,23 @@ def remove_path(*paths):
                     shutil.rmtree(path)
                 else:
                     os.remove(path)
-            except PermissionError:
-                os.chmod(path, stat.S_IWUSR)
-                shutil.rmtree(path)
-                print(f"Forced deletion of: {path}")
             except FileNotFoundError:
                 print(f"Skipped deletion of: {path}")
 
-    except WinError:
-        for dir, dirnames, filenames in os.walk(path):
-            current_dir_mode = os.stat(dir).st_mode
-            os.chmod(dir, current_dir_mode | stat.S_IWUSR)
+    except (WinError, PermissionError):
+        try:
+            for path in paths:
+                for dir, _, filenames in os.walk(path):
+                    current_dir_mode = os.stat(dir).st_mode
+                    os.chmod(dir, current_dir_mode | stat.S_IWUSR)
 
-            for filename in filenames:
-                filepath = os.path.join(dir, filename)
-                current_file_mode = os.stat(filepath).st_mode
-                os.chmod(filepath, current_file_mode | stat.S_IWUSR)
-        return remove_path(*paths)
+                    for filename in filenames:
+                        filepath = os.path.join(dir, filename)
+                        current_file_mode = os.stat(filepath).st_mode
+                        os.chmod(filepath, current_file_mode | stat.S_IWUSR)
+            return remove_path(*paths)
+        except Exception as e:
+            warnings.append(f"{type(e).__name__}: {str(e)}")
 
 
 def exec_script(script_path, mod_name, order_name):

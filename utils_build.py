@@ -1,10 +1,11 @@
+import csv
 import json
 import os
 import re
 import shutil
 import subprocess
-import time
 import threading
+import time
 import traceback
 import xml.etree.ElementTree as ET
 
@@ -47,23 +48,27 @@ def patcher():
         blank_file_extensions = helper.get_blank_file_extensions()  # list of extensions in bin/blank-files
         dota_pak_contents = vpk.open(mpaths.dota_game_pak_path)
         core_pak_contents = vpk.open(mpaths.dota_core_pak_path)
-        dota_extracts = set()
-        core_extracts = set()
+        dota_extracts = []
+        core_extracts = []
 
         blacklist_data = []  # path from every blacklist.txt
         mod_menus = []
         styling_data = []  # path and style from every styling.txt
         styling_dictionary = {}
         xml_modifications = {}
+        replacer_source_extracts = []
+        replacer_targets = []
 
         for folder in mpaths.mods_folder_application_order:
             try:
                 mod_path = os.path.join(mpaths.mods_dir, folder)
+                # TODO get rid of custom parsed textfiles
                 blacklist_txt = os.path.join(mod_path, "blacklist.txt")
                 styling_txt = os.path.join(mod_path, "styling.txt")
                 menu_xml = os.path.join(mod_path, "menu.xml")
                 xml_mod_file = os.path.join(mod_path, "xml_mod.json")
                 script_file = os.path.join(mod_path, "script.py")
+                replacer_file = os.path.join(mod_path, "replacer.csv")
                 files_dir = os.path.join(mod_path, "files")
 
                 if folder == "base" or ui.get_value(
@@ -199,7 +204,7 @@ def patcher():
                                     continue
 
                                 elif line.startswith("@@"):
-                                    for path in helper.urlValidator(line):
+                                    for path in helper.url_validator(line):
                                         styling_data.append(path)
                                     continue
                                 else:
@@ -235,28 +240,41 @@ def patcher():
                             )
                             try:
                                 if path_style[0].startswith("!"):
-                                    core_extracts.add(f"{sanitized_path}.vcss_c")
+                                    core_extracts.append(f"{sanitized_path}.vcss_c")
                                 else:
-                                    dota_extracts.add(f"{sanitized_path}.vcss_c")
+                                    dota_extracts.append(f"{sanitized_path}.vcss_c")
                             except KeyError:
                                 helper.warnings.append(
                                     f"Path does not exist in VPK -> '{sanitized_path}.vcss_c', error in 'mods\\{folder}\\styling.txt'"
                                 )
+                    # --------------------------------- replacer.csv --------------------------------- #
+                    if os.path.exists(replacer_file):
+                        with open(replacer_file, newline="") as file:
+                            for row in csv.reader(file):
+                                try:
+                                    if not (row[0] == "" and row[1] == ""):
+                                        replacer_source_extracts.append(row[0])
+                                        replacer_targets.append(row[1])
+                                except Exception as e:
+                                    min_len = min(len(replacer_source_extracts), len(replacer_targets))
+                                    replacer_source_extracts = replacer_source_extracts[:min_len]
+                                    replacer_targets = replacer_targets[:min_len]
+                                    helper.warnings.append(f"{type(e).__name__}: {str(e)}")
 
             except Exception as exception:
                 exceptiondata = traceback.format_exc().splitlines()
                 helper.warnings.append(exceptiondata[-1])
 
         if mod_menus:
-            dota_extracts.add("panorama/layout/popups/popup_settings_reborn.vxml_c")
+            dota_extracts.append("panorama/layout/popups/popup_settings_reborn.vxml_c")
         # Extract XMLs to be modified (assume they are in game VPK)
         for path in xml_modifications.keys():
             compiled = path.replace(".xml", ".vxml_c")
-            dota_extracts.add(compiled)
+            dota_extracts.append(compiled)
 
         helper.add_text_to_terminal(helper.localization_dict["starting_extraction_text_var"])
-        vpk_extractor(core_pak_contents, list(core_extracts))
-        vpk_extractor(dota_pak_contents, list(dota_extracts))
+        vpk_extractor(core_pak_contents, core_extracts)
+        vpk_extractor(dota_pak_contents, dota_extracts)
         # ---------------------------------- STEP 2 ---------------------------------- #
         # ------------------- Decompile all files in "build" folder ------------------ #
         # ---------------------------------------------------------------------------- #
@@ -334,6 +352,15 @@ def patcher():
                 #     raise Exception(decoded_err)
         utils_gui.bulk_exec_script("after_recompile")
 
+        if replacer_source_extracts and replacer_targets and (len(replacer_source_extracts) == len(replacer_targets)):
+            vpk_extractor(dota_pak_contents, replacer_source_extracts, mpaths.replace_dir)
+            for i, target in enumerate(replacer_targets):
+                helper.add_text_to_terminal(
+                    helper.localization_dict["replacing_terminal_text_var"].format(replacer_source_extracts[i], target)
+                )
+                os.makedirs(target_dir := os.path.join(mpaths.minify_dota_compile_output_path, target), exist_ok=True)
+                shutil.copy(os.path.join(mpaths.replace_dir, replacer_source_extracts[i]), target_dir)
+
         # ---------------------------------- STEP 6 ---------------------------------- #
         # -------- Create VPK from game folder and save into Minify directory -------- #
         # ---------------------------------------------------------------------------- #
@@ -362,6 +389,7 @@ def patcher():
             mpaths.minify_dota_compile_input_path,
             mpaths.minify_dota_compile_output_path,
             mpaths.build_dir,
+            mpaths.replace_dir,
         )
 
         utils_gui.unlock_interaction()
@@ -428,20 +456,18 @@ def uninstaller():
     utils_gui.unlock_interaction()
 
 
-def vpk_extractor(vpk_to_extract_from, paths):
+def vpk_extractor(vpk_to_extract_from, paths, path_to_extract_to=mpaths.build_dir):
     if isinstance(paths, str):
         paths = [paths]
     for path in paths:
-        fullPath = os.path.join(mpaths.build_dir, path)
-        if not os.path.exists(fullPath):  # extract files from VPK only once
+        if not os.path.exists(full_path := os.path.join(path_to_extract_to, path)):  # extract files from VPK only once
             helper.add_text_to_terminal(
-                f"{helper.localization_dict['extracting_terminal_text_var']}{path}",
-                f"extracting_{path}_tag",
+                helper.localization_dict["extracting_terminal_text_var"].format(path), f"extracting_{path}_tag"
             )
             vpk_path = path.replace(os.sep, "/")
             pakfile = vpk_to_extract_from.get_file(vpk_path)
-            os.makedirs(os.path.dirname(fullPath), exist_ok=True)
-            pakfile.save(fullPath)
+            os.makedirs(os.path.dirname(full_path), exist_ok=True)
+            pakfile.save(full_path)
 
 
 def apply_xml_modifications(xml_file, modifications):

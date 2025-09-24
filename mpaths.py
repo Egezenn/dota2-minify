@@ -43,6 +43,7 @@ DOTA_EXECUTABLE_PATH_FALLBACK = os.path.join("steamapps", "common", "dota 2 beta
 # minify project paths
 bin_dir = "bin"
 build_dir = "vpk_build"
+replace_dir = "vpk_replace"
 logs_dir = "logs"
 mods_dir = "mods"
 config_dir = "config"

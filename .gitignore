@@ -2,6 +2,7 @@
 bin/maps/
 bin/gamepakcontents.txt
 vpk_build
+vpk_replace
 config
 dota2path_minify.txt
 locale

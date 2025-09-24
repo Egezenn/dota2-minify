@@ -113,7 +113,7 @@ def create_ui():
         ui.bind_item_font("lang_select", combo_font)
         with ui.group(horizontal=True):
             with ui.group(pos=(391, 29)):
-                ui.add_button(tag="button_patch", label="Patch", width=92, callback=patcher_start)
+                ui.add_button(tag="button_patch", label="Patch", width=92, callback=patcher_start, enabled=False)
                 ui.add_button(
                     tag="button_select_mods",
                     label="Select Mods",
@@ -269,6 +269,7 @@ def create_base_ui():
     utils_gui.recalc_rescomp_dirs()
     helper.get_available_localizations()
     create_ui()
+    utils_gui.lock_interaction()
     utils_gui.focus_window()
     utils_gui.start_text()
     utils_gui.theme()
@@ -278,6 +279,7 @@ def create_base_ui():
     time.sleep(0.05)
     utils_gui.configure_update_popup()
     utils_gui.bulk_exec_script("initial")
+    utils_gui.unlock_interaction()
 
 
 # Adding font to the ui registry
