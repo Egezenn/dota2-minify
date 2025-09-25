@@ -37,10 +37,13 @@ title = f"Minify {version}" if version else "Minify"
 def version_check():
     global version
     if version and not "rc" in version:
-        response = requests.get(mpaths.version_query)
-        if response.status_code == 200 and response.text == "404: Not Found":
-            if version != response.text:
-                update_popup_show()
+        try:
+            response = requests.get(mpaths.version_query)
+            if response.status_code == 200 and not response.text == "404: Not Found":
+                if version != response.text:
+                    update_popup_show()
+        except:
+            pass
 
 
 def initiate_conditionals():
