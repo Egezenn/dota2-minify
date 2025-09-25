@@ -5,14 +5,14 @@
       "name": "gui",
       "type": "debugpy",
       "request": "launch",
-      "program": "imgui.py",
+      "program": "Minify/__main__.py",
       "console": "integratedTerminal"
     },
     {
       "name": "gui console",
       "type": "debugpy",
       "request": "launch",
-      "program": "imgui.py",
+      "program": "Minify/__main__.py",
       "console": "internalConsole"
     }
   ]

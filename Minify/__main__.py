@@ -1,6 +1,16 @@
 import os
+import sys
 import threading
 import time
+
+# Ensure root directories
+if getattr(sys, "frozen", False):
+    os.chdir(os.path.dirname(os.path.realpath(sys.executable)))
+else:
+    os.chdir(current_dir := os.path.dirname(os.path.abspath(__file__)))
+    if current_dir not in sys.path:
+        sys.path.insert(0, current_dir)
+
 
 import dearpygui.dearpygui as ui
 import screeninfo

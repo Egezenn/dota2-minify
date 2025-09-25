@@ -1,61 +1,57 @@
 # Minify
-bin/maps/
-bin/gamepakcontents.txt
-vpk_build
-vpk_replace
-config
-dota2path_minify.txt
-locale
-logs
-mods.json
-mods/*
+Minify/bin/gamepakcontents.txt
+Minify/vpk_build
+Minify/vpk_replace
+Minify/config
+Minify/logs
+Minify/mods/*
 
 ## In-repo mods
-!mods/Auto Accept Match
-!mods/base
-!mods/Custom Backgrounds
-mods/Custom Backgrounds/*.png
-mods/Custom Backgrounds/*.jpg
-mods/Custom Backgrounds/*.jpeg
-mods/Custom Backgrounds/*.webp
-!mods/Dark Terrain
-!mods/Minify Base Attacks
-!mods/Minify Spells & Items
-!mods/Misc Optimization
-!mods/Mute Ambient Sounds
-!mods/Mute Announcers
-!mods/Mute Taunt Sounds
-!mods/Mute Voice Line Sounds
-!mods/OpenDotaGuides Guides
-!mods/Remove Foilage
-!mods/Remove Hero Card Clutter
-!mods/Remove Hero Renders
-!mods/Remove Main Menu Background
-!mods/Remove Pings
-!mods/Remove River
-!mods/Remove Showcases
-!mods/Remove Sprays
-!mods/Remove Weather Effects
-!mods/Repopulate Unit Query HUD
-!mods/Reposition & Rescale HUD
-!mods/Revert Ping Sounds
-!mods/Show NetWorth
-!mods/Stat Site Buttons
-!mods/Transparent HUD
-!mods/Tree Mod
-!mods/User Styles
+!Minify/mods/Auto Accept Match
+!Minify/mods/base
+!Minify/mods/Custom Backgrounds
+Minify/mods/Custom Backgrounds/*.png
+Minify/mods/Custom Backgrounds/*.jpg
+Minify/mods/Custom Backgrounds/*.jpeg
+Minify/mods/Custom Backgrounds/*.webp
+!Minify/mods/Dark Terrain
+!Minify/mods/Minify Base Attacks
+!Minify/mods/Minify Spells & Items
+!Minify/mods/Misc Optimization
+!Minify/mods/Mute Ambient Sounds
+!Minify/mods/Mute Announcers
+!Minify/mods/Mute Taunt Sounds
+!Minify/mods/Mute Voice Line Sounds
+!Minify/mods/OpenDotaGuides Guides
+!Minify/mods/Remove Foilage
+!Minify/mods/Remove Hero Card Clutter
+!Minify/mods/Remove Hero Renders
+!Minify/mods/Remove Main Menu Background
+!Minify/mods/Remove Pings
+!Minify/mods/Remove River
+!Minify/mods/Remove Showcases
+!Minify/mods/Remove Sprays
+!Minify/mods/Remove Weather Effects
+!Minify/mods/Repopulate Unit Query HUD
+!Minify/mods/Reposition & Rescale HUD
+!Minify/mods/Revert Ping Sounds
+!Minify/mods/Show NetWorth
+!Minify/mods/Stat Site Buttons
+!Minify/mods/Transparent HUD
+!Minify/mods/Tree Mod
+!Minify/mods/User Styles
 
 ## Dependencies
-bin/rescomproot*
-cli-*-*.*
-libSkiaSharp*
-libTinyEXR.Native.so
-rg*
-Source2Viewer-CLI*
-TinyEXR.Native.dll
+Minify/bin/rescomproot*
+Minify/cli-*-*.*
+Minify/libSkiaSharp*
+Minify/libTinyEXR.Native.so
+Minify/rg*
+Minify/Source2Viewer-CLI*
+Minify/TinyEXR.Native.dll
 
 ## Dota2
-steam_appid.txt
+Minify/steam_appid.txt
 
 # Byte-compiled / optimized / DLL files
 __pycache__
@@ -76,7 +72,6 @@ ENV/
 venv.bak/
 venv/
 
-
-#Ignore vscode AI rules
+# Ignore vscode AI rules
 .github/instructions/
 .DS_Store

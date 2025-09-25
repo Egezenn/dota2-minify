@@ -6,7 +6,15 @@ on:
       release_name:
         description: "Name the release"
         required: true
-        default: "Minify-v1.xx.x"
+        default: "Minify-v1."
+      prerelease:
+        description: "Whether or not release candidate"
+        required: true
+        type: choice
+        options:
+          - true
+          - false
+        default: "true"
 
 permissions:
   contents: write
@@ -26,14 +34,13 @@ jobs:
           python-version: "3.13"
 
       - name: Set version
-        if: matrix.os == 'ubuntu-latest'
         shell: pwsh
         run: |
           $releaseName = "${{ github.event.inputs.release_name }}"
           $version = $releaseName.Substring(8)
           Set-Content -Path "version" -Value $version -NoNewline
       - uses: stefanzweifel/git-auto-commit-action@v5
-        if: matrix.os == 'ubuntu-latest'
+        if: ${{ inputs.prerelease == 'true' && matrix.os == 'ubuntu-latest' }}
         with:
           commit_message: "Version change"
 
@@ -50,11 +57,12 @@ jobs:
 
       - name: Install dependencies
         run: |
+          cd Minify
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
       - name: Build executable
-        run: pyinstaller --noconsole --icon=bin/images/favicon.ico --name=Minify --hidden-import=tkinter --hidden-import=PIL imgui.py
+        run: pyinstaller --noconsole --icon=bin/images/favicon.ico --name=Minify --hidden-import=tkinter __main__.py
 
       - name: Move project dependencies
         shell: pwsh
@@ -62,26 +70,28 @@ jobs:
           Copy-Item -Path "bin" -Destination "dist\Minify\bin" -Recurse
           Copy-Item -Path "mods" -Destination "dist\Minify\mods" -Recurse
           Copy-Item -Path "version" -Destination "dist\Minify\version"
-          Copy-Item -Path "readme.md" -Destination "dist\Minify\readme.md"
+          Copy-Item -Path "..\readme.md" -Destination "dist\Minify\readme.md"
+          Copy-Item -Path "..\LICENSE" -Destination "dist\Minify\LICENSE"
 
       - name: Archiving (Windows)
         if: matrix.os == 'windows-latest'
         run: |
           Set-Location dist\Minify
-          Compress-Archive -Path ".\*" -DestinationPath "..\..\${{ github.event.inputs.release_name }}-windows.zip"
-          Set-Location .\..\..\
+          Compress-Archive -Path ".\*" -DestinationPath "..\..\..\${{ github.event.inputs.release_name }}-windows.zip"
+          Set-Location .\..\..\..\
       - name: Archiving (Linux)
         shell: pwsh
         if: matrix.os == 'ubuntu-latest'
         run: |
           Set-Location dist/Minify
-          Compress-Archive -Path "./*" -DestinationPath "./../../${{ github.event.inputs.release_name }}-linux.zip"
-          Set-Location ../..
+          Compress-Archive -Path "./*" -DestinationPath "./../../../${{ github.event.inputs.release_name }}-linux.zip"
+          Set-Location ../../..
 
       - name: Create Release (Windows)
         if: matrix.os == 'windows-latest'
         uses: softprops/action-gh-release@v1
         with:
+          prerelease: ${{ inputs.prerelease }}
           tag_name: ${{ github.event.inputs.release_name }}
           files: "${{ github.event.inputs.release_name }}-windows.zip"
         env:
@@ -90,6 +100,7 @@ jobs:
         if: matrix.os == 'ubuntu-latest'
         uses: softprops/action-gh-release@v1
         with:
+          prerelease: ${{ inputs.prerelease }}
           tag_name: ${{ github.event.inputs.release_name }}
           files: "${{ github.event.inputs.release_name }}-linux.zip"
         env:

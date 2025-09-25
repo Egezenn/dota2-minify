@@ -117,7 +117,7 @@ Prerequisites are `git`, `python` and `uv`. (also `tk` for tkinter and `wine` fo
 
 - `git clone https://github.com/Egezenn/dota2-minify`
 - `cd dota2-minify`
-- `uv run imgui.py`
+- `uv run Minify`
 
 #### Compilation from source
 
@@ -166,9 +166,9 @@ If not specifically protected by Dota2, these files will override any game conte
 #### `blacklist.txt`
 
 This file is a list of path to files used to override those with blanks.
-Supported file types are can be found in [`bin/blank-files`](bin/blank-files).
+Supported file types are can be found in [`bin/blank-files`](Minify/bin/blank-files).
 
-A list of all the files (from the game pak) can be found in [`bin/gamepakcontents.txt`](bin/gamepakcontents.txt).
+A list of all the files (from the game pak) can be found in [`bin/gamepakcontents.txt`](Minify/bin/gamepakcontents.txt).
 
 Syntax for this file starting from the line beginning is as follows:  
 `#`: Comments  
@@ -265,20 +265,20 @@ Creation of the base project.
 <details>
 <summary>Mods</summary>
 
-- [`Dark Terrain`](./mods/Dark%20Terrain)
-- [`Minify Base Attacks`](./mods/Minify%20Base%20Attacks)
-- [`Reposition & Rescale HUD`](./mods/Reposition%20&%20Rescale%20HUD/)
-- [`Minify Spells & Items`](./mods/Minify%20Spells%20&%20Items)
-- [`Misc Optimization`](./mods/Misc%20Optimization)
-- [`Mute Ambient Sounds`](./mods/Mute%20Ambient%20Sounds)
-- [`Mute Taunt Sounds`](./mods/Mute%20Taunt%20Sounds)
-- [`Mute Voice Line Sounds`](./mods/Mute%20Voice%20Line%20Sounds)
-- [`Remove Foilage`](./mods/Remove%20Foilage)
-- [`Remove Pings`](./mods/Remove%20Pings)
-- [`Remove River`](./mods/Remove%20River)
-- [`Remove Sprays`](./mods/Remove%20Sprays)
-- [`Remove Weather Effects`](./mods/Remove%20Weather%20Effects)
-- [`Tree Mod`](./mods/Tree%20Mod)
+- [`Dark Terrain`](./Minify/mods/Dark%20Terrain)
+- [`Minify Base Attacks`](./Minify/mods/Minify%20Base%20Attacks)
+- [`Reposition & Rescale HUD`](./Minify/mods/Reposition%20&%20Rescale%20HUD/)
+- [`Minify Spells & Items`](./Minify/mods/Minify%20Spells%20&%20Items)
+- [`Misc Optimization`](./Minify/mods/Misc%20Optimization)
+- [`Mute Ambient Sounds`](./Minify/mods/Mute%20Ambient%20Sounds)
+- [`Mute Taunt Sounds`](./Minify/mods/Mute%20Taunt%20Sounds)
+- [`Mute Voice Line Sounds`](./Minify/mods/Mute%20Voice%20Line%20Sounds)
+- [`Remove Foilage`](./Minify/mods/Remove%20Foilage)
+- [`Remove Pings`](./Minify/mods/Remove%20Pings)
+- [`Remove River`](./Minify/mods/Remove%20River)
+- [`Remove Sprays`](./Minify/mods/Remove%20Sprays)
+- [`Remove Weather Effects`](./Minify/mods/Remove%20Weather%20Effects)
+- [`Tree Mod`](./Minify/mods/Tree%20Mod)
 
 </details>
 
@@ -289,17 +289,17 @@ Taking over the maintainership of the project, implementing automated workflows,
 <details>
 <summary>Mods</summary>
 
-- [`Custom Backgrounds`](./mods/Custom%20Backgrounds)
-- [`Mute Announcers`](./mods/Mute%20Announcers)
-- [`OpenDotaGuides Guides`](./mods/OpenDotaGuides%20Guides) - [Project](https://github.com/Egezenn/OpenDotaGuides)
-- [`Remove Hero Card Clutter`](./mods/Remove%20Hero%20Card%20Clutter)
-- [`Remove Hero Renders`](./mods/Remove%20Hero%20Renders)
-- [`Remove Main Menu Background`](./mods/Remove%20Main%20Menu%20Background)
-- [`Remove Showcases`](./mods/Remove%20Showcases)
-- [`Revert Ping Sounds`](./mods/Revert%20Ping%20Sounds)
-- [`Stat Site Buttons`](./mods/Stat%20Site%20Buttons)
-- [`Transparent HUD`](./mods/Transparent%20HUD/) improvements
-- Snippets in [`User Styles`](./mods/User%20Styles)
+- [`Custom Backgrounds`](./Minify/mods/Custom%20Backgrounds)
+- [`Mute Announcers`](./Minify/mods/Mute%20Announcers)
+- [`OpenDotaGuides Guides`](./Minify/mods/OpenDotaGuides%20Guides) - [Project](https://github.com/Egezenn/OpenDotaGuides)
+- [`Remove Hero Card Clutter`](./Minify/mods/Remove%20Hero%20Card%20Clutter)
+- [`Remove Hero Renders`](./Minify/mods/Remove%20Hero%20Renders)
+- [`Remove Main Menu Background`](./Minify/mods/Remove%20Main%20Menu%20Background)
+- [`Remove Showcases`](./Minify/mods/Remove%20Showcases)
+- [`Revert Ping Sounds`](./Minify/mods/Revert%20Ping%20Sounds)
+- [`Stat Site Buttons`](./Minify/mods/Stat%20Site%20Buttons)
+- [`Transparent HUD`](./Minify/mods/Transparent%20HUD/) improvements
+- Snippets in [`User Styles`](./Minify/mods/User%20Styles)
 
 </details>
 
@@ -310,7 +310,7 @@ Rewrite of the GUI, Russian translations, mod fixes and [more](https://github.co
 <details>
 <summary>Mods</summary>
 
-- [`Transparent HUD`](./mods/Transparent%20HUD)
+- [`Transparent HUD`](./Minify/mods/Transparent%20HUD)
 
 </details>
 
@@ -321,10 +321,10 @@ XML mod behavior and Minify mod settings section.
 <details>
 <summary>Mods</summary>
 
-- [`Auto Accept Match`](./mods/Auto%20Accept%20Match)
-- [`Auto Language Dialog Accept`](./mods/base/files/panorama/scripts/popup_generic.vjs_c)
-- [`Repopulate Unit Query HUD`](./mods/Repopulate%20Unit%20Query%20HUD)
-- [`Show NetWorth`](./mods/Show%20NetWorth)
+- [`Auto Accept Match`](./Minify/mods/Auto%20Accept%20Match)
+- [`Auto Language Dialog Accept`](./Minify/mods/base/files/panorama/scripts/popup_generic.vjs_c)
+- [`Repopulate Unit Query HUD`](./Minify/mods/Repopulate%20Unit%20Query%20HUD)
+- [`Show NetWorth`](./Minify/mods/Show%20NetWorth)
 
 </details>
 
@@ -337,7 +337,7 @@ MacOS port and workflow.
 <details>
 <summary>Mods</summary>
 
-- `Dotabuff in Profiles` mod which has been refactored to [`Stat Site Buttons`](./mods/Stat%20Site%20Buttons)
+- `Dotabuff in Profiles` mod which has been refactored to [`Stat Site Buttons`](./Minify/mods/Stat%20Site%20Buttons)
 
 </details>
 
@@ -370,4 +370,4 @@ Spanish translation.
 
 ## License
 
-Contents of this repository are licensed under [GPL-3.0](LICENSE), however some files in `mods/*/files` may contain files that originate from Dota2 itself, with or without modifications to them.
+Contents of this repository are licensed under [GPL-3.0](LICENSE), however some files in `Minify/mods/*/files` may contain files that originate from Dota2 itself, with or without modifications to them.
