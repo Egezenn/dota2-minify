@@ -1,1 +1,1 @@
-Repositions & scales some asepcts of the in-game HUD.
+Repositions & scales some aspects of the in-game HUD.

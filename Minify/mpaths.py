@@ -415,7 +415,11 @@ dota_tools_extraction_paths = [
 ]
 
 
-mods_folders = sorted(os.listdir(mods_dir))
+mods_folders = []
+for item in sorted(os.listdir(mods_dir)):
+    if os.path.isdir(os.path.join(mods_dir, item)):
+        mods_folders.append(item)
+
 i = mods_folders.index("base")
 mods_folders.pop(i)
 mods_folders.insert(0, "base")

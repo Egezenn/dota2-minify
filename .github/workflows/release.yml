@@ -69,7 +69,7 @@ jobs:
         run: |
           Copy-Item -Path "bin" -Destination "dist\Minify\bin" -Recurse
           Copy-Item -Path "mods" -Destination "dist\Minify\mods" -Recurse
-          Copy-Item -Path "version" -Destination "dist\Minify\version"
+          Copy-Item -Path "..\version" -Destination "dist\Minify\version"
           Copy-Item -Path "..\readme.md" -Destination "dist\Minify\readme.md"
           Copy-Item -Path "..\LICENSE" -Destination "dist\Minify\LICENSE"
 
