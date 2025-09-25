@@ -3,6 +3,7 @@
 import getpass
 import os
 import platform
+import sys
 import traceback
 
 import vdf
@@ -65,7 +66,11 @@ localization_file_dir = os.path.join(bin_dir, "localization.json")
 mods_file_dir = os.path.join(config_dir, "mods.json")
 path_file_dir = os.path.join(config_dir, "dota2path_minify.txt")
 rescomp_override_dir = os.path.join(bin_dir, "rescomproot")
-version_file_dir = "version"
+# killswitch accident 2025-09-25
+if getattr(sys, "frozen", False):
+    version_file_dir = "version"
+else:
+    version_file_dir = os.path.join(os.pardir, "version")
 
 rescomp_override = True if os.path.exists(rescomp_override_dir) else False
 

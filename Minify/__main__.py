@@ -263,14 +263,14 @@ def create_ui():
             label="Ignore updates",
             width=120,
             height=24,
-            callback=lambda: utils_gui.delete_update_popup(ignore=True),
+            callback=lambda: utils_gui.delete_update_popup(True),
             tag="update_popup_ignore_button",
         )
         ui.add_button(
             label="No",
             width=120,
             height=24,
-            callback=utils_gui.delete_update_popup,
+            callback=lambda: utils_gui.delete_update_popup(False),
             tag="update_popup_no_button",
         )
 
@@ -285,6 +285,7 @@ def create_base_ui():
     utils_gui.theme()
     helper.change_localization(init=True)
     utils_gui.version_check()
+    utils_gui.initiate_conditionals()
     helper.disable_workshop_mods(utils_gui.checkboxes)
     time.sleep(0.05)
     utils_gui.configure_update_popup()
@@ -365,5 +366,8 @@ ui.set_viewport_small_icon("./bin/favicon.ico")
 ui.set_viewport_large_icon("./bin/favicon.ico")
 ui.setup_dearpygui()
 ui.show_viewport()
-ui.start_dearpygui()
+try:
+    ui.start_dearpygui()
+except KeyboardInterrupt:
+    pass
 ui.destroy_context()

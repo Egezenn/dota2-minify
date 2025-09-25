@@ -37,20 +37,10 @@ title = f"Minify {version}" if version else "Minify"
 def version_check():
     global version
     if version and not "rc" in version:
-        try:
-            response = requests.get(mpaths.version_query)
-            if response.status_code == 200:
-                if version == response.text:
-                    initiate_conditionals()
-                else:
-                    version = response.text
-                    update_popup_show()
-        except:  # no connection
-            initiate_conditionals()
-            version = ""
-    else:
-        initiate_conditionals()
-        version = ""
+        response = requests.get(mpaths.version_query)
+        if response.status_code == 200 and response.text == "404: Not Found":
+            if version != response.text:
+                update_popup_show()
 
 
 def initiate_conditionals():
@@ -278,12 +268,11 @@ def focus_window():
                 file.write(f"Linux focus error: {error}")
 
 
-def delete_update_popup(ignore=False):
+def delete_update_popup(ignore):
     if ignore:
         os.remove(mpaths.version_file_dir)
     ui.configure_item("update_popup", show=False)
     ui.delete_item("update_popup")
-    initiate_conditionals()
 
 
 def hide_uninstall_popup():
