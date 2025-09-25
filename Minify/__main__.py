@@ -104,7 +104,7 @@ def create_ui():
             parent="top_bar",
             tag="output_select",
             items=(mpaths.minify_output_list),
-            default_value="minify",
+            default_value=mpaths.get_config("output_locale", "minify"),
             width=95,
             pos=(210, 8),
             callback=helper.change_output_path,

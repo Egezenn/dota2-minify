@@ -137,77 +137,75 @@ def change_localization(init=False):
     global locale
     with open(mpaths.localization_file_dir, "r", encoding="utf-8") as localization_file:
         localization_data = json.load(localization_file)
-        if init == True:
-            if os.path.exists(mpaths.locale_file_dir):
-                with open(mpaths.locale_file_dir, "r") as file:
-                    locale = file.readline()
-                    ui.configure_item("lang_select", default_value=locale)
-            else:
-                locale = ui.get_value("lang_select")
-                with open(mpaths.locale_file_dir, "w") as file:
-                    file.write(locale)
+    if init == True:
+        if (locale := mpaths.get_config("locale", ui.get_value("lang_select"))) is not None:
+            ui.configure_item("lang_select", default_value=locale)
+        else:
+            locale = mpaths.set_config("locale", ui.get_value("lang_select"))
+        ui.configure_item("lang_select", default_value=locale)
 
-        for key, value in localization_data.items():
-            locale = ui.get_value("lang_select")
-            if key.endswith("var") == True:
-                if ui.does_item_exist(key) == True:
-                    if locale in localization_data[key]:
-                        localization_dict[key] = value[locale]
-                        ui.set_value(key, value=value[locale])
-                    else:
-                        ui.set_value(key, value=value["EN"])
-                else:
-                    if locale in localization_data[key]:
-                        localization_dict[key] = value[locale]
-                    else:
-                        localization_dict[key] = value["EN"]
+    for key, value in localization_data.items():
+        locale = ui.get_value("lang_select")
+        if key.endswith("var") == True:
             if ui.does_item_exist(key) == True:
-                if key.endswith("var") == False and ui.get_item_info(key).get("type") == "mvAppItemType::mvButton":
-                    if locale in localization_data[key]:
-                        ui.configure_item(key, label=value[locale])
-                    else:  # default to english if the line isn't available on selected locale
-                        ui.configure_item(key, label=value["EN"])
-                if key.endswith("var") == False and ui.get_item_info(key).get("type") == "mvAppItemType::mvText":
-                    if locale in localization_data[key]:
-                        ui.configure_item(key, default_value=value[locale])
-                    else:
-                        ui.configure_item(key, default_value=value["EN"])
-                with open(mpaths.locale_file_dir, "w") as file:
-                    file.write(locale)
-
-        for tag_id in ui.get_item_children("details_tags")[1]:
-            tag = ui.get_item_alias(tag_id).removesuffix("_details_text_value_tag")
-            mod_path = os.path.join(mpaths.mods_dir, tag)
-            note_path = os.path.join(mod_path, f"notes_{locale}.txt")
-            try:
-                if os.path.exists(note_path):
-                    with open(note_path, "r", encoding="utf-8") as file:
-                        data = file.read()
-                    ui.configure_item(tag_id, default_value=data)
+                if locale in localization_data[key]:
+                    localization_dict[key] = value[locale]
+                    ui.set_value(key, value=value[locale])
                 else:
-                    note_path = os.path.join(mod_path, "notes_en.txt")
-                    with open(note_path, "r", encoding="utf-8") as file:
-                        data = file.read()
-                    ui.configure_item(tag_id, default_value=data)
-            except FileNotFoundError:
-                data = ""
-        global details_label_text_var, mod_selection_window_var
-        details_label_text_var = localization_data["details_button_label_var"][locale]
-        mod_selection_window_var = localization_data["mod_selection_window_var"][locale]
-        ui.configure_item("mod_menu", label=mod_selection_window_var)
-        for id in ui.get_item_children("mod_menu")[1]:
-            for item in ui.get_item_children(id)[1]:
-                if ui.get_item_alias(item).endswith("_button_show_details_tag"):
-                    ui.configure_item(
-                        item,
-                        label=localization_data["details_button_label_var"][locale],
-                    )
+                    ui.set_value(key, value=value["EN"])
+            else:
+                if locale in localization_data[key]:
+                    localization_dict[key] = value[locale]
+                else:
+                    localization_dict[key] = value["EN"]
+        if ui.does_item_exist(key) == True:
+            if key.endswith("var") == False and ui.get_item_info(key).get("type") == "mvAppItemType::mvButton":
+                if locale in localization_data[key]:
+                    ui.configure_item(key, label=value[locale])
+                else:  # default to english if the line isn't available on selected locale
+                    ui.configure_item(key, label=value["EN"])
+            if key.endswith("var") == False and ui.get_item_info(key).get("type") == "mvAppItemType::mvText":
+                if locale in localization_data[key]:
+                    ui.configure_item(key, default_value=value[locale])
+                else:
+                    ui.configure_item(key, default_value=value["EN"])
+            mpaths.set_config("locale", locale)
+
+    for tag_id in ui.get_item_children("details_tags")[1]:
+        tag = ui.get_item_alias(tag_id).removesuffix("_details_text_value_tag")
+        mod_path = os.path.join(mpaths.mods_dir, tag)
+        note_path = os.path.join(mod_path, f"notes_{locale}.txt")
+        try:
+            if os.path.exists(note_path):
+                with open(note_path, "r", encoding="utf-8") as file:
+                    data = file.read()
+                ui.configure_item(tag_id, default_value=data)
+            else:
+                note_path = os.path.join(mod_path, "notes_en.txt")
+                with open(note_path, "r", encoding="utf-8") as file:
+                    data = file.read()
+                ui.configure_item(tag_id, default_value=data)
+        except FileNotFoundError:
+            data = ""
+    global details_label_text_var, mod_selection_window_var
+    details_label_text_var = localization_data["details_button_label_var"][locale]
+    mod_selection_window_var = localization_data["mod_selection_window_var"][locale]
+    ui.configure_item("mod_menu", label=mod_selection_window_var)
+    for id in ui.get_item_children("mod_menu")[1]:
+        for item in ui.get_item_children(id)[1]:
+            if ui.get_item_alias(item).endswith("_button_show_details_tag"):
+                ui.configure_item(
+                    item,
+                    label=localization_data["details_button_label_var"][locale],
+                )
 
 
 def change_output_path():
     global output_path
     selection = ui.get_value("output_select")
     output_path = [lang for lang in mpaths.minify_dota_possible_language_output_paths if selection in lang][0]
+    mpaths.set_config("output_locale", selection)
+    mpaths.set_config("output_path", output_path)
 
 
 def url_validator(url):

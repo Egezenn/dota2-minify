@@ -168,10 +168,10 @@
     "TR": "Yama başarısız!"
   },
   "check_logs_terminal_text_var": {
-    "EN": "Check 'logs\\crashlog.txt' for more info.",
-    "ES": "Revisa 'logs\\crashlog.txt' para más información.",
-    "RU": "Проверь 'logs\\crashlog.txt' для детальной информации.",
-    "TR": "Ayrıntılar için 'logs\\crashlog.txt' dosyasını kontrol et."
+    "EN": "Check 'logs/crashlog.txt' for more info.",
+    "ES": "Revisa 'logs/crashlog.txt' para más información.",
+    "RU": "Проверь 'logs/crashlog.txt' для детальной информации.",
+    "TR": "Ayrıntılar için 'logs/crashlog.txt' dosyasını kontrol et."
   },
   "downloading_cli_terminal_text_var": {
     "EN": "-> Downloading Source2Viewer-CLI...",
@@ -198,10 +198,10 @@
     "EN": "Failed to download, retrying."
   },
   "check_crashlog_terminal_text_var": {
-    "EN": "Check 'logs\\crashlog.txt' for more info.",
-    "ES": "Revisa 'logs\\crashlog.txt' para más información.",
-    "RU": "Проверь 'logs\\crashlog.txt' для детальной информации.",
-    "TR": "Daha fazla bilgi için 'logs\\crashlog.txt' dosyasını kontrol et."
+    "EN": "Check 'logs/crashlog.txt' for more info.",
+    "ES": "Revisa 'logs/crashlog.txt' para más información.",
+    "RU": "Проверь 'logs/crashlog.txt' для детальной информации.",
+    "TR": "Daha fazla bilgi için 'logs/crashlog.txt' dosyasını kontrol et."
   },
   "mods_removed_terminal_text_var": {
     "EN": "All Minify mods have been removed.",
@@ -225,10 +225,10 @@
     "EN": "   {} \"{}\" script has no main function!"
   },
   "minify_encountered_errors_terminal_text_var": {
-    "EN": "Minify encountered errors. Check Minify\\logs\\warnings.txt for details.",
-    "ES": "Minify encontró errores. Revisa Minify\\logs\\warnings.txt para más detalles.",
-    "RU": "Minify столкнулся с ошибками. Проверь Minify\\logs\\warnings.txt для подробностей.",
-    "TR": "Minify hatalarla karşılaştı. Ayrıntılar için Minify\\logs\\warnings.txt dosyasını kontrol edin."
+    "EN": "Minify encountered errors. Check Minify/logs/warnings.txt for details.",
+    "ES": "Minify encontró errores. Revisa Minify/logs/warnings.txt para más detalles.",
+    "RU": "Minify столкнулся с ошибками. Проверь Minify/logs/warnings.txt для подробностей.",
+    "TR": "Minify hatalarla karşılaştı. Ayrıntılar için Minify/logs/warnings.txt dosyasını kontrol edin."
   },
   "error_please_close_dota_terminal_text_var": {
     "EN": "Error: Please close Dota 2 and restart Minify.",

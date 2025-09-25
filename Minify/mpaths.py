@@ -1,6 +1,7 @@
 "All the necessary file paths & links"
 
 import getpass
+import json
 import os
 import platform
 import sys
@@ -60,12 +61,15 @@ create_dirs(logs_dir, config_dir)
 # bin
 blank_files_dir = os.path.join(bin_dir, "blank-files")
 img_dir = os.path.join(bin_dir, "images")
-sounds_dir = os.path.join(bin_dir, "sounds")
-locale_file_dir = os.path.join(config_dir, "locale")
 localization_file_dir = os.path.join(bin_dir, "localization.json")
-mods_file_dir = os.path.join(config_dir, "mods.json")
-path_file_dir = os.path.join(config_dir, "dota2path_minify.txt")
 rescomp_override_dir = os.path.join(bin_dir, "rescomproot")
+sounds_dir = os.path.join(bin_dir, "sounds")
+
+# config
+## locale, steam_dir
+main_config_file_dir = os.path.join(config_dir, "minify_config.json")
+mods_file_dir = os.path.join(config_dir, "mods.json")
+
 # killswitch accident 2025-09-25
 if getattr(sys, "frozen", False):
     version_file_dir = "version"
@@ -75,15 +79,50 @@ else:
 rescomp_override = True if os.path.exists(rescomp_override_dir) else False
 
 
+def get_config(key, default_value=None):
+    try:
+        with open(main_config_file_dir, "r+") as file:
+            base_data = json.load(file)
+            try:
+                return base_data[key]
+
+            except KeyError:
+                if default_value is not None:
+                    base_data[key] = default_value
+                    file.seek(0)
+                    json.dump(base_data, file, indent=2)
+                    file.truncate()
+                    return default_value
+                else:
+                    return None
+
+    except (FileNotFoundError, json.JSONDecodeError):
+        with open(main_config_file_dir, "w") as file:
+            json.dump({}, file)
+        return get_config(key, default_value)
+
+
+def set_config(key, value):
+    try:
+        with open(main_config_file_dir, "r+") as file:
+            data = json.load(file)
+            data[key] = value
+            file.seek(0)
+            json.dump(data, file, indent=2)
+            file.truncate()
+
+        return value
+
+    except (FileNotFoundError, json.JSONDecodeError):
+        with open(main_config_file_dir, "w") as file:
+            json.dump({}, file)
+        return get_config(key, value)
+
+
 def find_library_from_vdf():
     global steam_dir
 
-    try:
-        with open(path_file_dir, "r") as file:
-            steam_dir = os.path.normpath(file.readline().strip())
-    except Exception as error:
-        with open(os.path.join(logs_dir, "warnings.txt"), "w") as file:
-            file.write(f"Error reading {path_file_dir}: {error}")
+    steam_dir = get_config("steam_dir")
 
     try:
         if steam_dir and steam_dir != ".":  # regkey found
@@ -92,23 +131,28 @@ def find_library_from_vdf():
                 "r",
                 encoding="utf-8",
             ) as dump:
-                data = vdf.load(dump)
+                vdf_data = vdf.load(dump)
         else:  # try with defaults
             with open(
                 os.path.join(STEAM_DEFAULT_INSTALLATION_PATH, "config", "libraryfolders.vdf"),
                 "r",
                 encoding="utf-8",
             ) as dump:
-                data = vdf.load(dump)
+                vdf_data = vdf.load(dump)
 
-        paths = get_steam_library_paths(data)
+        paths = []
+        for folder_key in vdf_data.get("libraryfolders", {}):
+            folder = vdf_data["libraryfolders"][folder_key]
+            # could check if "apps" key has 570 in it and return only one path, would require tests though
+            if "path" in folder:
+                paths.append(folder["path"])
+
         for path in paths:
             if os.path.exists(os.path.join(path, DOTA_EXECUTABLE_PATH)) or os.path.exists(
                 os.path.join(path, DOTA_EXECUTABLE_PATH_FALLBACK)
             ):
-                steam_dir = path
-                with open(path_file_dir, "w") as file:
-                    file.write(steam_dir)
+                set_config("steam_dir", path)
+                break
 
     except Exception as error:
         with open(os.path.join(logs_dir, "warnings.txt"), "w") as file:
@@ -116,17 +160,8 @@ def find_library_from_vdf():
             steam_dir = ""
 
 
-def get_steam_library_paths(vdf_data):
-    paths = []
-    for folder_key in vdf_data.get("libraryfolders", {}):
-        folder = vdf_data["libraryfolders"][folder_key]
-        # could check if "apps" key has 570 in it and return only one path, would require tests though
-        if "path" in folder:
-            paths.append(folder["path"])
-    return paths
-
-
 def get_steam_path():
+    # Windows specific
     global steam_dir
     if OS == "Windows":
         import winreg
@@ -156,16 +191,11 @@ def get_steam_path():
 
 def handle_non_default_path():
     global steam_dir
-    # when dota2 is not inside Steam folder, set new steam directory from 'dota2path_minify.txt
+    # when dota2 is not inside Steam folder, set new steam directory from 'minify_config["steam_dir"]'
     if not os.path.exists(os.path.join(steam_dir, DOTA_EXECUTABLE_PATH)):
-        if not os.path.exists(path_file_dir):
-            with open(path_file_dir, "w") as file:
-                file.write("")
-
         find_library_from_vdf()
 
-        with open(path_file_dir, "r") as file:
-            steam_dir = os.path.normpath(file.readline().strip())
+        steam_dir = get_config("steam_dir")
 
     # last line of defense
     while not steam_dir or (
@@ -192,9 +222,8 @@ def handle_non_default_path():
 
             if choice:
                 steam_dir = os.path.normpath(filedialog.askdirectory())
-                with open(path_file_dir, "w") as file:
-                    file.write(steam_dir)
-                print(steam_dir)
+                set_config("steam_dir")
+
             else:
                 quit()
 
@@ -203,7 +232,7 @@ def handle_non_default_path():
             with open(os.path.join(logs_dir, "crashlog.txt"), "w") as file:
                 file.write(
                     f"{type(e).__name__}: {str(e)}"
-                    "Could not open directory picker. Set your Steam library path in 'config/dota2path_minify.txt' and restart Minify.\n"
+                    "Could not open directory picker. Set your Steam library path in 'config/minify_config.json[\"steam_dir\"]' and restart Minify.\n"
                     f"Expected something like: {STEAM_DEFAULT_INSTALLATION_PATH}\n"
                 )
             break
