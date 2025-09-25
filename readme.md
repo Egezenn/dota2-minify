@@ -1,7 +1,7 @@
 # <div align="center">Dota2 Minify</div>
 
 <div align="center">
-  <img src="bin/images/logo.png" alt="logo" width="150">
+  <img src="Minify/bin/images/logo.png" alt="logo" width="150">
 </div>
 
 <br>
@@ -166,7 +166,7 @@ If not specifically protected by Dota2, these files will override any game conte
 #### `blacklist.txt`
 
 This file is a list of path to files used to override those with blanks.
-Supported file types are can be found in [`bin/blank-files`](Minify/bin/blank-files).
+Supported file types can be found in [`bin/blank-files`](Minify/bin/blank-files).
 
 A list of all the files (from the game pak) can be found in [`bin/gamepakcontents.txt`](Minify/bin/gamepakcontents.txt).
 
