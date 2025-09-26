@@ -44,6 +44,7 @@ def patcher():
 
     try:
         helper.clean_folders()
+        helper.warnings = []
 
         blank_file_extensions = helper.get_blank_file_extensions()  # list of extensions in bin/blank-files
         dota_pak_contents = vpk.open(mpaths.dota_game_pak_path)

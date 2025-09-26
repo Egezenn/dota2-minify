@@ -1,0 +1,56 @@
+{
+  "folders": [
+    {
+      "path": ".",
+      "name": "root"
+    },
+    {
+      "path": "Minify",
+      "name": "Source"
+    },
+    {
+      "path": "Minify/config",
+      "name": "Configurations"
+    },
+    {
+      "path": "Minify/logs",
+      "name": "Logs"
+    },
+    {
+      "path": "Minify/mods",
+      "name": "Mods"
+    },
+    {
+      "path": "Minify/bin"
+    }
+  ],
+  "settings": {
+    "files.exclude": {
+      "__pycache__": true,
+      "**/.git": true,
+      "**/.svn": true,
+      "**/.hg": true,
+      "**/.DS_Store": true,
+      "**/Thumbs.db": true,
+
+      // Minify/
+      "Source2Viewer-CLI*": true,
+      "*TinyEXR*": true,
+      "libSkiaSharp*": true,
+      "steam_appid.txt": true,
+      "*.spec": true,
+      "rg*": true,
+
+      // Minify/bin/
+      "bin": true,
+      "blank-files": true,
+      "images": true,
+      "sounds": true,
+      "FiraMono-Medium.ttf": true,
+
+      "config": true,
+      "logs": true,
+      "mods": true
+    }
+  }
+}

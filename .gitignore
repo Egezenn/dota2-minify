@@ -45,10 +45,9 @@ Minify/mods/Custom Backgrounds/*.webp
 Minify/bin/rescomproot*
 Minify/cli-*-*.*
 Minify/libSkiaSharp*
-Minify/libTinyEXR.Native.so
+Minify/*TinyEXR*
 Minify/rg*
 Minify/Source2Viewer-CLI*
-Minify/TinyEXR.Native.dll
 
 ## Dota2
 Minify/steam_appid.txt
