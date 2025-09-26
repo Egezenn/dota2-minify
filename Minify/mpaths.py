@@ -116,7 +116,7 @@ def set_config(key, value):
     except (FileNotFoundError, json.JSONDecodeError):
         with open(main_config_file_dir, "w") as file:
             json.dump({}, file)
-        return get_config(key, value)
+        return set_config(key, value)
 
 
 def find_library_from_vdf():
