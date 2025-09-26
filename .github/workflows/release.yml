@@ -40,7 +40,7 @@ jobs:
           $version = $releaseName.Substring(8)
           Set-Content -Path "version" -Value $version -NoNewline
       - uses: stefanzweifel/git-auto-commit-action@v5
-        if: ${{ inputs.prerelease == 'true' && matrix.os == 'ubuntu-latest' }}
+        if: ${{ inputs.prerelease == 'false' && matrix.os == 'ubuntu-latest' }}
         with:
           commit_message: "Version change"
 
@@ -56,17 +56,24 @@ jobs:
           source ./.venv/bin/activate
 
       - name: Install dependencies
+        shell: pwsh
         run: |
-          cd Minify
           python -m pip install --upgrade pip
           pip install -r requirements.txt
+          Get-ChildItem
+          Set-Location Minify
+          Get-ChildItem
 
       - name: Build executable
-        run: pyinstaller --noconsole --icon=bin/images/favicon.ico --name=Minify --hidden-import=tkinter __main__.py
+        shell: pwsh
+        run: |
+          Set-Location Minify
+          pyinstaller Minify.spec
 
       - name: Move project dependencies
         shell: pwsh
         run: |
+          Set-Location Minify
           Copy-Item -Path "bin" -Destination "dist\Minify\bin" -Recurse
           Copy-Item -Path "mods" -Destination "dist\Minify\mods" -Recurse
           Copy-Item -Path "..\version" -Destination "dist\Minify\version"
@@ -76,14 +83,14 @@ jobs:
       - name: Archiving (Windows)
         if: matrix.os == 'windows-latest'
         run: |
-          Set-Location dist\Minify
+          Set-Location Minify\dist\Minify
           Compress-Archive -Path ".\*" -DestinationPath "..\..\..\${{ github.event.inputs.release_name }}-windows.zip"
           Set-Location .\..\..\..\
       - name: Archiving (Linux)
         shell: pwsh
         if: matrix.os == 'ubuntu-latest'
         run: |
-          Set-Location dist/Minify
+          Set-Location Minify/dist/Minify
           Compress-Archive -Path "./*" -DestinationPath "./../../../${{ github.event.inputs.release_name }}-linux.zip"
           Set-Location ../../..
 
