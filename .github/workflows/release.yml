@@ -40,7 +40,7 @@ jobs:
           $version = $releaseName.Substring(8)
           Set-Content -Path "version" -Value $version -NoNewline
       - uses: stefanzweifel/git-auto-commit-action@v5
-        if: ${{ inputs.prerelease == 'true' && matrix.os == 'ubuntu-latest' }}
+        if: ${{ inputs.prerelease == 'false' && matrix.os == 'ubuntu-latest' }}
         with:
           commit_message: "Version change"
 
@@ -57,9 +57,9 @@ jobs:
 
       - name: Install dependencies
         run: |
-          cd Minify
           python -m pip install --upgrade pip
           pip install -r requirements.txt
+          cd Minify
 
       - name: Build executable
         run: pyinstaller --noconsole --icon=bin/images/favicon.ico --name=Minify --hidden-import=tkinter __main__.py
