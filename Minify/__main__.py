@@ -11,12 +11,12 @@ else:
     if current_dir not in sys.path:
         sys.path.insert(0, current_dir)
 
+import mpaths
 
 import dearpygui.dearpygui as ui
 import screeninfo
 
 import helper
-import mpaths
 import build
 import gui
 

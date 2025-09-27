@@ -39,7 +39,7 @@ def version_check():
     if version and not "rc" in version:
         try:
             response = requests.get(mpaths.version_query)
-            if response.status_code == 200 and not response.text == "404: Not Found":
+            if response.status_code == 200 and response.text != "404: Not Found":
                 if version != response.text:
                     update_popup_show()
         except:
@@ -285,7 +285,7 @@ def checkbox_state_save():
     for box in checkboxes:
         checkboxes_state[box] = ui.get_value(box)
         with open(mpaths.mods_file_dir, "w", encoding="utf-8") as file:
-            json.dump(checkboxes_state, file, indent=4)
+            json.dump(checkboxes_state, file, indent=2)
 
 
 def drag_viewport(sender, app_data, user_data):

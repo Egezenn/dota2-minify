@@ -127,26 +127,29 @@ def set_config(key, value):
         return set_config(key, value)
 
 
-def write_crashlog(header=None):
-    with open(log_crashlog, "w") as file:
-        file.write(f"{header}\n\n{traceback.format_exc()}") if header else file.write(traceback.format_exc())
+def write_crashlog(exc_type=None, exc_value=None, exc_traceback=None, header=None, handled=True):
+    path = log_crashlog if handled else log_unhandled
+    with open(path, "w") as file:
+        if handled:
+            file.write(f"{header}\n\n{traceback.format_exc()}") if header else file.write(traceback.format_exc())
+        else:
+            file.write(f"{''.join(traceback.format_exception(exc_type, exc_value, exc_traceback))}")
 
 
-def write_warning(exc_type, exc_value, exc_traceback, header=None, handled=True):
-    if not os.path.exists((path := log_warnings if handled else log_unhandled)):
-        open(path, "w").close()
+def write_warning(header=None):
+    if not os.path.exists(log_warnings):
+        open(log_warnings, "w").close()
 
-    with open(path, "r+"):
-        (
-            file.write(f"{header}\n\n{traceback.format_exc()}\n{"-" * 20}")
-            if header
-            else file.write(f"{traceback.format_exc()}\n{"-" * 20}")
-        )
+    with open(log_warnings, "r+") as file:
+        if not "NoneType: None" in traceback.format_exc():
+            file.write(f"{header}\n\n{traceback.format_exc()}") if header else file.write(traceback.format_exc())
+        else:
+            file.write(f"{header}\n\n")
 
 
 def unhandled_handler(handled=False):
     def handler(exc_type, exc_value, exc_traceback):
-        return write_warning(exc_type, exc_value, exc_traceback, handled=handled)
+        return write_crashlog(exc_type, exc_value, exc_traceback, handled=handled)
 
     return handler
 

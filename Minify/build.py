@@ -150,7 +150,7 @@ def patcher():
                                         blacklist_data.append(line)
                                     else:
                                         mpaths.write_warning(
-                                            f"[Invalid Extension] '{line}' in 'mods\\{folder}\\blacklist.txt' [line: {index+1}] does not end in one of the valid extensions -> {blank_file_extensions}"
+                                            f"[Invalid Extension] '{line}' in 'mods/{folder}/blacklist.txt' [line: {index+1}] does not end in one of the valid extensions -> {blank_file_extensions}"
                                         )
 
                         for exclusion in blacklist_data_exclusions:
@@ -184,7 +184,7 @@ def patcher():
                                 )
                             except FileNotFoundError:
                                 mpaths.write_warning(
-                                    f"[Invalid Extension] '{line}' in 'mods\\{os.path.basename(mod_path)}\\blacklist.txt' does not end in one of the valid extensions -> {blank_file_extensions}"
+                                    f"[Invalid Extension] '{line}' in 'mods/{os.path.basename(mod_path)}/blacklist.txt' does not end in one of the valid extensions -> {blank_file_extensions}"
                                 )
 
                         blacklist_data = []
@@ -222,7 +222,7 @@ def patcher():
 
                             except:
                                 mpaths.write_warning(
-                                    f" Could not validate '{line}' in --> 'mods\\{folder}\\styling.txt' [line: {index + 1}]"
+                                    f" Could not validate '{line}' in --> 'mods/{folder}/styling.txt' [line: {index + 1}]"
                                 )
 
                         for key, path_style in list(styling_dictionary.items()):
@@ -243,7 +243,7 @@ def patcher():
                                     dota_extracts.append(f"{sanitized_path}.vcss_c")
                             except KeyError:
                                 mpaths.write_warning(
-                                    f"Path does not exist in VPK -> '{sanitized_path}.vcss_c', error in 'mods\\{folder}\\styling.txt'"
+                                    f"Path does not exist in VPK -> '{sanitized_path}.vcss_c', error in 'mods/{folder}/styling.txt'"
                                 )
                     # --------------------------------- replacer.csv --------------------------------- #
                     if os.path.exists(replacer_file):
@@ -651,7 +651,7 @@ def process_blacklist_dir(index, line, folder):
 
     if not data:
         mpaths.write_warning(
-            f"[Directory Not Found] Could not find '{line}' in pak01_dir.vpk -> mods\\{folder}\\blacklist.txt [line: {index+1}]"
+            f"[Directory Not Found] Could not find '{line}' in pak01_dir.vpk -> mods/{folder}/blacklist.txt [line: {index+1}]"
         )
 
     return data
@@ -678,7 +678,7 @@ def process_blacklist(index, line, folder, blank_file_extensions):
                     data.append(line)
                 else:
                     mpaths.write_warning(
-                        f"[Invalid Extension] '{line}' in 'mods\\{folder}\\blacklist.txt' [line: {index+1}] does not end in one of the valid extensions -> {blank_file_extensions}"
+                        f"[Invalid Extension] '{line}' in 'mods/{folder}/blacklist.txt' [line: {index+1}] does not end in one of the valid extensions -> {blank_file_extensions}"
                     )
 
             except TypeError:

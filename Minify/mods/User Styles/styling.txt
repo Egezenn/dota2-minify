@@ -9,7 +9,7 @@ panorama/styles/dashboard_page_profile_hero_stats @@ #DotaPlusStatsBanner { visi
 
 # remove play button backgrounds
 panorama/styles/play @@ .PlayTabBackgroundImage { visibility: collapse; }
-panorama/styles/dashboard @@ #DashboardPagesBlocker { visibility: collapse; } DOTADashboard.PlayTabVisible #DashboardPages,DOTADashboard.PlayTabVisible #TopBarSecondaryContainer,DOTADashboard.PopupBackgroundBlur #DashboardForeground,DOTADashboard.PopupBackgroundBlur #Chat,DOTADashboard.PopupBackgroundBlur #PartySearch,DOTADashboard.PopupBackgroundBlur #FriendMenu { blur: none; wash-color: none; saturation: 1; }
+panorama/styles/dashboard @@ #DashboardPagesBlocker { visibility: collapse; } DOTADashboard.PlayTabVisible #DashboardPages, DOTADashboard.PlayTabVisible #TopBarSecondaryContainer, DOTADashboard.PopupBackgroundBlur #DashboardForeground, DOTADashboard.PopupBackgroundBlur #Chat, DOTADashboard.PopupBackgroundBlur #PartySearch, DOTADashboard.PopupBackgroundBlur #FriendMenu { blur: none; wash-color: none; saturation: 1; }
 
 # remove useless item info
 panorama/styles/ability_details @@ #Contents.AbilityContents { background-color: none; } DOTAAbilityDetails { background-image: none; } #AbilityLore, .HasBuildComment:not(.DescriptionOnly) .AbilityBuildHeader:not(.Edit), .HasBuildComment:not(.DescriptionOnly) #AbilityBuildComment { visibility: collapse; } .AdditionalDetails .AltDetailsHelp { visibility: collapse; }
