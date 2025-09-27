@@ -17,8 +17,8 @@ import screeninfo
 
 import helper
 import mpaths
-import utils_build
-import utils_gui
+import build
+import gui
 
 
 ui.create_context()
@@ -46,10 +46,10 @@ with ui.value_registry():
 
 
 def patcher_start():
-    checkbox_state_save_thread = threading.Thread(target=utils_gui.checkbox_state_save)
+    checkbox_state_save_thread = threading.Thread(target=gui.checkbox_state_save)
     checkbox_state_save_thread.start()
     checkbox_state_save_thread.join()
-    patch_thread = threading.Thread(target=utils_build.patcher)
+    patch_thread = threading.Thread(target=build.patcher)
     patch_thread.start()
     patch_thread.join()
 
@@ -80,7 +80,7 @@ def create_ui():
             width=21,
             height=16,
             pos=(55, 7),
-            callback=utils_gui.open_discord_link,
+            callback=gui.open_discord_link,
         )
         ui.add_image_button(
             "git_texture_tag",
@@ -88,7 +88,7 @@ def create_ui():
             width=18,
             height=18,
             pos=(87, 6),
-            callback=utils_gui.open_github_link,
+            callback=gui.open_github_link,
         )
         ui.add_image_button(
             "dev_texture_tag",
@@ -97,7 +97,7 @@ def create_ui():
             width=16,
             height=16,
             pos=(115, 6),
-            callback=utils_gui.dev_mode,
+            callback=gui.dev_mode,
         )
         ui.add_text(tag="language_select", pos=(138, 3))
         ui.add_combo(
@@ -109,7 +109,7 @@ def create_ui():
             pos=(210, 8),
             callback=helper.change_output_path,
         )
-        ui.add_text(utils_gui.title, pos=(320, 3))
+        ui.add_text(gui.title, pos=(320, 3))
         ui.add_button(
             parent="top_bar",
             tag="button_exit",
@@ -128,13 +128,13 @@ def create_ui():
                     tag="button_select_mods",
                     label="Select Mods",
                     width=92,
-                    callback=utils_gui.open_mod_menu,
+                    callback=gui.open_mod_menu,
                 )
                 ui.add_button(
                     tag="button_uninstall",
                     label="Uninstall",
                     width=92,
-                    callback=utils_gui.uninstall_popup_show,
+                    callback=gui.uninstall_popup_show,
                 )
             with ui.group(pos=(-45, 4)):
                 ui.add_text(
@@ -191,13 +191,13 @@ def create_ui():
         ui.add_button(
             label="Confirm",
             tag="uninstall_confirm_button",
-            callback=utils_build.uninstaller,
+            callback=build.uninstaller,
             width=100,
         )
         ui.add_button(
             label="Cancel",
             tag="uninstall_cancel_button",
-            callback=utils_gui.hide_uninstall_popup,
+            callback=gui.hide_uninstall_popup,
             width=100,
         )
 
@@ -217,7 +217,7 @@ def create_ui():
         width=494,
         show=False,
         no_resize=True,
-        on_close=utils_gui.checkbox_state_save,
+        on_close=gui.checkbox_state_save,
     )
 
     ui.add_window(
@@ -256,41 +256,41 @@ def create_ui():
             label="Yes",
             width=120,
             height=24,
-            callback=utils_gui.open_github_link_and_close_minify,
+            callback=gui.open_github_link_and_close_minify,
             tag="update_popup_yes_button",
         )
         ui.add_button(
             label="Ignore updates",
             width=120,
             height=24,
-            callback=lambda: utils_gui.delete_update_popup(True),
+            callback=lambda: gui.delete_update_popup(True),
             tag="update_popup_ignore_button",
         )
         ui.add_button(
             label="No",
             width=120,
             height=24,
-            callback=lambda: utils_gui.delete_update_popup(False),
+            callback=lambda: gui.delete_update_popup(False),
             tag="update_popup_no_button",
         )
 
 
 def create_base_ui():
-    utils_gui.recalc_rescomp_dirs()
+    gui.recalc_rescomp_dirs()
     helper.get_available_localizations()
     create_ui()
-    utils_gui.lock_interaction()
-    utils_gui.focus_window()
-    utils_gui.start_text()
-    utils_gui.theme()
+    gui.lock_interaction()
+    gui.focus_window()
+    gui.start_text()
+    gui.theme()
     helper.change_localization(init=True)
-    utils_gui.version_check()
-    utils_gui.initiate_conditionals()
-    helper.disable_workshop_mods(utils_gui.checkboxes)
+    gui.version_check()
+    gui.initiate_conditionals()
+    helper.disable_workshop_mods(gui.checkboxes)
     time.sleep(0.05)
-    utils_gui.configure_update_popup()
-    utils_gui.bulk_exec_script("initial")
-    utils_gui.unlock_interaction()
+    gui.configure_update_popup()
+    gui.bulk_exec_script("initial")
+    gui.unlock_interaction()
 
 
 # Adding font to the ui registry
@@ -307,8 +307,8 @@ with ui.font_registry():
 
 # Adding mouse handler to ui registry
 with ui.handler_registry():
-    ui.add_mouse_drag_handler(parent="top_bar", button=0, threshold=4, callback=utils_gui.drag_viewport)
-    ui.add_key_release_handler(0x20E, callback=utils_gui.close_active_window)
+    ui.add_mouse_drag_handler(parent="top_bar", button=0, threshold=4, callback=gui.drag_viewport)
+    ui.add_key_release_handler(0x20E, callback=gui.close_active_window)
 
 width_discord, height_discord, channels_discord, data_discord = ui.load_image(
     os.path.join(mpaths.img_dir, "Discord.png")
@@ -348,7 +348,7 @@ for monitor in screeninfo.get_monitors():
 
 
 ui.create_viewport(
-    title=utils_gui.title,
+    title=gui.title,
     height=300,
     width=494,
     x_pos=min(widths) // 2 - 494 // 2,

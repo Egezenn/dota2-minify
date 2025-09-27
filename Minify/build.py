@@ -6,7 +6,6 @@ import shutil
 import subprocess
 import threading
 import time
-import traceback
 import xml.etree.ElementTree as ET
 
 import dearpygui.dearpygui as ui
@@ -16,13 +15,13 @@ import vpk
 
 import helper
 import mpaths
-import utils_gui
+import gui
 
 game_contents_file_init = False
 
 
 def patcher():
-    utils_gui.lock_interaction()
+    gui.lock_interaction()
     helper.clean_terminal()
     target = "dota2.exe" if mpaths.OS == "Windows" else "dota2"
     running = False
@@ -72,7 +71,7 @@ def patcher():
                 files_dir = os.path.join(mod_path, "files")
 
                 if folder == "base" or ui.get_value(
-                    utils_gui.checkboxes[folder]
+                    gui.checkboxes[folder]
                 ):  # step into folders that have ticked checkboxes only
                     helper.exec_script(script_file, folder, "loop")
                     helper.add_text_to_terminal(f"{helper.localization_dict['installing_terminal_text_var']} {folder}")
@@ -301,7 +300,7 @@ def patcher():
             build_minify_menu(mod_menus)
         for path, mods in xml_modifications.items():
             apply_xml_modifications(os.path.join(mpaths.build_dir, path), mods)
-        utils_gui.bulk_exec_script("after_decompile")
+        gui.bulk_exec_script("after_decompile")
         # ---------------------------------- STEP 3 ---------------------------------- #
         # ---------------------------- CSS resourcecompile --------------------------- #
         # ---------------------------------------------------------------------------- #
@@ -345,7 +344,7 @@ def patcher():
                 # if sp_compiler.stderr != b"":
                 #     decoded_err = sp_compiler.stderr.decode("utf-8")
                 #     raise Exception(decoded_err)
-        utils_gui.bulk_exec_script("after_recompile")
+        gui.bulk_exec_script("after_recompile")
 
         if replacer_source_extracts and replacer_targets and (len(replacer_source_extracts) == len(replacer_targets)):
             vpk_extractor(dota_pak_contents, replacer_source_extracts, mpaths.replace_dir)
@@ -387,7 +386,7 @@ def patcher():
             mpaths.replace_dir,
         )
 
-        utils_gui.unlock_interaction()
+        gui.unlock_interaction()
         helper.add_text_to_terminal("-------------------------------------------------------", "spacer1_text")
         helper.add_text_to_terminal(
             helper.localization_dict["success_terminal_text_var"],
@@ -419,15 +418,15 @@ def patcher():
             "check_logs_text_tag",
             "warning",
         )
-        utils_gui.unlock_interaction()
+        gui.unlock_interaction()
         playsound3.playsound(os.path.join(mpaths.sounds_dir, "fail.wav"))
 
 
 def uninstaller():
-    utils_gui.hide_uninstall_popup()
+    gui.hide_uninstall_popup()
     helper.clean_terminal()
     time.sleep(0.05)
-    utils_gui.lock_interaction()
+    gui.lock_interaction()
 
     # smart uninstall
     pak_pattern = r"^pak\d{2}_dir\.vpk$"
@@ -442,12 +441,12 @@ def uninstaller():
                     except KeyError:
                         pass
 
-    utils_gui.bulk_exec_script("uninstall")
+    gui.bulk_exec_script("uninstall")
     helper.add_text_to_terminal(
         helper.localization_dict["mods_removed_terminal_text_var"],
         "uninstaller_text_tag",
     )
-    utils_gui.unlock_interaction()
+    gui.unlock_interaction()
 
 
 def vpk_extractor(vpk_to_extract_from, paths, path_to_extract_to=mpaths.build_dir):

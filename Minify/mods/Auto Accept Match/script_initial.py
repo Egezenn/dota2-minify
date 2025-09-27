@@ -10,12 +10,12 @@ if minify_root not in sys.path:
 import dearpygui.dearpygui as ui
 
 import helper
-import utils_gui
+import gui
 
 
 def main():
     if not helper.workshop_installed:
-        for checkbox in utils_gui.checkboxes:
+        for checkbox in gui.checkboxes:
             if checkbox == os.path.basename(current_dir):
                 ui.configure_item(checkbox, enabled=True)
                 break

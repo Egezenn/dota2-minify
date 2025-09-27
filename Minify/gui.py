@@ -15,7 +15,7 @@ import requests
 
 import helper
 import mpaths
-import utils_build
+import build
 
 checkboxes = {}
 checkboxes_state = {}
@@ -570,12 +570,12 @@ def dev_mode():
             )
             ui.add_button(label="Compile items from path", callback=helper.compile)
             ui.add_spacer(width=0, height=10)
-            ui.add_button(label="Clean all language paths", callback=utils_build.clean_lang_dirs)
+            ui.add_button(label="Clean all language paths", callback=build.clean_lang_dirs)
             ui.add_text("^ Verify your files!")
             ui.add_spacer(width=0, height=10)
             ui.add_button(label="Extract workshop tools", callback=extract_workshop_tools)
             ui.add_spacer(width=0, height=10)
-            ui.add_button(label="Create a blank mod", callback=utils_build.create_blank_mod)
+            ui.add_button(label="Create a blank mod", callback=build.create_blank_mod)
             ui.add_spacer(width=0, height=10)
             ui.add_text(
                 "* Do note that some of these will not work if you're not on Windows because Source2Viewer's GUI and Dota2 Tools aren't crossplatform.",
