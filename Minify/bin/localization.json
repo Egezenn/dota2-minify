@@ -260,12 +260,6 @@
     "RU": "Отсутсвует файл 'styling.txt' в ",
     "TR": "Burada 'styling.txt' dosyası eksik "
   },
-  "error_no_execution_permission_s2v_var": {
-    "EN": "Give execution permission to Source2Viewer!",
-    "ES": "¡Dale permiso de ejecución a Source2Viewer!",
-    "RU": "Предоставь права на выполнение для Source2Viewer!",
-    "TR": "Source2Viewer'a çalıştırma yetkisi ver!"
-  },
   "compile_successful_text_var": {
     "EN": "Compiled successfully!",
     "RU": "Компиляция успешна!"

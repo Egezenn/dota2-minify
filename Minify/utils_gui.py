@@ -133,15 +133,14 @@ def download_dependencies():
         if gui_lock:
             lock_interaction()
 
-    except Exception as e:
-        with open(os.path.join(mpaths.logs_dir, "crashlog.txt"), "w") as file:
-            file.write(f"{type(e).__name__}: {str(e)}")
-            lock_interaction()
-            helper.add_text_to_terminal(
-                helper.localization_dict["failed_download_retrying_terminal_text_var"],
-                None,
-                "error",
-            )
+    except:
+        mpaths.write_crashlog()
+        lock_interaction()
+        helper.add_text_to_terminal(
+            helper.localization_dict["failed_download_retrying_terminal_text_var"],
+            None,
+            "error",
+        )
         return download_dependencies()
 
 
@@ -257,18 +256,13 @@ def focus_window():
             if hwnd != 0:
                 ctypes.windll.user32.ShowWindow(hwnd, 9)
                 ctypes.windll.user32.SetForegroundWindow(hwnd)
-        except Exception as error:
-            with open(os.path.join(mpaths.logs_dir, "warnings.txt"), "w") as file:
-                file.write(f"Windows focus error: {error}")
+        except:
+            mpaths.write_warning()
     else:
         try:
             subprocess.run(["wmctrl", "-a", "Minify"], check=True)
-        except FileNotFoundError:
-            with open(os.path.join(mpaths.logs_dir, "warnings.txt"), "w") as file:
-                file.write("wmctrl not installed")
-        except subprocess.CalledProcessError as error:
-            with open(os.path.join(mpaths.logs_dir, "warnings.txt"), "w") as file:
-                file.write(f"Linux focus error: {error}")
+        except:
+            mpaths.write_warning()
 
 
 def delete_update_popup(ignore):
@@ -521,7 +515,7 @@ def dev_mode():
             ui.add_button(label="Path: Minify", callback=lambda: helper.open_thing(os.getcwd()))
             ui.add_button(
                 label="Path: Logs",
-                callback=lambda: helper.open_thing(os.path.join(mpaths.logs_dir)),
+                callback=lambda: helper.open_thing(mpaths.logs_dir),
             )
             ui.add_button(
                 label="Path: Dota2",

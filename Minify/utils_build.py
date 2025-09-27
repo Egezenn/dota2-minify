@@ -44,7 +44,6 @@ def patcher():
 
     try:
         helper.clean_folders()
-        helper.warnings = []
 
         blank_file_extensions = helper.get_blank_file_extensions()  # list of extensions in bin/blank-files
         dota_pak_contents = vpk.open(mpaths.dota_game_pak_path)
@@ -91,7 +90,7 @@ def patcher():
                             if data[:7] == r"<Panel ":
                                 mod_menus.append(data)
                             else:
-                                helper.warnings.append(f"Improper mod menu on {folder}!")
+                                mpaths.write_warning(f"Improper mod menu on {folder}!")
 
                     if os.path.exists(xml_mod_file):
                         with open(xml_mod_file, "r", encoding="utf-8") as file:
@@ -151,7 +150,7 @@ def patcher():
                                     if line.endswith(tuple(blank_file_extensions)):
                                         blacklist_data.append(line)
                                     else:
-                                        helper.warnings.append(
+                                        mpaths.write_warning(
                                             f"[Invalid Extension] '{line}' in 'mods\\{folder}\\blacklist.txt' [line: {index+1}] does not end in one of the valid extensions -> {blank_file_extensions}"
                                         )
 
@@ -184,8 +183,8 @@ def patcher():
                                         path + extension,
                                     ),
                                 )
-                            except FileNotFoundError as exception:
-                                helper.warnings.append(
+                            except FileNotFoundError:
+                                mpaths.write_warning(
                                     f"[Invalid Extension] '{line}' in 'mods\\{os.path.basename(mod_path)}\\blacklist.txt' does not end in one of the valid extensions -> {blank_file_extensions}"
                                 )
 
@@ -222,10 +221,9 @@ def patcher():
                                     style,
                                 )
 
-                            except Exception as exception:
-                                helper.warnings.append(
-                                    f"[{type(exception).__name__}]"
-                                    + f" Could not validate '{line}' in --> 'mods\\{folder}\\styling.txt' [line: {index + 1}]"
+                            except:
+                                mpaths.write_warning(
+                                    f" Could not validate '{line}' in --> 'mods\\{folder}\\styling.txt' [line: {index + 1}]"
                                 )
 
                         for key, path_style in list(styling_dictionary.items()):
@@ -245,7 +243,7 @@ def patcher():
                                 else:
                                     dota_extracts.append(f"{sanitized_path}.vcss_c")
                             except KeyError:
-                                helper.warnings.append(
+                                mpaths.write_warning(
                                     f"Path does not exist in VPK -> '{sanitized_path}.vcss_c', error in 'mods\\{folder}\\styling.txt'"
                                 )
                     # --------------------------------- replacer.csv --------------------------------- #
@@ -256,15 +254,14 @@ def patcher():
                                     if not (row[0] == "" and row[1] == ""):
                                         replacer_source_extracts.append(row[0])
                                         replacer_targets.append(row[1])
-                                except Exception as e:
+                                except:
                                     min_len = min(len(replacer_source_extracts), len(replacer_targets))
                                     replacer_source_extracts = replacer_source_extracts[:min_len]
                                     replacer_targets = replacer_targets[:min_len]
-                                    helper.warnings.append(f"{type(e).__name__}: {str(e)}")
+                                    mpaths.write_warning()
 
-            except Exception as exception:
-                exceptiondata = traceback.format_exc().splitlines()
-                helper.warnings.append(exceptiondata[-1])
+            except:
+                mpaths.write_warning()
 
         if mod_menus:
             dota_extracts.append("panorama/layout/popups/popup_settings_reborn.vxml_c")
@@ -283,7 +280,7 @@ def patcher():
             helper.localization_dict["decompiling_terminal_text_var"],
             "decompiling_text",
         )
-        with open(os.path.join(mpaths.logs_dir, "Source2Viewer-CLI.txt"), "w") as file:
+        with open(mpaths.log_s2v, "w") as file:
             try:
                 subprocess.run(
                     [
@@ -297,11 +294,8 @@ def patcher():
                     ],
                     stdout=file,
                 )
-            except PermissionError:
-                helper.add_text_to_terminal(
-                    helper.localization_dict["error_no_execution_permission_s2v_var"],
-                    "error",
-                )
+            except:
+                mpaths.write_crashlog()
 
         if mod_menus:
             build_minify_menu(mod_menus)
@@ -330,7 +324,7 @@ def patcher():
         )
 
         if helper.workshop_installed:
-            with open(os.path.join(mpaths.logs_dir, "resourcecompiler.txt"), "wb") as file:
+            with open(mpaths.log_rescomp, "wb") as file:
                 command = [
                     mpaths.dota_resource_compiler_path,
                     "-i",
@@ -410,10 +404,9 @@ def patcher():
         helper.handle_warnings()
         threading.Thread(target=lambda: playsound3.playsound(os.path.join(mpaths.sounds_dir, "success.wav"))).start()
 
-    except Exception:
-        with open(crashlog_path := os.path.join(mpaths.logs_dir, "crashlog.txt"), "w") as file:
-            file.write(traceback.format_exc())
-        helper.open_thing(crashlog_path)
+    except:
+        mpaths.write_crashlog()
+        helper.open_thing(mpaths.log_crashlog)
 
         helper.add_text_to_terminal("-------------------------------------------------------", "spacer2_text")
         helper.add_text_to_terminal(
@@ -473,7 +466,7 @@ def vpk_extractor(vpk_to_extract_from, paths, path_to_extract_to=mpaths.build_di
 
 def apply_xml_modifications(xml_file, modifications):
     if not os.path.exists(xml_file):
-        helper.warnings.append(f"[Missing XML] '{xml_file}' not found; skipping modifications")
+        mpaths.write_warning(f"[Missing XML] '{xml_file}' not found; skipping modifications")
         return
     tree = ET.parse(xml_file)
     root = tree.getroot()
@@ -536,10 +529,10 @@ def apply_xml_modifications(xml_file, modifications):
                     try:
                         child = ET.fromstring(xml_snippet)
                         parent_elem.append(child)
-                    except ET.ParseError as e:
-                        helper.warnings.append(f"[XML ParseError] add_child -> {e}")
+                    except ET.ParseError:
+                        mpaths.write_warning(f"[XML ParseError] add_child")
                 else:
-                    helper.warnings.append(
+                    mpaths.write_warning(
                         f"[add_child] parent id '{parent_id}' not found in {os.path.basename(xml_file)}"
                     )
 
@@ -555,11 +548,11 @@ def apply_xml_modifications(xml_file, modifications):
                     new_parent.append(elem)
                 else:
                     if elem is None:
-                        helper.warnings.append(
+                        mpaths.write_warning(
                             f"[move_into] target id '{target_id}' not found in {os.path.basename(xml_file)}"
                         )
                     if new_parent is None:
-                        helper.warnings.append(
+                        mpaths.write_warning(
                             f"[move_into] new_parent id '{new_parent_id}' not found in {os.path.basename(xml_file)}"
                         )
 
@@ -573,10 +566,10 @@ def apply_xml_modifications(xml_file, modifications):
                         new_elem = ET.fromstring(xml_snippet)
                         idx = list(parent).index(target)
                         parent.insert(idx + 1, new_elem)
-                    except ET.ParseError as e:
-                        helper.warnings.append(f"[XML ParseError] insert_after -> {e}")
+                    except ET.ParseError:
+                        mpaths.write_warning(f"[XML ParseError] insert_after")
                 else:
-                    helper.warnings.append(
+                    mpaths.write_warning(
                         f"[insert_after] target id '{target_id}' not found in {os.path.basename(xml_file)}"
                     )
 
@@ -590,10 +583,10 @@ def apply_xml_modifications(xml_file, modifications):
                         new_elem = ET.fromstring(xml_snippet)
                         idx = list(parent).index(target)
                         parent.insert(idx, new_elem)
-                    except ET.ParseError as e:
-                        helper.warnings.append(f"[XML ParseError] insert_before -> {e}")
+                    except ET.ParseError:
+                        mpaths.write_warning(f"[XML ParseError] insert_before")
                 else:
-                    helper.warnings.append(
+                    mpaths.write_warning(
                         f"[insert_before] target id '{target_id}' not found in {os.path.basename(xml_file)}"
                     )
 
@@ -633,8 +626,8 @@ def build_minify_menu(menus):
         if settings_body is not None:
             settings_body.append(minify_section)
             tree.write(settings_path)
-    except ET.ParseError as e:
-        helper.warnings.append(f"[XML ParseError] -> {e}")
+    except ET.ParseError:
+        mpaths.write_warning()
 
 
 def process_blacklist_dir(index, line, folder):
@@ -658,7 +651,7 @@ def process_blacklist_dir(index, line, folder):
     data.pop(0)
 
     if not data:
-        helper.warnings.append(
+        mpaths.write_warning(
             f"[Directory Not Found] Could not find '{line}' in pak01_dir.vpk -> mods\\{folder}\\blacklist.txt [line: {index+1}]"
         )
 
@@ -685,12 +678,12 @@ def process_blacklist(index, line, folder, blank_file_extensions):
                 if line.endswith(tuple(blank_file_extensions)):
                     data.append(line)
                 else:
-                    warnings.append(
+                    mpaths.write_warning(
                         f"[Invalid Extension] '{line}' in 'mods\\{folder}\\blacklist.txt' [line: {index+1}] does not end in one of the valid extensions -> {blank_file_extensions}"
                     )
 
-            except TypeError as exception:
-                helper.warnings.append(f"[{type(exception).__name__}]" + " Invalid data type in line -> " + str(line))
+            except TypeError:
+                mpaths.write_warning("Invalid data type in line -> " + str(line))
 
     return data
 
@@ -765,7 +758,7 @@ if minify_root not in sys.path:
 def main():
     pass
     # Code specific to your mod goes here, minify will try to execute this block.
-    # If any exceptions occur, it'll be written to `logs/warnings.txt`
+    # If any exceptions occur, it'll be written to `logs` directory
 
 
 if __name__ == "__main__":

@@ -25,23 +25,16 @@ localization_dict = {}
 localizations = []
 mod_selection_window_var = ""
 output_path = mpaths.minify_dota_pak_output_path
-warnings = []
 workshop_installed = False
 
 
 def handle_warnings():
-    global warnings
-
-    if len(warnings) != 0:
-        with open(warning_log_path := os.path.join(mpaths.logs_dir, "warnings.txt"), "a") as file:
-            for line in warnings:
-                file.write(line + "\n")
+    if os.path.getsize(mpaths.log_warnings) != 0:
         add_text_to_terminal(
             localization_dict["minify_encountered_errors_terminal_text_var"],
             "minify_error_var",
             "warning",
         )
-        open_thing(os.path.join(warning_log_path))
 
 
 def scroll_to_terminal_end():
@@ -217,24 +210,19 @@ def url_validator(url):
             try:
                 line = line.decode("utf-8").split()
                 line = "".join(line)
-            except UnicodeDecodeError as exception:
-                warnings.append(
-                    f"[{type(exception).__name__}]"
-                    + " Cannot decode -> "
-                    + str(line)
-                    + " Make sure your URL is using a 'utf-8' charset"
-                )
+            except UnicodeDecodeError:
+                mpaths.write_warning("Cannot decode -> " + str(line) + " Make sure your URL is using a 'utf-8' charset")
 
             content.append(line)
 
-    except urllib.error.HTTPError as exception:
-        warnings.append(f"[{type(exception).__name__}]" + f" Could not connect to -> " + url)
+    except urllib.error.HTTPError:
+        mpaths.write_warning(f"Could not connect to -> " + url)
 
-    except ValueError as exception:
-        warnings.append(f"[{type(exception).__name__}]" + f" Invalid URL -> " + url)
+    except ValueError:
+        mpaths.write_warning(f"Invalid URL -> " + url)
 
-    except urllib.error.URLError as exception:
-        warnings.append(f"[{type(exception).__name__}]" + f" Invalid URL -> " + url)
+    except urllib.error.URLError:
+        mpaths.write_warning(f"Invalid URL -> " + url)
 
     return content
 
@@ -304,7 +292,7 @@ def compile(sender, app_data, user_data):
                 )
             else:
                 shutil.copy(os.path.join(folder, item), mpaths.minify_dota_compile_input_path)
-        with open(os.path.join(mpaths.logs_dir, "resourcecompiler.txt"), "w") as file:
+        with open(mpaths.log_rescomp, "w") as file:
             subprocess.run(
                 [
                     mpaths.dota_resource_compiler_path,
@@ -358,8 +346,8 @@ def remove_path(*paths):
                         current_file_mode = os.stat(filepath).st_mode
                         os.chmod(filepath, current_file_mode | stat.S_IWUSR)
             return remove_path(*paths)
-        except Exception as e:
-            warnings.append(f"{type(e).__name__}: {str(e)}")
+        except:
+            mpaths.write_warning()
 
 
 def exec_script(script_path, mod_name, order_name):
@@ -383,7 +371,7 @@ def exec_script(script_path, mod_name, order_name):
                     "success",
                 )
         else:
-            warnings.append(localization_dict["script_no_main_text_var"].format(mod_name, order_name))
+            mpaths.write_warning(localization_dict["script_no_main_text_var"].format(mod_name, order_name))
             add_text_to_terminal(
                 localization_dict["script_no_main_text_var"].format(mod_name, order_name),
                 None,

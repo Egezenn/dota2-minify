@@ -65,6 +65,14 @@ localization_file_dir = os.path.join(bin_dir, "localization.json")
 rescomp_override_dir = os.path.join(bin_dir, "rescomproot")
 sounds_dir = os.path.join(bin_dir, "sounds")
 
+
+# logs
+log_crashlog = os.path.join(logs_dir, "crashlog.txt")
+log_warnings = os.path.join(logs_dir, "warnings.txt")
+log_unhandled = os.path.join(logs_dir, "unhandled.txt")
+log_s2v = os.path.join(logs_dir, "Source2Viewer-CLI.txt")
+log_rescomp = os.path.join(logs_dir, "resourcecompiler.txt")
+
 # config
 ## locale, steam_dir
 main_config_file_dir = os.path.join(config_dir, "minify_config.json")
@@ -119,6 +127,33 @@ def set_config(key, value):
         return set_config(key, value)
 
 
+def write_crashlog(header=None):
+    with open(log_crashlog, "w") as file:
+        file.write(f"{header}\n\n{traceback.format_exc()}") if header else file.write(traceback.format_exc())
+
+
+def write_warning(exc_type, exc_value, exc_traceback, header=None, handled=True):
+    if not os.path.exists((path := log_warnings if handled else log_unhandled)):
+        open(path, "w").close()
+
+    with open(path, "r+"):
+        (
+            file.write(f"{header}\n\n{traceback.format_exc()}\n{"-" * 20}")
+            if header
+            else file.write(f"{traceback.format_exc()}\n{"-" * 20}")
+        )
+
+
+def unhandled_handler(handled=False):
+    def handler(exc_type, exc_value, exc_traceback):
+        return write_warning(exc_type, exc_value, exc_traceback, handled=handled)
+
+    return handler
+
+
+sys.excepthook = unhandled_handler()
+
+
 def find_library_from_vdf():
     global steam_dir
 
@@ -154,10 +189,9 @@ def find_library_from_vdf():
                 set_config("steam_dir", path)
                 break
 
-    except Exception as error:
-        with open(os.path.join(logs_dir, "warnings.txt"), "w") as file:
-            file.write(f"Error reading libraryfolders.vdf: {error}")
-            steam_dir = ""
+    except:
+        write_warning("Error reading libraryfolders.vdf")
+        steam_dir = ""
 
 
 def get_steam_path():
@@ -168,17 +202,15 @@ def get_steam_path():
 
         try:
             hkey = winreg.OpenKey(winreg.HKEY_LOCAL_MACHINE, r"SOFTWARE\WOW6432Node\Valve\Steam")
-        except Exception as exception:
+        except:
             hkey = None
-            with open(os.path.join(os.getcwd(), "logs", "registry.txt"), "w") as file:
-                file.write(traceback.format_exc())
+            write_crashlog()
 
         try:
             steam_path = winreg.QueryValueEx(hkey, "InstallPath")
         except:
             steam_path = ""
-            with open(os.path.join(os.getcwd(), "logs", "registry_query.txt"), "w") as file:
-                file.write(traceback.format_exc())
+            write_crashlog()
 
         try:
             steam_dir = steam_path[0]
@@ -228,13 +260,11 @@ def handle_non_default_path():
                 quit()
 
             root.destroy()
-        except Exception as e:
-            with open(os.path.join(logs_dir, "crashlog.txt"), "w") as file:
-                file.write(
-                    f"{type(e).__name__}: {str(e)}"
-                    "Could not open directory picker. Set your Steam library path in 'config/minify_config.json[\"steam_dir\"]' and restart Minify.\n"
-                    f"Expected something like: {STEAM_DEFAULT_INSTALLATION_PATH}\n"
-                )
+        except:
+            write_crashlog(
+                "Could not open directory picker. Set your Steam library path in 'config/minify_config.json[\"steam_dir\"]' and restart Minify.\n"
+                f"Expected something like: {STEAM_DEFAULT_INSTALLATION_PATH}\n",
+            )
             break
 
 
@@ -328,9 +358,8 @@ try:
     else:
         raise Exception("Unsupported ripgrep platform!")
 
-except Exception as error:
-    with open(os.path.join(logs_dir, "crashlog.txt"), "w") as file:
-        file.write(f"Unsupported configuration ({OS}/{MACHINE}/{ARCHITECTURE})\n{error}")
+except:
+    write_crashlog(f"Unsupported configuration ({OS}/{MACHINE}/{ARCHITECTURE})\n{error}")
 
 
 # dota2 paths

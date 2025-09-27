@@ -233,7 +233,7 @@ if minify_root not in sys.path:
 def main():
     pass
     # Code specific to your mod goes here, minify will try to execute this block.
-    # If any exceptions occur, it'll be written to `logs/warnings.txt`
+    # If any exceptions occur, it'll be written to `logs` directory
 
 
 if __name__ == "__main__":

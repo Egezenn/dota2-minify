@@ -41,7 +41,6 @@ def main():
                     helper.add_text_to_terminal(
                         warning := f"imagemagick is not available on path, unable to convert {file}"
                     )
-                    helper.warnings.append(warning)
 
             if filepath.endswith(".png"):
                 os.makedirs(
