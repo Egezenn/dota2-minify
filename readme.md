@@ -138,6 +138,7 @@ mods
 │   │   └── <...>
 │   ├── blacklist.txt
 │   ├── menu.xml
+│   ├── modcfg.json
 │   ├── notes_<language>.txt
 │   ├── script.py
 │   ├── script_after_decompile.py
@@ -152,10 +153,15 @@ mods
 >
 > With the version 1.12 you aren't required to keep blank files in your mod's contents anymore. Only include the files needed and delete the rest.
 
-> [!TIP]
-> Mods have applicaton order based on their names. (_until we have a better solution_)
->
-> For blacklist mods which replace stuff, add `Mute` or `Remove` words in front of the mod, it'll patch them last to resolve any conflicts.
+#### `modcfg.json`
+
+```json
+{
+  "order": 1, // default is 1, ordered from negative to positive to resolve any conflicts
+  "visual": true, // true by default, show it in the UI as a checkbox
+  "always": false // false by default, apply them without checking mods.json or checkbox
+}
+```
 
 #### `files` directory
 

@@ -22,8 +22,6 @@ checkboxes_state = {}
 dev_mode_state = -1
 gui_lock = False
 version = None
-visually_available_mods = mpaths.mods_folders
-visually_available_mods.remove("base")
 
 try:
     with open(mpaths.version_file_dir, "r") as file:
@@ -154,24 +152,32 @@ def load_checkboxes_state():
 
 
 def create_checkboxes():
-    global checkboxes_state, visually_available_mods
-    for index in range(len(visually_available_mods)):
-        name = visually_available_mods[index]
-        ui.add_group(parent="mod_menu", tag=f"{name}_group_tag", horizontal=True, width=300)
+    global checkboxes_state
+
+    for mod in mpaths.visually_available_mods:
+        mod_path = os.path.join(mpaths.mods_dir, mod)
+        try:
+            with open(os.path.join(mod_path, "modcfg.json")) as cfg:
+                mod_cfg = json.load(cfg)
+            value = mod_cfg["always"]
+            enable_ticking = False if value else True
+        except (KeyError, FileNotFoundError):
+            if checkboxes_state[mod] != None:
+                value = checkboxes_state[mod]
+            else:
+                value = False
+            enable_ticking = True
+
+        ui.add_group(parent="mod_menu", tag=f"{mod}_group_tag", horizontal=True, width=300)
+        # enabled=False default_value=True doesn't show up as ticked
         ui.add_checkbox(
-            parent=f"{name}_group_tag",
-            label=name,
-            tag=name,
-            default_value=False,
+            parent=f"{mod}_group_tag",
+            label=mod,
+            tag=mod,
             callback=setup_button_state,
+            default_value=value,
+            enabled=enable_ticking,
         )
-        for key in checkboxes_state.keys():
-            if key == name:
-                if checkboxes_state[name] == None:
-                    ui.configure_item(name, default_value=False)
-                else:
-                    ui.configure_item(name, default_value=checkboxes_state[name])
-        mod_path = os.path.join(mpaths.mods_dir, name)
         try:
             if os.path.exists(os.path.join(mod_path, f"notes_{helper.locale.lower()}.txt")):
                 notes_txt = os.path.join(mod_path, f"notes_{helper.locale.lower()}.txt")
@@ -182,17 +188,17 @@ def create_checkboxes():
         except FileNotFoundError:
             data = ""
             helper.add_text_to_terminal(
-                helper.localization_dict["no_notes_found_text_var"].format(name),
+                helper.localization_dict["no_notes_found_text_var"].format(mod),
                 None,
                 "warning",
             )
 
-        tag_data = f"{name}_details_window_tag"
+        tag_data = f"{mod}_details_window_tag"
         ui.add_button(
-            parent=f"{name}_group_tag",
+            parent=f"{mod}_group_tag",
             small=True,
             indent=250,
-            tag=f"{name}_button_show_details_tag",
+            tag=f"{mod}_button_show_details_tag",
             label=f"{helper.details_label_text_var}",
             callback=show_details,
             user_data=tag_data,
@@ -207,17 +213,17 @@ def create_checkboxes():
             no_resize=True,
             no_move=True,
             no_collapse=True,
-            label=name,
+            label=mod,
         )
         ui.add_string_value(
             parent="details_tags",
             default_value=data,
-            tag=f"{name}_details_text_value_tag",
+            tag=f"{mod}_details_text_value_tag",
         )
-        ui.add_text(source=f"{name}_details_text_value_tag", parent=tag_data, wrap=480)
+        ui.add_text(source=f"{mod}_details_text_value_tag", parent=tag_data, wrap=480)
 
-        current_box = name
-        checkboxes[current_box] = name
+        current_box = mod
+        checkboxes[current_box] = mod
 
 
 def setup_button_state():

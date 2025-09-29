@@ -58,21 +58,29 @@ def patcher():
         replacer_source_extracts = []
         replacer_targets = []
 
-        for folder in mpaths.mods_folder_application_order:
-            try:
-                mod_path = os.path.join(mpaths.mods_dir, folder)
-                # TODO get rid of custom parsed textfiles
-                blacklist_txt = os.path.join(mod_path, "blacklist.txt")
-                styling_txt = os.path.join(mod_path, "styling.txt")
-                menu_xml = os.path.join(mod_path, "menu.xml")
-                xml_mod_file = os.path.join(mod_path, "xml_mod.json")
-                script_file = os.path.join(mod_path, "script.py")
-                replacer_file = os.path.join(mod_path, "replacer.csv")
-                files_dir = os.path.join(mod_path, "files")
+        for folder in mpaths.mods_with_order:
+            mod_path = os.path.join(mpaths.mods_dir, folder)
 
-                if folder == "base" or ui.get_value(
+            try:
+                with open(os.path.join(mod_path, "modcfg.json")) as cfg:
+                    mod_cfg = json.load(cfg)
+                apply_without_user_confirmation = mod_cfg["always"]
+            except (KeyError, FileNotFoundError):
+                apply_without_user_confirmation = False
+
+            try:
+                if apply_without_user_confirmation or ui.get_value(
                     gui.checkboxes[folder]
                 ):  # step into folders that have ticked checkboxes only
+                    # TODO get rid of custom parsed textfiles
+                    blacklist_txt = os.path.join(mod_path, "blacklist.txt")
+                    styling_txt = os.path.join(mod_path, "styling.txt")
+                    menu_xml = os.path.join(mod_path, "menu.xml")
+                    xml_mod_file = os.path.join(mod_path, "xml_mod.json")
+                    script_file = os.path.join(mod_path, "script.py")
+                    replacer_file = os.path.join(mod_path, "replacer.csv")
+                    files_dir = os.path.join(mod_path, "files")
+
                     helper.exec_script(script_file, folder, "loop")
                     helper.add_text_to_terminal(f"{helper.localization_dict['installing_terminal_text_var']} {folder}")
                     if os.path.exists(files_dir):

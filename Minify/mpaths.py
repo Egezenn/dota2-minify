@@ -480,26 +480,31 @@ dota_tools_extraction_paths = [
     os.path.join(rescomp_override_dir, "game", "dota", "gameinfo.gi"),
 ]
 
+mods_alphabetical = []
+mods_with_order = []
+visually_unavailable_mods = []
+for mod in sorted(os.listdir(mods_dir)):
+    if os.path.isdir(mod_dir := os.path.join(mods_dir, mod)):
+        mods_alphabetical.append(mod)
 
-mods_folders = []
-for item in sorted(os.listdir(mods_dir)):
-    if os.path.isdir(os.path.join(mods_dir, item)):
-        mods_folders.append(item)
+        cfg_exist = os.path.exists(mod_cfg := os.path.join(mod_dir, "modcfg.json"))
+        blacklist_exist = os.path.exists(os.path.join(mod_dir, "blacklist.txt"))
 
-i = mods_folders.index("base")
-mods_folders.pop(i)
-mods_folders.insert(0, "base")
+        if not cfg_exist and not blacklist_exist:
+            mods_with_order.append({mod: 1})
+        elif cfg_exist:
+            with open(mod_cfg) as file:
+                cfg = json.load(file)
+            mods_with_order.append({mod: cfg["order"]})
+            try:
+                if cfg["visual"] == False:
+                    visually_unavailable_mods.append(mod)
+            except KeyError:
+                pass
 
-# Rubberband fix to always do blacklists at last for them to make overwrites
-mods_folder_application_order = overwrite_ensurance_hack(
-    [
-        "Mute",
-        "Remove",
-        "Minify Base Attacks",
-        "Minify Spells & Items",
-        "Misc Optimization",
-        "User Styles",
-        "_",
-    ],
-    mods_folders,
-)
+        elif blacklist_exist:
+            mods_with_order.append({mod: 2})
+
+mods_with_order = sorted(mods_with_order, key=lambda d: list(d.values())[0])
+mods_with_order = [list(d.keys())[0] for d in mods_with_order]
+visually_available_mods = [item for item in mods_alphabetical if item not in visually_unavailable_mods]

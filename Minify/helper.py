@@ -68,7 +68,7 @@ def add_text_to_terminal(text, tag: int | str | None = None, type: str | None = 
 
 def disable_workshop_mods(checkboxes):
     if not workshop_installed:
-        for folder in mpaths.mods_folders:
+        for folder in mpaths.mods_with_order:
             mod_path = os.path.join(mpaths.mods_dir, folder)
             worskhop_required_modification_methods = ["styling.txt", "menu.xml", "xml_mod.json"]
 
