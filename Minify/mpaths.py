@@ -484,7 +484,7 @@ mods_alphabetical = []
 mods_with_order = []
 visually_unavailable_mods = []
 for mod in sorted(os.listdir(mods_dir)):
-    if os.path.isdir(mod_dir := os.path.join(mods_dir, mod)):
+    if os.path.isdir(mod_dir := os.path.join(mods_dir, mod)) and not mod.startswith("_"):
         mods_alphabetical.append(mod)
 
         cfg_exist = os.path.exists(mod_cfg := os.path.join(mod_dir, "modcfg.json"))

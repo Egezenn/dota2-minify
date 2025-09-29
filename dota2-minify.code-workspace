@@ -17,21 +17,18 @@
       "name": "Logs"
     },
     {
-      "path": "Minify/mods",
-      "name": "Mods"
-    },
-    {
       "path": "Minify/bin"
     }
   ],
   "settings": {
     "files.exclude": {
-      "__pycache__": true,
+      "**/__pycache__": true,
       "**/.git": true,
       "**/.svn": true,
       "**/.hg": true,
       "**/.DS_Store": true,
       "**/Thumbs.db": true,
+      ".venv": true,
 
       // Minify/
       "Source2Viewer-CLI*": true,
@@ -49,8 +46,7 @@
       "FiraMono-Medium.ttf": true,
 
       "config": true,
-      "logs": true,
-      "mods": true
+      "logs": true
     }
   }
 }

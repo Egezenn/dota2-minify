@@ -705,7 +705,7 @@ def clean_lang_dirs():
 
 
 def create_blank_mod():
-    mod_name = "_test"
+    mod_name = "!Your-Mod-Name"
     path_to_mod = os.path.join(mpaths.mods_dir, mod_name)
 
     blacklist_template = r"""# This file is a list of path to files used to override those with blanks.
@@ -771,6 +771,12 @@ def main():
 if __name__ == "__main__":
     main()
 """
+    mod_config_template = r"""{
+  "order": 1, // default is 1, ordered from negative to positive to resolve any conflicts
+  "visual": true, // true by default, show it in the UI as a checkbox
+  "always": false // false by default, apply them without checking mods.json or checkbox
+}"""
+
     mod_menu_template = r""
     xml_mod_template = r"{}"
 
@@ -786,6 +792,8 @@ if __name__ == "__main__":
         file.write(styling_template)
     with open(os.path.join(path_to_mod, "script.py"), "w") as file:
         file.write(script_template)
+    with open(os.path.join(path_to_mod, "modcfg.json"), "w") as file:
+        file.write(mod_config_template)
     with open(os.path.join(path_to_mod, "menu.xml"), "w") as file:
         file.write(mod_menu_template)
     with open(os.path.join(path_to_mod, "xml_mod.json"), "w") as file:

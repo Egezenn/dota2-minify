@@ -10,23 +10,21 @@ if minify_root not in sys.path:
 import mpaths
 import helper
 
-img_available = False
-
-for file in sorted(os.listdir(current_dir)):
-    if file.endswith((".png", ".jpg", ".jpeg", ".webm")):
-        img_available = True
-        break
-
 
 def main():
-    if helper.workshop_installed:
-        global img_available
-        if img_available:
-            try:
-                os.remove(
-                    os.path.join(
-                        mpaths.minify_dota_compile_output_path, "panorama", "images", "backgrounds", "imgref.vxml_c"
-                    )
+    img_available = False
+
+    for file in sorted(os.listdir(current_dir)):
+        if file.endswith((".png", ".jpg", ".jpeg", ".webm")):
+            img_available = True
+            break
+
+    if helper.workshop_installed and img_available:
+        try:
+            os.remove(
+                os.path.join(
+                    mpaths.minify_dota_compile_output_path, "panorama", "images", "backgrounds", "imgref.vxml_c"
                 )
-            except:
-                pass
+            )
+        except:
+            pass

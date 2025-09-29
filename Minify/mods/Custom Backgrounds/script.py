@@ -13,44 +13,40 @@ import helper
 import mpaths
 
 
-img_available = False
-
-
-for file in sorted(os.listdir(current_dir)):
-    if file.endswith((".png", ".jpg", ".jpeg", ".webp")):
-        img_available = True
-        break
-
-
 def main():
-    if helper.workshop_installed:
-        global img_available
-        if img_available:
-            filepath = os.path.join(current_dir, file)
+    img_available = False
 
-            xml_template = r"""<root>
+    for file in sorted(os.listdir(current_dir)):
+        if file.endswith((".png", ".jpg", ".jpeg", ".webp")):
+            img_available = True
+            break
+
+    if helper.workshop_installed and img_available:
+        filepath = os.path.join(current_dir, file)
+
+        xml_template = r"""<root>
     <Panel class="AddonLoadingRoot">
         <Image src="file://{images}/backgrounds/background.png" />
     </Panel>
 </root>
 """
-            if not filepath.endswith(".png"):
-                if (magick_path := shutil.which("magick")) is not None:
-                    subprocess.run([magick_path, filepath, filepath := os.path.join(current_dir, "background.png")])
-                else:
-                    helper.add_text_to_terminal(
-                        warning := f"imagemagick is not available on path, unable to convert {file}"
-                    )
-
-            if filepath.endswith(".png"):
-                os.makedirs(
-                    compile_location := os.path.join(
-                        mpaths.minify_dota_compile_input_path, "panorama", "images", "backgrounds"
-                    ),
-                    exist_ok=True,
+        if not filepath.endswith(".png"):
+            if (magick_path := shutil.which("magick")) is not None:
+                subprocess.run([magick_path, filepath, filepath := os.path.join(current_dir, "background.png")])
+            else:
+                helper.add_text_to_terminal(
+                    warning := f"imagemagick is not available on path, unable to convert {file}"
                 )
 
-                shutil.copy(filepath, os.path.join(compile_location, "background.png"))
+        if filepath.endswith(".png"):
+            os.makedirs(
+                compile_location := os.path.join(
+                    mpaths.minify_dota_compile_input_path, "panorama", "images", "backgrounds"
+                ),
+                exist_ok=True,
+            )
 
-                with open(os.path.join(compile_location, "imgref.xml"), "w") as xml:
-                    xml.write(xml_template)
+            shutil.copy(filepath, os.path.join(compile_location, "background.png"))
+
+            with open(os.path.join(compile_location, "imgref.xml"), "w") as xml:
+                xml.write(xml_template)
