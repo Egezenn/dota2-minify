@@ -39,8 +39,16 @@
     - [Optional Setup](#optional-setup)
       - [Using the project locally](#using-the-project-locally)
       - [Compilation from source](#compilation-from-source)
+  - [Troubleshooting](#troubleshooting)
+    - [Antivirus software flagged it / I don't see an executable](#antivirus-software-flagged-it--i-dont-see-an-executable)
+      - [Why though?](#why-though)
+      - [How do I trust it?](#how-do-i-trust-it)
+    - [VAC dialog](#vac-dialog)
+    - [Things are broken!](#things-are-broken)
+    - [It doesn't work / open!](#it-doesnt-work--open)
   - [Developing mods](#developing-mods)
     - [Mod files and explanations](#mod-files-and-explanations)
+      - [`modcfg.json`](#modcfgjson)
       - [`files` directory](#files-directory)
       - [`blacklist.txt`](#blacklisttxt)
       - [`styling.txt`](#stylingtxt)
@@ -122,6 +130,34 @@ Prerequisites are `git`, `python` and `uv`. (also `tk` for tkinter and `wine` fo
 #### Compilation from source
 
 For instructions, refer to the [workflow](https://github.com/Egezenn/dota2-minify/blob/main/.github/workflows/release.yml).
+
+## Troubleshooting
+
+### Antivirus software flagged it / I don't see an executable 
+
+Exclude the folder from your antivirus software(s).
+
+#### Why though?
+
+These are false-positives caused by people generating similiar compilation/hashes for malwares via the same compilers we're using and we don't have a signing certificate to resolve this as the project is relatively small.
+
+#### How do I trust it?
+
+Binaries are released directly from GitHub's build system and there aren't any modifications done from us after releases. If you don't like the executable we're providing, you can run it with Python or build it completely yourself. Instructions for both are included in [the readme](#optional-setup).
+
+### VAC dialog
+
+Verify your files from Steam, this happens every so often randomly and is NOT related to anything the program does.
+
+### Things are broken!
+
+Try uninstalling the mods. If that doesn't work aswell try using the feature below (it'll delete all the contents of `dota 2 beta/game/dota_<language>`!)
+
+![clean-all-language-paths](assets/clean-all-language-paths.png)
+
+### It doesn't work / open!
+
+Make a bug report on GitHub or Discord with the contents of your `logs` folder.
 
 ## Developing mods
 

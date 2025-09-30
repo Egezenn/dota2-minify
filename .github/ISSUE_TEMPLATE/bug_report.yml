@@ -7,6 +7,20 @@ body:
     attributes:
       value: Thanks for your efforts!
 
+  - type: checkboxes
+    attributes:
+      label: Is there an existing issue for this?
+      description: Please search to see if an issue already exists for the bug you encountered.
+      options:
+        - label: I have searched the existing issues.
+          required: true
+        - label: It's not a virus report. See the readme for information regarding the topic.
+          required: true
+        - label: I've downloaded a release from https://github.com/Egezenn/dota2-minify/releases or cloned the source.
+          required: true
+        - label: I can read.
+          required: true
+
   - type: input
     id: minify-version
     attributes:
@@ -20,7 +34,7 @@ body:
     id: bug-description
     attributes:
       label: Bug description
-      description: Describe the bug (screenshots are appreciated!)
+      description: Describe the bug along with steps to produce it (screenshots are appreciated!)
       placeholder: Bug description
     validations:
       required: true
