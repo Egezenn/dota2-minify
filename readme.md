@@ -9,7 +9,6 @@
 <div align="center">
 
 [![discord](https://img.shields.io/badge/Discord-%237289DA.svg?style=for-the-badge&logo=discord&logoColor=white)](https://discord.com/invite/2YDnqpbcKM)
-[![github-wiki](https://img.shields.io/badge/github_wiki-%23000000.svg?style=for-the-badge&logo=github)](https://github.com/Egezenn/dota2-minify/wiki)
 ![license](https://img.shields.io/github/license/Egezenn/dota2-minify?style=for-the-badge)
 
 ![latest-release](https://img.shields.io/github/v/release/Egezenn/dota2-minify?style=for-the-badge)
@@ -133,7 +132,7 @@ For instructions, refer to the [workflow](https://github.com/Egezenn/dota2-minif
 
 ## Troubleshooting
 
-### Antivirus software flagged it / I don't see an executable 
+### Antivirus software flagged it / I don't see an executable
 
 Exclude the folder from your antivirus software(s).
 
@@ -399,16 +398,17 @@ Spanish translation.
 
 ### Python packages
 
-| Name                                                 | Usage                                            | License                                                                                                       |
-| ---------------------------------------------------- | :----------------------------------------------- | ------------------------------------------------------------------------------------------------------------- |
-| [dearpygui](https://github.com/hoffstadt/DearPyGui)  | GUI                                              | [MIT license](https://github.com/hoffstadt/DearPyGui/blob/master/LICENSE)                                     |
-| [playsound3](https://github.com/szmikler/playsound3) | Playing sounds                                   | [MIT license](https://github.com/szmikler/playsound3/blob/main/LICENSE)                                       |
-| [psutil](https://github.com/giampaolo/psutil)        | Handling processes                               | [BSD-3-Clause license](https://github.com/giampaolo/psutil/blob/master/LICENSE)                               |
-| [PyInstaller](https://pyinstaller.org)               | Compilation of the binaries                      | [GPLv2 or later + additional properties](https://github.com/pyinstaller/pyinstaller/blob/develop/COPYING.txt) |
-| [requests](https://github.com/psf/requests)          | Downloading/querying project's dependencies      | [Apache-2.0 license](https://github.com/psf/requests/blob/main/LICENSE)                                       |
-| [screeninfo](https://github.com/rr-/screeninfo)      | Calculating initial position for the main window | [MIT license](https://github.com/rr-/screeninfo/blob/master/LICENSE.md)                                       |
-| [vdf](https://github.com/ValvePython/vdf)            | Serializing VDFs                                 | [MIT license](https://github.com/ValvePython/vdf/blob/master/LICENSE)                                         |
-| [vpk](https://github.com/ValvePython/vpk)            | Creating and getting file content list in VPKs   | [MIT license](https://github.com/ValvePython/vpk/blob/master/LICENSE)                                         |
+| Name                                                                   | Usage                                            | License                                                                                                       |
+| ---------------------------------------------------------------------- | :----------------------------------------------- | ------------------------------------------------------------------------------------------------------------- |
+| [dearpygui](https://github.com/hoffstadt/DearPyGui)                    | GUI                                              | [MIT license](https://github.com/hoffstadt/DearPyGui/blob/master/LICENSE)                                     |
+| [json-with-comments](https://github.com/n-takumasa/json-with-comments) | JSON parsing with comments                       | [MIT license](https://github.com/n-takumasa/json-with-comments/blob/main/LICENSE)                             |
+| [playsound3](https://github.com/szmikler/playsound3)                   | Playing sounds                                   | [MIT license](https://github.com/szmikler/playsound3/blob/main/LICENSE)                                       |
+| [psutil](https://github.com/giampaolo/psutil)                          | Handling processes                               | [BSD-3-Clause license](https://github.com/giampaolo/psutil/blob/master/LICENSE)                               |
+| [PyInstaller](https://pyinstaller.org)                                 | Compilation of the binaries                      | [GPLv2 or later + additional properties](https://github.com/pyinstaller/pyinstaller/blob/develop/COPYING.txt) |
+| [requests](https://github.com/psf/requests)                            | Downloading/querying project's dependencies      | [Apache-2.0 license](https://github.com/psf/requests/blob/main/LICENSE)                                       |
+| [screeninfo](https://github.com/rr-/screeninfo)                        | Calculating initial position for the main window | [MIT license](https://github.com/rr-/screeninfo/blob/master/LICENSE.md)                                       |
+| [vdf](https://github.com/ValvePython/vdf)                              | Serializing VDFs                                 | [MIT license](https://github.com/ValvePython/vdf/blob/master/LICENSE)                                         |
+| [vpk](https://github.com/ValvePython/vpk)                              | Creating and getting file content list in VPKs   | [MIT license](https://github.com/ValvePython/vpk/blob/master/LICENSE)                                         |
 
 ## License
 

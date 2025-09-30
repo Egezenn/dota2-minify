@@ -34,6 +34,7 @@
       "Source2Viewer-CLI*": true,
       "*TinyEXR*": true,
       "libSkiaSharp*": true,
+      "*spirv-cross*": true,
       "steam_appid.txt": true,
       "*.spec": true,
       "rg*": true,

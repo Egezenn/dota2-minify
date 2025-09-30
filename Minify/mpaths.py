@@ -293,44 +293,13 @@ version_query = "https://raw.githubusercontent.com/Egezenn/dota2-minify/refs/hea
 discord = "https://discord.com/invite/2YDnqpbcKM"
 latest_release = "https://github.com/Egezenn/dota2-minify/releases"
 
-# source2viewer install
 try:
     if OS == "Windows":
         s2v_executable = "Source2Viewer-CLI.exe"
-        s2v_skia_path = "libSkiaSharp.dll"
-        s2v_tinyexr_path = "TinyEXR.Native.dll"
         s2v_latest = (
-            "https://github.com/ValveResourceFormat/ValveResourceFormat/releases/latest/download/cli-windows-x64.zip"
+            "https://github.com/ValveResourceFormat/ValveResourceFormat/releases/download/15.0/cli-windows-x64.zip"
         )
-    elif OS == "Linux":
-        s2v_executable = "Source2Viewer-CLI"
-        s2v_skia_path = "libSkiaSharp.so"
-        s2v_tinyexr_path = "libTinyEXR.Native.so"
-        if MACHINE in ["aarch64", "arm64"]:
-            s2v_latest = "https://github.com/ValveResourceFormat/ValveResourceFormat/releases/latest/download/cli-linux-arm64.zip"
-        elif MACHINE in ["armv7l", "arm"]:
-            s2v_latest = (
-                "https://github.com/ValveResourceFormat/ValveResourceFormat/releases/latest/download/cli-linux-arm.zip"
-            )
-        elif ARCHITECTURE == "64bit":
-            s2v_latest = (
-                "https://github.com/ValveResourceFormat/ValveResourceFormat/releases/latest/download/cli-linux-x64.zip"
-            )
-    elif OS == "Darwin":
-        s2v_executable = "Source2Viewer-CLI"
-        s2v_skia_path = "libSkiaSharp.dylib"
-        s2v_tinyexr_path = "libTinyEXR.Native.dylib"
-        if MACHINE in ["aarch64", "arm64"]:
-            s2v_latest = "https://github.com/ValveResourceFormat/ValveResourceFormat/releases/latest/download/cli-macos-arm64.zip"
-        else:
-            s2v_latest = (
-                "https://github.com/ValveResourceFormat/ValveResourceFormat/releases/latest/download/cli-macos-x64.zip"
-            )
-    else:
-        raise Exception("Unsupported Source2Viewer platform!")
 
-    # ripgrep install
-    if OS == "Windows":
         rg_executable = "rg.exe"
         if ARCHITECTURE == "64bit":
             rg_latest = "https://github.com/BurntSushi/ripgrep/releases/download/14.1.1/ripgrep-14.1.1-x86_64-pc-windows-msvc.zip"
@@ -338,7 +307,22 @@ try:
             rg_latest = (
                 "https://github.com/BurntSushi/ripgrep/releases/download/14.1.1/ripgrep-14.1.1-i686-pc-windows-msvc.zip"
             )
+
     elif OS == "Linux":
+        s2v_executable = "Source2Viewer-CLI"
+        if MACHINE in ["aarch64", "arm64"]:
+            s2v_latest = (
+                "https://github.com/ValveResourceFormat/ValveResourceFormat/releases/download/15.0/cli-linux-arm64.zip"
+            )
+        elif MACHINE in ["armv7l", "arm"]:
+            s2v_latest = (
+                "https://github.com/ValveResourceFormat/ValveResourceFormat/releases/download/15.0/cli-linux-arm.zip"
+            )
+        elif ARCHITECTURE == "64bit":
+            s2v_latest = (
+                "https://github.com/ValveResourceFormat/ValveResourceFormat/releases/download/15.0/cli-linux-x64.zip"
+            )
+
         rg_executable = "rg"
         if MACHINE in ["aarch64", "arm64"]:
             rg_latest = "https://github.com/BurntSushi/ripgrep/releases/download/14.1.1/ripgrep-14.1.1-aarch64-unknown-linux-gnu.tar.gz"
@@ -352,14 +336,25 @@ try:
             rg_latest = "https://github.com/BurntSushi/ripgrep/releases/download/14.1.1/ripgrep-14.1.1-x86_64-unknown-linux-musl.tar.gz"
         elif ARCHITECTURE == "32bit":
             rg_latest = "https://github.com/BurntSushi/ripgrep/releases/download/14.1.1/ripgrep-14.1.1-i686-unknown-linux-gnu.tar.gz"
+
     elif OS == "Darwin":
+        s2v_executable = "Source2Viewer-CLI"
+        if MACHINE in ["aarch64", "arm64"]:
+            s2v_latest = (
+                "https://github.com/ValveResourceFormat/ValveResourceFormat/releases/download/15.0/cli-macos-arm64.zip"
+            )
+        elif ARCHITECTURE == "64bit":
+            s2v_latest = (
+                "https://github.com/ValveResourceFormat/ValveResourceFormat/releases/download/15.0/cli-macos-x64.zip"
+            )
+
         rg_executable = "rg"
         if MACHINE in ["aarch64", "arm64"]:
             rg_latest = "https://github.com/BurntSushi/ripgrep/releases/download/14.1.1/ripgrep-14.1.1-aarch64-apple-darwin.tar.gz"
         else:
             rg_latest = "https://github.com/BurntSushi/ripgrep/releases/download/14.1.1/ripgrep-14.1.1-x86_64-apple-darwin.tar.gz"
     else:
-        raise Exception("Unsupported ripgrep platform!")
+        raise Exception("Unsupported platform!")
 
 except:
     write_crashlog(f"Unsupported configuration ({OS}/{MACHINE}/{ARCHITECTURE})\n{error}")
@@ -446,17 +441,8 @@ minify_output_list = [
 ]
 
 ## base game
-if OS == "Windows":
-    dota2_executable = os.path.join(steam_dir, DOTA_EXECUTABLE_PATH)
-    dota2_tools_executable = os.path.join(steam_dir, DOTA_TOOLS_EXECUTABLE_PATH)
-elif OS == "Linux":
-    dota2_executable = os.path.join(steam_dir, DOTA_EXECUTABLE_PATH)
-    # tools launcher path kept as Windows for extraction override flow
-    dota2_tools_executable = os.path.join(steam_dir, DOTA_TOOLS_EXECUTABLE_PATH)
-elif OS == "Darwin":
-    dota2_executable = os.path.join(steam_dir, DOTA_EXECUTABLE_PATH)
-    # tools not available on macOS; keep Windows placeholder
-    dota2_tools_executable = os.path.join(steam_dir, DOTA_TOOLS_EXECUTABLE_PATH)
+dota2_executable = os.path.join(steam_dir, DOTA_EXECUTABLE_PATH)
+dota2_tools_executable = os.path.join(steam_dir, DOTA_TOOLS_EXECUTABLE_PATH)
 dota_game_pak_path = os.path.join(steam_dir, "steamapps", "common", "dota 2 beta", "game", "dota", "pak01_dir.vpk")
 dota_core_pak_path = os.path.join(steam_dir, "steamapps", "common", "dota 2 beta", "game", "core", "pak01_dir.vpk")
 dota_itembuilds_path = os.path.join(steam_dir, "steamapps", "common", "dota 2 beta", "game", "dota", "itembuilds")

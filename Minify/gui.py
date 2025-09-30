@@ -68,11 +68,7 @@ def setup_system():
 
 def download_dependencies():
     try:
-        if not (
-            os.path.exists(mpaths.s2v_executable)
-            and os.path.exists(mpaths.s2v_skia_path)
-            and os.path.exists(mpaths.s2v_tinyexr_path)
-        ):
+        if not os.path.exists(mpaths.s2v_executable):
             helper.add_text_to_terminal(helper.localization_dict["downloading_cli_terminal_text_var"])
             zip_path = mpaths.s2v_latest.split("/")[-1]
             response = requests.get(mpaths.s2v_latest)
@@ -83,7 +79,7 @@ def download_dependencies():
                 shutil.unpack_archive(zip_path, format="zip")
                 os.remove(zip_path)
                 helper.add_text_to_terminal(f"{helper.localization_dict['extracted_cli_terminal_text_var']}{zip_path}")
-                if mpaths.OS in ("Linux", "Darwin") and not os.access(mpaths.s2v_executable, os.X_OK):
+                if mpaths.OS != "Windows" and not os.access(mpaths.s2v_executable, os.X_OK):
                     current_permissions = os.stat(mpaths.s2v_executable).st_mode
                     os.chmod(
                         mpaths.s2v_executable,
@@ -162,11 +158,15 @@ def create_checkboxes():
             value = mod_cfg["always"]
             enable_ticking = False if value else True
         except (KeyError, FileNotFoundError):
-            if checkboxes_state[mod] != None:
-                value = checkboxes_state[mod]
-            else:
+            try:
+                if checkboxes_state[mod] != None:
+                    value = checkboxes_state[mod]
+                else:
+                    value = False
+                enable_ticking = True
+            except KeyError:
                 value = False
-            enable_ticking = True
+                enable_ticking = True
 
         ui.add_group(parent="mod_menu", tag=f"{mod}_group_tag", horizontal=True, width=300)
         # enabled=False default_value=True doesn't show up as ticked
