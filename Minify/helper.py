@@ -29,7 +29,7 @@ workshop_installed = False
 
 
 def handle_warnings():
-    if os.path.getsize(mpaths.log_warnings) != 0:
+    if os.path.exists(mpaths.log_warnings) and os.path.getsize(mpaths.log_warnings) != 0:
         add_text_to_terminal(
             localization_dict["minify_encountered_errors_terminal_text_var"],
             "minify_error_var",
