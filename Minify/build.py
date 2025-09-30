@@ -1,5 +1,5 @@
 import csv
-import json
+import jsonc
 import os
 import re
 import shutil
@@ -63,7 +63,7 @@ def patcher():
 
             try:
                 with open(os.path.join(mod_path, "modcfg.json")) as cfg:
-                    mod_cfg = json.load(cfg)
+                    mod_cfg = jsonc.load(cfg)
                 apply_without_user_confirmation = mod_cfg["always"]
             except (KeyError, FileNotFoundError):
                 apply_without_user_confirmation = False
@@ -101,7 +101,7 @@ def patcher():
 
                     if os.path.exists(xml_mod_file):
                         with open(xml_mod_file, "r", encoding="utf-8") as file:
-                            mod_xml = json.load(file)
+                            mod_xml = jsonc.load(file)
                         for path, mods in mod_xml.items():
                             xml_modifications.setdefault(path, []).extend(mods)
 

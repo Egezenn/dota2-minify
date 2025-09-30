@@ -1,5 +1,5 @@
 import importlib.util
-import json
+import jsonc
 import os
 import shlex
 import shutil
@@ -105,7 +105,7 @@ def get_available_localizations():
     global localizations
     # get available variables for text
     with open(mpaths.localization_file_dir, "r", encoding="utf-8") as file:
-        localization_data = json.load(file)
+        localization_data = jsonc.load(file)
     sub_headers = set()
     for header in localization_data.values():
         if isinstance(header, dict):
@@ -129,7 +129,7 @@ def close():
 def change_localization(init=False):
     global locale
     with open(mpaths.localization_file_dir, "r", encoding="utf-8") as localization_file:
-        localization_data = json.load(localization_file)
+        localization_data = jsonc.load(localization_file)
     if init == True:
         if (locale := mpaths.get_config("locale", ui.get_value("lang_select"))) is not None:
             ui.configure_item("lang_select", default_value=locale)

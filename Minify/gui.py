@@ -1,5 +1,5 @@
 import ctypes
-import json
+import jsonc
 import os
 import shutil
 import stat
@@ -146,7 +146,7 @@ def load_checkboxes_state():
     global checkboxes_state
     try:
         with open(mpaths.mods_file_dir, "r", encoding="utf-8") as file:
-            checkboxes_state = json.load(file)
+            checkboxes_state = jsonc.load(file)
     except FileNotFoundError:
         pass
 
@@ -158,7 +158,7 @@ def create_checkboxes():
         mod_path = os.path.join(mpaths.mods_dir, mod)
         try:
             with open(os.path.join(mod_path, "modcfg.json")) as cfg:
-                mod_cfg = json.load(cfg)
+                mod_cfg = jsonc.load(cfg)
             value = mod_cfg["always"]
             enable_ticking = False if value else True
         except (KeyError, FileNotFoundError):
@@ -291,7 +291,7 @@ def checkbox_state_save():
     for box in checkboxes:
         checkboxes_state[box] = ui.get_value(box)
         with open(mpaths.mods_file_dir, "w", encoding="utf-8") as file:
-            json.dump(checkboxes_state, file, indent=2)
+            jsonc.dump(checkboxes_state, file, indent=2)
 
 
 def drag_viewport(sender, app_data, user_data):

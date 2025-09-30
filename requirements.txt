@@ -1,4 +1,5 @@
 dearpygui
+json-with-comments
 playsound3
 psutil
 pyinstaller

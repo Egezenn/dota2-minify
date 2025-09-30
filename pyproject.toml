@@ -6,6 +6,7 @@ readme = "readme.md"
 requires-python = ">=3.13"
 dependencies = [
     "dearpygui>=2.1.0",
+    "json-with-comments>=1.2.10",
     "playsound3>=3.2.6",
     "psutil>=7.0.0",
     "pyinstaller>=6.16.0",

@@ -81,6 +81,7 @@ version = "1.12"
 source = { virtual = "." }
 dependencies = [
     { name = "dearpygui" },
+    { name = "json-with-comments" },
     { name = "playsound3" },
     { name = "psutil" },
     { name = "pyinstaller" },
@@ -93,6 +94,7 @@ dependencies = [
 [package.metadata]
 requires-dist = [
     { name = "dearpygui", specifier = ">=2.1.0" },
+    { name = "json-with-comments", specifier = ">=1.2.10" },
     { name = "playsound3", specifier = ">=3.2.6" },
     { name = "psutil", specifier = ">=7.0.0" },
     { name = "pyinstaller", specifier = ">=6.16.0" },
@@ -109,6 +111,15 @@ source = { registry = "https://pypi.org/simple" }
 sdist = { url = "https://files.pythonhosted.org/packages/f1/70/7703c29685631f5a7590aa73f1f1d3fa9a380e654b86af429e0934a32f7d/idna-3.10.tar.gz", hash = "sha256:12f65c9b470abda6dc35cf8e63cc574b1c52b11df2c86030af0ac09b01b13ea9", size = 190490, upload-time = "2024-09-15T18:07:39.745Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/76/c6/c88e154df9c4e1a2a66ccf0005a88dfb2650c1dffb6f5ce603dfbd452ce3/idna-3.10-py3-none-any.whl", hash = "sha256:946d195a0d259cbba61165e88e65941f16e9b36ea6ddb97f00452bae8b1287d3", size = 70442, upload-time = "2024-09-15T18:07:37.964Z" },
+]
+
+[[package]]
+name = "json-with-comments"
+version = "1.2.10"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/bf/6d/638e8adbb2b92bb0803c092dd8ae6482945961c8545fc7e2f21c48233928/json_with_comments-1.2.10.tar.gz", hash = "sha256:0020b321cf6c80963c85f95ce985e71332f1797ed49abfd1cd675b3bdee24a28", size = 6788, upload-time = "2024-12-10T05:46:37.415Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/00/8a/f67dadb0648f00ac2249d3ef32532f0d5a2e72016f8426290ce6fe575870/json_with_comments-1.2.10-py3-none-any.whl", hash = "sha256:d7989c2577b1f8cbba735209f8d388d21017feb42ef30c29c230040f86b42700", size = 6533, upload-time = "2024-12-10T05:46:34.856Z" },
 ]
 
 [[package]]

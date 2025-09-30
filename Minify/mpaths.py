@@ -1,7 +1,7 @@
 "All the necessary file paths & links"
 
 import getpass
-import json
+import jsonc
 import os
 import platform
 import sys
@@ -90,7 +90,7 @@ rescomp_override = True if os.path.exists(rescomp_override_dir) else False
 def get_config(key, default_value=None):
     try:
         with open(main_config_file_dir, "r+") as file:
-            base_data = json.load(file)
+            base_data = jsonc.load(file)
             try:
                 return base_data[key]
 
@@ -98,32 +98,32 @@ def get_config(key, default_value=None):
                 if default_value is not None:
                     base_data[key] = default_value
                     file.seek(0)
-                    json.dump(base_data, file, indent=2)
+                    jsonc.dump(base_data, file, indent=2)
                     file.truncate()
                     return default_value
                 else:
                     return None
 
-    except (FileNotFoundError, json.JSONDecodeError):
+    except (FileNotFoundError, jsonc.JSONDecodeError):
         with open(main_config_file_dir, "w") as file:
-            json.dump({}, file)
+            jsonc.dump({}, file)
         return get_config(key, default_value)
 
 
 def set_config(key, value):
     try:
         with open(main_config_file_dir, "r+") as file:
-            data = json.load(file)
+            data = jsonc.load(file)
             data[key] = value
             file.seek(0)
-            json.dump(data, file, indent=2)
+            jsonc.dump(data, file, indent=2)
             file.truncate()
 
         return value
 
-    except (FileNotFoundError, json.JSONDecodeError):
+    except (FileNotFoundError, jsonc.JSONDecodeError):
         with open(main_config_file_dir, "w") as file:
-            json.dump({}, file)
+            jsonc.dump({}, file)
         return set_config(key, value)
 
 
@@ -494,7 +494,7 @@ for mod in sorted(os.listdir(mods_dir)):
             mods_with_order.append({mod: 1})
         elif cfg_exist:
             with open(mod_cfg) as file:
-                cfg = json.load(file)
+                cfg = jsonc.load(file)
             mods_with_order.append({mod: cfg["order"]})
             try:
                 if cfg["visual"] == False:
