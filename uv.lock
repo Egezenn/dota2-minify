@@ -77,7 +77,7 @@ wheels = [
 
 [[package]]
 name = "dota2-minify"
-version = "1.12"
+version = "1.12.1"
 source = { virtual = "." }
 dependencies = [
     { name = "dearpygui" },
@@ -154,14 +154,14 @@ wheels = [
 
 [[package]]
 name = "playsound3"
-version = "3.2.6"
+version = "3.2.8"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "pywin32", marker = "sys_platform == 'win32'" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/28/4d/3880fd3e97d4655955d0ada4f2745453eb87d9615062ec41953717579b13/playsound3-3.2.6.tar.gz", hash = "sha256:a036b586c1e2592cef42eb6e06b28516f6a97f2e71034164186da7e9c2b84553", size = 608111, upload-time = "2025-08-21T15:18:59.329Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/20/df/1bc4664f65f5068df468e1d4c085382dcdf17454276531938341a01ee935/playsound3-3.2.8.tar.gz", hash = "sha256:c7a7b4dbbd1cdf76a2715059daf20537bb2f8713ee8f2f5a27e3e053374c2342", size = 608326, upload-time = "2025-10-01T19:45:28.958Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/7b/ea/44040163f32d2602774737bf37d3bcb577e645b567f3e2da51a78f23425a/playsound3-3.2.6-py3-none-any.whl", hash = "sha256:638c059cb7d2581ca6caf5ea561d801bbdb44b5346e1c888fb702fd15a88aa49", size = 9464, upload-time = "2025-08-21T15:18:57.529Z" },
+    { url = "https://files.pythonhosted.org/packages/37/11/83a47fa57257f4b2bbc52aa4b5ebcdb1e6aba0ebd8604a85d9a375194e36/playsound3-3.2.8-py3-none-any.whl", hash = "sha256:1225807f14354702cba0171c999fe062580d77d07d8718a35b5978ed00272402", size = 9679, upload-time = "2025-10-01T19:45:27.277Z" },
 ]
 
 [[package]]

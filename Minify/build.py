@@ -409,7 +409,7 @@ def patcher():
         )
 
         helper.handle_warnings()
-        threading.Thread(target=lambda: playsound3.playsound(os.path.join(mpaths.sounds_dir, "success.wav"))).start()
+        playsound3.playsound(os.path.join(mpaths.sounds_dir, "success.wav"), block=False)
 
     except:
         mpaths.write_crashlog()
@@ -427,7 +427,7 @@ def patcher():
             "warning",
         )
         gui.unlock_interaction()
-        playsound3.playsound(os.path.join(mpaths.sounds_dir, "fail.wav"))
+        playsound3.playsound(os.path.join(mpaths.sounds_dir, "fail.wav"), block=False)
 
 
 def uninstaller():
