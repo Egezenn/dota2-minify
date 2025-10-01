@@ -1,12 +1,8 @@
-# <div align="center">Dota2 Minify</div>
-
 <div align="center">
-  <img src="Minify/bin/images/logo.png" alt="logo" width="150">
-</div>
 
-<br>
+# Dota2 Minify
 
-<div align="center">
+![logo](Minify/bin/images/logo.png)
 
 [![discord](https://img.shields.io/badge/Discord-%237289DA.svg?style=for-the-badge&logo=discord&logoColor=white)](https://discord.com/invite/2YDnqpbcKM)
 ![license](https://img.shields.io/github/license/Egezenn/dota2-minify?style=for-the-badge)
@@ -17,15 +13,12 @@
 ![downloads](https://img.shields.io/github/downloads/Egezenn/dota2-minify/total?style=for-the-badge)
 ![downloads-latest](https://img.shields.io/github/downloads/Egezenn/dota2-minify/latest/total?style=for-the-badge)
 
-</div>
 
-<h3 align="center">All in one smart patcher for Dota2 to install all types of mods</h3>
+**All in one smart patcher for Dota2 to install all types of mods**
 
-<h3 align="center">Updated to 7.39!</h3>
+![ss1](assets/screenshot-1.jpg)
+![ss2](assets/screenshot-2.jpg)
 
-<div align="center">
-    <a href="#"><img alt="ss1" src="assets/screenshot-1.jpg"></a>
-    <a href="#"><img alt="ss2" src="assets/screenshot-2.jpg"></a>
 </div>
 
 ## Table of contents
@@ -57,13 +50,6 @@
     - [Tools of the trade](#tools-of-the-trade)
   - [Thanks](#thanks)
   - [Special thanks to](#special-thanks-to)
-    - [robbyz512](#robbyz512)
-    - [Egezenn](#egezenn)
-    - [ZerdacK](#zerdack)
-    - [MeGaNeKoS](#meganekos)
-    - [sadesguy](#sadesguy)
-    - [yujin sharingan](#yujin-sharingan)
-    - [otf31](#otf31)
   - [Dependencies](#dependencies)
     - [Binaries](#binaries)
     - [Python packages](#python-packages)
@@ -94,15 +80,17 @@ No one has ever been banned for these mods. This project strictly deals with VPK
    - Extract the ZIP file.
    - Run `Minify` executable and patch with the mods and the language you want to use.
 
-     <a href="#"><img alt="language-instruction-1" src="assets/language-instruction-1.png"></a>
-     <a href="#"><img alt="language-instruction-2" src="assets/language-instruction-2.png"></a>
+![language-instruction-1](assets/language-instruction-1.png)
+
+![language-instruction-2](assets/language-instruction-2.png)
 
 3. **Setting the language argument for Dota2 on Steam**
 
    - Right-click on Dota2 in Steam and click **Properties**.
    - **For English:** Add `-language minify` to your launch options.
    - **For Other Languages:** Select the language you want to patch with on the top bar and add `-language language_id`
-     <a href="#"><img alt="language-instruction-3" src="assets/language-instruction-3.png"></a>
+
+![language-instruction-3](assets/language-instruction-3.png)
 
 4. **Start Dota 2**
    - Launch Dota2 and enjoy!
@@ -191,7 +179,7 @@ mods
 #### `modcfg.json`
 
 ```json
-{
+{ // defaults doesn't need to be indicated
   "order": 1, // default is 1, ordered from negative to positive to resolve any conflicts
   "visual": true, // true by default, show it in the UI as a checkbox
   "always": false // false by default, apply them without checking mods.json or checkbox
@@ -295,111 +283,58 @@ _to be written_
 
 ## Thanks
 
-This project wouldn't be available without the work of the community. Thanks to everyone that has contributed to the project over [GitHub](https://github.com/Egezenn/dota2-minify/graphs/contributors) or [Discord](https://discord.com/invite/2YDnqpbcKM)!
+This project wouldn't be available without the work of the community. Thanks to everyone that has contributed to the project over GitHub with issues & contributions or Discord!
 
 ## Special thanks to
 
-### [robbyz512](https://github.com/robbyz512)
+![contributors](https://contrib.rocks/image?repo=egezenn/dota2-minify)
 
-Creation of the base project.
-
-<details>
-<summary>Mods</summary>
-
-- [`Dark Terrain`](./Minify/mods/Dark%20Terrain)
-- [`Minify Base Attacks`](./Minify/mods/Minify%20Base%20Attacks)
-- [`Reposition & Rescale HUD`](./Minify/mods/Reposition%20&%20Rescale%20HUD/)
-- [`Minify Spells & Items`](./Minify/mods/Minify%20Spells%20&%20Items)
-- [`Misc Optimization`](./Minify/mods/Misc%20Optimization)
-- [`Mute Ambient Sounds`](./Minify/mods/Mute%20Ambient%20Sounds)
-- [`Mute Taunt Sounds`](./Minify/mods/Mute%20Taunt%20Sounds)
-- [`Mute Voice Line Sounds`](./Minify/mods/Mute%20Voice%20Line%20Sounds)
-- [`Remove Foilage`](./Minify/mods/Remove%20Foilage)
-- [`Remove Pings`](./Minify/mods/Remove%20Pings)
-- [`Remove River`](./Minify/mods/Remove%20River)
-- [`Remove Sprays`](./Minify/mods/Remove%20Sprays)
-- [`Remove Weather Effects`](./Minify/mods/Remove%20Weather%20Effects)
-- [`Tree Mod`](./Minify/mods/Tree%20Mod)
-
-</details>
-
-### [Egezenn](https://github.com/Egezenn)
-
-Taking over the maintainership of the project, implementing automated workflows, various improvements, full Linux port, RegExp blacklists, scripting support, Turkish translations and [more](https://github.com/Egezenn/dota2-minify/commits/main/?author=Egezenn).
-
-<details>
-<summary>Mods</summary>
-
-- [`Custom Backgrounds`](./Minify/mods/Custom%20Backgrounds)
-- [`Mute Announcers`](./Minify/mods/Mute%20Announcers)
-- [`OpenDotaGuides Guides`](./Minify/mods/OpenDotaGuides%20Guides) - [Project](https://github.com/Egezenn/OpenDotaGuides)
-- [`Remove Hero Card Clutter`](./Minify/mods/Remove%20Hero%20Card%20Clutter)
-- [`Remove Hero Renders`](./Minify/mods/Remove%20Hero%20Renders)
-- [`Remove Main Menu Background`](./Minify/mods/Remove%20Main%20Menu%20Background)
-- [`Remove Showcases`](./Minify/mods/Remove%20Showcases)
-- [`Revert Ping Sounds`](./Minify/mods/Revert%20Ping%20Sounds)
-- [`Stat Site Buttons`](./Minify/mods/Stat%20Site%20Buttons)
-- [`Transparent HUD`](./Minify/mods/Transparent%20HUD/) improvements
-- Snippets in [`User Styles`](./Minify/mods/User%20Styles)
-
-</details>
-
-### [ZerdacK](https://github.com/DotaModdingCommunity)
-
-Rewrite of the GUI, Russian translations, mod fixes and [more](https://github.com/Egezenn/dota2-minify/commits/main/?author=DotaModdingCommunity).
-
-<details>
-<summary>Mods</summary>
-
-- [`Transparent HUD`](./Minify/mods/Transparent%20HUD)
-
-</details>
-
-### [MeGaNeKoS](https://github.com/MeGaNeKoS)
-
-XML mod behavior and Minify mod settings section.
-
-<details>
-<summary>Mods</summary>
-
-- [`Auto Accept Match`](./Minify/mods/Auto%20Accept%20Match)
-- [`Auto Language Dialog Accept`](./Minify/mods/base/files/panorama/scripts/popup_generic.vjs_c)
-- [`Repopulate Unit Query HUD`](./Minify/mods/Repopulate%20Unit%20Query%20HUD)
-- [`Show NetWorth`](./Minify/mods/Show%20NetWorth)
-
-</details>
-
-### [sadesguy](https://github.com/sadesguy)
-
-MacOS port and workflow.
-
-### [yujin sharingan](https://discord.com/users/234341830647480321)
-
-<details>
-<summary>Mods</summary>
-
-- `Dotabuff in Profiles` mod which has been refactored to [`Stat Site Buttons`](./Minify/mods/Stat%20Site%20Buttons)
-
-</details>
-
-### [otf31](https://github.com/otf31)
-
-Spanish translation.
+| Mod                                                                                            | Author                                             | Other                                                                                                        |
+| ---------------------------------------------------------------------------------------------- | -------------------------------------------------- | ------------------------------------------------------------------------------------------------------------ |
+| [`Auto Accept Match`](./Minify/mods/Auto%20Accept%20Match)                                     | [MeGaNeKoS](https://github.com/MeGaNeKoS)          |                                                                                                              |
+| [`Auto Language Dialog Accept`](./Minify/mods/base/files/panorama/scripts/popup_generic.vjs_c) | [MeGaNeKoS](https://github.com/MeGaNeKoS)          |                                                                                                              |
+| [`Custom Backgrounds`](./Minify/mods/Custom%20Backgrounds)                                     | [Egezenn](https://github.com/Egezenn)              |                                                                                                              |
+| [`Dark Terrain`](./Minify/mods/Dark%20Terrain)                                                 | [robbyz512](https://github.com/robbyz512)          |                                                                                                              |
+| [`Minify Base Attacks`](./Minify/mods/Minify%20Base%20Attacks)                                 | [robbyz512](https://github.com/robbyz512)          |                                                                                                              |
+| [`Minify Spells & Items`](./Minify/mods/Minify%20Spells%20&%20Items)                           | [robbyz512](https://github.com/robbyz512)          |                                                                                                              |
+| [`Misc Optimization`](./Minify/mods/Misc%20Optimization)                                       | [robbyz512](https://github.com/robbyz512)          |                                                                                                              |
+| [`Mute Ambient Sounds`](./Minify/mods/Mute%20Ambient%20Sounds)                                 | [robbyz512](https://github.com/robbyz512)          |                                                                                                              |
+| [`Mute Announcers`](./Minify/mods/Mute%20Announcers)                                           | [Egezenn](https://github.com/Egezenn)              |                                                                                                              |
+| [`Mute Taunt Sounds`](./Minify/mods/Mute%20Taunt%20Sounds)                                     | [robbyz512](https://github.com/robbyz512)          |                                                                                                              |
+| [`Mute Voice Line Sounds`](./Minify/mods/Mute%20Voice%20Line%20Sounds)                         | [robbyz512](https://github.com/robbyz512)          |                                                                                                              |
+| [`OpenDotaGuides Guides`](./Minify/mods/OpenDotaGuides%20Guides)                               | [Egezenn](https://github.com/Egezenn)              |                                                                                                              |
+| [`Remove Foilage`](./Minify/mods/Remove%20Foilage)                                             | [robbyz512](https://github.com/robbyz512)          |                                                                                                              |
+| [`Remove Hero Card Clutter`](./Minify/mods/Remove%20Hero%20Card%20Clutter)                     | [Egezenn](https://github.com/Egezenn)              |                                                                                                              |
+| [`Remove Hero Renders`](./Minify/mods/Remove%20Hero%20Renders)                                 | [Egezenn](https://github.com/Egezenn)              |                                                                                                              |
+| [`Remove Main Menu Background`](./Minify/mods/Remove%20Main%20Menu%20Background)               | [Egezenn](https://github.com/Egezenn)              |                                                                                                              |
+| [`Remove Pings`](./Minify/mods/Remove%20Pings)                                                 | [robbyz512](https://github.com/robbyz512)          |                                                                                                              |
+| [`Remove River`](./Minify/mods/Remove%20River)                                                 | [robbyz512](https://github.com/robbyz512)          |                                                                                                              |
+| [`Remove Showcases`](./Minify/mods/Remove%20Showcases)                                         | [Egezenn](https://github.com/Egezenn)              |                                                                                                              |
+| [`Remove Sprays`](./Minify/mods/Remove%20Sprays)                                               | [robbyz512](https://github.com/robbyz512)          |                                                                                                              |
+| [`Remove Weather Effects`](./Minify/mods/Remove%20Weather%20Effects)                           | [robbyz512](https://github.com/robbyz512)          |                                                                                                              |
+| [`Repopulate Unit Query HUD`](./Minify/mods/Repopulate%20Unit%20Query%20HUD)                   | [MeGaNeKoS](https://github.com/MeGaNeKoS)          |                                                                                                              |
+| [`Reposition & Rescale HUD`](./Minify/mods/Reposition%20&%20Rescale%20HUD/)                    | [robbyz512](https://github.com/robbyz512)          |                                                                                                              |
+| [`Revert Ping Sounds`](./Minify/mods/Revert%20Ping%20Sounds)                                   | [Egezenn](https://github.com/Egezenn)              |                                                                                                              |
+| [`Show NetWorth`](./Minify/mods/Show%20NetWorth)                                               | [MeGaNeKoS](https://github.com/MeGaNeKoS)          |                                                                                                              |
+| [`Stat Site Buttons`](./Minify/mods/Stat%20Site%20Buttons)                                     | [Egezenn](https://github.com/Egezenn)              | Generalized off of `Dotabuff in Profiles` by [yujin sharingan](https://discord.com/users/234341830647480321) |
+| [`Transparent HUD`](./Minify/mods/Transparent%20HUD)                                           | [ZerdacK](https://github.com/DotaModdingCommunity) | [Egezenn](https://github.com/Egezenn)                                                                        |
+| [`Tree Mod`](./Minify/mods/Tree%20Mod)                                                         | [robbyz512](https://github.com/robbyz512)          |                                                                                                              |
+| [`User Styles`](./Minify/mods/User%20Styles)                                                   | [Egezenn](https://github.com/Egezenn)              |                                                                                                              |
 
 ## Dependencies
 
 ### Binaries
 
-[Python](https://www.python.org/) - Core language. Licensed under PSFL license.
-
-[Source 2 Viewer](https://github.com/ValveResourceFormat/ValveResourceFormat) - Used in decompilation of contents in paks and listing of them. Licensed under MIT license.
-
-[ripgrep](https://github.com/BurntSushi/ripgrep) - Used in dynamic blacklist generation. Licensed under Unlicense and MIT licenses.
+| Name                                                                          | Usage                                                  | License                  |
+| ----------------------------------------------------------------------------- | ------------------------------------------------------ | ------------------------ |
+| [Python](https://www.python.org/)                                             | Core language.                                         | PSFL license.            |
+| [Source 2 Viewer](https://github.com/ValveResourceFormat/ValveResourceFormat) | Decompilation of contents in paks and listing of them. | MIT license.             |
+| [ripgrep](https://github.com/BurntSushi/ripgrep)                              | Dynamic blacklist generation.                          | Unlicense & MIT license. |
 
 ### Python packages
 
 | Name                                                                   | Usage                                            | License                                                                                                       |
-| ---------------------------------------------------------------------- | :----------------------------------------------- | ------------------------------------------------------------------------------------------------------------- |
+| ---------------------------------------------------------------------- | ------------------------------------------------ | ------------------------------------------------------------------------------------------------------------- |
 | [dearpygui](https://github.com/hoffstadt/DearPyGui)                    | GUI                                              | [MIT license](https://github.com/hoffstadt/DearPyGui/blob/master/LICENSE)                                     |
 | [json-with-comments](https://github.com/n-takumasa/json-with-comments) | JSON parsing with comments                       | [MIT license](https://github.com/n-takumasa/json-with-comments/blob/main/LICENSE)                             |
 | [playsound3](https://github.com/szmikler/playsound3)                   | Playing sounds                                   | [MIT license](https://github.com/szmikler/playsound3/blob/main/LICENSE)                                       |

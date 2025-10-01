@@ -771,7 +771,7 @@ def main():
 if __name__ == "__main__":
     main()
 """
-    mod_config_template = r"""{
+    mod_config_template = r"""{ // defaults doesn't need to be indicated
   "order": 1, // default is 1, ordered from negative to positive to resolve any conflicts
   "visual": true, // true by default, show it in the UI as a checkbox
   "always": false // false by default, apply them without checking mods.json or checkbox
