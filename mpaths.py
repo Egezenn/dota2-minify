@@ -5,6 +5,7 @@ import sys
 import os
 import platform
 import traceback
+import shutil
 
 import vdf
 
@@ -12,6 +13,26 @@ steam_dir = ""
 OS = platform.system()
 MACHINE = platform.machine().lower()
 ARCHITECTURE = platform.architecture()[0]
+
+# Detect Wine executable on Unix-like systems (prefers wine64 when available)
+def _detect_wine_cmd():
+    if OS == "Darwin":
+        whisky_wine = os.path.expanduser(
+            "~/Library/Application Support/com.isaacmarovitz.Whisky/Libraries/Wine/bin/wine64"
+        )
+        if os.path.exists(whisky_wine) and os.access(whisky_wine, os.X_OK):
+            return whisky_wine
+
+    if OS in ("Linux", "Darwin"):
+        try:
+            for candidate in ("wine64", "wine"):
+                if shutil.which(candidate):
+                    return candidate
+        except Exception:
+            pass
+    return None
+
+WINE_CMD = _detect_wine_cmd()
 
 # assuming steam runtimes on linux / darwin
 if OS == "Linux":
@@ -462,7 +483,17 @@ dota_tools_extraction_paths = [
 try:
     if not os.path.isdir(mods_dir):
         raise FileNotFoundError(mods_dir)
-    mods_folders = sorted(os.listdir(mods_dir))
+    filtered_entries = []
+    for entry in os.listdir(mods_dir):
+        if entry.startswith('.'):
+            continue
+        if entry in {"__MACOSX"}:
+            continue
+        full_path = os.path.join(mods_dir, entry)
+        if not os.path.isdir(full_path):
+            continue
+        filtered_entries.append(entry)
+    mods_folders = sorted(filtered_entries)
 except Exception:
     # Fallback to a minimal list to avoid crashing at import time
     mods_folders = ["base"]

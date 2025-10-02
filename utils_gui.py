@@ -23,6 +23,10 @@ checkboxes_state = {}
 dev_mode_state = -1
 gui_lock = False
 version = None
+# Track whether we've already prompted for DWT auto-install this session
+_auto_dwt_prompted = False
+# Toggle for exposing Workshop Tools (DWT) related UI/actions.
+_show_dwt_controls = True
 visually_available_mods = mpaths.mods_folders.copy()
 if "base" in visually_available_mods:
     visually_available_mods.remove("base")
@@ -71,9 +75,16 @@ def update_popup_show():
 
 
 def setupSystem():
+    global _auto_dwt_prompted
     os.makedirs("logs", exist_ok=True)
     isDotaRunning()
+    recalc_rescomp_dirs()
     isCompilerFound()
+    # If Workshop Tools are missing, optionally open the download dialog once
+    if _show_dwt_controls and not helper.workshop_installed and not _auto_dwt_prompted:
+        _auto_dwt_prompted = True
+        helper.add_text_to_terminal("Workshop Tools not found. Opening download dialog...")
+        show_steam_login_popup()
     try:
         if not (
             os.path.exists(mpaths.s2v_executable)
@@ -167,6 +178,10 @@ def create_checkboxes():
     global checkboxes_state, visually_available_mods
     for index in range(len(visually_available_mods)):
         name = visually_available_mods[index]
+        mod_path = os.path.join(mpaths.mods_dir, name)
+        # Skip stray files in mods root (e.g., .DS_Store)
+        if not os.path.isdir(mod_path):
+            continue
         ui.add_group(parent="mod_menu", tag=f"{name}_group_tag", horizontal=True, width=300)
         ui.add_checkbox(
             parent=f"{name}_group_tag",
@@ -181,7 +196,6 @@ def create_checkboxes():
                     ui.configure_item(name, default_value=False)
                 else:
                     ui.configure_item(name, default_value=checkboxes_state[name])
-        mod_path = os.path.join(mpaths.mods_dir, name)
         try:
             if os.path.exists(os.path.join(mod_path, f"notes_{helper.locale.lower()}.txt")):
                 notes_txt = os.path.join(mod_path, f"notes_{helper.locale.lower()}.txt")
@@ -271,15 +285,31 @@ def focus_window():
         except Exception as error:
             with open(os.path.join(mpaths.logs_dir, "crashlog.txt"), "w") as file:
                 file.write(f"Windows focus error: {error}")
-    else:
+    elif mpaths.OS == "Linux":
         try:
-            subprocess.run(["wmctrl", "-a", "Minify"], check=True)
-        except FileNotFoundError:
-            with open(os.path.join(mpaths.logs_dir, "crashlog.txt"), "w") as file:
-                file.write("wmctrl not installed")
-        except subprocess.CalledProcessError as error:
-            with open(os.path.join(mpaths.logs_dir, "crashlog.txt"), "w") as file:
-                file.write(f"Linux focus error: {error}")
+            # Only attempt if an X display is available
+            if os.environ.get("DISPLAY"):
+                if shutil.which("wmctrl"):
+                    subprocess.run(["wmctrl", "-a", "Minify"], check=False)
+                elif shutil.which("xdotool"):
+                    # Activate the first window matching title 'Minify'
+                    subprocess.run(["xdotool", "search", "--name", "Minify", "windowactivate"], check=False)
+                # Else: silently skip without logging
+        except Exception:
+            # Avoid noisy logs on headless sessions
+            pass
+    else:  # macOS
+        try:
+            # Bring our process to front using AppleScript via System Events
+            pid = os.getpid()
+            osa = f'tell application "System Events" to set frontmost of (first process whose unix id is {pid}) to true'
+            subprocess.run(["osascript", "-e", osa], check=False)
+        except Exception:
+            # Fallback: try activating by app name when running as .app
+            try:
+                subprocess.run(["osascript", "-e", 'tell application "Minify" to activate'], check=False)
+            except Exception:
+                pass
 
 
 def delete_update_popup(ignore=False):
@@ -589,8 +619,9 @@ def dev_mode():
             ui.add_button(label="Clean all language paths", callback=utils_build.clean_lang_dirs)
             ui.add_text("^ Verify your files!")
             ui.add_spacer(width=0, height=10)
-            ui.add_button(label="Extract workshop tools", callback=extract_workshop_tools)
-            ui.add_spacer(width=0, height=10)
+            if _show_dwt_controls:
+                ui.add_button(label="Download workshop tools (SteamCMD)", callback=show_steam_login_popup)
+                ui.add_spacer(width=0, height=10)
             ui.add_button(label="Create a blank mod", callback=utils_build.create_blank_mod)
             ui.add_spacer(width=0, height=10)
             ui.add_text(
@@ -679,16 +710,19 @@ def isCompilerFound():
 
 
 def recalc_rescomp_dirs():
-    if mpaths.rescomp_override:
+    # Detect override dynamically
+    override_compiler = os.path.join(
+        mpaths.rescomp_override_dir, "game", "bin", "win64", "resourcecompiler.exe"
+    )
+    if os.path.exists(override_compiler):
+        mpaths.rescomp_override = True
         mpaths.minify_dota_compile_input_path = os.path.join(
             mpaths.rescomp_override_dir, "content", "dota_addons", "minify"
         )
         mpaths.minify_dota_compile_output_path = os.path.join(
             mpaths.rescomp_override_dir, "game", "dota_addons", "minify"
         )
-        mpaths.dota_resource_compiler_path = os.path.join(
-            mpaths.rescomp_override_dir, "game", "bin", "win64", "resourcecompiler.exe"
-        )
+        mpaths.dota_resource_compiler_path = override_compiler
 
 
 def extract_workshop_tools():
@@ -714,3 +748,73 @@ def extract_workshop_tools():
             helper.add_text_to_terminal(helper.localization_dict["extracted_text_var"])
         else:
             helper.add_text_to_terminal(helper.localization_dict["extraction_of_failed_text_var"].format(path))
+
+
+def show_steam_login_popup():
+    """Create and show the Steam login popup on demand (after DPG context exists)."""
+    if not ui.does_item_exist("steam_login_popup"):
+        ui.add_window(
+            label="Steam Login",
+            tag="steam_login_popup",
+            modal=True,
+            show=False,
+            no_move=True,
+            no_resize=True,
+            autosize=True,
+            no_title_bar=False,
+            no_collapse=True,
+        )
+        ui.add_input_text(parent="steam_login_popup", tag="steam_user_input", label="Username", width=280)
+        ui.add_input_text(parent="steam_login_popup", tag="steam_pass_input", label="Password", width=280, password=True)
+        ui.add_input_text(parent="steam_login_popup", tag="steam_guard_input", label="Steam Guard (optional)", width=280)
+        with ui.group(parent="steam_login_popup", horizontal=True, horizontal_spacing=20):
+            def _start_download():
+                ui.configure_item("steam_login_popup", show=False)
+                threading.Thread(
+                    target=lambda: utils_build.download_workshop_tools_via_steamcmd(
+                        ui.get_value("steam_user_input") or None,
+                        ui.get_value("steam_pass_input") or None,
+                        ui.get_value("steam_guard_input") or None,
+                    ),
+                    daemon=True,
+                ).start()
+
+            ui.add_button(label="Download", callback=_start_download, width=120, height=24)
+            ui.add_button(
+                label="Cancel",
+                callback=lambda: ui.configure_item("steam_login_popup", show=False),
+                width=120,
+                height=24,
+            )
+    ui.configure_item("steam_login_popup", show=True)
+
+
+def show_steam_guard_prompt(prompt_text: str, on_submit):
+    tag = "steam_guard_popup"
+    if not ui.does_item_exist(tag):
+        ui.add_window(
+            label="Steam Guard",
+            tag=tag,
+            modal=True,
+            show=False,
+            no_move=True,
+            no_resize=True,
+            autosize=True,
+            no_title_bar=False,
+            no_collapse=True,
+        )
+        ui.add_text(parent=tag, default_value=prompt_text)
+        ui.add_input_text(parent=tag, tag="steam_guard_input_field", label="Code", width=200)
+        with ui.group(parent=tag, horizontal=True, horizontal_spacing=20):
+            def _submit():
+                code = ui.get_value("steam_guard_input_field")
+                on_submit(code)
+                ui.configure_item(tag, show=False)
+
+            def _cancel():
+                on_submit(None)
+                ui.configure_item(tag, show=False)
+
+            ui.add_button(label="Submit", callback=_submit, width=100, height=24)
+            ui.add_button(label="Cancel", callback=_cancel, width=100, height=24)
+    ui.configure_item(tag, show=True)

@@ -45,3 +45,6 @@ venv/
 #Ignore vscode AI rules
 .github/instructions/codacy.instructions.md
 .DS_Store
+resourcecompiler*
+codex-memory.md
+memory.md

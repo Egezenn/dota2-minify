@@ -48,6 +48,9 @@ def scroll_to_terminal_end():
 def add_text_to_terminal(text, tag: int | str | None = None, type: str | None = None):
     kwargs = {}
     if tag is not None:
+        # Prevent alias collisions if the same tag is added multiple times
+        if isinstance(tag, str) and ui.does_item_exist(tag):
+            tag = f"{tag}_{int(time.time()*1000)}"
         kwargs["tag"] = tag
     if type is not None:
         if type == "error":
@@ -78,10 +81,42 @@ def disableWorkshopMods(mods_dir, mods_folders, checkboxes):
                     ui.configure_item(box, enabled=False, default_value=False)
 
 
+def dump_recent_logs(max_chars: int = 4000):
+    """Send the tail of each log file to the terminal for quick inspection."""
+    if not os.path.isdir(mpaths.logs_dir):
+        return
+
+    for name in sorted(os.listdir(mpaths.logs_dir)):
+        path = os.path.join(mpaths.logs_dir, name)
+        if not os.path.isfile(path):
+            continue
+        try:
+            with open(path, "r", encoding="utf-8", errors="ignore") as file:
+                content = file.read()
+        except OSError:
+            continue
+
+        snippet = content[-max_chars:].strip()
+        if not snippet:
+            continue
+
+        add_text_to_terminal(f"===== LOG: {name} =====")
+        for line in snippet.splitlines():
+            add_text_to_terminal(line)
+
+
 def cleanFolders():
+    """Prepare working directories while preserving existing logs."""
+    timestamp = time.strftime("%Y-%m-%d %H:%M:%S")
+    os.makedirs(mpaths.logs_dir, exist_ok=True)
     for root, dirs, files in os.walk(mpaths.logs_dir):
         for filename in files:
-            open(os.path.join(root, filename), "w").close()
+            path = os.path.join(root, filename)
+            try:
+                with open(path, "a", encoding="utf-8", errors="ignore") as file:
+                    file.write(f"\n----- New run started at {timestamp} -----\n")
+            except OSError:
+                pass
 
     os.makedirs(mpaths.build_dir, exist_ok=True)
     os.makedirs(mpaths.minify_dota_compile_input_path, exist_ok=True)
@@ -360,7 +395,7 @@ def build_minify_menu(menus):
     try:
         for menu in menus:
             menu_element = ET.fromstring(menu)
-        minify_section.append(menu_element)
+            minify_section.append(menu_element)
 
         settings_path = os.path.join(
             mpaths.build_dir,
@@ -484,6 +519,11 @@ def open_dir(path, args=""):
             if mpaths.OS == "Windows":
                 os.startfile(path, arguments=args)
                 return
+            # If target is a Windows executable, use Wine when available
+            if path.lower().endswith(".exe") and mpaths.WINE_CMD:
+                cmd = [mpaths.WINE_CMD, path] + shlex.split(args)
+                subprocess.Popen(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+                return
             # POSIX: launch executable directly when possible
             if os.access(path, os.X_OK) and os.path.isfile(path):
                 cmd = [path] + shlex.split(args)
@@ -501,13 +541,17 @@ def open_dir(path, args=""):
             else:
                 subprocess.run(["xdg-open", path])
         else:
-            if mpaths.OS == "Windows":
-                os.startfile(path)
-            elif mpaths.OS == "Darwin":
-                # Reveal the file in Finder to avoid missing-app association errors
-                subprocess.run(["open", "-R", path])
+            # If it's a Windows executable, run with Wine when possible
+            if path.lower().endswith(".exe") and mpaths.OS in ("Linux", "Darwin") and mpaths.WINE_CMD:
+                subprocess.Popen([mpaths.WINE_CMD, path], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
             else:
-                subprocess.run(["xdg-open", path])
+                if mpaths.OS == "Windows":
+                    os.startfile(path)
+                elif mpaths.OS == "Darwin":
+                    # Reveal the file in Finder to avoid missing-app association errors
+                    subprocess.run(["open", "-R", path])
+                else:
+                    subprocess.run(["xdg-open", path])
     except FileNotFoundError:
         add_text_to_terminal(f"{path}{localization_dict['open_dir_fail_text_var']}", type="error")
 
@@ -541,15 +585,19 @@ def compile(sender, app_data, user_data):
             else:
                 shutil.copy(os.path.join(folder, item), mpaths.minify_dota_compile_input_path)
         with open(os.path.join(mpaths.logs_dir, "resourcecompiler.txt"), "w") as file:
-            subprocess.run(
-                [
-                    mpaths.dota_resource_compiler_path,
-                    "-i",
-                    mpaths.minify_dota_compile_input_path + "/*",
-                    "-r",
-                ],
-                stdout=file,
-            )
+            # Use Wine on Linux/macOS to run Windows resourcecompiler
+            cmd = [
+                mpaths.dota_resource_compiler_path,
+                "-i",
+                mpaths.minify_dota_compile_input_path + "/*",
+                "-r",
+            ]
+            if mpaths.OS in ("Linux", "Darwin") and mpaths.WINE_CMD:
+                cmd.insert(0, mpaths.WINE_CMD)
+            elif mpaths.OS in ("Linux", "Darwin") and not mpaths.WINE_CMD:
+                add_text_to_terminal("Wine not found; cannot run resourcecompiler.", type="error")
+                return
+            subprocess.run(cmd, stdout=file)
 
         os.makedirs(mpaths.minify_dota_compile_output_path, exist_ok=True)
         shutil.copytree(os.path.join(mpaths.minify_dota_compile_output_path), compile_output_path)

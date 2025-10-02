@@ -7,6 +7,9 @@ import subprocess
 import sys
 import time
 import traceback
+import zipfile
+import threading
+from urllib.request import urlopen
 
 import dearpygui.dearpygui as ui
 import playsound3  # chimes are from pixabay.com/sound-effects/chime-74910/
@@ -16,6 +19,8 @@ import vpk
 import helper
 import mpaths
 import utils_gui
+
+COPYTREE_IGNORE_PATTERNS = ("*.gitkeep", ".DS_Store", "__MACOSX", "Thumbs.db", "desktop.ini")
 
 game_contents_file_init = False
 
@@ -43,6 +48,8 @@ def patcher():
 
     try:
         helper.cleanFolders()
+        if os.path.exists(mpaths.dota_resource_compiler_path):
+            helper.workshop_installed = True
 
         blank_file_extensions = helper.getBlankFileExtensions(
             mpaths.blank_files_dir
@@ -81,7 +88,7 @@ def patcher():
                                 os.path.join(mod_path, "files"),
                                 mpaths.minify_dota_compile_output_path,
                                 dirs_exist_ok=True,
-                                ignore=shutil.ignore_patterns("*.gitkeep"),
+                                ignore=shutil.ignore_patterns(*COPYTREE_IGNORE_PATTERNS),
                             )
 
                         if os.path.exists(menu_xml):
@@ -340,31 +347,54 @@ def patcher():
         )
 
         if helper.workshop_installed:
-            with open(os.path.join(mpaths.logs_dir, "resourcecompiler.txt"), "wb") as file:
+            resource_log_path = os.path.join(mpaths.logs_dir, "resourcecompiler.txt")
+            with open(resource_log_path, "wb") as file:
                 helper.add_text_to_terminal(
                     helper.localization_dict["compiling_terminal_text_var"],
                     "compiling_text",
                 )
-                command = [
-                    mpaths.dota_resource_compiler_path,
-                    "-i",
-                    mpaths.minify_dota_compile_input_path + "/*",
-                    "-r",
-                ]
-                if mpaths.OS == "Linux":
-                    command.insert(0, "wine")
+                input_root = mpaths.minify_dota_compile_input_path
+                output_root = mpaths.minify_dota_compile_output_path
+                input_count = 0
+                for _, _, files in os.walk(input_root):
+                    input_count += len(files)
+                file.write(f"Input file count: {input_count}\n".encode("utf-8"))
+                file.write(f"Input root: {input_root}\n".encode("utf-8"))
+                file.write(f"Output root: {output_root}\n".encode("utf-8"))
+
+                compiler_path = mpaths.dota_resource_compiler_path
+                input_arg = os.path.join(input_root, "*")
+                compiler_dir = os.path.dirname(compiler_path)
+                game_path = os.path.normpath(
+                    os.path.join(compiler_dir, os.pardir, os.pardir, "dota")
+                )
+                command = [compiler_path, "-i", input_arg, "-r", "-game", game_path]
 
                 rescomp = subprocess.run(
                     command,
                     stdout=subprocess.PIPE,
                     stderr=subprocess.PIPE,  # compiler complains if minify_dota_compile_input_path is empty
+                    env=os.environ.copy(),
                 )
-                if rescomp.stdout != b"":
+                file.write(b"Command: " + " ".join(command).encode("utf-8") + b"\n")
+                file.write(b"Exit code: " + str(rescomp.returncode).encode("utf-8") + b"\n")
+                if rescomp.stdout:
+                    file.write(b"--- STDOUT ---\n")
                     file.write(rescomp.stdout)
+                if rescomp.stderr:
+                    file.write(b"\n--- STDERR ---\n")
+                    file.write(rescomp.stderr)
 
-                # if sp_compiler.stderr != b"":
-                #     decoded_err = sp_compiler.stderr.decode("utf-8")
-                #     raise Exception(decoded_err)
+                if rescomp.returncode != 0:
+                    helper.add_text_to_terminal(
+                        f"resourcecompiler exited with code {rescomp.returncode}. Check logs/resourcecompiler.txt.",
+                        type="warning",
+                    )
+        else:
+            helper.add_text_to_terminal(
+                "Workshop Tools not detected; skipping resourcecompiler step.",
+                type="warning",
+            )
 
         # ---------------------------------- STEP 6 ---------------------------------- #
         # -------- Create VPK from game folder and save into Minify directory -------- #
@@ -407,6 +437,7 @@ def patcher():
         )
 
         helper.handleWarnings(mpaths.logs_dir)
+        helper.dump_recent_logs()
         playsound3.playsound(os.path.join(mpaths.sounds_dir, "success.wav"))
 
     except Exception:
@@ -424,8 +455,41 @@ def patcher():
             "check_logs_text_tag",
             "warning",
         )
+        helper.dump_recent_logs()
         utils_gui.unlock_interaction()
         playsound3.playsound(os.path.join(mpaths.sounds_dir, "fail.wav"))
+
+
+def _vpk_contains_minify_marker(path):
+    """Return tuple (contains_marker, unicode_error) for given VPK path."""
+    unicode_error = None
+
+    try:
+        pak = vpk.open(path)
+    except UnicodeDecodeError as err:
+        unicode_error = err
+    else:
+        try:
+            pak.get_file("minify_mods.json")
+            return True, None
+        except KeyError:
+            return False, None
+        except UnicodeDecodeError as err:
+            unicode_error = err
+
+    if unicode_error is None:
+        return False, None
+
+    try:
+        pak = vpk.open(path, path_enc=None)
+    except Exception as err:
+        raise err from unicode_error
+
+    try:
+        pak.get_file(b"minify_mods.json")
+        return True, unicode_error
+    except KeyError:
+        return False, unicode_error
 
 
 def uninstaller():
@@ -439,13 +503,23 @@ def uninstaller():
     for dir in mpaths.minify_dota_possible_language_output_paths:
         if os.path.isdir(dir):
             for item in os.listdir(dir):
-                if os.path.isfile(os.path.join(dir, item)) and re.fullmatch(pak_pattern, item):
-                    pak_contents = vpk.open(os.path.join(dir, item))
+                path = os.path.join(dir, item)
+                if os.path.isfile(path) and re.fullmatch(pak_pattern, item):
                     try:
-                        if pak_contents.get_file("minify_mods.json"):
-                            os.remove(os.path.join(dir, item))
-                    except KeyError:
-                        pass
+                        should_remove, _ = _vpk_contains_minify_marker(path)
+                    except UnicodeDecodeError as e:
+                        with open(os.path.join(mpaths.logs_dir, "uninstaller_vpk_error.txt"), "a") as file:
+                            file.write(f"UnicodeDecodeError inspecting {path}: {e}\n")
+                        helper.warnings.append(f"Skipping VPK during inspection: {path}")
+                        continue
+                    except Exception:
+                        with open(os.path.join(mpaths.logs_dir, "uninstaller_vpk_error.txt"), "a") as file:
+                            file.write(traceback.format_exc() + "\n")
+                        helper.warnings.append(f"Error inspecting VPK: {path}")
+                        continue
+
+                    if should_remove:
+                        os.remove(path)
 
     # TODO: implement mod specific uninstall instructions without relying on base code
     # odg
@@ -569,3 +643,459 @@ if __name__ == "__main__":
         file.write(mod_menu_template)
     with open(os.path.join(path_to_mod, "xml_mod.json"), "w") as file:
         file.write(xml_mod_template)
+
+
+def _ensure_steamcmd_windows_binary():
+    """Download steamcmd.exe (Windows build) locally if missing and return its path."""
+    tools_dir = os.path.join(mpaths.user_data_root, "tools")
+    steamcmd_dir = os.path.join(tools_dir, "steamcmd")
+    os.makedirs(steamcmd_dir, exist_ok=True)
+
+    steamcmd_exe = os.path.join(steamcmd_dir, "steamcmd.exe")
+    if os.path.exists(steamcmd_exe):
+        return steamcmd_exe
+
+    helper.add_text_to_terminal("Downloading SteamCMD (Windows)...")
+    url = "https://steamcdn-a.akamaihd.net/client/installer/steamcmd.zip"
+    try:
+        with urlopen(url) as resp:
+            data = resp.read()
+        zip_path = os.path.join(steamcmd_dir, "steamcmd.zip")
+        with open(zip_path, "wb") as f:
+            f.write(data)
+        with zipfile.ZipFile(zip_path, "r") as zf:
+            zf.extractall(steamcmd_dir)
+        os.remove(zip_path)
+        if not os.path.exists(steamcmd_exe):
+            raise FileNotFoundError("steamcmd.exe not found after extraction")
+    except Exception:
+        with open(os.path.join(mpaths.logs_dir, "steamcmd_download.txt"), "w") as f:
+            f.write(traceback.format_exc())
+        helper.add_text_to_terminal("Failed to download SteamCMD. See logs/steamcmd_download.txt", type="error")
+        return None
+
+    return steamcmd_exe
+
+
+def _run_steamcmd(app_id: str, install_dir: str, username: str | None, password: str | None, guard: str | None):
+    """Run SteamCMD to app_update the given app_id into install_dir (Windows platform)."""
+    steamcmd_exe = _ensure_steamcmd_windows_binary()
+    if not steamcmd_exe:
+        return False
+
+    cmd = []
+    if mpaths.OS != "Windows":
+        helper.add_text_to_terminal(
+            "SteamCMD downloads now require Windows; please run on a Windows system.",
+            type="error",
+        )
+        return False
+
+    cmd = [steamcmd_exe]
+
+    os.makedirs(install_dir, exist_ok=True)
+    cmd += ["+force_install_dir", install_dir]
+
+    # Optional Steam Guard code first
+    if guard:
+        cmd += ["+set_steam_guard_code", guard]
+
+    if username and password:
+        cmd += ["+login", username, password]
+    else:
+        # Without credentials, DLC depots won't download; attempt anonymous to validate plumbing
+        cmd += ["+login", "anonymous"]
+
+    # Fetch Windows build of Dota 2 (app 570). If user owns DLC 313250, its depots will be fetched too.
+    cmd += ["+app_update", app_id, "-validate", "+quit"]
+
+    helper.add_text_to_terminal("Running SteamCMD to fetch Dota 2 (Windows) build...")
+    try:
+        with open(os.path.join(mpaths.logs_dir, "steamcmd.txt"), "w", encoding="utf-8", errors="ignore") as logf:
+            proc = subprocess.run(cmd, stdout=logf, stderr=subprocess.STDOUT)
+        if proc.returncode != 0:
+            helper.add_text_to_terminal(
+                "SteamCMD failed. Check logs/steamcmd.txt. If first time, you may need credentials and Steam Guard.",
+                type="error",
+            )
+            return False
+    except Exception:
+        with open(os.path.join(mpaths.logs_dir, "steamcmd_run.txt"), "w") as f:
+            f.write(traceback.format_exc())
+        helper.add_text_to_terminal("SteamCMD execution failed. See logs/steamcmd_run.txt", type="error")
+        return False
+
+    return True
+
+
+def _steamcmd_base(username: str | None, password: str | None, guard: str | None):
+    steamcmd_exe = _ensure_steamcmd_windows_binary()
+    if not steamcmd_exe:
+        return None
+    cmd = []
+    if mpaths.OS != "Windows":
+        helper.add_text_to_terminal(
+            "SteamCMD downloads now require Windows; please run on a Windows system.",
+            type="error",
+        )
+        return None
+
+    cmd = [steamcmd_exe]
+    if guard:
+        cmd += ["+set_steam_guard_code", guard]
+    if username and password:
+        cmd += ["+login", username, password]
+    else:
+        cmd += ["+login", "anonymous"]
+    return cmd
+
+
+def _steamcmd_run_and_capture(args: list[str]) -> tuple[int, str]:
+    try:
+        proc = subprocess.run(args, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True, encoding="utf-8", errors="ignore")
+        return proc.returncode, proc.stdout or ""
+    except Exception:
+        return 1, traceback.format_exc()
+
+
+def _steamcmd_stream_output(args: list[str], log_path: str) -> tuple[bool, bool, bool]:
+    os.makedirs(os.path.dirname(log_path), exist_ok=True)
+    guard_prompted = False
+    rate_limited = False
+    with open(log_path, "w", encoding="utf-8", errors="ignore") as logf:
+        try:
+            proc = subprocess.Popen(
+                args,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.STDOUT,
+                text=True,
+                encoding="utf-8",
+                errors="ignore",
+            )
+            for line in proc.stdout or []:
+                line = line.rstrip()
+                logf.write(line + "\n")
+                low = line.lower()
+                if "%" in line or "downloading" in low or "bytes" in low:
+                    helper.add_text_to_terminal(line)
+                if "steam guard" in line or "two-factor" in low or "enter the current code" in line:
+                    guard_prompted = True
+                if "rate limit exceeded" in low:
+                    rate_limited = True
+            proc.wait()
+            return proc.returncode == 0, guard_prompted, rate_limited
+        except Exception:
+            logf.write(traceback.format_exc())
+            return False, guard_prompted, rate_limited
+
+
+def _download_depots_only(depots: list[dict], username: str | None, password: str | None, guard: str | None) -> tuple[bool, str, bool]:
+    base = _steamcmd_base(username, password, guard)
+    if not base:
+        return False, "", False
+    args = base[:]
+    for d in depots:
+        if d.get("manifest"):
+            args += ["+download_depot", d["app_id"], d["id"], d["manifest"]]
+        else:
+            # No manifest -> download latest
+            args += ["+download_depot", d["app_id"], d["id"]]
+    args += ["+quit"]
+    log_path = os.path.join(mpaths.logs_dir, "steamcmd_progress.txt")
+    # Up to 3 attempts total with backoff
+    for i in range(3):
+        ok, guard_prompted, rate_limited = _steamcmd_stream_output(args, log_path)
+        if ok:
+            break
+        if guard_prompted and i == 0:
+            helper.add_text_to_terminal("Approve the sign-in on your phone (30s)...")
+            time.sleep(30)
+            ok, guard_prompted, rate_limited = _steamcmd_stream_output(args, log_path)
+            if ok:
+                break
+        if not ok and guard_prompted and i == 1:
+            helper.add_text_to_terminal("Steam Guard requested. Please provide the current 2FA code.")
+            new_code = _await_guard_code_from_user()
+            if not new_code:
+                break
+            base2 = _steamcmd_base(username, password, new_code)
+            if not base2:
+                break
+            args = base2 + args[len(base):]  # replace login portion
+            ok, guard_prompted, rate_limited = _steamcmd_stream_output(args, log_path)
+            if ok:
+                break
+        if rate_limited:
+            backoff = 60 * (i + 1)
+            helper.add_text_to_terminal(f"Steam rate limit hit. Waiting {backoff}s before retry...", type="warning")
+            time.sleep(backoff)
+            continue
+        # If failed without specific signal, break
+        break
+    steamcmd_exe = _ensure_steamcmd_windows_binary()
+    content_root = os.path.join(os.path.dirname(steamcmd_exe), "steamapps", "content") if steamcmd_exe else ""
+    return ok, content_root, guard_prompted
+
+
+def _get_app_info_text(app_id: str, username: str | None, password: str | None, guard: str | None, retries: int = 2) -> str | None:
+    base_args = _steamcmd_base(username, password, guard)
+    if not base_args:
+        return None
+    attempt = 0
+    args = base_args + ["+app_info_update", "1", "+app_info_print", app_id, "+quit"]
+    log_file = os.path.join(mpaths.logs_dir, f"steam_app_{app_id}.txt")
+    out = ""
+    while attempt <= retries:
+        code, out = _steamcmd_run_and_capture(args)
+        with open(log_file, "w", encoding="utf-8", errors="ignore") as f:
+            f.write(out)
+        low = out.lower()
+        guard_needed = ("steam guard" in out or "two-factor" in low or "enter the current code" in out or "two-factor code mismatch" in out)
+        if guard_needed and attempt == 0:
+            helper.add_text_to_terminal("Approve the sign-in on your phone (30s)...")
+            time.sleep(30)
+            code, out = _steamcmd_run_and_capture(args)
+            with open(log_file, "w", encoding="utf-8", errors="ignore") as f:
+                f.write(out)
+            low = out.lower()
+            guard_needed = ("steam guard" in out or "two-factor" in low or "enter the current code" in out or "two-factor code mismatch" in out)
+            if guard_needed:
+                helper.add_text_to_terminal("Steam Guard required. Please enter the current 2FA code.")
+                new_code = _await_guard_code_from_user()
+                if not new_code:
+                    return None
+                base_args2 = _steamcmd_base(username, password, new_code)
+                if not base_args2:
+                    return None
+                args = base_args2 + ["+app_info_update", "1", "+app_info_print", app_id, "+quit"]
+                code, out = _steamcmd_run_and_capture(args)
+                with open(log_file, "w", encoding="utf-8", errors="ignore") as f:
+                    f.write(out)
+                low = out.lower()
+        if "rate limit exceeded" in low and attempt < retries:
+            backoff = 60 * (attempt + 1)
+            helper.add_text_to_terminal(f"Steam rate limit hit during app info. Waiting {backoff}s before retry...", type="warning")
+            time.sleep(backoff)
+            attempt += 1
+            continue
+        break
+    if code != 0:
+        # If depots content is present, proceed anyway
+        if '"depots"' in out:
+            helper.add_text_to_terminal(f"app_info for {app_id} returned non-zero but contains depots; continuing.", type="warning")
+            return out
+        helper.add_text_to_terminal(f"Failed to fetch app_info for {app_id}. See {log_file}", type="error")
+        return None
+    return out
+
+
+def download_workshop_tools_via_steamcmd(username: str | None = None, password: str | None = None, guard: str | None = None):
+    """Download only the Dota 2 Workshop Tools depots via SteamCMD and copy into rescomproot.
+
+    Uses explicit depots under app 570:
+      - 381450 (Workshop Tools, DLC 313250) manifest 709350790366570241
+      - 373303 (Dota 2 Win64 binaries) manifest 1983977856334381899
+    Credentials can be provided via parameters or env vars (MINIFY_STEAM_USER/MINIFY_STEAM_PASS/MINIFY_STEAM_GUARD).
+    Streams SteamCMD output to the terminal for progress lines, and supports phone approval/2FA codes.
+    """
+    utils_gui.lock_interaction()
+    try:
+        helper.clean_terminal()
+        helper.add_text_to_terminal("Preparing SteamCMD and staging explicit depot downloads...")
+        app_main = "570"
+        # Forced depots with manifests (as of 2025-09-15)
+        forced_depots = [
+            {"app_id": "570", "id": "381450", "manifest": "709350790366570241"},
+            {"app_id": "570", "id": "373303", "manifest": "1983977856334381899"},
+        ]
+        user = username or os.getenv("MINIFY_STEAM_USER")
+        pwd = password or os.getenv("MINIFY_STEAM_PASS")
+        guard_code = guard or os.getenv("MINIFY_STEAM_GUARD")
+
+        # Deduplicate (future safe if adjusted)
+        seen = set()
+        unique_depots = []
+        for d in forced_depots:
+            key = (d["app_id"], d["id"])
+            if key in seen:
+                continue
+            seen.add(key)
+            unique_depots.append(d)
+
+        helper.add_text_to_terminal(f"Downloading {len(unique_depots)} depot(s) from app 570...")
+        ok, content_root, guard_prompted = _download_depots_only(unique_depots, user, pwd, guard_code)
+        if not ok and guard_prompted:
+            # Ask for a fresh 2FA code and retry once
+            helper.add_text_to_terminal("Steam Guard requested. Please provide the current 2FA code.")
+            new_code = _await_guard_code_from_user()
+            if not new_code:
+                helper.add_text_to_terminal("No Steam Guard code provided. Aborting.", type="error")
+                return
+            ok, content_root, _ = _download_depots_only(unique_depots, user, pwd, new_code)
+
+        if not ok:
+            helper.add_text_to_terminal("SteamCMD depot download failed. See logs/steamcmd_progress.txt", type="error")
+            return
+        if not _copy_tools_from_content_root(content_root):
+            helper.add_text_to_terminal("Download complete, but could not locate expected game folders in depots.", type="error")
+            return
+
+        # Write steam_appid.txt next to Win64 binaries so tools can launch outside Steam
+        steam_appid_path = os.path.join(mpaths.rescomp_override_dir, "game", "bin", "win64", "steam_appid.txt")
+        os.makedirs(os.path.dirname(steam_appid_path), exist_ok=True)
+        try:
+            with open(steam_appid_path, "w") as f:
+                f.write(app_main + "\n")
+        except Exception:
+            pass
+
+        os.makedirs(mpaths.rescomp_override_dir, exist_ok=True)
+        utils_gui.recalc_rescomp_dirs()
+        helper.workshop_installed = os.path.exists(mpaths.dota_resource_compiler_path)
+        # Refresh UI buttons immediately
+        try:
+            utils_gui.setupButtonState()
+        except Exception:
+            pass
+        helper.add_text_to_terminal("Workshop Tools (381450) and Win64 binaries (373303) downloaded and configured.", type="success")
+    except Exception:
+        with open(os.path.join(mpaths.logs_dir, "steamcmd_pipeline.txt"), "w") as f:
+            f.write(traceback.format_exc())
+        helper.add_text_to_terminal("Unexpected error during SteamCMD pipeline. See logs/steamcmd_pipeline.txt", type="error")
+    finally:
+        utils_gui.unlock_interaction()
+
+
+def _parse_dlc_depots(app_info_text: str, dlc_app_id: str = "313250", os_filter: str = "windows", app_id: str = "570") -> list[dict]:
+    """Parse depots from Steam app_info text where depot belongs to the DLC.
+    Matches either dlcappid=<dlc> or depotfromapp=<dlc>. Returns list of dicts with app_id, id, manifest.
+    """
+    depots: list[dict] = []
+    lines = app_info_text.splitlines()
+    in_depots = False
+    brace_level = 0
+    current = None
+    for raw in lines:
+        line = raw.strip()
+        if not in_depots and line.startswith('"depots"'):
+            in_depots = True
+            continue
+        if in_depots:
+            if "{" in line:
+                brace_level += line.count("{")
+            if "}" in line:
+                brace_level -= line.count("}")
+                if current is not None and brace_level == 1:
+                    depots.append(current)
+                    current = None
+                if brace_level <= 0:
+                    break
+            m = re.match(r'^"(\d+)"\s*\{\s*$', line)
+            if m and brace_level == 1:
+                current = {"id": m.group(1), "dlcappid": None, "depotfromapp": None, "oslist": None, "manifest": None, "app_id": app_id}
+                continue
+            if current is None:
+                continue
+            m = re.match(r'^"dlcappid"\s*"(\d+)"', line)
+            if m:
+                current["dlcappid"] = m.group(1)
+            m = re.match(r'^"depotfromapp"\s*"(\d+)"', line)
+            if m:
+                current["depotfromapp"] = m.group(1)
+            m = re.match(r'^"oslist"\s*"([^"]+)"', line)
+            if m:
+                current["oslist"] = m.group(1)
+            # public manifest id is nested under manifests/public
+            m = re.match(r'^"public"\s*"(\d+)"', line)
+            if m:
+                current["manifest"] = m.group(1)
+    results = [
+        {"app_id": d["app_id"], "id": d["id"], "manifest": d["manifest"]}
+        for d in depots
+        if d.get("manifest") and (d.get("oslist") is None or os_filter in d.get("oslist", "")) and (d.get("dlcappid") == dlc_app_id or d.get("depotfromapp") == dlc_app_id)
+    ]
+    return results
+
+
+def _parse_app_depots(app_info_text: str, app_id: str, os_filter: str = "windows") -> list[dict]:
+    """Parse any depots directly listed under given app. Returns list of dicts with app_id, id, manifest."""
+    depots: list[dict] = []
+    lines = app_info_text.splitlines()
+    in_depots = False
+    brace_level = 0
+    current = None
+    for raw in lines:
+        line = raw.strip()
+        if not in_depots and line.startswith('"depots"'):
+            in_depots = True
+            continue
+        if in_depots:
+            if "{" in line:
+                brace_level += line.count("{")
+            if "}" in line:
+                brace_level -= line.count("}")
+                if current is not None and brace_level == 1:
+                    depots.append(current)
+                    current = None
+                if brace_level <= 0:
+                    break
+            m = re.match(r'^"(\d+)"\s*\{\s*$', line)
+            if m and brace_level == 1:
+                current = {"id": m.group(1), "oslist": None, "manifest": None, "app_id": app_id}
+                continue
+            if current is None:
+                continue
+            m = re.match(r'^"oslist"\s*"([^"]+)"', line)
+            if m:
+                current["oslist"] = m.group(1)
+            m = re.match(r'^"public"\s*"(\d+)"', line)
+            if m:
+                current["manifest"] = m.group(1)
+    results = [
+        {"app_id": d["app_id"], "id": d["id"], "manifest": d["manifest"]}
+        for d in depots
+        if d.get("manifest") and (d.get("oslist") is None or os_filter in d.get("oslist", ""))
+    ]
+    return results
+
+
+def _copy_tools_from_content_root(content_root: str) -> bool:
+    """Copy required folders from downloaded depots content tree into rescomproot."""
+    if not content_root or not os.path.isdir(content_root):
+        return False
+    copied_any = False
+    # Walk app_* folders
+    for app_folder in os.listdir(content_root):
+        app_path = os.path.join(content_root, app_folder)
+        if not os.path.isdir(app_path) or not app_folder.startswith("app_"):
+            continue
+        for depot_folder in os.listdir(app_path):
+            depot_path = os.path.join(app_path, depot_folder)
+            if not os.path.isdir(depot_path):
+                continue
+            # Locate 'game' directory inside depot
+            candidate_game = None
+            for root, dirs, files in os.walk(depot_path):
+                if os.path.basename(root) == "game":
+                    candidate_game = root
+                    break
+            if not candidate_game:
+                continue
+            src_root = candidate_game
+            paths = {
+                os.path.join(src_root, "bin"): os.path.join(mpaths.rescomp_override_dir, "game", "bin"),
+                os.path.join(src_root, "core"): os.path.join(mpaths.rescomp_override_dir, "game", "core"),
+                os.path.join(src_root, "dota", "bin"): os.path.join(mpaths.rescomp_override_dir, "game", "dota", "bin"),
+                os.path.join(src_root, "dota", "tools"): os.path.join(mpaths.rescomp_override_dir, "game", "dota", "tools"),
+            }
+            gameinfo_src = os.path.join(src_root, "dota", "gameinfo.gi")
+            gameinfo_dst = os.path.join(mpaths.rescomp_override_dir, "game", "dota", "gameinfo.gi")
+            for s, d in paths.items():
+                if os.path.exists(s):
+                    shutil.copytree(s, d, dirs_exist_ok=True)
+                    copied_any = True
+            if os.path.exists(gameinfo_src):
+                os.makedirs(os.path.dirname(gameinfo_dst), exist_ok=True)
+                shutil.copy(gameinfo_src, gameinfo_dst)
+                copied_any = True
+    return copied_any
