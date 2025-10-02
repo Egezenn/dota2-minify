@@ -334,17 +334,22 @@ def remove_path(*paths):
             except FileNotFoundError:
                 print(f"Skipped deletion of: {path}")
 
-    except (WinError, PermissionError):
+    except PermissionError:
         try:
             for path in paths:
-                for dir, _, filenames in os.walk(path):
-                    current_dir_mode = os.stat(dir).st_mode
-                    os.chmod(dir, current_dir_mode | stat.S_IWUSR)
+                if os.path.isdir(path):
+                    for dir, _, filenames in os.walk(path):
+                        current_dir_mode = os.stat(dir).st_mode
+                        os.chmod(dir, current_dir_mode | stat.S_IWUSR)
 
-                    for filename in filenames:
-                        filepath = os.path.join(dir, filename)
-                        current_file_mode = os.stat(filepath).st_mode
-                        os.chmod(filepath, current_file_mode | stat.S_IWUSR)
+                        for filename in filenames:
+                            filepath = os.path.join(dir, filename)
+                            current_file_mode = os.stat(filepath).st_mode
+                            os.chmod(filepath, current_file_mode | stat.S_IWUSR)
+                else:
+                    current_file_mode = os.stat(path).st_mode
+                    os.chmod(path, current_file_mode | stat.S_IWUSR)
+
             return remove_path(*paths)
         except:
             mpaths.write_warning()

@@ -171,14 +171,9 @@ mods
 │   └── xml_mod.json
 ```
 
-> [!WARNING]
-> It's not required to have all these files and directories
->
-> With the version 1.12 you aren't required to keep blank files in your mod's contents anymore. Only include the files needed and delete the rest.
-
 #### `modcfg.json`
 
-```json
+```jsonc
 { // defaults doesn't need to be indicated
   "order": 1, // default is 1, ordered from negative to positive to resolve any conflicts
   "visual": true, // true by default, show it in the UI as a checkbox
@@ -220,9 +215,9 @@ particles/base_attacks/ranged_goodguy_launch.vpcf_c
 
 This file is a list of CSS paths and styling that will be appended to them.  
 By the nature of this method modifications done here may break the original XML or CSS that gets updated resulting in a bad layout.  
-In such cases, a repatch is required.
+In such cases, a repatch or a slight modification is required.
 
-If you encounter errors while patching, it's most likely that your CSS is invalid or the path is wrong.
+If you encounter errors while patching, it's most likely that your CSS is invalid or the path is wrong. Check [`logs/resourcecompiler.txt`](Minify/logs/resourcecompiler.txt) for more information.
 
 For Source 2 flavored CSS properties, refer to: [Valve Developer Community Wiki](https://developer.valvesoftware.com/wiki/Dota_2_Workshop_Tools/Panorama/CSS_Properties).  
 To live inspect the layout, open the workshop tools and press <kbd>F6</kbd> and select the element you'd like to select from the XML.
@@ -325,11 +320,11 @@ This project wouldn't be available without the work of the community. Thanks to 
 
 ### Binaries
 
-| Name                                                                          | Usage                                                  | License                  |
-| ----------------------------------------------------------------------------- | ------------------------------------------------------ | ------------------------ |
-| [Python](https://www.python.org/)                                             | Core language.                                         | PSFL license.            |
-| [Source 2 Viewer](https://github.com/ValveResourceFormat/ValveResourceFormat) | Decompilation of contents in paks and listing of them. | MIT license.             |
-| [ripgrep](https://github.com/BurntSushi/ripgrep)                              | Dynamic blacklist generation.                          | Unlicense & MIT license. |
+| Name                                                                          | Usage                                                  | License                                                                                                                                                 |
+| ----------------------------------------------------------------------------- | ------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [Python](https://www.python.org/)                                             | Core language.                                         | [PSFL license](https://github.com/python/cpython/blob/main/LICENSE)                                                                                     |
+| [Source 2 Viewer](https://github.com/ValveResourceFormat/ValveResourceFormat) | Decompilation of contents in paks and listing of them. | [MIT license](https://github.com/ValveResourceFormat/ValveResourceFormat/blob/master/LICENSE)                                                           |
+| [ripgrep](https://github.com/BurntSushi/ripgrep)                              | Dynamic blacklist generation.                          | [Unlicense](https://github.com/BurntSushi/ripgrep/blob/master/UNLICENSE) & [MIT license](https://github.com/BurntSushi/ripgrep/blob/master/LICENSE-MIT) |
 
 ### Python packages
 
