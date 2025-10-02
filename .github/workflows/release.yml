@@ -71,11 +71,7 @@ jobs:
           Copy-Item -Path "bin" -Destination "dist/Minify/bin" -Recurse -Exclude "rescomproot","gamepakcontents.txt"
           Copy-Item -Path "mods" -Destination "dist/Minify/mods" -Recurse
           Copy-Item -Path "version" -Destination "dist/Minify/version"
-<<<<<<< HEAD
       # macOS bundle already contains data via Minify.spec
-=======
-
->>>>>>> fix/macos-open-and-rg-detection
       - name: Archiving (Windows)
         if: matrix.os == 'windows-latest'
         run: |
