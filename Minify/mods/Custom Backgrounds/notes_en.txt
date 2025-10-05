@@ -3,3 +3,5 @@ Replaces main menu background, player showcase background and pick screen backgr
 If you have workshop tools you can drop an image to the mod folder and it will use that for the background.
 
 You need "magick" utility on your path variable if your image isn't a png and needs to be converted.
+
+* Remove Dark Terrain is needed, will be automatically included if you haven't ticked it

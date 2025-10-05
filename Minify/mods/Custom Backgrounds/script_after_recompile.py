@@ -15,16 +15,11 @@ def main():
     img_available = False
 
     for file in sorted(os.listdir(current_dir)):
-        if file.endswith((".png", ".jpg", ".jpeg", ".webm")):
+        if file.endswith((".png", ".jpg", ".jpeg", ".webp")):
             img_available = True
             break
 
     if helper.workshop_installed and img_available:
-        try:
-            os.remove(
-                os.path.join(
-                    mpaths.minify_dota_compile_output_path, "panorama", "images", "backgrounds", "imgref.vxml_c"
-                )
-            )
-        except:
-            pass
+        helper.remove_path(
+            os.path.join(mpaths.minify_dota_compile_output_path, "panorama", "images", "backgrounds", "imgref.vxml_c")
+        )

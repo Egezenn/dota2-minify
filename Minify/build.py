@@ -394,6 +394,7 @@ def patcher():
             mpaths.replace_dir,
         )
 
+        gui.checkbox_state_save()
         gui.unlock_interaction()
         helper.add_text_to_terminal("-------------------------------------------------------", "spacer1_text")
         helper.add_text_to_terminal(
@@ -412,6 +413,7 @@ def patcher():
         playsound3.playsound(os.path.join(mpaths.sounds_dir, "success.wav"), block=False)
 
     except:
+        gui.checkbox_state_save()
         mpaths.write_crashlog()
         helper.open_thing(mpaths.log_crashlog)
 
@@ -454,6 +456,7 @@ def uninstaller():
         helper.localization_dict["mods_removed_terminal_text_var"],
         "uninstaller_text_tag",
     )
+    gui.checkbox_state_save()
     gui.unlock_interaction()
 
 

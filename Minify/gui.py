@@ -233,6 +233,7 @@ def setup_button_state():
             break
         else:
             ui.configure_item("button_patch", enabled=False)
+    checkbox_state_save()
 
 
 def lock_interaction():

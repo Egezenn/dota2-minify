@@ -13,7 +13,6 @@
 ![downloads](https://img.shields.io/github/downloads/Egezenn/dota2-minify/total?style=for-the-badge)
 ![downloads-latest](https://img.shields.io/github/downloads/Egezenn/dota2-minify/latest/total?style=for-the-badge)
 
-
 **All in one smart patcher for Dota2 to install all types of mods**
 
 ![ss1](assets/screenshot-1.jpg)
@@ -58,6 +57,8 @@
 ## Is this safe to use?
 
 This project has been around for over 4 years with thousands of downloads and users. While binaries are offered for ease of use, anyone can compile it themselves.
+
+The only valid source to get the software is from [GitHub releases](https://github.com/Egezenn/dota2-minify/releases/latest), we do not distribute elsewhere.
 
 No one has ever been banned for these mods. This project strictly deals with VPK modifications and not hacking concepts like memory/file manipulation. It's utilizing Valve's approved methods (VPK loading) for creating assets, as documented on the [official Valve Wiki](https://developer.valvesoftware.com/wiki/VPK). Historically Valve has only disabled assets from loading and never punished modders. The worst thing that can happen is a mod stops working and that's it.
 
