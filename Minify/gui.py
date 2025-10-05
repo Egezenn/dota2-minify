@@ -1,5 +1,4 @@
 import ctypes
-import jsonc
 import os
 import shutil
 import stat
@@ -10,12 +9,13 @@ import time
 import zipfile
 
 import dearpygui.dearpygui as ui
+import jsonc
 import psutil
 import requests
 
+import build
 import helper
 import mpaths
-import build
 
 checkboxes = {}
 checkboxes_state = {}
@@ -141,7 +141,7 @@ def download_dependencies():
 def load_checkboxes_state():
     global checkboxes_state
     try:
-        with open(mpaths.mods_file_dir, "r", encoding="utf-8") as file:
+        with open(mpaths.mods_config_dir, "r", encoding="utf-8") as file:
             checkboxes_state = jsonc.load(file)
     except FileNotFoundError:
         pass
@@ -291,7 +291,7 @@ def open_github_link_and_close_minify():
 def checkbox_state_save():
     for box in checkboxes:
         checkboxes_state[box] = ui.get_value(box)
-        with open(mpaths.mods_file_dir, "w", encoding="utf-8") as file:
+        with open(mpaths.mods_config_dir, "w", encoding="utf-8") as file:
             jsonc.dump(checkboxes_state, file, indent=2)
 
 
@@ -578,16 +578,12 @@ def dev_mode():
             ui.add_button(label="Compile items from path", callback=helper.compile)
             ui.add_spacer(width=0, height=10)
             ui.add_button(label="Clean all language paths", callback=build.clean_lang_dirs)
-            ui.add_text("^ Verify your files!")
             ui.add_spacer(width=0, height=10)
             ui.add_button(label="Extract workshop tools", callback=extract_workshop_tools)
             ui.add_spacer(width=0, height=10)
             ui.add_button(label="Create a blank mod", callback=build.create_blank_mod)
             ui.add_spacer(width=0, height=10)
-            ui.add_text(
-                "* Do note that some of these will not work if you're not on Windows because Source2Viewer's GUI and Dota2 Tools aren't crossplatform.",
-                wrap=240,
-            )
+            ui.add_button(label="Patch with seperate paks", callback=build.patch_seperate)
         dev_mode_state = 1
 
     elif dev_mode_state == 0:
@@ -709,7 +705,26 @@ def extract_workshop_tools():
 def bulk_exec_script(order_name):
     bulk_name = f"script_{order_name}.py"
     for root, dirs, files in os.walk(mpaths.mods_dir):
-        if bulk_name in files:
+        if bulk_name in files and not os.path.basename(root).startswith("_"):
+            # TODO implement load with defaults
+            try:
+                with open(os.path.join(root, "modcfg.json")) as file:
+                    cfg = jsonc.load(file)
+            except FileNotFoundError:
+                cfg = {}
+            try:
+                always = cfg["always"]
+            except KeyError:
+                always = False
+            try:
+                visual = cfg["visual"]
+            except KeyError:
+                visual = True
+
             # TODO: pull the file from pak66 to check if it was enabled for uninstallers
-            if order_name in ["initial", "uninstall"] or ui.get_value(checkboxes[os.path.basename(root)]):
+            if (
+                always
+                or order_name in ["initial", "uninstall"]
+                or (visual and ui.get_value(checkboxes[os.path.basename(root)]))
+            ):
                 helper.exec_script(os.path.join(root, bulk_name), os.path.basename(root), order_name)

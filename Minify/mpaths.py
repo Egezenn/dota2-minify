@@ -1,12 +1,12 @@
 "All the necessary file paths & links"
 
 import getpass
-import jsonc
 import os
 import platform
 import sys
 import traceback
 
+import jsonc
 import vdf
 
 steam_dir = ""
@@ -76,7 +76,7 @@ log_rescomp = os.path.join(logs_dir, "resourcecompiler.txt")
 # config
 ## locale, steam_dir
 main_config_file_dir = os.path.join(config_dir, "minify_config.json")
-mods_file_dir = os.path.join(config_dir, "mods.json")
+mods_config_dir = os.path.join(config_dir, "mods.json")
 
 # killswitch accident 2025-09-25
 if getattr(sys, "frozen", False):
@@ -375,7 +375,6 @@ minify_dota_tools_required_path = os.path.join(
     steam_dir, "steamapps", "common", "dota 2 beta", "content", "dota_minify"
 )
 ### vpk destination
-minify_dota_pak_possible_output_path = os.path.join(steam_dir, "steamapps", "common", "dota 2 beta", "game")
 minify_dota_pak_output_path = os.path.join(steam_dir, "steamapps", "common", "dota 2 beta", "game", "dota_minify")
 minify_dota_possible_language_output_paths = [
     os.path.join(steam_dir, "steamapps", "common", "dota 2 beta", "game", "dota_minify"),

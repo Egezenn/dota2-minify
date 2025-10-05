@@ -1,5 +1,4 @@
 import importlib.util
-import jsonc
 import os
 import shlex
 import shutil
@@ -11,12 +10,9 @@ from urllib.request import urlopen
 import webbrowser
 
 import dearpygui.dearpygui as ui
+import jsonc
 
 import mpaths
-
-if mpaths.OS == "Windows":
-    from ctypes import WinError
-
 
 compile_path = ""
 details_label_text_var = ""
@@ -24,7 +20,7 @@ locale = ""
 localization_dict = {}
 localizations = []
 mod_selection_window_var = ""
-output_path = mpaths.minify_dota_pak_output_path
+output_path = mpaths.get_config("output_path", mpaths.minify_dota_pak_output_path)
 workshop_installed = False
 
 

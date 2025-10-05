@@ -22,9 +22,6 @@ import gui
 
 
 ui.create_context()
-
-styling_dictionary = {}
-
 ui.add_value_registry(tag="details_tags")
 
 with ui.value_registry():

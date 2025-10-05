@@ -1,26 +1,25 @@
 import csv
-import jsonc
 import os
 import re
 import shutil
 import subprocess
-import threading
 import time
 import xml.etree.ElementTree as ET
 
 import dearpygui.dearpygui as ui
+import jsonc
 import playsound3  # chimes are from pixabay.com/sound-effects/chime-74910/
 import psutil
 import vpk
 
+import gui
 import helper
 import mpaths
-import gui
 
 game_contents_file_init = False
 
 
-def patcher():
+def patcher(mod=None, pakname=None):
     gui.lock_interaction()
     helper.clean_terminal()
     target = "dota2.exe" if mpaths.OS == "Windows" else "dota2"
@@ -42,6 +41,7 @@ def patcher():
         return
 
     try:
+        mod_list = mpaths.mods_with_order if mod is None else [mod]
         helper.clean_folders()
 
         blank_file_extensions = helper.get_blank_file_extensions()  # list of extensions in bin/blank-files
@@ -58,19 +58,29 @@ def patcher():
         replacer_source_extracts = []
         replacer_targets = []
 
-        for folder in mpaths.mods_with_order:
+        for folder in mod_list:
             mod_path = os.path.join(mpaths.mods_dir, folder)
 
+            # TODO implement load with defaults
             try:
                 with open(os.path.join(mod_path, "modcfg.json")) as cfg:
                     mod_cfg = jsonc.load(cfg)
-                apply_without_user_confirmation = mod_cfg["always"]
-            except (KeyError, FileNotFoundError):
+            except FileNotFoundError:
+                mod_cfg = {}
+            try:
+                apply_without_user_confirmation = mod_cfg["always"] if mod is not None else False
+            except KeyError:
                 apply_without_user_confirmation = False
+            try:
+                visual = mod_cfg["visual"]
+            except KeyError:
+                visual = True
 
             try:
-                if apply_without_user_confirmation or ui.get_value(
-                    gui.checkboxes[folder]
+                if (
+                    mod is not None
+                    or apply_without_user_confirmation
+                    or (visual and ui.get_value(gui.checkboxes[folder]))
                 ):  # step into folders that have ticked checkboxes only
                     # TODO get rid of custom parsed textfiles
                     blacklist_txt = os.path.join(mod_path, "blacklist.txt")
@@ -367,10 +377,14 @@ def patcher():
         # -------- Create VPK from game folder and save into Minify directory -------- #
         # ---------------------------------------------------------------------------- #
         # insert metadata to pak
-        shutil.copy(
-            mpaths.mods_file_dir,
-            os.path.join(mpaths.minify_dota_compile_output_path, "minify_mods.json"),
-        )
+        if mod is None:
+            shutil.copy(
+                mpaths.mods_config_dir,
+                os.path.join(mpaths.minify_dota_compile_output_path, "minify_mods.json"),
+            )
+        else:
+            open(os.path.join(mpaths.minify_dota_compile_output_path, f"{mod}.txt"), "w").close()
+
         try:
             shutil.copy(
                 mpaths.version_file_dir,
@@ -385,7 +399,8 @@ def patcher():
             helper.localization_dict["compiling_terminal_text_var"],
             "compiling_text",
         )
-        newpak.save(os.path.join(helper.output_path, "pak66_dir.vpk"))
+        pakname = "pak66" if pakname is None else pakname
+        newpak.save(os.path.join(helper.output_path, f"{pakname}_dir.vpk"))
 
         helper.remove_path(
             mpaths.minify_dota_compile_input_path,
@@ -394,7 +409,6 @@ def patcher():
             mpaths.replace_dir,
         )
 
-        gui.checkbox_state_save()
         gui.unlock_interaction()
         helper.add_text_to_terminal("-------------------------------------------------------", "spacer1_text")
         helper.add_text_to_terminal(
@@ -413,7 +427,6 @@ def patcher():
         playsound3.playsound(os.path.join(mpaths.sounds_dir, "success.wav"), block=False)
 
     except:
-        gui.checkbox_state_save()
         mpaths.write_crashlog()
         helper.open_thing(mpaths.log_crashlog)
 
@@ -432,6 +445,17 @@ def patcher():
         playsound3.playsound(os.path.join(mpaths.sounds_dir, "fail.wav"), block=False)
 
 
+def patch_seperate():
+    with open(mpaths.mods_config_dir) as file:
+        mods = jsonc.load(file)
+    i = 20
+    for mod in mods:
+        if mods[mod]:
+            i += 1
+            patcher(mod, f"pak{i}")
+            print(f"Created pak{i} with the mod {mod}")
+
+
 def uninstaller():
     gui.hide_uninstall_popup()
     helper.clean_terminal()
@@ -445,18 +469,16 @@ def uninstaller():
             for item in os.listdir(dir):
                 if os.path.isfile(os.path.join(dir, item)) and re.fullmatch(pak_pattern, item):
                     pak_contents = vpk.open(os.path.join(dir, item))
-                    try:
-                        if pak_contents.get_file("minify_mods.json"):
+                    for file in ["minify_mods.json", "minify_version.txt", *mpaths.visually_available_mods]:
+                        if file in pak_contents:
                             os.remove(os.path.join(dir, item))
-                    except KeyError:
-                        pass
+                            break
 
     gui.bulk_exec_script("uninstall")
     helper.add_text_to_terminal(
         helper.localization_dict["mods_removed_terminal_text_var"],
         "uninstaller_text_tag",
     )
-    gui.checkbox_state_save()
     gui.unlock_interaction()
 
 
