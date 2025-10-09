@@ -40,6 +40,9 @@ def patcher(mod=None, pakname=None):
         )
         return
 
+    if not mod:
+        gui.save_checkbox_state()
+
     try:
         mod_list = mpaths.mods_with_order if mod is None else [mod]
 
@@ -86,9 +89,9 @@ def patcher(mod=None, pakname=None):
 
             visual, mod_cfg = mpaths.get_key_from_json_file_w_default(cfg_path, "visual", True)
 
-            if mod is not None:
+            if mod is None:
                 apply_without_user_confirmation = mpaths.get_key_from_dict_w_default(mod_cfg, "always", False)
-            else:
+            else:  # will not be in mods.json
                 apply_without_user_confirmation = False
 
             try:
@@ -443,8 +446,6 @@ def patcher(mod=None, pakname=None):
                 "warning",
             )
         playsound3.playsound(os.path.join(mpaths.sounds_dir, "success.wav"), block=False)
-        if not mod:
-            gui.save_checkbox_state()
 
     except:
         mpaths.write_crashlog()
