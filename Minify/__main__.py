@@ -43,7 +43,7 @@ with ui.value_registry():
 
 
 def patcher_start():
-    checkbox_state_save_thread = threading.Thread(target=gui.checkbox_state_save)
+    checkbox_state_save_thread = threading.Thread(target=gui.save_checkbox_state)
     checkbox_state_save_thread.start()
     checkbox_state_save_thread.join()
     patch_thread = threading.Thread(target=build.patcher)
@@ -214,7 +214,7 @@ def create_ui():
         width=494,
         show=False,
         no_resize=True,
-        on_close=gui.checkbox_state_save,
+        on_close=gui.save_checkbox_state,
     )
 
     ui.add_window(
@@ -283,7 +283,7 @@ def create_base_ui():
     helper.change_localization(init=True)
     gui.version_check()
     gui.initiate_conditionals()
-    helper.disable_workshop_mods(gui.checkboxes)
+    helper.disable_workshop_mods()
     time.sleep(0.05)
     gui.configure_update_popup()
     gui.bulk_exec_script("initial")

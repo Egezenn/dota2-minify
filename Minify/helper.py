@@ -24,15 +24,6 @@ output_path = mpaths.get_config("output_path", mpaths.minify_dota_pak_output_pat
 workshop_installed = False
 
 
-def handle_warnings():
-    if os.path.exists(mpaths.log_warnings) and os.path.getsize(mpaths.log_warnings) != 0:
-        add_text_to_terminal(
-            localization_dict["minify_encountered_errors_terminal_text_var"],
-            "minify_error_var",
-            "warning",
-        )
-
-
 def scroll_to_terminal_end():
     time.sleep(0.05)
     ui.set_y_scroll("terminal_window", ui.get_y_scroll_max("terminal_window"))
@@ -62,27 +53,16 @@ def add_text_to_terminal(text, tag: int | str | None = None, type: str | None = 
     scroll_to_terminal_end()
 
 
-def disable_workshop_mods(checkboxes):
+def disable_workshop_mods():
     if not workshop_installed:
         for folder in mpaths.mods_with_order:
             mod_path = os.path.join(mpaths.mods_dir, folder)
             worskhop_required_modification_methods = ["styling.txt", "menu.xml", "xml_mod.json"]
 
-            for box in checkboxes:
-                if checkboxes[box] == folder:
-                    for method_file in worskhop_required_modification_methods:
-                        if os.path.exists(os.path.join(mod_path, method_file)):
-                            ui.configure_item(box, enabled=False, default_value=False)
-                            break
-
-
-def clean_folders():
-    for root, dirs, files in os.walk(mpaths.logs_dir):
-        for filename in files:
-            open(os.path.join(root, filename), "w").close()
-
-    os.makedirs(mpaths.build_dir, exist_ok=True)
-    os.makedirs(mpaths.minify_dota_compile_input_path, exist_ok=True)
+            for method_file in worskhop_required_modification_methods:
+                if os.path.exists(os.path.join(mod_path, method_file)):
+                    ui.configure_item(folder, enabled=False, default_value=False)
+                    break
 
 
 def url_dispatcher(url):

@@ -79,7 +79,7 @@ No one has ever been banned for these mods. This project strictly deals with VPK
 2. **Run Minify**
 
    - Extract the ZIP file.
-   - Run `Minify` executable and patch with the mods and the language you want to use.
+   - Ensure that you have execution permissions for the `Minify` executable, run and patch with the mods and the language you want to use.
 
 ![language-instruction-1](assets/language-instruction-1.png)
 
@@ -179,7 +179,7 @@ mods
 ```jsonc
 { // defaults doesn't need to be indicated
   "always": false, // false by default, apply them without checking mods.json or checkbox
-  "dependency": ["<mod>"], // None by default, add a mod dependency's name here 
+  "dependencies": ["<mod>"], // None by default, add a mod dependency's name here 
   "order": 1, // default is 1, ordered from negative to positive to resolve any conflicts
   "visual": true // true by default, show it in the UI as a checkbox
 }

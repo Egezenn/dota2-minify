@@ -17,7 +17,7 @@ import build
 import helper
 import mpaths
 
-checkboxes = {}
+checkboxes = []
 checkboxes_state = {}
 dev_mode_state = -1
 gui_lock = False
@@ -141,10 +141,17 @@ def download_dependencies():
 def load_checkboxes_state():
     global checkboxes_state
     try:
-        with open(mpaths.mods_config_dir, "r", encoding="utf-8") as file:
+        with open(mpaths.mods_config_dir, encoding="utf-8") as file:
             checkboxes_state = jsonc.load(file)
     except FileNotFoundError:
-        pass
+        open(mpaths.mods_config_dir, "w").close()
+
+
+def save_checkbox_state():
+    for box in checkboxes:
+        checkboxes_state[box] = ui.get_value(box)
+    with open(mpaths.mods_config_dir, "w", encoding="utf-8") as file:
+        jsonc.dump(checkboxes_state, file, indent=2)
 
 
 def create_checkboxes():
@@ -222,8 +229,7 @@ def create_checkboxes():
         )
         ui.add_text(source=f"{mod}_details_text_value_tag", parent=tag_data, wrap=480)
 
-        current_box = mod
-        checkboxes[current_box] = mod
+        checkboxes.append(mod)
 
 
 def setup_button_state():
@@ -233,7 +239,7 @@ def setup_button_state():
             break
         else:
             ui.configure_item("button_patch", enabled=False)
-    checkbox_state_save()
+    save_checkbox_state()
 
 
 def lock_interaction():
@@ -286,13 +292,6 @@ def hide_uninstall_popup():
 def open_github_link_and_close_minify():
     open_github_link()  # TODO: updater behavior
     helper.close()
-
-
-def checkbox_state_save():
-    for box in checkboxes:
-        checkboxes_state[box] = ui.get_value(box)
-        with open(mpaths.mods_config_dir, "w", encoding="utf-8") as file:
-            jsonc.dump(checkboxes_state, file, indent=2)
 
 
 def drag_viewport(sender, app_data, user_data):
@@ -722,9 +721,5 @@ def bulk_exec_script(order_name):
                 visual = True
 
             # TODO: pull the file from pak66 to check if it was enabled for uninstallers
-            if (
-                always
-                or order_name in ["initial", "uninstall"]
-                or (visual and ui.get_value(checkboxes[os.path.basename(root)]))
-            ):
+            if always or order_name in ["initial", "uninstall"] or (visual and ui.get_value(os.path.basename(root))):
                 helper.exec_script(os.path.join(root, bulk_name), os.path.basename(root), order_name)

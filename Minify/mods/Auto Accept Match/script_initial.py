@@ -15,7 +15,4 @@ import gui
 
 def main():
     if not helper.workshop_installed:
-        for checkbox in gui.checkboxes:
-            if checkbox == os.path.basename(current_dir):
-                ui.configure_item(checkbox, enabled=True)
-                break
+        ui.configure_item(os.path.basename(current_dir), enabled=True)

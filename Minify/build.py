@@ -42,7 +42,12 @@ def patcher(mod=None, pakname=None):
 
     try:
         mod_list = mpaths.mods_with_order if mod is None else [mod]
-        helper.clean_folders()
+
+        for item in os.listdir(mpaths.logs_dir):
+            os.remove(os.path.join(mpaths.logs_dir, item))
+
+        os.makedirs(mpaths.build_dir, exist_ok=True)
+        os.makedirs(mpaths.minify_dota_compile_input_path, exist_ok=True)
 
         blank_file_extensions = helper.get_blank_file_extensions()  # list of extensions in bin/blank-files
         dota_pak_contents = vpk.open(mpaths.dota_game_pak_path)
@@ -58,17 +63,22 @@ def patcher(mod=None, pakname=None):
         replacer_source_extracts = []
         replacer_targets = []
 
-        # TODO: reapply until the list of values remain same for cascading dependencies
-        for dependency_dict in mpaths.mod_dependencies_list:
-            for dependant, dependencies in dependency_dict.items():
-                if ui.get_value(gui.checkboxes[dependant]):
-                    for dependency in dependencies:
-                        try:
-                            ui.set_value(dependency, True)
-                        except:
-                            mpaths.write_warning(
-                                f"Mod dependency {dependency} for {mod} couldn't be resolved, might be mod might not exist."
-                            )
+        dependency_checkbox_states = ui.get_values(gui.checkboxes)
+        dependencies_resolved = False
+
+        while not dependencies_resolved:
+            for dependency_dict in mpaths.mod_dependencies_list:
+                for dependant, dependencies in dependency_dict.items():
+                    if ui.get_value(dependant):
+                        for dependency in dependencies:
+                            try:
+                                ui.set_value(dependency, True)
+                            except:
+                                mpaths.write_warning(
+                                    f"Mod dependency {dependency} for {mod} couldn't be resolved, might be mod might not exist."
+                                )
+            if sum(dependency_checkbox_states) == (sum(dependency_checkbox_states := ui.get_values(gui.checkboxes))):
+                dependencies_resolved = True
 
         for folder in mod_list:
             mod_path = os.path.join(mpaths.mods_dir, folder)
@@ -83,9 +93,7 @@ def patcher(mod=None, pakname=None):
 
             try:
                 if (
-                    mod is not None
-                    or apply_without_user_confirmation
-                    or (visual and ui.get_value(gui.checkboxes[folder]))
+                    mod is not None or apply_without_user_confirmation or (visual and ui.get_value(folder))
                 ):  # step into folders that have ticked checkboxes only
                     # TODO get rid of custom parsed textfiles
                     blacklist_txt = os.path.join(mod_path, "blacklist.txt")
@@ -428,8 +436,15 @@ def patcher(mod=None, pakname=None):
             "warning",
         )
 
-        helper.handle_warnings()
+        if os.path.exists(mpaths.log_warnings) and os.path.getsize(mpaths.log_warnings) != 0:
+            helper.add_text_to_terminal(
+                helper.localization_dict["minify_encountered_errors_terminal_text_var"],
+                "minify_error_var",
+                "warning",
+            )
         playsound3.playsound(os.path.join(mpaths.sounds_dir, "success.wav"), block=False)
+        if not mod:
+            gui.save_checkbox_state()
 
     except:
         mpaths.write_crashlog()
@@ -805,7 +820,7 @@ if __name__ == "__main__":
 """
     mod_config_template = r"""{ // defaults doesn't need to be indicated
   "always": false, // false by default, apply them without checking mods.json or checkbox
-  "dependency": ["<mod>"], // None by default, add a mod dependency's name here 
+  "dependencies": ["<mod>"], // None by default, add a mod dependency's name here 
   "order": 1, // default is 1, ordered from negative to positive to resolve any conflicts
   "visual": true // true by default, show it in the UI as a checkbox
 }"""
