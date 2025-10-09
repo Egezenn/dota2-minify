@@ -127,6 +127,22 @@ def set_config(key, value):
         return set_config(key, value)
 
 
+def get_key_from_dict_w_default(dict, key, default):
+    try:
+        return dict[key]
+    except:
+        return default
+
+
+def get_key_from_json_file_w_default(file, key, default):
+    try:
+        with open(file) as file:
+            data = jsonc.load(file)
+        return get_key_from_dict_w_default(data, key, default), data
+    except FileNotFoundError:
+        return default, {}
+
+
 def write_crashlog(exc_type=None, exc_value=None, exc_traceback=None, header=None, handled=True):
     path = log_crashlog if handled else log_unhandled
     with open(path, "w") as file:
@@ -468,6 +484,8 @@ dota_tools_extraction_paths = [
 mods_alphabetical = []
 mods_with_order = []
 visually_unavailable_mods = []
+visually_available_mods = []
+mod_dependencies_list = []
 for mod in sorted(os.listdir(mods_dir)):
     if os.path.isdir(mod_dir := os.path.join(mods_dir, mod)) and not mod.startswith("_"):
         mods_alphabetical.append(mod)
@@ -475,21 +493,19 @@ for mod in sorted(os.listdir(mods_dir)):
         cfg_exist = os.path.exists(mod_cfg := os.path.join(mod_dir, "modcfg.json"))
         blacklist_exist = os.path.exists(os.path.join(mod_dir, "blacklist.txt"))
 
-        if not cfg_exist and not blacklist_exist:
-            mods_with_order.append({mod: 1})
-        elif cfg_exist:
-            with open(mod_cfg) as file:
-                cfg = jsonc.load(file)
-            mods_with_order.append({mod: cfg["order"]})
-            try:
-                if cfg["visual"] == False:
-                    visually_unavailable_mods.append(mod)
-            except KeyError:
-                pass
+        order, cfg = get_key_from_json_file_w_default(mod_cfg, "order", 1)
+        dependencies = get_key_from_dict_w_default(cfg, "dependencies", None)
+        visual = get_key_from_dict_w_default(cfg, "visual", True)
+        visually_available_mods.append(mod) if visual else visually_unavailable_mods.append(mod)
+        if dependencies is not None:
+            mod_dependencies_list.append({mod: dependencies})
 
-        elif blacklist_exist:
+        # Default order, blacklist mods should always be indexed last
+        if blacklist_exist and not cfg_exist:
             mods_with_order.append({mod: 2})
+        else:
+            mods_with_order.append({mod: order})
+
 
 mods_with_order = sorted(mods_with_order, key=lambda d: list(d.values())[0])
 mods_with_order = [list(d.keys())[0] for d in mods_with_order]
-visually_available_mods = [item for item in mods_alphabetical if item not in visually_unavailable_mods]

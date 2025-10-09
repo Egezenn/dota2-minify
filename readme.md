@@ -151,6 +151,8 @@ Make a bug report on GitHub or Discord with the contents of your `logs` folder.
 
 Minify has a programmatical approach to most modifications to keep everything minimal and simple. If there isn't a method available for your needs, you can always upload your mod files in `mods/<mod_name>/files` to be directly included into the pak minify is going to create or include a python script to accomodate specific behavior.
 
+For most changes, you do not need to reopen the application. Try opening it again if you encounter undesired behavior.
+
 ### Mod files and explanations
 
 ```plaintext
@@ -176,9 +178,10 @@ mods
 
 ```jsonc
 { // defaults doesn't need to be indicated
+  "always": false, // false by default, apply them without checking mods.json or checkbox
+  "dependency": ["<mod>"], // None by default, add a mod dependency's name here 
   "order": 1, // default is 1, ordered from negative to positive to resolve any conflicts
-  "visual": true, // true by default, show it in the UI as a checkbox
-  "always": false // false by default, apply them without checking mods.json or checkbox
+  "visual": true // true by default, show it in the UI as a checkbox
 }
 ```
 

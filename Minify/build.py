@@ -58,23 +58,28 @@ def patcher(mod=None, pakname=None):
         replacer_source_extracts = []
         replacer_targets = []
 
+        # TODO: reapply until the list of values remain same for cascading dependencies
+        for dependency_dict in mpaths.mod_dependencies_list:
+            for dependant, dependencies in dependency_dict.items():
+                if ui.get_value(gui.checkboxes[dependant]):
+                    for dependency in dependencies:
+                        try:
+                            ui.set_value(dependency, True)
+                        except:
+                            mpaths.write_warning(
+                                f"Mod dependency {dependency} for {mod} couldn't be resolved, might be mod might not exist."
+                            )
+
         for folder in mod_list:
             mod_path = os.path.join(mpaths.mods_dir, folder)
+            cfg_path = os.path.join(mod_path, "modcfg.json")
 
-            # TODO implement load with defaults
-            try:
-                with open(os.path.join(mod_path, "modcfg.json")) as cfg:
-                    mod_cfg = jsonc.load(cfg)
-            except FileNotFoundError:
-                mod_cfg = {}
-            try:
-                apply_without_user_confirmation = mod_cfg["always"] if mod is not None else False
-            except KeyError:
+            visual, mod_cfg = mpaths.get_key_from_json_file_w_default(cfg_path, "visual", True)
+
+            if mod is not None:
+                apply_without_user_confirmation = mpaths.get_key_from_dict_w_default(mod_cfg, "always", False)
+            else:
                 apply_without_user_confirmation = False
-            try:
-                visual = mod_cfg["visual"]
-            except KeyError:
-                visual = True
 
             try:
                 if (
@@ -446,6 +451,7 @@ def patcher(mod=None, pakname=None):
 
 
 def patch_seperate():
+    # Mods that don't end up in config file will not be included (mods that are non-visual), fix?
     with open(mpaths.mods_config_dir) as file:
         mods = jsonc.load(file)
     i = 20
@@ -469,7 +475,8 @@ def uninstaller():
             for item in os.listdir(dir):
                 if os.path.isfile(os.path.join(dir, item)) and re.fullmatch(pak_pattern, item):
                     pak_contents = vpk.open(os.path.join(dir, item))
-                    for file in ["minify_mods.json", "minify_version.txt", *mpaths.visually_available_mods]:
+                    mod_names_with_txt = [s + ".txt" for s in mpaths.visually_available_mods]
+                    for file in ["minify_mods.json", "minify_version.txt", *mod_names_with_txt]:
                         if file in pak_contents:
                             os.remove(os.path.join(dir, item))
                             break
@@ -797,9 +804,10 @@ if __name__ == "__main__":
     main()
 """
     mod_config_template = r"""{ // defaults doesn't need to be indicated
+  "always": false, // false by default, apply them without checking mods.json or checkbox
+  "dependency": ["<mod>"], // None by default, add a mod dependency's name here 
   "order": 1, // default is 1, ordered from negative to positive to resolve any conflicts
-  "visual": true, // true by default, show it in the UI as a checkbox
-  "always": false // false by default, apply them without checking mods.json or checkbox
+  "visual": true // true by default, show it in the UI as a checkbox
 }"""
 
     mod_menu_template = r""

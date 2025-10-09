@@ -8,17 +8,11 @@ minify_root = os.path.abspath(os.path.join(current_dir, os.pardir, os.pardir))
 if minify_root not in sys.path:
     sys.path.insert(0, minify_root)
 
-import dearpygui.dearpygui as ui
-
 import helper
 import mpaths
-import gui
 
 
 def main():
-    if not ui.get_value(gui.checkboxes["Remove Main Menu Background"]):
-        ui.configure_item("Remove Main Menu Background", default_value=True)
-
     img_available, vid_available = False, False
 
     for file in sorted(os.listdir(current_dir)):

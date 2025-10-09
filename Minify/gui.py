@@ -512,11 +512,11 @@ def dev_mode():
         ):
             ui.add_button(
                 label="Path: Dota2 Minify",
-                callback=lambda: helper.open_thing(os.path.join(mpaths.minify_dota_pak_output_path)),
+                callback=lambda: helper.open_thing(os.path.join(helper.output_path)),
             )
             ui.add_button(
                 label="File: Dota2 Minify pak66 VPK",
-                callback=lambda: helper.open_thing(os.path.join(mpaths.minify_dota_pak_output_path, "pak66_dir.vpk")),
+                callback=lambda: helper.open_thing(os.path.join(helper.output_path, "pak66_dir.vpk")),
             )
             ui.add_spacer(width=0, height=10)
             ui.add_button(label="Path: Minify", callback=lambda: helper.open_thing(os.getcwd()))

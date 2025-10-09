@@ -1,5 +1,5 @@
 {
+  "always": true,
   "order": 0,
-  "visual": false,
-  "always": true
+  "visual": false
 }
