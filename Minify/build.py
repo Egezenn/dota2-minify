@@ -386,7 +386,10 @@ def patcher(mod=None, pakname=None):
                 helper.add_text_to_terminal(
                     helper.localization_dict["replacing_terminal_text_var"].format(replacer_source_extracts[i], target)
                 )
-                os.makedirs(target_dir := os.path.join(mpaths.minify_dota_compile_output_path, target), exist_ok=True)
+                os.makedirs(
+                    os.path.dirname(target_dir := os.path.join(mpaths.minify_dota_compile_output_path, target)),
+                    exist_ok=True,
+                )
                 shutil.copy(os.path.join(mpaths.replace_dir, replacer_source_extracts[i]), target_dir)
 
         # ---------------------------------- STEP 6 ---------------------------------- #
