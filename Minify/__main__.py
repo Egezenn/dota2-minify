@@ -346,8 +346,8 @@ for monitor in screeninfo.get_monitors():
 
 ui.create_viewport(
     title=gui.title,
-    height=300,
     width=494,
+    height=300,
     x_pos=min(widths) // 2 - 494 // 2,
     y_pos=min(heights) // 2 - 300 // 2 - 40,
     resizable=False,

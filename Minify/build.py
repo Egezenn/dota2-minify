@@ -40,9 +40,6 @@ def patcher(mod=None, pakname=None):
         )
         return
 
-    if not mod:
-        gui.save_checkbox_state()
-
     try:
         mod_list = mpaths.mods_with_order if mod is None else [mod]
 
@@ -78,10 +75,13 @@ def patcher(mod=None, pakname=None):
                                 ui.set_value(dependency, True)
                             except:
                                 mpaths.write_warning(
-                                    f"Mod dependency {dependency} for {mod} couldn't be resolved, might be mod might not exist."
+                                    f"Mod dependency {dependency} for {mod} couldn't be resolved, might be that the mod doesn't exist."
                                 )
             if sum(dependency_checkbox_states) == (sum(dependency_checkbox_states := ui.get_values(gui.checkboxes))):
                 dependencies_resolved = True
+
+        if mod is None:
+            gui.save_checkbox_state()
 
         for folder in mod_list:
             mod_path = os.path.join(mpaths.mods_dir, folder)

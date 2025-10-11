@@ -23,6 +23,11 @@ dev_mode_state = -1
 gui_lock = False
 version = None
 
+main_window_width = 494
+main_window_width_dev = 494
+main_window_height = 300
+main_window_height_dev = 650
+
 try:
     with open(mpaths.version_file_dir, "r") as file:
         version = file.readline()
@@ -379,7 +384,8 @@ def close_active_window():
         "primary_window",
         "top_bar",
         "opener",
-        "tools",
+        "mod_tools",
+        "maintenance_tools",
     ]:
         if active_window == "update_popup":
             delete_update_popup()
@@ -495,34 +501,46 @@ def theme():
 
 def dev_mode():
     global dev_mode_state
-    if dev_mode_state == -1:
-        ui.configure_viewport(item="main_viewport", resizable=True, height=600)
-        ui.configure_viewport(item="primary_window", resizable=True)
+    if dev_mode_state == -1:  # init
+        dev_mode_state = 1
+        ui.configure_viewport(
+            item="main_viewport", resizable=False, width=main_window_width_dev, height=main_window_height_dev
+        )
+        ui.configure_viewport(item="primary_window", resizable=False)
         with ui.window(
-            label="Path and file opener",
+            label="Path & File Opener",
             tag="opener",
             pos=(0, 300),
             width=240,
-            height=300,
+            height=350,
             no_resize=True,
             no_move=True,
             no_close=True,
             no_collapse=True,
         ):
             ui.add_button(
-                label="Path: Dota2 Minify",
+                label="Path: Compile output path",
                 callback=lambda: helper.open_thing(os.path.join(helper.output_path)),
             )
             ui.add_button(
-                label="File: Dota2 Minify pak66 VPK",
+                label="File: Compiled pak66 VPK",
                 callback=lambda: helper.open_thing(os.path.join(helper.output_path, "pak66_dir.vpk")),
             )
-            ui.add_spacer(width=0, height=10)
-            ui.add_button(label="Path: Minify", callback=lambda: helper.open_thing(os.getcwd()))
+            ui.add_spacer(width=0, height=5)
+            ui.add_button(label="Path: Minify root", callback=lambda: helper.open_thing(os.getcwd()))
             ui.add_button(
                 label="Path: Logs",
                 callback=lambda: helper.open_thing(mpaths.logs_dir),
             )
+            ui.add_button(
+                label="Path: Config",
+                callback=lambda: helper.open_thing(mpaths.config_dir),
+            )
+            ui.add_button(
+                label="Path: Mods",
+                callback=lambda: helper.open_thing(mpaths.mods_dir),
+            )
+            ui.add_spacer(width=0, height=5)
             ui.add_button(
                 label="Path: Dota2",
                 callback=lambda: helper.open_thing(
@@ -537,7 +555,6 @@ def dev_mode():
                 label="File: Dota2 pak01(core) VPK",
                 callback=lambda: helper.open_thing(mpaths.dota_core_pak_path),
             )
-            ui.add_spacer(width=0, height=10)
             ui.add_button(
                 label="Executable: Dota2 Tools",
                 callback=lambda: helper.open_thing(
@@ -552,11 +569,11 @@ def dev_mode():
             )
 
         with ui.window(
-            label="Tools",
-            tag="tools",
+            label="Mod Tools",
+            tag="mod_tools",
             pos=(240, 300),
             width=253,
-            height=300,
+            height=200,
             no_resize=True,
             no_move=True,
             no_close=True,
@@ -575,27 +592,44 @@ def dev_mode():
                 directory_selector=True,
             )
             ui.add_button(label="Compile items from path", callback=helper.compile)
-            ui.add_spacer(width=0, height=10)
-            ui.add_button(label="Clean all language paths", callback=build.clean_lang_dirs)
-            ui.add_spacer(width=0, height=10)
-            ui.add_button(label="Extract workshop tools", callback=extract_workshop_tools)
-            ui.add_spacer(width=0, height=10)
+            ui.add_spacer(width=0, height=5)
             ui.add_button(label="Create a blank mod", callback=build.create_blank_mod)
-            ui.add_spacer(width=0, height=10)
+            ui.add_spacer(width=0, height=5)
             ui.add_button(label="Patch with seperate paks", callback=build.patch_seperate)
-        dev_mode_state = 1
+            ui.add_spacer(width=0, height=5)
+            ui.add_button(label="Untick all mods", callback=lambda: tick_batch(False))
+            ui.add_button(label="Tick all mods", callback=lambda: tick_batch(True))
 
-    elif dev_mode_state == 0:
-        ui.configure_viewport(item="main_viewport", resizable=True, height=300)
+        with ui.window(
+            label="Maintenance Tools",
+            tag="maintenance_tools",
+            pos=(240, 500),
+            width=253,
+            height=150,
+            no_resize=True,
+            no_move=True,
+            no_close=True,
+            no_collapse=True,
+        ):
+            ui.add_button(label="Clean all language paths", callback=build.clean_lang_dirs)
+            ui.add_spacer(width=0, height=5)
+            ui.add_button(label="Extract workshop tools", callback=extract_workshop_tools)
+
+    elif dev_mode_state == 0:  # close
+        dev_mode_state = 1
+        ui.configure_viewport(item="main_viewport", resizable=False, width=main_window_width, height=main_window_height)
         ui.configure_item("opener", show=False)
-        ui.configure_item("tools", show=False)
-        dev_mode_state = 1
+        ui.configure_item("mod_tools", show=False)
+        ui.configure_item("maintenance_tools", show=False)
 
-    else:
-        ui.configure_viewport(item="main_viewport", resizable=True, height=600)
-        ui.configure_item("opener", show=True)
-        ui.configure_item("tools", show=True)
+    else:  # reopen
         dev_mode_state = 0
+        ui.configure_viewport(
+            item="main_viewport", resizable=False, width=main_window_width_dev, height=main_window_height_dev
+        )
+        ui.configure_item("opener", show=True)
+        ui.configure_item("mod_tools", show=True)
+        ui.configure_item("maintenance_tools", show=True)
 
 
 def configure_update_popup():
@@ -703,7 +737,7 @@ def extract_workshop_tools():
 
 def bulk_exec_script(order_name):
     bulk_name = f"script_{order_name}.py"
-    for root, dirs, files in os.walk(mpaths.mods_dir):
+    for root, _, files in os.walk(mpaths.mods_dir):
         if bulk_name in files and not os.path.basename(root).startswith("_"):
             # TODO implement load with defaults
             try:
@@ -723,3 +757,9 @@ def bulk_exec_script(order_name):
             # TODO: pull the file from pak66 to check if it was enabled for uninstallers
             if always or order_name in ["initial", "uninstall"] or (visual and ui.get_value(os.path.basename(root))):
                 helper.exec_script(os.path.join(root, bulk_name), os.path.basename(root), order_name)
+
+
+def tick_batch(state: bool):
+    for box in checkboxes:
+        ui.set_value(box, state)
+    save_checkbox_state()
