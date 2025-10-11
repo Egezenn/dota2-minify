@@ -1,1 +1,1 @@
-Silencia los anunciadores & líneas de racha.
+Silenciará los locutores predeterminados y las líneas de rachas de muertes.

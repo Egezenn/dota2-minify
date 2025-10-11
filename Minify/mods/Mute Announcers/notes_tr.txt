@@ -1,1 +1,1 @@
-Spikerleri ve killstreak repliklerini susturur.
+Varsayılan spikerleri ve öldürme serisi repliklerini susturur.

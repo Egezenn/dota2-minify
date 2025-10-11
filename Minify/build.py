@@ -692,7 +692,9 @@ def build_minify_menu(menus):
 def process_blacklist_dir(index, line, folder):
     data = []
 
-    line = line[2:] if line.startswith(">>") or line.startswith("**") else line
+    line = line[2:] if line.startswith("**") else line
+    line = line + "/" if line.startswith(">>") else line
+    line = line[2:] if line.startswith(">>") else line
 
     lines = subprocess.run(
         [

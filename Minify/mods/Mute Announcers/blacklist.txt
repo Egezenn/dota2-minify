@@ -1,1 +1,1 @@
-**sounds/vo/announcer
+>>sounds/vo/announcer
