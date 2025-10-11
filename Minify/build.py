@@ -47,6 +47,7 @@ def patcher(mod=None, pakname=None):
             os.remove(os.path.join(mpaths.logs_dir, item))
 
         os.makedirs(mpaths.build_dir, exist_ok=True)
+        os.makedirs(mpaths.replace_dir, exist_ok=True)
         os.makedirs(mpaths.minify_dota_compile_input_path, exist_ok=True)
 
         blank_file_extensions = helper.get_blank_file_extensions()  # list of extensions in bin/blank-files
