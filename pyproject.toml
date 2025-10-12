@@ -1,6 +1,6 @@
 [project]
 name = "dota2-minify"
-version = "1.12.1"
+version = "1.12.2"
 description = "Dota2 Mod Patcher & Toolkit for everyone to use mods easily"
 readme = "readme.md"
 requires-python = ">=3.13"

@@ -1,4 +1,3 @@
 panorama/styles/chat @@ DOTAChat#HudChat { y: -145px; }
-panorama/styles/hud/dota_hud_ability_panel @@ #ItemCharges { font-size: 14px; }
 panorama/styles/hud/dota_hud_top_bar @@ DOTATopBar { ui-scale: 75%; } #TimeOfDay {ui-scale: 125%;} #TimeOfDayBG { ui-scale: 125%; }
 panorama/styles/hud/hud_reborn @@ #lower_hud, #minimap_container{ ui-scale: 90%; margin-left: 10%; margin-right: 10%; } #SpectatorToastManager { ui-scale: 75%; } #center_with_stats { ui-scale: 85%; }
