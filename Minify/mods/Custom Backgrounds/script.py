@@ -31,6 +31,7 @@ def main():
         filepath = os.path.join(current_dir, file)
         if img_available:
 
+            # reference to the file to compile to vtex
             xml_template = r"""<root>
     <Panel class="AddonLoadingRoot">
         <Image src="file://{images}/backgrounds/background.png" />
