@@ -57,7 +57,6 @@ def initiate_conditionals():
     setup_system_thread.join()
     load_state_checkboxes_thread.join()
     create_checkboxes()
-    setup_button_state()
 
 
 def update_popup_show():
@@ -238,8 +237,8 @@ def create_checkboxes():
 
 
 def setup_button_state():
-    for box in checkboxes:
-        if ui.get_value(box):
+    for box in checkboxes_state:
+        if box in checkboxes and ui.get_value(box):
             ui.configure_item("button_patch", enabled=True)
             break
         else:
@@ -261,6 +260,7 @@ def unlock_interaction():
     ui.configure_item("button_uninstall", enabled=True)
     ui.configure_item("lang_select", enabled=True)
     ui.configure_item("output_select", enabled=True)
+    setup_button_state()
 
 
 def show_details(sender, app_data, user_data):
