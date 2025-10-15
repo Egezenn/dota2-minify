@@ -277,7 +277,7 @@ def handle_non_default_path():
 
             if choice:
                 steam_dir = os.path.normpath(filedialog.askdirectory())
-                set_config("steam_dir")
+                set_config("steam_dir", steam_dir)
 
             else:
                 quit()
