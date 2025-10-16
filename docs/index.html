@@ -53,12 +53,26 @@
       <h1 class="h1 mb-3 fw-bold">Dota2 Minify</h1>
       <p class="mb-3">Dota2 Mod Patcher & Toolkit for everyone to use mods easily.</p>
       <div id="download-buttons" class="btn-container btn-group-lg mb-3">
-        <a id="latest-stable" class="btn btn-primary" href="https://github.com/egezenn/dota2-minify/releases/latest" role="button"> <ion-icon name="download-outline"></ion-icon> Download (Latest stable) </a>
+        <a id="latest-stable" class="btn btn-primary" href="#" role="button" data-bs-toggle="modal" data-bs-target="#downloadModal" data-release-type="stable"> <ion-icon name="download-outline"></ion-icon> Download (Latest stable) </a>
       </div>
       <div class="btn-container btn-group-lg">
         <a class="btn btn-info" href="https://github.com/Egezenn/dota2-minify#table-of-contents" role="button"> <ion-icon name="logo-github"></ion-icon> Information </a>
         <a class="btn btn-secondary" href="https://github.com/egezenn/dota2-minify" role="button"> <ion-icon name="logo-github"></ion-icon> GitHub </a>
         <a class="btn btn-info" href="https://discord.com/invite/2YDnqpbcKM" role="button"> <ion-icon name="logo-discord"></ion-icon> Discord </a>
+      </div>
+      <div class="modal fade" id="downloadModal" tabindex="-1" aria-labelledby="downloadModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content bg-">
+            <div class="modal-header">
+              <h5 class="modal-title" id="downloadModalLabel">Download for your platform</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body btn-container">
+              <a id="download-windows" class="btn btn-primary" href="#" role="button"><ion-icon name="logo-windows"></ion-icon> Windows</a>
+              <a id="download-linux" class="btn btn-primary" href="#" role="button"><ion-icon name="logo-tux"></ion-icon> Linux</a>
+            </div>
+          </div>
+        </div>
       </div>
     </main>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
@@ -66,6 +80,9 @@
       const cacheKey = "github-releases";
       const cachedData = JSON.parse(localStorage.getItem(cacheKey));
       const now = new Date().getTime();
+
+      window.latestStableRelease = null;
+      window.latestPrereleaseRelease = null;
 
       function processReleases(releases) {
         if (!releases || releases.length === 0) {
@@ -76,12 +93,14 @@
         const latestPrerelease = releases.find((release) => release.prerelease);
 
         if (latestStable) {
+          window.latestStableRelease = latestStable;
           const stableLink = document.getElementById("latest-stable");
           const version = latestStable.tag_name.replace("Minify-", "");
-          stableLink.innerHTML = `<ion-icon name="download-outline"></ion-icon> Download (Latest stable ${version})`;
+          stableLink.innerHTML = `<ion-icon name="download-outline"></ion-icon> Download (${version})`;
         }
 
         if (latestPrerelease) {
+          window.latestPrereleaseRelease = latestPrerelease;
           const downloadButtons = document.getElementById("download-buttons");
           let prereleaseLink = document.getElementById("latest-prerelease");
           if (!prereleaseLink) {
@@ -89,15 +108,17 @@
             prereleaseLink.id = "latest-prerelease";
             prereleaseLink.className = "btn btn-danger";
             prereleaseLink.role = "button";
+            prereleaseLink.setAttribute("data-bs-toggle", "modal");
+            prereleaseLink.setAttribute("data-bs-target", "#downloadModal");
             downloadButtons.appendChild(prereleaseLink);
           }
           const version = latestPrerelease.tag_name.replace("Minify-", "");
-          prereleaseLink.href = latestPrerelease.html_url;
-          prereleaseLink.innerHTML = `<ion-icon name="download-outline"></ion-icon> Download (Latest release candidate ${version})`;
+          prereleaseLink.innerHTML = `<ion-icon name="download-outline"></ion-icon> Download (${version})`;
+          prereleaseLink.setAttribute("data-release-type", "prerelease");
         }
       }
 
-      if (cachedData && now - cachedData.timestamp < 3600000) {
+      if (cachedData && now - cachedData.timestamp < 300000) {
         processReleases(cachedData.releases);
       } else {
         fetch("https://api.github.com/repos/egezenn/dota2-minify/releases")
@@ -107,12 +128,40 @@
             processReleases(releases);
           })
           .catch((error) => {
-            // If fetch fails, try to use cached data even if it's stale
             if (cachedData) {
               processReleases(cachedData.releases);
             }
             console.error("Error fetching releases:", error);
           });
+      }
+
+      const downloadModal = document.getElementById("downloadModal");
+      if (downloadModal) {
+        downloadModal.addEventListener("show.bs.modal", function (event) {
+          const button = event.relatedTarget;
+          const releaseType = button.getAttribute("data-release-type");
+
+          const modalTitle = downloadModal.querySelector(".modal-title");
+          const windowsLink = downloadModal.querySelector("#download-windows");
+          const linuxLink = downloadModal.querySelector("#download-linux");
+
+          let release;
+          if (releaseType === "stable") {
+            release = window.latestStableRelease;
+          } else {
+            release = window.latestPrereleaseRelease;
+          }
+
+          if (release) {
+            const version = release.tag_name.replace("Minify-", "");
+            const typeText = releaseType === "stable" ? "latest stable" : "latest release candidate";
+            modalTitle.textContent = `Download ${typeText} ${version}`;
+
+            const downloadUrlBase = `https://github.com/Egezenn/dota2-minify/releases/download/${release.tag_name}/${release.tag_name}`;
+            windowsLink.href = `${downloadUrlBase}-windows.zip`;
+            linuxLink.href = `${downloadUrlBase}-linux.zip`;
+          }
+        });
       }
     </script>
   </body>
