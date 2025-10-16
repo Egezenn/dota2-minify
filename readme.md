@@ -13,8 +13,6 @@
 ![downloads](https://img.shields.io/github/downloads/Egezenn/dota2-minify/total?style=for-the-badge)
 ![downloads-latest](https://img.shields.io/github/downloads/Egezenn/dota2-minify/latest/total?style=for-the-badge)
 
-**All in one smart patcher for Dota2 to install all types of mods**
-
 ![ss1](assets/screenshot-1.jpg)
 ![ss2](assets/screenshot-2.jpg)
 
