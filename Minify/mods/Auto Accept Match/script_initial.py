@@ -13,7 +13,6 @@ if minify_root not in sys.path:
 import dearpygui.dearpygui as ui
 
 import helper
-import gui
 
 
 def main():

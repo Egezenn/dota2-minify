@@ -16,7 +16,9 @@ import requests
 import helper
 import mpaths
 
-
+dota_itembuilds_path = os.path.join(
+    mpaths.steam_dir, "steamapps", "common", "dota 2 beta", "game", "dota", "itembuilds"
+)
 odg_latest = "https://github.com/Egezenn/OpenDotaGuides/releases/latest/download/itembuilds.zip"
 zip_path = os.path.join(current_dir, "files", "OpenDotaGuides.zip")
 temp_dump_path = os.path.join(current_dir, "files", "temp")
@@ -30,13 +32,13 @@ def main():
     if response.status_code == 200:
         with open(zip_path, "wb") as file:
             file.write(response.content)
-        os.makedirs(os.path.join(mpaths.dota_itembuilds_path, "bkup"), exist_ok=True)
+        os.makedirs(os.path.join(dota_itembuilds_path, "bkup"), exist_ok=True)
         try:
-            for name in os.listdir(mpaths.dota_itembuilds_path):
+            for name in os.listdir(dota_itembuilds_path):
                 if name != "bkup":
                     os.rename(
-                        os.path.join(mpaths.dota_itembuilds_path, name),
-                        os.path.join(mpaths.dota_itembuilds_path, "bkup", name),
+                        os.path.join(dota_itembuilds_path, name),
+                        os.path.join(dota_itembuilds_path, "bkup", name),
                     )
         except FileExistsError:
             pass  # backup was created and opendotaguides was replacing the guides already
@@ -44,7 +46,7 @@ def main():
         for file in os.listdir(temp_dump_path):
             shutil.copy(
                 os.path.join(temp_dump_path, file),
-                os.path.join(mpaths.dota_itembuilds_path, file),
+                os.path.join(dota_itembuilds_path, file),
             )
         helper.remove_path(temp_dump_path)
         os.remove(zip_path)

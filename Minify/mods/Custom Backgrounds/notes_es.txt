@@ -1,5 +1,5 @@
 Reemplaza el fondo del menú principal, el fondo de la vitrina del jugador y el fondo de la pantalla de selección.
 
-Si tienes herramientas de taller, puedes soltar una imagen en la carpeta mod y se utilizará como fondo.
+Puedes soltar una imagen en la carpeta de este mod y la utilizará como fondo.
 
-*Necesitas la utilidad "magick" en tu variable de ruta si tu imagen no es un png y necesita ser convertida.
+* Necesitas la utilidad "magick" en tu variable de ruta si tu imagen no es un png y necesita ser convertida.

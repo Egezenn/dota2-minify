@@ -1,0 +1,15 @@
+Lets you use Dota2ProTracker's hero grids. Your previous layouts will be saved in this mod's `backup` folder.
+
+* Uses the steam account with the lowest id if "steam_id" is not specified.
+* To use a different grid, specify "grid_type". By default "d2ptrating" is used.
+* Alternatively, download a hero grid of your choosing from https://dota2protracker.com/meta-hero-grids and drop into this mod's folder.
+
+`config.json`
+```json
+{
+  "steam_id": STEAM_ID3,
+  "grid_type": "matches" | "matches_wr" | "d2ptrating"
+  "steam_path": path_to_your_steam_installation_if_needed
+  "patch": "7.39e"
+}
+```

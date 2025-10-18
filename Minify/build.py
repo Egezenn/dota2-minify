@@ -472,6 +472,7 @@ def patcher(mod=None, pakname=None):
 
 def patch_seperate():
     # Mods that don't end up in config file will not be included (mods that are non-visual), fix?
+    # Mods that have nothing to do with the built pak, will also create a pak
     with open(mpaths.mods_config_dir) as file:
         mods = jsonc.load(file)
     i = 20

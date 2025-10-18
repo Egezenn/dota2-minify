@@ -7,26 +7,20 @@ Minify/logs
 Minify/mods/*
 
 ## In-repo mods
-!Minify/mods/Auto Accept Match
 !Minify/mods/#base
+!Minify/mods/Auto Accept Match
 !Minify/mods/Custom Backgrounds
-Minify/mods/Custom Backgrounds/*.png
-Minify/mods/Custom Backgrounds/*.jpg
-Minify/mods/Custom Backgrounds/*.jpeg
-Minify/mods/Custom Backgrounds/*.webp
-Minify/mods/Custom Backgrounds/*.mp4
-Minify/mods/Custom Backgrounds/*.webm
+!Minify/mods/D2PT Hero Grids
 !Minify/mods/Dark Terrain
 !Minify/mods/Minify Base Attacks
 !Minify/mods/Minify Spells & Items
 !Minify/mods/Misc Optimization
 !Minify/mods/Mute Ambient Sounds
-!Minify/mods/Mute Announcers
+!Minify/mods/Mute Default Announcer
 !Minify/mods/Mute Taunt Sounds
 !Minify/mods/Mute Voice Line Sounds
 !Minify/mods/OpenDotaGuides Guides
 !Minify/mods/Remove Foilage
-!Minify/mods/Revamp Hero Grid Layout
 !Minify/mods/Remove Hero Renders
 !Minify/mods/Remove Main Menu Background
 !Minify/mods/Remove Pings
@@ -36,12 +30,21 @@ Minify/mods/Custom Backgrounds/*.webm
 !Minify/mods/Remove Weather Effects
 !Minify/mods/Repopulate Unit Query HUD
 !Minify/mods/Reposition & Rescale HUD
+!Minify/mods/Revamp Hero Grid Layout
 !Minify/mods/Revert Ping Sounds
 !Minify/mods/Show NetWorth
 !Minify/mods/Stat Site Buttons
 !Minify/mods/Transparent HUD
 !Minify/mods/Tree Mod
 !Minify/mods/User Styles
+Minify/mods/Custom Backgrounds/*.jpeg
+Minify/mods/Custom Backgrounds/*.jpg
+Minify/mods/Custom Backgrounds/*.mp4
+Minify/mods/Custom Backgrounds/*.png
+Minify/mods/Custom Backgrounds/*.webm
+Minify/mods/Custom Backgrounds/*.webp
+Minify/mods/D2PT Hero Grids/*.json
+Minify/mods/D2PT Hero Grids/backup
 
 ## Dependencies
 Minify/bin/rescomproot*

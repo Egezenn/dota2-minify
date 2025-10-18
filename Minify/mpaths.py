@@ -143,6 +143,20 @@ def get_key_from_json_file_w_default(file, key, default):
         return default, {}
 
 
+def set_key_for_json_file(file, key, value):
+    try:
+        with open(file, "r+") as file:
+            data = jsonc.load(file)
+            data[key] = value
+            file.seek(0)
+            jsonc.dump(data, file, indent=2)
+            file.truncate()
+
+    except (FileNotFoundError, jsonc.JSONDecodeError):
+        with open(file, "w") as file:
+            jsonc.dump({key: value}, file, indent=2)
+
+
 def write_crashlog(exc_type=None, exc_value=None, exc_traceback=None, header=None, handled=True):
     path = log_crashlog if handled else log_unhandled
     with open(path, "w") as file:
@@ -464,7 +478,6 @@ dota2_executable = os.path.join(steam_dir, DOTA_EXECUTABLE_PATH)
 dota2_tools_executable = os.path.join(steam_dir, DOTA_TOOLS_EXECUTABLE_PATH)
 dota_game_pak_path = os.path.join(steam_dir, "steamapps", "common", "dota 2 beta", "game", "dota", "pak01_dir.vpk")
 dota_core_pak_path = os.path.join(steam_dir, "steamapps", "common", "dota 2 beta", "game", "core", "pak01_dir.vpk")
-dota_itembuilds_path = os.path.join(steam_dir, "steamapps", "common", "dota 2 beta", "game", "dota", "itembuilds")
 dota_map_path = os.path.join(steam_dir, "steamapps", "common", "dota 2 beta", "game", "dota", "maps", "dota.vpk")
 dota_resource_compiler_path = os.path.join(
     steam_dir, "steamapps", "common", "dota 2 beta", "game", "bin", "win64", "resourcecompiler.exe"

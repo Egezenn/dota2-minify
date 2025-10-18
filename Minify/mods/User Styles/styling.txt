@@ -23,3 +23,39 @@ panorama/styles/hud/hud_reborn @@ #inventory_neutral_level_up .NeutralLevelUpAva
 
 # remove dims & blurs
 !panorama/styles/popups/popup_manager @@ #BlurBackground, #DimBackground { visibility: collapse; }
+
+# expand pregame after selection ui
+panorama/styles/hud/dota_hud_pregame @@ #RightContainer { width: 1200px; margin-top: 100px; margin-right: 0px; } .StrategyTabContents { width: 1200px; }
+panorama/styles/ui_cosmetic_picker @@ DOTAHudPreGame .RightColumn { width: 1200px; }
+panorama/styles/dota_ui_guide_browser @@ #GuidesTab DOTAGuideBrowser { width: 1200px; } #GuideArea { width: 100%; margin-top: 0px; } #GuideTop { height: 560px; } .HeaderGroup { visibility: collapse; } #ItemBuild { height: 100%; } .SmallMode #RightColumn { width: 100%; }
+
+# unlist some friends sections
+panorama/styles/friend_menu @@ #GuildMembersOnline.Collapsed, #FriendsPending.Collapsed { visibility: collapse; }
+
+# #FriendsOpenParties.Collapsed
+# #FriendsPlayingDota.Collapsed
+# #GuildMembersOnline.Collapsed
+# #FriendsOnline.Collapsed
+# #FriendsOffline.Collapsed
+# #FriendsPending.Collapsed
+
+# change the color of item action menu backgrounds
+panorama/styles/hud/context_menu_inventory_item @@ .ShowMarkForSellNewBadge #MarkForSellNewBadge { visibility: collapse; } #Sell { background-color: #C92424; } #MarkForSell { background-color: #C95824; } #Disassemble { background-color: #9524C9; } #UnmarkForSell { background-color: #2487C9; } #CombineLock { background-color: #24C955; } #CombineUnlock { background-color: #24C9BB; }
+
+# #ShowInShop
+# #CombineLock
+# #CombineUnlock
+# #Sell
+# #Disassemble
+# #MarkForSell
+# #UnmarkForSell
+# #DropFromStash
+# #Alert
+# #MoveToStash
+# #DropAtFountain
+# #TeleportToNeutralStash
+# #DropImmediate
+# #ConsumeItem
+
+# make shop ui smaller, remove it's animation (may cause defects in grid listing)
+panorama/styles/hud/dota_hud_shop @@ DOTAHUDShop { transition-duration: 0s; ui-scale: 90%; }

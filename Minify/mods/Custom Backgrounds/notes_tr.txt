@@ -1,5 +1,5 @@
 Ana menü arka planını, oyuncu vitrin arka planını ve seçim ekranı arka planını değiştirir.
 
-Atölye araçlarınız varsa, mod klasörüne bir resim bırakabilirsiniz ve bu resim arka plan olarak kullanılacaktır.
+Bu modun klasörüne bir resim bırakırsanız mod bunu arka plan olarak kullanacaktır.
 
 *Görüntünüz png formatında değilse ve dönüştürülmesi gerekiyorsa, yol değişkeninizde “magick” yardımcı programına ihtiyacınız var.
