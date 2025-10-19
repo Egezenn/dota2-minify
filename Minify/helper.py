@@ -89,7 +89,7 @@ def get_available_localizations():
     localizations = sorted(list(sub_headers))
 
     for key, value in localization_data.items():
-        if key.endswith("var") == True:
+        if key.endswith("var"):
             localization_dict[key] = value["EN"]
 
 
@@ -106,7 +106,7 @@ def change_localization(init=False):
     global locale
     with open(mpaths.localization_file_dir, "r", encoding="utf-8") as localization_file:
         localization_data = jsonc.load(localization_file)
-    if init == True:
+    if init:
         if (locale := mpaths.get_config("locale", ui.get_value("lang_select"))) is not None:
             ui.configure_item("lang_select", default_value=locale)
         else:
@@ -115,8 +115,8 @@ def change_localization(init=False):
 
     for key, value in localization_data.items():
         locale = ui.get_value("lang_select")
-        if key.endswith("var") == True:
-            if ui.does_item_exist(key) == True:
+        if key.endswith("var"):
+            if ui.does_item_exist(key):
                 if locale in localization_data[key]:
                     localization_dict[key] = value[locale]
                     ui.set_value(key, value=value[locale])
@@ -127,13 +127,13 @@ def change_localization(init=False):
                     localization_dict[key] = value[locale]
                 else:
                     localization_dict[key] = value["EN"]
-        if ui.does_item_exist(key) == True:
-            if key.endswith("var") == False and ui.get_item_info(key).get("type") == "mvAppItemType::mvButton":
+        if ui.does_item_exist(key):
+            if not key.endswith("var") and ui.get_item_info(key).get("type") == "mvAppItemType::mvButton":
                 if locale in localization_data[key]:
                     ui.configure_item(key, label=value[locale])
                 else:  # default to english if the line isn't available on selected locale
                     ui.configure_item(key, label=value["EN"])
-            if key.endswith("var") == False and ui.get_item_info(key).get("type") == "mvAppItemType::mvText":
+            if not key.endswith("var") and ui.get_item_info(key).get("type") == "mvAppItemType::mvText":
                 if locale in localization_data[key]:
                     ui.configure_item(key, default_value=value[locale])
                 else:
@@ -192,13 +192,13 @@ def url_validator(url):
             content.append(line)
 
     except urllib.error.HTTPError:
-        mpaths.write_warning(f"Could not connect to -> " + url)
+        mpaths.write_warning(f"Could not connect to -> {url}")
 
     except ValueError:
-        mpaths.write_warning(f"Invalid URL -> " + url)
+        mpaths.write_warning(f"Invalid URL -> {url}")
 
     except urllib.error.URLError:
-        mpaths.write_warning(f"Invalid URL -> " + url)
+        mpaths.write_warning(f"Invalid URL -> {url}")
 
     return content
 

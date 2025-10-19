@@ -30,7 +30,6 @@ def main():
     if helper.workshop_installed and (img_available or vid_available):
         filepath = os.path.join(current_dir, file)
         if img_available:
-
             # reference to the file to compile to vtex
             xml_template = r"""<root>
     <Panel class="AddonLoadingRoot">

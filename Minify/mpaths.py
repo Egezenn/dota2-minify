@@ -171,14 +171,14 @@ def write_warning(header=None):
         open(log_warnings, "w").close()
 
     with open(log_warnings, "a") as file:
-        if not "NoneType: None" in traceback.format_exc():
+        if "NoneType: None" not in traceback.format_exc():
             (
-                file.write(f"{header}\n\n{traceback.format_exc()}\n{"-" * 50}\n\n")
+                file.write(f"{header}\n\n{traceback.format_exc()}\n{'-' * 50}\n\n")
                 if header
-                else file.write(traceback.format_exc() + f"\n{"-" * 50}\n\n")
+                else file.write(traceback.format_exc() + f"\n{'-' * 50}\n\n")
             )
         else:
-            file.write(f"{header}\n{"-" * 50}\n\n")
+            file.write(f"{header}\n{'-' * 50}\n\n")
 
 
 def unhandled_handler(handled=False):
@@ -391,7 +391,7 @@ try:
         raise Exception("Unsupported platform!")
 
 except:
-    write_crashlog(f"Unsupported configuration ({OS}/{MACHINE}/{ARCHITECTURE})\n{error}")
+    write_crashlog(f"Unsupported configuration ({OS}/{MACHINE}/{ARCHITECTURE})")
 
 
 # dota2 paths

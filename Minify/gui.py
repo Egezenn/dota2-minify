@@ -39,7 +39,7 @@ title = f"Minify {version}" if version else "Minify"
 
 def version_check():
     global version
-    if version and not "rc" in version:
+    if version and "rc" not in version:
         try:
             response = requests.get(mpaths.version_query)
             if response.status_code == 200 and response.text != "404: Not Found":
@@ -170,7 +170,7 @@ def create_checkboxes():
             enable_ticking = False if value else True
         except (KeyError, FileNotFoundError):
             try:
-                if checkboxes_state[mod] != None:
+                if checkboxes_state[mod] is not None:
                     value = checkboxes_state[mod]
                 else:
                     value = False
@@ -300,12 +300,12 @@ def open_github_link_and_close_minify():
 
 
 def drag_viewport(sender, app_data, user_data):
-    if ui.get_item_alias(ui.get_active_window()) != None and (
-        ui.is_item_hovered("primary_window") == True
-        or ui.is_item_hovered("terminal_window") == True
-        or ui.is_item_hovered("top_bar") == True
-        or ui.is_item_hovered("mod_menu") == True
-        or ui.get_item_alias(ui.get_active_window()).endswith("details_window_tag") == True
+    if ui.get_item_alias(ui.get_active_window()) is not None and (
+        ui.is_item_hovered("primary_window")
+        or ui.is_item_hovered("terminal_window")
+        or ui.is_item_hovered("top_bar")
+        or ui.is_item_hovered("mod_menu")
+        or ui.get_item_alias(ui.get_active_window()).endswith("details_window_tag")
     ):  # Note: If local pos [1] < *Height_of_top_bar is buggy)
         drag_deltas = app_data
         viewport_current_pos = ui.get_viewport_pos()

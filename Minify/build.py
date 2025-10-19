@@ -169,10 +169,6 @@ def patcher(mod=None, pakname=None):
                                 if line.startswith("#") or line == "":
                                     continue
 
-                                elif line.startswith("@@"):
-                                    for path in process_blacklist(index, line, folder, blank_file_extensions):
-                                        blacklist_data.append(path)
-
                                 elif line.startswith(">>") or line.startswith("**"):
                                     for path in process_blacklist_dir(index, line, folder):
                                         blacklist_data.append(path)
@@ -185,7 +181,7 @@ def patcher(mod=None, pakname=None):
                                         blacklist_data.append(line)
                                     else:
                                         mpaths.write_warning(
-                                            f"[Invalid Extension] '{line}' in 'mods/{folder}/blacklist.txt' [line: {index+1}] does not end in one of the valid extensions -> {blank_file_extensions}"
+                                            f"[Invalid Extension] '{line}' in 'mods/{folder}/blacklist.txt' [line: {index + 1}] does not end in one of the valid extensions -> {blank_file_extensions}"
                                         )
 
                         for exclusion in blacklist_data_exclusions:
@@ -228,7 +224,6 @@ def patcher(mod=None, pakname=None):
                     # --------------------------------- styling.txt --------------------------------- #
                     if os.path.exists(styling_txt):
                         with open(styling_txt) as file:
-
                             lines = file.readlines()
 
                             for line in lines:
@@ -590,7 +585,7 @@ def apply_xml_modifications(xml_file, modifications):
                         child = ET.fromstring(xml_snippet)
                         parent_elem.append(child)
                     except ET.ParseError:
-                        mpaths.write_warning(f"[XML ParseError] add_child")
+                        mpaths.write_warning("[XML ParseError] add_child")
                 else:
                     mpaths.write_warning(
                         f"[add_child] parent id '{parent_id}' not found in {os.path.basename(xml_file)}"
@@ -627,7 +622,7 @@ def apply_xml_modifications(xml_file, modifications):
                         idx = list(parent).index(target)
                         parent.insert(idx + 1, new_elem)
                     except ET.ParseError:
-                        mpaths.write_warning(f"[XML ParseError] insert_after")
+                        mpaths.write_warning("[XML ParseError] insert_after")
                 else:
                     mpaths.write_warning(
                         f"[insert_after] target id '{target_id}' not found in {os.path.basename(xml_file)}"
@@ -644,7 +639,7 @@ def apply_xml_modifications(xml_file, modifications):
                         idx = list(parent).index(target)
                         parent.insert(idx, new_elem)
                     except ET.ParseError:
-                        mpaths.write_warning(f"[XML ParseError] insert_before")
+                        mpaths.write_warning("[XML ParseError] insert_before")
                 else:
                     mpaths.write_warning(
                         f"[insert_before] target id '{target_id}' not found in {os.path.basename(xml_file)}"
@@ -714,38 +709,8 @@ def process_blacklist_dir(index, line, folder):
 
     if not data:
         mpaths.write_warning(
-            f"[Directory Not Found] Could not find '{line}' in pak01_dir.vpk -> mods/{folder}/blacklist.txt [line: {index+1}]"
+            f"[Directory Not Found] Could not find '{line}' in pak01_dir.vpk -> mods/{folder}/blacklist.txt [line: {index + 1}]"
         )
-
-    return data
-
-
-def process_blacklist(index, line, folder, blank_file_extensions):
-    data = []
-
-    if line.startswith("@@"):
-        content = urlValidator(line)
-
-        for line in content:
-
-            if line.startswith("#") or line == "":
-                continue
-
-            if line.startswith(">>") or line.startswith("**"):
-                for path in process_blacklist_dir(index, line, folder):
-                    data.append(path)
-                continue
-
-            try:
-                if line.endswith(tuple(blank_file_extensions)):
-                    data.append(line)
-                else:
-                    mpaths.write_warning(
-                        f"[Invalid Extension] '{line}' in 'mods/{folder}/blacklist.txt' [line: {index+1}] does not end in one of the valid extensions -> {blank_file_extensions}"
-                    )
-
-            except TypeError:
-                mpaths.write_warning("Invalid data type in line -> " + str(line))
 
     return data
 
