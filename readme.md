@@ -201,7 +201,6 @@ Syntax for this file starting from the line beginning is as follows:
 `>>`: Directories  
 `**`: RegExp patterns  
 `--`: Exclusions (for when you want to exclude specific files from bulk additions)  
-`@@`: Links to raw data
 
 After that with no blank spaces you put the path to the file you want to override.
 `path/to/file`
@@ -210,7 +209,6 @@ After that with no blank spaces you put the path to the file you want to overrid
 particles/base_attacks/ranged_goodguy_launch.vpcf_c
 >>particles/sprays
 **taunt.*\.vsnd_c
-@@link-to-url
 ```
 
 #### `styling.txt`

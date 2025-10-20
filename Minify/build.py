@@ -147,11 +147,6 @@ def patcher(mod=None, pakname=None):
 
                                 if line.startswith("#") or line == "":
                                     continue
-
-                                elif line.startswith("@@"):
-                                    for path in helper.url_validator(line):
-                                        styling_data.append(path)
-                                    continue
                                 else:
                                     styling_data.append(line)
 
@@ -778,7 +773,6 @@ def create_blank_mod():
 # `>>`: Directories
 # `**`: RegExp patterns
 # `--`: Exclusions (for when you want to exclude specific files from bulk additions)
-# `@@`: Links to raw data
 
 # After that with no blank spaces you put the path to the file you want to override.
 # path/to/file
@@ -786,7 +780,6 @@ def create_blank_mod():
 # particles/base_attacks/ranged_goodguy_launch.vpcf_c
 # >>particles/sprays
 # **taunt.*\.vsnd_c
-# @@link-to-url
 """
     styling_template = r"""# This file is a list of CSS paths and styling that will be appended to them.
 # By the nature of this method modifications done here may break the original XML or CSS that gets updated resulting in a bad layout.
@@ -801,7 +794,6 @@ def create_blank_mod():
 # `#`: Comments 
 # `!`: By default, the file is pulled from `dota 2 beta/game/dota/pak01_dir.vpk`.
 #      However to change this behavior and pull files from `dota 2 beta/game/core/pak01_dir.vpk`, you can use this.
-# `@@`: Links to raw data
 
 # path/to/file_without_extension @@ #example_id { property: value; }
 """

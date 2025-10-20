@@ -177,32 +177,6 @@ def change_output_path():
     mpaths.set_config("output_path", output_path)
 
 
-def url_validator(url):
-    content = []
-    url = url.replace("@@", "")
-
-    try:
-        for line in urlopen(url):
-            try:
-                line = line.decode("utf-8").split()
-                line = "".join(line)
-            except UnicodeDecodeError:
-                mpaths.write_warning("Cannot decode -> " + str(line) + " Make sure your URL is using a 'utf-8' charset")
-
-            content.append(line)
-
-    except urllib.error.HTTPError:
-        mpaths.write_warning(f"Could not connect to -> {url}")
-
-    except ValueError:
-        mpaths.write_warning(f"Invalid URL -> {url}")
-
-    except urllib.error.URLError:
-        mpaths.write_warning(f"Invalid URL -> {url}")
-
-    return content
-
-
 def open_thing(path, args=""):
     if path == mpaths.dota2_tools_executable:
         os.makedirs(mpaths.minify_dota_tools_required_path, exist_ok=True)
