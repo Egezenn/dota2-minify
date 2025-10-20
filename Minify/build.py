@@ -1,3 +1,5 @@
+from concurrent.futures import ThreadPoolExecutor
+import threading
 import csv
 import os
 import re
@@ -56,7 +58,6 @@ def patcher(mod=None, pakname=None):
         dota_extracts = []
         core_extracts = []
 
-        blacklist_data = []  # path from every blacklist.txt
         mod_menus = []
         styling_data = []  # path and style from every styling.txt
         styling_dictionary = {}
@@ -134,92 +135,7 @@ def patcher(mod=None, pakname=None):
 
                     # ------------------------------- blacklist.txt ------------------------------ #
                     if os.path.exists(blacklist_txt):
-                        global game_contents_file_init
-                        if not game_contents_file_init:
-                            # TODO: check pak01 hash, log it & run this only if it's different
-                            extract = subprocess.run(
-                                [
-                                    os.path.join(".", mpaths.s2v_executable),
-                                    "-i",
-                                    mpaths.dota_game_pak_path,
-                                    "-l",
-                                ],
-                                capture_output=True,
-                                text=True,
-                            )
-                            pattern = r"(.*) CRC:.*"
-                            replacement = r"\1"
-
-                            with open(
-                                os.path.join(mpaths.bin_dir, "gamepakcontents.txt"),
-                                "w",
-                            ) as file:
-                                for extract_line in extract.stdout.splitlines():
-                                    new_line = re.sub(pattern, replacement, extract_line.rstrip())
-                                    file.write(new_line + "\n")
-                            game_contents_file_init = True
-
-                        with open(blacklist_txt) as file:
-                            lines = file.readlines()
-                            blacklist_data_exclusions = []
-
-                            for index, line in enumerate(lines):
-                                line = line.strip()
-
-                                if line.startswith("#") or line == "":
-                                    continue
-
-                                elif line.startswith(">>") or line.startswith("**"):
-                                    for path in process_blacklist_dir(index, line, folder):
-                                        blacklist_data.append(path)
-
-                                elif line.startswith("--"):
-                                    blacklist_data_exclusions.append(line[2:])
-
-                                else:
-                                    if line.endswith(tuple(blank_file_extensions)):
-                                        blacklist_data.append(line)
-                                    else:
-                                        mpaths.write_warning(
-                                            f"[Invalid Extension] '{line}' in 'mods/{folder}/blacklist.txt' [line: {index + 1}] does not end in one of the valid extensions -> {blank_file_extensions}"
-                                        )
-
-                        for exclusion in blacklist_data_exclusions:
-                            if exclusion in blacklist_data:
-                                blacklist_data.remove(exclusion)
-                            else:
-                                print(
-                                    f"[Unnecessary Exclusion] '{exclusion}' in '{folder}' is not necessary, the mod doesn't include this file."
-                                )
-                        print(f"{folder}'s blacklist replaced {len(blacklist_data)} files!")
-
-                        for index, line in enumerate(blacklist_data):
-                            line = line.strip()
-                            path, extension = os.path.splitext(line)
-
-                            os.makedirs(
-                                os.path.join(
-                                    mpaths.minify_dota_compile_output_path,
-                                    os.path.dirname(path),
-                                ),
-                                exist_ok=True,
-                            )
-
-                            try:  # TODO: parallelize filecopy if and when blacklists get bigger
-                                shutil.copy(
-                                    os.path.join(mpaths.blank_files_dir, f"blank{extension}"),
-                                    os.path.join(
-                                        mpaths.minify_dota_compile_output_path,
-                                        path + extension,
-                                    ),
-                                )
-                            except FileNotFoundError:
-                                mpaths.write_warning(
-                                    f"[Invalid Extension] '{line}' in 'mods/{os.path.basename(mod_path)}/blacklist.txt' does not end in one of the valid extensions -> {blank_file_extensions}"
-                                )
-
-                        blacklist_data = []
-                        blacklist_data_exclusions = []
+                        process_blacklist(blacklist_txt, folder, blank_file_extensions)
 
                     # --------------------------------- styling.txt --------------------------------- #
                     if os.path.exists(styling_txt):
@@ -299,6 +215,31 @@ def patcher(mod=None, pakname=None):
             compiled = path.replace(".xml", ".vxml_c")
             dota_extracts.append(compiled)
 
+        global game_contents_file_init
+        if not game_contents_file_init:
+            # TODO: check pak01 hash, log it & run this only if it's different
+            extract = subprocess.run(
+                [
+                    os.path.join(".", mpaths.s2v_executable),
+                    "-i",
+                    mpaths.dota_game_pak_path,
+                    "-l",
+                ],
+                capture_output=True,
+                text=True,
+            )
+            pattern = r"(.*) CRC:.*"
+            replacement = r"\1"
+
+            with open(
+                os.path.join(mpaths.bin_dir, "gamepakcontents.txt"),
+                "w",
+            ) as file:
+                for extract_line in extract.stdout.splitlines():
+                    new_line = re.sub(pattern, replacement, extract_line.rstrip())
+                    file.write(new_line + "\n")
+            game_contents_file_init = True
+
         helper.add_text_to_terminal(helper.localization_dict["starting_extraction_text_var"])
         vpk_extractor(core_pak_contents, core_extracts)
         vpk_extractor(dota_pak_contents, dota_extracts)
@@ -328,8 +269,9 @@ def patcher(mod=None, pakname=None):
 
         if mod_menus:
             build_minify_menu(mod_menus)
-        for path, mods in xml_modifications.items():
-            apply_xml_modifications(os.path.join(mpaths.build_dir, path), mods)
+        with ThreadPoolExecutor() as executor:
+            xml_mod_args = [(os.path.join(mpaths.build_dir, path), mods) for path, mods in xml_modifications.items()]
+            executor.map(lambda p: apply_xml_modifications(*p), xml_mod_args)
         gui.bulk_exec_script("after_decompile")
         # ---------------------------------- STEP 3 ---------------------------------- #
         # ---------------------------- CSS resourcecompile --------------------------- #
@@ -339,11 +281,16 @@ def patcher(mod=None, pakname=None):
             "compiling_resourcecompiler_text_tag",
         )
 
-        for key, path_style in list(styling_dictionary.items()):
-            sanitized_path = path_style[0][1:] if path_style[0].startswith("!") else path_style[0]  # hhack
-            with open(os.path.join(mpaths.build_dir, f"{sanitized_path}.css"), "r+") as file:
-                if path_style[1] not in file.read():
-                    file.write("\n" + path_style[1])
+        styles_by_file = {}
+        for path, style in styling_dictionary.values():
+            sanitized_path = path[1:] if path.startswith("!") else path
+            css_file_path = os.path.join(mpaths.build_dir, f"{sanitized_path}.css")
+            if css_file_path not in styles_by_file:
+                styles_by_file[css_file_path] = []
+            styles_by_file[css_file_path].append(style)
+
+        with ThreadPoolExecutor() as executor:
+            executor.map(apply_styles_to_file, styles_by_file.items())
 
         shutil.copytree(
             mpaths.build_dir,
@@ -378,15 +325,8 @@ def patcher(mod=None, pakname=None):
 
         if replacer_source_extracts and replacer_targets and (len(replacer_source_extracts) == len(replacer_targets)):
             vpk_extractor(dota_pak_contents, replacer_source_extracts, mpaths.replace_dir)
-            for i, target in enumerate(replacer_targets):
-                helper.add_text_to_terminal(
-                    helper.localization_dict["replacing_terminal_text_var"].format(replacer_source_extracts[i], target)
-                )
-                os.makedirs(
-                    os.path.dirname(target_dir := os.path.join(mpaths.minify_dota_compile_output_path, target)),
-                    exist_ok=True,
-                )
-                shutil.copy(os.path.join(mpaths.replace_dir, replacer_source_extracts[i]), target_dir)
+            with ThreadPoolExecutor() as executor:
+                executor.map(process_replacer, replacer_targets)
 
         # ---------------------------------- STEP 6 ---------------------------------- #
         # -------- Create VPK from game folder and save into Minify directory -------- #
@@ -508,15 +448,27 @@ def uninstaller():
 def vpk_extractor(vpk_to_extract_from, paths, path_to_extract_to=mpaths.build_dir):
     if isinstance(paths, str):
         paths = [paths]
-    for path in paths:
+
+    vpk_lock = threading.Lock()
+
+    def extract_file(path):
         if not os.path.exists(full_path := os.path.join(path_to_extract_to, path)):  # extract files from VPK only once
             helper.add_text_to_terminal(
                 helper.localization_dict["extracting_terminal_text_var"].format(path), f"extracting_{path}_tag"
             )
             vpk_path = path.replace(os.sep, "/")
-            pakfile = vpk_to_extract_from.get_file(vpk_path)
-            os.makedirs(os.path.dirname(full_path), exist_ok=True)
-            pakfile.save(full_path)
+
+            with vpk_lock:
+                pakfile = vpk_to_extract_from.get_file(vpk_path)
+
+            if pakfile:
+                os.makedirs(os.path.dirname(full_path), exist_ok=True)
+                pakfile.save(full_path)
+            else:
+                mpaths.write_warning(f"File not found in VPK: {vpk_path}")
+
+    with ThreadPoolExecutor() as executor:
+        executor.map(extract_file, paths)
 
 
 def apply_xml_modifications(xml_file, modifications):
@@ -683,6 +635,94 @@ def build_minify_menu(menus):
             tree.write(settings_path)
     except ET.ParseError:
         mpaths.write_warning()
+
+
+def apply_styles_to_file(item):
+    file_path, styles_to_apply = item
+    with open(file_path, "r+") as file:
+        content = file.read()
+
+        unique_styles_to_add = []
+        for style in styles_to_apply:
+            if style not in content and style not in unique_styles_to_add:
+                unique_styles_to_add.append(style)
+
+        if unique_styles_to_add:
+            file.write("\n" + "\n".join(unique_styles_to_add))
+
+
+def process_blacklist(blacklist_txt, folder, blank_file_extensions):
+    with open(blacklist_txt) as file:
+        lines = file.readlines()
+        blacklist_data = []
+        blacklist_data_exclusions = []
+
+        for index, line in enumerate(lines):
+            line = line.strip()
+
+            if line.startswith("#") or line == "":
+                continue
+
+            elif line.startswith(">>") or line.startswith("**"):
+                for path in process_blacklist_dir(index, line, folder):
+                    blacklist_data.append(path)
+
+            elif line.startswith("--"):
+                blacklist_data_exclusions.append(line[2:])
+
+            else:
+                if line.endswith(tuple(blank_file_extensions)):
+                    blacklist_data.append(line)
+                else:
+                    mpaths.write_warning(
+                        f"[Invalid Extension] '{line}' in 'mods/{folder}/blacklist.txt' [line: {index + 1}] does not end in one of the valid extensions -> {blank_file_extensions}"
+                    )
+
+    for exclusion in blacklist_data_exclusions:
+        if exclusion in blacklist_data:
+            blacklist_data.remove(exclusion)
+        else:
+            print(
+                f"[Unnecessary Exclusion] '{exclusion}' in '{folder}' is not necessary, the mod doesn't include this file."
+            )
+    print(f"{folder}'s blacklist replaced {len(blacklist_data)} files!")
+
+    def copy_blank_file(line):
+        line = line.strip()
+        path, extension = os.path.splitext(line)
+
+        os.makedirs(
+            os.path.join(
+                mpaths.minify_dota_compile_output_path,
+                os.path.dirname(path),
+            ),
+            exist_ok=True,
+        )
+
+        try:
+            shutil.copy(
+                os.path.join(mpaths.blank_files_dir, f"blank{extension}"),
+                os.path.join(
+                    mpaths.minify_dota_compile_output_path,
+                    path + extension,
+                ),
+            )
+        except FileNotFoundError:
+            mpaths.write_warning(
+                f"[Invalid Extension] '{line}' in 'mods/{os.path.basename(folder)}/blacklist.txt' does not end in one of the valid extensions -> {blank_file_extensions}"
+            )
+
+    with ThreadPoolExecutor() as executor:
+        executor.map(copy_blank_file, blacklist_data)
+
+
+def process_replacer(target):
+    helper.add_text_to_terminal(helper.localization_dict["replacing_terminal_text_var"].format(target, target))
+    os.makedirs(
+        os.path.dirname(target_dir := os.path.join(mpaths.minify_dota_compile_output_path, target)),
+        exist_ok=True,
+    )
+    shutil.copy(os.path.join(mpaths.replace_dir, target), target_dir)
 
 
 def process_blacklist_dir(index, line, folder):
