@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Dota2 Minify - Community Mods</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" type="image/x-icon" href="https://github.com/Egezenn/dota2-minify/raw/main/Minify/bin/images/favicon.ico" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous" />
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+    <style>
+      body {
+        padding-top: 2rem;
+        padding-bottom: 2rem;
+      }
+      .mod-buttons {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1rem;
+      }
+      #notes-content img {
+        max-width: 100%;
+        height: auto;
+        border-radius: 12px;
+      }
+    </style>
+  </head>
+  <body>
+    <main class="container">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h1 class="h1 fw-bold">Community Mods</h1>
+        <a class="btn btn-primary" href="index.html" role="button"><ion-icon name="arrow-back-outline"></ion-icon> Back</a>
+      </div>
+      <div id="mod-buttons" class="mod-buttons"></div>
+
+      <div class="modal fade" id="notesModal" tabindex="-1" aria-labelledby="notesModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="notesModalLabel">Mod Notes</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <div id="notes-content"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+    <script>
+      const modButtonsContainer = document.getElementById("mod-buttons");
+      const notesModal = new bootstrap.Modal(document.getElementById("notesModal"));
+      const notesModalLabel = document.getElementById("notesModalLabel");
+      const notesContent = document.getElementById("notes-content");
+
+      const cacheKey = "github-community-mods";
+      const cachedData = JSON.parse(localStorage.getItem(cacheKey));
+      const now = new Date().getTime();
+
+      function processMods(mods) {
+        mods.forEach((mod) => {
+          const button = document.createElement("button");
+          button.className = "btn btn-info";
+          button.textContent = mod;
+          button.addEventListener("click", () => {
+            const notesCacheKey = `community-mod-notes-${mod}`;
+            const cachedNotes = JSON.parse(sessionStorage.getItem(notesCacheKey));
+            const now = new Date().getTime();
+
+            notesModalLabel.textContent = `${mod} Notes`;
+            notesModal.show();
+
+            if (cachedNotes && now - cachedNotes.timestamp < 60000) {
+              notesContent.innerHTML = cachedNotes.content;
+            } else {
+              const notesUrl = `https://raw.githubusercontent.com/Egezenn/dota2-minify-community/main/${encodeURIComponent(mod)}/notes.html`;
+              notesContent.innerHTML = "<p>Loading...</p>";
+
+              fetch(notesUrl)
+                .then(response => {
+                  if (!response.ok) {
+                    throw new Error("Network response was not ok");
+                  }
+                  return response.text();
+                })
+                .then(text => {
+                  const tempDiv = document.createElement('div');
+                  tempDiv.innerHTML = text;
+                  const images = tempDiv.getElementsByTagName('img');
+                  for (let i = 0; i < images.length; i++) {
+                    const img = images[i];
+                    const src = img.getAttribute('src');
+                    if (src && !src.startsWith('http')) {
+                      img.src = `https://raw.githubusercontent.com/Egezenn/dota2-minify-community/main/${encodeURIComponent(mod)}/${src}`;
+                    }
+                  }
+                  notesContent.innerHTML = tempDiv.innerHTML;
+                  sessionStorage.setItem(notesCacheKey, JSON.stringify({ timestamp: now, content: tempDiv.innerHTML }));
+                })
+                .catch(error => {
+                  notesContent.innerHTML = "<p>Could not load notes. The file might not exist for this mod.</p>";
+                  console.error("Error fetching notes:", error);
+                });
+            }
+          });
+          modButtonsContainer.appendChild(button);
+        });
+      }
+
+      if (cachedData && now - cachedData.timestamp < 60000) {
+        processMods(cachedData.mods);
+      } else {
+        fetch("https://api.github.com/repos/egezenn/dota2-minify-community/contents/")
+          .then((response) => response.json())
+          .then((data) => {
+            const mods = data.filter((item) => item.type === "dir").map((item) => item.name);
+            localStorage.setItem(cacheKey, JSON.stringify({ timestamp: now, mods: mods }));
+            processMods(mods);
+          })
+          .catch((error) => {
+            if (cachedData) {
+              processMods(cachedData.mods);
+            }
+            modButtonsContainer.textContent = "Could not load mods list.";
+            console.error("Error fetching mods list:", error);
+          });
+      }
+    </script>
+  </body>
+</html>

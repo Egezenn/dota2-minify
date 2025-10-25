@@ -1,3 +1,3 @@
 Simplifies every spell and item in the game.
 
-* Only modifies default spells
+* Mostly modifies default spells.

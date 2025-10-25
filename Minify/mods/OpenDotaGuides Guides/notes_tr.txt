@@ -2,4 +2,4 @@ Varsayılan rehberleri OpenDotaGuides rehberleri ile değiştirir
 
 * Oyun içinde görmek için varsayılan rehberlerin seçili olması gereklidir
 
-- Kaynak: https://github.com/Egezenn/OpenDotaGuides/releases/latest
+Kaynak: https://github.com/Egezenn/OpenDotaGuides/releases/latest

@@ -1,4 +1,1 @@
-- Tüm DotaPlus Kahraman sohbet çarkı seslerini kaldırır
-https://liquipedia.net/dota2/Chat_Wheel/Dota_Plus
-- Diğer tüm DotaPlus sohbet çarkı seslerini kaldırır
-- Savaş geçişlerinden tüm ses hatlarını kaldırır
+Tüm söylemlerin seslerini susturur.

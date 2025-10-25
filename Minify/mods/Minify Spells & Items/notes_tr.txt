@@ -1,3 +1,3 @@
 Oyundaki her büyüyü ve eşyayı basitleştirir.
 
-* Sadece varsayılan büyüleri değiştirir
+* Çoğunlukla varsayılan büyüleri değiştirir.
