@@ -200,6 +200,7 @@ Syntax for this file starting from the line beginning is as follows:
 `#`: Comments  
 `>>`: Directories  
 `**`: RegExp patterns  
+`*-`: RegExp patterns for exclusion  
 `--`: Exclusions (for when you want to exclude specific files from bulk additions)  
 
 After that with no blank spaces you put the path to the file you want to override.

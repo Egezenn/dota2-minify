@@ -2,4 +2,4 @@ Replaces main menu background, player showcase background and pick screen backgr
 
 You can drop an image to this mod's folder and it will use that for the background.
 
-You need "magick" utility on your path variable if your image isn't a png and needs to be converted.
+You need `magick` utility on your path variable if your image isn't a png and needs to be converted.

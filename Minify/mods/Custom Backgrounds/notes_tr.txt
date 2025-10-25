@@ -2,4 +2,4 @@ Ana menü arka planını, oyuncu vitrin arka planını ve seçim ekranı arka pl
 
 Bu modun klasörüne bir resim bırakırsanız mod bunu arka plan olarak kullanacaktır.
 
-*Görüntünüz png formatında değilse ve dönüştürülmesi gerekiyorsa, yol değişkeninizde “magick” yardımcı programına ihtiyacınız var.
+* Kullanacağınız resim png formatında değilse ve dönüştürülmesi gerekiyorsa, yol değişkeninizde `magick` yardımcı programına ihtiyacınız var.
