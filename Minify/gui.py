@@ -163,21 +163,15 @@ def create_checkboxes():
 
     for mod in mpaths.visually_available_mods:
         mod_path = os.path.join(mpaths.mods_dir, mod)
-        try:
-            with open(os.path.join(mod_path, "modcfg.json")) as cfg:
-                mod_cfg = jsonc.load(cfg)
-            value = mod_cfg["always"]
-            enable_ticking = False if value else True
-        except (KeyError, FileNotFoundError):
-            try:
-                if checkboxes_state[mod] is not None:
-                    value = checkboxes_state[mod]
-                else:
-                    value = False
-                enable_ticking = True
-            except KeyError:
-                value = False
-                enable_ticking = True
+        mod_cfg_path = os.path.join(mod_path, "modcfg.json")
+        always_val, _ = mpaths.get_key_from_json_file_w_default(mod_cfg_path, "always", None)
+
+        if always_val:
+            enable_ticking = False
+            value = True
+        else:
+            enable_ticking = True
+            value = checkboxes_state[mod]
 
         ui.add_group(parent="mod_menu", tag=f"{mod}_group_tag", horizontal=True, width=300)
         # enabled=False default_value=True doesn't show up as ticked
