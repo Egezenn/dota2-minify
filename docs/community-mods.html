@@ -29,7 +29,7 @@
     <main class="container">
       <div class="d-flex justify-content-between align-items-center mb-3">
         <h1 class="h1 fw-bold">Community Mods</h1>
-        <a class="btn btn-primary" href="index.html" role="button"><ion-icon name="arrow-back-outline"></ion-icon> Back</a>
+        <a class="btn btn-primary" href="https://egezenn.github.io/dota2-minify" role="button"><ion-icon name="arrow-back-outline"></ion-icon> Back</a>
       </div>
       <div id="mod-buttons" class="mod-buttons"></div>
 
@@ -78,27 +78,27 @@
               notesContent.innerHTML = "<p>Loading...</p>";
 
               fetch(notesUrl)
-                .then(response => {
+                .then((response) => {
                   if (!response.ok) {
                     throw new Error("Network response was not ok");
                   }
                   return response.text();
                 })
-                .then(text => {
-                  const tempDiv = document.createElement('div');
+                .then((text) => {
+                  const tempDiv = document.createElement("div");
                   tempDiv.innerHTML = text;
-                  const images = tempDiv.getElementsByTagName('img');
+                  const images = tempDiv.getElementsByTagName("img");
                   for (let i = 0; i < images.length; i++) {
                     const img = images[i];
-                    const src = img.getAttribute('src');
-                    if (src && !src.startsWith('http')) {
+                    const src = img.getAttribute("src");
+                    if (src && !src.startsWith("http")) {
                       img.src = `https://raw.githubusercontent.com/Egezenn/dota2-minify-community/main/${encodeURIComponent(mod)}/${src}`;
                     }
                   }
                   notesContent.innerHTML = tempDiv.innerHTML;
                   sessionStorage.setItem(notesCacheKey, JSON.stringify({ timestamp: now, content: tempDiv.innerHTML }));
                 })
-                .catch(error => {
+                .catch((error) => {
                   notesContent.innerHTML = "<p>Could not load notes. The file might not exist for this mod.</p>";
                   console.error("Error fetching notes:", error);
                 });
