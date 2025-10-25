@@ -739,20 +739,9 @@ def bulk_exec_script(order_name):
     bulk_name = f"script_{order_name}.py"
     for root, _, files in os.walk(mpaths.mods_dir):
         if bulk_name in files and not os.path.basename(root).startswith("_"):
-            # TODO implement load with defaults
-            try:
-                with open(os.path.join(root, "modcfg.json")) as file:
-                    cfg = jsonc.load(file)
-            except FileNotFoundError:
-                cfg = {}
-            try:
-                always = cfg["always"]
-            except KeyError:
-                always = False
-            try:
-                visual = cfg["visual"]
-            except KeyError:
-                visual = True
+            mod_cfg_path = os.path.join(root, "modcfg.json")
+            always, cfg = mpaths.get_key_from_json_file_w_default(mod_cfg_path, "always", False)
+            visual = mpaths.get_key_from_dict_w_default(cfg, "visual", True)
 
             # TODO: pull the file from pak66 to check if it was enabled for uninstallers
             if always or order_name in ["initial", "uninstall"] or (visual and ui.get_value(os.path.basename(root))):
@@ -763,3 +752,4 @@ def tick_batch(state: bool):
     for box in checkboxes:
         ui.set_value(box, state)
     save_checkbox_state()
+    setup_button_state()

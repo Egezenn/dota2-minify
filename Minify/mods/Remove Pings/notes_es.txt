@@ -1,5 +1,1 @@
-Elimina todos los pings
-
-Si también quieres eliminar los pings del minimapa, abre la consola y escribe esto:
-dota_minimap_ping_duration 0
-dota_minimap_ping_tag_duration 0
+Elimina todas las partículas de ping y los sonidos, excepto el predeterminado.

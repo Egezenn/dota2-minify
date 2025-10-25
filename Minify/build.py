@@ -662,6 +662,10 @@ def process_blacklist(blacklist_txt, folder, blank_file_extensions):
                 for path in process_blacklist_dir(index, line, folder):
                     blacklist_data.append(path)
 
+            elif line.startswith("*-"):
+                for path in process_blacklist_dir(index, line, folder):
+                    blacklist_data_exclusions.append(path)
+
             elif line.startswith("--"):
                 blacklist_data_exclusions.append(line[2:])
 
@@ -723,7 +727,7 @@ def process_replacer(target):
 def process_blacklist_dir(index, line, folder):
     data = []
 
-    line = line[2:] if line.startswith("**") else line
+    line = line[2:] if line.startswith("**") or line.startswith("*-") else line
     line = line + "/" if line.startswith(">>") else line
     line = line[2:] if line.startswith(">>") else line
 

@@ -5,8 +5,6 @@ import shutil
 import stat
 import subprocess
 import time
-import urllib.error
-from urllib.request import urlopen
 import webbrowser
 
 import dearpygui.dearpygui as ui
