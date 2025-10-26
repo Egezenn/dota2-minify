@@ -171,7 +171,7 @@ def create_checkboxes():
             value = True
         else:
             enable_ticking = True
-            value = checkboxes_state[mod]
+            value = mpaths.get_key_from_dict_w_default(checkboxes_state, mod, False)
 
         ui.add_group(parent="mod_menu", tag=f"{mod}_group_tag", horizontal=True, width=300)
         # enabled=False default_value=True doesn't show up as ticked
