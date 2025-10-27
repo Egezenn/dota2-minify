@@ -326,67 +326,55 @@ handle_non_default_path()
 version_query = "https://raw.githubusercontent.com/Egezenn/dota2-minify/refs/heads/main/version"
 discord = "https://discord.com/invite/2YDnqpbcKM"
 latest_release = "https://github.com/Egezenn/dota2-minify/releases"
+s2v_cli_ver = "15.0"
+rg_ver = "15.1.0"
 
 try:
     if OS == "Windows":
         s2v_executable = "Source2Viewer-CLI.exe"
-        s2v_latest = (
-            "https://github.com/ValveResourceFormat/ValveResourceFormat/releases/download/15.0/cli-windows-x64.zip"
-        )
+        s2v_latest = f"https://github.com/ValveResourceFormat/ValveResourceFormat/releases/download/{s2v_cli_ver}/cli-windows-x64.zip"
 
         rg_executable = "rg.exe"
         if ARCHITECTURE == "64bit":
-            rg_latest = "https://github.com/BurntSushi/ripgrep/releases/download/14.1.1/ripgrep-14.1.1-x86_64-pc-windows-msvc.zip"
+            rg_latest = f"https://github.com/BurntSushi/ripgrep/releases/download/{rg_ver}/ripgrep-{rg_ver}-x86_64-pc-windows-msvc.zip"
         else:
-            rg_latest = (
-                "https://github.com/BurntSushi/ripgrep/releases/download/14.1.1/ripgrep-14.1.1-i686-pc-windows-msvc.zip"
-            )
+            rg_latest = f"https://github.com/BurntSushi/ripgrep/releases/download/{rg_ver}/ripgrep-{rg_ver}-i686-pc-windows-msvc.zip"
 
     elif OS == "Linux":
         s2v_executable = "Source2Viewer-CLI"
         if MACHINE in ["aarch64", "arm64"]:
-            s2v_latest = (
-                "https://github.com/ValveResourceFormat/ValveResourceFormat/releases/download/15.0/cli-linux-arm64.zip"
-            )
+            s2v_latest = f"https://github.com/ValveResourceFormat/ValveResourceFormat/releases/download/{s2v_cli_ver}/cli-linux-arm64.zip"
         elif MACHINE in ["armv7l", "arm"]:
-            s2v_latest = (
-                "https://github.com/ValveResourceFormat/ValveResourceFormat/releases/download/15.0/cli-linux-arm.zip"
-            )
+            s2v_latest = f"https://github.com/ValveResourceFormat/ValveResourceFormat/releases/download/{s2v_cli_ver}/cli-linux-arm.zip"
         elif ARCHITECTURE == "64bit":
-            s2v_latest = (
-                "https://github.com/ValveResourceFormat/ValveResourceFormat/releases/download/15.0/cli-linux-x64.zip"
-            )
+            s2v_latest = f"https://github.com/ValveResourceFormat/ValveResourceFormat/releases/download/{s2v_cli_ver}/cli-linux-x64.zip"
 
         rg_executable = "rg"
         if MACHINE in ["aarch64", "arm64"]:
-            rg_latest = "https://github.com/BurntSushi/ripgrep/releases/download/14.1.1/ripgrep-14.1.1-aarch64-unknown-linux-gnu.tar.gz"
+            rg_latest = f"https://github.com/BurntSushi/ripgrep/releases/download/{rg_ver}/ripgrep-{rg_ver}-aarch64-unknown-linux-gnu.tar.gz"
         elif MACHINE in ["armv7l", "arm"]:
-            rg_latest = "https://github.com/BurntSushi/ripgrep/releases/download/14.1.1/ripgrep-14.1.1-armv7-unknown-linux-gnueabihf.tar.gz"
+            rg_latest = f"https://github.com/BurntSushi/ripgrep/releases/download/{rg_ver}/ripgrep-{rg_ver}-armv7-unknown-linux-gnueabihf.tar.gz"
         elif MACHINE == "ppc64":  # unlikely
-            rg_latest = "https://github.com/BurntSushi/ripgrep/releases/download/14.1.1/ripgrep-14.1.1-powerpc64-unknown-linux-gnu.tar.gz"
+            rg_latest = f"https://github.com/BurntSushi/ripgrep/releases/download/{rg_ver}/ripgrep-{rg_ver}-powerpc64-unknown-linux-gnu.tar.gz"
         elif MACHINE == "s390x":  # unlikely
-            rg_latest = "https://github.com/BurntSushi/ripgrep/releases/download/14.1.1/ripgrep-14.1.1-s390x-unknown-linux-gnu.tar.gz"
+            rg_latest = f"https://github.com/BurntSushi/ripgrep/releases/download/{rg_ver}/ripgrep-{rg_ver}-s390x-unknown-linux-gnu.tar.gz"
         elif ARCHITECTURE == "64bit":
-            rg_latest = "https://github.com/BurntSushi/ripgrep/releases/download/14.1.1/ripgrep-14.1.1-x86_64-unknown-linux-musl.tar.gz"
+            rg_latest = f"https://github.com/BurntSushi/ripgrep/releases/download/{rg_ver}/ripgrep-{rg_ver}-x86_64-unknown-linux-musl.tar.gz"
         elif ARCHITECTURE == "32bit":
-            rg_latest = "https://github.com/BurntSushi/ripgrep/releases/download/14.1.1/ripgrep-14.1.1-i686-unknown-linux-gnu.tar.gz"
+            rg_latest = f"https://github.com/BurntSushi/ripgrep/releases/download/{rg_ver}/ripgrep-{rg_ver}-i686-unknown-linux-gnu.tar.gz"
 
     elif OS == "Darwin":
         s2v_executable = "Source2Viewer-CLI"
         if MACHINE in ["aarch64", "arm64"]:
-            s2v_latest = (
-                "https://github.com/ValveResourceFormat/ValveResourceFormat/releases/download/15.0/cli-macos-arm64.zip"
-            )
+            s2v_latest = f"https://github.com/ValveResourceFormat/ValveResourceFormat/releases/download/{s2v_cli_ver}/cli-macos-arm64.zip"
         elif ARCHITECTURE == "64bit":
-            s2v_latest = (
-                "https://github.com/ValveResourceFormat/ValveResourceFormat/releases/download/15.0/cli-macos-x64.zip"
-            )
+            s2v_latest = f"https://github.com/ValveResourceFormat/ValveResourceFormat/releases/download/{s2v_cli_ver}/cli-macos-x64.zip"
 
         rg_executable = "rg"
         if MACHINE in ["aarch64", "arm64"]:
-            rg_latest = "https://github.com/BurntSushi/ripgrep/releases/download/14.1.1/ripgrep-14.1.1-aarch64-apple-darwin.tar.gz"
+            rg_latest = f"https://github.com/BurntSushi/ripgrep/releases/download/{rg_ver}/ripgrep-{rg_ver}-aarch64-apple-darwin.tar.gz"
         else:
-            rg_latest = "https://github.com/BurntSushi/ripgrep/releases/download/14.1.1/ripgrep-14.1.1-x86_64-apple-darwin.tar.gz"
+            rg_latest = f"https://github.com/BurntSushi/ripgrep/releases/download/{rg_ver}/ripgrep-{rg_ver}-x86_64-apple-darwin.tar.gz"
     else:
         raise Exception("Unsupported platform!")
 
