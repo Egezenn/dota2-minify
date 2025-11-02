@@ -25,6 +25,12 @@ temp_dump_path = os.path.join(current_dir, "files", "temp")
 
 
 def main():
+    try:
+        if helper.workshop_installed:
+            shutil.copy(os.path.join(current_dir, "_styling.txt"), os.path.join(current_dir, "styling.txt"))
+    except:
+        pass
+
     if os.path.exists(zip_path):
         os.remove(zip_path)
 
@@ -36,7 +42,7 @@ def main():
         try:
             for name in os.listdir(dota_itembuilds_path):
                 if name != "bkup":
-                    os.rename(
+                    helper.move_path(
                         os.path.join(dota_itembuilds_path, name),
                         os.path.join(dota_itembuilds_path, "bkup", name),
                     )

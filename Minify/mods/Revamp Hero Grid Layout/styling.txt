@@ -1,6 +1,6 @@
 !panorama/styles/tooltips/tooltip_base @@ DOTATooltipHeroCard#HeroCardTooltip.TooltipVisible { visibility: collapse; }
 panorama/styles/dashboard_page_heroes @@ #HeroGrid { margin-top: 50px; ui-scale: 145%;} DOTAHeroesPage#DOTAHeroesPage { margin-top: 60px; }
-panorama/styles/hero_grid_new @@ .HeroCard #HeroImage { margin: 0px 4px 4px 0px; } .HeroCard { transition-duration: 0s; } #HeroBadgeStatus { visibility: collapse; } DOTAHeroGridNew#HeroGrid { height: 600px; }
+panorama/styles/hero_grid_new @@ .HeroCard #HeroImage { margin: 0px 4px 4px 0px; } .HeroCard { transition-duration: 0s; } #HeroBadgeStatus { visibility: collapse; } DOTAHeroGridNew#HeroGrid { height: 600px; } #GridCategories { overflow: clip scroll; } .RolesOverlayBranding { visibility: collapse; } #RolesOverlayRankTiers { background-color: #00000080; } .ConfigPreset_Roles.ConfigStatus_Loaded #RolesOverlay { transform: translateY(-490px); } #StickersCategory { visibility: collapse; }
 panorama/styles/hud/dota_hud_pregame @@ #MainHeroPickScreenContents { margin: 0; animation-duration: 0s; } #TitlesContainer { visibility: collapse; } #HeroPickLeftColumn { ui-scale: 125%; margin-right: 377px; } #HeroGrid { margin-left: 10px; } DOTAHeroGridNew#HeroGrid { width:100%; }
 panorama/styles/hud/hud_simple_hero_description @@ .SimilarHeroes { visibility: collapse; }
 panorama/styles/tooltips/tooltip_hero_card @@ #MainContents { visibility: collapse; }

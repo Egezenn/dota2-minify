@@ -270,6 +270,39 @@ def select_compile_dir(sender, app_data):
     compile_path = app_data["current_path"]
 
 
+def move_path(src, dst):
+    "Superset of `shutil.move`, `os.rename` to handle permissions for moving and renaming."
+    try:
+        shutil.move(src, dst)
+    except PermissionError:
+        try:
+            paths_to_chmod = []
+            if os.path.exists(src):
+                paths_to_chmod.append(src)
+            if os.path.exists(dst):
+                paths_to_chmod.append(dst)
+
+            for path in paths_to_chmod:
+                if os.path.isdir(path):
+                    for dir, _, filenames in os.walk(path):
+                        current_dir_mode = os.stat(dir).st_mode
+                        os.chmod(dir, current_dir_mode | stat.S_IWUSR)
+
+                        for filename in filenames:
+                            filepath = os.path.join(dir, filename)
+                            current_file_mode = os.stat(filepath).st_mode
+                            os.chmod(filepath, current_file_mode | stat.S_IWUSR)
+                else:
+                    current_file_mode = os.stat(path).st_mode
+                    os.chmod(path, current_file_mode | stat.S_IWUSR)
+
+            return move_path(src, dst)
+        except:
+            mpaths.write_warning()
+    except FileNotFoundError:
+        print(f"Skipped move of: {src} (not found)")
+
+
 def remove_path(*paths):
     "Superset of `shutil.rmtree` to handle permissions and take in list of paths and also delete files."
     try:

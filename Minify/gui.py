@@ -112,7 +112,7 @@ def download_dependencies():
                 else:
                     with tarfile.open(archive_path, "r:gz") as tar:
                         tar.extractall()
-                os.rename(
+                helper.move_path(
                     os.path.join(archive_name, mpaths.rg_executable),
                     mpaths.rg_executable,
                 )

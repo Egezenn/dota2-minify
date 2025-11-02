@@ -27,7 +27,7 @@ def main():
                     if name != "bkup":
                         os.remove(os.path.join(dota_itembuilds_path, name))
                 for name in os.listdir(os.path.join(dota_itembuilds_path, "bkup")):
-                    os.rename(
+                    helper.move_path(
                         os.path.join(dota_itembuilds_path, "bkup", name),
                         os.path.join(dota_itembuilds_path, name),
                     )

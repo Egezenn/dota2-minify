@@ -11,6 +11,7 @@ os.chdir(minify_root)
 if minify_root not in sys.path:
     sys.path.insert(0, minify_root)
 
+import helper
 import mpaths
 
 import requests
@@ -66,18 +67,24 @@ def main():
             mpaths.set_key_for_json_file(config_path, "patch_name", patch_name)
 
             if found_id and os.path.isdir(dest_path := os.path.join(id_to_use_path, "570", "remote", "cfg")):
-                formatted_time = datetime.fromtimestamp(
-                    os.path.getmtime(original_grid_path := os.path.join(dest_path, "hero_grid_config.json"))
-                ).strftime("%Y-%m-%d_%H%M")
+                original_grid_path = os.path.join(dest_path, "hero_grid_config.json")
                 if not os.path.exists(backup_dir := os.path.join(current_dir, "backup")):
                     os.mkdir(backup_dir)
-                # TODO detect grids from D2PT to not backup them?
-                # user could be using a merged one though
-                os.rename(
-                    original_grid_path,
-                    os.path.join(backup_dir, f"{formatted_time}.json"),
-                )
+                try:
+                    formatted_time = datetime.fromtimestamp(os.path.getmtime(original_grid_path)).strftime(
+                        "%Y-%m-%d_%H%M"
+                    )
+                    helper.move_path(
+                        original_grid_path,
+                        os.path.join(backup_dir, f"{formatted_time}.json"),
+                    )
+                except FileNotFoundError:
+                    pass
                 shutil.copy(grid_path, os.path.join(dest_path, "hero_grid_config.json"))
+            else:
+                mpaths.write_warning(
+                    f"The first account found in {userdata_path} doesn't have a hero grid or an account couldn't be found. Manually set your `steam_id` for D2PT Hero Grids."
+                )
     else:
         mpaths.write_warning(
             "Path to your steam installation couldn't be found for D2PT Hero Grids, manually set it from `config.json` with the key `steam_path`"
@@ -89,3 +96,5 @@ if __name__ == "__main__":
 
 
 # TODO Implement uninstaller instructions
+# TODO detect grids from D2PT to not backup them?
+# user could be using a merged one though
