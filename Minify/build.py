@@ -59,9 +59,10 @@ def patcher(mod=None, pakname=None):
         core_extracts = []
 
         mod_menus = []
-        styling_data = []  # path and style from every styling.txt
-        styling_dictionary = {}
-        xml_modifications = {}
+        if helper.workshop_installed:
+            styling_data = []
+            styling_dictionary = {}
+            xml_modifications = {}
         replacer_source_extracts = []
         replacer_targets = []
 
@@ -102,9 +103,10 @@ def patcher(mod=None, pakname=None):
                 ):  # step into folders that have ticked checkboxes only
                     # TODO get rid of custom parsed textfiles
                     blacklist_txt = os.path.join(mod_path, "blacklist.txt")
-                    styling_txt = os.path.join(mod_path, "styling.txt")
-                    menu_xml = os.path.join(mod_path, "menu.xml")
-                    xml_mod_file = os.path.join(mod_path, "xml_mod.json")
+                    if helper.workshop_installed:
+                        styling_txt = os.path.join(mod_path, "styling.txt")
+                        menu_xml = os.path.join(mod_path, "menu.xml")
+                        xml_mod_file = os.path.join(mod_path, "xml_mod.json")
                     script_file = os.path.join(mod_path, "script.py")
                     replacer_file = os.path.join(mod_path, "replacer.csv")
                     files_dir = os.path.join(mod_path, "files")
@@ -119,7 +121,7 @@ def patcher(mod=None, pakname=None):
                             ignore=shutil.ignore_patterns("*.gitkeep"),
                         )
 
-                    if os.path.exists(menu_xml):
+                    if helper.workshop_installed and os.path.exists(menu_xml):
                         with open(menu_xml, "r", encoding="utf-8") as file:
                             data = file.read()
                             if data[:7] == r"<Panel ":
@@ -127,7 +129,7 @@ def patcher(mod=None, pakname=None):
                             else:
                                 mpaths.write_warning(f"Improper mod menu on {folder}!")
 
-                    if os.path.exists(xml_mod_file):
+                    if helper.workshop_installed and os.path.exists(xml_mod_file):
                         with open(xml_mod_file, "r", encoding="utf-8") as file:
                             mod_xml = jsonc.load(file)
                         for path, mods in mod_xml.items():
@@ -138,7 +140,7 @@ def patcher(mod=None, pakname=None):
                         process_blacklist(blacklist_txt, folder, blank_file_extensions)
 
                     # --------------------------------- styling.txt --------------------------------- #
-                    if os.path.exists(styling_txt):
+                    if helper.workshop_installed and os.path.exists(styling_txt):
                         with open(styling_txt) as file:
                             lines = file.readlines()
 
@@ -203,12 +205,13 @@ def patcher(mod=None, pakname=None):
             except:
                 mpaths.write_warning()
 
-        if mod_menus:
-            dota_extracts.append("panorama/layout/popups/popup_settings_reborn.vxml_c")
-        # Extract XMLs to be modified (assume they are in game VPK)
-        for path in xml_modifications.keys():
-            compiled = path.replace(".xml", ".vxml_c")
-            dota_extracts.append(compiled)
+        if helper.workshop_installed:
+            if mod_menus:
+                dota_extracts.append("panorama/layout/popups/popup_settings_reborn.vxml_c")
+            # Extract XMLs to be modified (assume they are in game VPK)
+            for path in xml_modifications.keys():
+                compiled = path.replace(".xml", ".vxml_c")
+                dota_extracts.append(compiled)
 
         global game_contents_file_init
         if not game_contents_file_init:
@@ -262,11 +265,14 @@ def patcher(mod=None, pakname=None):
             except:
                 mpaths.write_crashlog()
 
-        if mod_menus:
-            build_minify_menu(mod_menus)
-        with ThreadPoolExecutor() as executor:
-            xml_mod_args = [(os.path.join(mpaths.build_dir, path), mods) for path, mods in xml_modifications.items()]
-            executor.map(lambda p: apply_xml_modifications(*p), xml_mod_args)
+        if helper.workshop_installed:
+            if mod_menus:
+                build_minify_menu(mod_menus)
+            with ThreadPoolExecutor() as executor:
+                xml_mod_args = [
+                    (os.path.join(mpaths.build_dir, path), mods) for path, mods in xml_modifications.items()
+                ]
+                executor.map(lambda p: apply_xml_modifications(*p), xml_mod_args)
         gui.bulk_exec_script("after_decompile")
         # ---------------------------------- STEP 3 ---------------------------------- #
         # ---------------------------- CSS resourcecompile --------------------------- #
@@ -276,25 +282,25 @@ def patcher(mod=None, pakname=None):
             "compiling_resourcecompiler_text_tag",
         )
 
-        styles_by_file = {}
-        for path, style in styling_dictionary.values():
-            sanitized_path = path[1:] if path.startswith("!") else path
-            css_file_path = os.path.join(mpaths.build_dir, f"{sanitized_path}.css")
-            if css_file_path not in styles_by_file:
-                styles_by_file[css_file_path] = []
-            styles_by_file[css_file_path].append(style)
-
-        with ThreadPoolExecutor() as executor:
-            executor.map(apply_styles_to_file, styles_by_file.items())
-
-        shutil.copytree(
-            mpaths.build_dir,
-            mpaths.minify_dota_compile_input_path,
-            dirs_exist_ok=True,
-            ignore=shutil.ignore_patterns("*.vcss_c", "*.vxml_c"),
-        )
-
         if helper.workshop_installed:
+            styles_by_file = {}
+            for path, style in styling_dictionary.values():
+                sanitized_path = path[1:] if path.startswith("!") else path
+                css_file_path = os.path.join(mpaths.build_dir, f"{sanitized_path}.css")
+                if css_file_path not in styles_by_file:
+                    styles_by_file[css_file_path] = []
+                styles_by_file[css_file_path].append(style)
+
+            with ThreadPoolExecutor() as executor:
+                executor.map(apply_styles_to_file, styles_by_file.items())
+
+            shutil.copytree(
+                mpaths.build_dir,
+                mpaths.minify_dota_compile_input_path,
+                dirs_exist_ok=True,
+                ignore=shutil.ignore_patterns("*.vcss_c", "*.vxml_c"),
+            )
+
             with open(mpaths.log_rescomp, "wb") as file:
                 command = [
                     mpaths.dota_resource_compiler_path,
