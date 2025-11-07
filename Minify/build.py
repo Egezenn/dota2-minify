@@ -10,7 +10,7 @@ import xml.etree.ElementTree as ET
 
 import dearpygui.dearpygui as ui
 import jsonc
-import playsound3  # chimes are from pixabay.com/sound-effects/chime-74910/
+import playsound3
 import psutil
 import vpk
 
@@ -387,6 +387,10 @@ def patcher(mod=None, pakname=None):
             )
         playsound3.playsound(os.path.join(mpaths.sounds_dir, "success.wav"), block=False)
 
+    # chimes are from pixabay.com/sound-effects/chime-74910/
+    except PermissionError:  # PlaysoundException
+        mpaths.write_warning()
+
     except:
         mpaths.write_crashlog()
         helper.open_thing(mpaths.log_crashlog)
@@ -750,7 +754,6 @@ def process_blacklist_dir(index, line, folder):
         text=True,
     )
     data = lines.stdout.splitlines()
-    data.pop(0)
 
     if not data:
         mpaths.write_warning(
