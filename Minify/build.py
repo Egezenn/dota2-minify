@@ -1,10 +1,10 @@
 from concurrent.futures import ThreadPoolExecutor
-import threading
 import csv
 import os
 import re
 import shutil
 import subprocess
+import threading
 import time
 import xml.etree.ElementTree as ET
 
@@ -388,7 +388,7 @@ def patcher(mod=None, pakname=None):
         playsound3.playsound(os.path.join(mpaths.sounds_dir, "success.wav"), block=False)
 
     # chimes are from pixabay.com/sound-effects/chime-74910/
-    except PermissionError:  # PlaysoundException
+    except (PermissionError, playsound3.PlaysoundException):
         mpaths.write_warning()
 
     except:
