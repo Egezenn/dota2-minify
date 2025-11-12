@@ -176,8 +176,6 @@ def change_output_path():
 
 
 def open_thing(path, args=""):
-    if path == mpaths.dota2_tools_executable:
-        os.makedirs(mpaths.minify_dota_tools_required_path, exist_ok=True)
     try:
         # If args are provided and target is executable, prefer launching directly
         if args:
