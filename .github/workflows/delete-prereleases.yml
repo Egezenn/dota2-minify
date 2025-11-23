@@ -12,6 +12,8 @@ jobs:
         with:
           repo: ${{ github.repository }}
           keep_latest: 0
+          delete_tags: true
+          target_branch: main
           delete_type: "prerelease"
           delete_tag_pattern: ""
         env:
