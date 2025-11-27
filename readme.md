@@ -1,6 +1,6 @@
 <div align="center">
 
-# Dota2 Minify
+# [Dota2 Minify](https://egezenn.github.io/dota2-minify/)
 
 ![logo](Minify/bin/images/logo.png)
 
@@ -70,11 +70,24 @@ No one has ever been banned for these mods. This project strictly deals with VPK
 
    - These tools enable HUD/Interface mods. **Skip this step if you don't need them.**
    - Right-click on Dota 2 in Steam.
-   - Select **Properties** > **DLC**.
-     - On Linux, you need to force the use of `Proton Experimental` and have `wine` package installed. Relaunch steam if you still don't see the DLC.
-   - Install `Dota 2 Workshop Tools DLC`.
 
-2. **Run Minify**
+![tools-instruction-1](assets/tools-instruction-1.png)
+
+- Select **Properties** > **DLC**.
+  - On Linux, you need to force the use of `Proton Experimental` and have `wine` package installed. Relaunch steam if you still don't see the DLC.
+
+![tools-instruction-2](assets/tools-instruction-2.png)
+
+- Install `Dota 2 Workshop Tools DLC`.
+
+> [!WARNING]
+> For people using Minify on Linux with workshop tools!
+>
+> After patching, extract your workshop tools using the `Gearcog button` > `Extract workshop tools` (this is for later use so that you won't have to switch back and forth again) and go back to using a `Steam Runtime` as you'll not be able to queue games with `Proton Experimental`.
+
+![tools-instruction-3](assets/tools-instruction-3.png)
+
+1. **Run Minify**
 
    - Extract the ZIP file.
    - Ensure that you have execution permissions for the `Minify` executable, run and patch with the mods and the language you want to use.
@@ -93,11 +106,6 @@ No one has ever been banned for these mods. This project strictly deals with VPK
 
 4. **Start Dota 2**
    - Launch Dota2 and enjoy!
-
-> [!WARNING]
-> For people using Minify on Linux with workshop tools!
->
-> After patching, extract your workshop tools using the `Gearcog button` > `Extract workshop tools` (this is for later use so that you won't have to switch back and forth again) and go back to using a `Steam Runtime` as you'll not be able to queue games with `Proton Experimental`.
 
 ### Community mods
 
