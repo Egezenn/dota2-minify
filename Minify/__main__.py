@@ -302,11 +302,13 @@ with ui.font_registry():
         ui.add_font_range_hint(ui.mvFontRangeHint_Default)
         ui.add_font_range_hint(ui.mvFontRangeHint_Cyrillic)
         ui.add_font_range(0x0100, 0x017F)  # Turkish set
+        ui.add_font_range(0x0370, 0x03FF)  # Greek set
         ui.bind_font(main_font)
     with ui.font(os.path.join("bin", "FiraMono-Medium.ttf"), 16) as combo_font:
         ui.add_font_range_hint(ui.mvFontRangeHint_Default)
         ui.add_font_range_hint(ui.mvFontRangeHint_Cyrillic)
         ui.add_font_range(0x0100, 0x017F)  # Turkish set
+        ui.add_font_range(0x0370, 0x03FF)  # Greek set
 
 # Adding mouse handler to ui registry
 with ui.handler_registry():
