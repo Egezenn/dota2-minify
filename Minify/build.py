@@ -50,6 +50,7 @@ def patcher(mod=None, pakname=None):
 
         os.makedirs(mpaths.build_dir, exist_ok=True)
         os.makedirs(mpaths.replace_dir, exist_ok=True)
+        os.makedirs(mpaths.merge_dir, exist_ok=True)
         os.makedirs(mpaths.minify_dota_compile_input_path, exist_ok=True)
         os.makedirs(mpaths.minify_dota_tools_required_path, exist_ok=True)
 
@@ -367,11 +368,43 @@ def patcher(mod=None, pakname=None):
         pakname = "pak66" if pakname is None else pakname
         newpak.save(os.path.join(helper.output_path, f"{pakname}_dir.vpk"))
 
+        # ---------------------------------- STEP 7 ---------------------------------- #
+        # -------------------------- Merge VPKs into pak33 --------------------------- #
+        # ---------------------------------------------------------------------------- #
+
+        pak66_path = os.path.join(helper.output_path, f"{pakname}_dir.vpk")
+
+        helper.add_text_to_terminal(helper.localization_dict["merging_vpks_text_var"])
+
+        pak66 = vpk.open(pak66_path)
+        dump_vpk(pak66, mpaths.merge_dir, check_exists=False)
+
+        for mod_name in mod_list:
+            if mod_name.endswith(".vpk") and (mod is not None or ui.get_value(mod_name)):
+                mod_path = os.path.join(mpaths.mods_dir, mod_name)
+                try:
+                    mod_vpk = vpk.open(mod_path)
+                    dump_vpk(mod_vpk, mpaths.merge_dir, check_exists=True)
+                    helper.add_text_to_terminal(helper.localization_dict["merged_mod_text_var"].format(mod_name))
+                except:
+                    mpaths.write_warning(helper.localization_dict["failed_to_merge_mod_text_var"].format(mod_name))
+
+        helper.add_text_to_terminal(helper.localization_dict["creating_merged_vpk_text_var"])
+        pak33 = vpk.new(mpaths.merge_dir)
+        pak33.save(os.path.join(helper.output_path, "pak33_dir.vpk"))
+
+        helper.add_text_to_terminal(helper.localization_dict["success_merged_vpk_text_var"], None, "success")
+
+        # ---------------------------------- STEP 8 ---------------------------------- #
+        # -------------------------- Clean paths and inform -------------------------- #
+        # ---------------------------------------------------------------------------- #
+
         helper.remove_path(
             mpaths.minify_dota_compile_input_path,
             mpaths.minify_dota_compile_output_path,
             mpaths.build_dir,
             mpaths.replace_dir,
+            mpaths.merge_dir,
         )
 
         gui.unlock_interaction()
@@ -461,6 +494,16 @@ def uninstaller():
         "uninstaller_text_tag",
     )
     gui.unlock_interaction()
+
+
+def dump_vpk(vpk_obj, output_dir, check_exists=True):
+    for filepath in vpk_obj:
+        full_path = os.path.join(output_dir, filepath)
+        if check_exists and os.path.exists(full_path):
+            continue
+
+        os.makedirs(os.path.dirname(full_path), exist_ok=True)
+        vpk_obj.get_file(filepath).save(full_path)
 
 
 def vpk_extractor(vpk_to_extract_from, paths, path_to_extract_to=mpaths.build_dir):

@@ -49,6 +49,7 @@ DOTA_EXECUTABLE_PATH_FALLBACK = os.path.join("steamapps", "common", "dota 2 beta
 bin_dir = "bin"
 build_dir = "vpk_build"
 replace_dir = "vpk_replace"
+merge_dir = "vpk_merge"
 logs_dir = "logs"
 mods_dir = "mods"
 config_dir = "config"
@@ -499,24 +500,31 @@ visually_unavailable_mods = []
 visually_available_mods = []
 mod_dependencies_list = []
 for mod in sorted(os.listdir(mods_dir)):
-    if os.path.isdir(mod_dir := os.path.join(mods_dir, mod)) and not mod.startswith("_"):
-        mods_alphabetical.append(mod)
+    mod_path = os.path.join(mods_dir, mod)
+    if not mod.startswith("_"):
+        if os.path.isdir(mod_path):
+            mods_alphabetical.append(mod)
 
-        cfg_exist = os.path.exists(mod_cfg := os.path.join(mod_dir, "modcfg.json"))
-        blacklist_exist = os.path.exists(os.path.join(mod_dir, "blacklist.txt"))
+            cfg_exist = os.path.exists(mod_cfg := os.path.join(mod_path, "modcfg.json"))
+            blacklist_exist = os.path.exists(os.path.join(mod_path, "blacklist.txt"))
 
-        order, cfg = get_key_from_json_file_w_default(mod_cfg, "order", 1)
-        dependencies = get_key_from_dict_w_default(cfg, "dependencies", None)
-        visual = get_key_from_dict_w_default(cfg, "visual", True)
-        visually_available_mods.append(mod) if visual else visually_unavailable_mods.append(mod)
-        if dependencies is not None:
-            mod_dependencies_list.append({mod: dependencies})
+            order, cfg = get_key_from_json_file_w_default(mod_cfg, "order", 1)
+            dependencies = get_key_from_dict_w_default(cfg, "dependencies", None)
+            visual = get_key_from_dict_w_default(cfg, "visual", True)
+            visually_available_mods.append(mod) if visual else visually_unavailable_mods.append(mod)
+            if dependencies is not None:
+                mod_dependencies_list.append({mod: dependencies})
 
-        # Default order, blacklist mods should always be indexed last
-        if blacklist_exist and not cfg_exist:
-            mods_with_order.append({mod: 2})
-        else:
-            mods_with_order.append({mod: order})
+            # Default order, blacklist mods should always be indexed last
+            if blacklist_exist and not cfg_exist:
+                mods_with_order.append({mod: 2})
+            else:
+                mods_with_order.append({mod: order})
+
+        elif mod.endswith(".vpk"):
+            mods_alphabetical.append(mod)
+            visually_available_mods.append(mod)
+            mods_with_order.append({mod: 1})
 
 mods_with_order = sorted(mods_with_order, key=lambda d: list(d.values())[0])
 mods_with_order = [list(d.keys())[0] for d in mods_with_order]

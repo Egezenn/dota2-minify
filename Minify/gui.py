@@ -163,8 +163,11 @@ def create_checkboxes():
 
     for mod in mpaths.visually_available_mods:
         mod_path = os.path.join(mpaths.mods_dir, mod)
-        mod_cfg_path = os.path.join(mod_path, "modcfg.json")
-        always_val, _ = mpaths.get_key_from_json_file_w_default(mod_cfg_path, "always", None)
+        if is_vpk := mod.endswith(".vpk"):
+            always_val = False
+        else:
+            mod_cfg_path = os.path.join(mod_path, "modcfg.json")
+            always_val, _ = mpaths.get_key_from_json_file_w_default(mod_cfg_path, "always", None)
 
         if always_val:
             enable_ticking = False
@@ -177,55 +180,57 @@ def create_checkboxes():
         # enabled=False default_value=True doesn't show up as ticked
         ui.add_checkbox(
             parent=f"{mod}_group_tag",
-            label=mod,
+            label=mod[:-4] if is_vpk else mod,
             tag=mod,
             callback=setup_button_state,
             default_value=value,
             enabled=enable_ticking,
         )
-        try:
-            if os.path.exists(os.path.join(mod_path, f"notes_{helper.locale.lower()}.txt")):
-                notes_txt = os.path.join(mod_path, f"notes_{helper.locale.lower()}.txt")
-            else:
-                notes_txt = os.path.join(mod_path, "notes_en.txt")
-            with open(notes_txt, "r", encoding="utf-8") as file:
-                data = file.read()
-        except FileNotFoundError:
-            data = ""
-            helper.add_text_to_terminal(
-                helper.localization_dict["no_notes_found_text_var"].format(mod),
-                None,
-                "warning",
+
+        if not is_vpk:
+            try:
+                if os.path.exists(os.path.join(mod_path, f"notes_{helper.locale.lower()}.txt")):
+                    notes_txt = os.path.join(mod_path, f"notes_{helper.locale.lower()}.txt")
+                else:
+                    notes_txt = os.path.join(mod_path, "notes_en.txt")
+                with open(notes_txt, "r", encoding="utf-8") as file:
+                    data = file.read()
+            except FileNotFoundError:
+                data = ""
+                helper.add_text_to_terminal(
+                    helper.localization_dict["no_notes_found_text_var"].format(mod),
+                    None,
+                    "warning",
+                )
+
+            tag_data = f"{mod}_details_window_tag"
+            ui.add_button(
+                parent=f"{mod}_group_tag",
+                small=True,
+                indent=250,
+                tag=f"{mod}_button_show_details_tag",
+                label=f"{helper.details_label_text_var}",
+                callback=show_details,
+                user_data=tag_data,
             )
 
-        tag_data = f"{mod}_details_window_tag"
-        ui.add_button(
-            parent=f"{mod}_group_tag",
-            small=True,
-            indent=250,
-            tag=f"{mod}_button_show_details_tag",
-            label=f"{helper.details_label_text_var}",
-            callback=show_details,
-            user_data=tag_data,
-        )
-
-        ui.add_window(
-            tag=tag_data,
-            pos=(0, 0),
-            show=False,
-            width=494,
-            height=300,
-            no_resize=True,
-            no_move=True,
-            no_collapse=True,
-            label=mod,
-        )
-        ui.add_string_value(
-            parent="details_tags",
-            default_value=data,
-            tag=f"{mod}_details_text_value_tag",
-        )
-        ui.add_text(source=f"{mod}_details_text_value_tag", parent=tag_data, wrap=480)
+            ui.add_window(
+                tag=tag_data,
+                pos=(0, 0),
+                show=False,
+                width=494,
+                height=300,
+                no_resize=True,
+                no_move=True,
+                no_collapse=True,
+                label=mod,
+            )
+            ui.add_string_value(
+                parent="details_tags",
+                default_value=data,
+                tag=f"{mod}_details_text_value_tag",
+            )
+            ui.add_text(source=f"{mod}_details_text_value_tag", parent=tag_data, wrap=480)
 
         checkboxes.append(mod)
 

@@ -294,5 +294,20 @@
   },
   "no_notes_found_text_var": {
     "EN": "An English note or a note in your locale couldn't be found in the mod {}"
+  },
+  "merging_vpks_text_var": {
+    "EN": "-> Merging VPKs..."
+  },
+  "merged_mod_text_var": {
+    "EN": "   Merged {}"
+  },
+  "failed_merge_text_var": {
+    "EN": "   Failed to merge {}"
+  },
+  "creating_merged_vpk_text_var": {
+    "EN": "-> Creating merged vpk..."
+  },
+  "success_merged_vpk_text_var": {
+    "EN": "-> Created merged vpk"
   }
 }
