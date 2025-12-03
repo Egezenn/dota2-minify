@@ -14,11 +14,15 @@ OS = platform.system()
 MACHINE = platform.machine().lower()
 ARCHITECTURE = platform.architecture()[0]
 
+WIN = "Windows"
+LINUX = "LINUX"
+MAC = "MAC"
+
 # assuming steam runtimes on linux / darwin
-if OS == "Linux":
+if OS == LINUX:
     DOTA_EXECUTABLE_PATH = os.path.join("steamapps", "common", "dota 2 beta", "game", "bin", "linuxsteamrt64", "dota2")
     STEAM_DEFAULT_INSTALLATION_PATH = os.path.join("/", "home", getpass.getuser(), ".local", "share", "Steam")
-elif OS == "Darwin":
+elif OS == MAC:
     DOTA_EXECUTABLE_PATH = os.path.join(
         "steamapps",
         "common",
@@ -232,7 +236,7 @@ def find_library_from_vdf():
 def get_steam_path():
     # Windows specific
     global steam_dir
-    if OS == "Windows":
+    if OS == WIN:
         import winreg
 
         try:
@@ -327,7 +331,7 @@ s2v_cli_ver = "15.0"
 rg_ver = "15.1.0"
 
 try:
-    if OS == "Windows":
+    if OS == WIN:
         s2v_executable = "Source2Viewer-CLI.exe"
         s2v_latest = f"https://github.com/ValveResourceFormat/ValveResourceFormat/releases/download/{s2v_cli_ver}/cli-windows-x64.zip"
 
@@ -337,7 +341,7 @@ try:
         else:
             rg_latest = f"https://github.com/BurntSushi/ripgrep/releases/download/{rg_ver}/ripgrep-{rg_ver}-i686-pc-windows-msvc.zip"
 
-    elif OS == "Linux":
+    elif OS == LINUX:
         s2v_executable = "Source2Viewer-CLI"
         if MACHINE in ["aarch64", "arm64"]:
             s2v_latest = f"https://github.com/ValveResourceFormat/ValveResourceFormat/releases/download/{s2v_cli_ver}/cli-linux-arm64.zip"
@@ -360,7 +364,7 @@ try:
         elif ARCHITECTURE == "32bit":
             rg_latest = f"https://github.com/BurntSushi/ripgrep/releases/download/{rg_ver}/ripgrep-{rg_ver}-i686-unknown-linux-gnu.tar.gz"
 
-    elif OS == "Darwin":
+    elif OS == MAC:
         s2v_executable = "Source2Viewer-CLI"
         if MACHINE in ["aarch64", "arm64"]:
             s2v_latest = f"https://github.com/ValveResourceFormat/ValveResourceFormat/releases/download/{s2v_cli_ver}/cli-macos-arm64.zip"

@@ -24,7 +24,7 @@ game_contents_file_init = False
 def patcher(mod=None, pakname=None):
     gui.lock_interaction()
     helper.clean_terminal()
-    target = "dota2.exe" if mpaths.OS == "Windows" else "dota2"
+    target = "dota2.exe" if mpaths.OS == mpaths.WIN else "dota2"
     running = False
     for p in psutil.process_iter(attrs=["name"]):
         try:
@@ -229,7 +229,7 @@ def patcher(mod=None, pakname=None):
                 ],
                 capture_output=True,
                 text=True,
-                creationflags=subprocess.CREATE_NO_WINDOW,
+                creationflags=subprocess.CREATE_NO_WINDOW if mpaths.OS == mpaths.WIN else 0,
             )
             pattern = r"(.*) CRC:.*"
             replacement = r"\1"
@@ -244,6 +244,8 @@ def patcher(mod=None, pakname=None):
             game_contents_file_init = True
 
         helper.add_text_to_terminal(helper.localization_dict["starting_extraction_text_var"])
+        core_extracts = list(set(core_extracts))
+        dota_extracts = list(set(dota_extracts))
         vpk_extractor(core_pak_contents, core_extracts)
         vpk_extractor(dota_pak_contents, dota_extracts)
         # ---------------------------------- STEP 2 ---------------------------------- #
@@ -266,7 +268,7 @@ def patcher(mod=None, pakname=None):
                         mpaths.build_dir,
                     ],
                     stdout=file,
-                    creationflags=subprocess.CREATE_NO_WINDOW,
+                    creationflags=subprocess.CREATE_NO_WINDOW if mpaths.OS == mpaths.WIN else 0,
                 )
             except:
                 mpaths.write_crashlog()
@@ -314,14 +316,14 @@ def patcher(mod=None, pakname=None):
                     mpaths.minify_dota_compile_input_path + "/*",
                     "-r",
                 ]
-                if mpaths.OS != "Windows":
+                if mpaths.OS != mpaths.WIN:
                     command.insert(0, "wine")
 
                 rescomp = subprocess.run(
                     command,
                     stdout=subprocess.PIPE,
                     stderr=subprocess.PIPE,  # compiler complains if minify_dota_compile_input_path is empty
-                    creationflags=subprocess.CREATE_NO_WINDOW,
+                    creationflags=subprocess.CREATE_NO_WINDOW if mpaths.OS == mpaths.WIN else 0,
                 )
                 if rescomp.stdout != b"":
                     file.write(rescomp.stdout)
@@ -764,7 +766,7 @@ def process_blacklist_dir(index, line, folder):
         ],
         capture_output=True,
         text=True,
-        creationflags=subprocess.CREATE_NO_WINDOW,
+        creationflags=subprocess.CREATE_NO_WINDOW if mpaths.OS == mpaths.WIN else 0,
     )
     data = lines.stdout.splitlines()
 

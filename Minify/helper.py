@@ -4,6 +4,7 @@ import shlex
 import shutil
 import stat
 import subprocess
+import sys
 import time
 import webbrowser
 
@@ -183,7 +184,7 @@ def open_thing(path, args=""):
     try:
         # If args are provided and target is executable, prefer launching directly
         if args:
-            if mpaths.OS == "Windows":
+            if mpaths.OS == mpaths.WIN:
                 os.startfile(path, arguments=args)
                 return
             # POSIX: launch executable directly when possible
@@ -196,16 +197,16 @@ def open_thing(path, args=""):
 
         # No args path open
         if os.path.isdir(path):
-            if mpaths.OS == "Windows":
+            if mpaths.OS == mpaths.WIN:
                 os.startfile(path)
-            elif mpaths.OS == "Darwin":
+            elif mpaths.OS == mpaths.MAC:
                 subprocess.run(["open", path])
             else:
                 subprocess.run(["xdg-open", path])
         else:
-            if mpaths.OS == "Windows":
+            if mpaths.OS == mpaths.WIN:
                 os.startfile(path)
-            elif mpaths.OS == "Darwin":
+            elif mpaths.OS == mpaths.MAC:
                 # Reveal the file in Finder to avoid missing-app association errors
                 subprocess.run(["open", "-R", path])
             else:
@@ -243,15 +244,19 @@ def compile(sender, app_data, user_data):
             else:
                 shutil.copy(os.path.join(folder, item), mpaths.minify_dota_compile_input_path)
         with open(mpaths.log_rescomp, "w") as file:
+            command = (
+                mpaths.dota_resource_compiler_path,
+                "-i",
+                mpaths.minify_dota_compile_input_path + "/*",
+                "-r",
+            )
+
+            if mpaths.OS != mpaths.WIN:
+                command.insert(0, "wine")
+
             subprocess.run(
-                [
-                    mpaths.dota_resource_compiler_path,
-                    "-i",
-                    mpaths.minify_dota_compile_input_path + "/*",
-                    "-r",
-                ],
                 stdout=file,
-                creationflags=subprocess.CREATE_NO_WINDOW,
+                creationflags=subprocess.CREATE_NO_WINDOW if mpaths.OS == mpaths.WIN else 0,
             )
 
         os.makedirs(mpaths.minify_dota_compile_output_path, exist_ok=True)

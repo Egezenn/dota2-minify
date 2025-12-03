@@ -83,7 +83,7 @@ def download_dependencies():
                 shutil.unpack_archive(zip_path, format="zip")
                 os.remove(zip_path)
                 helper.add_text_to_terminal(f"{helper.localization_dict['extracted_cli_terminal_text_var']}{zip_path}")
-                if mpaths.OS != "Windows" and not os.access(mpaths.s2v_executable, os.X_OK):
+                if mpaths.OS != mpaths.WIN and not os.access(mpaths.s2v_executable, os.X_OK):
                     current_permissions = os.stat(mpaths.s2v_executable).st_mode
                     os.chmod(
                         mpaths.s2v_executable,
@@ -121,7 +121,7 @@ def download_dependencies():
                 helper.add_text_to_terminal(
                     f"{helper.localization_dict['extracted_cli_terminal_text_var']}{archive_path}"
                 )
-                if mpaths.OS in ("Linux", "Darwin") and not os.access(mpaths.rg_executable, os.X_OK):
+                if mpaths.OS in (mpaths.LINUX, mpaths.MAC) and not os.access(mpaths.rg_executable, os.X_OK):
                     current_permissions = os.stat(mpaths.rg_executable).st_mode
                     os.chmod(
                         mpaths.rg_executable,
@@ -266,7 +266,7 @@ def show_details(sender, app_data, user_data):
 
 
 def focus_window():
-    if mpaths.OS == "Windows":
+    if mpaths.OS == mpaths.WIN:
         try:
             hwnd = ctypes.windll.user32.FindWindowW(None, "Minify")
             if hwnd != 0:
@@ -276,7 +276,10 @@ def focus_window():
             mpaths.write_warning()
     else:
         try:
-            subprocess.run(["wmctrl", "-a", "Minify"], check=True, creationflags=subprocess.CREATE_NO_WINDOW)
+            subprocess.run(
+                ["wmctrl", "-a", "Minify"],
+                check=True,
+            )
         except:
             mpaths.write_warning()
 
@@ -678,7 +681,7 @@ def configure_update_popup():
 
 
 def is_dota_running():
-    target = "dota2.exe" if mpaths.OS == "Windows" else "dota2"
+    target = "dota2.exe" if mpaths.OS == mpaths.WIN else "dota2"
     running = False
     for p in psutil.process_iter(attrs=["name"]):
         try:

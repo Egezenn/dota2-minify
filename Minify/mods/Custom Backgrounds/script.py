@@ -45,7 +45,7 @@ def main():
                             filepath,
                             filepath := os.path.join(current_dir, "background.png"),
                         ],
-                        creationflags=subprocess.CREATE_NO_WINDOW
+                        creationflags=subprocess.CREATE_NO_WINDOW if mpaths.OS == mpaths.WIN else 0,
                     )
                 else:
                     helper.add_text_to_terminal(f"imagemagick is not available on path, unable to convert {file}")
