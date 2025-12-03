@@ -9,19 +9,19 @@
       "group": { "kind": "build", "isDefault": true }
     },
     {
-      "label": "Build",
+      "label": "Build via PyInstaller & Run",
       "detail": "Build via PyInstaller under powershell (not recommended for distribution as it may include your personal configurations!)",
-      "icon": { "id": "terminal-powershell", "color": "terminal.ansiBlue" },
+      "icon": { "id": "run", "color": "terminal.ansiBlue" },
       "type": "shell",
-      "command": "Set-Location Minify; uv run pyinstaller Minify.spec; Copy-Item -Path 'bin' -Destination 'dist\\Minify\\bin' -Recurse; Copy-Item -Path 'mods' -Destination 'dist\\Minify\\mods' -Recurse; Copy-Item -Path '..\\version' -Destination 'dist\\Minify\\version'; Copy-Item -Path '..\\readme.md' -Destination 'dist\\Minify\\readme.md'; Copy-Item -Path '..\\LICENSE' -Destination 'dist\\Minify\\LICENSE'",
+      "command": "Set-Location Minify; Remove-Item -Recurse 'dist'; uv run pyinstaller Minify.spec; Copy-Item 'bin' 'dist\\Minify\\bin' -Recurse; Copy-Item 'mods' 'dist\\Minify\\mods' -Recurse; Copy-Item '..\\version' 'dist\\Minify\\version'; Copy-Item '..\\readme.md' 'dist\\Minify\\readme.md'; Copy-Item '..\\LICENSE' 'dist\\Minify\\LICENSE'; Copy-Item 'Source2Viewer-CLI.exe' 'dist\\Minify'; dist\\Minify\\Minify.exe",
       "group": { "kind": "test" }
     },
     {
       "label": "Clean",
       "detail": "Clean build directories and logs under powershell",
-      "icon": { "id": "terminal-powershell", "color": "terminal.ansiBlue" },
+      "icon": { "id": "trash", "color": "terminal.ansiWhite" },
       "type": "shell",
-      "command": "Set-Location Minify; Remove-Item -Recurse -Path 'build'; Remove-Item -Recurse -Path 'dist'; Remove-Item -Recurse -Path 'logs'",
+      "command": "Set-Location Minify; Remove-Item -Recurse 'build'; Remove-Item -Recurse 'dist'; Remove-Item -Recurse 'logs'",
       "group": { "kind": "test" }
     }
   ]

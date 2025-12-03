@@ -251,6 +251,7 @@ def compile(sender, app_data, user_data):
                     "-r",
                 ],
                 stdout=file,
+                creationflags=subprocess.CREATE_NO_WINDOW,
             )
 
         os.makedirs(mpaths.minify_dota_compile_output_path, exist_ok=True)

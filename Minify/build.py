@@ -229,6 +229,7 @@ def patcher(mod=None, pakname=None):
                 ],
                 capture_output=True,
                 text=True,
+                creationflags=subprocess.CREATE_NO_WINDOW,
             )
             pattern = r"(.*) CRC:.*"
             replacement = r"\1"
@@ -265,6 +266,7 @@ def patcher(mod=None, pakname=None):
                         mpaths.build_dir,
                     ],
                     stdout=file,
+                    creationflags=subprocess.CREATE_NO_WINDOW,
                 )
             except:
                 mpaths.write_crashlog()
@@ -319,6 +321,7 @@ def patcher(mod=None, pakname=None):
                     command,
                     stdout=subprocess.PIPE,
                     stderr=subprocess.PIPE,  # compiler complains if minify_dota_compile_input_path is empty
+                    creationflags=subprocess.CREATE_NO_WINDOW,
                 )
                 if rescomp.stdout != b"":
                     file.write(rescomp.stdout)
@@ -761,6 +764,7 @@ def process_blacklist_dir(index, line, folder):
         ],
         capture_output=True,
         text=True,
+        creationflags=subprocess.CREATE_NO_WINDOW,
     )
     data = lines.stdout.splitlines()
 

@@ -292,6 +292,7 @@ def create_base_ui():
     time.sleep(0.05)
     gui.configure_update_popup()
     gui.bulk_exec_script("initial")
+    gui.setup_button_state()
     gui.unlock_interaction()
 
 

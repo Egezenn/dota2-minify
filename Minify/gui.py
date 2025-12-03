@@ -276,7 +276,7 @@ def focus_window():
             mpaths.write_warning()
     else:
         try:
-            subprocess.run(["wmctrl", "-a", "Minify"], check=True)
+            subprocess.run(["wmctrl", "-a", "Minify"], check=True, creationflags=subprocess.CREATE_NO_WINDOW)
         except:
             mpaths.write_warning()
 
