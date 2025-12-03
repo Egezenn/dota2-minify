@@ -9,7 +9,6 @@ if os.getcwd() != minify_root:
 if minify_root not in sys.path:
     sys.path.insert(0, minify_root)
 
-
 import dearpygui.dearpygui as ui
 
 import helper

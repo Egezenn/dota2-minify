@@ -94,7 +94,6 @@ def main():
 if __name__ == "__main__":
     main()
 
-
 # TODO Implement uninstaller instructions
 # TODO detect grids from D2PT to not backup them?
 # user could be using a merged one though

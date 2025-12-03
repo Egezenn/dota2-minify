@@ -1,8 +1,8 @@
 <div align="center">
 
-# [Dota2 Minify](https://egezenn.github.io/dota2-minify/)
+# [Dota2 Minify](https://egezenn.github.io/dota2-minify)
 
-![logo](Minify/bin/images/logo.png)
+[![logo](Minify/bin/images/logo.png)](https://egezenn.github.io/dota2-minify)
 
 [![discord](https://img.shields.io/badge/Discord-%237289DA.svg?style=for-the-badge&logo=discord&logoColor=white)](https://discord.com/invite/2YDnqpbcKM)
 ![license](https://img.shields.io/github/license/Egezenn/dota2-minify?style=for-the-badge)
@@ -54,11 +54,11 @@
 
 ## Is this safe to use?
 
-This project has been around for over 4 years with thousands of downloads and users. While binaries are offered for ease of use, anyone can compile it themselves.
+This project has been around since [2022](https://github.com/Egezenn/dota2-minify/commit/825ed37e6007577b98c3003fe0bdab6410ba87db) with thousands of downloads and users. While binaries are offered for ease of use, anyone can compile it themselves.
 
-The only valid source to get the software is from [GitHub releases](https://github.com/Egezenn/dota2-minify/releases/latest), we do not distribute elsewhere.
+The only valid source to get the software is from [GitHub Releases](https://github.com/Egezenn/dota2-minify/releases/latest) or [the website](https://egezenn.github.io/dota2-minify). Releases are built via [GitHub Workflows](https://github.com/Egezenn/dota2-minify/blob/main/.github/workflows/release.yml) with no intervention, we do not distribute elsewhere.
 
-No one has ever been banned for these mods. This project strictly deals with VPK modifications and not hacking concepts like memory/file manipulation. It's utilizing Valve's approved methods (VPK loading) for creating assets, as documented on the [official Valve Wiki](https://developer.valvesoftware.com/wiki/VPK). Historically Valve has only disabled assets from loading and never punished modders. The worst thing that can happen is a mod stops working and that's it.
+No one has ever been banned for the use of these mods and alike. Minify strictly deals with VPK modifications and not hacking concepts like memory/file manipulation. It utilizes Valve's approved methods (VPK loading) for creating assets, as documented on the [official Valve Wiki](https://developer.valvesoftware.com/wiki/VPK). Historically Valve has only disabled assets from loading and never punished modders. The worst thing that can happen is a mod stops working and that's it.
 
 ## Installation
 

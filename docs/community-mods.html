@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en" data-bs-theme="dark">
   <head>
     <meta charset="UTF-8" />
@@ -96,7 +96,13 @@
                     }
                   }
                   notesContent.innerHTML = tempDiv.innerHTML;
-                  sessionStorage.setItem(notesCacheKey, JSON.stringify({ timestamp: now, content: tempDiv.innerHTML }));
+                  sessionStorage.setItem(
+                    notesCacheKey,
+                    JSON.stringify({
+                      timestamp: now,
+                      content: tempDiv.innerHTML,
+                    }),
+                  );
                 })
                 .catch((error) => {
                   notesContent.innerHTML = "<p>Could not load notes. The file might not exist for this mod.</p>";

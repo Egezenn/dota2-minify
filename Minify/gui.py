@@ -241,6 +241,8 @@ def setup_button_state():
 
 
 def lock_interaction():
+    global gui_lock
+    gui_lock = True
     ui.configure_item("button_patch", enabled=False)
     ui.configure_item("button_select_mods", enabled=False)
     ui.configure_item("button_uninstall", enabled=False)
@@ -249,6 +251,8 @@ def lock_interaction():
 
 
 def unlock_interaction():
+    global gui_lock
+    gui_lock = False
     ui.configure_item("button_patch", enabled=True)
     ui.configure_item("button_select_mods", enabled=True)
     ui.configure_item("button_uninstall", enabled=True)
@@ -498,7 +502,10 @@ def dev_mode():
     if dev_mode_state == -1:  # init
         dev_mode_state = 1
         ui.configure_viewport(
-            item="main_viewport", resizable=False, width=main_window_width_dev, height=main_window_height_dev
+            item="main_viewport",
+            resizable=False,
+            width=main_window_width_dev,
+            height=main_window_height_dev,
         )
         ui.configure_viewport(item="primary_window", resizable=False)
         with ui.window(
@@ -521,7 +528,10 @@ def dev_mode():
                 callback=lambda: helper.open_thing(os.path.join(helper.output_path, "pak66_dir.vpk")),
             )
             ui.add_spacer(width=0, height=5)
-            ui.add_button(label="Path: Minify root", callback=lambda: helper.open_thing(os.getcwd()))
+            ui.add_button(
+                label="Path: Minify root",
+                callback=lambda: helper.open_thing(os.getcwd()),
+            )
             ui.add_button(
                 label="Path: Logs",
                 callback=lambda: helper.open_thing(mpaths.logs_dir),
@@ -611,7 +621,12 @@ def dev_mode():
 
     elif dev_mode_state == 0:  # close
         dev_mode_state = 1
-        ui.configure_viewport(item="main_viewport", resizable=False, width=main_window_width, height=main_window_height)
+        ui.configure_viewport(
+            item="main_viewport",
+            resizable=False,
+            width=main_window_width,
+            height=main_window_height,
+        )
         ui.configure_item("opener", show=False)
         ui.configure_item("mod_tools", show=False)
         ui.configure_item("maintenance_tools", show=False)
@@ -619,7 +634,10 @@ def dev_mode():
     else:  # reopen
         dev_mode_state = 0
         ui.configure_viewport(
-            item="main_viewport", resizable=False, width=main_window_width_dev, height=main_window_height_dev
+            item="main_viewport",
+            resizable=False,
+            width=main_window_width_dev,
+            height=main_window_height_dev,
         )
         ui.configure_item("opener", show=True)
         ui.configure_item("mod_tools", show=True)
@@ -664,15 +682,14 @@ def is_dota_running():
     running = False
     for p in psutil.process_iter(attrs=["name"]):
         try:
-            name = p.info.get("name") or ""
+            name = p.name() or ""
             if name == target:
                 running = True
                 break
         except (psutil.NoSuchProcess, psutil.AccessDenied, psutil.ZombieProcess):
             continue
     if running:
-        global gui_lock
-        gui_lock = True
+        lock_interaction()
         helper.add_text_to_terminal(
             helper.localization_dict["error_please_close_dota_terminal_text_var"],
             "please_close_dota_text_tag",

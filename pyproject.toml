@@ -1,17 +1,22 @@
 [project]
 name = "dota2-minify"
-version = "1.12.3"
+version = "0"
 description = "Dota2 Mod Patcher & Toolkit for everyone to use mods easily"
 readme = "readme.md"
 requires-python = ">=3.13"
 dependencies = [
-    "dearpygui>=2.1.0",
+    "dearpygui>=2.1.1",
     "json-with-comments>=1.2.10",
-    "playsound3>=3.2.8",
-    "psutil>=7.1.0",
-    "pyinstaller>=6.16.0",
+    "playsound3>=3.3.0",
+    "psutil>=7.1.3",
+    "pyinstaller>=6.17.0",
     "requests>=2.32.5",
     "screeninfo>=0.8.1",
     "vdf>=3.4",
     "vpk>=1.4.0",
 ]
+
+[tool]
+
+[tool.black]
+line-length = 120

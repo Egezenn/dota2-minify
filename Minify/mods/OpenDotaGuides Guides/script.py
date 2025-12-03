@@ -27,7 +27,10 @@ temp_dump_path = os.path.join(current_dir, "files", "temp")
 def main():
     try:
         if helper.workshop_installed:
-            shutil.copy(os.path.join(current_dir, "_styling.txt"), os.path.join(current_dir, "styling.txt"))
+            shutil.copy(
+                os.path.join(current_dir, "_styling.txt"),
+                os.path.join(current_dir, "styling.txt"),
+            )
     except:
         pass
 

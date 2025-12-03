@@ -28,7 +28,7 @@ def patcher(mod=None, pakname=None):
     running = False
     for p in psutil.process_iter(attrs=["name"]):
         try:
-            name = p.info.get("name") or ""
+            name = p.name() or ""
             if name == target:
                 running = True
                 break
@@ -198,7 +198,10 @@ def patcher(mod=None, pakname=None):
                                         replacer_source_extracts.append(row[0])
                                         replacer_targets.append(row[1])
                                 except:
-                                    min_len = min(len(replacer_source_extracts), len(replacer_targets))
+                                    min_len = min(
+                                        len(replacer_source_extracts),
+                                        len(replacer_targets),
+                                    )
                                     replacer_source_extracts = replacer_source_extracts[:min_len]
                                     replacer_targets = replacer_targets[:min_len]
                                     mpaths.write_warning()
@@ -438,7 +441,11 @@ def uninstaller():
                 if os.path.isfile(os.path.join(dir, item)) and re.fullmatch(pak_pattern, item):
                     pak_contents = vpk.open(os.path.join(dir, item))
                     mod_names_with_txt = [s + ".txt" for s in mpaths.visually_available_mods]
-                    for file in ["minify_mods.json", "minify_version.txt", *mod_names_with_txt]:
+                    for file in [
+                        "minify_mods.json",
+                        "minify_version.txt",
+                        *mod_names_with_txt,
+                    ]:
                         if file in pak_contents:
                             os.remove(os.path.join(dir, item))
                             break
@@ -460,7 +467,8 @@ def vpk_extractor(vpk_to_extract_from, paths, path_to_extract_to=mpaths.build_di
     def extract_file(path):
         if not os.path.exists(full_path := os.path.join(path_to_extract_to, path)):  # extract files from VPK only once
             helper.add_text_to_terminal(
-                helper.localization_dict["extracting_terminal_text_var"].format(path), f"extracting_{path}_tag"
+                helper.localization_dict["extracting_terminal_text_var"].format(path),
+                f"extracting_{path}_tag",
             )
             vpk_path = path.replace(os.sep, "/")
 

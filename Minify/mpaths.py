@@ -41,7 +41,6 @@ DOTA_TOOLS_EXECUTABLE_PATH = os.path.join("steamapps", "common", "dota 2 beta", 
 # launchers for dota2 won't work as it presumes native version, doesn't really matter
 DOTA_EXECUTABLE_PATH_FALLBACK = os.path.join("steamapps", "common", "dota 2 beta", "game", "bin", "win64", "dota2.exe")
 
-
 # minify project paths
 bin_dir = "bin"
 build_dir = "vpk_build"
@@ -64,7 +63,6 @@ img_dir = os.path.join(bin_dir, "images")
 localization_file_dir = os.path.join(bin_dir, "localization.json")
 rescomp_override_dir = os.path.join(bin_dir, "rescomproot")
 sounds_dir = os.path.join(bin_dir, "sounds")
-
 
 # logs
 log_crashlog = os.path.join(logs_dir, "crashlog.txt")
@@ -321,7 +319,6 @@ def overwrite_ensurance_hack(list_of_string_patterns, strings):
 get_steam_path()
 handle_non_default_path()
 
-
 # links
 version_query = "https://raw.githubusercontent.com/Egezenn/dota2-minify/refs/heads/main/version"
 discord = "https://discord.com/invite/2YDnqpbcKM"
@@ -380,7 +377,6 @@ try:
 
 except:
     write_crashlog(f"Unsupported configuration ({OS}/{MACHINE}/{ARCHITECTURE})")
-
 
 # dota2 paths
 ## minify
@@ -468,7 +464,14 @@ dota_game_pak_path = os.path.join(steam_dir, "steamapps", "common", "dota 2 beta
 dota_core_pak_path = os.path.join(steam_dir, "steamapps", "common", "dota 2 beta", "game", "core", "pak01_dir.vpk")
 dota_map_path = os.path.join(steam_dir, "steamapps", "common", "dota 2 beta", "game", "dota", "maps", "dota.vpk")
 dota_resource_compiler_path = os.path.join(
-    steam_dir, "steamapps", "common", "dota 2 beta", "game", "bin", "win64", "resourcecompiler.exe"
+    steam_dir,
+    "steamapps",
+    "common",
+    "dota 2 beta",
+    "game",
+    "bin",
+    "win64",
+    "resourcecompiler.exe",
 )
 
 dota_tools_paths = [
@@ -510,7 +513,6 @@ for mod in sorted(os.listdir(mods_dir)):
             mods_with_order.append({mod: 2})
         else:
             mods_with_order.append({mod: order})
-
 
 mods_with_order = sorted(mods_with_order, key=lambda d: list(d.values())[0])
 mods_with_order = [list(d.keys())[0] for d in mods_with_order]

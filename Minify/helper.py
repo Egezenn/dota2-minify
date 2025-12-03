@@ -55,7 +55,11 @@ def disable_workshop_mods():
     if not workshop_installed:
         for folder in mpaths.mods_with_order:
             mod_path = os.path.join(mpaths.mods_dir, folder)
-            worskhop_required_modification_methods = ["styling.txt", "menu.xml", "xml_mod.json"]
+            worskhop_required_modification_methods = [
+                "styling.txt",
+                "menu.xml",
+                "xml_mod.json",
+            ]
 
             for method_file in worskhop_required_modification_methods:
                 if os.path.exists(os.path.join(mod_path, method_file)):

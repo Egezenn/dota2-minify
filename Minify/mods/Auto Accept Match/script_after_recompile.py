@@ -22,11 +22,21 @@ def main():
         response = requests.get(before_workshop_req)
         if response.status_code == 200:
             os.makedirs(
-                os.path.join(mpaths.minify_dota_compile_output_path, "panoroma", "layout", "popups"), exist_ok=True
+                os.path.join(
+                    mpaths.minify_dota_compile_output_path,
+                    "panoroma",
+                    "layout",
+                    "popups",
+                ),
+                exist_ok=True,
             )
             with open(
                 os.path.join(
-                    mpaths.minify_dota_compile_output_path, "panoroma", "layout", "popups", "popup_accept_match.vxml_c"
+                    mpaths.minify_dota_compile_output_path,
+                    "panoroma",
+                    "layout",
+                    "popups",
+                    "popup_accept_match.vxml_c",
                 ),
                 "wb",
             ) as file:

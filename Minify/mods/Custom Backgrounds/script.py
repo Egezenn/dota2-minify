@@ -39,14 +39,23 @@ def main():
 """
             if not filepath.endswith(".png"):
                 if (magick_path := shutil.which("magick")) is not None:
-                    subprocess.run([magick_path, filepath, filepath := os.path.join(current_dir, "background.png")])
+                    subprocess.run(
+                        [
+                            magick_path,
+                            filepath,
+                            filepath := os.path.join(current_dir, "background.png"),
+                        ]
+                    )
                 else:
                     helper.add_text_to_terminal(f"imagemagick is not available on path, unable to convert {file}")
 
             if filepath.endswith(".png"):
                 os.makedirs(
                     compile_location := os.path.join(
-                        mpaths.minify_dota_compile_input_path, "panorama", "images", "backgrounds"
+                        mpaths.minify_dota_compile_input_path,
+                        "panorama",
+                        "images",
+                        "backgrounds",
                     ),
                     exist_ok=True,
                 )

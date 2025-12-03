@@ -20,7 +20,6 @@ import helper
 import build
 import gui
 
-
 ui.create_context()
 ui.add_value_registry(tag="details_tags")
 
@@ -120,7 +119,13 @@ def create_ui():
         ui.bind_item_font("lang_select", combo_font)
         with ui.group(horizontal=True):
             with ui.group(pos=(391, 29)):
-                ui.add_button(tag="button_patch", label="Patch", width=92, callback=patcher_start, enabled=False)
+                ui.add_button(
+                    tag="button_patch",
+                    label="Patch",
+                    width=92,
+                    callback=patcher_start,
+                    enabled=False,
+                )
                 ui.add_button(
                     tag="button_select_mods",
                     label="Select Mods",
@@ -334,7 +339,6 @@ with ui.texture_registry(show=False):
         tag="dev_texture_tag",
     )
 
-
 # Creating_main_viewport
 widths = []
 heights = []
@@ -342,7 +346,6 @@ heights = []
 for monitor in screeninfo.get_monitors():
     widths.append(monitor.width)
     heights.append(monitor.height)
-
 
 ui.create_viewport(
     title=gui.title,
@@ -357,7 +360,6 @@ ui.create_viewport(
 )
 
 ui.set_frame_callback(1, callback=create_base_ui)  # On first frame execute app_start
-
 
 ui.set_viewport_small_icon("./bin/favicon.ico")
 ui.set_viewport_large_icon("./bin/favicon.ico")
