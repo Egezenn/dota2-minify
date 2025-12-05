@@ -360,27 +360,29 @@ def patcher(mod=None, pakname=None):
             pass
 
         os.makedirs(helper.output_path, exist_ok=True)
-        newpak = vpk.new(mpaths.minify_dota_compile_output_path)
+        native_mods = vpk.new(mpaths.minify_dota_compile_output_path)
         helper.add_text_to_terminal(
             helper.localization_dict["compiling_terminal_text_var"],
             "compiling_text",
         )
         pakname = "pak66" if pakname is None else pakname
-        newpak.save(os.path.join(helper.output_path, f"{pakname}_dir.vpk"))
+        native_mods.save(os.path.join(helper.output_path, f"{pakname}_dir.vpk"))
 
         # ---------------------------------- STEP 7 ---------------------------------- #
         # -------------------------- Merge VPKs into pak33 --------------------------- #
         # ---------------------------------------------------------------------------- #
 
-        pak66_path = os.path.join(helper.output_path, f"{pakname}_dir.vpk")
-
-        helper.add_text_to_terminal(helper.localization_dict["merging_vpks_text_var"])
-
-        pak66 = vpk.open(pak66_path)
-        dump_vpk(pak66, mpaths.merge_dir, check_exists=False)
-
+        # Check if there are any VPK mods selected
+        vpk_mods_to_merge = []
         for mod_name in mod_list:
             if mod_name.endswith(".vpk") and (mod is not None or ui.get_value(mod_name)):
+                vpk_mods_to_merge.append(mod_name)
+
+        # Only create pak65 if there are VPK mods to merge
+        if vpk_mods_to_merge:
+            helper.add_text_to_terminal(helper.localization_dict["merging_vpks_text_var"])
+
+            for mod_name in vpk_mods_to_merge:
                 mod_path = os.path.join(mpaths.mods_dir, mod_name)
                 try:
                     mod_vpk = vpk.open(mod_path)
@@ -389,11 +391,35 @@ def patcher(mod=None, pakname=None):
                 except:
                     mpaths.write_warning(helper.localization_dict["failed_to_merge_mod_text_var"].format(mod_name))
 
-        helper.add_text_to_terminal(helper.localization_dict["creating_merged_vpk_text_var"])
-        pak33 = vpk.new(mpaths.merge_dir)
-        pak33.save(os.path.join(helper.output_path, "pak33_dir.vpk"))
+            # Insert metadata to pak65
+            # Create a metadata file listing the VPK mods included
+            with open(os.path.join(mpaths.merge_dir, "minify_vpk_mods.txt"), "w") as f:
+                f.write("\n".join(vpk_mods_to_merge))
 
-        helper.add_text_to_terminal(helper.localization_dict["success_merged_vpk_text_var"], None, "success")
+            try:
+                shutil.copy(
+                    mpaths.version_file_dir,
+                    os.path.join(mpaths.merge_dir, "minify_version.txt"),
+                )
+            except FileNotFoundError:  # update ignore
+                pass
+
+            helper.add_text_to_terminal(helper.localization_dict["creating_merged_vpk_text_var"])
+            merged_mods = vpk.new(mpaths.merge_dir)
+            merged_mods.save(os.path.join(helper.output_path, "pak65_dir.vpk"))
+
+            helper.add_text_to_terminal(helper.localization_dict["success_merged_vpk_text_var"], None, "success")
+        else:
+            # No VPK mods selected - remove pak65 if it exists from previous patches
+            pak65_path = os.path.join(helper.output_path, "pak65_dir.vpk")
+            if os.path.exists(pak65_path):
+                try:
+                    # Verify it's a Minify-created pak65 by checking metadata
+                    pak65_contents = vpk.open(pak65_path)
+                    if "minify_vpk_mods.txt" in pak65_contents or "minify_version.txt" in pak65_contents:
+                        os.remove(pak65_path)
+                except:
+                    pass
 
         # ---------------------------------- STEP 8 ---------------------------------- #
         # -------------------------- Clean paths and inform -------------------------- #
@@ -481,6 +507,7 @@ def uninstaller():
                     mod_names_with_txt = [s + ".txt" for s in mpaths.visually_available_mods]
                     for file in [
                         "minify_mods.json",
+                        "minify_vpk_mods.txt",
                         "minify_version.txt",
                         *mod_names_with_txt,
                     ]:

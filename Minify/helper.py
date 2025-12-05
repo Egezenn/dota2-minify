@@ -4,7 +4,6 @@ import shlex
 import shutil
 import stat
 import subprocess
-import sys
 import time
 import webbrowser
 
@@ -109,7 +108,7 @@ def change_localization(init=False):
     global locale
     with open(mpaths.localization_file_dir, "r", encoding="utf-8") as localization_file:
         localization_data = jsonc.load(localization_file)
-    if init == True:
+    if init == True:  # gets broken equality check is not there # noqa: E712
         if (locale := mpaths.get_config("locale", ui.get_value("lang_select"))) is not None:
             ui.configure_item("lang_select", default_value=locale)
         else:

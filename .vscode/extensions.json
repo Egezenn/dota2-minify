@@ -3,7 +3,6 @@
     "detachhead.basedpyright",
     "ms-python.black-formatter",
     "ms-python.debugpy",
-    "ms-python.python",
-    "ms-python.vscode-python-envs"
+    "ms-python.python"
   ]
 }

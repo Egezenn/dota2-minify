@@ -90,44 +90,41 @@ else:
 rescomp_override = True if os.path.exists(rescomp_override_dir) else False
 
 
-def get_config(key, default_value=None):
+def read_json_file(path):
     try:
-        with open(main_config_file_dir, "r+") as file:
-            base_data = jsonc.load(file)
-            try:
-                return base_data[key]
-
-            except KeyError:
-                if default_value is not None:
-                    base_data[key] = default_value
-                    file.seek(0)
-                    jsonc.dump(base_data, file, indent=2)
-                    file.truncate()
-                    return default_value
-                else:
-                    return None
-
+        with open(path, "r") as file:
+            return jsonc.load(file)
     except (FileNotFoundError, jsonc.JSONDecodeError):
-        with open(main_config_file_dir, "w") as file:
-            jsonc.dump({}, file)
-        return get_config(key, default_value)
+        return {}
+
+
+def write_json_file(path, data):
+    with open(path, "w") as file:
+        jsonc.dump(data, file, indent=2)
+
+
+def update_json_file(path, key, value):
+    data = read_json_file(path)
+    data[key] = value
+    write_json_file(path, data)
+    return value
+
+
+def get_config(key, default_value=None):
+    data = read_json_file(main_config_file_dir)
+    try:
+        return data[key]
+    except KeyError:
+        if default_value is not None:
+            update_json_file(main_config_file_dir, key, default_value)
+            return default_value
+        else:
+            return None
 
 
 def set_config(key, value):
-    try:
-        with open(main_config_file_dir, "r+") as file:
-            data = jsonc.load(file)
-            data[key] = value
-            file.seek(0)
-            jsonc.dump(data, file, indent=2)
-            file.truncate()
-
-        return value
-
-    except (FileNotFoundError, jsonc.JSONDecodeError):
-        with open(main_config_file_dir, "w") as file:
-            jsonc.dump({}, file)
-        return set_config(key, value)
+    update_json_file(main_config_file_dir, key, value)
+    return value
 
 
 def get_key_from_dict_w_default(dict, key, default):
@@ -139,25 +136,14 @@ def get_key_from_dict_w_default(dict, key, default):
 
 def get_key_from_json_file_w_default(file, key, default):
     try:
-        with open(file) as file:
-            data = jsonc.load(file)
+        data = read_json_file(file)
         return get_key_from_dict_w_default(data, key, default), data
     except FileNotFoundError:
         return default, {}
 
 
 def set_key_for_json_file(file, key, value):
-    try:
-        with open(file, "r+") as file:
-            data = jsonc.load(file)
-            data[key] = value
-            file.seek(0)
-            jsonc.dump(data, file, indent=2)
-            file.truncate()
-
-    except (FileNotFoundError, jsonc.JSONDecodeError):
-        with open(file, "w") as file:
-            jsonc.dump({key: value}, file, indent=2)
+    update_json_file(file, key, value)
 
 
 def write_crashlog(exc_type=None, exc_value=None, exc_traceback=None, header=None, handled=True):
