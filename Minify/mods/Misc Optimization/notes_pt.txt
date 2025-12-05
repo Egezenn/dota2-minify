@@ -1,0 +1,7 @@
+Remove efeitos diversos
+
+- Remove efeitos de partículas em construções, como o brilho azul em fontes, postos avançados, bases, etc.
+- Partículas de projéteis/destruição de torres
+- Partículas de efígies
+- Ilusões simplificadas
+- Equipamentos de heróis, emblemas de eventos, glifos e muito mais

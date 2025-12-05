@@ -1,0 +1,1 @@
+Flytter og skalerer nogle aspekter af spillets HUD.

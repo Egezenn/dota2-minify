@@ -1,0 +1,1 @@
+Positioniert und skaliert einige Aspekte des In-Game-HUDs neu.

@@ -1,0 +1,10 @@
+Entfernt diverse Effekte
+
+- Entfernt Partikeleffekte an Gebäuden, wie z. B. das blaue Leuchten von Brunnen, Außenposten, Basisgebäuden usw.
+- Projektil-/Zerstörungspartikel von Turmangriffen
+
+- Partikel von Abbildern
+
+- Vereinfachte Illusionen
+
+- Heldenausrüstungen, Event-Embleme, Glyphen und mehr

@@ -1,0 +1,1 @@
+Réduit le nombre de particules lors des attaques automatiques des héros à distance.

@@ -1,0 +1,2 @@
+Mărește cărțile cu eroi.
+Elimină filmele cu eroi care apar pe suprafețele de afișare a cărților, pe insigne și pe rândurile cu eroi similari.

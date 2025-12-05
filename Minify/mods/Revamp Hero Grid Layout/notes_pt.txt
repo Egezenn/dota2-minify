@@ -1,0 +1,2 @@
+Aumenta o tamanho dos cards de herói.
+Remove os vídeos de herói que aparecem ao passar o mouse sobre os cards, emblemas e outras informações semelhantes na linha de heróis.

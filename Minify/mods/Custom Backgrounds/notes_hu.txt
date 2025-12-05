@@ -1,0 +1,5 @@
+Lecseréli a főmenü hátterét, a játékos bemutató hátterét és a képernyőválasztó hátterét.
+
+A mod mappájába másolhatsz egy képet, és az azt fogja használni háttérként.
+
+A `magick` segédprogramra van szükséged az elérési út változódban, ha a képed nem png, és konvertálni kell.

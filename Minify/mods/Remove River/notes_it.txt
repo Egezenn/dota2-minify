@@ -1,0 +1,3 @@
+Rimuove tutto ciò che riguarda i fiumi.
+
+Inclusi dipingere il fiume con oggetti in fiala, effetti sonori di camminata, effetti di schizzi di particelle.

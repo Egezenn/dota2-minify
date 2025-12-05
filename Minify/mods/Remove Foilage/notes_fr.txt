@@ -1,0 +1,3 @@
+Supprime tous les buissons, fleurs, rochers et autres éléments de décor au sol pour ne laisser que des dalles.
+
+* Le terrain par défaut doit être équipé dans votre inventaire.

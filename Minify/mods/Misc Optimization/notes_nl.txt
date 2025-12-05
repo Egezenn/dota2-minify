@@ -1,0 +1,7 @@
+Verwijdert diverse effecten
+
+- Verwijdert deeltjeseffecten op gebouwen, zoals de gloeiende blauwe effecten op fonteinen, buitenposten, basisgebouwen, enz.
+- Torenaanvalsprojectiel-/vernietigingsdeeltjes
+- Beeltenisdeeltjes
+- Vereenvoudigde illusies
+- Heldenuitrustingen, evenementemblemen, symbolen en meer

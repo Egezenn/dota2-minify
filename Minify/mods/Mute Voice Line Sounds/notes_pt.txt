@@ -1,0 +1,1 @@
+Silencia todos os sons da linha de voz.

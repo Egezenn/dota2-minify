@@ -1,0 +1,1 @@
+Zmniejsza ilość cząsteczek podczas ataków automatycznych bohaterów walczących na dystans.

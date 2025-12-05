@@ -1,0 +1,3 @@
+Dodaj własne / zmodyfikuj i usuń istniejące fragmenty stylów tutaj.
+
+Te fragmenty mogą nie być pożądane przez większość użytkowników, dlatego należy je włączać ostrożnie.

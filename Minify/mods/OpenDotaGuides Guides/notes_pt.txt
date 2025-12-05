@@ -1,0 +1,5 @@
+Substitui os guias padrão pelos do OpenDotaGuides
+
+* Requer que as builds padrão estejam selecionadas para visualizá-las no jogo
+
+Fonte: https://github.com/Egezenn/OpenDotaGuides/releases/latest

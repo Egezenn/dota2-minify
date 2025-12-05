@@ -1,0 +1,15 @@
+Hiermee kun je de hero grids van Dota2ProTracker gebruiken. Je vorige layouts worden opgeslagen in de back-upmap van deze mod.
+
+* Gebruikt het Steam-account met de laagste id als "steam_id" niet is opgegeven.
+* Om een ​​ander grid te gebruiken, specificeer "grid_type". Standaard wordt "d2ptrating" gebruikt.
+* Je kunt ook een hero grid naar keuze downloaden van https://dota2protracker.com/meta-hero-grids en deze in de map van deze mod plaatsen.
+
+`minify_config.json`
+```json
+{
+"steam_id": STEAM_ID3,
+"grid_type": "matches" | "matches_wr" | "d2ptrating"
+"steam_path": pad_naar_je_steam_installatie_indien_nodig
+"patch": "7.39e"
+}
+```

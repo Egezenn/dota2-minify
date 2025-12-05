@@ -1,0 +1,9 @@
+Rétablit les sons des pings tels qu'ils étaient avant la mise à jour 7.39.
+
+Les nouveaux sons sont remplacés par :
+
+- ping_heart = ping
+
+- ping_enemy_ward = ping_warning
+
+- ping_need_ward = ping

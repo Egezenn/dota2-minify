@@ -1,0 +1,1 @@
+Ompositionerar och skalar vissa aspekter av spelets HUD.

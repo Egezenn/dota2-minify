@@ -1,0 +1,1 @@
+Accetta automaticamente la finestra di dialogo di abbinamento dopo X secondi di ritardo. Il ritardo è regolabile tramite il pannello delle impostazioni. Il valore predefinito è 10 se gli strumenti dell'officina non sono installati.

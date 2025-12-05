@@ -1,0 +1,3 @@
+Minden fát apró, kör alakú bokrokká alakít
+
+* Alapértelmezett tereptárgyat igényel

@@ -1,0 +1,3 @@
+Verwijdert alle struiken, bloemen, rotsen en andere grondobjecten, zodat je alleen tegels overhoudt.
+
+* Standaardterrein moet in je inventaris aanwezig zijn.

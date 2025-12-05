@@ -1,0 +1,14 @@
+Für optimale visuelle Klarheit entwickelt.
+
+* Standard-Dota-2-Terrain muss installiert sein.
+
+- Alle Kacheln werden grau/dunkelgrau dargestellt.
+
+- Nebellinien
+- Nebelschleier entfernt
+
+- Dunkles Wasser
+- Benutzerdefinierte Teamlogos
+
+Benutzerdefinierte Händler
+- Weitere Texturverbesserungen passend zum Kartenthema

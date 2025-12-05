@@ -1,0 +1,1 @@
+Usuwa wszystkie cząsteczki i dźwięki pingu oprócz domyślnych.

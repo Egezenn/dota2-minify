@@ -1,0 +1,3 @@
+A legtöbb játékbeli HUD elemet átlátszóvá teszi, eltávolít néhány felesleges funkciót.
+
+* Alapértelmezett játékbeli HUD szükséges hozzá.

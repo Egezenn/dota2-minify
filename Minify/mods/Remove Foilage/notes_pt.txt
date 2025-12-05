@@ -1,0 +1,3 @@
+Remove todos os arbustos, flores, pedras e quaisquer outros objetos de chão, deixando apenas os ladrilhos.
+
+* É necessário ter o terreno padrão equipado no seu inventário.

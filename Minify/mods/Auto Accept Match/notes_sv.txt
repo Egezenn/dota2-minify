@@ -1,0 +1,1 @@
+Accepterar automatiskt matchningsdialogrutan efter X sekunders fördröjning. Fördröjningen kan justeras via inställningspanelen. Standardinställningen är 10 om verkstadsverktyg inte är installerade.

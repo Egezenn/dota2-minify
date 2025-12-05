@@ -1,0 +1,5 @@
+Korvaa oletusoppaat OpenDotaGuidesin oppailla
+
+* Edellyttää oletuskokoonpanojen valitsemista, jotta ne näkyvät pelissä
+
+Lähde: https://github.com/Egezenn/OpenDotaGuides/releases/latest

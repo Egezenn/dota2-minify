@@ -1,0 +1,11 @@
+Utformad för visuell tydlighet.
+
+* Måste ha standard dota2-terräng utrustad
+
+- Gör alla rutor grå/mörkgrå
+- Dimlinjer
+- Borttagen dimma
+- Mörkt vatten
+- Anpassade laglogotyper
+- Anpassade butiksinnehavare
+- Andra diverse texturförbättringar för att passa karttemat

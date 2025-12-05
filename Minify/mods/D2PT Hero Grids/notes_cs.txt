@@ -1,0 +1,18 @@
+Umožňuje používat mřížky hrdinů z Dota2ProTrackeru. Vaše předchozí rozvržení budou uložena ve složce `backup` tohoto modu.
+
+* Pokud není zadáno "steam_id", použije se účet Steam s nejnižším ID.
+* Chcete-li použít jinou mřížku, zadejte "grid_type". Ve výchozím nastavení se používá "d2ptrating".
+* Případně si stáhněte mřížku hrdiny dle vlastního výběru z https://dota2protracker.com/meta-hero-grids a přetáhněte ji do složky tohoto modu.
+
+`minify_config.json`
+```json
+{
+"steam_id": STEAM_ID3,
+
+"grid_type": "matches" | "matches_wr" | "d2ptrating"
+
+"steam_path": cesta_k_vaší_instalaci_steamu_pokud_needed
+
+"patch": "7.39e"
+}
+```

@@ -1,0 +1,1 @@
+Reduz o número de partículas nos ataques automáticos de heróis de longo alcance.

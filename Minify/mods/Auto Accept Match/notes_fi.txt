@@ -1,0 +1,1 @@
+Hyväksyy otteludialogin automaattisesti X sekunnin viiveen jälkeen. Viivettä voi säätää asetuspaneelista. Oletusarvo on 10, jos työpajatyökaluja ei ole asennettu.

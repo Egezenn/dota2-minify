@@ -1,0 +1,3 @@
+Elimină previzualizările și randările eroilor din interfața cu utilizatorul.
+
+Variabila de consolă `map_enable_portrait_worlds 0` atinge același obiectiv, însă veți rămâne blocați pe ecranele MVP.

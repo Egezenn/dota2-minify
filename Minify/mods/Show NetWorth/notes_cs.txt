@@ -1,0 +1,1 @@
+Zobrazuje vaše aktuální čisté jmění v panelu rychlých statistik.

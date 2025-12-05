@@ -1,0 +1,3 @@
+Forenkler alle trylleformularer og genstande i spillet.
+
+* Ændrer for det meste standardtrylleformularer.

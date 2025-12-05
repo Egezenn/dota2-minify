@@ -1,0 +1,3 @@
+Macht die meisten HUD-Elemente im Spiel transparent und entfernt einige überflüssige Funktionen.
+
+* Erfordert das Standard-HUD im Spiel.

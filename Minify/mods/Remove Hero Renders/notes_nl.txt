@@ -1,0 +1,3 @@
+Verwijdert hero-previews en renders uit de gebruikersinterface.
+
+De consolevariabele `map_enable_portrait_worlds 0` bereikt hetzelfde doel, maar je blijft dan hangen op MVP-schermen.

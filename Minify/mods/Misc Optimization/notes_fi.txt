@@ -1,0 +1,8 @@
+Poistaa sekalaisia ​​tehosteita
+
+- Poistaa hiukkastehosteet rakennuksista, kuten hehkuvan siniset tehosteet suihkulähteistä, etuvartioista, tukikohdista jne.
+
+- Tornihyökkäysammuksen / tuhohiukkaset
+- Nukkejen hiukkaset
+- Yksinkertaistetut illuusiot
+- Sankarien varusteet, tapahtumatunnukset, symbolit ja paljon muuta

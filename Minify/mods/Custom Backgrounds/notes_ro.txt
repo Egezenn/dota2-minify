@@ -1,0 +1,5 @@
+Înlocuiește fundalul meniului principal, fundalul prezentării jucătorului și fundalul ecranului de selectare.
+
+Poți plasa o imagine în folderul acestui mod, iar acesta o va folosi pentru fundal.
+
+Ai nevoie de utilitarul `magick` pe variabila de cale dacă imaginea nu este un png și trebuie convertită.

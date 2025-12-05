@@ -1,0 +1,1 @@
+Usuwa tło menu głównego.

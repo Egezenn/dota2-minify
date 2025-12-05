@@ -1,0 +1,1 @@
+Fjerner alle ping-partikler og lyde undtagen standardlyden.

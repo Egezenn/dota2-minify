@@ -1,0 +1,2 @@
+Powiększa karty bohaterów.
+Usuwa filmy o bohaterach, które pojawiają się na kartach, odznakach i w rzędach podobnych bohaterów.

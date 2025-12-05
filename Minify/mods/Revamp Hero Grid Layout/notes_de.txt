@@ -1,0 +1,1 @@
+Vergrößert Heldenkarten. Entfernt Heldenfilme, die beim Überfahren von Karten mit der Maus, auf Abzeichen und in der Reihe ähnlicher Helden angezeigt werden.

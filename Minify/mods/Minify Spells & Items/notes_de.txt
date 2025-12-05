@@ -1,0 +1,3 @@
+Vereinfacht alle Zauber und Gegenstände im Spiel.
+
+* Modifiziert hauptsächlich Standardzauber.

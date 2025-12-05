@@ -1,0 +1,15 @@
+Lehetővé teszi a Dota2ProTracker hősrácsainak használatát. A korábbi elrendezéseid a mod `backup` mappájába lesznek mentve.
+
+* A legalacsonyabb azonosítóval rendelkező Steam fiókot használja, ha a "steam_id" nincs megadva.
+* Másik rács használatához add meg a "grid_type" értéket. Alapértelmezés szerint a "d2ptrating" kerül felhasználásra.
+* Alternatív megoldásként tölts le egy általad választott hősrácsot a https://dota2protracker.com/meta-hero-grids oldalról, és másold be a mod mappájába.
+
+`minify_config.json`
+```json
+{
+"steam_id": STEAM_ID3,
+"grid_type": "matches" | "matches_wr" | "d2ptrating"
+"steam_path": path_to_your_steam_installation_if_needed
+"patch": "7.39e"
+}
+```

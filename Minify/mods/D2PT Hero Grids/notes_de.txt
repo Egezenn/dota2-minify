@@ -1,0 +1,17 @@
+Ermöglicht die Verwendung der Heldenraster von Dota2ProTracker. Deine vorherigen Layouts werden im Ordner `backup` dieser Mod gespeichert.
+
+* Verwendet den Steam-Account mit der niedrigsten ID, falls "steam_id" nicht angegeben ist.
+
+* Um ein anderes Raster zu verwenden, gib "grid_type" an. Standardmäßig wird "d2ptrating" verwendet.
+
+* Alternativ kannst du ein Heldenraster deiner Wahl von https://dota2protracker.com/meta-hero-grids herunterladen und in den Ordner dieser Mod einfügen.
+
+`minify_config.json`
+```json
+{
+"steam_id": STEAM_ID3,
+"grid_type": "matches" | "matches_wr" | "d2ptrating"
+"steam_path": Pfad_zur_Steam-Installation_falls_benötigt
+"patch": "7.39e"
+}
+```

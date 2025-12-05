@@ -1,0 +1,3 @@
+Remove as pré-visualizações dos heróis e as renderizações da interface do usuário.
+
+A variável de console `map_enable_portrait_worlds 0` alcança o mesmo objetivo, porém você ficará preso nas telas de MVP (Maior Propósito Viável).

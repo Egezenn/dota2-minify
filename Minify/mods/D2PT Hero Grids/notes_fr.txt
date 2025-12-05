@@ -1,0 +1,20 @@
+Permet d'utiliser les grilles de héros de Dota2ProTracker. Vos configurations précédentes seront sauvegardées dans le dossier `backup` de ce mod.
+
+* Utilise le compte Steam avec l'ID le plus bas si « steam_id » n'est pas spécifié.
+
+* Pour utiliser une autre grille, spécifiez « grid_type ». Par défaut, « d2ptrating » est utilisé.
+
+* Vous pouvez également télécharger une grille de héros de votre choix depuis https://dota2protracker.com/meta-hero-grids et la déposer dans le dossier de ce mod.
+
+`minify_config.json`
+```json
+{
+"steam_id": STEAM_ID3,
+
+"grid_type": "matches" | "matches_wr" | "d2ptrating"
+
+"steam_path": chemin_vers_votre_installation_steam_si_nécessaire
+
+"patch": "7.39e"
+}
+```

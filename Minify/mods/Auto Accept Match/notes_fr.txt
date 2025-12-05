@@ -1,0 +1,1 @@
+Accepte automatiquement la boîte de dialogue de correspondance après un délai de X secondes. Ce délai est réglable dans les paramètres. Par défaut, il est de 10 secondes si les outils de l'atelier ne sont pas installés.

@@ -1,0 +1,1 @@
+Fjerner profilfremvisninger og animation.

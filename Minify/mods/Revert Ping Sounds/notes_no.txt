@@ -1,0 +1,6 @@
+Tilbakestiller pinglyder til lydene fra før 7.39-oppdateringen.
+
+Nye lyder erstattes med:
+- ping_heart = ping
+- ping_enemy_ward = ping_warning
+- ping_need_ward = ping

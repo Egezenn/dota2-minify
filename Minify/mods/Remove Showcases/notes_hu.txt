@@ -1,0 +1,1 @@
+Eltávolítja a profilbemutatókat és az animációkat.

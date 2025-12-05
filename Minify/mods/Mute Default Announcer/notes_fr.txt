@@ -1,0 +1,1 @@
+Désactive les annonces vocales par défaut et les répliques de séries d'éliminations.

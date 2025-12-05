@@ -1,0 +1,19 @@
+Permite usar as grades de heróis do Dota2ProTracker. Seus layouts anteriores serão salvos na pasta `backup` deste mod.
+
+* Usa a conta Steam com o ID mais baixo se "steam_id" não for especificado.
+
+* Para usar uma grade diferente, especifique "grid_type". Por padrão, "d2ptrating" é usado.
+
+* Como alternativa, baixe uma grade de heróis de sua escolha em https://dota2protracker.com/meta-hero-grids e coloque-a na pasta deste mod.
+
+`minify_config.json`
+```json
+{
+"steam_id": STEAM_ID3,
+
+"grid_type": "matches" | "matches_wr" | "d2ptrating"
+
+"steam_path": caminho_para_sua_instalação_do_Steam_se_necessário
+"patch": "7.39e"
+}
+```

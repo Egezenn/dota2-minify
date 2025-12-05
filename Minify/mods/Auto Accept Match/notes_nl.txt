@@ -1,0 +1,1 @@
+Accepteert automatisch de matchdialoog na X seconden vertraging. De vertraging is instelbaar via het instellingenpaneel. Standaardwaarde is 10 als er geen werkplaatsgereedschap is geïnstalleerd.

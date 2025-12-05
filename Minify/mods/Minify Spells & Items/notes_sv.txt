@@ -1,0 +1,3 @@
+Förenklar varje besvärjelse och föremål i spelet.
+
+* Modifierar mestadels standardbesvärjelser.

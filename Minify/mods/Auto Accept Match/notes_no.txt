@@ -1,0 +1,1 @@
+Godtar automatisk samsvarsdialogen etter X sekunders forsinkelse. Forsinkelsen kan justeres via innstillingspanelet. Standardinnstillingen er 10 hvis verkstedverktøy ikke er installert.

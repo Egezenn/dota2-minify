@@ -1,0 +1,11 @@
+Ontworpen voor visuele duidelijkheid.
+
+* Standaard Dota 2-terrein vereist
+
+- Maakt alle tegels grijs/donkergrijs
+- Mistlijnen
+- Mist verwijderd
+- Donker water
+- Aangepaste teamlogo's
+- Aangepaste winkeliers
+- Diverse andere textuurverbeteringen die passen bij het kaartthema

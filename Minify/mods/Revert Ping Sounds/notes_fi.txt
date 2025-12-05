@@ -1,0 +1,6 @@
+Palauttaa ping-äänet 7.39-päivitystä edeltäneisiin ääniin.
+
+Uudet äänet korvataan seuraavilla:
+- ping_heart = ping
+- ping_enemy_ward = ping_warning
+- ping_need_ward = ping

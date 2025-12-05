@@ -1,0 +1,6 @@
+Pinggeluiden worden teruggezet naar de geluiden van vóór patch 7.39.
+
+Nieuwe geluiden worden vervangen door:
+- ping_heart = ping
+- ping_enemy_ward = ping_warning
+- ping_need_ward = ping

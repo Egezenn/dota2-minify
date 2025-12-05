@@ -1,0 +1,1 @@
+Némítja az alapértelmezett bemondókat és a killstreak sorokat.

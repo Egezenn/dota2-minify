@@ -1,0 +1,3 @@
+Behebt einen Fehler im mit Patch 7.00 eingeführten Einheiten-Abfrage-HUD und aktualisiert es.
+
+Verfügbar über die Konsolenvariable `dota_hud_new_query_panel 1`.

@@ -5,6 +5,7 @@ import shutil
 import sys
 
 current_dir = os.path.dirname(os.path.abspath(__file__))
+mod_name = os.path.basename(current_dir)
 minify_root = os.path.abspath(os.path.join(current_dir, os.pardir, os.pardir))
 os.chdir(minify_root)
 
@@ -19,7 +20,7 @@ import requests
 
 def main():
     modconf = mpaths.get_config("modconf", {})
-    config_data = mpaths.get_key_from_dict_w_default(modconf, current_dir, {})
+    config_data = mpaths.get_key_from_dict_w_default(modconf, mod_name, {})
     path_from_config = mpaths.get_key_from_dict_w_default(config_data, "steam_path", "")
     possible_userdata_paths = [
         os.path.join(path_from_config, "userdata"),
@@ -66,7 +67,7 @@ def main():
             config_data["grid_type"] = grid_type
             config_data["patch_name"] = patch_name
 
-            modconf[current_dir] = config_data
+            modconf[mod_name] = config_data
             mpaths.set_config("modconf", modconf)
 
             if found_id and os.path.isdir(dest_path := os.path.join(id_to_use_path, "570", "remote", "cfg")):
@@ -86,11 +87,11 @@ def main():
                 shutil.copy(grid_path, os.path.join(dest_path, "hero_grid_config.json"))
             else:
                 mpaths.write_warning(
-                    f"The first account found in {userdata_path} doesn't have a hero grid or an account couldn't be found. Manually set your `steam_id` for {current_dir}."
+                    f"The first account found in {userdata_path} doesn't have a hero grid or an account couldn't be found. Manually set your `steam_id` for {mod_name}."
                 )
     else:
         mpaths.write_warning(
-            f"Path to your steam installation couldn't be found for {current_dir}, manually set it from `minify_config.json` under `modconf` > `{current_dir}` key with `steam_path`"
+            f"Path to your steam installation couldn't be found for {mod_name}, manually set it from `minify_config.json` under `modconf` > `{mod_name}` key with `steam_path`"
         )
 
 

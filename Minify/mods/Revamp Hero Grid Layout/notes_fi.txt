@@ -1,0 +1,2 @@
+Suurentaa sankarikortteja.
+Poistaa sankarielokuvia, jotka näkyvät korttien päällä, merkeissä ja vastaavien sankarien rivillä.

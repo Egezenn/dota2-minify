@@ -1,0 +1,3 @@
+Naprawia i ponownie wypełnia panel HUD zapytania jednostki, który został udostępniony w aktualizacji 7.00.
+
+Dostępne ze zmienną konsoli `dota_hud_new_query_panel 1`.

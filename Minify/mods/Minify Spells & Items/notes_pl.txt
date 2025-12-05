@@ -1,0 +1,3 @@
+Upraszcza wszystkie zaklęcia i przedmioty w grze.
+
+* Modyfikuje głównie domyślne zaklęcia.

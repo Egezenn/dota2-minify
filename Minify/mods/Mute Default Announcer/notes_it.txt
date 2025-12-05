@@ -1,0 +1,1 @@
+Disattiva l'audio degli annunciatori predefiniti e delle linee di killstreak.

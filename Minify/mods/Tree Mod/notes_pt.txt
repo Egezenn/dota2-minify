@@ -1,0 +1,3 @@
+Transforma todas as árvores em pequenos arbustos circulares
+
+* Requer terreno padrão

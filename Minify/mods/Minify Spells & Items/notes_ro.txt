@@ -1,0 +1,3 @@
+Simplifică fiecare vrajă și obiect din joc.
+
+* Modifică în mare parte vrăjile implicite.

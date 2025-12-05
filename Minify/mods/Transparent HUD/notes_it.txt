@@ -1,0 +1,3 @@
+Rende trasparenti la maggior parte degli elementi dell'HUD di gioco, rimuovendo alcune funzionalità inutili.
+
+* Richiede l'HUD di gioco predefinito

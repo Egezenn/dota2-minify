@@ -1,0 +1,11 @@
+Projetado para clareza visual.
+
+* Requer o terreno padrão do Dota 2 equipado
+
+- Deixa todos os tiles cinza/cinza escuro
+- Linhas de neblina
+- Remove a névoa
+- Água escura
+- Logotipos de times personalizados
+- Lojistas personalizados
+- Outras melhorias de textura diversas para combinar com o tema do mapa

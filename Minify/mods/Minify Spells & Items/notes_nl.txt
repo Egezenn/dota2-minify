@@ -1,0 +1,3 @@
+Vereenvoudigt elke spreuk en elk item in het spel.
+
+* Wijzigt voornamelijk standaardspreuken.

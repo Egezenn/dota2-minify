@@ -1,0 +1,3 @@
+Fjerner alt som er relatert til elver.
+
+Inkludert å male elver med ampuller, lydeffekter av gående og partikkelsprut.

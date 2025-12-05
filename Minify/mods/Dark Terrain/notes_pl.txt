@@ -1,0 +1,11 @@
+Zaprojektowano z myślą o przejrzystości.
+
+* Wymagane jest wyposażenie w domyślny teren Dota2
+
+- Wszystkie pola stają się szare/ciemnoszare
+- Linie mgły
+- Usunięto mgłę
+- Ciemna woda
+- Własne loga drużyn
+- Własne sklepikarze
+- Inne drobne ulepszenia tekstur, aby dopasować je do motywu mapy

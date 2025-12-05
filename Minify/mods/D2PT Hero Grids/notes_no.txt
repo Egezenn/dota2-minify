@@ -1,0 +1,16 @@
+Lar deg bruke Dota2ProTrackers helte-rutenett. Dine tidligere oppsett lagres i denne moddens `backup`-mappe.
+
+* Bruker Steam-kontoen med lavest ID hvis "steam_id" ikke er spesifisert.
+
+* For å bruke et annet rutenett, spesifiser "grid_type". Som standard brukes "d2ptrating".
+* Alternativt kan du laste ned et helte-rutenett du velger fra https://dota2protracker.com/meta-hero-grids og slippe det i denne moddens mappe.
+
+`minify_config.json`
+```json
+{
+"steam_id": STEAM_ID3,
+"grid_type": "matches" | "matches_wr" | "d2ptrating"
+"steam_path": path_to_your_steam_installation_if_needed
+"patch": "7.39e"
+}
+```

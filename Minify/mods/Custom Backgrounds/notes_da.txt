@@ -1,0 +1,5 @@
+Erstatter baggrunden for hovedmenuen, baggrunden for spillerens showcase og baggrunden for valgskærmen.
+
+Du kan slippe et billede i denne mods mappe, og den vil bruge det som baggrund.
+
+Du skal bruge `magick`-værktøjet på din path-variabel, hvis dit billede ikke er en png og skal konverteres.

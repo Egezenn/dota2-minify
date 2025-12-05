@@ -1,0 +1,3 @@
+Rimuove le anteprime e i rendering degli eroi dall'interfaccia utente.
+
+La variabile della console `map_enable_portrait_worlds 0` raggiunge lo stesso obiettivo, tuttavia rimarrai bloccato sulle schermate MVP.

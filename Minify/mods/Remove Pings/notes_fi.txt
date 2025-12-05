@@ -1,0 +1,1 @@
+Poistaa kaikki ping-partikkelit ja äänet paitsi oletusäänen.

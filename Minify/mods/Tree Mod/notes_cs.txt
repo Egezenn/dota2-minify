@@ -1,0 +1,3 @@
+Promění všechny stromy v malé kruhové keře
+
+* Vyžaduje výchozí terén

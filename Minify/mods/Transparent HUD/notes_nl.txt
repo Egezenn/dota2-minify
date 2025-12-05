@@ -1,0 +1,3 @@
+Maakt de meeste in-game HUD-elementen transparant en verwijdert enkele nutteloze functies.
+
+* Vereist standaard in-game HUD

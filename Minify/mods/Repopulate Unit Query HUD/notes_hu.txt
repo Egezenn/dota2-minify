@@ -1,0 +1,3 @@
+Kijavítja és újratölti az Egységlekérdezés HUD panelt, amely a 7.00-s javításban jelent meg.
+
+Elérhető a `dota_hud_new_query_panel 1` konzolváltozóval.

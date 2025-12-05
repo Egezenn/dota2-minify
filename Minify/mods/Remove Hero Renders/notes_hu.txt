@@ -1,0 +1,3 @@
+Eltávolítja a hős előnézeteket és rendereléseket a felhasználói felületről.
+
+A `map_enable_portrait_worlds 0` konzolváltozó ugyanazt a célt éri el, azonban az MVP képernyőkön elakadhatsz.

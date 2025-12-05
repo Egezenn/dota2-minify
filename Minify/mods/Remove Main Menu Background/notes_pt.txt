@@ -1,0 +1,1 @@
+Remove o fundo do menu principal.

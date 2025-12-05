@@ -1,0 +1,5 @@
+Заменя ръководствата по подразбиране с тези от OpenDotaGuides
+
+* Изисква се да бъдат избрани сборки по подразбиране, за да се видят в играта
+
+Източник: https://github.com/Egezenn/OpenDotaGuides/releases/latest

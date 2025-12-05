@@ -1,0 +1,3 @@
+Zde můžete přidat vlastní / upravit a odstranit existující úryvky stylů.
+
+Tyto úryvky nemusí být pro většinu uživatelů žádoucí, povolujte je s opatrností.

@@ -1,0 +1,7 @@
+Elimină efecte diverse
+
+- Elimină efectele de particule de pe clădiri, cum ar fi efectele albastru strălucitor de pe fântână, avanpost, clădiri de bază etc.
+- Proiectil de atac / particule de distrugere pentru turnuri
+- Particule de efigii
+- Iluzii simplificate
+- Echipamente pentru eroi, embleme de evenimente, glife și multe altele

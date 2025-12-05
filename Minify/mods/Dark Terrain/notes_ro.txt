@@ -1,0 +1,11 @@
+Conceput pentru claritate vizuală.
+
+* Trebuie să aibă terenul echipat implicit în Dota 2
+
+- Toate plăcuțele devin gri/gri închis
+- Linii de ceață
+- Ceața de ceață a fost eliminată
+- Apă închisă la culoare
+- Logo-uri personalizate ale echipelor
+- Negustori personalizați
+- Alte îmbunătățiri diverse ale texturii pentru a se potrivi temei hărții

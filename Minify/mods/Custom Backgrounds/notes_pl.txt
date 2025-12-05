@@ -1,0 +1,5 @@
+Zastępuje tło menu głównego, tło prezentacji gracza i tło ekranu wyboru.
+
+Możesz upuścić obraz do folderu tego moda, a zostanie on użyty jako tło.
+
+Jeśli obraz nie jest w formacie PNG i wymaga konwersji, musisz dodać narzędzie `magick` do zmiennej ścieżki.

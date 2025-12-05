@@ -1,0 +1,3 @@
+Zprůhledňuje většinu prvků herního HUDu a odstraňuje některé zbytečné funkce.
+
+* Vyžaduje výchozí herní HUD.

@@ -1,0 +1,3 @@
+Usuwa podglądy bohaterów i renderuje je z interfejsu użytkownika.
+
+Zmienna konsoli `map_enable_portrait_worlds 0` osiąga ten sam cel, jednak utkniesz na ekranach MVP.

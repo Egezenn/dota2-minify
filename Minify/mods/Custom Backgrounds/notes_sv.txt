@@ -1,0 +1,5 @@
+Ersätter huvudmenybakgrunden, spelarens visningsbakgrund och plockskärmens bakgrund.
+
+Du kan släppa en bild till den här moddens mapp och den kommer att använda den som bakgrund.
+
+Du behöver `magick`-verktyget på din path-variabel om din bild inte är en png och behöver konverteras.

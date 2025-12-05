@@ -1,0 +1,15 @@
+Îți permite să utilizezi grilele de eroi din Dota2ProTracker. Layout-urile tale anterioare vor fi salvate în folderul `backup` al acestui mod.
+
+* Folosește contul Steam cu cel mai mic ID dacă nu este specificat „steam_id”.
+* Pentru a utiliza o altă grilă, specifică „grid_type”. În mod implicit, se utilizează „d2ptrating”.
+* Alternativ, descarcă o grilă de eroi la alegere de pe https://dota2protracker.com/meta-hero-grids și plasează-o în folderul acestui mod.
+
+`minify_config.json`
+```json
+{
+"steam_id": STEAM_ID3,
+"grid_type": "matches" | "matches_wr" | "d2ptrating"
+"steam_path": path_to_your_steam_installation_if_needed
+"patch": "7.39e"
+}
+```

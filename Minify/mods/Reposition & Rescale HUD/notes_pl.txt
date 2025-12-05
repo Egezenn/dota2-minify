@@ -1,0 +1,1 @@
+Zmienia położenie i skalę niektórych aspektów interfejsu użytkownika gry.

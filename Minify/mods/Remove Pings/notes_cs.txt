@@ -1,0 +1,1 @@
+Odstraní všechny částice pingu, zvuky kromě výchozího.

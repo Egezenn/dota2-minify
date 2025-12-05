@@ -1,0 +1,1 @@
+Herpositioneert en schaalt bepaalde aspecten van de in-game HUD.

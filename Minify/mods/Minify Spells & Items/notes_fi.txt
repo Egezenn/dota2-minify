@@ -1,0 +1,3 @@
+Yksinkertaistaa jokaista pelin loitsua ja esinettä.
+
+* Muokkaa enimmäkseen oletusloitsuja.

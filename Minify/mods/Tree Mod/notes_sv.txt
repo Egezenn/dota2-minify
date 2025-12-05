@@ -1,0 +1,3 @@
+Förvandlar alla träd till små cirklar av buskar
+
+* Kräver standardterräng

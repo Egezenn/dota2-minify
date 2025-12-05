@@ -1,0 +1,3 @@
+Semplifica ogni incantesimo e oggetto del gioco.
+
+* Modifica principalmente gli incantesimi predefiniti.

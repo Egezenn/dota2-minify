@@ -1,0 +1,15 @@
+Дозволяє використовувати сітки героїв Dota2ProTracker. Ваші попередні макети будуть збережені в папці `backup` цього моду.
+
+* Використовується обліковий запис Steam з найнижчим ідентифікатором, якщо не вказано "steam_id".
+* Щоб використовувати іншу сітку, вкажіть "grid_type". За замовчуванням використовується "d2ptrating".
+* Або ж завантажте сітку героя на ваш вибір з https://dota2protracker.com/meta-hero-grids та перетягніть її в папку цього моду.
+
+`minify_config.json`
+```json
+
+"steam_id": STEAM_ID3,
+"grid_type": "matches" | "matches_wr" | "d2ptrating"
+"steam_path": шлях_до_вашої_встановлення_steam_if_needed
+"patch": "7.39e"
+}
+```

@@ -1,0 +1,6 @@
+Επαναφέρει τους ήχους των pings στους ήχους που είχαν πριν από την ενημέρωση κώδικα 7.39.
+
+Οι νέοι ήχοι αντικαθίστανται σε:
+- ping_heart = ping
+- ping_enemy_ward = ping_warning
+- ping_need_ward = ping

@@ -1,0 +1,1 @@
+Remove todas as partículas e sons de ping, exceto o padrão.

@@ -1,0 +1,3 @@
+Fjerner alle busker, blomster, steiner og andre bakkestøtter, slik at du bare har fliser.
+
+* Må ha standard terreng utstyrt i inventaret ditt.

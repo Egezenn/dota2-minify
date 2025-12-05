@@ -1,0 +1,1 @@
+Afișează averea ta netă actuală în panoul de statistici rapide.

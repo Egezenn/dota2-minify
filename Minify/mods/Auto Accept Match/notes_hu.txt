@@ -1,0 +1,1 @@
+X másodperces késleltetés után automatikusan elfogadja a mérkőzés párbeszédpanelt. A késleltetés a beállítások panelen állítható. Alapértelmezés szerint 10, ha nincsenek telepítve műhelyeszközök.

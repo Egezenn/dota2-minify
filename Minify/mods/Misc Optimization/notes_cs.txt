@@ -1,0 +1,10 @@
+Odstraňuje různé efekty
+
+- Odstraňuje částicové efekty na budovách, jako jsou například modré efekty na fontáně, základně, základních budovách atd.
+
+- Částice projektilů útočících na věže / ničivých projektilů
+
+- Částice figurín
+
+- Zjednodušené iluze
+- Vybavení hrdinů, emblémy událostí, glyfy a další

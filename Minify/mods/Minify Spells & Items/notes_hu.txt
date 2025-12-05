@@ -1,0 +1,3 @@
+Leegyszerűsíti a játékban található összes varázslatot és tárgyat.
+
+* Leginkább az alapértelmezett varázslatokat módosítja.

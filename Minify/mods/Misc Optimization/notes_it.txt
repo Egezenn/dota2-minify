@@ -1,0 +1,7 @@
+Rimuove effetti vari
+
+- Rimuove gli effetti particellari dagli edifici, come gli effetti blu luminosi su fontane, avamposti, edifici della base, ecc.
+- Proiettili di attacco/distruzione delle torri
+- Particelle di effigi
+- Illusioni semplificate
+- Equipaggiamenti degli eroi, emblemi degli eventi, glifi e altro ancora

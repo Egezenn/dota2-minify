@@ -1,0 +1,1 @@
+Verwijdert alle pingdeeltjes en geluiden, behalve het standaardgeluid.

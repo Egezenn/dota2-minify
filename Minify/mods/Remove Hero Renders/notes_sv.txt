@@ -1,0 +1,3 @@
+Tar bort förhandsvisningar och renderingar av hjältar från användargränssnittet.
+
+Konsolvariabeln `map_enable_portrait_worlds 0` uppnår samma mål, men du kommer att fastna på MVP-skärmar.

@@ -1,0 +1,3 @@
+Zamienia wszystkie drzewa w małe, okrągłe krzewy.
+
+* Wymaga domyślnego terenu.

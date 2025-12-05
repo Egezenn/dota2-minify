@@ -1,0 +1,3 @@
+Gör de flesta HUD-elementen i spelet transparenta, tar bort vissa onödiga funktioner.
+
+* Kräver standard HUD i spelet

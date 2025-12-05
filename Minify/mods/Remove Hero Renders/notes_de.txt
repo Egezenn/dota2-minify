@@ -1,0 +1,3 @@
+Entfernt die Heldenvorschau und die Renderings aus der Benutzeroberfläche.
+
+Die Konsolenvariable `map_enable_portrait_worlds 0` bewirkt dasselbe, allerdings bleiben Sie dann auf den MVP-Bildschirmen hängen.
