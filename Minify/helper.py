@@ -360,13 +360,11 @@ def exec_script(script_path, mod_name, order_name):
             if order_name != "initial":
                 add_text_to_terminal(
                     localization_dict["script_success_text_var"].format(mod_name, order_name),
-                    None,
-                    "success",
+                    type="success",
                 )
         else:
             mpaths.write_warning(localization_dict["script_no_main_text_var"].format(mod_name, order_name))
             add_text_to_terminal(
                 localization_dict["script_no_main_text_var"].format(mod_name, order_name),
-                None,
-                "warning",
+                type="warning",
             )

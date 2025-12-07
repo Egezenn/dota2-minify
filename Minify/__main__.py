@@ -258,7 +258,7 @@ def create_ui():
             label="Yes",
             width=120,
             height=24,
-            callback=gui.open_github_link_and_close_minify,
+            callback=gui.update,
             tag="update_popup_yes_button",
         )
         ui.add_button(

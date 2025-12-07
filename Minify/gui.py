@@ -12,6 +12,7 @@ import dearpygui.dearpygui as ui
 import jsonc
 import psutil
 import requests
+import urllib.request
 
 import build
 import helper
@@ -22,6 +23,7 @@ checkboxes_state = {}
 dev_mode_state = -1
 gui_lock = False
 version = None
+latest_download_url = None
 
 main_window_width = 494
 main_window_width_dev = 494
@@ -39,17 +41,56 @@ title = f"Minify {version}" if version else "Minify"
 
 def version_check():
     global version
-    if version and "rc" not in version:
+    global latest_download_url
+
+    if version:
         try:
-            response = requests.get(mpaths.version_query)
-            if response.status_code == 200 and response.text != "404: Not Found":
-                if version != response.text:
-                    update_popup_show()
+            repo_owner = "Egezenn"
+            repo_name = "dota2-minify"
+            api_url = f"https://api.github.com/repos/{repo_owner}/{repo_name}/releases"
+
+            response = requests.get(api_url)
+            response.raise_for_status()
+            releases = response.json()
+
+            download_url = None
+            tag_name = None
+
+            suffix = mpaths.OS.lower()
+
+            if suffix:
+                for release in releases:
+                    if release["prerelease"]:
+                        continue
+                    for asset in release.get("assets", []):
+                        if asset["name"].endswith(suffix):
+                            download_url = asset["browser_download_url"]
+                            tag_name = release["tag_name"]
+                            break
+                    if download_url:
+                        break
+
+            if download_url and tag_name and version.strip() != tag_name:
+                latest_download_url = download_url
+                update_popup_show()
         except:
             pass
 
 
 def initiate_conditionals():
+    # Updater self-update
+    updater = "updater.exe" if mpaths.OS == mpaths.WIN else "updater"
+    updater_new = "updater-new.exe" if mpaths.OS == mpaths.WIN else "updater"
+
+    if os.path.exists(updater_new):
+        try:
+            helper.remove_path(updater)
+            helper.move_path(updater_new, updater)
+            if mpaths.OS != mpaths.WIN:
+                os.chmod(updater, 0o755)
+        except:
+            mpaths.write_warning()
+
     setup_system_thread = threading.Thread(target=setup_system)
     load_state_checkboxes_thread = threading.Thread(target=load_checkboxes_state)
     setup_system_thread.start()
@@ -136,8 +177,7 @@ def download_dependencies():
         lock_interaction()
         helper.add_text_to_terminal(
             helper.localization_dict["failed_download_retrying_terminal_text_var"],
-            None,
-            "error",
+            type="error",
         )
         return download_dependencies()
 
@@ -199,8 +239,7 @@ def create_checkboxes():
                 data = ""
                 helper.add_text_to_terminal(
                     helper.localization_dict["no_notes_found_text_var"].format(mod),
-                    None,
-                    "warning",
+                    type="warning",
                 )
 
             tag_data = f"{mod}_details_window_tag"
@@ -300,9 +339,63 @@ def hide_uninstall_popup():
     ui.configure_item("uninstall_popup", show=False)
 
 
-def open_github_link_and_close_minify():
-    open_github_link()  # TODO: updater behavior
-    helper.close()
+def update():
+    def threaded_update():
+        try:
+            global latest_download_url
+            download_url = latest_download_url
+
+            if download_url:
+                helper.add_text_to_terminal("Downloading update...", "update_download_progress_tag")
+
+                target_zip = "update.zip"
+                helper.remove_path(target_zip)
+
+                try:
+                    last_report_time = 0
+
+                    def progress_hook(block_num, block_size, total_size):
+                        nonlocal last_report_time
+                        current_time = time.time()
+                        if current_time - last_report_time >= 0.1:
+                            downloaded = block_num * block_size
+                            ui.set_value(
+                                "update_download_progress_tag", f"Downloading: {downloaded}/{total_size} bytes"
+                            )
+                            last_report_time = current_time
+
+                    urllib.request.urlretrieve(download_url, target_zip, reporthook=progress_hook)
+                except Exception as e:
+                    helper.add_text_to_terminal(f"Download failed: {e}", type="error")
+                    open_github_link()
+                    helper.close()
+                    return
+
+                helper.add_text_to_terminal("Download complete. Launching updater...")
+
+                cmd = ["updater.exe" if mpaths.OS == mpaths.WIN else "./updater", target_zip]
+
+                if mpaths.OS == mpaths.WIN:
+                    subprocess.Popen(
+                        cmd,
+                        creationflags=subprocess.DETACHED_PROCESS | subprocess.CREATE_NEW_PROCESS_GROUP,
+                        close_fds=True,
+                    )
+                else:
+                    subprocess.Popen(cmd, start_new_session=True, close_fds=True)
+
+                helper.close()
+                return
+
+        except Exception as e:
+            print(f"Update failed: {e}")
+            open_github_link()
+            helper.close()
+
+    delete_update_popup(ignore=False)
+
+    t = threading.Thread(target=threaded_update)
+    t.start()
 
 
 def drag_viewport(sender, app_data, user_data):

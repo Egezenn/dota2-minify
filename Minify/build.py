@@ -408,7 +408,7 @@ def patcher(mod=None, pakname=None):
             merged_mods = vpk.new(mpaths.merge_dir)
             merged_mods.save(os.path.join(helper.output_path, "pak65_dir.vpk"))
 
-            helper.add_text_to_terminal(helper.localization_dict["success_merged_vpk_text_var"], None, "success")
+            helper.add_text_to_terminal(helper.localization_dict["success_merged_vpk_text_var"], type="success")
         else:
             # No VPK mods selected - remove pak65 if it exists from previous patches
             pak65_path = os.path.join(helper.output_path, "pak65_dir.vpk")
