@@ -55,7 +55,7 @@ exe_updater = EXE(
     a_updater.binaries,
     a_updater.datas,
     [],
-    name="Minify/updater",
+    name="updater",
     debug=False,
     bootloader_ignore_signals=False,
     strip=False,
