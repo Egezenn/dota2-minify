@@ -18,6 +18,9 @@ WIN = "Windows"
 LINUX = "LINUX"
 MAC = "MAC"
 
+head_owner = "Egezenn"
+repo_name = "dota2-minify"
+
 # assuming steam runtimes on linux / darwin
 if OS == LINUX:
     DOTA_EXECUTABLE_PATH = os.path.join("steamapps", "common", "dota 2 beta", "game", "bin", "linuxsteamrt64", "dota2")
@@ -311,9 +314,9 @@ get_steam_path()
 handle_non_default_path()
 
 # links
-version_query = "https://raw.githubusercontent.com/Egezenn/dota2-minify/refs/heads/main/version"
+version_query = f"https://raw.githubusercontent.com/{head_owner}/{repo_name}/refs/heads/main/version"
 discord = "https://discord.com/invite/2YDnqpbcKM"
-latest_release = "https://github.com/Egezenn/dota2-minify/releases"
+latest_release = f"https://github.com/{head_owner}/{repo_name}/releases"
 s2v_cli_ver = "15.0"
 rg_ver = "15.1.0"
 

@@ -1,18 +1,19 @@
 import ctypes
 import os
+import re
 import shutil
 import stat
 import subprocess
 import tarfile
 import threading
 import time
+import urllib.request
 import zipfile
 
 import dearpygui.dearpygui as ui
 import jsonc
 import psutil
 import requests
-import urllib.request
 
 import build
 import helper
@@ -45,9 +46,7 @@ def version_check():
 
     if version:
         try:
-            repo_owner = "Egezenn"
-            repo_name = "dota2-minify"
-            api_url = f"https://api.github.com/repos/{repo_owner}/{repo_name}/releases"
+            api_url = f"https://api.github.com/repos/{mpaths.head_owner}/{mpaths.repo_name}/releases"
 
             response = requests.get(api_url)
             response.raise_for_status()
@@ -60,8 +59,10 @@ def version_check():
 
             if suffix:
                 for release in releases:
-                    if release["prerelease"]:
-                        continue
+                    if release[
+                        "prerelease"
+                    ]:  # and not re.search(r"rc\d+$", version): # 2025-12-11 UNCOMMENT AFTER UPDATER TEST
+                        continue  # Show only if the current version is a pre-release
                     for asset in release.get("assets", []):
                         if asset["name"].endswith(suffix):
                             download_url = asset["browser_download_url"]
@@ -69,7 +70,7 @@ def version_check():
                             break
                     if download_url:
                         break
-            if download_url and tag_name and version != tag_name:
+            if download_url and tag_name and version != tag_name[8:]:  # DEPRECATE: bad tag name
                 latest_download_url = download_url
                 update_popup_show()
         except:

@@ -112,7 +112,7 @@
         if (latestStable) {
           window.latestStableRelease = latestStable;
           const stableLink = document.getElementById("latest-stable");
-          const version = latestStable.tag_name.replace("Minify-", "");
+          const version = latestStable.tag_name.replace("Minify-", ""); // DEPRECATE: bad tag name
           stableLink.innerHTML = `<ion-icon name="download-outline"></ion-icon> Download (${version})`;
         }
 
@@ -129,7 +129,7 @@
             prereleaseLink.setAttribute("data-bs-target", "#downloadModal");
             downloadButtons.appendChild(prereleaseLink);
           }
-          const version = latestPrerelease.tag_name.replace("Minify-", "");
+          const version = latestPrerelease.tag_name.replace("Minify-", ""); // DEPRECATE: bad tag name
           prereleaseLink.innerHTML = `<ion-icon name="download-outline"></ion-icon> Download (${version})`;
           prereleaseLink.setAttribute("data-release-type", "prerelease");
         }
@@ -182,7 +182,7 @@
           }
 
           if (release) {
-            const version = release.tag_name.replace("Minify-", "");
+            const version = release.tag_name.replace("Minify-", ""); // DEPRECATE: bad tag name
             const typeText = releaseType === "stable" ? "latest stable" : "latest release candidate";
             modalTitle.innerHTML = `Download ${typeText}, ${version}<br><small class="text-muted">Dated ${new Date(release.published_at).toLocaleString()}</small>`;
 

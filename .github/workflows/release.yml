@@ -6,7 +6,7 @@ on:
       release_name:
         description: "Name the release"
         required: true
-        default: "Minify-v1."
+        default: "Minify-v1." # DEPRECATE: bad tag name
       prerelease:
         description: "Whether or not release candidate"
         required: true
@@ -37,7 +37,7 @@ jobs:
         shell: pwsh
         run: |
           $releaseName = "${{ github.event.inputs.release_name }}"
-          $version = $releaseName.Substring(8)
+          $version = $releaseName.Substring(8)  # DEPRECATE: bad tag name, replace with 1
           Set-Content -Path "version" -Value $version -NoNewline
       - uses: stefanzweifel/git-auto-commit-action@v5
         if: ${{ inputs.prerelease == 'false' && matrix.os == 'ubuntu-latest' }}
@@ -62,9 +62,11 @@ jobs:
           pip install -r requirements.txt
           Set-Location Minify
 
+      # 2025-12-11 UPDATER TEST, FORCES THE NEW UPDATE FUNCTIONALITY AT INIT
       - name: Build executable
         shell: pwsh
         run: |
+          Set-Content -Path "version" -Value updater-test -NoNewline
           Set-Location Minify
           pyinstaller Minify.spec
 
