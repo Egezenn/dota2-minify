@@ -56,7 +56,7 @@ def version_check():
             download_url = None
             tag_name = None
 
-            suffix = mpaths.OS.lower()
+            suffix = mpaths.OS.lower() + ".zip"
 
             if suffix:
                 for release in releases:
@@ -69,12 +69,11 @@ def version_check():
                             break
                     if download_url:
                         break
-
-            if download_url and tag_name and version.strip() != tag_name:
+            if download_url and tag_name and version != tag_name:
                 latest_download_url = download_url
                 update_popup_show()
         except:
-            pass
+            mpaths.write_warning()
 
 
 def initiate_conditionals():

@@ -10,7 +10,7 @@
     },
     {
       "label": "Build via PyInstaller & Run",
-      "detail": "Build via PyInstaller under powershell and run (not recommended for distribution as it may include your personal configurations!)",
+      "detail": "Build via PyInstaller under powershell and run",
       "icon": { "id": "run", "color": "terminal.ansiBlue" },
       "type": "shell",
       "command": "Set-Location Minify; Remove-Item -Recurse -ErrorAction SilentlyContinue 'dist'; uv run pyinstaller Minify.spec; Copy-Item 'bin' 'dist\\Minify\\bin' -Recurse; Copy-Item 'mods' 'dist\\Minify\\mods' -Recurse; Copy-Item '..\\version' 'dist\\Minify\\version'; Copy-Item '..\\readme.md' 'dist\\Minify\\readme.md'; Copy-Item '..\\LICENSE' 'dist\\Minify\\LICENSE'; Copy-Item 'Source2Viewer-CLI.exe' 'dist\\Minify'; Move-Item 'dist\\updater.exe' 'dist\\Minify\\updater.exe'; dist\\Minify\\Minify.exe",
@@ -18,7 +18,7 @@
     },
     {
       "label": "Build via PyInstaller",
-      "detail": "Build via PyInstaller under powershell (not recommended for distribution as it may include your personal configurations!)",
+      "detail": "Build via PyInstaller under powershell",
       "icon": { "id": "tools", "color": "terminal.ansiYellow" },
       "type": "shell",
       "command": "Set-Location Minify; Remove-Item -Recurse -ErrorAction SilentlyContinue 'dist'; uv run pyinstaller Minify.spec; Copy-Item 'bin' 'dist\\Minify\\bin' -Recurse; Copy-Item 'mods' 'dist\\Minify\\mods' -Recurse; Copy-Item '..\\version' 'dist\\Minify\\version'; Copy-Item '..\\readme.md' 'dist\\Minify\\readme.md'; Copy-Item '..\\LICENSE' 'dist\\Minify\\LICENSE'; Copy-Item 'Source2Viewer-CLI.exe' 'dist\\Minify'; Move-Item 'dist\\updater.exe' 'dist\\Minify\\updater.exe'",
