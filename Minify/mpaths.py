@@ -18,6 +18,8 @@ WIN = "Windows"
 LINUX = "LINUX"
 MAC = "MAC"
 
+frozen = getattr(sys, "frozen", False)
+
 head_owner = "Egezenn"
 repo_name = "dota2-minify"
 
@@ -85,7 +87,7 @@ main_config_file_dir = os.path.join(config_dir, "minify_config.json")
 mods_config_dir = os.path.join(config_dir, "mods.json")
 
 # killswitch accident 2025-09-25
-if getattr(sys, "frozen", False):
+if frozen:
     version_file_dir = "version"
 else:
     version_file_dir = os.path.join(os.pardir, "version")

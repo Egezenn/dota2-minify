@@ -44,7 +44,7 @@ def version_check():
     global version
     global latest_download_url
 
-    if version:
+    if version and not mpaths.frozen:
         try:
             api_url = f"https://api.github.com/repos/{mpaths.head_owner}/{mpaths.repo_name}/releases"
 
