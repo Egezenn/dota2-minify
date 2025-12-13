@@ -59,9 +59,7 @@ def version_check():
 
             if suffix:
                 for release in releases:
-                    if release[
-                        "prerelease"
-                    ]:  # and not re.search(r"rc\d+$", version): # 2025-12-11 UNCOMMENT AFTER UPDATER TEST
+                    if release["prerelease"] and not re.search(r"rc\d+$", version):
                         continue  # Show only if the current version is a pre-release
                     for asset in release.get("assets", []):
                         if asset["name"].endswith(suffix):

@@ -62,11 +62,9 @@ jobs:
           pip install -r requirements.txt
           Set-Location Minify
 
-      # 2025-12-11 UPDATER TEST, FORCES THE NEW UPDATE FUNCTIONALITY AT INIT
       - name: Build executable
         shell: pwsh
         run: |
-          Set-Content -Path "version" -Value updater-test -NoNewline
           Set-Location Minify
           pyinstaller Minify.spec
 
