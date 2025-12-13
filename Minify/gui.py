@@ -58,8 +58,9 @@ def version_check():
             suffix = mpaths.OS.lower() + ".zip"
 
             if suffix:
+                opt_in = mpaths.get_config("opt_into_rcs", False)
                 for release in releases:
-                    if release["prerelease"] and not re.search(r"rc\d+$", version):
+                    if release["prerelease"] and not re.search(r"rc\d+$", version) and not opt_in:
                         continue  # Show only if the current version is a pre-release
                     for asset in release.get("assets", []):
                         if asset["name"].endswith(suffix):

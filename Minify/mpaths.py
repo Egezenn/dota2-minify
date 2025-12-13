@@ -147,8 +147,21 @@ def get_key_from_json_file_w_default(file, key, default):
         return default, {}
 
 
+def get_mod_config(mod_name, default=None):
+    if default is None:
+        default = {}
+    modconf = get_config("modconf", {})
+    return get_key_from_dict_w_default(modconf, mod_name, default)
+
+
 def set_key_for_json_file(file, key, value):
     update_json_file(file, key, value)
+
+
+def set_mod_config(mod_name, config_data):
+    modconf = get_config("modconf", {})
+    modconf[mod_name] = config_data
+    set_config("modconf", modconf)
 
 
 def write_crashlog(exc_type=None, exc_value=None, exc_traceback=None, header=None, handled=True):

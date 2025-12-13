@@ -19,8 +19,7 @@ import requests
 
 
 def main():
-    modconf = mpaths.get_config("modconf", {})
-    config_data = mpaths.get_key_from_dict_w_default(modconf, mod_name, {})
+    config_data = mpaths.get_mod_config(mod_name)
     path_from_config = mpaths.get_key_from_dict_w_default(config_data, "steam_path", "")
     possible_userdata_paths = [
         os.path.join(path_from_config, "userdata"),
@@ -67,8 +66,7 @@ def main():
             config_data["grid_type"] = grid_type
             config_data["patch_name"] = patch_name
 
-            modconf[mod_name] = config_data
-            mpaths.set_config("modconf", modconf)
+            mpaths.set_mod_config(mod_name, config_data)
 
             if found_id and os.path.isdir(dest_path := os.path.join(id_to_use_path, "570", "remote", "cfg")):
                 original_grid_path = os.path.join(dest_path, "hero_grid_config.json")

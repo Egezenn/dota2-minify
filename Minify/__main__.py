@@ -236,14 +236,14 @@ def create_ui():
     )
     ui.add_group(parent="update_popup", tag="popup_text_wraper_1")
     ui.add_text(
-        default_value="New update is now available!",
+        default_value="New update is available!",
         parent="popup_text_wraper_1",
         tag="update_popup_text_1_tag",
         indent=1,
     )
     ui.add_group(parent="update_popup", tag="popup_text_wraper_2")
     ui.add_text(
-        default_value="Would you like to go to the download page?",
+        default_value="Would you like to update?",
         parent="popup_text_wraper_2",
         tag="update_popup_text_2_tag",
         indent=1,
