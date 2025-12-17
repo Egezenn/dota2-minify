@@ -53,7 +53,7 @@ panorama/styles/hud/dota_hud_top_bar @@ #TopBarRadiantPlayersContainer, #TopBarD
 
 panorama/styles/hud/dota_hud_xp @@ #CircularXPProgressBlur { opacity: 0; }
 
-# margin-left doesn't apply?
+# margin-left doesn't apply? - overriden by other block with same name
 panorama/styles/hud/hud_reborn @@ #center_bg { height: 155px; margin-left: 60px; margin-right: 60px; background-color: #00000040; border-radius: 32px 32px 0px 0px; } .MinimapExtraLarge #minimap { width: 318px; height: 318px; } #AbilitiesAndStatBranch { margin-bottom: 42px; } #inventory { margin-right: 102px; } #inventory_composition_layer_container { margin-right: 40px; } #inventory_tpscroll_slot, #inventory_neutral_slot { box-shadow: fill #00000000 0px 0px 0px 0px; background-img-opacity: 0.5; } #MenuButtons { margin-left: 0px; margin-top: 0px; opacity: 0.25; } #MenuButtons:hover { opacity: 1; } #MorphProgress { margin-bottom: 30px; }
 
 panorama/styles/popups/popup_settings_reborn @@ .SettingsContainer, #SettingsNavigationContainer { background-color: #000000D8; }
@@ -68,3 +68,9 @@ panorama/styles/tooltips/tooltip_aghs_status @@ #TopSection, #AghsTooltipConnect
 panorama/styles/tooltips/tooltip_neutral_crafting @@ #Contents { background-color: #000000D8; }
 panorama/styles/hud/tooltip_gold @@ DOTATooltipGold #Contents { background-color: #000000D8; }
 panorama/styles/hud/dota_hud_scoreboard @@ #TeamInventoryBackground, .SharedUnitControl#SharedUnitControl, DOTASharedContent#SharedContent, #ScoreboardCoaches { background-color: #000000D8; background-image: none; box-shadow: none; }
+
+#fix for very wide dota plus guides
+panorama/styles/hud/dota_hud_shop @@ .PlusGuide #GuideFlyout { width: 280px; } 
+
+#fix for tormentor hud icon bg
+panorama/styles/dota_hud_tormentor_timer @@ DOTATormentorTimer { background-image: none; }
