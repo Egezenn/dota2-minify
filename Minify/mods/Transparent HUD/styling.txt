@@ -8,6 +8,7 @@ panorama/styles/hud/dota_hud_shop @@ .ItemContextMenuInstructionsContainer { vis
 # legacy topbar backgrounds
 panorama/styles/hud/dota_hud_top_bar @@ .Reborn.CustomHUDSkin:not(.HIDE_TOP_BAR_BACKGROUND) #HUDSkinTopBarBG { visibility: collapse; }
 
+panorama/styles/dota_hud_tormentor_timer @@ DOTATormentorTimer { background-image: none; }
 panorama/styles/dotastyles @@ DOTAItemImage.Reborn #ButtonWell { background-image: none; }
 panorama/styles/hud/dota_hud_inventory @@ .Reborn #inventory_items { background-image: none; }
 panorama/styles/hud/dota_hud_item_build @@ #ItemBuildBackground { background-image: none; }
@@ -70,7 +71,4 @@ panorama/styles/hud/tooltip_gold @@ DOTATooltipGold #Contents { background-color
 panorama/styles/hud/dota_hud_scoreboard @@ #TeamInventoryBackground, .SharedUnitControl#SharedUnitControl, DOTASharedContent#SharedContent, #ScoreboardCoaches { background-color: #000000D8; background-image: none; box-shadow: none; }
 
 #fix for very wide dota plus guides
-panorama/styles/hud/dota_hud_shop @@ .PlusGuide #GuideFlyout { width: 280px; } 
-
-#fix for tormentor hud icon bg
-panorama/styles/dota_hud_tormentor_timer @@ DOTATormentorTimer { background-image: none; }
+panorama/styles/hud/dota_hud_shop @@ .PlusGuide #GuideFlyout { width: 280px; }

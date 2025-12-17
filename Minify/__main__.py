@@ -291,7 +291,7 @@ def create_base_ui():
     helper.disable_workshop_mods()
     time.sleep(0.05)
     gui.configure_update_popup()
-    gui.bulk_exec_script("initial")
+    gui.bulk_exec_script("initial", False)
     gui.setup_button_state()
     gui.unlock_interaction()
 

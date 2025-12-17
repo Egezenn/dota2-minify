@@ -343,7 +343,7 @@ def remove_path(*paths):
             mpaths.write_warning()
 
 
-def exec_script(script_path, mod_name, order_name):
+def exec_script(script_path, mod_name, order_name, _terminal_output=True):
     if os.path.exists(script_path):
         module_name = mod_name.replace(" ", "").lower() + f"_{order_name}_script"
         spec = importlib.util.spec_from_file_location(module_name, script_path)
@@ -352,12 +352,12 @@ def exec_script(script_path, mod_name, order_name):
 
         main_func = getattr(module, "main", None)
         if callable(main_func):
-            if order_name != "initial":
+            if _terminal_output:
                 add_text_to_terminal(
                     localization_dict["script_execution_text_var"].format(mod_name, order_name),
                 )
             main_func()
-            if order_name != "initial":
+            if _terminal_output:
                 add_text_to_terminal(
                     localization_dict["script_success_text_var"].format(mod_name, order_name),
                     type="success",

@@ -715,7 +715,7 @@ def dev_mode():
             no_close=True,
             no_collapse=True,
         ):
-            ui.add_button(label="Clean all language paths", callback=build.clean_lang_dirs)
+            ui.add_button(label="Wipe language paths", callback=build.wipe_lang_dirs)
             ui.add_spacer(width=0, height=5)
             ui.add_button(label="Extract workshop tools", callback=extract_workshop_tools)
 
@@ -846,7 +846,7 @@ def extract_workshop_tools():
             helper.add_text_to_terminal(helper.localization_dict["extraction_of_failed_text_var"].format(path))
 
 
-def bulk_exec_script(order_name):
+def bulk_exec_script(order_name, terminal_output=True):
     bulk_name = f"script_{order_name}.py"
     for root, _, files in os.walk(mpaths.mods_dir):
         if bulk_name in files and not os.path.basename(root).startswith("_"):
@@ -856,7 +856,9 @@ def bulk_exec_script(order_name):
 
             # TODO: pull the file from pak66 to check if it was enabled for uninstallers
             if always or order_name in ["initial", "uninstall"] or (visual and ui.get_value(os.path.basename(root))):
-                helper.exec_script(os.path.join(root, bulk_name), os.path.basename(root), order_name)
+                helper.exec_script(
+                    os.path.join(root, bulk_name), os.path.basename(root), order_name, _terminal_output=terminal_output
+                )
 
 
 def tick_batch(state: bool):

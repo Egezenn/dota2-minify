@@ -369,7 +369,7 @@ def patcher(mod=None, pakname=None):
         native_mods.save(os.path.join(helper.output_path, f"{pakname}_dir.vpk"))
 
         # ---------------------------------- STEP 7 ---------------------------------- #
-        # -------------------------- Merge VPKs into pak33 --------------------------- #
+        # -------------------------- Merge VPKs into pak65 --------------------------- #
         # ---------------------------------------------------------------------------- #
 
         # Check if there are any VPK mods selected
@@ -389,7 +389,7 @@ def patcher(mod=None, pakname=None):
                     dump_vpk(mod_vpk, mpaths.merge_dir, check_exists=True)
                     helper.add_text_to_terminal(helper.localization_dict["merged_mod_text_var"].format(mod_name))
                 except:
-                    mpaths.write_warning(helper.localization_dict["failed_to_merge_mod_text_var"].format(mod_name))
+                    mpaths.write_warning(helper.localization_dict["failed_merge_mod_text_var"].format(mod_name))
 
             # Insert metadata to pak65
             # Create a metadata file listing the VPK mods included
@@ -446,6 +446,8 @@ def patcher(mod=None, pakname=None):
             "launch_option_text",
             "warning",
         )
+
+        gui.bulk_exec_script("after_patch", False)
 
         if os.path.exists(mpaths.log_warnings) and os.path.getsize(mpaths.log_warnings) != 0:
             helper.add_text_to_terminal(
@@ -848,7 +850,7 @@ def process_blacklist_dir(index, line, folder):
     return data
 
 
-def clean_lang_dirs():
+def wipe_lang_dirs():
     helper.clean_terminal()
     uninstaller()
     for path in mpaths.minify_dota_possible_language_output_paths:
