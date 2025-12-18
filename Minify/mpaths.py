@@ -15,8 +15,8 @@ MACHINE = platform.machine().lower()
 ARCHITECTURE = platform.architecture()[0]
 
 WIN = "Windows"
-LINUX = "LINUX"
-MAC = "MAC"
+LINUX = "Linux"
+MAC = "Darwin"
 
 frozen = getattr(sys, "frozen", False)
 
