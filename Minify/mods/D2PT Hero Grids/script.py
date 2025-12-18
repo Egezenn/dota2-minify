@@ -38,7 +38,7 @@ def main():
             replace_grid = True
         else:
             grid_type = mpaths.get_key_from_dict_w_default(config_data, "grid_type", "d2ptrating")
-            patch_name = mpaths.get_key_from_dict_w_default(config_data, "patch", "7.39e")  # to be fixed later
+            patch_name = mpaths.get_key_from_dict_w_default(config_data, "patch", "7.40")  # to be fixed later
             response = requests.get(
                 f"https://dota2protracker.com/meta-hero-grids/download?mode={grid_type}&patch={patch_name}"
             )
@@ -96,6 +96,5 @@ def main():
 if __name__ == "__main__":
     main()
 
-# TODO Implement uninstaller instructions
-# TODO detect grids from D2PT to not backup them?
-# user could be using a merged one though
+# TODO Do not replace as whole, merge with existing grids
+# TODO Implement uninstaller instructions: simply remove kv's that D2PT adds

@@ -288,9 +288,7 @@ def handle_non_default_path():
             root.wm_attributes("-topmost", 1)
             choice = messagebox.askokcancel(
                 "Minify Install Path Handler",
-                "We couldn't find your Dota2 install path, please select:\n\n"
-                "Your SteamLibrary folder if you have Dota2 installed elsewhere\n\n"
-                "Steam folder if your OS is not Windows and have Dota2 installed at the default path.",
+                "We couldn't find your Dota2 install path, please select your steam installation directory or the library that Dota2 is located in",
                 parent=root,
             )
             root.lift()
@@ -299,6 +297,17 @@ def handle_non_default_path():
             if choice:
                 steam_dir = os.path.normpath(filedialog.askdirectory())
                 set_config("steam_dir", steam_dir)
+
+                # if user selected installdir instead of library(steamapps|steamlibrary) try to get vdf
+                if (
+                    os.path.exists(os.path.join(steam_dir, "config", "libraryfolders.vdf"))
+                    and not steam_dir
+                    or (
+                        not os.path.exists(os.path.join(steam_dir, DOTA_EXECUTABLE_PATH))
+                        and not os.path.exists(os.path.join(steam_dir, DOTA_EXECUTABLE_PATH_FALLBACK))
+                    )
+                ):
+                    find_library_from_vdf()
 
             else:
                 quit()
@@ -312,19 +321,12 @@ def handle_non_default_path():
             break
 
 
-def overwrite_ensurance_hack(list_of_string_patterns, strings):
-    matched, unmatched = [[], []]
-    for string in strings:
-        for pattern in list_of_string_patterns:
-            if string.startswith(pattern):
-                matched.append(string)
-                break
-        if string not in [*unmatched, *matched]:
-            unmatched.append(string)
-
-    return [*unmatched, *matched]
-
-
+# case 1: got steam path from query_steam_path and dota exists under the installdir => pass
+# case 2: got steam path from query_steam_path but dota doesn't exist under the installdir => read vdf
+# case 3: query_steam_path failed
+#         => try to get it with default installdirs
+#                 => steam exists under default installdirs => read vdf
+#                 => steam doesn't exist under default installdirs => prompt user for the library dota OR steam installdir
 get_steam_path()
 handle_non_default_path()
 
