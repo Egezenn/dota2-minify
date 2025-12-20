@@ -19,7 +19,7 @@ dota_itembuilds_path = os.path.join(
 
 def main():
     try:
-        with open(os.path.join(dota_itembuilds_path, "default_antimage.txt"), "r") as file:
+        with open(os.path.join(dota_itembuilds_path, "default_antimage.txt")) as file:
             lines = file.readlines()
         if len(lines) >= 3:
             if "OpenDotaGuides" in lines[2]:

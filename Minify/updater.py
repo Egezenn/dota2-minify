@@ -22,7 +22,7 @@ import glob
 
 def get_current_version():
     try:
-        with open("version", "r") as f:
+        with open("version") as f:
             return f.read().strip()
     except FileNotFoundError:
         return "unknown"
@@ -60,7 +60,7 @@ def main():
     try:
         print(f"Extracting {zip_path}...")
         temp_dir = tempfile.mkdtemp()
-        with zipfile.ZipFile(zip_path, "r") as zip_ref:
+        with zipfile.ZipFile(zip_path) as zip_ref:
             zip_ref.extractall(temp_dir)
 
         backup_dir = tempfile.mkdtemp()

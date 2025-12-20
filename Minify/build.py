@@ -124,7 +124,7 @@ def patcher(mod=None, pakname=None):
                         )
 
                     if helper.workshop_installed and os.path.exists(menu_xml):
-                        with open(menu_xml, "r", encoding="utf-8") as file:
+                        with open(menu_xml, encoding="utf-8") as file:
                             data = file.read()
                             if data[:7] == r"<Panel ":
                                 mod_menus.append(data)
@@ -132,7 +132,7 @@ def patcher(mod=None, pakname=None):
                                 mpaths.write_warning(f"Improper mod menu on {folder}!")
 
                     if helper.workshop_installed and os.path.exists(xml_mod_file):
-                        with open(xml_mod_file, "r", encoding="utf-8") as file:
+                        with open(xml_mod_file, encoding="utf-8") as file:
                             mod_xml = jsonc.load(file)
                         for path, mods in mod_xml.items():
                             xml_modifications.setdefault(path, []).extend(mods)

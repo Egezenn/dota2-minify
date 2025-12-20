@@ -32,7 +32,7 @@ main_window_height = 300
 main_window_height_dev = 650
 
 try:
-    with open(mpaths.version_file_dir, "r") as file:
+    with open(mpaths.version_file_dir) as file:
         version = file.readline()
 except:
     version = ""
@@ -147,7 +147,7 @@ def download_dependencies():
                     f"{helper.localization_dict['downloaded_cli_terminal_text_var']}{archive_path}"
                 )
                 if archive_extension == ".zip":
-                    with zipfile.ZipFile(archive_path, "r") as zip_ref:
+                    with zipfile.ZipFile(archive_path) as zip_ref:
                         zip_ref.extract(archive_name + "/" + mpaths.rg_executable)
                 else:
                     with tarfile.open(archive_path, "r:gz") as tar:
@@ -232,7 +232,7 @@ def create_checkboxes():
                     notes_txt = os.path.join(mod_path, f"notes_{helper.locale.lower()}.txt")
                 else:
                     notes_txt = os.path.join(mod_path, "notes_en.txt")
-                with open(notes_txt, "r", encoding="utf-8") as file:
+                with open(notes_txt, encoding="utf-8") as file:
                     data = file.read()
             except FileNotFoundError:
                 data = ""

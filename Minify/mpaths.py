@@ -9,7 +9,6 @@ import traceback
 import jsonc
 import vdf
 
-steam_dir = ""
 OS = platform.system()
 MACHINE = platform.machine().lower()
 ARCHITECTURE = platform.architecture()[0]
@@ -97,7 +96,7 @@ rescomp_override = True if os.path.exists(rescomp_override_dir) else False
 
 def read_json_file(path):
     try:
-        with open(path, "r") as file:
+        with open(path) as file:
             return jsonc.load(file)
     except (FileNotFoundError, jsonc.JSONDecodeError):
         return {}
@@ -154,10 +153,6 @@ def get_mod_config(mod_name, default=None):
     return get_key_from_dict_w_default(modconf, mod_name, default)
 
 
-def set_key_for_json_file(file, key, value):
-    update_json_file(file, key, value)
-
-
 def set_mod_config(mod_name, config_data):
     modconf = get_config("modconf", {})
     modconf[mod_name] = config_data
@@ -199,22 +194,23 @@ sys.excepthook = unhandled_handler()
 
 
 def find_library_from_vdf():
-    global steam_dir
-
     steam_dir = get_config("steam_dir")
 
     try:
-        if steam_dir and steam_dir != ".":  # regkey found
+        # regkey has the root steam installdir
+        if (
+            steam_dir
+            and steam_dir != "."
+            and os.path.exists(reg_path := os.path.join(steam_dir, "config", "libraryfolders.vdf"))
+        ):
             with open(
-                os.path.join(steam_dir, "config", "libraryfolders.vdf"),
-                "r",
+                os.path.join(reg_path),
                 encoding="utf-8",
             ) as dump:
                 vdf_data = vdf.load(dump)
-        else:  # try with defaults
+        else:
             with open(
                 os.path.join(STEAM_DEFAULT_INSTALLATION_PATH, "config", "libraryfolders.vdf"),
-                "r",
                 encoding="utf-8",
             ) as dump:
                 vdf_data = vdf.load(dump)
@@ -235,43 +231,39 @@ def find_library_from_vdf():
 
     except:
         write_warning("Error reading libraryfolders.vdf")
-        steam_dir = ""
+        set_config("steam_dir", "")
 
 
-def get_steam_path():
+def get_steam_root_path():
     # Windows specific
-    global steam_dir
-    if OS == WIN:
+    # Returns the root steam installation directory
+    # STEAM_DEFAULT_INSTALLATION_PATH = C:\Program Files (x86)\Steam
+
+    steam_dir = get_config("steam_dir", "")
+
+    # Run only if there's no preexisting config
+    if OS == WIN and steam_dir == "":
         import winreg
 
         try:
             hkey = winreg.OpenKey(winreg.HKEY_LOCAL_MACHINE, r"SOFTWARE\WOW6432Node\Valve\Steam")
-        except:
-            hkey = None
-            write_crashlog()
-
-        try:
             steam_path = winreg.QueryValueEx(hkey, "InstallPath")
+            set_config("steam_dir", steam_path[0])
         except:
-            steam_path = ""
+            set_config("steam_dir", "")
             write_crashlog()
-
-        try:
-            steam_dir = steam_path[0]
-        except:
-            steam_dir = ""
 
     else:
-        steam_dir = ""
+        set_config("steam_dir", "")
 
 
 def handle_non_default_path():
-    global steam_dir
-    # when dota2 is not inside Steam folder, set new steam directory from 'minify_config["steam_dir"]'
+    steam_dir = get_config("steam_dir", "")
+    # when dota2 is not inside root steam installation directory, use library VDFs to determine where it's at
     if not os.path.exists(os.path.join(steam_dir, DOTA_EXECUTABLE_PATH)):
         find_library_from_vdf()
 
-        steam_dir = get_config("steam_dir")
+        steam_dir = get_config("steam_dir", "")
 
     # last line of defense
     while not steam_dir or (
@@ -327,8 +319,9 @@ def handle_non_default_path():
 #         => try to get it with default installdirs
 #                 => steam exists under default installdirs => read vdf
 #                 => steam doesn't exist under default installdirs => prompt user for the library dota OR steam installdir
-get_steam_path()
+get_steam_root_path()
 handle_non_default_path()
+steam_dir = get_config("steam_dir")
 
 # links
 version_query = f"https://raw.githubusercontent.com/{head_owner}/{repo_name}/refs/heads/main/version"

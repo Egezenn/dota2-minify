@@ -82,7 +82,7 @@ def get_available_localizations():
     "Initializes `localization_dict` at startup"
     global localizations
     # get available variables for text
-    with open(mpaths.localization_file_dir, "r", encoding="utf-8") as file:
+    with open(mpaths.localization_file_dir, encoding="utf-8") as file:
         localization_data = jsonc.load(file)
     sub_headers = set()
     for header in localization_data.values():
@@ -106,7 +106,7 @@ def close():
 # TODO: also revise this
 def change_localization(init=False):
     global locale
-    with open(mpaths.localization_file_dir, "r", encoding="utf-8") as localization_file:
+    with open(mpaths.localization_file_dir, encoding="utf-8") as localization_file:
         localization_data = jsonc.load(localization_file)
     if init == True:  # gets broken equality check is not there # noqa: E712
         if (locale := mpaths.get_config("locale", ui.get_value("lang_select"))) is not None:
@@ -148,12 +148,12 @@ def change_localization(init=False):
         note_path = os.path.join(mod_path, f"notes_{locale}.txt")
         try:
             if os.path.exists(note_path):
-                with open(note_path, "r", encoding="utf-8") as file:
+                with open(note_path, encoding="utf-8") as file:
                     data = file.read()
                 ui.configure_item(tag_id, default_value=data)
             else:
                 note_path = os.path.join(mod_path, "notes_en.txt")
-                with open(note_path, "r", encoding="utf-8") as file:
+                with open(note_path, encoding="utf-8") as file:
                     data = file.read()
                 ui.configure_item(tag_id, default_value=data)
         except FileNotFoundError:
