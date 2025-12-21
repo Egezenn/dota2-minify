@@ -122,5 +122,8 @@ coll = COLLECT(
     name="Minify",
 )
 
-os.remove("ffi_main.txt")
-os.remove("ffi_updater.txt")
+try:
+    os.remove("ffi_main.txt")
+    os.remove("ffi_updater.txt")
+except:
+    pass
