@@ -4,11 +4,8 @@ import re
 import shutil
 import stat
 import subprocess
-import tarfile
 import threading
 import time
-import urllib.request
-import zipfile
 
 import dearpygui.dearpygui as ui
 import jsonc
@@ -44,7 +41,7 @@ def version_check():
     global version
     global latest_download_url
 
-    if version and not mpaths.frozen:
+    if version and mpaths.frozen:
         try:
             api_url = f"https://api.github.com/repos/{mpaths.head_owner}/{mpaths.repo_name}/releases"
 
@@ -113,67 +110,63 @@ def setup_system():
 def download_dependencies():
     try:
         if not os.path.exists(mpaths.s2v_executable):
-            helper.add_text_to_terminal(helper.localization_dict["downloading_cli_terminal_text_var"])
+            helper.add_text_to_terminal(
+                helper.localization_dict["downloading_cli_terminal_text_var"], "downloading_cli_terminal_text_var"
+            )
             zip_path = mpaths.s2v_latest.split("/")[-1]
-            response = requests.get(mpaths.s2v_latest)
-            if response.status_code == 200:
-                with open(zip_path, "wb") as file:
-                    file.write(response.content)
+            if helper.download_file(mpaths.s2v_latest, zip_path, "downloading_cli_terminal_text_var"):
                 helper.add_text_to_terminal(f"{helper.localization_dict['downloaded_cli_terminal_text_var']}{zip_path}")
-                shutil.unpack_archive(zip_path, format="zip")
-                os.remove(zip_path)
-                helper.add_text_to_terminal(f"{helper.localization_dict['extracted_cli_terminal_text_var']}{zip_path}")
-                if mpaths.OS != mpaths.WIN and not os.access(mpaths.s2v_executable, os.X_OK):
-                    current_permissions = os.stat(mpaths.s2v_executable).st_mode
-                    os.chmod(
-                        mpaths.s2v_executable,
-                        current_permissions | stat.S_IXUSR | stat.S_IXGRP | stat.S_IXOTH,
+                if helper.extract_archive(zip_path, "."):
+                    os.remove(zip_path)
+                    helper.add_text_to_terminal(
+                        f"{helper.localization_dict['extracted_cli_terminal_text_var']}{zip_path}"
                     )
+                    if mpaths.OS != mpaths.WIN and not os.access(mpaths.s2v_executable, os.X_OK):
+                        current_permissions = os.stat(mpaths.s2v_executable).st_mode
+                        os.chmod(
+                            mpaths.s2v_executable,
+                            current_permissions | stat.S_IXUSR | stat.S_IXGRP | stat.S_IXOTH,
+                        )
 
         # Prefer system-installed ripgrep when available
         rg_on_path = shutil.which(mpaths.rg_executable)
         if rg_on_path:
             mpaths.rg_executable = rg_on_path
         elif not os.path.exists(mpaths.rg_executable):
-            helper.add_text_to_terminal(helper.localization_dict["downloading_ripgrep_terminal_text_var"])
+            helper.add_text_to_terminal(
+                helper.localization_dict["downloading_ripgrep_terminal_text_var"],
+                "downloading_ripgrep_terminal_text_var",
+            )
             archive_path = mpaths.rg_latest.split("/")[-1]
             archive_name = archive_path[:-4] if archive_path[-4:] == ".zip" else archive_path[:-7]
-            archive_extension = archive_path[-4:] if archive_path[-4:] == ".zip" else archive_path[-7:]
-            response = requests.get(mpaths.rg_latest)
-            if response.status_code == 200:
-                with open(archive_path, "wb") as file:
-                    file.write(response.content)
+
+            if helper.download_file(mpaths.rg_latest, archive_path, "downloading_ripgrep_terminal_text_var"):
                 helper.add_text_to_terminal(
                     f"{helper.localization_dict['downloaded_cli_terminal_text_var']}{archive_path}"
                 )
-                if archive_extension == ".zip":
-                    with zipfile.ZipFile(archive_path) as zip_ref:
-                        zip_ref.extract(archive_name + "/" + mpaths.rg_executable)
-                else:
-                    with tarfile.open(archive_path, "r:gz") as tar:
-                        tar.extractall()
-                helper.move_path(
-                    os.path.join(archive_name, mpaths.rg_executable),
-                    mpaths.rg_executable,
-                )
-                helper.remove_path(archive_name)
-                os.remove(archive_path)
-                helper.add_text_to_terminal(
-                    f"{helper.localization_dict['extracted_cli_terminal_text_var']}{archive_path}"
-                )
-                if mpaths.OS in (mpaths.LINUX, mpaths.MAC) and not os.access(mpaths.rg_executable, os.X_OK):
-                    current_permissions = os.stat(mpaths.rg_executable).st_mode
-                    os.chmod(
-                        mpaths.rg_executable,
-                        current_permissions | stat.S_IXUSR | stat.S_IXGRP | stat.S_IXOTH,
-                    )
 
-        if gui_lock:
-            lock_interaction()
+                success = False
+                success = helper.extract_archive(archive_path, ".", f"{archive_name}/{mpaths.rg_executable}")
+
+                if success:
+                    helper.move_path(
+                        os.path.join(archive_name, mpaths.rg_executable),
+                        mpaths.rg_executable,
+                    )
+                    helper.remove_path(archive_name)
+                    os.remove(archive_path)
+                    helper.add_text_to_terminal(
+                        f"{helper.localization_dict['extracted_cli_terminal_text_var']}{archive_path}"
+                    )
+                    if mpaths.OS in (mpaths.LINUX, mpaths.MAC) and not os.access(mpaths.rg_executable, os.X_OK):
+                        current_permissions = os.stat(mpaths.rg_executable).st_mode
+                        os.chmod(
+                            mpaths.rg_executable,
+                            current_permissions | stat.S_IXUSR | stat.S_IXGRP | stat.S_IXOTH,
+                        )
 
     except:
         mpaths.write_crashlog()
-        lock_interaction()
         helper.add_text_to_terminal(
             helper.localization_dict["failed_download_retrying_terminal_text_var"],
             type="error",
@@ -301,7 +294,6 @@ def unlock_interaction():
     ui.configure_item("button_uninstall", enabled=True)
     ui.configure_item("lang_select", enabled=True)
     ui.configure_item("output_select", enabled=True)
-    setup_button_state()
 
 
 def show_details(sender, app_data, user_data):
@@ -324,7 +316,7 @@ def focus_window():
                 check=True,
             )
         except:
-            mpaths.write_warning()
+            pass
 
 
 def delete_update_popup(ignore):
@@ -350,22 +342,7 @@ def update():
                 target_zip = "update.zip"
                 helper.remove_path(target_zip)
 
-                try:
-                    last_report_time = 0
-
-                    def progress_hook(block_num, block_size, total_size):
-                        nonlocal last_report_time
-                        current_time = time.time()
-                        if current_time - last_report_time >= 0.1:
-                            downloaded = block_num * block_size
-                            ui.set_value(
-                                "update_download_progress_tag", f"Downloading: {downloaded}/{total_size} bytes"
-                            )
-                            last_report_time = current_time
-
-                    urllib.request.urlretrieve(download_url, target_zip, reporthook=progress_hook)
-                except Exception as e:
-                    helper.add_text_to_terminal(f"Download failed: {e}", type="error")
+                if not helper.download_file(download_url, target_zip, "update_download_progress_tag"):
                     open_github_link()
                     helper.close()
                     return

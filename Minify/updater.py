@@ -1,14 +1,14 @@
 "Updater executable."
 
-import os
-import sys
-import shutil
-import time
-import zipfile
-import subprocess
-import tempfile
 import argparse
 import glob
+import os
+import shutil
+import subprocess
+import sys
+import tempfile
+import time
+import zipfile
 
 # Configuration
 # - bin/rescomproot -> keep
@@ -42,6 +42,11 @@ def main():
     parser = argparse.ArgumentParser(description="Minify Updater")
     parser.add_argument("zip_path", help="Path to the update zip file")
     args = parser.parse_args()
+
+    if getattr(sys, "frozen", False):
+        os.chdir(os.path.dirname(sys.executable))
+    else:
+        sys.exit("Please run this script as a frozen executable.")
 
     zip_path = args.zip_path
 

@@ -4,9 +4,12 @@ import shlex
 import shutil
 import stat
 import subprocess
+import tarfile
 import time
 import webbrowser
+import zipfile
 
+import requests
 import dearpygui.dearpygui as ui
 import jsonc
 
@@ -20,6 +23,74 @@ localizations = []
 mod_selection_window_var = ""
 output_path = mpaths.get_config("output_path", mpaths.minify_dota_pak_output_path)
 workshop_installed = False
+
+
+def download_file(url, target_path, progress_tag=None):
+    """
+    Downloads a file from url to target_path using requests.
+    Updates the UI progress_tag with "Downloading: X.XX/Y.YY MB" if provided.
+    """
+    try:
+        response = requests.get(url, stream=True)
+        response.raise_for_status()
+        total_size = int(response.headers.get("content-length", 0))
+        block_size = 8192
+        downloaded = 0
+        last_report_time = 0
+
+        with open(target_path, "wb") as f:
+            for chunk in response.iter_content(chunk_size=block_size):
+                if chunk:
+                    f.write(chunk)
+                    downloaded += len(chunk)
+                    if progress_tag:
+                        current_time = time.time()
+                        if current_time - last_report_time >= 0.1:
+                            downloaded_mb = downloaded / (1024 * 1024)
+                            total_size_mb = total_size / (1024 * 1024)
+                            if total_size > 0:
+                                # TODO: localize texts, use single string for downloads
+                                #       "Downloading {}".format(item)
+                                #       "Downloading {}".format(progress)
+                                ui.set_value(
+                                    progress_tag,
+                                    f"Downloading: {downloaded_mb:.2f}/{total_size_mb:.2f} MB",
+                                )
+                            else:
+                                ui.set_value(progress_tag, f"Downloading: {downloaded_mb:.2f} MB")
+                            last_report_time = current_time
+        return True
+    except Exception as e:
+        add_text_to_terminal(f"Download failed: {e}", type="error")
+        return False
+
+
+def extract_archive(archive_path, extract_dir=".", target_file=None):
+    """
+    Extracts an archive (zip or tar.gz).
+    If target_file is provided, extracts only that file (or directory structure leading to it).
+    """
+    try:
+        if archive_path.endswith(".zip"):
+            with zipfile.ZipFile(archive_path, "r") as zip_ref:
+                if target_file:
+                    zip_ref.extract(target_file, path=extract_dir)
+                else:
+                    zip_ref.extractall(extract_dir)
+        elif archive_path.endswith((".tar.gz", ".tgz")):
+            with tarfile.open(archive_path, "r:gz") as tar:
+                if target_file:
+                    member = tar.getmember(target_file)
+                    tar.extract(member, path=extract_dir)
+                else:
+                    tar.extractall(extract_dir)
+        else:
+            add_text_to_terminal(f"Unsupported archive format: {archive_path}", type="error")
+            return False
+        return True
+    except Exception as e:
+        add_text_to_terminal(f"Extraction failed: {e}", type="error")
+        return False
 
 
 def scroll_to_terminal_end():

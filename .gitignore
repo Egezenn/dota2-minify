@@ -6,6 +6,7 @@ Minify/vpk_merge
 Minify/config
 Minify/logs
 Minify/mods/*
+scripts/ffi_*.txt
 
 ## In-repo mods
 !Minify/mods/#base

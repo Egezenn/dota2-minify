@@ -65,15 +65,15 @@ jobs:
       - name: Build executable
         shell: pwsh
         run: |
-          Set-Location Minify
+          Set-Location scripts
           pyinstaller Minify.spec
 
       - name: Move project dependencies
         shell: pwsh
         run: |
-          Set-Location Minify
-          Copy-Item -Path "bin" -Destination "dist\Minify\bin" -Recurse
-          Copy-Item -Path "mods" -Destination "dist\Minify\mods" -Recurse
+          Set-Location scripts
+          Copy-Item -Path "..\Minify\bin" -Destination "dist\Minify\bin" -Recurse
+          Copy-Item -Path "..\Minify\mods" -Destination "dist\Minify\mods" -Recurse
           Copy-Item -Path "..\version" -Destination "dist\Minify\version"
           Copy-Item -Path "..\readme.md" -Destination "dist\Minify\readme.md"
           Copy-Item -Path "..\LICENSE" -Destination "dist\Minify\LICENSE"
@@ -81,16 +81,16 @@ jobs:
       - name: Archiving (Windows)
         if: matrix.os == 'windows-latest'
         run: |
-          Set-Location Minify\dist\Minify
-          Copy-Item -Path "..\updater.exe" -Destination "updater-new.exe"
+          Set-Location scripts\dist\Minify
+          Copy-Item -Path "updater.exe" -Destination "updater-new.exe"
           Compress-Archive -Path ".\*" -DestinationPath "..\..\..\${{ github.event.inputs.release_name }}-windows.zip"
           Set-Location .\..\..\..\
       - name: Archiving (Linux)
         shell: pwsh
         if: matrix.os == 'ubuntu-latest'
         run: |
-          Set-Location Minify/dist/Minify
-          Copy-Item -Path "../updater" -Destination "updater-new"
+          Set-Location scripts/dist/Minify
+          Copy-Item -Path "updater" -Destination "updater-new"
           Compress-Archive -Path "./*" -DestinationPath "./../../../${{ github.event.inputs.release_name }}-linux.zip"
           Set-Location ../../..
 
