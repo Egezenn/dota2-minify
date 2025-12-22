@@ -20,6 +20,7 @@ import requests
 
 def main():
     config_data = mpaths.get_mod_config(mod_name)
+    # Ensure it's the root steam installation as everything related is stored there
     path_from_config = mpaths.get_key_from_dict_w_default(config_data, "steam_path", "")
     possible_userdata_paths = [
         os.path.join(path_from_config, "userdata"),
@@ -38,7 +39,7 @@ def main():
             replace_grid = True
         else:
             grid_type = mpaths.get_key_from_dict_w_default(config_data, "grid_type", "d2ptrating")
-            patch_name = mpaths.get_key_from_dict_w_default(config_data, "patch", "7.40")  # to be fixed later
+            patch_name = mpaths.get_key_from_dict_w_default(config_data, "patch_name", "7.40")
             response = requests.get(
                 f"https://dota2protracker.com/meta-hero-grids/download?mode={grid_type}&patch={patch_name}"
             )
@@ -48,6 +49,33 @@ def main():
                 with open(grid_path, "wb") as file:
                     file.write(response.content)
                 replace_grid = True
+            elif response.status_code == 404:
+                try:
+                    patch_response = requests.get("https://api.opendota.com/api/constants/patchnotes")
+                    if patch_response.status_code == 200:
+                        patches = list(patch_response.json().keys())
+                        # Get last 5 patches and reverse to try newest first, just to be sure
+                        last_patches = patches[-5:]
+                        last_patches.reverse()
+
+                        for patch in last_patches:
+                            normalized_patch = patch.replace("_", ".")
+
+                            print(f"Retrying with patch: {normalized_patch}")
+                            response = requests.get(
+                                f"https://dota2protracker.com/meta-hero-grids/download?mode={grid_type}&patch={normalized_patch}"
+                            )
+                            if response.status_code == 200:
+                                patch_name = normalized_patch
+                                grid_path = os.path.join(current_dir, "grid.json")
+                                helper.remove_path(grid_path)
+                                with open(grid_path, "wb") as file:
+                                    file.write(response.content)
+                                replace_grid = True
+                                break
+                except:
+                    mpaths.write_warning()
+                    replace_grid = False
             else:
                 mpaths.write_warning(f"Couldn't fetch a grid from {current_dir}.")
                 replace_grid = False
@@ -56,7 +84,7 @@ def main():
             found_id = False
             if steam_id := mpaths.get_key_from_dict_w_default(config_data, "steam_id", ""):
                 id_to_use_path = os.path.join(userdata_path, str(steam_id))
-                found_id = True
+                found_id = True if os.path.exists(id_to_use_path) else False
             elif steam_ids := sorted(os.listdir(userdata_path)):
                 id_to_use_path = os.path.join(userdata_path, steam_ids[0])
                 found_id = True
