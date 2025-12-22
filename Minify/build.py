@@ -92,10 +92,10 @@ def patcher(mod=None, pakname=None):
             mod_path = os.path.join(mpaths.mods_dir, folder)
             cfg_path = os.path.join(mod_path, "modcfg.json")
 
-            visual, mod_cfg = mpaths.get_key_from_json_file_w_default(cfg_path, "visual", True)
+            visual, mod_cfg = mpaths.get_config__file(cfg_path, "visual", True)
 
             if mod is None:
-                apply_without_user_confirmation = mpaths.get_key_from_dict_w_default(mod_cfg, "always", False)
+                apply_without_user_confirmation = mpaths.get_config__dict(mod_cfg, "always", False)
             else:  # will not be in mods.json
                 apply_without_user_confirmation = False
 

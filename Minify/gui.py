@@ -198,14 +198,14 @@ def create_checkboxes():
             always_val = False
         else:
             mod_cfg_path = os.path.join(mod_path, "modcfg.json")
-            always_val, _ = mpaths.get_key_from_json_file_w_default(mod_cfg_path, "always", None)
+            always_val, _ = mpaths.get_config__file(mod_cfg_path, "always", None)
 
         if always_val:
             enable_ticking = False
             value = True
         else:
             enable_ticking = True
-            value = mpaths.get_key_from_dict_w_default(checkboxes_state, mod, False)
+            value = mpaths.get_config__dict(checkboxes_state, mod, False)
 
         ui.add_group(parent="mod_menu", tag=f"{mod}_group_tag", horizontal=True, width=300)
         # enabled=False default_value=True doesn't show up as ticked
@@ -827,8 +827,8 @@ def bulk_exec_script(order_name, terminal_output=True):
     for root, _, files in os.walk(mpaths.mods_dir):
         if bulk_name in files and not os.path.basename(root).startswith("_"):
             mod_cfg_path = os.path.join(root, "modcfg.json")
-            always, cfg = mpaths.get_key_from_json_file_w_default(mod_cfg_path, "always", False)
-            visual = mpaths.get_key_from_dict_w_default(cfg, "visual", True)
+            always, cfg = mpaths.get_config__file(mod_cfg_path, "always", False)
+            visual = mpaths.get_config__dict(cfg, "visual", True)
 
             # TODO: pull the file from pak66 to check if it was enabled for uninstallers
             if always or order_name in ["initial", "uninstall"] or (visual and ui.get_value(os.path.basename(root))):

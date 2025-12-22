@@ -115,6 +115,7 @@ def update_json_file(path, key, value):
 
 
 def get_config(key, default_value=None):
+    "Get config value from the main config file with default and set the default onto config."
     data = read_json_file(main_config_file_dir)
     try:
         return data[key]
@@ -127,33 +128,38 @@ def get_config(key, default_value=None):
 
 
 def set_config(key, value):
+    "Set config value for the main config file."
     update_json_file(main_config_file_dir, key, value)
     return value
 
 
-def get_key_from_dict_w_default(dict, key, default):
+def get_config__file(file, key, default=None):
+    "Get config value from a file with default and return the dict for later use."
+    try:
+        data = read_json_file(file)
+        return get_config__dict(data, key, default), data
+    except FileNotFoundError:
+        return default, {}
+
+
+def get_config__dict(dict, key, default=None):
+    "Get config value from preexisting dict."
     try:
         return dict[key]
     except:
         return default
 
 
-def get_key_from_json_file_w_default(file, key, default):
-    try:
-        data = read_json_file(file)
-        return get_key_from_dict_w_default(data, key, default), data
-    except FileNotFoundError:
-        return default, {}
-
-
 def get_mod_config(mod_name, default=None):
+    "Get config value for mods and return the dict for later use."
     if default is None:
         default = {}
     modconf = get_config("modconf", {})
-    return get_key_from_dict_w_default(modconf, mod_name, default)
+    return get_config__dict(modconf, mod_name, default)
 
 
 def set_mod_config(mod_name, config_data):
+    "Set config value for mods."
     modconf = get_config("modconf", {})
     modconf[mod_name] = config_data
     set_config("modconf", modconf)
@@ -507,9 +513,9 @@ for mod in sorted(os.listdir(mods_dir)):
             cfg_exist = os.path.exists(mod_cfg := os.path.join(mod_path, "modcfg.json"))
             blacklist_exist = os.path.exists(os.path.join(mod_path, "blacklist.txt"))
 
-            order, cfg = get_key_from_json_file_w_default(mod_cfg, "order", 1)
-            dependencies = get_key_from_dict_w_default(cfg, "dependencies", None)
-            visual = get_key_from_dict_w_default(cfg, "visual", True)
+            order, cfg = get_config__file(mod_cfg, "order", 1)
+            dependencies = get_config__dict(cfg, "dependencies", None)
+            visual = get_config__dict(cfg, "visual", True)
             visually_available_mods.append(mod) if visual else visually_unavailable_mods.append(mod)
             if dependencies is not None:
                 mod_dependencies_list.append({mod: dependencies})

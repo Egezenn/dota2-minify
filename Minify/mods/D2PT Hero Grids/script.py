@@ -21,7 +21,7 @@ import requests
 def main():
     config_data = mpaths.get_mod_config(mod_name)
     # Ensure it's the root steam installation as everything related is stored there
-    path_from_config = mpaths.get_key_from_dict_w_default(config_data, "steam_path", "")
+    path_from_config = mpaths.get_config__dict(config_data, "steam_path", "")
     possible_userdata_paths = [
         os.path.join(path_from_config, "userdata"),
         os.path.join(mpaths.steam_dir, "userdata"),
@@ -38,8 +38,8 @@ def main():
             grid_path = grid_path[0]
             replace_grid = True
         else:
-            grid_type = mpaths.get_key_from_dict_w_default(config_data, "grid_type", "d2ptrating")
-            patch_name = mpaths.get_key_from_dict_w_default(config_data, "patch_name", "7.40")
+            grid_type = mpaths.get_config__dict(config_data, "grid_type", "d2ptrating")
+            patch_name = mpaths.get_config__dict(config_data, "patch_name", "7.40")
             response = requests.get(
                 f"https://dota2protracker.com/meta-hero-grids/download?mode={grid_type}&patch={patch_name}"
             )
@@ -82,7 +82,7 @@ def main():
 
         if replace_grid:
             found_id = False
-            if steam_id := mpaths.get_key_from_dict_w_default(config_data, "steam_id", ""):
+            if steam_id := mpaths.get_config__dict(config_data, "steam_id", ""):
                 id_to_use_path = os.path.join(userdata_path, str(steam_id))
                 found_id = True if os.path.exists(id_to_use_path) else False
             elif steam_ids := sorted(os.listdir(userdata_path)):
