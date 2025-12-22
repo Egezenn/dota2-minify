@@ -34,8 +34,7 @@ def main():
     except:
         pass
 
-    if os.path.exists(zip_path):
-        os.remove(zip_path)
+    helper.remove_path(zip_path)
 
     response = requests.get(odg_latest)
     if response.status_code == 200:
@@ -57,10 +56,7 @@ def main():
                 os.path.join(temp_dump_path, file),
                 os.path.join(dota_itembuilds_path, file),
             )
-        helper.remove_path(temp_dump_path)
-        os.remove(zip_path)
-        if os.path.exists(zip_path):
-            os.remove(zip_path)
+        helper.remove_path(temp_dump_path, zip_path)
 
 
 if __name__ == "__main__":

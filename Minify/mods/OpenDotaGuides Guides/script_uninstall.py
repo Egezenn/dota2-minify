@@ -25,7 +25,7 @@ def main():
             if "OpenDotaGuides" in lines[2]:
                 for name in os.listdir(dota_itembuilds_path):
                     if name != "bkup":
-                        os.remove(os.path.join(dota_itembuilds_path, name))
+                        helper.remove_path(os.path.join(dota_itembuilds_path, name))
                 for name in os.listdir(os.path.join(dota_itembuilds_path, "bkup")):
                     helper.move_path(
                         os.path.join(dota_itembuilds_path, "bkup", name),

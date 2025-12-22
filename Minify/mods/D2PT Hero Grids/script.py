@@ -43,8 +43,8 @@ def main():
                 f"https://dota2protracker.com/meta-hero-grids/download?mode={grid_type}&patch={patch_name}"
             )
             if response.status_code == 200:
-                if os.path.exists(grid_path := os.path.join(current_dir, "grid.json")):
-                    os.remove(grid_path)
+                grid_path = os.path.join(current_dir, "grid.json")
+                helper.remove_path(grid_path)
                 with open(grid_path, "wb") as file:
                     file.write(response.content)
                 replace_grid = True

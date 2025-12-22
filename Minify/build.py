@@ -46,7 +46,7 @@ def patcher(mod=None, pakname=None):
         mod_list = mpaths.mods_with_order if mod is None else [mod]
 
         for item in os.listdir(mpaths.logs_dir):
-            os.remove(os.path.join(mpaths.logs_dir, item))
+            helper.remove_path(os.path.join(mpaths.logs_dir, item))
 
         os.makedirs(mpaths.build_dir, exist_ok=True)
         os.makedirs(mpaths.replace_dir, exist_ok=True)
@@ -417,7 +417,7 @@ def patcher(mod=None, pakname=None):
                     # Verify it's a Minify-created pak65 by checking metadata
                     pak65_contents = vpk.open(pak65_path)
                     if "minify_vpk_mods.txt" in pak65_contents or "minify_version.txt" in pak65_contents:
-                        os.remove(pak65_path)
+                        helper.remove_path(pak65_path)
                 except:
                     pass
 
@@ -514,7 +514,7 @@ def uninstaller():
                         *mod_names_with_txt,
                     ]:
                         if file in pak_contents:
-                            os.remove(os.path.join(dir, item))
+                            helper.remove_path(os.path.join(dir, item))
                             break
 
     gui.bulk_exec_script("uninstall")

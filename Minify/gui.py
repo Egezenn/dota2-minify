@@ -117,7 +117,7 @@ def download_dependencies():
             if helper.download_file(mpaths.s2v_latest, zip_path, "downloading_cli_terminal_text_var"):
                 helper.add_text_to_terminal(f"{helper.localization_dict['downloaded_cli_terminal_text_var']}{zip_path}")
                 if helper.extract_archive(zip_path, "."):
-                    os.remove(zip_path)
+                    helper.remove_path(zip_path)
                     helper.add_text_to_terminal(
                         f"{helper.localization_dict['extracted_cli_terminal_text_var']}{zip_path}"
                     )
@@ -153,8 +153,7 @@ def download_dependencies():
                         os.path.join(archive_name, mpaths.rg_executable),
                         mpaths.rg_executable,
                     )
-                    helper.remove_path(archive_name)
-                    os.remove(archive_path)
+                    helper.remove_path(archive_path)
                     helper.add_text_to_terminal(
                         f"{helper.localization_dict['extracted_cli_terminal_text_var']}{archive_path}"
                     )
@@ -321,7 +320,7 @@ def focus_window():
 
 def delete_update_popup(ignore):
     if ignore:
-        os.remove(mpaths.version_file_dir)
+        helper.remove_path(mpaths.version_file_dir)
     ui.configure_item("update_popup", show=False)
     ui.delete_item("update_popup")
 
