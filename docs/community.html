@@ -2,7 +2,7 @@
 <html lang="en" data-bs-theme="dark">
   <head>
     <meta charset="UTF-8" />
-    <title>Dota2 Minify - Community Mods</title>
+    <title>Dota2 Minify - Community</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="icon" type="image/x-icon" href="https://github.com/Egezenn/dota2-minify/raw/main/Minify/bin/images/favicon.ico" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous" />
@@ -12,6 +12,16 @@
       body {
         padding-top: 2rem;
         padding-bottom: 2rem;
+      }
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        transition: filter 0.3s ease;
+
+        &:hover {
+          filter: brightness(0.8);
+        }
       }
       .mod-buttons {
         display: grid;
@@ -47,7 +57,7 @@
   <body>
     <main class="container">
       <div class="d-flex justify-content-between align-items-center mb-3">
-        <h1 class="h1 fw-bold">Community Mods</h1>
+        <h1 class="h1 fw-bold">Community</h1>
         <a class="btn btn-primary" href="https://egezenn.github.io/dota2-minify" role="button" style="display: inline-flex; align-items: center; gap: 0.5rem"><ion-icon name="arrow-back-outline"></ion-icon> Back</a>
       </div>
       <div id="mods-section" class="mb-4" style="display: none">

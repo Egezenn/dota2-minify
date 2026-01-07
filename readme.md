@@ -24,7 +24,7 @@
   - [Table of contents](#table-of-contents)
   - [Is this safe to use?](#is-this-safe-to-use)
   - [Installation](#installation)
-    - [Community mods](#community-mods)
+    - [Community](#community)
     - [Optional Setup](#optional-setup)
       - [Using the project locally](#using-the-project-locally)
       - [Compilation from source](#compilation-from-source)
@@ -107,9 +107,9 @@ No one has ever been banned for the use of these mods and alike. Minify strictly
 4. **Start Dota 2**
    - Launch Dota2 and enjoy!
 
-### Community mods
+### Community
 
-In our [Discord server](https://discord.com/invite/2YDnqpbcKM) we have a forum in which you can find more mods!
+You can find more mods, tooling and skins at the [website](https://egezenn.github.io/dota2-minify/community.html) or our [Discord server](https://discord.com/invite/2YDnqpbcKM).
 
 ### Optional Setup
 

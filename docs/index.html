@@ -27,6 +27,11 @@
         display: inline-flex;
         align-items: center;
         gap: 0.5rem;
+        transition: filter 0.3s ease;
+
+        &:hover {
+          filter: brightness(0.8);
+        }
       }
       img {
         border-radius: 12px;
@@ -68,7 +73,7 @@
       </div>
       <div class="btn-container btn-group-lg mb-3">
         <a class="btn btn-info" href="mods.html" role="button"> <ion-icon name="document-text-outline"></ion-icon> Mods </a>
-        <a class="btn btn-info" href="community-mods.html" role="button"> <ion-icon name="people-outline"></ion-icon> Community Mods </a>
+        <a class="btn btn-info" href="community.html" role="button"> <ion-icon name="people-outline"></ion-icon> Community </a>
       </div>
       <div class="btn-container btn-group-lg">
         <a class="btn btn-secondary" href="https://github.com/sponsors/Egezenn" role="button"> <ion-icon name="heart-outline" style="color: pink"></ion-icon> GitHub Sponsors </a>
