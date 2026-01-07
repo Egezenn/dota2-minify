@@ -22,15 +22,38 @@ def main():
     config_data = mpaths.get_mod_config(mod_name)
     # Ensure it's the root steam installation as everything related is stored there
     path_from_config = mpaths.get_config__dict(config_data, "steam_path", "")
+    steam_id_config = mpaths.get_config__dict(config_data, "steam_id", "")
+
     possible_userdata_paths = [
         os.path.join(path_from_config, "userdata"),
         os.path.join(mpaths.steam_dir, "userdata"),
         os.path.join(mpaths.STEAM_DEFAULT_INSTALLATION_PATH, "userdata"),
     ]
     found = False
-    for userdata_path in possible_userdata_paths:
-        if os.path.exists(userdata_path):
-            found = True
+    dest_path = None
+    id_to_use_path = None
+
+    for potential_ud_path in possible_userdata_paths:
+        if os.path.exists(potential_ud_path):
+            ids_to_check = []
+            if steam_id_config:
+                ids_to_check = [str(steam_id_config)]
+            else:
+                ids_to_check = sorted(
+                    [d for d in os.listdir(potential_ud_path) if os.path.isdir(os.path.join(potential_ud_path, d))]
+                )
+
+            for pid in ids_to_check:
+                temp_id_path = os.path.join(potential_ud_path, pid)
+                temp_dest_path = os.path.join(temp_id_path, "570", "remote", "cfg")
+                if os.path.isdir(temp_dest_path):
+                    userdata_path = potential_ud_path
+                    id_to_use_path = temp_id_path
+                    dest_path = temp_dest_path
+                    found = True
+                    break
+
+        if found:
             break
 
     if found:
@@ -81,43 +104,32 @@ def main():
                 replace_grid = False
 
         if replace_grid:
-            found_id = False
-            if steam_id := mpaths.get_config__dict(config_data, "steam_id", ""):
-                id_to_use_path = os.path.join(userdata_path, str(steam_id))
-                found_id = True if os.path.exists(id_to_use_path) else False
-            elif steam_ids := sorted(os.listdir(userdata_path)):
-                id_to_use_path = os.path.join(userdata_path, steam_ids[0])
-                found_id = True
 
             config_data["steam_path"] = os.path.dirname(userdata_path)
             config_data["steam_id"] = os.path.basename(id_to_use_path)
-            config_data["grid_type"] = grid_type
-            config_data["patch_name"] = patch_name
+            try:  # local download
+                config_data["grid_type"] = grid_type
+                config_data["patch_name"] = patch_name
+            except UnboundLocalError:
+                pass
 
             mpaths.set_mod_config(mod_name, config_data)
 
-            if found_id and os.path.isdir(dest_path := os.path.join(id_to_use_path, "570", "remote", "cfg")):
-                original_grid_path = os.path.join(dest_path, "hero_grid_config.json")
-                if not os.path.exists(backup_dir := os.path.join(current_dir, "backup")):
-                    os.mkdir(backup_dir)
-                try:
-                    formatted_time = datetime.fromtimestamp(os.path.getmtime(original_grid_path)).strftime(
-                        "%Y-%m-%d_%H%M"
-                    )
-                    helper.move_path(
-                        original_grid_path,
-                        os.path.join(backup_dir, f"{formatted_time}.json"),
-                    )
-                except FileNotFoundError:
-                    pass
-                shutil.copy(grid_path, os.path.join(dest_path, "hero_grid_config.json"))
-            else:
-                mpaths.write_warning(
-                    f"The first account found in {userdata_path} doesn't have a hero grid or an account couldn't be found. Manually set your `steam_id` for {mod_name}."
+            original_grid_path = os.path.join(dest_path, "hero_grid_config.json")
+            if not os.path.exists(backup_dir := os.path.join(current_dir, "backup")):
+                os.mkdir(backup_dir)
+            try:
+                formatted_time = datetime.fromtimestamp(os.path.getmtime(original_grid_path)).strftime("%Y-%m-%d_%H%M")
+                helper.move_path(
+                    original_grid_path,
+                    os.path.join(backup_dir, f"{formatted_time}.json"),
                 )
+            except FileNotFoundError:
+                pass
+            shutil.copy(grid_path, os.path.join(dest_path, "hero_grid_config.json"))
     else:
         mpaths.write_warning(
-            f"Path to your steam installation couldn't be found for {mod_name}, manually set it from `minify_config.json` under `modconf` > `{mod_name}` key with `steam_path`"
+            f"A valid user ID or path to your steam installation couldn't be found for {mod_name}, manually set it from `minify_config.json` under `modconf` > `{mod_name}` key with `steam_path`"
         )
 
 
