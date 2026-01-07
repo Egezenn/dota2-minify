@@ -23,6 +23,25 @@
         height: auto;
         border-radius: 12px;
       }
+      #notes-content > div:not(:last-of-type) {
+        margin-bottom: 2rem;
+      }
+      h1,
+      h2,
+      h3,
+      h4,
+      h5,
+      h6,
+      .h1,
+      .h2,
+      .h3,
+      .h4,
+      .h5,
+      .h6 {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
     </style>
   </head>
   <body>
@@ -31,17 +50,17 @@
         <h1 class="h1 fw-bold">Community Mods</h1>
         <a class="btn btn-primary" href="https://egezenn.github.io/dota2-minify" role="button" style="display: inline-flex; align-items: center; gap: 0.5rem"><ion-icon name="arrow-back-outline"></ion-icon> Back</a>
       </div>
-      <div class="mb-4">
+      <div id="mods-section" class="mb-4" style="display: none">
         <h2 class="h4 border-bottom pb-2 mb-3">Mods</h2>
         <div id="mods-container" class="mod-buttons"></div>
       </div>
 
-      <div>
+      <div id="tools-section" style="display: none">
         <h2 class="h4 border-bottom pb-2 mb-3">Tools</h2>
         <div id="tools-container" class="mod-buttons"></div>
       </div>
 
-      <div class="mt-4">
+      <div id="skins-section" class="mt-4" style="display: none">
         <h2 class="h4 border-bottom pb-2 mb-3">Skins</h2>
         <div id="skins-container" class="mod-buttons"></div>
       </div>
@@ -155,6 +174,10 @@
       }
 
       function processData(items, meta) {
+        modsContainer.innerHTML = "";
+        toolsContainer.innerHTML = "";
+        skinsContainer.innerHTML = "";
+
         items.forEach((item) => {
           const card = createCard(item);
           // Default to 'mod' if not specified or found in meta
@@ -168,6 +191,10 @@
             modsContainer.appendChild(card);
           }
         });
+
+        document.getElementById("mods-section").style.display = modsContainer.hasChildNodes() ? "block" : "none";
+        document.getElementById("tools-section").style.display = toolsContainer.hasChildNodes() ? "block" : "none";
+        document.getElementById("skins-section").style.display = skinsContainer.hasChildNodes() ? "block" : "none";
       }
 
       if (cachedData && now - cachedData.timestamp < 60000) {
