@@ -41,15 +41,20 @@ VSVersionInfo(
 
 def generate_version_info(version):
     try:
-        match = re.match(r"(\d+)\.(\d+)\.(\d+)(?:rc(\d+))?", version)
+        match = re.match(r"(\d+)\.(\d+)(?:\.(\d+))?(?:rc(\d+))?", version)
         if not match:
             parts = version.split(".")
-            while len(parts) < 4:
-                parts.append("0")
-            v_tuple = tuple(int(p) for p in parts[:4])
+            clean_parts = []
+            for p in parts:
+                m = re.match(r"^(\d+)", p)
+                clean_parts.append(int(m.group(1)) if m else 0)
+
+            while len(clean_parts) < 4:
+                clean_parts.append(0)
+            v_tuple = tuple(clean_parts[:4])
         else:
             major, minor, patch, rc = match.groups()
-            v_tuple = (int(major), int(minor), int(patch), int(rc) if rc else 0)
+            v_tuple = (int(major), int(minor), int(patch) if patch else 0, int(rc) if rc else 0)
         v_str = ", ".join(str(p) for p in v_tuple)
 
         flags = 0x0
@@ -74,7 +79,7 @@ def generate_version_info(version):
 if platform.system() == "Windows":
     try:
         with open(os.path.join(os.pardir, "version")) as f:
-            version = f.read()
+            version = f.read().strip()
     except FileNotFoundError:
         version = "0"
     generate_version_info(version)
