@@ -13,7 +13,7 @@ import mpaths
 import helper
 
 dota_itembuilds_path = os.path.join(
-    mpaths.steam_dir, "steamapps", "common", "dota 2 beta", "game", "dota", "itembuilds"
+    mpaths.steam_library, "steamapps", "common", "dota 2 beta", "game", "dota", "itembuilds"
 )
 
 

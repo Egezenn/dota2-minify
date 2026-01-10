@@ -20,41 +20,16 @@ import requests
 
 def main():
     config_data = mpaths.get_mod_config(mod_name)
-    # Ensure it's the root steam installation as everything related is stored there
-    path_from_config = mpaths.get_config__dict(config_data, "steam_path", "")
-    steam_id_config = mpaths.get_config__dict(config_data, "steam_id", "")
+    steam_id_config = mpaths.get_config("steam_id", "")
 
-    possible_userdata_paths = [
-        os.path.join(path_from_config, "userdata"),
-        os.path.join(mpaths.steam_dir, "userdata"),
-        os.path.join(mpaths.STEAM_DEFAULT_INSTALLATION_PATH, "userdata"),
-    ]
+    userdata_path = os.path.join(mpaths.steam_root, "userdata")
     found = False
-    dest_path = None
-    id_to_use_path = None
 
-    for potential_ud_path in possible_userdata_paths:
-        if os.path.exists(potential_ud_path):
-            ids_to_check = []
-            if steam_id_config:
-                ids_to_check = [str(steam_id_config)]
-            else:
-                ids_to_check = sorted(
-                    [d for d in os.listdir(potential_ud_path) if os.path.isdir(os.path.join(potential_ud_path, d))]
-                )
-
-            for pid in ids_to_check:
-                temp_id_path = os.path.join(potential_ud_path, pid)
-                temp_dest_path = os.path.join(temp_id_path, "570", "remote", "cfg")
-                if os.path.isdir(temp_dest_path):
-                    userdata_path = potential_ud_path
-                    id_to_use_path = temp_id_path
-                    dest_path = temp_dest_path
-                    found = True
-                    break
-
-        if found:
-            break
+    if steam_id_config and os.path.exists(userdata_path):
+        id_to_use_path = os.path.join(userdata_path, str(steam_id_config))
+        dest_path = os.path.join(id_to_use_path, "570", "remote", "cfg")
+        if os.path.exists(dest_path):
+            found = True
 
     if found:
         if grid_path := (glob.glob(os.path.join(current_dir, "dota2protracker_hero_grid*.json"))):
@@ -105,8 +80,6 @@ def main():
 
         if replace_grid:
 
-            config_data["steam_path"] = os.path.dirname(userdata_path)
-            config_data["steam_id"] = os.path.basename(id_to_use_path)
             try:  # local download
                 config_data["grid_type"] = grid_type
                 config_data["patch_name"] = patch_name

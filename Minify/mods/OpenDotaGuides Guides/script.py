@@ -17,7 +17,7 @@ import helper
 import mpaths
 
 dota_itembuilds_path = os.path.join(
-    mpaths.steam_dir, "steamapps", "common", "dota 2 beta", "game", "dota", "itembuilds"
+    mpaths.steam_library, "steamapps", "common", "dota 2 beta", "game", "dota", "itembuilds"
 )
 odg_latest = "https://github.com/Egezenn/OpenDotaGuides/releases/latest/download/itembuilds.zip"
 zip_path = os.path.join(current_dir, "files", "OpenDotaGuides.zip")

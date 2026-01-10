@@ -11,6 +11,8 @@ import dearpygui.dearpygui as ui
 import jsonc
 import psutil
 import requests
+import requests
+import vdf
 
 import build
 import helper
@@ -22,11 +24,6 @@ dev_mode_state = -1
 gui_lock = False
 version = None
 latest_download_url = None
-
-main_window_width = 494
-main_window_width_dev = 494
-main_window_height = 300
-main_window_height_dev = 650
 
 try:
     with open(mpaths.version_file_dir) as file:
@@ -207,7 +204,7 @@ def create_checkboxes():
             enable_ticking = True
             value = mpaths.get_config__dict(checkboxes_state, mod, False)
 
-        ui.add_group(parent="mod_menu", tag=f"{mod}_group_tag", horizontal=True, width=300)
+        ui.add_group(parent="mod_menu", tag=f"{mod}_group_tag", horizontal=True, width=mpaths.main_window_width)
         # enabled=False default_value=True doesn't show up as ticked
         ui.add_checkbox(
             parent=f"{mod}_group_tag",
@@ -237,7 +234,7 @@ def create_checkboxes():
             ui.add_button(
                 parent=f"{mod}_group_tag",
                 small=True,
-                indent=250,
+                indent=mpaths.main_window_width - 244,
                 tag=f"{mod}_button_show_details_tag",
                 label=f"{helper.details_label_text_var}",
                 callback=show_details,
@@ -248,8 +245,8 @@ def create_checkboxes():
                 tag=tag_data,
                 pos=(0, 0),
                 show=False,
-                width=494,
-                height=300,
+                width=mpaths.main_window_width,
+                height=mpaths.main_window_height,
                 no_resize=True,
                 no_move=True,
                 no_collapse=True,
@@ -260,7 +257,7 @@ def create_checkboxes():
                 default_value=data,
                 tag=f"{mod}_details_text_value_tag",
             )
-            ui.add_text(source=f"{mod}_details_text_value_tag", parent=tag_data, wrap=480)
+            ui.add_text(source=f"{mod}_details_text_value_tag", parent=tag_data, wrap=mpaths.main_window_width - 14)
 
         checkboxes.append(mod)
 
@@ -379,6 +376,7 @@ def drag_viewport(sender, app_data, user_data):
         or ui.is_item_hovered("terminal_window")
         or ui.is_item_hovered("top_bar")
         or ui.is_item_hovered("mod_menu")
+        or ui.is_item_hovered("options_menu")
         or ui.get_item_alias(ui.get_active_window()).endswith("details_window_tag")
     ):  # Note: If local pos [1] < *Height_of_top_bar is buggy)
         drag_deltas = app_data
@@ -391,6 +389,99 @@ def drag_viewport(sender, app_data, user_data):
 
 def open_mod_menu():
     ui.configure_item("mod_menu", show=True)
+
+
+def open_options_menu():
+    ui.configure_item("options_menu", show=True)
+
+
+options_config = [
+    {
+        "key": "steam_root",
+        "label": "steam_root",
+        "tag": "opt_steam_root",
+        "default": "",
+        "type": "text",
+    },
+    {
+        "key": "steam_id",
+        "label": "steam_id",
+        "tag": "opt_steam_id",
+        "default": "",
+        "type": "combo",
+        "items_getter": mpaths.get_steam_accounts,
+    },
+    {
+        "key": "opt_into_rcs",
+        "label": "opt_into_rcs",
+        "tag": "opt_opt_into_rcs",
+        "default": False,
+        "type": "checkbox",
+    },
+]
+
+
+def get_steam_user_list():
+    steam_root = mpaths.get_config("steam_root", "")
+    if not steam_root:
+        return []
+
+    userdata = os.path.join(steam_root, "userdata")
+    if not os.path.exists(userdata):
+        return []
+
+    users = []
+
+    for folder in os.listdir(userdata):
+        if folder.isdigit():
+            try:
+                config_path = os.path.join(userdata, folder, "config", "localconfig.vdf")
+                if os.path.exists(config_path):
+                    with open(config_path, encoding="utf-8") as f:
+                        data = vdf.load(f)
+
+                    try:
+                        name = data.get("UserLocalConfigStore", {}).get("friends", {})
+                    except:
+                        name = "Unknown"
+
+                    users.append(f"{folder} - {name}")
+                else:
+                    users.append(folder)
+            except:
+                users.append(folder)
+
+    return sorted(users)
+
+
+def save_options():
+    for opt in options_config:
+        val = ui.get_value(opt["tag"])
+        if opt["key"] == "steam_id" and val:
+            val = val.split(" - ")[0]
+        mpaths.set_config(opt["key"], val)
+
+
+def refresh_options():
+    for opt in options_config:
+        if opt["type"] == "combo" and "items_getter" in opt:
+            raw_items = opt["items_getter"]()
+            if raw_items and isinstance(raw_items[0], dict):
+                items = [f"{item['id']} - {item['name']}" for item in raw_items]
+            else:
+                items = raw_items
+            ui.configure_item(opt["tag"], items=items)
+
+        val = mpaths.get_config(opt["key"], opt["default"])
+
+        if opt["type"] == "combo" and val:
+            current_items = ui.get_item_configuration(opt["tag"])["items"]
+            for item in current_items:
+                if item.startswith(f"{val} - "):
+                    val = item
+                    break
+
+        ui.set_value(opt["tag"], val)
 
 
 def open_discord_link():
@@ -444,7 +535,7 @@ def start_text():
     ui.add_text(source="start_text_4_var", parent="terminal_window")
     ui.add_text(source="start_text_5_var", parent="terminal_window")
     ui.add_text(
-        default_value="------------------------------------------------------------------",
+        default_value="-" * 75,
         parent="terminal_window",
         tag="spacer_start_text_tag",
     )
@@ -567,6 +658,7 @@ def theme():
     ui.bind_item_theme("button_select_mods", main_buttons_theme)
     ui.bind_item_theme("button_uninstall", main_buttons_theme)
     ui.bind_item_theme("button_exit", close_button_theme)
+    ui.bind_item_theme("button_minimize", close_button_theme)
     ui.bind_item_theme("mod_menu", mod_menu_theme)
     ui.bind_item_theme("top_bar", top_bar_theme)
     ui.bind_item_theme("update_popup", popup_theme)
@@ -580,15 +672,15 @@ def dev_mode():
         ui.configure_viewport(
             item="main_viewport",
             resizable=False,
-            width=main_window_width_dev,
-            height=main_window_height_dev,
+            width=mpaths.main_window_width,
+            height=mpaths.main_window_height + 350,
         )
         ui.configure_viewport(item="primary_window", resizable=False)
         with ui.window(
             label="Path & File Opener",
             tag="opener",
-            pos=(0, 300),
-            width=240,
+            pos=(0, mpaths.main_window_height),
+            width=mpaths.main_window_width // 2,
             height=350,
             no_resize=True,
             no_move=True,
@@ -624,7 +716,7 @@ def dev_mode():
             ui.add_button(
                 label="Path: Dota2",
                 callback=lambda: helper.open_thing(
-                    os.path.join(mpaths.steam_dir, "steamapps", "common", "dota 2 beta")
+                    os.path.join(mpaths.steam_library, "steamapps", "common", "dota 2 beta")
                 ),
             )
             ui.add_button(
@@ -651,8 +743,8 @@ def dev_mode():
         with ui.window(
             label="Mod Tools",
             tag="mod_tools",
-            pos=(240, 300),
-            width=253,
+            pos=(mpaths.main_window_width // 2, mpaths.main_window_height),
+            width=mpaths.main_window_width // 2,
             height=200,
             no_resize=True,
             no_move=True,
@@ -683,8 +775,8 @@ def dev_mode():
         with ui.window(
             label="Maintenance Tools",
             tag="maintenance_tools",
-            pos=(240, 500),
-            width=253,
+            pos=(mpaths.main_window_width // 2, mpaths.main_window_height + 200),
+            width=mpaths.main_window_width // 2,
             height=150,
             no_resize=True,
             no_move=True,
@@ -695,29 +787,29 @@ def dev_mode():
             ui.add_spacer(width=0, height=5)
             ui.add_button(label="Extract workshop tools", callback=extract_workshop_tools)
 
-    elif dev_mode_state == 0:  # close
+    elif dev_mode_state == 0:  # open
         dev_mode_state = 1
         ui.configure_viewport(
             item="main_viewport",
             resizable=False,
-            width=main_window_width,
-            height=main_window_height,
-        )
-        ui.configure_item("opener", show=False)
-        ui.configure_item("mod_tools", show=False)
-        ui.configure_item("maintenance_tools", show=False)
-
-    else:  # reopen
-        dev_mode_state = 0
-        ui.configure_viewport(
-            item="main_viewport",
-            resizable=False,
-            width=main_window_width_dev,
-            height=main_window_height_dev,
+            width=mpaths.main_window_width,
+            height=mpaths.main_window_height + 350,
         )
         ui.configure_item("opener", show=True)
         ui.configure_item("mod_tools", show=True)
         ui.configure_item("maintenance_tools", show=True)
+
+    else:  # close
+        dev_mode_state = 0
+        ui.configure_viewport(
+            item="main_viewport",
+            resizable=False,
+            width=mpaths.main_window_width,
+            height=mpaths.main_window_height,
+        )
+        ui.configure_item("opener", show=False)
+        ui.configure_item("mod_tools", show=False)
+        ui.configure_item("maintenance_tools", show=False)
 
 
 def configure_update_popup():

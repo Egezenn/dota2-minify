@@ -9,9 +9,9 @@ import time
 import webbrowser
 import zipfile
 
-import requests
 import dearpygui.dearpygui as ui
 import jsonc
+import requests
 
 import mpaths
 
@@ -118,7 +118,7 @@ def add_text_to_terminal(text, tag: int | str | None = None, type: str | None = 
 
         kwargs["color"] = color
 
-    ui.add_text(default_value=text, parent="terminal_window", wrap=482, **kwargs)
+    ui.add_text(default_value=text, parent="terminal_window", wrap=mpaths.main_window_width - 20, **kwargs)
     scroll_to_terminal_end()
 
 

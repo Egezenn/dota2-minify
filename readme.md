@@ -13,8 +13,12 @@
 ![downloads](https://img.shields.io/github/downloads/Egezenn/dota2-minify/total?style=for-the-badge)
 ![downloads-latest](https://img.shields.io/github/downloads/Egezenn/dota2-minify/latest/total?style=for-the-badge)
 
+![platform-windows](https://custom-icon-badges.demolab.com/badge/Windows-0078D6?style=for-the-badge&logo=windows11&logoColor=white)
+![platform-linux](https://img.shields.io/badge/Linux-FCC624?style=for-the-badge&logo=linux&logoColor=black)
+![platform-macos](https://img.shields.io/badge/macOS%20(Partial)-000000?style=for-the-badge&logo=apple&logoColor=white)
+
 ![ss1](assets/screenshot-1.jpg)
-![ss2](assets/screenshot-2.jpg)
+![ss2](assets/screenshot-2.png)
 
 </div>
 
@@ -147,7 +151,7 @@ Verify your files from Steam, this happens every so often randomly and is NOT re
 
 Try uninstalling the mods. If that doesn't work aswell try using the feature below (it'll delete all the contents of `dota 2 beta/game/dota_<language>`!)
 
-![clean-all-language-paths](assets/clean-all-language-paths.png)
+![clean-all-language-paths](assets/wipe-language-paths.png)
 
 ### It doesn't work / open!
 

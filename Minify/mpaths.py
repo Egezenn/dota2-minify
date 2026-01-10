@@ -81,7 +81,6 @@ log_s2v = os.path.join(logs_dir, "Source2Viewer-CLI.txt")
 log_rescomp = os.path.join(logs_dir, "resourcecompiler.txt")
 
 # config
-## locale, steam_dir
 main_config_file_dir = os.path.join(config_dir, "minify_config.json")
 mods_config_dir = os.path.join(config_dir, "mods.json")
 
@@ -199,82 +198,83 @@ def unhandled_handler(handled=False):
 sys.excepthook = unhandled_handler()
 
 
-def find_library_from_vdf():
-    steam_dir = get_config("steam_dir")
-
+def find_library_from_vdf(steam_root):
     try:
-        # regkey has the root steam installdir
         if (
-            steam_dir
-            and steam_dir != "."
-            and os.path.exists(reg_path := os.path.join(steam_dir, "config", "libraryfolders.vdf"))
+            steam_root
+            and steam_root != "."  # ?
+            and os.path.exists(reg_path := os.path.join(steam_root, "config", "libraryfolders.vdf"))
         ):
             with open(
                 os.path.join(reg_path),
                 encoding="utf-8",
             ) as dump:
                 vdf_data = vdf.load(dump)
-        else:
-            with open(
-                os.path.join(STEAM_DEFAULT_INSTALLATION_PATH, "config", "libraryfolders.vdf"),
-                encoding="utf-8",
-            ) as dump:
-                vdf_data = vdf.load(dump)
 
-        paths = []
-        for folder_key in vdf_data.get("libraryfolders", {}):
-            folder = vdf_data["libraryfolders"][folder_key]
-            # could check if "apps" key has 570 in it and return only one path, would require tests though
-            if "path" in folder:
-                paths.append(folder["path"])
+            paths = []
+            for folder_key in vdf_data.get("libraryfolders", {}):
+                folder = vdf_data["libraryfolders"][folder_key]
+                # brute
+                if "path" in folder:
+                    paths.append(folder["path"])
 
-        for path in paths:
-            if os.path.exists(os.path.join(path, DOTA_EXECUTABLE_PATH)) or os.path.exists(
-                os.path.join(path, DOTA_EXECUTABLE_PATH_FALLBACK)
-            ):
-                set_config("steam_dir", path)
-                break
+            for path in paths:
+                if os.path.exists(os.path.join(path, DOTA_EXECUTABLE_PATH)) or os.path.exists(
+                    os.path.join(path, DOTA_EXECUTABLE_PATH_FALLBACK)
+                ):
+                    set_config("steam_library", path)
+                    break
 
     except:
         write_warning("Error reading libraryfolders.vdf")
-        set_config("steam_dir", "")
+        set_config("steam_library", "")
 
 
 def get_steam_root_path():
-    # Windows specific
-    # Returns the root steam installation directory
-    # STEAM_DEFAULT_INSTALLATION_PATH = C:\Program Files (x86)\Steam
+    # Try to get steam root from registry keys on windows or known locations
 
-    steam_dir = get_config("steam_dir", "")
+    steam_root = get_config("steam_root", "")
 
-    # Run only if there's no preexisting config
-    if OS == WIN and steam_dir == "":
+    if steam_root and os.path.exists(steam_root):
+        return steam_root
+
+    found_path = ""
+    # registry
+    if OS == WIN:
         import winreg
 
         try:
             hkey = winreg.OpenKey(winreg.HKEY_LOCAL_MACHINE, r"SOFTWARE\WOW6432Node\Valve\Steam")
-            steam_path = winreg.QueryValueEx(hkey, "InstallPath")
-            set_config("steam_dir", steam_path[0])
+            steam_path = winreg.QueryValueEx(hkey, "InstallPath")[0]
+            if os.path.exists(steam_path):
+                found_path = steam_path
         except:
-            set_config("steam_dir", "")
-            write_crashlog()
+            pass
 
-    else:
-        set_config("steam_dir", "")
+    # defaults
+    if not found_path and os.path.exists(STEAM_DEFAULT_INSTALLATION_PATH):
+        found_path = STEAM_DEFAULT_INSTALLATION_PATH
+
+    if found_path:
+        set_config("steam_root", found_path)
+        set_config("steam_library", found_path)  # assume, will be checked anyway
+        return found_path
+
+    return ""
 
 
-def handle_non_default_path():
-    steam_dir = get_config("steam_dir", "")
+def handle_non_default_path(steam_root):
+    steam_library = get_config("steam_library", "")
     # when dota2 is not inside root steam installation directory, use library VDFs to determine where it's at
-    if not os.path.exists(os.path.join(steam_dir, DOTA_EXECUTABLE_PATH)):
-        find_library_from_vdf()
+    if not os.path.exists(os.path.join(steam_library, DOTA_EXECUTABLE_PATH)):
+        find_library_from_vdf(steam_root)
 
-        steam_dir = get_config("steam_dir", "")
+        steam_library = get_config("steam_library", "")
 
     # last line of defense
-    while not steam_dir or (
-        not os.path.exists(os.path.join(steam_dir, DOTA_EXECUTABLE_PATH))
-        and not os.path.exists(os.path.join(steam_dir, DOTA_EXECUTABLE_PATH_FALLBACK))
+    while not steam_library or (
+        not os.path.exists(os.path.join(steam_library, DOTA_EXECUTABLE_PATH))
+        and not os.path.exists(os.path.join(steam_library, DOTA_EXECUTABLE_PATH_FALLBACK))
     ):
         try:
             import tkinter as tk
@@ -293,27 +293,28 @@ def handle_non_default_path():
             root.focus_force()
 
             if choice:
-                steam_dir = os.path.normpath(filedialog.askdirectory())
-                set_config("steam_dir", steam_dir)
+                steam_library = os.path.normpath(filedialog.askdirectory())
+                set_config("steam_library", steam_library)
 
                 # if user selected installdir instead of library(steamapps|steamlibrary) try to get vdf
                 if (
-                    os.path.exists(os.path.join(steam_dir, "config", "libraryfolders.vdf"))
-                    and not steam_dir
+                    os.path.exists(os.path.join(steam_library, "config", "libraryfolders.vdf"))
+                    and not steam_library
                     or (
-                        not os.path.exists(os.path.join(steam_dir, DOTA_EXECUTABLE_PATH))
-                        and not os.path.exists(os.path.join(steam_dir, DOTA_EXECUTABLE_PATH_FALLBACK))
+                        not os.path.exists(os.path.join(steam_library, DOTA_EXECUTABLE_PATH))
+                        and not os.path.exists(os.path.join(steam_library, DOTA_EXECUTABLE_PATH_FALLBACK))
                     )
                 ):
-                    find_library_from_vdf()
+                    find_library_from_vdf(steam_root)
 
             else:
                 quit()
 
             root.destroy()
+            break
         except:
             write_crashlog(
-                "Could not open directory picker. Set your Steam library path in 'config/minify_config.json[\"steam_dir\"]' and restart Minify.\n"
+                "Could not open directory picker. Set your Steam library path in 'config/minify_config.json[\"steam_library\"]' and restart Minify.\n"
                 f"Expected something like: {STEAM_DEFAULT_INSTALLATION_PATH}\n",
             )
             break
@@ -325,21 +326,70 @@ def handle_non_default_path():
 #         => try to get it with default installdirs
 #                 => steam exists under default installdirs => read vdf
 #                 => steam doesn't exist under default installdirs => prompt user for the library dota OR steam installdir
-get_steam_root_path()
-handle_non_default_path()
-steam_dir = get_config("steam_dir")
+steam_root = get_steam_root_path()
+handle_non_default_path(steam_root)
+steam_library = get_config("steam_library")
+
+
+def get_steam_accounts():
+    accounts = []
+    if not steam_root or not os.path.exists(os.path.join(steam_root, "userdata")):
+        return accounts
+
+    try:
+        for user_id in os.listdir(os.path.join(steam_root, "userdata")):
+            localconfig_path = os.path.join(steam_root, "userdata", user_id, "config", "localconfig.vdf")
+            if os.path.exists(localconfig_path):
+                try:
+                    with open(localconfig_path, encoding="utf-8") as f:
+                        data = vdf.load(f)
+                        store = data.get("UserLocalConfigStore", {})
+                        friends = store.get("friends", {})
+
+                        username = friends.get("PersonaName")
+
+                        if not username:
+                            username = "?"
+
+                        accounts.append(
+                            {
+                                "id": user_id,
+                                "name": username,
+                            }
+                        )
+                except:
+                    accounts.append({"id": user_id, "name": "?", "avatar": ""})
+    except:
+        write_warning("Failed to fetch steam accounts")
+
+    return accounts
+
+
+# Auto-determine a steam_id if not set
+current_steam_id = get_config("steam_id")
+if not current_steam_id and steam_root:
+    for account in get_steam_accounts():
+        acc_id = account["id"]
+        if os.path.exists(os.path.join(steam_root, "userdata", acc_id, "570")):
+            set_config("steam_id", acc_id)
+            break
+
 
 # links
 version_query = f"https://raw.githubusercontent.com/{head_owner}/{repo_name}/refs/heads/main/version"
 discord = "https://discord.com/invite/2YDnqpbcKM"
 latest_release = f"https://github.com/{head_owner}/{repo_name}/releases"
-s2v_cli_ver = "15.0"
+s2v_cli_ver = "17.0"
 rg_ver = "15.1.0"
 
 try:
     if OS == WIN:
         s2v_executable = "Source2Viewer-CLI.exe"
-        s2v_latest = f"https://github.com/ValveResourceFormat/ValveResourceFormat/releases/download/{s2v_cli_ver}/cli-windows-x64.zip"
+
+        if MACHINE in ["aarch64", "arm64"]:
+            s2v_latest = f"https://github.com/ValveResourceFormat/ValveResourceFormat/releases/download/{s2v_cli_ver}/cli-macos-x64.zip"
+        else:
+            s2v_latest = f"https://github.com/ValveResourceFormat/ValveResourceFormat/releases/download/{s2v_cli_ver}/cli-windows-x64.zip"
 
         rg_executable = "rg.exe"
         if ARCHITECTURE == "64bit":
@@ -392,50 +442,50 @@ except:
 ## minify
 ### resourcecompiler required dir
 minify_dota_compile_input_path = os.path.join(
-    steam_dir, "steamapps", "common", "dota 2 beta", "content", "dota_addons", "minify"
+    steam_library, "steamapps", "common", "dota 2 beta", "content", "dota_addons", "minify"
 )
 ### compiled files from resourcefiles
 minify_dota_compile_output_path = os.path.join(
-    steam_dir, "steamapps", "common", "dota 2 beta", "game", "dota_addons", "minify"
+    steam_library, "steamapps", "common", "dota 2 beta", "game", "dota_addons", "minify"
 )
 ### required dir for tools
 minify_dota_tools_required_path = os.path.join(
-    steam_dir, "steamapps", "common", "dota 2 beta", "content", "dota_minify"
+    steam_library, "steamapps", "common", "dota 2 beta", "content", "dota_minify"
 )
 ### vpk destination
-minify_dota_pak_output_path = os.path.join(steam_dir, "steamapps", "common", "dota 2 beta", "game", "dota_minify")
+minify_dota_pak_output_path = os.path.join(steam_library, "steamapps", "common", "dota 2 beta", "game", "dota_minify")
 minify_dota_possible_language_output_paths = [
-    os.path.join(steam_dir, "steamapps", "common", "dota 2 beta", "game", "dota_minify"),
-    os.path.join(steam_dir, "steamapps", "common", "dota 2 beta", "game", "dota_brazilian"),
-    os.path.join(steam_dir, "steamapps", "common", "dota 2 beta", "game", "dota_bulgarian"),
-    os.path.join(steam_dir, "steamapps", "common", "dota 2 beta", "game", "dota_czech"),
-    os.path.join(steam_dir, "steamapps", "common", "dota 2 beta", "game", "dota_danish"),
-    os.path.join(steam_dir, "steamapps", "common", "dota 2 beta", "game", "dota_dutch"),
-    os.path.join(steam_dir, "steamapps", "common", "dota 2 beta", "game", "dota_finnish"),
-    os.path.join(steam_dir, "steamapps", "common", "dota 2 beta", "game", "dota_french"),
-    os.path.join(steam_dir, "steamapps", "common", "dota 2 beta", "game", "dota_german"),
-    os.path.join(steam_dir, "steamapps", "common", "dota 2 beta", "game", "dota_greek"),
-    os.path.join(steam_dir, "steamapps", "common", "dota 2 beta", "game", "dota_hungarian"),
-    os.path.join(steam_dir, "steamapps", "common", "dota 2 beta", "game", "dota_italian"),
-    os.path.join(steam_dir, "steamapps", "common", "dota 2 beta", "game", "dota_japanese"),
-    os.path.join(steam_dir, "steamapps", "common", "dota 2 beta", "game", "dota_koreana"),
-    os.path.join(steam_dir, "steamapps", "common", "dota 2 beta", "game", "dota_latam"),
-    os.path.join(steam_dir, "steamapps", "common", "dota 2 beta", "game", "dota_norwegian"),
-    os.path.join(steam_dir, "steamapps", "common", "dota 2 beta", "game", "dota_polish"),
-    os.path.join(steam_dir, "steamapps", "common", "dota 2 beta", "game", "dota_portuguese"),
-    os.path.join(steam_dir, "steamapps", "common", "dota 2 beta", "game", "dota_romanian"),
-    os.path.join(steam_dir, "steamapps", "common", "dota 2 beta", "game", "dota_russian"),
-    os.path.join(steam_dir, "steamapps", "common", "dota 2 beta", "game", "dota_schinese"),
-    os.path.join(steam_dir, "steamapps", "common", "dota 2 beta", "game", "dota_spanish"),
-    os.path.join(steam_dir, "steamapps", "common", "dota 2 beta", "game", "dota_swedish"),
-    os.path.join(steam_dir, "steamapps", "common", "dota 2 beta", "game", "dota_tchinese"),
-    os.path.join(steam_dir, "steamapps", "common", "dota 2 beta", "game", "dota_thai"),
-    os.path.join(steam_dir, "steamapps", "common", "dota 2 beta", "game", "dota_turkish"),
-    os.path.join(steam_dir, "steamapps", "common", "dota 2 beta", "game", "dota_ukrainian"),
-    os.path.join(steam_dir, "steamapps", "common", "dota 2 beta", "game", "dota_vietnamese"),
+    os.path.join(steam_library, "steamapps", "common", "dota 2 beta", "game", "dota_minify"),
+    os.path.join(steam_library, "steamapps", "common", "dota 2 beta", "game", "dota_brazilian"),
+    os.path.join(steam_library, "steamapps", "common", "dota 2 beta", "game", "dota_bulgarian"),
+    os.path.join(steam_library, "steamapps", "common", "dota 2 beta", "game", "dota_czech"),
+    os.path.join(steam_library, "steamapps", "common", "dota 2 beta", "game", "dota_danish"),
+    os.path.join(steam_library, "steamapps", "common", "dota 2 beta", "game", "dota_dutch"),
+    os.path.join(steam_library, "steamapps", "common", "dota 2 beta", "game", "dota_finnish"),
+    os.path.join(steam_library, "steamapps", "common", "dota 2 beta", "game", "dota_french"),
+    os.path.join(steam_library, "steamapps", "common", "dota 2 beta", "game", "dota_german"),
+    os.path.join(steam_library, "steamapps", "common", "dota 2 beta", "game", "dota_greek"),
+    os.path.join(steam_library, "steamapps", "common", "dota 2 beta", "game", "dota_hungarian"),
+    os.path.join(steam_library, "steamapps", "common", "dota 2 beta", "game", "dota_italian"),
+    os.path.join(steam_library, "steamapps", "common", "dota 2 beta", "game", "dota_japanese"),
+    os.path.join(steam_library, "steamapps", "common", "dota 2 beta", "game", "dota_koreana"),
+    os.path.join(steam_library, "steamapps", "common", "dota 2 beta", "game", "dota_latam"),
+    os.path.join(steam_library, "steamapps", "common", "dota 2 beta", "game", "dota_norwegian"),
+    os.path.join(steam_library, "steamapps", "common", "dota 2 beta", "game", "dota_polish"),
+    os.path.join(steam_library, "steamapps", "common", "dota 2 beta", "game", "dota_portuguese"),
+    os.path.join(steam_library, "steamapps", "common", "dota 2 beta", "game", "dota_romanian"),
+    os.path.join(steam_library, "steamapps", "common", "dota 2 beta", "game", "dota_russian"),
+    os.path.join(steam_library, "steamapps", "common", "dota 2 beta", "game", "dota_schinese"),
+    os.path.join(steam_library, "steamapps", "common", "dota 2 beta", "game", "dota_spanish"),
+    os.path.join(steam_library, "steamapps", "common", "dota 2 beta", "game", "dota_swedish"),
+    os.path.join(steam_library, "steamapps", "common", "dota 2 beta", "game", "dota_tchinese"),
+    os.path.join(steam_library, "steamapps", "common", "dota 2 beta", "game", "dota_thai"),
+    os.path.join(steam_library, "steamapps", "common", "dota 2 beta", "game", "dota_turkish"),
+    os.path.join(steam_library, "steamapps", "common", "dota 2 beta", "game", "dota_ukrainian"),
+    os.path.join(steam_library, "steamapps", "common", "dota 2 beta", "game", "dota_vietnamese"),
 ]
 # required for tools to launch
-minify_dota_content_path = os.path.join(steam_dir, "steamapps", "common", "dota 2 beta", "content", "dota_minify")
+minify_dota_content_path = os.path.join(steam_library, "steamapps", "common", "dota 2 beta", "content", "dota_minify")
 minify_output_list = [
     "minify",
     "brazilian",
@@ -468,13 +518,13 @@ minify_output_list = [
 ]
 
 ## base game
-dota2_executable = os.path.join(steam_dir, DOTA_EXECUTABLE_PATH)
-dota2_tools_executable = os.path.join(steam_dir, DOTA_TOOLS_EXECUTABLE_PATH)
-dota_game_pak_path = os.path.join(steam_dir, "steamapps", "common", "dota 2 beta", "game", "dota", "pak01_dir.vpk")
-dota_core_pak_path = os.path.join(steam_dir, "steamapps", "common", "dota 2 beta", "game", "core", "pak01_dir.vpk")
-dota_map_path = os.path.join(steam_dir, "steamapps", "common", "dota 2 beta", "game", "dota", "maps", "dota.vpk")
+dota2_executable = os.path.join(steam_library, DOTA_EXECUTABLE_PATH)
+dota2_tools_executable = os.path.join(steam_library, DOTA_TOOLS_EXECUTABLE_PATH)
+dota_game_pak_path = os.path.join(steam_library, "steamapps", "common", "dota 2 beta", "game", "dota", "pak01_dir.vpk")
+dota_core_pak_path = os.path.join(steam_library, "steamapps", "common", "dota 2 beta", "game", "core", "pak01_dir.vpk")
+dota_map_path = os.path.join(steam_library, "steamapps", "common", "dota 2 beta", "game", "dota", "maps", "dota.vpk")
 dota_resource_compiler_path = os.path.join(
-    steam_dir,
+    steam_library,
     "steamapps",
     "common",
     "dota 2 beta",
@@ -485,11 +535,11 @@ dota_resource_compiler_path = os.path.join(
 )
 
 dota_tools_paths = [
-    os.path.join(steam_dir, "steamapps", "common", "dota 2 beta", "game", "bin"),
-    os.path.join(steam_dir, "steamapps", "common", "dota 2 beta", "game", "core"),
-    os.path.join(steam_dir, "steamapps", "common", "dota 2 beta", "game", "dota", "bin"),
-    os.path.join(steam_dir, "steamapps", "common", "dota 2 beta", "game", "dota", "tools"),
-    os.path.join(steam_dir, "steamapps", "common", "dota 2 beta", "game", "dota", "gameinfo.gi"),
+    os.path.join(steam_library, "steamapps", "common", "dota 2 beta", "game", "bin"),
+    os.path.join(steam_library, "steamapps", "common", "dota 2 beta", "game", "core"),
+    os.path.join(steam_library, "steamapps", "common", "dota 2 beta", "game", "dota", "bin"),
+    os.path.join(steam_library, "steamapps", "common", "dota 2 beta", "game", "dota", "tools"),
+    os.path.join(steam_library, "steamapps", "common", "dota 2 beta", "game", "dota", "gameinfo.gi"),
 ]
 dota_tools_extraction_paths = [
     os.path.join(rescomp_override_dir, "game", "bin"),
@@ -533,3 +583,6 @@ for mod in sorted(os.listdir(mods_dir)):
 
 mods_with_order = sorted(mods_with_order, key=lambda d: list(d.values())[0])
 mods_with_order = [list(d.keys())[0] for d in mods_with_order]
+
+main_window_width = 550
+main_window_height = 300
