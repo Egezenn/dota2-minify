@@ -22,6 +22,7 @@ checkboxes = []
 checkboxes_state = {}
 dev_mode_state = -1
 gui_lock = False
+is_moving_viewport = False
 version = None
 latest_download_url = None
 
@@ -371,7 +372,16 @@ def update():
 
 
 def drag_viewport(sender, app_data, user_data):
-    if ui.get_item_alias(ui.get_active_window()) is not None and (
+    global is_moving_viewport
+
+    if is_moving_viewport:
+        drag_deltas = app_data
+        viewport_current_pos = ui.get_viewport_pos()
+        new_x_position = viewport_current_pos[0] + drag_deltas[1]
+        new_y_position = viewport_current_pos[1] + drag_deltas[2]
+        new_y_position = max(new_y_position, 0)  # prevent the viewport to go off the top of the screen
+        ui.set_viewport_pos([new_x_position, new_y_position])
+    elif ui.get_item_alias(ui.get_active_window()) is not None and (
         ui.is_item_hovered("primary_window")
         or ui.is_item_hovered("terminal_window")
         or ui.is_item_hovered("top_bar")
@@ -379,12 +389,18 @@ def drag_viewport(sender, app_data, user_data):
         or ui.is_item_hovered("options_menu")
         or ui.get_item_alias(ui.get_active_window()).endswith("details_window_tag")
     ):  # Note: If local pos [1] < *Height_of_top_bar is buggy)
+        is_moving_viewport = True
         drag_deltas = app_data
         viewport_current_pos = ui.get_viewport_pos()
         new_x_position = viewport_current_pos[0] + drag_deltas[1]
         new_y_position = viewport_current_pos[1] + drag_deltas[2]
         new_y_position = max(new_y_position, 0)  # prevent the viewport to go off the top of the screen
         ui.set_viewport_pos([new_x_position, new_y_position])
+
+
+def stop_drag_viewport():
+    global is_moving_viewport
+    is_moving_viewport = False
 
 
 def open_mod_menu():

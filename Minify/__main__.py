@@ -383,6 +383,7 @@ with ui.font_registry():
 # Adding mouse handler to ui registry
 with ui.handler_registry():
     ui.add_mouse_drag_handler(parent="top_bar", button=0, threshold=4, callback=gui.drag_viewport)
+    ui.add_mouse_release_handler(button=0, callback=gui.stop_drag_viewport)
     ui.add_key_release_handler(0x20E, callback=gui.close_active_window)
 
 with ui.texture_registry(show=False):
