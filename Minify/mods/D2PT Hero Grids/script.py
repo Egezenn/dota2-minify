@@ -21,9 +21,13 @@ import requests
 def main():
     config_data = mpaths.get_mod_config(mod_name)
     steam_id_config = mpaths.get_config("steam_id", "")
+    grid_type = mpaths.get_config__dict(config_data, "grid_type", "d2ptrating")
+    config_data["grid_type"] = grid_type
+    mpaths.set_mod_config(mod_name, config_data)
 
     userdata_path = os.path.join(mpaths.steam_root, "userdata")
     found = False
+    replace_grid = False
 
     if steam_id_config and os.path.exists(userdata_path):
         id_to_use_path = os.path.join(userdata_path, str(steam_id_config))
@@ -36,10 +40,8 @@ def main():
             grid_path = grid_path[0]
             replace_grid = True
         else:
-            grid_type = mpaths.get_config__dict(config_data, "grid_type", "d2ptrating")
-            patch_name = mpaths.get_config__dict(config_data, "patch_name", "7.40")
             response = requests.get(
-                f"https://dota2protracker.com/meta-hero-grids/download?mode={grid_type}&patch={patch_name}"
+                f"https://dota2protracker.com/meta-hero-grids/download?mode={grid_type}&patch=latest"
             )
             if response.status_code == 200:
                 grid_path = os.path.join(current_dir, "grid.json")
@@ -47,47 +49,10 @@ def main():
                 with open(grid_path, "wb") as file:
                     file.write(response.content)
                 replace_grid = True
-            elif response.status_code == 404:
-                try:
-                    patch_response = requests.get("https://api.opendota.com/api/constants/patchnotes")
-                    if patch_response.status_code == 200:
-                        patches = list(patch_response.json().keys())
-                        # Get last 5 patches and reverse to try newest first, just to be sure
-                        last_patches = patches[-5:]
-                        last_patches.reverse()
-
-                        for patch in last_patches:
-                            normalized_patch = patch.replace("_", ".")
-
-                            print(f"Retrying with patch: {normalized_patch}")
-                            response = requests.get(
-                                f"https://dota2protracker.com/meta-hero-grids/download?mode={grid_type}&patch={normalized_patch}"
-                            )
-                            if response.status_code == 200:
-                                patch_name = normalized_patch
-                                grid_path = os.path.join(current_dir, "grid.json")
-                                helper.remove_path(grid_path)
-                                with open(grid_path, "wb") as file:
-                                    file.write(response.content)
-                                replace_grid = True
-                                break
-                except:
-                    mpaths.write_warning()
-                    replace_grid = False
             else:
                 mpaths.write_warning(f"Couldn't fetch a grid from {current_dir}.")
-                replace_grid = False
 
         if replace_grid:
-
-            try:  # local download
-                config_data["grid_type"] = grid_type
-                config_data["patch_name"] = patch_name
-            except UnboundLocalError:
-                pass
-
-            mpaths.set_mod_config(mod_name, config_data)
-
             original_grid_path = os.path.join(dest_path, "hero_grid_config.json")
             if not os.path.exists(backup_dir := os.path.join(current_dir, "backup")):
                 os.mkdir(backup_dir)

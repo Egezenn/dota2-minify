@@ -11,7 +11,6 @@ import dearpygui.dearpygui as ui
 import jsonc
 import psutil
 import requests
-import requests
 import vdf
 
 import build
@@ -743,6 +742,7 @@ def dev_mode():
                 label="File: Dota2 pak01(core) VPK",
                 callback=lambda: helper.open_thing(mpaths.dota_core_pak_path),
             )
+            ui.add_spacer(width=0, height=5)
             ui.add_button(
                 label="Executable: Dota2 Tools",
                 callback=lambda: helper.open_thing(

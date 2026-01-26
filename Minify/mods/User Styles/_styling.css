@@ -1,0 +1,214 @@
+/* g:panorama/styles/hud/hud_reborn */
+/* remove hero portraits */
+#PortraitGroup {
+    visibility: collapse;
+}
+
+#stats_container_bg {
+    background-color: none;
+}
+
+#center_bg {
+    margin-left: 82px;
+}
+
+#xp {
+    width: 54px;
+    margin: 0px 0px 22px 106px;
+    z-index: 1;
+}
+
+/* g:panorama/styles/hud/dota_hud_shop_search_results */
+/* remove stat filters from search */
+#SearchResultsStatToggles {
+    visibility: collapse;
+}
+
+/* g:panorama/styles/dashboard_page_profile_hero_stats */
+/* remove dota+ ad banner from last matches */
+#DotaPlusStatsBanner {
+    visibility: collapse;
+}
+
+/* g:panorama/styles/play */
+/* remove play button backgrounds */
+.PlayTabBackgroundImage {
+    visibility: collapse;
+}
+
+/* g:panorama/styles/dashboard */
+#DashboardPagesBlocker {
+    visibility: collapse;
+}
+
+DOTADashboard.PlayTabVisible #DashboardPages,
+DOTADashboard.PlayTabVisible #TopBarSecondaryContainer,
+DOTADashboard.PopupBackgroundBlur #DashboardForeground,
+DOTADashboard.PopupBackgroundBlur #Chat,
+DOTADashboard.PopupBackgroundBlur #PartySearch,
+DOTADashboard.PopupBackgroundBlur #FriendMenu {
+    blur: none;
+    wash-color: none;
+    saturation: 1;
+}
+
+/* g:panorama/styles/ability_details */
+/* remove useless item info */
+#Contents.AbilityContents {
+    background-color: none;
+}
+
+DOTAAbilityDetails {
+    background-image: none;
+}
+
+#AbilityLore,
+.HasBuildComment:not(.DescriptionOnly) .AbilityBuildHeader:not(.Edit),
+.HasBuildComment:not(.DescriptionOnly) #AbilityBuildComment {
+    visibility: collapse;
+}
+
+.AdditionalDetails .AltDetailsHelp {
+    visibility: collapse;
+}
+
+/* g:panorama/styles/facet_details */
+.AltDetailsHelp {
+    visibility: collapse;
+}
+
+/* g:panorama/styles/hud/hud_reborn */
+/* remove madstone animations */
+#inventory_neutral_level_up .NeutralLevelUpAvailableGlow,
+.GotMadstone .inventory_neutral_got_madstone_container,
+.GotMadstone #inventory_neutral_madstone_holder .inventory_neutral_madstone_counter_container #inventory_neutral_madstone_text {
+    animation-name: none;
+}
+
+/* c:panorama/styles/tooltips/tooltip_base */
+/* remove tooltip transitions */
+.TooltipContainer {
+    transition-duration: 0s;
+}
+
+/* c:panorama/styles/popups/popup_manager */
+/* remove dims & blurs */
+#BlurBackground,
+#DimBackground {
+    visibility: collapse;
+}
+
+/* g:panorama/styles/hud/dota_hud_pregame */
+/* expand pregame after selection ui */
+#RightContainer {
+    width: 1200px;
+    margin-top: 100px;
+    margin-right: 0px;
+}
+
+.StrategyTabContents {
+    width: 1200px;
+}
+
+/* g:panorama/styles/ui_cosmetic_picker */
+DOTAHudPreGame .RightColumn {
+    width: 1200px;
+}
+
+/* g:panorama/styles/dota_ui_guide_browser */
+#GuidesTab DOTAGuideBrowser {
+    width: 1200px;
+}
+
+#GuideArea {
+    width: 100%;
+    margin-top: 0px;
+}
+
+#GuideTop {
+    height: 560px;
+}
+
+.HeaderGroup {
+    visibility: collapse;
+}
+
+#ItemBuild {
+    height: 100%;
+}
+
+.SmallMode #RightColumn {
+    width: 100%;
+}
+
+/* g:panorama/styles/friend_menu */
+/* unlist some friends sections */
+#GuildMembersOnline.Collapsed,
+#FriendsPending.Collapsed {
+    visibility: collapse;
+}
+
+/* #FriendsOpenParties.Collapsed */
+/* #FriendsPlayingDota.Collapsed */
+/* #GuildMembersOnline.Collapsed */
+/* #FriendsOnline.Collapsed */
+/* #FriendsOffline.Collapsed */
+/* #FriendsPending.Collapsed */
+
+/* g:panorama/styles/hud/context_menu_inventory_item */
+/* change the color of item action menu backgrounds */
+.ShowMarkForSellNewBadge #MarkForSellNewBadge {
+    visibility: collapse;
+}
+
+#Sell {
+    background-color: #C92424;
+}
+
+#MarkForSell {
+    background-color: #C95824;
+}
+
+#Disassemble {
+    background-color: #9524C9;
+}
+
+#UnmarkForSell {
+    background-color: #2487C9;
+}
+
+#CombineLock {
+    background-color: #24C955;
+}
+
+#CombineUnlock {
+    background-color: #24C9BB;
+}
+
+/* #ShowInShop */
+/* #CombineLock */
+/* #CombineUnlock */
+/* #Sell */
+/* #Disassemble */
+/* #MarkForSell */
+/* #UnmarkForSell */
+/* #DropFromStash */
+/* #Alert */
+/* #MoveToStash */
+/* #DropAtFountain */
+/* #TeleportToNeutralStash */
+/* #DropImmediate */
+/* #ConsumeItem */
+
+/* g:panorama/styles/hud/dota_hud_shop */
+/* make shop ui smaller, remove it's animation (may cause defects in grid listing) */
+DOTAHUDShop {
+    transition-duration: 0s;
+    ui-scale: 90%;
+}
+
+/* g:panorama/styles/hero_grid_new */
+/* new weird gray mh overlay? */
+.Season_MonsterHunter #MonsterHunterHeroAtlasProgressionOverlay {
+    visibility: collapse;
+}

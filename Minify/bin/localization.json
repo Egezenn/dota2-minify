@@ -483,28 +483,6 @@
     "TR": "Burada 'files' dizini eksik ",
     "UK": "Відсутній шлях до файлів у"
   },
-  "error_no_styling_txt_found_terminal_text_var": {
-    "EN": "Missing 'styling.txt' file in ",
-    "BG": "Липсва файлът „styling.txt“ в",
-    "CS": "Chybí soubor 'styling.txt' v",
-    "DA": "Manglende 'styling.txt'-fil i",
-    "DE": "Die Datei „styling.txt“ fehlt in",
-    "EL": "Λείπει το αρχείο 'styling.txt' στο",
-    "ES": "Falta el archivo 'styling.txt' en ",
-    "FI": "Puuttuu tiedosto 'styling.txt'",
-    "FR": "Fichier 'styling.txt' manquant dans",
-    "HU": "Hiányzik a „styling.txt” fájl a következőből:",
-    "IT": "Manca il file 'styling.txt' in",
-    "NL": "Ontbrekend 'styling.txt'-bestand in",
-    "NO": "Mangler «styling.txt»-fil i",
-    "PL": "Brak pliku „styling.txt” w",
-    "PT": "Arquivo 'styling.txt' ausente em",
-    "RO": "Lipsește fișierul „styling.txt” din",
-    "RU": "Отсутсвует файл 'styling.txt' в ",
-    "SV": "Filen 'styling.txt' saknas i",
-    "TR": "Burada 'styling.txt' dosyası eksik ",
-    "UK": "Відсутній файл 'styling.txt' у"
-  },
   "error_no_workshop_tools_found_terminal_text_var": {
     "EN": "Some mods have been disabled because have Workshop Tools aren't installed.",
     "BG": "Някои модификации са деактивирани, защото не са инсталирани инструменти за работилница.",

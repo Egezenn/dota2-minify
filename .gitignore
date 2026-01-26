@@ -47,8 +47,8 @@ Minify/mods/Custom Backgrounds/*.webm
 Minify/mods/Custom Backgrounds/*.webp
 Minify/mods/D2PT Hero Grids/*.json
 Minify/mods/D2PT Hero Grids/backup
-Minify/mods/OpenDotaGuides Guides/styling.txt
-Minify/mods/User Styles/styling.txt
+Minify/mods/OpenDotaGuides Guides/styling.css
+Minify/mods/User Styles/styling.css
 
 ## Dependencies
 Minify/bin/rescomproot*

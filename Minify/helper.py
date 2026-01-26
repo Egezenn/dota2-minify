@@ -127,7 +127,7 @@ def disable_workshop_mods():
         for folder in mpaths.mods_with_order:
             mod_path = os.path.join(mpaths.mods_dir, folder)
             worskhop_required_modification_methods = [
-                "styling.txt",
+                "styling.css",
                 "menu.xml",
                 "xml_mod.json",
             ]

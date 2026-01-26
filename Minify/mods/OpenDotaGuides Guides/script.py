@@ -28,8 +28,8 @@ def main():
     try:
         if helper.workshop_installed:
             shutil.copy(
-                os.path.join(current_dir, "_styling.txt"),
-                os.path.join(current_dir, "styling.txt"),
+                os.path.join(current_dir, "_styling.css"),
+                os.path.join(current_dir, "styling.css"),
             )
     except:
         pass

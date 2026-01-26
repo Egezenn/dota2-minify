@@ -1,0 +1,42 @@
+/* g:panorama/styles/dashboard_page_collection */
+DOTACollectionPage,
+DOTACollectionPageHeroes,
+DOTACollectionPageGlobal,
+DOTACollectionPageGlobalWorldItems,
+DOTACollectionPageGlobalInterfaceItems,
+DOTACollectionPageTreasury,
+DOTACollectionPageShards,
+DOTACollectionPageBrowse,
+DOTACollectionPageBundles,
+DOTACollectionPageFeatured {
+    background-image: none;
+}
+
+/* g:panorama/styles/hero_loadout_background_images */
+#HeroLoadoutBackgroundImageContainer {
+    visibility: collapse;
+}
+
+/* g:panorama/styles/hero_slot_item_picker_loadout */
+.IsFullSetPicker #FullSetSlotThumbnail {
+    visibility: collapse;
+}
+
+DOTAHeroSlotItemPickerLoadout.IsActive {
+    width: 100%;
+}
+
+/* g:panorama/styles/hud/dota_hud_pregame */
+.SelectedHeroFacets .Shadow {
+    visibility: collapse;
+}
+
+/* g:panorama/styles/hud/dota_hud_versus_screen2 */
+DOTAHudVersusScreen2 {
+    visibility: collapse;
+}
+
+/* g:panorama/styles/ui_econ_set_preview */
+DOTAUIEconSetPreview.Use3DPreview #Preview3DItems {
+    visibility: collapse;
+}

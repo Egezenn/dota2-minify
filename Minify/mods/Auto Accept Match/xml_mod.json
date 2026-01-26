@@ -10,5 +10,6 @@
       "attribute": "onload",
       "value": "AcceptMatchPopup()"
     }
-  ]
+  ],
+  "panorama/layout/popups/popup_settings_reborn.xml": []
 }

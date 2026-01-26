@@ -15,6 +15,6 @@ import helper
 def main():
     try:
         if helper.workshop_installed:
-            helper.remove_path(os.path.join(current_dir, "styling.txt"))
+            helper.remove_path(os.path.join(current_dir, "styling.css"))
     except:
         pass

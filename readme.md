@@ -44,10 +44,9 @@
       - [`modcfg.json`](#modcfgjson)
       - [`files` directory](#files-directory)
       - [`blacklist.txt`](#blacklisttxt)
-      - [`styling.txt`](#stylingtxt)
+      - [`styling.css`](#stylingcss)
       - [`script.py`](#scriptpy)
       - [`xml_mod.json`](#xml_modjson)
-      - [`menu.xml`](#menuxml)
     - [Tools of the trade](#tools-of-the-trade)
   - [Thanks](#thanks)
   - [Special thanks to](#special-thanks-to)
@@ -180,7 +179,7 @@ mods
 │   ├── script_after_decompile.py
 │   ├── script_after_recompile.py
 │   ├── script_uninstall.py
-│   ├── styling.txt
+│   ├── styling.css
 │   └── xml_mod.json
 ```
 
@@ -224,9 +223,9 @@ particles/base_attacks/ranged_goodguy_launch.vpcf_c
 **taunt.*\.vsnd_c
 ```
 
-#### `styling.txt`
+#### `styling.css`
 
-This file is a list of CSS paths and styling that will be appended to them.  
+This file is a list of VCSS filepaths and styling that will be appended to them.  
 By the nature of this method modifications done here may break the original XML or CSS that gets updated resulting in a bad layout.  
 In such cases, a repatch or a slight modification is required.
 
@@ -236,12 +235,13 @@ For Source 2 flavored CSS properties, refer to: [Valve Developer Community Wiki]
 To live inspect the layout, open the workshop tools and press <kbd>F6</kbd> and select the element you'd like to select from the XML.
 
 Syntax for this file starting from the line beginning is as follows:  
-`#`: Comments  
-`!`: By default, the file is pulled from `dota 2 beta/game/dota/pak01_dir.vpk`.  
+`/* c:path */`: By default, the file is pulled from `dota 2 beta/game/dota/pak01_dir.vpk`.  
 However to change this behavior and pull files from `dota 2 beta/game/core/pak01_dir.vpk`, you can use this.  
-`@@`: Links to raw data
 
-`path/to/vcss_file_without_extension @@ #example_id { property: value; }`
+```css
+/* g|c:path/to/vcss_file_without_extension */
+example_selector { property: value; }
+```
 
 #### `script.py`
 
@@ -281,11 +281,49 @@ if __name__ == "__main__":
 
 #### `xml_mod.json`
 
-_to be written_
+This file allows you to modify Valve's XML (Panorama) files. It uses a key-value structure where the key is the path to the XML file in the VPK (e.g., `panorama/layout/popups/popup_accept_match.xml`) and the value is a list of modification actions.
 
-#### `menu.xml`
+Supported actions:
 
-_to be written_
+- `add_script`: Adds a script include to the `<scripts>` section.
+  - `src`: Path to the script (e.g., `s2r://panorama/scripts/popups/popup_auto_accept_match.vjs_c`)
+- `add_style_include`: Adds a style include to the `<styles>` section.
+  - `src`: Path to the style (e.g., `s2r://panorama/styles/popups/popup_accept_match.vcss_c`)
+- `set_attribute`: Sets an attribute on an element.
+  - `tag`: The tag name or ID of the element.
+  - `attribute`: Name of the attribute to set.
+  - `value`: Value of the attribute.
+- `add_child`: Appends a child element to a parent.
+  - `parent_id`: ID of the parent element.
+  - `xml`: The XML string of the child element.
+- `move_into`: Moves an element into a new parent.
+  - `target_id`: ID of the element to move.
+  - `new_parent_id`: ID of the new parent element.
+- `insert_after`: Inserts an element after a target element.
+  - `target_id`: ID of the reference element.
+  - `xml`: The XML string to insert.
+- `insert_before`: Inserts an element before a target element.
+  - `target_id`: ID of the reference element.
+  - `xml`: The XML string to insert.
+
+Example:
+
+```jsonc
+{
+  "panorama/layout/popups/popup_accept_match.xml": [
+    {
+      "action": "add_script",
+      "src": "s2r://panorama/scripts/popups/popup_auto_accept_match.vjs_c"
+    },
+    {
+      "action": "set_attribute",
+      "tag": "PopupAcceptMatch",
+      "attribute": "onload",
+      "value": "AcceptMatchPopup()"
+    }
+  ]
+}
+```
 
 ### Tools of the trade
 

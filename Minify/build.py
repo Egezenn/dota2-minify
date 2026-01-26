@@ -60,9 +60,7 @@ def patcher(mod=None, pakname=None):
         dota_extracts = []
         core_extracts = []
 
-        mod_menus = []
         if helper.workshop_installed:
-            styling_data = []
             styling_dictionary = {}
             xml_modifications = {}
         replacer_source_extracts = []
@@ -103,11 +101,9 @@ def patcher(mod=None, pakname=None):
                 if (
                     mod is not None or apply_without_user_confirmation or (visual and ui.get_value(folder))
                 ):  # step into folders that have ticked checkboxes only
-                    # TODO get rid of custom parsed textfiles
                     blacklist_txt = os.path.join(mod_path, "blacklist.txt")
                     if helper.workshop_installed:
-                        styling_txt = os.path.join(mod_path, "styling.txt")
-                        menu_xml = os.path.join(mod_path, "menu.xml")
+                        styling_css = os.path.join(mod_path, "styling.css")
                         xml_mod_file = os.path.join(mod_path, "xml_mod.json")
                     script_file = os.path.join(mod_path, "script.py")
                     replacer_file = os.path.join(mod_path, "replacer.csv")
@@ -123,14 +119,6 @@ def patcher(mod=None, pakname=None):
                             ignore=shutil.ignore_patterns("*.gitkeep"),
                         )
 
-                    if helper.workshop_installed and os.path.exists(menu_xml):
-                        with open(menu_xml, encoding="utf-8") as file:
-                            data = file.read()
-                            if data[:7] == r"<Panel ":
-                                mod_menus.append(data)
-                            else:
-                                mpaths.write_warning(f"Improper mod menu on {folder}!")
-
                     if helper.workshop_installed and os.path.exists(xml_mod_file):
                         with open(xml_mod_file, encoding="utf-8") as file:
                             mod_xml = jsonc.load(file)
@@ -141,34 +129,23 @@ def patcher(mod=None, pakname=None):
                     if os.path.exists(blacklist_txt):
                         process_blacklist(blacklist_txt, folder, blank_file_extensions)
 
-                    # --------------------------------- styling.txt --------------------------------- #
-                    if helper.workshop_installed and os.path.exists(styling_txt):
-                        with open(styling_txt) as file:
-                            lines = file.readlines()
+                    # --------------------------------- styling.css --------------------------------- #
+                    if helper.workshop_installed and os.path.exists(styling_css):
+                        with open(styling_css, encoding="utf-8") as file:
+                            content = file.read()
 
-                            for line in lines:
-                                line = line.strip()
+                        matches = list(re.finditer(r"/\*\s*([cg]):(.*?)\s*\*/", content))
+                        for i, match in enumerate(matches):
+                            indicator = match.group(1)
+                            path = match.group(2).strip()
 
-                                if line.startswith("#") or line == "":
-                                    continue
-                                else:
-                                    styling_data.append(line)
+                            start = match.end()
+                            end = matches[i + 1].start() if i + 1 < len(matches) else len(content)
+                            style = content[start:end].strip()
 
-                        for index, line in enumerate(styling_data):
-                            try:
-                                line = line.split("@@")
-                                path = line[0].strip()
-                                style = line[1].strip()
-
-                                styling_dictionary[f"styling-key{index + 1}"] = (
-                                    path,
-                                    style,
-                                )
-
-                            except:
-                                mpaths.write_warning(
-                                    f" Could not validate '{line}' in --> 'mods/{folder}/styling.txt' [line: {index + 1}]"
-                                )
+                            if style:
+                                path = f"!{path}" if indicator == "c" else path
+                                styling_dictionary[f"styling-css-{folder}-{i}"] = (path, style)
 
                         for key, path_style in list(styling_dictionary.items()):
                             sanitized_path = (
@@ -188,7 +165,7 @@ def patcher(mod=None, pakname=None):
                                     dota_extracts.append(f"{sanitized_path}.vcss_c")
                             except KeyError:
                                 mpaths.write_warning(
-                                    f"Path does not exist in VPK -> '{sanitized_path}.vcss_c', error in 'mods/{folder}/styling.txt'"
+                                    f"Path does not exist in VPK -> '{sanitized_path}.vcss_c', error in 'mods/{folder}/styling.css'"
                                 )
                     # --------------------------------- replacer.csv --------------------------------- #
                     if os.path.exists(replacer_file):
@@ -210,9 +187,6 @@ def patcher(mod=None, pakname=None):
             except:
                 mpaths.write_warning()
 
-        if helper.workshop_installed:
-            if mod_menus:
-                dota_extracts.append("panorama/layout/popups/popup_settings_reborn.vxml_c")
             # Extract XMLs to be modified (assume they are in game VPK)
             for path in xml_modifications.keys():
                 compiled = path.replace(".xml", ".vxml_c")
@@ -275,8 +249,6 @@ def patcher(mod=None, pakname=None):
                 mpaths.write_crashlog()
 
         if helper.workshop_installed:
-            if mod_menus:
-                build_minify_menu(mod_menus)
             with ThreadPoolExecutor() as executor:
                 xml_mod_args = [
                     (os.path.join(mpaths.build_dir, path), mods) for path, mods in xml_modifications.items()
@@ -695,39 +667,6 @@ def apply_xml_modifications(xml_file, modifications):
         tree.write(xml_file)
 
 
-def build_minify_menu(menus):
-    minify_section_xml = r"""
-<Panel class="SettingsSectionContainer" section="#minify" icon="s2r://panorama/images/control_icons/24px/check.vsvg">
-  <Panel class="SettingsSectionTitleContainer LeftRightFlow">
-    <Image class="SettingsSectionTitleIcon" texturewidth="48px" textureheight="48px" scaling="stretch-to-fit-preserve-aspect" src="s2r://panorama/images/control_icons/24px/check.vsvg" />
-    <Label class="SettingsSectionTitle" text="Minify" />
-  </Panel>
-</Panel>
-"""
-
-    minify_section = ET.fromstring(minify_section_xml)
-    try:
-        for menu in menus:
-            menu_element = ET.fromstring(menu)
-        minify_section.append(menu_element)
-
-        settings_path = os.path.join(
-            mpaths.build_dir,
-            "panorama",
-            "layout",
-            "popups",
-            "popup_settings_reborn.xml",
-        )
-        tree = ET.parse(settings_path)
-        root = tree.getroot()
-        settings_body = root.find(".//PopupSettingsRebornSettingsBody")
-        if settings_body is not None:
-            settings_body.append(minify_section)
-            tree.write(settings_path)
-    except ET.ParseError:
-        mpaths.write_warning()
-
-
 def apply_styles_to_file(item):
     file_path, styles_to_apply = item
     with open(file_path, "r+") as file:
@@ -881,21 +820,21 @@ def create_blank_mod():
 # >>particles/sprays
 # **taunt.*\.vsnd_c
 """
-    styling_template = r"""# This file is a list of CSS paths and styling that will be appended to them.
-# By the nature of this method modifications done here may break the original XML or CSS that gets updated resulting in a bad layout.
-# In such cases, a repatch is required.
+    styling_template = r"""/* This file is a list of VCSS filepaths and styling that will be appended to them.  
+By the nature of this method modifications done here may break the original XML or CSS that gets updated resulting in a bad layout.  
+In such cases, a repatch or a slight modification is required.
 
-# If you encounter errors while patching, it's most likely that your CSS is invalid or the path is wrong.
+If you encounter errors while patching, it's most likely that your CSS is invalid or the path is wrong. Check [`logs/resourcecompiler.txt`](Minify/logs/resourcecompiler.txt) for more information.
 
-# For Source 2 flavored CSS properties, refer to: https://developer.valvesoftware.com/wiki/Dota_2_Workshop_Tools/Panorama/CSS_Properties
-# To live inspect the layout, open the workshop tools and press F6 and select the element you'd like to select from the XML.
+For Source 2 flavored CSS properties, refer to: [Valve Developer Community Wiki](https://developer.valvesoftware.com/wiki/Dota_2_Workshop_Tools/Panorama/CSS_Properties).  
+To live inspect the layout, open the workshop tools and press <kbd>F6</kbd> and select the element you'd like to select from the XML.
 
-# Syntax for this file starting from the line beginning is as follows:
-# `#`: Comments 
-# `!`: By default, the file is pulled from `dota 2 beta/game/dota/pak01_dir.vpk`.
-#      However to change this behavior and pull files from `dota 2 beta/game/core/pak01_dir.vpk`, you can use this.
+Syntax for this file starting from the line beginning is as follows:  
+`/<star> c:path <star>/`: By default, the file is pulled from `dota 2 beta/game/dota/pak01_dir.vpk`.  
+However to change this behavior and pull files from `dota 2 beta/game/core/pak01_dir.vpk`, you can use this.  
 
-# path/to/file_without_extension @@ #example_id { property: value; }
+/<star> g|c:path/to/vcss_file_without_extension <star>/
+example_selector { property: value; }*/
 """
     script_template = r"""# This script template can be run both manually and from minify.
 # You are able to use packages and modules from minify (you need an activated environment from the minify root or running with the tool `uv` can automatically handle this.)
@@ -933,8 +872,51 @@ if __name__ == "__main__":
   "visual": true // true by default, show it in the UI as a checkbox
 }"""
 
-    mod_menu_template = r""
-    xml_mod_template = r"{}"
+    xml_mod_template = r"""{}
+/*
+This file allows you to modify Valve's XML (Panorama) files. It uses a key-value structure where the key is the path to the XML file in the VPK (e.g., `panorama/layout/popups/popup_accept_match.xml`) and the value is a list of modification actions.
+
+Supported actions:
+
+- `add_script`: Adds a script include to the `<scripts>` section.
+  - `src`: Path to the script (e.g., `s2r://panorama/scripts/popups/popup_auto_accept_match.vjs_c`)
+- `add_style_include`: Adds a style include to the `<styles>` section.
+  - `src`: Path to the style (e.g., `s2r://panorama/styles/popups/popup_accept_match.vcss_c`)
+- `set_attribute`: Sets an attribute on an element.
+  - `tag`: The tag name or ID of the element.
+  - `attribute`: Name of the attribute to set.
+  - `value`: Value of the attribute.
+- `add_child`: Appends a child element to a parent.
+  - `parent_id`: ID of the parent element.
+  - `xml`: The XML string of the child element.
+- `move_into`: Moves an element into a new parent.
+  - `target_id`: ID of the element to move.
+  - `new_parent_id`: ID of the new parent element.
+- `insert_after`: Inserts an element after a target element.
+  - `target_id`: ID of the reference element.
+  - `xml`: The XML string to insert.
+- `insert_before`: Inserts an element before a target element.
+  - `target_id`: ID of the reference element.
+  - `xml`: The XML string to insert.
+
+Example:
+
+{
+  "panorama/layout/popups/popup_accept_match.xml": [
+    {
+      "action": "add_script",
+      "src": "s2r://panorama/scripts/popups/popup_auto_accept_match.vjs_c"
+    },
+    {
+      "action": "set_attribute",
+      "tag": "PopupAcceptMatch",
+      "attribute": "onload",
+      "value": "AcceptMatchPopup()"
+    }
+  ]
+}
+*/
+"""
 
     helper.remove_path(path_to_mod)
     os.mkdir(path_to_mod)
@@ -944,13 +926,11 @@ if __name__ == "__main__":
         open(os.path.join(path_to_mod, f"notes_{locale.lower()}.txt"), "w").close()
     with open(os.path.join(path_to_mod, "blacklist.txt"), "w") as file:
         file.write(blacklist_template)
-    with open(os.path.join(path_to_mod, "styling.txt"), "w") as file:
+    with open(os.path.join(path_to_mod, "styling.css"), "w") as file:
         file.write(styling_template)
     with open(os.path.join(path_to_mod, "script.py"), "w") as file:
         file.write(script_template)
     with open(os.path.join(path_to_mod, "modcfg.json"), "w") as file:
         file.write(mod_config_template)
-    with open(os.path.join(path_to_mod, "menu.xml"), "w") as file:
-        file.write(mod_menu_template)
     with open(os.path.join(path_to_mod, "xml_mod.json"), "w") as file:
         file.write(xml_mod_template)

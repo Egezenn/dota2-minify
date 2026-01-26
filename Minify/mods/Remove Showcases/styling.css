@@ -1,0 +1,20 @@
+/* g:panorama/styles/context_menus/context_menu_player */
+#MenuOptionsPanel {
+    transition-duration: 0s;
+}
+
+/* g:panorama/styles/friend_menu */
+#EditShowcaseButton {
+    visibility: collapse;
+}
+
+/* g:panorama/styles/showcase/mini_showcase */
+.ShowcaseData {
+    visibility: collapse;
+}
+
+/* g:panorama/styles/showcase/showcase_contents */
+#ShowcaseBackground,
+#ShowcaseForeground {
+    visibility: collapse;
+}
