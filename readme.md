@@ -86,7 +86,7 @@ No one has ever been banned for the use of these mods and alike. Minify strictly
 > [!WARNING]
 > For people using Minify on Linux with workshop tools!
 >
-> After patching, extract your workshop tools using the `Gearcog button` > `Extract workshop tools` (this is for later use so that you won't have to switch back and forth again) and go back to using a `Steam Runtime` as you'll not be able to queue games with `Proton Experimental`.
+> After patching, extract your workshop tools using the `Hammer button` > `Extract workshop tools` (this is for later use so that you won't have to switch back and forth again) and go back to using a `Steam Runtime` as you'll not be able to queue games with `Proton Experimental`.
 
 ![tools-instruction-3](assets/tools-instruction-3.png)
 
@@ -172,7 +172,6 @@ mods
 │   │   ├── <...>
 │   │   └── <...>
 │   ├── blacklist.txt
-│   ├── menu.xml
 │   ├── modcfg.json
 │   ├── notes_<language>.txt
 │   ├── script.py

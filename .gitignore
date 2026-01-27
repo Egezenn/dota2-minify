@@ -8,6 +8,18 @@ Minify/logs
 Minify/mods/*
 scripts/ffi_*.txt
 
+## Dependencies
+Minify/bin/rescomproot*
+Minify/cli-*-*.*
+Minify/Source2Viewer-CLI*
+Minify/libSkiaSharp*
+Minify/*spirv-cross*
+Minify/*TinyEXR*
+Minify/rg*
+
+## Dota2
+Minify/steam_appid.txt
+
 ## In-repo mods
 !Minify/mods/#base
 !Minify/mods/Auto Accept Match
@@ -39,37 +51,24 @@ scripts/ffi_*.txt
 !Minify/mods/Transparent HUD
 !Minify/mods/Tree Mod
 !Minify/mods/User Styles
-Minify/mods/Custom Backgrounds/*.jpeg
-Minify/mods/Custom Backgrounds/*.jpg
+Minify/mods/Custom Backgrounds/*.jpe?g
 Minify/mods/Custom Backgrounds/*.mp4
 Minify/mods/Custom Backgrounds/*.png
-Minify/mods/Custom Backgrounds/*.webm
-Minify/mods/Custom Backgrounds/*.webp
+Minify/mods/Custom Backgrounds/*.web[mp]
 Minify/mods/D2PT Hero Grids/*.json
 Minify/mods/D2PT Hero Grids/backup
 Minify/mods/OpenDotaGuides Guides/styling.css
 Minify/mods/User Styles/styling.css
 
-## Dependencies
-Minify/bin/rescomproot*
-Minify/cli-*-*.*
-Minify/libSkiaSharp*
-Minify/*spirv-cross*
-Minify/*TinyEXR*
-Minify/rg*
-Minify/Source2Viewer-CLI*
-
-## Dota2
-Minify/steam_appid.txt
-
-# Byte-compiled / optimized / DLL files
+# misc
 __pycache__
-build
+.DS_Store
 *.build
 *.dist
 *.exe
 *.py[cod]
 *$py.class
+build
 dist
 
 # Environments
@@ -80,7 +79,3 @@ env/
 ENV/
 venv.bak/
 venv/
-
-# Ignore vscode AI rules
-.github/instructions/
-.DS_Store
