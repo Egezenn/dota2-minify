@@ -1,5 +1,0 @@
-Αντικαθιστά τους προεπιλεγμένους οδηγούς με αυτούς από το OpenDotaGuides
-
-* Απαιτείται η επιλογή των προεπιλεγμένων builds για να τις δείτε στο παιχνίδι
-
-Πηγή: https://github.com/Egezenn/OpenDotaGuides/releases/late

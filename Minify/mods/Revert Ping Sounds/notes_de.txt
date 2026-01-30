@@ -1,9 +1,0 @@
-Setzt die Ping-Sounds auf die Sounds vor Patch 7.39 zurück.
-
-Neue Sounds werden ersetzt durch:
-
-- ping_heart = ping
-
-- ping_enemy_ward = ping_warning
-
-- ping_need_ward = ping

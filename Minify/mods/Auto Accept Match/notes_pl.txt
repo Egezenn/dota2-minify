@@ -1,1 +1,0 @@
-Automatycznie akceptuje dialog dopasowania po X sekundach opóźnienia. Opóźnienie można regulować w panelu ustawień. Domyślnie 10, jeśli narzędzia warsztatowe nie są zainstalowane.

@@ -1,1 +1,0 @@
-Fjerner baggrunden i hovedmenuen.

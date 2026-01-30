@@ -1,5 +1,6 @@
 import importlib.util
 import os
+import re
 import shlex
 import shutil
 import stat
@@ -174,6 +175,42 @@ def close():
     ui.stop_dearpygui()
 
 
+def parse_markdown_notes(mod_path, locale):
+    try:
+        notes_md_path = os.path.join(mod_path, "notes.md")
+        if os.path.exists(notes_md_path):
+            with open(notes_md_path, encoding="utf-8") as file:
+                raw_notes = file.read()
+
+            user_locale = locale.upper()
+            sections = {}
+
+            parts = re.split(r"<!-- LANG:(\w+) -->", raw_notes)
+
+            if len(parts) > 1:
+                for i in range(1, len(parts), 2):
+                    lang = parts[i].upper()
+                    content = parts[i + 1].strip()
+                    sections[lang] = content
+            else:
+                sections["EN"] = raw_notes.strip()
+
+            return sections.get(user_locale, sections.get("EN", ""))
+    except Exception as e:
+        print(f"Error parsing notes for {mod_path}: {e}")
+    return ""
+
+
+def render_markdown(parent, text):
+    for line in text.split("\n"):
+        line = line.strip()
+        if not line:
+            ui.add_spacer(parent=parent, height=5)
+            continue
+
+        ui.add_text(line, parent=parent, wrap=mpaths.main_window_width - 20)
+
+
 # TODO: also revise this
 def change_localization(init=False):
     global locale
@@ -213,22 +250,14 @@ def change_localization(init=False):
                     ui.configure_item(key, default_value=value["EN"])
             mpaths.set_config("locale", locale)
 
-    for tag_id in ui.get_item_children("details_tags")[1]:
-        tag = ui.get_item_alias(tag_id).removesuffix("_details_text_value_tag")
-        mod_path = os.path.join(mpaths.mods_dir, tag)
-        note_path = os.path.join(mod_path, f"notes_{locale}.txt")
-        try:
-            if os.path.exists(note_path):
-                with open(note_path, encoding="utf-8") as file:
-                    data = file.read()
-                ui.configure_item(tag_id, default_value=data)
-            else:
-                note_path = os.path.join(mod_path, "notes_en.txt")
-                with open(note_path, encoding="utf-8") as file:
-                    data = file.read()
-                ui.configure_item(tag_id, default_value=data)
-        except FileNotFoundError:
-            data = ""
+    for mod in mpaths.visually_available_mods:
+        container = f"{mod}_markdown_container"
+        if ui.does_item_exist(container):
+            mod_path = os.path.join(mpaths.mods_dir, mod)
+            text = parse_markdown_notes(mod_path, locale)
+            ui.delete_item(container, children_only=True)
+            render_markdown(container, text)
+
     global details_label_text_var, mod_selection_window_var
     details_label_text_var = localization_data["details_button_label_var"][locale]
     mod_selection_window_var = localization_data["mod_selection_window_var"][locale]

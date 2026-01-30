@@ -1,5 +1,0 @@
-Înlocuiește ghidurile implicite cu cele din OpenDotaGuides
-
-* Necesită selectarea build-urilor implicite pentru a le vedea în joc
-
-Sursa: https://github.com/Egezenn/OpenDotaGuides/releases/latest

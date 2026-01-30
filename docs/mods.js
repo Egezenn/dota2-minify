@@ -8,22 +8,49 @@ const cachedData = JSON.parse(localStorage.getItem(cacheKey));
 const now = new Date().getTime();
 
 function processMods(mods) {
+  modButtonsContainer.innerHTML = "";
+
   mods.forEach((mod) => {
-    const button = document.createElement("button");
-    button.className = "btn btn-info";
-    button.textContent = mod;
-    button.addEventListener("click", () => {
+    const card = document.createElement("div");
+    card.className = "card h-100 text-center mod-card";
+    card.style.cursor = "pointer";
+    card.setAttribute("role", "button");
+
+    const img = document.createElement("img");
+    img.src = `https://raw.githubusercontent.com/Egezenn/dota2-minify/main/Minify/mods/${encodeURIComponent(mod)}/image.png`;
+    img.className = "card-img-top";
+    img.alt = `${mod} image`;
+    img.style.objectFit = "cover";
+    img.style.height = "140px";
+    img.onerror = function () {
+      this.style.display = "none";
+    };
+
+    const cardBody = document.createElement("div");
+    cardBody.className = "card-body d-flex align-items-center justify-content-center";
+
+    const title = document.createElement("h5");
+    title.className = "card-title mb-0";
+    title.textContent = mod;
+
+    cardBody.appendChild(title);
+    card.appendChild(img);
+    card.appendChild(cardBody);
+
+    card.addEventListener("click", () => {
       const notesCacheKey = `mod-notes-${mod}`;
       const cachedNotes = JSON.parse(sessionStorage.getItem(notesCacheKey));
       const now = new Date().getTime();
+      const imageUrl = `https://raw.githubusercontent.com/Egezenn/dota2-minify/main/Minify/mods/${encodeURIComponent(mod)}/image.png`;
+      const imageHtml = `<img src="${imageUrl}" class="mb-3" style="display: block; margin-left: auto; margin-right: auto;" onerror="this.style.display='none'" alt="${mod}">`;
 
       notesModalLabel.textContent = `${mod} Notes`;
       notesModal.show();
 
       if (cachedNotes && now - cachedNotes.timestamp < 60000) {
-        notesContent.innerHTML = marked.parse(cachedNotes.content);
+        notesContent.innerHTML = imageHtml + marked.parse(cachedNotes.content);
       } else {
-        const notesUrl = `https://raw.githubusercontent.com/Egezenn/dota2-minify/main/Minify/mods/${encodeURIComponent(mod)}/notes_en.txt`;
+        const notesUrl = `https://raw.githubusercontent.com/Egezenn/dota2-minify/main/Minify/mods/${encodeURIComponent(mod)}/notes.md`;
         notesContent.innerHTML = "<p>Loading...</p>";
 
         fetch(notesUrl)
@@ -34,8 +61,11 @@ function processMods(mods) {
             return response.text();
           })
           .then((text) => {
-            notesContent.innerHTML = marked.parse(text);
-            sessionStorage.setItem(notesCacheKey, JSON.stringify({ timestamp: now, content: text }));
+            const enMatch = text.match(/<!-- LANG:en -->([\s\S]*?)(?=<!-- LANG:\w+ -->|$)/i);
+            const content = enMatch ? enMatch[1].trim() : text;
+
+            notesContent.innerHTML = imageHtml + marked.parse(content);
+            sessionStorage.setItem(notesCacheKey, JSON.stringify({ timestamp: now, content: content }));
           })
           .catch((error) => {
             notesContent.innerHTML = "<p>Could not load notes. The file might not exist for this mod.</p>";
@@ -43,7 +73,8 @@ function processMods(mods) {
           });
       }
     });
-    modButtonsContainer.appendChild(button);
+
+    modButtonsContainer.appendChild(card);
   });
 }
 

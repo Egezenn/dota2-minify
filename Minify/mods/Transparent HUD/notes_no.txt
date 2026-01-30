@@ -1,3 +1,0 @@
-Gjør de fleste HUD-elementene i spillet gjennomsiktige, fjerner noen ubrukelige funksjoner.
-
-* Krever standard HUD i spillet

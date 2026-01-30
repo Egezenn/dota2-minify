@@ -1,3 +1,0 @@
-Entfernt alle Büsche, Blumen, Steine ​​und sonstige Bodenobjekte, sodass nur noch die Fliesen übrig bleiben.
-
-* Standard-Terrain muss im Inventar ausgerüstet sein.

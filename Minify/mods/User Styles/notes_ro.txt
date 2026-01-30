@@ -1,3 +1,0 @@
-Adăugați propriile fragmente de stil / modificați și eliminați fragmentele de stil existente aici.
-
-Aceste fragmente s-ar putea să nu fie de dorit pentru majoritatea utilizatorilor, activați-le cu precauție.

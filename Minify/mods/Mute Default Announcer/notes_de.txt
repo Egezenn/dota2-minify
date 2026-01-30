@@ -1,1 +1,0 @@
-Deaktiviert die Standardansager und die Killstreak-Anzeige.

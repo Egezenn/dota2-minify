@@ -1,5 +1,0 @@
-Substitui o fundo do menu principal, o fundo da tela de apresentação do jogador e o fundo da tela de seleção.
-
-Você pode adicionar uma imagem à pasta deste mod e ela será usada como fundo.
-
-Você precisa do utilitário `magick` na sua variável de ambiente PATH se a sua imagem não for PNG e precisar ser convertida.

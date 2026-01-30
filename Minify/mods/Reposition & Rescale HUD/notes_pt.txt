@@ -1,1 +1,0 @@
-Reposiciona e redimensiona alguns aspectos da interface do usuário (HUD) do jogo.

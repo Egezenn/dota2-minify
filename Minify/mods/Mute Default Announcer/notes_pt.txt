@@ -1,1 +1,0 @@
-Silencia os locutores padrão e as falas de sequência de eliminações.

@@ -1,3 +1,0 @@
-Remove tudo relacionado a rios
-
-Incluindo pintura de rios com frascos, efeitos sonoros de passos e efeitos de respingos de partículas.

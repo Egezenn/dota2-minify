@@ -1,3 +1,0 @@
-Poistaa kaikki pensaat, kukat, kivet ja muut maanpäälliset elementit, jotta jäljelle jäävät vain laatat.
-
-* Tavaraluettelossasi on oltava vakiomaasto.

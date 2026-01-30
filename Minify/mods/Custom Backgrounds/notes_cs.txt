@@ -1,5 +1,0 @@
-Nahrazuje pozadí hlavní nabídky, pozadí přehrávače a pozadí obrazovky pro výběr.
-
-Můžete vložit obrázek do složky tohoto modu a mod ho použije jako pozadí.
-
-Pokud váš obrázek není ve formátu png a je třeba jej převést, potřebujete v proměnné path utilitu `magick`.

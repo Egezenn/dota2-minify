@@ -1,3 +1,0 @@
-Usuwa wszystkie efekty pogodowe z elementów pogodowych i polecenia konsoli „cl_weather”.
-
-https://liquipedia.net/dota2/Weather_Effects

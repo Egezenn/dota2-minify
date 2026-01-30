@@ -1,3 +1,0 @@
-Verwandelt alle Bäume in kleine, kreisförmige Büsche.
-
-* Erfordert Standardgelände.

@@ -1,1 +1,0 @@
-Změna polohy a škálování některých aspektů herního HUDu.

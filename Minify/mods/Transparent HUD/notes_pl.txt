@@ -1,3 +1,0 @@
-Sprawia, że ​​większość elementów interfejsu gry staje się przezroczysta, usuwając niektóre zbędne funkcje.
-
-* Wymaga domyślnego interfejsu gry.

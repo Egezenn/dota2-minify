@@ -1,7 +1,0 @@
-Usuwa różne efekty
-
-- Usuwa efekty cząsteczkowe z budynków, takie jak świecące na niebiesko efekty fontann, posterunków, budynków baz itp.
-- Cząsteczki pocisków/destrukcji atakujących wieżę
-- Cząsteczki podobizny
-- Uproszczone iluzje
-- Wyposażenie bohaterów, emblematy wydarzeń, glify i inne

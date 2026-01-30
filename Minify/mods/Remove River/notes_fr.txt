@@ -1,3 +1,0 @@
-Supprime tous les éléments liés aux rivières.
-
-Y compris les effets de peinture de rivière avec des fioles, les bruitages de pas et les effets d'éclaboussures de particules.

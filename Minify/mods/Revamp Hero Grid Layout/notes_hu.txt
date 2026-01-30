@@ -1,2 +1,0 @@
-Nagyobbá teszi a hőskártyákat.
-Eltávolítja a kártyák fölé mutató egereken, jelvényeken és hasonló hősök sorában megjelenő hősfilmeket.

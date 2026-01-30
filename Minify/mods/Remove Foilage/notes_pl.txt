@@ -1,3 +1,0 @@
-Usuwa wszystkie krzaki, kwiaty, skały i inne elementy terenu, pozostawiając tylko pola.
-
-* Musisz mieć w ekwipunku domyślny teren.

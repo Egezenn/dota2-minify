@@ -922,8 +922,8 @@ Example:
     os.mkdir(path_to_mod)
     os.mkdir(os.path.join(path_to_mod, "files"))
     open(os.path.join(path_to_mod, "files", ".gitkeep"), "w").close()
-    for locale in helper.localizations:
-        open(os.path.join(path_to_mod, f"notes_{locale.lower()}.txt"), "w").close()
+    with open(os.path.join(path_to_mod, "notes.md"), "w") as file:
+        file.write("\n\n".join([f"<!-- LANG:{locale} -->" for locale in helper.localizations]))
     with open(os.path.join(path_to_mod, "blacklist.txt"), "w") as file:
         file.write(blacklist_template)
     with open(os.path.join(path_to_mod, "styling.css"), "w") as file:

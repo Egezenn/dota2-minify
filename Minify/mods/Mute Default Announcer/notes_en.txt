@@ -1,1 +1,0 @@
-Mutes default announcers & killstreak lines.

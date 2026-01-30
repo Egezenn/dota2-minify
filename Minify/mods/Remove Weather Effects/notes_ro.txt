@@ -1,3 +1,0 @@
-Elimină toate efectele meteorologice din elementele meteo și din comanda consolei „cl_weather”.
-
-https://liquipedia.net/dota2/Weather_Effects

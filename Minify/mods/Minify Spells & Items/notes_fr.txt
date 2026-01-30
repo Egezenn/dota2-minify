@@ -1,3 +1,0 @@
-Simplifie tous les sorts et objets du jeu.
-
-* Modifie principalement les sorts de base.

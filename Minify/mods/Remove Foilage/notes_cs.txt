@@ -1,3 +1,0 @@
-Odstraní všechny keře, květiny, kameny a jakékoli další pozemní prvky, takže vám zůstanou jen dlaždice.
-
-* Musíte mít v inventáři vybavený výchozí terén.

@@ -1,1 +1,0 @@
-Entfernt alle Ping-Partikel und -Geräusche außer dem Standardgeräusch.

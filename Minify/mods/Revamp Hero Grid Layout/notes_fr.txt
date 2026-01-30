@@ -1,3 +1,0 @@
-Agrandir les cartes de héros.
-
-Supprimer les vidéos de héros qui apparaissaient au survol des cartes, sur les badges et dans la rangée des héros similaires.

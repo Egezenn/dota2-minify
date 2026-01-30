@@ -1,6 +1,0 @@
-Връща звуците при пинг до състоянието им отпреди пач 7.39.
-
-Новите звуци са заменени с:
-- ping_heart = ping
-- ping_enemy_ward = ping_warning
-- ping_need_ward = ping

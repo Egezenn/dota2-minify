@@ -1,3 +1,0 @@
-Poistaa käyttöliittymästä sankarien esikatselut ja renderöinnit.
-
-Konsoli-muuttuja `map_enable_portrait_worlds 0` saavuttaa saman tavoitteen, mutta juutut MVP-näyttöihin.

@@ -1,6 +1,0 @@
-Visszaállítja a ping hangokat a 7.39-es patch előtti hangokra.
-
-Az új hangok a következőkre cserélődnek:
-- ping_heart = ping
-- ping_enemy_ward = ping_warning
-- ping_need_ward = ping

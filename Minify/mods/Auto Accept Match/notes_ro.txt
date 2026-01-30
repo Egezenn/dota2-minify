@@ -1,1 +1,0 @@
-Acceptă automat dialogul de potrivire după X secunde de întârziere. Întârzierea este reglabilă prin panoul de setări. Implicit, valoarea este 10 dacă instrumentele atelierului nu sunt instalate.

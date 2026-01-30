@@ -1,5 +1,0 @@
-Erstatter bakgrunnen for hovedmenyen, bakgrunnen for spillerens presentasjon og bakgrunnen for valgskjermen.
-
-Du kan slippe et bilde i mappen til denne modden, og den vil bruke det som bakgrunn.
-
-Du trenger verktøyet `magick` på path-variabelen din hvis bildet ikke er en png og må konverteres.

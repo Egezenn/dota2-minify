@@ -1,3 +1,0 @@
-Torna a maioria dos elementos da interface do jogo transparentes e remove algumas funcionalidades desnecessárias.
-
-* Requer a interface padrão do jogo.

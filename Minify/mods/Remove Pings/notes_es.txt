@@ -1,1 +1,0 @@
-Elimina todas las partículas de ping y los sonidos, excepto el predeterminado.

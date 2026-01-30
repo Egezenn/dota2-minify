@@ -1,3 +1,0 @@
-Eltávolít minden bokrot, virágot, követ és minden egyéb talajtámogató elemet, hogy csak csempék maradjanak.
-
-* Alapértelmezett tereptárgyakkal kell rendelkeznie a felszerelésedben.

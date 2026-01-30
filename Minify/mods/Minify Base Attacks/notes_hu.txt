@@ -1,1 +1,0 @@
-Csökkenti a távolsági hősök automatikus támadásai során keletkező részecskéket.

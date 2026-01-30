@@ -1,3 +1,0 @@
-Corrige et rétablit le panneau d'affichage des requêtes d'unités introduit dans le patch 7.00.
-
-Disponible avec la variable de console `dota_hud_new_query_panel 1`.

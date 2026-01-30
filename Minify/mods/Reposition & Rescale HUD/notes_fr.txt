@@ -1,1 +1,0 @@
-Repositionne et modifie l'échelle de certains aspects de l'interface utilisateur en jeu.

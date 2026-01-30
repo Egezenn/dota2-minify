@@ -1,7 +1,0 @@
-Eltávolítja a különféle effektusokat
-
-- Eltávolítja az épületeken lévő részecskeeffektusokat, például a szökőkúton, előőrsön, bázisépületeken stb. látható izzó kék effektusokat
-- Torony támadási lövedékek / romboló részecskék
-- Bábuk részecskéi
-- Egyszerűsített illúziók
-- Hősök felszerelése, esemény emblémák, szimbólumok és egyebek

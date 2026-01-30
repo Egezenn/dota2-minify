@@ -1,1 +1,0 @@
-Akzeptiert den Match-Dialog automatisch nach X Sekunden Verzögerung. Die Verzögerung kann über das Einstellungsmenü angepasst werden. Standardmäßig ist sie auf 10 Sekunden eingestellt, falls die Workshop-Tools nicht installiert sind.

@@ -1,1 +1,0 @@
-Schaltet alle Sprachausgabegeräusche stumm.

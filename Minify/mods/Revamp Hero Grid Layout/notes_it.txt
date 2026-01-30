@@ -1,2 +1,0 @@
-Ingrandisce le carte eroe.
-Rimuove i filmati degli eroi che appaiono quando si passa il mouse sulle carte, sui badge e sulle righe degli eroi simili.

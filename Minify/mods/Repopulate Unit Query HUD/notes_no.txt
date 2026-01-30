@@ -1,3 +1,0 @@
-Retter og fyller ut Unit Query HUD-panelet som ble utgitt i patch 7.00 på nytt.
-
-Tilgjengelig med konsollvariabelen `dota_hud_new_query_panel 1`.

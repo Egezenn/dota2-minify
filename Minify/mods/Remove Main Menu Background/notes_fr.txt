@@ -1,1 +1,0 @@
-Supprime l'arrière-plan du menu principal.

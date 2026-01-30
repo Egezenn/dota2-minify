@@ -1,3 +1,0 @@
-Rimuove tutti gli effetti meteorologici dagli elementi meteorologici e dal comando console "cl_weather".
-
-https://liquipedia.net/dota2/Weather_Effects

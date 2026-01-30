@@ -1,1 +1,0 @@
-Désactive tous les sons ambiants de la carte

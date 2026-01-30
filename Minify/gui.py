@@ -90,6 +90,10 @@ def initiate_conditionals():
     load_state_checkboxes_thread.start()
     setup_system_thread.join()
     load_state_checkboxes_thread.join()
+
+    with ui.texture_registry(tag="mod_images_registry", show=False):
+        pass
+
     create_checkboxes()
 
 
@@ -216,19 +220,6 @@ def create_checkboxes():
         )
 
         if not is_vpk:
-            try:
-                if os.path.exists(os.path.join(mod_path, f"notes_{helper.locale.lower()}.txt")):
-                    notes_txt = os.path.join(mod_path, f"notes_{helper.locale.lower()}.txt")
-                else:
-                    notes_txt = os.path.join(mod_path, "notes_en.txt")
-                with open(notes_txt, encoding="utf-8") as file:
-                    data = file.read()
-            except FileNotFoundError:
-                data = ""
-                helper.add_text_to_terminal(
-                    helper.localization_dict["no_notes_found_text_var"].format(mod),
-                    type="warning",
-                )
 
             tag_data = f"{mod}_details_window_tag"
             ui.add_button(
@@ -252,12 +243,49 @@ def create_checkboxes():
                 no_collapse=True,
                 label=mod,
             )
-            ui.add_string_value(
-                parent="details_tags",
-                default_value=data,
-                tag=f"{mod}_details_text_value_tag",
-            )
-            ui.add_text(source=f"{mod}_details_text_value_tag", parent=tag_data, wrap=mpaths.main_window_width - 14)
+
+            image_path = os.path.join(mod_path, "mod.png")
+            if os.path.exists(image_path):
+                try:
+                    w, h, _, d = ui.load_image(image_path)
+                    image_tag = f"{mod}_image_texture"
+                    ui.add_static_texture(
+                        width=w, height=h, default_value=d, tag=image_tag, parent="mod_images_registry"
+                    )
+
+                    avail_width = mpaths.main_window_width - 25
+                    max_height = mpaths.main_window_height // 2 - 20
+
+                    aspect_ratio = w / h
+
+                    display_w = avail_width
+                    display_h = display_w / aspect_ratio
+
+                    if display_h > max_height:
+                        display_h = max_height
+                        display_w = display_h * aspect_ratio
+
+                    scale = min(1.0, avail_width / w, max_height / h)
+                    display_w = int(w * scale)
+                    display_h = int(h * scale)
+
+                    indent_val = (mpaths.main_window_width - display_w) / 2
+
+                    with ui.group(horizontal=True, parent=tag_data):
+                        if indent_val > 0:
+                            ui.add_spacer(width=indent_val)
+                        ui.add_image(image_tag, width=display_w, height=display_h)
+
+                    ui.add_separator(parent=tag_data)
+                except Exception as e:
+                    print(f"Failed to load image for {mod}: {e}")
+
+            container = f"{mod}_markdown_container"
+            with ui.group(parent=tag_data, tag=container):
+                pass
+
+            text = helper.parse_markdown_notes(mod_path, helper.locale)
+            helper.render_markdown(container, text)
 
         checkboxes.append(mod)
 

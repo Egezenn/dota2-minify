@@ -1,1 +1,0 @@
-Visar din nuvarande nettoförmögenhet i snabbstatistikpanelen.

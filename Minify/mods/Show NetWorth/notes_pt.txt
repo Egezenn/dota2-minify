@@ -1,1 +1,0 @@
-Exibe seu patrimônio líquido atual no painel de estatísticas rápidas.

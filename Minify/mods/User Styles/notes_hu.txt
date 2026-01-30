@@ -1,3 +1,0 @@
-Itt adhatsz hozzá saját stíluskódokat / módosíthatod és távolíthatod el a meglévőket.
-
-Ezek a kódrészletek a többség számára nem biztos, hogy kívánatosak, ezért csak óvatosan engedélyezd őket.

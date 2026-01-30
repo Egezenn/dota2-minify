@@ -1,3 +1,0 @@
-Corregge e ripopola il pannello HUD delle query unità rilasciato nella patch 7.00.
-
-Disponibile con la variabile console `dota_hud_new_query_panel 1`.

@@ -1,5 +1,0 @@
-Ersetzt den Hintergrund des Hauptmenüs, der Spielerpräsentation und des Auswahlbildschirms.
-
-Sie können ein Bild in den Ordner dieser Mod ziehen; es wird dann als Hintergrund verwendet.
-
-Falls Ihr Bild kein PNG ist und konvertiert werden muss, benötigen Sie das Dienstprogramm `magick` in Ihrer Pfadvariablen.

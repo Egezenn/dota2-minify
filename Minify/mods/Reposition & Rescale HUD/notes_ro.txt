@@ -1,1 +1,0 @@
-Repoziționează și scalează unele aspecte ale HUD-ului din joc.

@@ -1,3 +1,0 @@
-Simplifica todas as magias e itens do jogo.
-
-* Modifica principalmente as magias padrão.

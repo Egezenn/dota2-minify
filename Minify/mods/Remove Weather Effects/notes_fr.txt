@@ -1,3 +1,0 @@
-Supprime tous les effets météorologiques des objets météo et de la commande console « cl_weather ».
-
-https://liquipedia.net/dota2/Weather_Effects

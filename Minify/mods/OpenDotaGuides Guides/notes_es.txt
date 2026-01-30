@@ -1,5 +1,0 @@
-Reemplaza las guías estándar, con guías de OpenDotaGuides de Egezenn.
-
-* No olvides seleccionar la guía de héroe por defecto para verlos en el juego
-
-Fuente: https://github.com/Egezenn/OpenDotaGuides/releases/latest

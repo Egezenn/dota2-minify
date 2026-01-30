@@ -1,1 +1,0 @@
-Rimuove lo sfondo del menu principale.

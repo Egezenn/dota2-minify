@@ -1,1 +1,0 @@
-Varsayılan hariç tüm ping parçacıklarını ve seslerini kaldırır.

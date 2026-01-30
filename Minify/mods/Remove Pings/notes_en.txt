@@ -1,1 +1,0 @@
-Removes all ping particles, sounds except for the default one.

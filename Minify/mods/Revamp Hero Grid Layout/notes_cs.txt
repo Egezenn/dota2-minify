@@ -1,2 +1,0 @@
-Zvětšuje karty hrdinů.
-Odstraňuje filmy o hrdinech, které se zobrazují při najetí myší na kartu, na odznaky a v podobných řádcích s hrdiny.

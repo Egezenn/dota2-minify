@@ -1,3 +1,0 @@
-Zjednodušuje každé kouzlo a předmět ve hře.
-
-* Většinou upravuje výchozí kouzla.

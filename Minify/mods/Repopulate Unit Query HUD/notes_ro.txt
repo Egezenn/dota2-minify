@@ -1,3 +1,0 @@
-Corectează și repopulează panoul HUD Unit Query lansat în patch-ul 7.00.
-
-Disponibil cu variabila de consolă `dota_hud_new_query_panel 1`.

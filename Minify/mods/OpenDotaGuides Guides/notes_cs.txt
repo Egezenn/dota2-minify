@@ -1,5 +1,0 @@
-Nahrazuje výchozí průvodce těmi z OpenDotaGuides
-
-* Pro zobrazení ve hře je nutné vybrat výchozí sestavení
-
-Zdroj: https://github.com/Egezenn/OpenDotaGuides/releases/latest

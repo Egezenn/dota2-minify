@@ -1,6 +1,0 @@
-Gendanner pingslyde til deres lyde fra før patch 7.39.
-
-Nye lyde erstattes med:
-- ping_heart = ping
-- ping_enemy_ward = ping_warning
-- ping_need_ward = ping

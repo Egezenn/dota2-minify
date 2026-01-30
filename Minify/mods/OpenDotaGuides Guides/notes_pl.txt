@@ -1,5 +1,0 @@
-Zastępuje domyślne poradniki poradnikami z OpenDotaGuides
-
-* Wymaga wybrania domyślnych buildów, aby zobaczyć je w grze.
-
-Źródło: https://github.com/Egezenn/OpenDotaGuides/releases/latest

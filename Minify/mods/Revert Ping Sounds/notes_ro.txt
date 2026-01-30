@@ -1,6 +1,0 @@
-Readuce sunetele ping-urilor la sunetele anterioare patch-ului 7.39.
-
-Noile sunete sunt înlocuite cu:
-- ping_heart = ping
-- ping_enemy_ward = ping_warning
-- ping_need_ward = ping

@@ -1,7 +1,0 @@
-Tar bort diverse effekter
-
-- Tar bort partikeleffekter på byggnader, såsom de lysande blå effekterna på fontäner, utposter, basbyggnader etc.
-- Projektiler/förstörelsepartiklar för tornattacker
-- Partiklar för avbildningar
-- Förenklade illusioner
-- Hjälteutrustning, händelseemblem, glyfer och mer

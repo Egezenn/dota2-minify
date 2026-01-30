@@ -1,1 +1,0 @@
-Silenciará los locutores predeterminados y las líneas de rachas de muertes.

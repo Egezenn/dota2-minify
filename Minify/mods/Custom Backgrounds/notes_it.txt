@@ -1,5 +1,0 @@
-Sostituisce lo sfondo del menu principale, lo sfondo della vetrina del giocatore e lo sfondo della schermata di selezione.
-
-È possibile trascinare un'immagine nella cartella di questa mod e verrà utilizzata come sfondo.
-
-È necessario avere l'utilità `magick` nella variabile del percorso se l'immagine non è in formato PNG e deve essere convertita.

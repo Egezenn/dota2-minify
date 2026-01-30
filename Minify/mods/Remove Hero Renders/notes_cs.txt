@@ -1,3 +1,0 @@
-Odstraňuje náhledy hrdinů a rendery z uživatelského rozhraní.
-
-Proměnná konzole `map_enable_portrait_worlds 0` dosahuje stejného cíle, ale uvíznete na obrazovkách MVP.

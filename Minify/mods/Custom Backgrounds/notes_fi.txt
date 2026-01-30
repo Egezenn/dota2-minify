@@ -1,5 +1,0 @@
-Korvaa päävalikon taustan, pelaajan esittelyn taustan ja valintanäytön taustan.
-
-Voit pudottaa kuvan tämän modin kansioon, ja se käyttää sitä taustana.
-
-Tarvitset `magick`-apuohjelman polkumuuttujaasi, jos kuvasi ei ole png ja se on muunnettava.

@@ -1,2 +1,0 @@
-Maakt heldenkaarten groter.
-Verwijdert heldenfilms die verschijnen bij kaartzwevingen, badges en vergelijkbare heldenrijen.

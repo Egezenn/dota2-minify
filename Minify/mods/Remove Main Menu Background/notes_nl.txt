@@ -1,1 +1,0 @@
-Verwijdert de achtergrond van het hoofdmenu.

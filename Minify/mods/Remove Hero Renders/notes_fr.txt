@@ -1,3 +1,0 @@
-Supprime les aperçus des héros et leur rendu depuis l'interface utilisateur.
-
-La variable de console `map_enable_portrait_worlds 0` permet d'obtenir le même résultat, mais vous risquez de rester bloqué sur les écrans MVP.

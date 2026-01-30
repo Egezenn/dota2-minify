@@ -1,1 +1,0 @@
-Siirtää ja skaalaa joitakin pelin sisäisen HUD:n ominaisuuksia.

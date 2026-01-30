@@ -1,1 +1,0 @@
-Aceita automaticamente a caixa de diálogo de correspondência após um atraso de X segundos. O atraso pode ser ajustado no painel de configurações. O valor padrão é 10 se as ferramentas de oficina não estiverem instaladas.

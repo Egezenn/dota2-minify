@@ -1,5 +1,0 @@
-Замінює стандартні посібники на ті, що з OpenDotaGuides
-
-* Для їх перегляду в грі необхідно вибрати стандартні збірки
-
-Джерело: https://github.com/Egezenn/OpenDotaGuides/releases/latest

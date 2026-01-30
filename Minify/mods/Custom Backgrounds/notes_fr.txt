@@ -1,5 +1,0 @@
-Remplace l'arrière-plan du menu principal, de la présentation des joueurs et de l'écran de sélection.
-
-Vous pouvez glisser-déposer une image dans le dossier de ce mod ; elle sera utilisée comme arrière-plan.
-
-Si votre image n'est pas au format PNG et doit être convertie, vous devez ajouter l'utilitaire `magick` à votre variable d'environnement PATH.

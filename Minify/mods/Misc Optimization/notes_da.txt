@@ -1,8 +1,0 @@
-Fjerner diverse effekter
-
-- Fjerner partikeleffekter på bygninger, såsom de glødende blå effekter på springvand, forpost, basebygninger osv.
-
-- Tårnangrebsprojektiler / ødelæggelsespartikler
-- Partikler af figurer
-- Forenklede illusioner
-- Helteudstyr, begivenhedsemblemer, glyf og mere

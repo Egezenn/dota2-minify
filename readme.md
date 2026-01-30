@@ -173,7 +173,8 @@ mods
 │   │   └── <...>
 │   ├── blacklist.txt
 │   ├── modcfg.json
-│   ├── notes_<language>.txt
+│   ├── mod.png
+│   ├── notes.md
 │   ├── script.py
 │   ├── script_after_decompile.py
 │   ├── script_after_recompile.py
@@ -211,7 +212,7 @@ Syntax for this file starting from the line beginning is as follows:
 `>>`: Directories  
 `**`: RegExp patterns  
 `*-`: RegExp patterns for exclusion  
-`--`: Exclusions (for when you want to exclude specific files from bulk additions)  
+`--`: Exclusions
 
 After that with no blank spaces you put the path to the file you want to override.
 `path/to/file`

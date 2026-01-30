@@ -1,5 +1,0 @@
-Sostituisce le guide predefinite con quelle di OpenDotaGuides
-
-* Richiede che le build predefinite siano selezionate per visualizzarle nel gioco
-
-Fonte: https://github.com/Egezenn/OpenDotaGuides/releases/latest

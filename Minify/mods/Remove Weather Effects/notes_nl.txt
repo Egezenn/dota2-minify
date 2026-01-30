@@ -1,3 +1,0 @@
-Verwijdert alle weereffecten van weeritems en van de consoleopdracht "cl_weather".
-
-https://liquipedia.net/dota2/Weather_Effects

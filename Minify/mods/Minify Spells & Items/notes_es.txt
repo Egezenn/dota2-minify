@@ -1,3 +1,0 @@
-Simplifica todas las habilidades y objetos del juego.
-
-* Modifica principalmente los hechizos predeterminados.

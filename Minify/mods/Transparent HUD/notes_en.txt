@@ -1,3 +1,0 @@
-Makes most in-game HUD elements transparent, removes some useless features.
-
-* Requires default in-game HUD

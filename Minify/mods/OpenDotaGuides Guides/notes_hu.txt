@@ -1,5 +1,0 @@
-Az alapértelmezett útmutatókat az OpenDotaGuides útmutatóira cseréli.
-
-* A játékban való megtekintéshez ki kell választani az alapértelmezett buildeket.
-
-Forrás: https://github.com/Egezenn/OpenDotaGuides/releases/latest

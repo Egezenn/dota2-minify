@@ -1,3 +1,0 @@
-Tar bort alla vädereffekter från väderobjekt och från konsolkommandot "cl_weather".
-
-https://liquipedia.net/dota2/Weather_Effects

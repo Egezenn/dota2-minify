@@ -1,1 +1,0 @@
-Supprime les présentations de profil et les animations.

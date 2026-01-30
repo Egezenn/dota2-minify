@@ -1,3 +1,0 @@
-Corrige e repopular o painel HUD de consulta de unidades lançado no patch 7.00.
-
-Disponível com a variável de console `dota_hud_new_query_panel 1`.

@@ -1,3 +1,0 @@
-Entfernt alle Elemente, die mit Flüssen in Verbindung stehen.
-
-Dies umfasst das Bemalen von Flüssen mit Phiolen, Gehgeräusche und Partikeleffekte.

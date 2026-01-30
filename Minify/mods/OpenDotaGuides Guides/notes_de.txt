@@ -1,5 +1,0 @@
-Ersetzt die Standard-Guides durch die von OpenDotaGuides
-
-* Standard-Builds müssen ausgewählt sein, um im Spiel angezeigt zu werden
-
-Quelle: https://github.com/Egezenn/OpenDotaGuides/releases/latest

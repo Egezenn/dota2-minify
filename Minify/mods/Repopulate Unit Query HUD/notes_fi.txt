@@ -1,3 +1,0 @@
-Korjaa ja täyttää uudelleen Unit Query HUD -paneelin, joka julkaistiin päivityksessä 7.00.
-
-Saatavilla konsolimuuttujalla `dota_hud_new_query_panel 1`.

@@ -1,1 +1,0 @@
-Tar bort alla ping-partiklar och ljud förutom standardljudet.

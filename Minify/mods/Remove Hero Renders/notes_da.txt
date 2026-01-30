@@ -1,3 +1,0 @@
-Fjerner forhåndsvisninger og gengivelser af helte fra brugergrænsefladen.
-
-Konsolvariablen `map_enable_portrait_worlds 0` opnår det samme mål, men du vil sidde fast på MVP-skærme.

@@ -1,5 +1,0 @@
-Vervangt de achtergrond van het hoofdmenu, de showcase van de speler en de achtergrond van het keuzescherm.
-
-Je kunt een afbeelding naar de map van deze mod slepen en deze wordt dan als achtergrond gebruikt.
-
-Je hebt het hulpprogramma `magick` nodig voor je padvariabele als je afbeelding geen png is en moet worden geconverteerd.

@@ -1,1 +1,0 @@
-Pokazuje aktualną wartość netto w panelu szybkich statystyk.

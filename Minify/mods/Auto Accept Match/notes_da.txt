@@ -1,1 +1,0 @@
-Accepterer automatisk matchdialogen efter X sekunders forsinkelse. Forsinkelsen kan justeres via indstillingspanelet. Standardindstillingen er 10, hvis der ikke er installeret værkstedsværktøjer.

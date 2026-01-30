@@ -1,6 +1,0 @@
-Vrátí zvuky pingu do stavu před patchem 7.39.
-
-Nové zvuky jsou nahrazeny:
-- ping_heart = ping
-- ping_enemy_ward = ping_warning
-- ping_need_ward = ping

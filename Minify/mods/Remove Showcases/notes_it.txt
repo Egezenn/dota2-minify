@@ -1,1 +1,0 @@
-Rimuove le vetrine e le animazioni dei profili.

@@ -1,3 +1,0 @@
-Forenkler alle trylleformler og gjenstander i spillet.
-
-* Endrer stort sett standardformler.

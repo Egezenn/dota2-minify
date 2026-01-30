@@ -1,1 +1,0 @@
-Automaticky přijme dialogové okno pro shodu po X sekundách prodlevy. Prodleva je nastavitelná v panelu nastavení. Výchozí hodnota je 10, pokud není nainstalováno dílenské nářadí.

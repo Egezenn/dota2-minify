@@ -1,1 +1,0 @@
-Entfernt den Hintergrund des Hauptmenüs.

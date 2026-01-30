@@ -1,3 +1,0 @@
-Face majoritatea elementelor HUD din joc transparente, elimină unele funcții inutile.
-
-* Necesită HUD-ul implicit din joc

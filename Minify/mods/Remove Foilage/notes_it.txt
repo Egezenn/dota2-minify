@@ -1,3 +1,0 @@
-Rimuove tutti i cespugli, i fiori, le rocce e qualsiasi altro elemento del terreno, lasciando solo le tessere.
-
-* È necessario avere il terreno predefinito equipaggiato nel proprio inventario.

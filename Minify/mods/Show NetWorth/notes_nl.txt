@@ -1,1 +1,0 @@
-Geeft uw huidige nettowaarde weer in het paneel met snelle statistieken.

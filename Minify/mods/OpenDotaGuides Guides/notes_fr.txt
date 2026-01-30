@@ -1,5 +1,0 @@
-Remplace les guides par défaut par ceux d'OpenDotaGuides.
-
-* Nécessite la sélection d'une configuration par défaut pour les afficher en jeu.
-
-Source : https://github.com/Egezenn/OpenDotaGuides/releases/latest

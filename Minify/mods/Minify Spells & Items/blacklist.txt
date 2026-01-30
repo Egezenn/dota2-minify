@@ -1,9 +1,3 @@
---particles/units/heroes/hero_batrider/batrider_firefly_path_b.vpcf_c
---particles/units/heroes/hero_batrider/batrider_firefly_path_c.vpcf_c
---particles/units/heroes/hero_batrider/batrider_firefly_path_d.vpcf_c
---particles/units/heroes/hero_batrider/batrider_firefly_path_f.vpcf_c
---particles/units/heroes/hero_batrider/batrider_firefly_path.vpcf_c
-**particles/units/heroes/hero_batrider/batrider_.*firefly.*\.vpcf_c
 particles/econ/items/monkey_king/mk_ti9_immortal_army_cast_burst.vpcf_c
 particles/econ/items/monkey_king/mk_ti9_immortal_army_cast_dark.vpcf_c.vpcf_c
 particles/econ/items/monkey_king/mk_ti9_immortal_army_cast_hair.vpcf_c
@@ -936,6 +930,10 @@ particles/units/heroes/hero_bane/enfeeble_shell_b.vpcf_c
 particles/units/heroes/hero_bane/enfeeble_sphere_mini.vpcf_c
 particles/units/heroes/hero_bane/enfeeble_sphere_small.vpcf_c
 particles/units/heroes/hero_batrider/batrider_clouds.vpcf_c
+particles/units/heroes/hero_batrider/batrider_firefly_path_b.vpcf_c
+particles/units/heroes/hero_batrider/batrider_firefly_path_fleks.vpcf_c
+particles/units/heroes/hero_batrider/batrider_firefly_path_groundfire_b.vpcf_c
+particles/units/heroes/hero_batrider/batrider_firefly_path_light.vpcf_c
 particles/units/heroes/hero_batrider/batrider_flamebreak_explosion_a.vpcf_c
 particles/units/heroes/hero_batrider/batrider_flamebreak_explosion_b.vpcf_c
 particles/units/heroes/hero_batrider/batrider_flamebreak_explosion_c.vpcf_c

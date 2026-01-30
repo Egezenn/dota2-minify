@@ -1,3 +1,0 @@
-Fjerner alt relateret til floder.
-
-Inklusive at male floder med genstande med flasker, gående lydeffekter og partikelstænk.

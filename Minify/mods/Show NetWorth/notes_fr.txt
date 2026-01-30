@@ -1,1 +1,0 @@
-Affiche votre patrimoine net actuel dans le panneau de statistiques rapides.

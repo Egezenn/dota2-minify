@@ -1,3 +1,0 @@
-Opravuje a znovu naplňuje panel HUD pro dotazy jednotek, který byl vydán v aktualizaci 7.00.
-
-K dispozici s proměnnou konzole `dota_hud_new_query_panel 1`.

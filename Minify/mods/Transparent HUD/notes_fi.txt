@@ -1,3 +1,0 @@
-Tekee useimmista pelin sisäisistä HUD-elementeistä läpinäkyviä, poistaa joitakin turhia ominaisuuksia.
-
-* Vaatii pelin sisäisen HUD-oletusarvon.
