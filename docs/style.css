@@ -1,0 +1,131 @@
+.btn {
+  align-items: center;
+  display: inline-flex;
+  gap: 0.5rem;
+  transition: filter 0.3s ease;
+}
+
+.btn:hover {
+  filter: brightness(0.8);
+}
+
+/* index.html */
+body.home {
+  align-items: center;
+  display: flex;
+  font-size: 32px;
+  justify-content: center;
+  min-height: 100vh;
+  padding-bottom: 60px;
+  text-align: center;
+}
+
+body.home .btn-container {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+}
+
+body.home img {
+  border-radius: 12px;
+  height: auto;
+  max-width: 100%;
+}
+
+body.home footer {
+  bottom: 0;
+  font-size: 0.8em;
+}
+
+body.home h1 {
+  justify-content: center;
+}
+
+@media (width <=768px) {
+  body.home {
+    font-size: 24px;
+    padding: 1rem;
+    padding-bottom: 60px;
+  }
+
+  body.home .btn-container {
+    flex-direction: column;
+  }
+
+  body.home h1.h1 {
+    font-size: 2.5rem;
+  }
+}
+
+/* community.html, mods.html */
+body:not(.home) {
+  padding-bottom: 2rem;
+  padding-top: 2rem;
+}
+
+/* Mods & Community Specific */
+.mod-buttons {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+}
+
+#notes-content img {
+  border-radius: 12px;
+  height: auto;
+  max-width: 100%;
+}
+
+#notes-content>div:not(:last-of-type) {
+  margin-bottom: 2rem;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+h1>a,
+h2>a,
+h3>a,
+h4>a,
+h5>a,
+h6>a {
+  align-items: center;
+  display: flex;
+  gap: 0.5rem;
+}
+
+.modal-title {
+  display: block;
+}
+
+#release-notes {
+  border-top: 1px solid #444;
+  display: none;
+  font-size: 0.5em;
+  margin-top: 1rem;
+  max-height: 300px;
+  overflow-y: auto;
+  padding-top: 1rem;
+}
+
+.icon-pink {
+  color: pink;
+}
+
+.icon-brown {
+  color: brown;
+}
+
+.btn-buymeacoffee {
+  background-color: #c6c635;
+  color: black;
+}
+
+#mods-section,
+#tools-section,
+#skins-section {
+  display: none;
+}

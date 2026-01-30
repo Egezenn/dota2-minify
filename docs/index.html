@@ -1,232 +1,87 @@
 <!doctype html>
 <html lang="en" data-bs-theme="dark">
-  <head>
-    <meta charset="UTF-8" />
-    <title>Dota2 Minify</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="icon" type="image/x-icon" href="https://github.com/Egezenn/dota2-minify/raw/main/Minify/bin/images/favicon.ico" />
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous" />
-    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
-    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
-    <style>
-      body {
-        font-size: 32px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        min-height: 100vh;
-        text-align: center;
-        padding-bottom: 60px;
-      }
-      .btn-container {
-        display: flex;
-        gap: 1rem;
-        justify-content: center;
-      }
-      .btn {
-        display: inline-flex;
-        align-items: center;
-        gap: 0.5rem;
-        transition: filter 0.3s ease;
 
-        &:hover {
-          filter: brightness(0.8);
-        }
-      }
-      img {
-        border-radius: 12px;
-        max-width: 100%;
-        height: auto;
-      }
-      footer {
-        bottom: 0;
-        font-size: 0.8em;
-      }
-      @media (max-width: 768px) {
-        body {
-          font-size: 24px;
-          padding: 1rem;
-          padding-bottom: 60px;
-        }
-        .btn-container {
-          flex-direction: column;
-        }
-        h1.h1 {
-          font-size: 2.5rem;
-        }
-      }
-    </style>
-  </head>
+<head>
+  <meta charset="UTF-8" />
+  <title>Dota2 Minify</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="icon" type="image/x-icon"
+    href="https://github.com/Egezenn/dota2-minify/raw/main/Minify/bin/images/favicon.ico" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous" />
+  <link rel="stylesheet" href="style.css" />
+  <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+  <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+</head>
 
-  <body>
-    <main>
-      <img src="https://github.com/Egezenn/dota2-minify/raw/main/Minify/bin/images/logo.png" />
-      <h1 class="h1 mb-3 fw-bold">Dota2 Minify</h1>
-      <p class="mb-3">Dota2 Mod Patcher & Toolkit for everyone to use mods easily.</p>
-      <div id="download-buttons" class="btn-container btn-group-lg mb-3">
-        <a id="latest-stable" class="btn btn-primary" href="#" role="button" data-bs-toggle="modal" data-bs-target="#downloadModal" data-release-type="stable"> <ion-icon name="download-outline"></ion-icon> Download (Latest stable) </a>
-      </div>
-      <div class="btn-container btn-group-lg mb-3">
-        <a class="btn btn-info" href="https://github.com/Egezenn/dota2-minify#table-of-contents" role="button"> <ion-icon name="logo-github"></ion-icon> Information </a>
-        <a class="btn btn-secondary" href="https://github.com/egezenn/dota2-minify" role="button"> <ion-icon name="logo-github"></ion-icon> GitHub </a>
-        <a class="btn btn-info" href="https://discord.com/invite/2YDnqpbcKM" role="button"> <ion-icon name="logo-discord"></ion-icon> Discord </a>
-      </div>
-      <div class="btn-container btn-group-lg mb-3">
-        <a class="btn btn-info" href="mods.html" role="button"> <ion-icon name="document-text-outline"></ion-icon> Mods </a>
-        <a class="btn btn-info" href="community.html" role="button"> <ion-icon name="people-outline"></ion-icon> Community </a>
-      </div>
-      <div class="btn-container btn-group-lg">
-        <a class="btn btn-secondary" href="https://github.com/sponsors/Egezenn" role="button"> <ion-icon name="heart-outline" style="color: pink"></ion-icon> GitHub Sponsors </a>
-        <a class="btn" href="https://buymeacoffee.com/egezenn" role="button" style="background-color: #c6c635; color: black"> <ion-icon name="cafe-outline" style="color: brown"></ion-icon> BuyMeACoffee </a>
-      </div>
-      <div class="modal fade" id="downloadModal" tabindex="-1" aria-labelledby="downloadModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-          <div class="modal-content bg-">
-            <div class="modal-header">
-              <h5 class="modal-title text-center flex-grow-1" id="downloadModalLabel">Download for your platform</h5>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body btn-container btn-group-lg">
-              <a id="download-windows" class="btn btn-primary" href="#" role="button"
-                ><ion-icon name="logo-windows"></ion-icon> Windows <span class="badge ms-auto"><ion-icon name="download-outline"></ion-icon> <span id="windows-download-count">...</span></span></a
-              >
-              <a id="download-linux" class="btn btn-primary" href="#" role="button"
-                ><ion-icon name="logo-tux"></ion-icon> Linux <span class="badge ms-auto"><ion-icon name="download-outline"></ion-icon> <span id="linux-download-count">...</span></span></a
-              >
-            </div>
+<body class="home">
+  <main>
+    <img src="https://github.com/Egezenn/dota2-minify/raw/main/Minify/bin/images/logo.png" />
+    <h1 class="h1 mb-3 fw-bold">Dota2 Minify</h1>
+    <p class="mb-3">Dota2 Mod Patcher & Toolkit for everyone to use mods easily.</p>
+    <div id="download-buttons" class="btn-container btn-group-lg mb-3">
+      <a id="latest-stable" class="btn btn-primary" href="#" role="button" data-bs-toggle="modal"
+        data-bs-target="#downloadModal" data-release-type="stable">
+        <ion-icon name="download-outline"></ion-icon> Download (Latest stable)
+      </a>
+    </div>
+    <div class="btn-container btn-group-lg mb-3">
+      <a class="btn btn-info" href="https://github.com/Egezenn/dota2-minify#table-of-contents" role="button">
+        <ion-icon name="logo-github"></ion-icon> Information
+      </a>
+      <a class="btn btn-secondary" href="https://github.com/egezenn/dota2-minify" role="button">
+        <ion-icon name="logo-github"></ion-icon> GitHub
+      </a>
+      <a class="btn btn-info" href="https://discord.com/invite/2YDnqpbcKM" role="button">
+        <ion-icon name="logo-discord"></ion-icon> Discord
+      </a>
+    </div>
+    <div class="btn-container btn-group-lg mb-3">
+      <a class="btn btn-info" href="mods.html" role="button">
+        <ion-icon name="document-text-outline"></ion-icon> Mods
+      </a>
+      <a class="btn btn-info" href="community.html" role="button">
+        <ion-icon name="people-outline"></ion-icon> Community
+      </a>
+    </div>
+    <div class="btn-container btn-group-lg">
+      <a class="btn btn-secondary" href="https://github.com/sponsors/Egezenn" role="button">
+        <ion-icon name="heart-outline" class="icon-pink"></ion-icon> GitHub Sponsors
+      </a>
+      <a class="btn btn-buymeacoffee" href="https://buymeacoffee.com/egezenn" role="button">
+        <ion-icon name="cafe-outline" class="icon-brown"></ion-icon> BuyMeACoffee
+      </a>
+    </div>
+    <div class="modal fade" id="downloadModal" tabindex="-1" aria-labelledby="downloadModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content bg-">
+          <div class="modal-header">
+            <h5 class="modal-title text-center flex-grow-1" id="downloadModalLabel">Download for your platform</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
+          <div class="modal-body btn-container btn-group-lg">
+            <a id="download-windows" class="btn btn-primary" href="#" role="button"><ion-icon
+                name="logo-windows"></ion-icon> Windows
+              <span class="badge ms-auto"><ion-icon name="download-outline"></ion-icon> <span
+                  id="windows-download-count">...</span></span></a>
+            <a id="download-linux" class="btn btn-primary" href="#" role="button"><ion-icon name="logo-tux"></ion-icon>
+              Linux
+              <span class="badge ms-auto"><ion-icon name="download-outline"></ion-icon> <span
+                  id="linux-download-count">...</span></span></a>
+          </div>
+          <div id="release-notes" class="modal-body text-start"></div>
         </div>
       </div>
-      <footer class="mt-5 text-muted">
-        <p>Total downloads: <span id="total-downloads">...</span></p>
-      </footer>
-    </main>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
-    <script>
-      const cacheKey = "github-releases";
-      const cachedData = JSON.parse(localStorage.getItem(cacheKey));
-      const now = new Date().getTime();
+    </div>
+    <footer class="mt-5 text-muted">
+      <p>Total downloads: <span id="total-downloads">...</span></p>
+    </footer>
+  </main>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+    crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <script src="index.js"></script>
+</body>
 
-      window.latestStableRelease = null;
-      window.latestPrereleaseRelease = null;
-
-      function processReleases(releases) {
-        if (!releases || releases.length === 0) {
-          return;
-        }
-
-        const latestStable = releases.find((release) => !release.prerelease);
-        const latestPrerelease = releases.find((release) => release.prerelease);
-
-        if (latestStable) {
-          window.latestStableRelease = latestStable;
-          const stableLink = document.getElementById("latest-stable");
-          const version = latestStable.tag_name.replace("Minify-", ""); // DEPRECATE: bad tag name
-          stableLink.innerHTML = `<ion-icon name="download-outline"></ion-icon> Download (${version})`;
-        }
-
-        if (latestPrerelease) {
-          window.latestPrereleaseRelease = latestPrerelease;
-          const downloadButtons = document.getElementById("download-buttons");
-          let prereleaseLink = document.getElementById("latest-prerelease");
-          if (!prereleaseLink) {
-            prereleaseLink = document.createElement("a");
-            prereleaseLink.id = "latest-prerelease";
-            prereleaseLink.className = "btn btn-danger";
-            prereleaseLink.role = "button";
-            prereleaseLink.setAttribute("data-bs-toggle", "modal");
-            prereleaseLink.setAttribute("data-bs-target", "#downloadModal");
-            downloadButtons.appendChild(prereleaseLink);
-          }
-          const version = latestPrerelease.tag_name.replace("Minify-", ""); // DEPRECATE: bad tag name
-          prereleaseLink.innerHTML = `<ion-icon name="download-outline"></ion-icon> Download (${version})`;
-          prereleaseLink.setAttribute("data-release-type", "prerelease");
-        }
-
-        let totalDownloads = 0;
-        releases.forEach((release) => {
-          release.assets.forEach((asset) => {
-            totalDownloads += asset.download_count;
-          });
-        });
-
-        const totalDownloadsElement = document.getElementById("total-downloads");
-        if (totalDownloadsElement) {
-          totalDownloadsElement.textContent = totalDownloads.toLocaleString();
-        }
-      }
-
-      if (cachedData && now - cachedData.timestamp < 300000) {
-        processReleases(cachedData.releases);
-      } else {
-        fetch("https://api.github.com/repos/egezenn/dota2-minify/releases")
-          .then((response) => response.json())
-          .then((releases) => {
-            localStorage.setItem(cacheKey, JSON.stringify({ timestamp: now, releases: releases }));
-            processReleases(releases);
-          })
-          .catch((error) => {
-            if (cachedData) {
-              processReleases(cachedData.releases);
-            }
-            console.error("Error fetching releases:", error);
-          });
-      }
-
-      const downloadModal = document.getElementById("downloadModal");
-      if (downloadModal) {
-        downloadModal.addEventListener("show.bs.modal", function (event) {
-          const button = event.relatedTarget;
-          const releaseType = button.getAttribute("data-release-type");
-
-          const modalTitle = downloadModal.querySelector(".modal-title");
-          const windowsLink = downloadModal.querySelector("#download-windows");
-          const linuxLink = downloadModal.querySelector("#download-linux");
-
-          let release;
-          if (releaseType === "stable") {
-            release = window.latestStableRelease;
-          } else {
-            release = window.latestPrereleaseRelease;
-          }
-
-          if (release) {
-            const version = release.tag_name.replace("Minify-", ""); // DEPRECATE: bad tag name
-            const typeText = releaseType === "stable" ? "latest stable" : "latest release candidate";
-            modalTitle.innerHTML = `Download ${typeText}, ${version}<br><small class="text-muted">Dated ${new Date(release.published_at).toLocaleString()}</small>`;
-
-            const downloadUrlBase = `https://github.com/Egezenn/dota2-minify/releases/download/${release.tag_name}/${release.tag_name}`;
-            windowsLink.href = `${downloadUrlBase}-windows.zip`;
-            linuxLink.href = `${downloadUrlBase}-linux.zip`;
-
-            if (releaseType === "prerelease") {
-              windowsLink.classList.remove("btn-primary");
-              windowsLink.classList.add("btn-danger");
-              linuxLink.classList.remove("btn-primary");
-              linuxLink.classList.add("btn-danger");
-            } else {
-              windowsLink.classList.remove("btn-danger");
-              windowsLink.classList.add("btn-primary");
-              linuxLink.classList.remove("btn-danger");
-              linuxLink.classList.add("btn-primary");
-            }
-
-            const windowsAsset = release.assets.find((asset) => asset.name.endsWith("-windows.zip"));
-            const linuxAsset = release.assets.find((asset) => asset.name.endsWith("-linux.zip"));
-
-            const windowsDownloadCount = downloadModal.querySelector("#windows-download-count");
-            const linuxDownloadCount = downloadModal.querySelector("#linux-download-count");
-
-            if (windowsAsset) {
-              windowsDownloadCount.textContent = windowsAsset.download_count;
-            }
-
-            if (linuxAsset) {
-              linuxDownloadCount.textContent = linuxAsset.download_count;
-            }
-          }
-        });
-      }
-    </script>
-  </body>
 </html>
