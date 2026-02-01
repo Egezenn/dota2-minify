@@ -188,9 +188,10 @@ def patcher(mod=None, pakname=None):
                 mpaths.write_warning()
 
             # Extract XMLs to be modified (assume they are in game VPK)
-            for path in xml_modifications.keys():
-                compiled = path.replace(".xml", ".vxml_c")
-                dota_extracts.append(compiled)
+            if helper.workshop_installed:
+                for path in xml_modifications.keys():
+                    compiled = path.replace(".xml", ".vxml_c")
+                    dota_extracts.append(compiled)
 
         global game_contents_file_init
         if not game_contents_file_init:
