@@ -585,4 +585,4 @@ mods_with_order = sorted(mods_with_order, key=lambda d: list(d.values())[0])
 mods_with_order = [list(d.keys())[0] for d in mods_with_order]
 
 main_window_width = 550
-main_window_height = 300
+main_window_height = 400

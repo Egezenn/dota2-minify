@@ -1,59 +1,59 @@
 <!-- LANG:EN -->
-Mutes all voice line sounds.
+Mutes voice line sounds.
 
 <!-- LANG:BG -->
-Заглушава всички звуци на гласовата линия.
+Заглушава звуците на гласовата линия.
 
 <!-- LANG:CS -->
-Ztlumí všechny zvuky hlasové linky.
+Ztlumí zvuky hlasové linky.
 
 <!-- LANG:DA -->
-Dæmper alle lyde på stemmelinjen.
+Dæmper lyde fra stemmelinjen.
 
 <!-- LANG:DE -->
-Schaltet alle Sprachausgabegeräusche stumm.
+Schaltet Sprachausgabe stumm.
 
 <!-- LANG:EL -->
-Σίγαση όλων των ήχων της φωνητικής γραμμής.
+Σίγαση των ήχων της φωνητικής γραμμής.
 
 <!-- LANG:ES -->
-Silencia todos los sonidos de la línea de voz.
+Silencia los sonidos de la línea de voz.
 
 <!-- LANG:FI -->
-Mykistää kaikki puhelinjan äänet.
+Mykistää puhelinjan äänet.
 
 <!-- LANG:FR -->
-Coupe le son de toutes les lignes vocales.
+Coupe le son des lignes vocales.
 
 <!-- LANG:HU -->
-Elnémítja az összes hangvonal hangját.
+Némítja a hangvonal hangjait.
 
 <!-- LANG:IT -->
-Disattiva tutti i suoni delle linee vocali.
+Disattiva i suoni della linea vocale.
 
 <!-- LANG:NL -->
-Dempt alle spraakgeluiden.
+Dempt spraakgeluiden.
 
 <!-- LANG:NO -->
-Demper alle lyder på talelinjen.
+Demper lydene på talelinjen.
 
 <!-- LANG:PL -->
-Wycisza wszystkie dźwięki linii głosowych.
+Wycisza dźwięki linii głosowych.
 
 <!-- LANG:PT -->
-Silencia todos os sons da linha de voz.
+Silencia os sons da linha de voz.
 
 <!-- LANG:RO -->
-Dezactivează toate sunetele din linia vocală.
+Dezactivează sunetele replicii vocale.
 
 <!-- LANG:RU -->
-Отключает все звуки голосовой линии.
+Отключает звуки голосовых реплик.
 
 <!-- LANG:SV -->
-Stänger av alla ljud på röstlinjen.
+Stänger av ljudet på röstlinjen.
 
 <!-- LANG:TR -->
-Tüm söylemlerin seslerini susturur.
+Sesli hatların sesini kapatır.
 
 <!-- LANG:UK -->
-Вимкнення всіх звуків голосової лінії.
+Вимкнення звуків голосової лінії.

@@ -97,6 +97,9 @@ def patcher(mod=None, pakname=None):
             else:  # will not be in mods.json
                 apply_without_user_confirmation = False
 
+            # ---------------------------------- STEP 1 ---------------------------------- #
+            # ---------------- Colect mod data and extract necessary files --------------- #
+            # ---------------------------------------------------------------------------- #
             try:
                 if (
                     mod is not None or apply_without_user_confirmation or (visual and ui.get_value(folder))
@@ -219,52 +222,50 @@ def patcher(mod=None, pakname=None):
                     file.write(new_line + "\n")
             game_contents_file_init = True
 
-        helper.add_text_to_terminal(helper.localization_dict["starting_extraction_text_var"])
-        core_extracts = list(set(core_extracts))
-        dota_extracts = list(set(dota_extracts))
-        vpk_extractor(core_pak_contents, core_extracts)
-        vpk_extractor(dota_pak_contents, dota_extracts)
-        # ---------------------------------- STEP 2 ---------------------------------- #
-        # ------------------- Decompile all files in "build" folder ------------------ #
-        # ---------------------------------------------------------------------------- #
-        helper.add_text_to_terminal(
-            helper.localization_dict["decompiling_terminal_text_var"],
-            "decompiling_text",
-        )
-        with open(mpaths.log_s2v, "w") as file:
-            try:
-                subprocess.run(
-                    [
-                        os.path.join(".", mpaths.s2v_executable),
-                        "--input",
-                        mpaths.build_dir,
-                        "--recursive",
-                        "--vpk_decompile",
-                        "--output",
-                        mpaths.build_dir,
-                    ],
-                    stdout=file,
-                    creationflags=subprocess.CREATE_NO_WINDOW if mpaths.OS == mpaths.WIN else 0,
-                )
-            except:
-                mpaths.write_crashlog()
-
         if helper.workshop_installed:
+            helper.add_text_to_terminal(helper.localization_dict["starting_extraction_text_var"])
+            core_extracts = list(set(core_extracts))
+            dota_extracts = list(set(dota_extracts))
+            vpk_extractor(core_pak_contents, core_extracts)
+            vpk_extractor(dota_pak_contents, dota_extracts)
+            # ---------------------------------- STEP 2 ---------------------------------- #
+            # ------------------- Decompile all files in "build" folder ------------------ #
+            # ---------------------------------------------------------------------------- #
+            helper.add_text_to_terminal(
+                helper.localization_dict["decompiling_terminal_text_var"],
+                "decompiling_text",
+            )
+            with open(mpaths.log_s2v, "w") as file:
+                try:
+                    subprocess.run(
+                        [
+                            os.path.join(".", mpaths.s2v_executable),
+                            "--input",
+                            mpaths.build_dir,
+                            "--recursive",
+                            "--vpk_decompile",
+                            "--output",
+                            mpaths.build_dir,
+                        ],
+                        stdout=file,
+                        creationflags=subprocess.CREATE_NO_WINDOW if mpaths.OS == mpaths.WIN else 0,
+                    )
+                except:
+                    mpaths.write_crashlog()
+
             with ThreadPoolExecutor() as executor:
                 xml_mod_args = [
                     (os.path.join(mpaths.build_dir, path), mods) for path, mods in xml_modifications.items()
                 ]
                 executor.map(lambda p: apply_xml_modifications(*p), xml_mod_args)
-        gui.bulk_exec_script("after_decompile")
-        # ---------------------------------- STEP 3 ---------------------------------- #
-        # ---------------------------- CSS resourcecompile --------------------------- #
-        # ---------------------------------------------------------------------------- #
-        helper.add_text_to_terminal(
-            helper.localization_dict["compiling_resource_terminal_text_var"],
-            "compiling_resourcecompiler_text_tag",
-        )
-
-        if helper.workshop_installed:
+            gui.bulk_exec_script("after_decompile")
+            # ---------------------------------- STEP 3 ---------------------------------- #
+            # ---------------------------- CSS resourcecompile --------------------------- #
+            # ---------------------------------------------------------------------------- #
+            helper.add_text_to_terminal(
+                helper.localization_dict["compiling_resource_terminal_text_var"],
+                "compiling_resourcecompiler_text_tag",
+            )
             styles_by_file = {}
             for path, style in styling_dictionary.values():
                 sanitized_path = path[1:] if path.startswith("!") else path
@@ -312,7 +313,7 @@ def patcher(mod=None, pakname=None):
             with ThreadPoolExecutor() as executor:
                 executor.map(process_replacer, replacer_targets)
 
-        # ---------------------------------- STEP 6 ---------------------------------- #
+        # ---------------------------------- STEP 4 ---------------------------------- #
         # -------- Create VPK from game folder and save into Minify directory -------- #
         # ---------------------------------------------------------------------------- #
         # insert metadata to pak
@@ -341,7 +342,7 @@ def patcher(mod=None, pakname=None):
         pakname = "pak66" if pakname is None else pakname
         native_mods.save(os.path.join(helper.output_path, f"{pakname}_dir.vpk"))
 
-        # ---------------------------------- STEP 7 ---------------------------------- #
+        # ---------------------------------- STEP 5 ---------------------------------- #
         # -------------------------- Merge VPKs into pak65 --------------------------- #
         # ---------------------------------------------------------------------------- #
 
@@ -394,7 +395,7 @@ def patcher(mod=None, pakname=None):
                 except:
                     pass
 
-        # ---------------------------------- STEP 8 ---------------------------------- #
+        # ---------------------------------- STEP 6 ---------------------------------- #
         # -------------------------- Clean paths and inform -------------------------- #
         # ---------------------------------------------------------------------------- #
 

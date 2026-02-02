@@ -1,360 +1,179 @@
 <!-- LANG:EN -->
 Lets you use Dota2ProTracker's hero grids. Your previous layouts will be saved in this mod's `backup` folder.
 
-* Uses the steam account with the lowest id if "steam_id" is not specified.
-* To use a different grid, specify "grid_type". By default "d2ptrating" is used.
-* Alternatively, download a hero grid of your choosing from https://dota2protracker.com/meta-hero-grids and drop into this mod's folder.
+You can specify the steam ID you want to use it for from the settings. By default Minify selects the lowest ID (oldest).
 
-`minify_config.json`
-```json
-{
-  "steam_id": STEAM_ID3,
-  "grid_type": "matches" | "matches_wr" | "d2ptrating"
-  "steam_path": path_to_your_steam_installation_if_needed
-  "patch": "7.39e"
-}
-```
+To use a different grid, specify `grid_type` from the config manually. By default `d2ptrating` is used.
+
+Alternatively, you can download a hero grid of your choosing from https://dota2protracker.com/meta-hero-grids and drop into this mod's folder.
 
 <!-- LANG:BG -->
 Позволява ви да използвате геройските мрежи на Dota2ProTracker. Предишните ви оформления ще бъдат запазени в папката `backup` на този мод.
 
-* Използва Steam акаунта с най-нисък идентификатор, ако не е посочен "steam_id".
-* За да използвате различна мрежа, посочете "grid_type". По подразбиране се използва "d2ptrating".
-* Като алтернатива, изтеглете геройска мрежа по ваш избор от https://dota2protracker.com/meta-hero-grids и я пуснете в папката на този мод.
+Можете да посочите Steam ID, за който искате да го използвате, от настройките. По подразбиране Minify избира най-ниския ID (най-стария).
 
-`config.json`
-```json
-{
-"steam_id": STEAM_ID3,
+За да използвате различна мрежа, посочете ръчно `grid_type` от конфигурацията. По подразбиране се използва `d2ptrating`.
 
-"grid_type": "matches" | "matches_wr" | "d2ptrating"
-
-"steam_path": path_to_your_steam_installation_if_needed
-
-"patch": "7.39e"
-}
-```
+Като алтернатива, можете да изтеглите геройска мрежа по ваш избор от https://dota2protracker.com/meta-hero-grids и да я пуснете в папката на този мод.
 
 <!-- LANG:CS -->
-Umožňuje používat mřížky hrdinů z Dota2ProTrackeru. Vaše předchozí rozvržení budou uložena ve složce `backup` tohoto modu.
+Umožňuje používat mřížky hrdinů z Dota2ProTracker. Vaše předchozí rozvržení budou uložena ve složce `záloha` tohoto modu.
 
-* Pokud není zadáno "steam_id", použije se účet Steam s nejnižším ID.
-* Chcete-li použít jinou mřížku, zadejte "grid_type". Ve výchozím nastavení se používá "d2ptrating".
-* Případně si stáhněte mřížku hrdiny dle vlastního výběru z https://dota2protracker.com/meta-hero-grids a přetáhněte ji do složky tohoto modu.
+V nastavení můžete zadat Steam ID, pro které chcete mřížku použít. Ve výchozím nastavení Minify vybere nejnižší ID (nejstarší).
 
-`minify_config.json`
-```json
-{
-"steam_id": STEAM_ID3,
+Chcete-li použít jinou mřížku, zadejte v konfiguraci ručně `grid_type`. Ve výchozím nastavení se používá `d2ptrating`.
 
-"grid_type": "matches" | "matches_wr" | "d2ptrating"
-
-"steam_path": cesta_k_vaší_instalaci_steamu_pokud_needed
-
-"patch": "7.39e"
-}
-```
+Případně si můžete stáhnout mřížku hrdinů dle vlastního výběru z https://dota2protracker.com/meta-hero-grids a přetáhnout ji do složky tohoto modu.
 
 <!-- LANG:DA -->
 Lader dig bruge Dota2ProTrackers heltegitter. Dine tidligere layouts gemmes i denne mods `backup`-mappe.
 
-* Bruger Steam-kontoen med det laveste id, hvis "steam_id" ikke er angivet.
+Du kan angive det Steam-ID, du vil bruge det til, fra indstillingerne. Som standard vælger Minify det laveste ID (ældste).
 
-* For at bruge et andet gitter skal du angive "grid_type". Som standard bruges "d2ptrating".
+For at bruge et andet gitter skal du manuelt angive `grid_type` fra konfigurationen. Som standard bruges `d2ptrating`.
 
-* Alternativt kan du downloade et heltegitter efter eget valg fra https://dota2protracker.com/meta-hero-grids og slippe det i denne mods mappe.
-
-`minify_config.json`
-```json
-{
-"steam_id": STEAM_ID3,
-"grid_type": "matches" | "matches_wr" | "d2ptrating"
-"steam_path": path_to_your_steam_installation_if_needed
-"patch": "7.39e"
-}
-```
+Alternativt kan du downloade et heltegitter efter eget valg fra https://dota2protracker.com/meta-hero-grids og slippe det i denne mods mappe.
 
 <!-- LANG:DE -->
 Ermöglicht die Verwendung der Heldenraster von Dota2ProTracker. Deine vorherigen Layouts werden im Ordner `backup` dieser Mod gespeichert.
 
-* Verwendet den Steam-Account mit der niedrigsten ID, falls "steam_id" nicht angegeben ist.
+In den Einstellungen kannst du die gewünschte Steam-ID festlegen. Standardmäßig wählt Minify die niedrigste (älteste) ID.
 
-* Um ein anderes Raster zu verwenden, gib "grid_type" an. Standardmäßig wird "d2ptrating" verwendet.
+Um ein anderes Raster zu verwenden, gib `grid_type` manuell in der Konfiguration an. Standardmäßig wird `d2ptrating` verwendet.
 
-* Alternativ kannst du ein Heldenraster deiner Wahl von https://dota2protracker.com/meta-hero-grids herunterladen und in den Ordner dieser Mod einfügen.
-
-`minify_config.json`
-```json
-{
-"steam_id": STEAM_ID3,
-"grid_type": "matches" | "matches_wr" | "d2ptrating"
-"steam_path": Pfad_zur_Steam-Installation_falls_benötigt
-"patch": "7.39e"
-}
-```
+Alternativ kannst du ein Heldenraster deiner Wahl von https://dota2protracker.com/meta-hero-grids herunterladen und in den Ordner dieser Mod einfügen.
 
 <!-- LANG:EL -->
 Σας επιτρέπει να χρησιμοποιείτε τα πλέγματα ηρώων του Dota2ProTracker. Οι προηγούμενες διατάξεις σας θα αποθηκευτούν στον φάκελο `backup` αυτού του mod.
 
-* Χρησιμοποιεί τον λογαριασμό steam με το χαμηλότερο id εάν δεν έχει καθοριστεί "steam_id".
-* Για να χρησιμοποιήσετε διαφορετικό πλέγμα, καθορίστε "grid_type". Από προεπιλογή χρησιμοποιείται το "d2ptrating".
-* Εναλλακτικά, κατεβάστε ένα πλέγμα ηρώων της επιλογής σας από το https://dota2protracker.com/meta-hero-grids και αποθέστε το στον φάκελο αυτού του mod.
+Μπορείτε να καθορίσετε το steam ID για το οποίο θέλετε να το χρησιμοποιήσετε από τις ρυθμίσεις. Από προεπιλογή, το Minify επιλέγει το χαμηλότερο ID (παλαιότερο).
 
-`minify_config.json`
-```json
-{
-"steam_id": STEAM_ID3,
-"grid_type": "matches" | "matches_wr" | "d2ptrating"
-"steam_path": path_to_your_steam_installation_if_needed
-"patch": "7.39e"
-}
-```
+Για να χρησιμοποιήσετε διαφορετικό πλέγμα, καθορίστε χειροκίνητα το `grid_type` από τη διαμόρφωση. Από προεπιλογή χρησιμοποιείται το `d2ptrating`.
+
+Εναλλακτικά, μπορείτε να κατεβάσετε ένα πλέγμα ηρώων της επιλογής σας από το https://dota2protracker.com/meta-hero-grids και να το αποθέσετε στον φάκελο αυτού του mod.
 
 <!-- LANG:ES -->
-Permite usar las cuadrículas de héroes de Dota2ProTracker. Tus diseños anteriores se guardarán en la carpeta `backup` de este mod.
+Te permite usar las cuadrículas de héroes de Dota2ProTracker. Tus diseños anteriores se guardarán en la carpeta `backup` de este mod.
 
-* Usa la cuenta de Steam con el ID más bajo si no se especifica "steam_id".
-* Para usar una cuadrícula diferente, especifica "grid_type". Por defecto, se usa "d2ptrating".
-* También puedes descargar la cuadrícula de héroes que prefieras desde https://dota2protracker.com/meta-hero-grids y colocarla en la carpeta de este mod.
+Puedes especificar el ID de Steam para el que quieres usarlo desde la configuración. Por defecto, Minificar selecciona el ID más bajo (el más antiguo).
 
-`minify_config.json`
-```json
-{
-"steam_id": STEAM_ID3,
-"grid_type": "matches" | "matches_wr" | "d2ptrating"
-"steam_path": path_to_your_steam_installation_if_needed
-"patch": "7.39e"
-}
-```
+Para usar una cuadrícula diferente, especifica manualmente `grid_type` en la configuración. Por defecto, se usa `d2ptrating`.
+
+También puedes descargar la cuadrícula de héroes que elijas desde https://dota2protracker.com/meta-hero-grids y colocarla en la carpeta de este mod.
 
 <!-- LANG:FI -->
-Voit käyttää Dota2ProTrackerin sankariruudukoita. Aiemmat asettelusi tallennetaan tämän modin `backup`-kansioon.
+Voit käyttää Dota2ProTrackerin sankariruudukoita. Aiemmat asettelusi tallennetaan modin `backup`-kansioon.
 
-* Käyttää Steam-tiliä, jolla on pienin id, jos "steam_id"-tunnusta ei ole määritetty.
-* Käyttääksesi eri ruudukkoa, määritä "grid_type". Oletusarvoisesti käytetään "d2ptrating".
-* Vaihtoehtoisesti voit ladata haluamasi sankariruudukon osoitteesta https://dota2protracker.com/meta-hero-grids ja pudottaa sen tämän modin kansioon.
+Voit määrittää asetuksista Steam-tunnuksen, jolle haluat käyttää sitä. Oletusarvoisesti Minify valitsee pienimmän tunnuksen (vanhimman).
 
-`minify_config.json`
-```json
-{
-"steam_id": STEAM_ID3,
-"grid_type": "matches" | "matches_wr" | "d2ptrating"
-"steam_path": path_to_your_steam_installation_if_needed
-"patch": "7.39e"
-}
-```
+Jos haluat käyttää eri ruudukkoa, määritä `grid_type` manuaalisesti asetuksista. Oletusarvoisesti käytetään `d2ptrating`.
+
+Vaihtoehtoisesti voit ladata haluamasi sankariruudukon osoitteesta https://dota2protracker.com/meta-hero-grids ja pudottaa sen modin kansioon.
 
 <!-- LANG:FR -->
 Permet d'utiliser les grilles de héros de Dota2ProTracker. Vos configurations précédentes seront sauvegardées dans le dossier `backup` de ce mod.
 
-* Utilise le compte Steam avec l'ID le plus bas si « steam_id » n'est pas spécifié.
+Vous pouvez spécifier l'identifiant Steam à utiliser dans les paramètres. Par défaut, Minify sélectionne l'identifiant le plus ancien.
 
-* Pour utiliser une autre grille, spécifiez « grid_type ». Par défaut, « d2ptrating » est utilisé.
+Pour utiliser une autre grille, spécifiez manuellement le paramètre `grid_type` dans la configuration. Par défaut, `d2ptrating` est utilisé.
 
-* Vous pouvez également télécharger une grille de héros de votre choix depuis https://dota2protracker.com/meta-hero-grids et la déposer dans le dossier de ce mod.
-
-`minify_config.json`
-```json
-{
-"steam_id": STEAM_ID3,
-
-"grid_type": "matches" | "matches_wr" | "d2ptrating"
-
-"steam_path": chemin_vers_votre_installation_steam_si_nécessaire
-
-"patch": "7.39e"
-}
-```
+Vous pouvez également télécharger une grille de héros de votre choix depuis https://dota2protracker.com/meta-hero-grids et la déposer dans le dossier de ce mod.
 
 <!-- LANG:HU -->
 Lehetővé teszi a Dota2ProTracker hősrácsainak használatát. A korábbi elrendezéseid a mod `backup` mappájába lesznek mentve.
 
-* A legalacsonyabb azonosítóval rendelkező Steam fiókot használja, ha a "steam_id" nincs megadva.
-* Másik rács használatához add meg a "grid_type" értéket. Alapértelmezés szerint a "d2ptrating" kerül felhasználásra.
-* Alternatív megoldásként tölts le egy általad választott hősrácsot a https://dota2protracker.com/meta-hero-grids oldalról, és másold be a mod mappájába.
+A beállításokban megadhatod a használni kívánt Steam ID-t. Alapértelmezés szerint a Minify a legalacsonyabb (legrégebbi) ID-t választja ki.
 
-`minify_config.json`
-```json
-{
-"steam_id": STEAM_ID3,
-"grid_type": "matches" | "matches_wr" | "d2ptrating"
-"steam_path": path_to_your_steam_installation_if_needed
-"patch": "7.39e"
-}
-```
+Eltérő rács használatához manuálisan add meg a `grid_type` értéket a konfigurációban. Alapértelmezés szerint a `d2ptrating` kerül felhasználásra.
+
+Alternatív megoldásként letölthetsz egy általad választott hősrácsot a https://dota2protracker.com/meta-hero-grids oldalról, és bedobhatod a mod mappájába.
 
 <!-- LANG:IT -->
 Ti permette di usare le griglie degli eroi di Dota2ProTracker. I tuoi layout precedenti verranno salvati nella cartella `backup` di questa mod.
 
-* Utilizza l'account Steam con l'ID più basso se "steam_id" non è specificato.
-* Per usare una griglia diversa, specifica "grid_type". Per impostazione predefinita, viene utilizzato "d2ptrating".
-* In alternativa, scarica una griglia degli eroi a tua scelta da https://dota2protracker.com/meta-hero-grids e inseriscila nella cartella di questa mod.
+Puoi specificare l'ID Steam per cui vuoi utilizzarlo dalle impostazioni. Per impostazione predefinita, Minify seleziona l'ID più basso (il più vecchio).
 
-`minify_config.json`
-```json
-{
-"steam_id": STEAM_ID3,
-"grid_type": "matches" | "matches_wr" | "d2ptrating"
-"steam_path": percorso_alla_tua_installazione_di_steam_se_necessaria
-"patch": "7.39e"
-}
-```
+Per usare una griglia diversa, specifica manualmente `grid_type` dalla configurazione. Per impostazione predefinita, viene utilizzato `d2ptrating`.
+
+In alternativa, puoi scaricare una griglia degli eroi a tua scelta da https://dota2protracker.com/meta-hero-grids e inserirla nella cartella di questa mod.
 
 <!-- LANG:NL -->
-Hiermee kun je de hero grids van Dota2ProTracker gebruiken. Je vorige layouts worden opgeslagen in de back-upmap van deze mod.
+Hiermee kun je de heldenroosters van Dota2ProTracker gebruiken. Je eerdere lay-outs worden opgeslagen in de `backup`-map van deze mod.
 
-* Gebruikt het Steam-account met de laagste id als "steam_id" niet is opgegeven.
-* Om een ​​ander grid te gebruiken, specificeer "grid_type". Standaard wordt "d2ptrating" gebruikt.
-* Je kunt ook een hero grid naar keuze downloaden van https://dota2protracker.com/meta-hero-grids en deze in de map van deze mod plaatsen.
+Je kunt in de instellingen de Steam ID opgeven waarvoor je de mod wilt gebruiken. Standaard selecteert Minify de laagste ID (de oudste).
 
-`minify_config.json`
-```json
-{
-"steam_id": STEAM_ID3,
-"grid_type": "matches" | "matches_wr" | "d2ptrating"
-"steam_path": pad_naar_je_steam_installatie_indien_nodig
-"patch": "7.39e"
-}
-```
+Om een ​​ander rooster te gebruiken, geef je handmatig `grid_type` op in de configuratie. Standaard wordt `d2ptrating` gebruikt.
+
+Je kunt ook een heldenrooster naar keuze downloaden van https://dota2protracker.com/meta-hero-grids en dit in de map van deze mod plaatsen.
 
 <!-- LANG:NO -->
 Lar deg bruke Dota2ProTrackers helte-rutenett. Dine tidligere oppsett lagres i denne moddens `backup`-mappe.
 
-* Bruker Steam-kontoen med lavest ID hvis "steam_id" ikke er spesifisert.
+Du kan angi Steam-ID-en du vil bruke den til fra innstillingene. Som standard velger Minify den laveste ID-en (eldste).
 
-* For å bruke et annet rutenett, spesifiser "grid_type". Som standard brukes "d2ptrating".
-* Alternativt kan du laste ned et helte-rutenett du velger fra https://dota2protracker.com/meta-hero-grids og slippe det i denne moddens mappe.
+For å bruke et annet rutenett, angi `grid_type` manuelt fra konfigurasjonen. Som standard brukes `d2ptrating`.
 
-`minify_config.json`
-```json
-{
-"steam_id": STEAM_ID3,
-"grid_type": "matches" | "matches_wr" | "d2ptrating"
-"steam_path": path_to_your_steam_installation_if_needed
-"patch": "7.39e"
-}
-```
+Alternativt kan du laste ned et helte-rutenett du velger fra https://dota2protracker.com/meta-hero-grids og slippe det i denne moddens mappe.
 
 <!-- LANG:PL -->
-Umożliwia korzystanie z siatek bohaterów Dota2ProTracker. Twoje poprzednie układy zostaną zapisane w folderze „backup” tego moda.
+Umożliwia korzystanie z siatek bohaterów Dota2ProTracker. Twoje poprzednie układy zostaną zapisane w folderze `backup` tego moda.
 
-* Używa konta Steam o najniższym identyfikatorze, jeśli nie określono parametru „steam_id”.
-* Aby użyć innej siatki, określ parametr „grid_type”. Domyślnie używany jest parametr „d2ptrating”.
-* Możesz również pobrać wybraną siatkę bohaterów ze strony https://dota2protracker.com/meta-hero-grids i umieścić ją w folderze tego moda.
+Możesz określić identyfikator Steam, dla którego chcesz go użyć, w ustawieniach. Domyślnie Minify wybiera najniższy (najstarszy) identyfikator.
 
-`minify_config.json`
-```json
-{
-"steam_id": STEAM_ID3,
-"grid_type": "matches" | "matches_wr" | "d2ptrating"
-"steam_path": ścieżka_do_instalacji_steam, jeśli_potrzebna
-"patch": "7.39e"
-}
-```
+Aby użyć innej siatki, ręcznie określ `grid_type` w konfiguracji. Domyślnie używany jest `d2ptrating`.
+
+Alternatywnie możesz pobrać wybraną siatkę bohaterów ze strony https://dota2protracker.com/meta-hero-grids i przenieść ją do folderu tego moda.
 
 <!-- LANG:PT -->
 Permite usar as grades de heróis do Dota2ProTracker. Seus layouts anteriores serão salvos na pasta `backup` deste mod.
 
-* Usa a conta Steam com o ID mais baixo se "steam_id" não for especificado.
+Você pode especificar o ID da Steam que deseja usar nas configurações. Por padrão, o Minify seleciona o ID mais baixo (o mais antigo).
 
-* Para usar uma grade diferente, especifique "grid_type". Por padrão, "d2ptrating" é usado.
+Para usar uma grade diferente, especifique `grid_type` manualmente na configuração. Por padrão, `d2ptrating` é usado.
 
-* Como alternativa, baixe uma grade de heróis de sua escolha em https://dota2protracker.com/meta-hero-grids e coloque-a na pasta deste mod.
-
-`minify_config.json`
-```json
-{
-"steam_id": STEAM_ID3,
-
-"grid_type": "matches" | "matches_wr" | "d2ptrating"
-
-"steam_path": caminho_para_sua_instalação_do_Steam_se_necessário
-"patch": "7.39e"
-}
-```
+Alternativamente, você pode baixar uma grade de heróis de sua escolha em https://dota2protracker.com/meta-hero-grids e colocá-la na pasta deste mod.
 
 <!-- LANG:RO -->
 Îți permite să utilizezi grilele de eroi din Dota2ProTracker. Layout-urile tale anterioare vor fi salvate în folderul `backup` al acestui mod.
 
-* Folosește contul Steam cu cel mai mic ID dacă nu este specificat „steam_id”.
-* Pentru a utiliza o altă grilă, specifică „grid_type”. În mod implicit, se utilizează „d2ptrating”.
-* Alternativ, descarcă o grilă de eroi la alegere de pe https://dota2protracker.com/meta-hero-grids și plasează-o în folderul acestui mod.
+Poți specifica ID-ul Steam pentru care dorești să îl utilizezi din setări. În mod implicit, Minify selectează cel mai mic ID (cel mai vechi).
 
-`minify_config.json`
-```json
-{
-"steam_id": STEAM_ID3,
-"grid_type": "matches" | "matches_wr" | "d2ptrating"
-"steam_path": path_to_your_steam_installation_if_needed
-"patch": "7.39e"
-}
-```
+Pentru a utiliza o altă grilă, specifică manual `grid_type` din configurație. În mod implicit, se folosește `d2ptrating`.
+
+Alternativ, poți descărca o grilă de eroi la alegere de pe https://dota2protracker.com/meta-hero-grids și o poți plasa în folderul acestui mod.
 
 <!-- LANG:RU -->
-Позволяет использовать сетки героев Dota2ProTracker. Ваши предыдущие раскладки будут сохранены в папке `backup` этого мода.
+Позволяет использовать сетки героев из Dota2ProTracker. Ваши предыдущие раскладки будут сохранены в папке `backup` этого мода.
 
-* Если не указан `steam_id`, используется аккаунт Steam с наименьшим идентификатором.
-* Чтобы использовать другую сетку, укажите `grid_type`. По умолчанию используется `d2ptrating`.
-* Вы также можете скачать сетку героев по вашему выбору с сайта https://dota2protracker.com/meta-hero-grids и переместить её в папку этого мода.
+Вы можете указать желаемый Steam ID в настройках. По умолчанию Minify выбирает самый старый ID (самый старый).
 
-`minify_config.json`
-```json
-{
-"steam_id": STEAM_ID3,
-"grid_type": "matches" | "matches_wr" | "d2ptrating"
-"steam_path": путь_к_вашей_установке_steam_если_необходима
-"patch": "7.39e"
-}
-```
+Чтобы использовать другую сетку, укажите `grid_type` в конфигурации вручную. По умолчанию используется `d2ptrating`.
+
+В качестве альтернативы вы можете загрузить выбранную вами сетку героев с сайта https://dota2protracker.com/meta-hero-grids и поместить её в папку этого мода.
 
 <!-- LANG:SV -->
 Låter dig använda Dota2ProTrackers hjälte-rutnät. Dina tidigare layouter sparas i den här moddens `backup`-mapp.
 
-* Använder Steam-kontot med lägst ID om "steam_id" inte anges.
+Du kan ange vilket Steam-ID du vill använda det för från inställningarna. Som standard väljer Minify det lägsta ID:t (äldsta).
 
-* För att använda ett annat rutnät, ange "grid_type". Som standard används "d2ptrating".
-* Alternativt kan du ladda ner ett hjälte-rutnät som du väljer från https://dota2protracker.com/meta-hero-grids och släppa det i den här moddens mapp.
+För att använda ett annat rutnät, ange `grid_type` manuellt från konfigurationen. Som standard används `d2ptrating`.
 
-`minify_config.json`
-```json
-{
-"steam_id": STEAM_ID3,
-"grid_type": "matches" | "matches_wr" | "d2ptrating"
-"steam_path": path_to_your_steam_installation_if_needed"
-"patch": "7.39e"
-}
-```
+Alternativt kan du ladda ner ett hjälte-rutnät som du väljer från https://dota2protracker.com/meta-hero-grids och släppa det i den här moddens mapp.
 
 <!-- LANG:TR -->
-Dota2ProTracker'ın kahraman ızgaralarını kullanmanızı sağlar. Önceki düzenleriniz bu modun `yedek` klasörüne kaydedilir.
+Dota2ProTracker'ın kahraman ızgaralarını kullanmanıza olanak tanır. Önceki düzenleriniz bu modun `backup` klasörüne kaydedilecektir.
 
-* "steam_id" belirtilmezse en düşük kimliğe sahip Steam hesabını kullanır.
-* Farklı bir ızgara kullanmak için "grid_type" belirtin. Varsayılan olarak "d2ptrating" kullanılır.
-* Alternatif olarak, https://dota2protracker.com/meta-hero-grids adresinden istediğiniz bir kahraman ızgarasını indirin ve bu modun klasörüne bırakın.
+Ayarlardan kullanmak istediğiniz Steam ID'sini belirtebilirsiniz. Varsayılan olarak Minify en düşük ID'yi (en eski) seçer.
 
-`minify_config.json`
-```json
-{
-"steam_id": STEAM_ID3,
-"grid_type": "matches" | "matches_wr" | "d2ptrating"
-"steam_path": path_to_your_steam_installation_if_needed
-"patch": "7.39e"
-}
-```
+Farklı bir ızgara kullanmak için, yapılandırma dosyasından `grid_type` değerini manuel olarak belirtin. Varsayılan olarak `d2ptrating` kullanılır.
+
+Alternatif olarak, https://dota2protracker.com/meta-hero-grids adresinden istediğiniz bir kahraman ızgarasını indirip bu modun klasörüne bırakabilirsiniz.
 
 <!-- LANG:UK -->
 Дозволяє використовувати сітки героїв Dota2ProTracker. Ваші попередні макети будуть збережені в папці `backup` цього моду.
 
-* Використовується обліковий запис Steam з найнижчим ідентифікатором, якщо не вказано "steam_id".
-* Щоб використовувати іншу сітку, вкажіть "grid_type". За замовчуванням використовується "d2ptrating".
-* Або ж завантажте сітку героя на ваш вибір з https://dota2protracker.com/meta-hero-grids та перетягніть її в папку цього моду.
+Ви можете вказати Steam ID, для якого ви хочете використовувати його, у налаштуваннях. За замовчуванням Minify вибирає найнижчий ID (найстаріший).
 
-`minify_config.json`
-```json
+Щоб використовувати іншу сітку, вкажіть `grid_type` у конфігурації вручну. За замовчуванням використовується `d2ptrating`.
 
-"steam_id": STEAM_ID3,
-"grid_type": "matches" | "matches_wr" | "d2ptrating"
-"steam_path": шлях_до_вашої_встановлення_steam_if_needed
-"patch": "7.39e"
-}
-```
+Крім того, ви можете завантажити сітку героя на ваш вибір з https://dota2protracker.com/meta-hero-grids та перетягнути її в папку цього моду.

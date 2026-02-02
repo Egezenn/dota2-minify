@@ -1,268 +1,223 @@
 <!-- LANG:EN -->
 Designed for visual clarity.
 
-* Must have default dota2 terrain equipped
+!!: Default terrain is required.
 
 - Makes all tiles gray/dark gray
 - Fog lines
 - Removed fog mist
 - Dark water
-- Custom team logos
-- Custom shopkeepers
-- Other miscellaneous texture improvements to fit map theme
+- Custom team logos, shopkeepers
 
 <!-- LANG:BG -->
-Проектиран за визуална яснота.
+Проектирано за визуална яснота.
 
-* Трябва да е оборудван терен по подразбиране за dota2
+!!: Изисква се терен по подразбиране.
 
 - Прави всички плочки сиви/тъмносиви
 - Линии от мъгла
 - Премахната мъгла
 - Тъмна вода
-- Персонализирани лога на отбори
-- Персонализирани магазинери
-- Други различни подобрения на текстурата, за да отговарят на темата на картата
+- Персонализирани лога на отбори, собственици на магазини
 
 <!-- LANG:CS -->
 Navrženo pro vizuální přehlednost.
 
-* Musí být vybaven výchozí terén Dota 2
+!!: Je vyžadován výchozí terén.
 
 - Všechny dlaždice jsou šedé/tmavě šedé
 - Mlžné linie
 - Odstraněna mlha
 - Tmavá voda
-- Vlastní loga týmů
-- Vlastní obchodníci
-- Další různá vylepšení textur, která odpovídají tématu mapy
+- Vlastní loga týmů, majitelé obchodů
 
 <!-- LANG:DA -->
 Designet til visuel klarhed.
 
-* Skal have standard Dota2-terræn udstyret
+!!: Standardterræn er påkrævet.
 
 - Gør alle felter grå/mørkegrå
 - Tågelinjer
 - Fjernet tåge
 - Mørkt vand
-- Brugerdefinerede holdlogoer
-- Brugerdefinerede butiksindehavere
-- Andre diverse teksturforbedringer, der passer til korttemaet
+- Brugerdefinerede holdlogoer, butiksindehavere
 
 <!-- LANG:DE -->
-Für optimale visuelle Klarheit entwickelt.
+Für optimale visuelle Darstellung optimiert.
 
-* Standard-Dota-2-Terrain muss installiert sein.
+Standard-Terrain erforderlich.
 
-- Alle Kacheln werden grau/dunkelgrau dargestellt.
-
-- Nebellinien
-- Nebelschleier entfernt
-
-- Dunkles Wasser
-- Benutzerdefinierte Teamlogos
-
-Benutzerdefinierte Händler
-- Weitere Texturverbesserungen passend zum Kartenthema
+– Alle Kacheln grau/dunkelgrau
+– Nebellinien
+– Nebelschleier entfernt
+– Dunkles Wasser
+– Benutzerdefinierte Teamlogos und Ladenbesitzer
 
 <!-- LANG:EL -->
 Σχεδιασμένο για οπτική ευκρίνεια.
 
-* Πρέπει να έχετε εξοπλίσει το προεπιλεγμένο έδαφος dota2
+!!: Απαιτείται το προεπιλεγμένο έδαφος.
 
 - Κάνει όλα τα πλακίδια γκρι/σκούρο γκρι
 - Γραμμές ομίχλης
 - Αφαιρέθηκε η ομίχλη
 - Σκούρα νερά
-- Προσαρμοσμένα λογότυπα ομάδων
-- Προσαρμοσμένοι καταστηματάρχες
-- Άλλες διάφορες βελτιώσεις υφής για να ταιριάζουν στο θέμα του χάρτη
+- Προσαρμοσμένα λογότυπα ομάδων, καταστηματάρχες
 
 <!-- LANG:ES -->
-Diseñado para claridad visual.
+Diseñado para mayor claridad visual.
 
-* Debes de tener equipado el mapa predeterminado.
+!!: Se requiere el terreno predeterminado.
 
-- Convierte todas las baldosas en gris/gris oscuro
-- Líneas de niebla visibles, permite ver claramente el borde de la niebla
-- Niebla eliminada
-- Agua oscura
-- Logos de equipo personalizados
-- Vendedores personalizados
-- Otras mejoras de texturas para adaptarse al tema del mapa
+- Cambia todos los mosaicos a gris/gris oscuro.
+- Líneas de niebla.
+- Se eliminó la niebla.
+- Agua oscura.
+- Logotipos de equipo y comerciantes personalizados.
 
 <!-- LANG:FI -->
 Suunniteltu visuaalista selkeyttä varten.
 
-* Vaatii oletusarvoisen Dota2-maaston
+!!: Oletusmaasto vaaditaan.
 
 - Tekee kaikista laatoista harmaita/tummanharmaita
 - Sumuviivat
-- Poistettu sumua
+- Poistettu sumupilvi
 - Tumma vesi
-- Mukautetut joukkuelogot
-- Mukautetut kauppiaat
-- Muita sekalaisia ​​tekstuuriparannuksia karttateeman mukauttamiseksi
+- Mukautetut joukkuelogot, kauppiaat
 
 <!-- LANG:FR -->
-Conçu pour une meilleure lisibilité.
+Conçu pour une clarté visuelle optimale.
 
-* Nécessite le terrain par défaut de Dota 2.
+!!: Terrain par défaut requis.
 
-- Rend toutes les cases grises/gris foncé.
+- Rend toutes les tuiles grises/gris foncé
 
-- Lignes de brouillard.
+- Lignes de brouillard
 
-- Suppression du brouillard.
+- Suppression du brouillard
 
-- Eau sombre.
+- Eau sombre
 
-- Logos d'équipe personnalisés.
-
-- Marchands personnalisés.
-
-- Diverses améliorations de textures pour une meilleure harmonie avec le thème de la carte.
+- Logos d'équipe et commerçants personnalisés
 
 <!-- LANG:HU -->
-Vizuális tisztaságra tervezve.
+Vizuális áttekinthetőségre tervezve.
 
-* Alapértelmezett dota2 tereptárgyakkal kell rendelkezni.
+!!: Alapértelmezett terep megadása kötelező.
 
-- Minden mezőt szürke/sötétszürke színre állít.
-- Ködvonalak.
-- Eltávolított ködpára.
-- Sötét víz.
-- Egyedi csapatlogók.
-- Egyedi boltosok.
-- Egyéb textúra-javítások a térképtémához igazodva.
+- Minden csempe szürke/sötétszürke
+- Ködvonalak
+- Eltávolított ködpára
+- Sötét víz
+- Egyedi csapatlogók, boltosok
 
 <!-- LANG:IT -->
-Progettato per la chiarezza visiva.
+Progettato per la massima chiarezza visiva.
 
-* Deve avere il terreno predefinito di Dota 2 equipaggiato
+!!: È richiesto il terreno predefinito.
 
 - Rende tutte le tessere grigie/grigio scuro
 - Linee di nebbia
-- Rimossa la foschia nebbiosa
+- Nebbia rimossa
 - Acqua scura
-- Loghi delle squadre personalizzati
-- Negozianti personalizzati
-- Altri miglioramenti vari alle texture per adattarle al tema della mappa
+- Loghi personalizzati per squadre e negozianti
 
 <!-- LANG:NL -->
-Ontworpen voor visuele duidelijkheid.
+Ontworpen voor visuele helderheid.
 
-* Standaard Dota 2-terrein vereist
+!!: Standaard terrein is vereist.
 
 - Maakt alle tegels grijs/donkergrijs
 - Mistlijnen
-- Mist verwijderd
+- Verwijderde mist
 - Donker water
-- Aangepaste teamlogo's
-- Aangepaste winkeliers
-- Diverse andere textuurverbeteringen die passen bij het kaartthema
+- Aangepaste teamlogo's en winkelierslogo's
 
 <!-- LANG:NO -->
 Utviklet for visuell klarhet.
 
-* Må ha standard dota2-terreng utstyrt
+!!: Standardterreng er påkrevd.
 
 - Gjør alle ruter grå/mørkegrå
 - Tåkelinjer
 - Fjernet tåke
 - Mørkt vann
-- Tilpassede laglogoer
-- Tilpassede butikkeiere
-- Andre diverse teksturforbedringer for å passe til karttemaet
+- Tilpassede laglogoer, butikkeiere
 
 <!-- LANG:PL -->
 Zaprojektowano z myślą o przejrzystości.
 
-* Wymagane jest wyposażenie w domyślny teren Dota2
+!!: Wymagany jest domyślny teren.
 
-- Wszystkie pola stają się szare/ciemnoszare
+- Zmienia kolor wszystkich kafelków na szary/ciemnoszary
 - Linie mgły
 - Usunięto mgłę
 - Ciemna woda
-- Własne loga drużyn
-- Własne sklepikarze
-- Inne drobne ulepszenia tekstur, aby dopasować je do motywu mapy
+- Niestandardowe loga drużyn, sklepikarze
 
 <!-- LANG:PT -->
 Projetado para clareza visual.
 
-* Requer o terreno padrão do Dota 2 equipado
+!!: Terreno padrão necessário.
 
-- Deixa todos os tiles cinza/cinza escuro
+- Deixa todos os blocos cinza/cinza escuro
 - Linhas de neblina
 - Remove a névoa
 - Água escura
-- Logotipos de times personalizados
-- Lojistas personalizados
-- Outras melhorias de textura diversas para combinar com o tema do mapa
+- Logotipos de equipes e lojistas personalizados
 
 <!-- LANG:RO -->
 Conceput pentru claritate vizuală.
 
-* Trebuie să aibă terenul echipat implicit în Dota 2
+!!: Este necesar terenul implicit.
 
 - Toate plăcuțele devin gri/gri închis
 - Linii de ceață
-- Ceața de ceață a fost eliminată
+- A fost eliminată ceața de ceață
 - Apă închisă la culoare
-- Logo-uri personalizate ale echipelor
-- Negustori personalizați
-- Alte îmbunătățiri diverse ale texturii pentru a se potrivi temei hărții
+- Logo-uri personalizate ale echipelor, ale vânzătorilor
 
 <!-- LANG:RU -->
-Разработан чтобы сделать персонажей и заклинания, максимально заметными, так чтобы ничего не сливалось с ландшафтом.
+Разработано для большей наглядности.
 
-* Должна быть экипирована стандартная карта.
+!!: Требуется стандартный ландшафт.
 
-- Делает все плиты серыми/темно-серыми
-- Граница тумана войны, изменена для более точного отображения.
-- Убирает туман
-- Затемняет воду
-- Кастомные логотипы команд
-- Кастомные торговцы
-- Другие разнообразные улучшения, которые подходили тематически.
+- Делает все тайлы серыми/темно-серыми
+- Линии тумана
+- Удален туман
+- Темная вода
+- Пользовательские логотипы команд, продавцов
 
 <!-- LANG:SV -->
 Utformad för visuell tydlighet.
 
-* Måste ha standard dota2-terräng utrustad
+!!: Standardterräng krävs.
 
 - Gör alla rutor grå/mörkgrå
 - Dimlinjer
 - Borttagen dimma
 - Mörkt vatten
-- Anpassade laglogotyper
-- Anpassade butiksinnehavare
-- Andra diverse texturförbättringar för att passa karttemat
+- Anpassade laglogotyper, butiksinnehavare
 
 <!-- LANG:TR -->
 Görsel netlik için tasarlanmıştır.
 
-* Varsayılan dota2 arazisini kullanmalısınız
+!!: Varsayılan arazi gereklidir.
 
-- Tüm karoları gri / koyu gri yapar
+- Tüm karoları gri/koyu gri yapar
 - Sis çizgileri
-- Sis pusu kaldırıldı
+- Sis buharı kaldırılır
 - Koyu su
-- Özel takım logoları
-- Özel dükkan sahipleri
-- Harita temasına uyacak diğer çeşitli doku iyileştirmeleri
+- Özel takım logoları, dükkan sahipleri
 
 <!-- LANG:UK -->
 Розроблено для візуальної чіткості.
 
-* Повинен бути обладнаний ландшафт dota2 за замовчуванням
+!!: Потрібна стандартна місцевість.
 
 - Зробить усі плитки сірими/темно-сірими
 - Лінії туману
 - Видалено туманну димку
 - Темна вода
-- Власні логотипи команд
-- Власні торговці
-- Інші різноманітні покращення текстур для відповідності темі карти
+- Власні логотипи команд, власники магазинів

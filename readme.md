@@ -43,9 +43,10 @@
     - [Mod files and explanations](#mod-files-and-explanations)
       - [`modcfg.json`](#modcfgjson)
       - [`files` directory](#files-directory)
+      - [`notes.md`](#notesmd)
       - [`blacklist.txt`](#blacklisttxt)
-      - [`styling.css`](#stylingcss)
       - [`script.py`](#scriptpy)
+      - [`styling.css`](#stylingcss)
       - [`xml_mod.json`](#xml_modjson)
     - [Tools of the trade](#tools-of-the-trade)
   - [Thanks](#thanks)
@@ -173,8 +174,8 @@ mods
 │   │   └── <...>
 │   ├── blacklist.txt
 │   ├── modcfg.json
-│   ├── mod.png
 │   ├── notes.md
+│   ├── preview.png
 │   ├── script.py
 │   ├── script_after_decompile.py
 │   ├── script_after_recompile.py
@@ -200,6 +201,27 @@ This directory will include any files put here into the pak that minify is going
 
 If not specifically protected by Dota2, these files will override any game content. This also applies for the rest of the modification methods available.
 
+#### `notes.md`
+
+Displays information about a mod on `Details` window.
+
+An image is rendered at the top if the file `preview.png` exists.
+
+```markdown
+<!-- LANG:EN -->
+Normal text supports `inline code` (pink) and https://example.com (orange).
+
+- This is a list item.
+- List items support `inline code` too.
+- And they support https://example.com as well.
+
+!!: This is an emphasized warning (Red & Large).
+!!: It supports `pink code` blocks.
+!!: And https://example.com links.
+```
+
+![notes](assets/notes-preview.png)
+
 #### `blacklist.txt`
 
 This file is a list of path to files used to override those with blanks.
@@ -221,26 +243,6 @@ After that with no blank spaces you put the path to the file you want to overrid
 particles/base_attacks/ranged_goodguy_launch.vpcf_c
 >>particles/sprays
 **taunt.*\.vsnd_c
-```
-
-#### `styling.css`
-
-This file is a list of VCSS filepaths and styling that will be appended to them.  
-By the nature of this method modifications done here may break the original XML or CSS that gets updated resulting in a bad layout.  
-In such cases, a repatch or a slight modification is required.
-
-If you encounter errors while patching, it's most likely that your CSS is invalid or the path is wrong. Check [`logs/resourcecompiler.txt`](Minify/logs/resourcecompiler.txt) for more information.
-
-For Source 2 flavored CSS properties, refer to: [Valve Developer Community Wiki](https://developer.valvesoftware.com/wiki/Dota_2_Workshop_Tools/Panorama/CSS_Properties).  
-To live inspect the layout, open the workshop tools and press <kbd>F6</kbd> and select the element you'd like to select from the XML.
-
-Syntax for this file starting from the line beginning is as follows:  
-`/* c:path */`: By default, the file is pulled from `dota 2 beta/game/dota/pak01_dir.vpk`.  
-However to change this behavior and pull files from `dota 2 beta/game/core/pak01_dir.vpk`, you can use this.  
-
-```css
-/* g|c:path/to/vcss_file_without_extension */
-example_selector { property: value; }
 ```
 
 #### `script.py`
@@ -277,6 +279,26 @@ def main():
 
 if __name__ == "__main__":
     main()
+```
+
+#### `styling.css`
+
+This file is a list of VCSS filepaths and styling that will be appended to them.  
+By the nature of this method modifications done here may break the original XML or CSS that gets updated resulting in a bad layout.  
+In such cases, a repatch or a slight modification is required.
+
+If you encounter errors while patching, it's most likely that your CSS is invalid or the path is wrong. Check [`logs/resourcecompiler.txt`](Minify/logs/resourcecompiler.txt) for more information.
+
+For Source 2 flavored CSS properties, refer to: [Valve Developer Community Wiki](https://developer.valvesoftware.com/wiki/Dota_2_Workshop_Tools/Panorama/CSS_Properties).  
+To live inspect the layout, open the workshop tools and press <kbd>F6</kbd> and select the element you'd like to select from the XML.
+
+Syntax for this file starting from the line beginning is as follows:  
+`/* c:path */`: By default, the file is pulled from `dota 2 beta/game/dota/pak01_dir.vpk`.  
+However to change this behavior and pull files from `dota 2 beta/game/core/pak01_dir.vpk`, you can use this.  
+
+```css
+/* g|c:path/to/vcss_file_without_extension */
+example_selector { property: value; }
 ```
 
 #### `xml_mod.json`

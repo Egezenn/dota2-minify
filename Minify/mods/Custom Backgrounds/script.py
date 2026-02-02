@@ -18,7 +18,9 @@ import mpaths
 def main():
     img_available, vid_available = False, False
 
-    for file in sorted(os.listdir(current_dir)).remove("mod.png"):
+    for file in sorted(os.listdir(current_dir)):
+        if file == "preview.png":
+            continue
         if file.endswith((".png", ".jpg", ".jpeg", ".webp")):
             img_available = True
             break

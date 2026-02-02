@@ -1,99 +1,99 @@
 <!-- LANG:EN -->
-Removes all the bushes, flowers, rocks and any other ground props so you just have tiles.
+Removes all the bushes, flowers, rocks and any other ground props so there are only tiles.
 
-* Must have default terrain equipped in your inventory
+!!: Default terrain is required.
 
 <!-- LANG:BG -->
-Премахва всички храсти, цветя, камъни и всякакви други наземни елементи, така че имате само плочки.
+Премахва всички храсти, цветя, камъни и всякакви други наземни подпори, така че да има само плочки.
 
-* Трябва да имате оборудван терен по подразбиране в инвентара си.
+!!: Изисква се терен по подразбиране.
 
 <!-- LANG:CS -->
-Odstraní všechny keře, květiny, kameny a jakékoli další pozemní prvky, takže vám zůstanou jen dlaždice.
+Odstraní všechny keře, květiny, kameny a jakékoli další pozemní prvky, takže zůstanou pouze dlaždice.
 
-* Musíte mít v inventáři vybavený výchozí terén.
+!!: Je vyžadován výchozí terén.
 
 <!-- LANG:DA -->
-Fjerner alle buske, blomster, sten og andre jordstøtter, så du kun har fliser.
+Fjerner alle buske, blomster, sten og andre jordstøtter, så der kun er fliser tilbage.
 
-* Skal have standardterræn udstyret i dit inventar.
+!!: Standardterræn er påkrævet.
 
 <!-- LANG:DE -->
-Entfernt alle Büsche, Blumen, Steine ​​und sonstige Bodenobjekte, sodass nur noch die Fliesen übrig bleiben.
+Entfernt alle Büsche, Blumen, Steine ​​und sonstige Bodenobjekte, sodass nur noch Kacheln übrig bleiben.
 
-* Standard-Terrain muss im Inventar ausgerüstet sein.
+!!: Standardterrain erforderlich.
 
 <!-- LANG:EL -->
-Αφαιρεί όλους τους θάμνους, τα λουλούδια, τις πέτρες και οποιαδήποτε άλλα στηρίγματα εδάφους, ώστε να έχετε μόνο πλακίδια.
+Αφαιρεί όλους τους θάμνους, τα λουλούδια, τις πέτρες και οποιαδήποτε άλλα στηρίγματα εδάφους, ώστε να υπάρχουν μόνο πλακίδια.
 
-* Πρέπει να έχετε προκαθορισμένο έδαφος εξοπλισμένο στο απόθεμά σας
+!!: Απαιτείται το προεπιλεγμένο έδαφος.
 
 <!-- LANG:ES -->
-Elimina todos los arbustos, flores, rocas y cualquier otro objeto del suelo, dejando solo las baldosas.
+Elimina todos los arbustos, flores, rocas y demás elementos del suelo, dejando solo casillas.
 
-* Debes de tener equipado el terreno predeterminado en el inventario
+!!: Se requiere el terreno predeterminado.
 
 <!-- LANG:FI -->
-Poistaa kaikki pensaat, kukat, kivet ja muut maanpäälliset elementit, jotta jäljelle jäävät vain laatat.
+Poistaa kaikki pensaat, kukat, kivet ja muut maanpinnalle rakennetut elementit, jolloin jäljelle jää vain laattoja.
 
-* Tavaraluettelossasi on oltava vakiomaasto.
+!!: Oletusmaasto on pakollinen.
 
 <!-- LANG:FR -->
 Supprime tous les buissons, fleurs, rochers et autres éléments de décor au sol pour ne laisser que des dalles.
 
-* Le terrain par défaut doit être équipé dans votre inventaire.
+!!: Le terrain par défaut est requis.
 
 <!-- LANG:HU -->
-Eltávolít minden bokrot, virágot, követ és minden egyéb talajtámogató elemet, hogy csak csempék maradjanak.
+Eltávolítja az összes bokrot, virágot, követ és minden egyéb talajt alátámasztó elemet, így csak lapok maradnak.
 
-* Alapértelmezett tereptárgyakkal kell rendelkeznie a felszerelésedben.
+!!: Az alapértelmezett terep megadása kötelező.
 
 <!-- LANG:IT -->
-Rimuove tutti i cespugli, i fiori, le rocce e qualsiasi altro elemento del terreno, lasciando solo le tessere.
+Rimuove tutti i cespugli, i fiori, le rocce e qualsiasi altro elemento del terreno, in modo che rimangano solo tessere.
 
-* È necessario avere il terreno predefinito equipaggiato nel proprio inventario.
+!!: È richiesto il terreno predefinito.
 
 <!-- LANG:NL -->
-Verwijdert alle struiken, bloemen, rotsen en andere grondobjecten, zodat je alleen tegels overhoudt.
+Verwijdert alle struiken, bloemen, rotsen en andere objecten op de grond, zodat er alleen tegels overblijven.
 
-* Standaardterrein moet in je inventaris aanwezig zijn.
+!!: Standaard terrein is vereist.
 
 <!-- LANG:NO -->
-Fjerner alle busker, blomster, steiner og andre bakkestøtter, slik at du bare har fliser.
+Fjerner alle busker, blomster, steiner og andre bakkestøtter slik at det bare er fliser igjen.
 
-* Må ha standard terreng utstyrt i inventaret ditt.
+!!: Standardterreng er nødvendig.
 
 <!-- LANG:PL -->
-Usuwa wszystkie krzaki, kwiaty, skały i inne elementy terenu, pozostawiając tylko pola.
+Usuwa wszystkie krzewy, kwiaty, skały i inne elementy terenu, pozostawiając tylko kafelki.
 
-* Musisz mieć w ekwipunku domyślny teren.
+!!: Wymagany jest domyślny teren.
 
 <!-- LANG:PT -->
-Remove todos os arbustos, flores, pedras e quaisquer outros objetos de chão, deixando apenas os ladrilhos.
+Remove todos os arbustos, flores, pedras e quaisquer outros elementos do terreno, deixando apenas ladrilhos.
 
-* É necessário ter o terreno padrão equipado no seu inventário.
+!!: O terreno padrão é necessário.
 
 <!-- LANG:RO -->
-Îndepărtează toate tufișurile, florile, pietrele și orice alte elemente de recuzită de la sol, astfel încât să ai doar plăcuțe.
+Îndepărtează toate tufișurile, florile, pietrele și orice alte elemente de recuzită de la sol, astfel încât să rămână doar plăci.
 
-* Trebuie să ai terenul echipat implicit în inventarul tău
+!!: Este necesar terenul implicit.
 
 <!-- LANG:RU -->
-Убирает все кусты, цветы, камни и другие пропы, чтобы отображались только тайлы.
+Удаляет все кусты, цветы, камни и любые другие элементы ландшафта, оставляя только тайлы.
 
-* Должна быть экипирована стандартная карта.
+!!: Требуется стандартный ландшафт.
 
 <!-- LANG:SV -->
-Tar bort alla buskar, blommor, stenar och andra markstöd så att du bara har brickor kvar.
+Tar bort alla buskar, blommor, stenar och andra markstöttor så att det bara finns plattor kvar.
 
-* Måste ha standardterräng utrustad i ditt inventarium.
+!!: Standardterräng krävs.
 
 <!-- LANG:TR -->
-Tüm çalıları, çiçekleri, kayaları ve diğer zemin aksesuarlarını kaldırır, böylece sadece karolara sahip olursunuz.
+Tüm çalıları, çiçekleri, kayaları ve diğer yer objelerini kaldırarak yalnızca karolar bırakır.
 
-* Varsayılan arazi kullanılmalıdır
+!!: Varsayılan arazi gereklidir.
 
 <!-- LANG:UK -->
-Видаляє всі кущі, квіти, каміння та будь-які інші наземні елементи, залишаючи вам лише плитки.
+Видаляє всі кущі, квіти, каміння та будь-які інші наземні елементи, залишаючи лише плитки.
 
-* У вашому інвентарі має бути обладнана місцевість за замовчуванням.
+!!: Потрібен ландшафт за замовчуванням.

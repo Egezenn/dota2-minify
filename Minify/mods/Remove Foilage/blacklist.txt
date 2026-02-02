@@ -221,7 +221,6 @@ models/props_bones/skeleton_design001.vmdl_c
 models/props_bones/skeleton_design002.vmdl_c
 models/props_bones/skeleton_design003.vmdl_c
 models/props_bones/skull_bull001.vmdl_c
-models/props_bones/skull_dragon001.vmdl_c
 models/props_bones/skull_moose001.vmdl_c
 models/props_bones/skull_ram001.vmdl_c
 models/props_bones/skull_rope001.vmdl_c

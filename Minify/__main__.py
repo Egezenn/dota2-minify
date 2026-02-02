@@ -92,7 +92,7 @@ def create_ui():
             width=16,
             height=16,
             pos=(115, 6),
-            callback=gui.open_options_menu,
+            callback=gui.open_settings_menu,
         )
         ui.add_image_button(
             "dev_texture_tag",
@@ -239,12 +239,12 @@ def create_ui():
         on_close=gui.save_checkbox_state,
     )
 
-    # Creating options menu as popup/modal
+    # Creating settings menu as popup/modal
     ui.add_window(
         modal=False,
         pos=(0, 0),
-        tag="options_menu",
-        label="Options",
+        tag="settings_menu",
+        label="Settings",
         menubar=False,
         no_title_bar=False,
         no_move=True,
@@ -257,16 +257,16 @@ def create_ui():
         no_resize=True,
     )
 
-    for opt in gui.options_config:
-        with ui.group(horizontal=True, parent="options_menu"):
+    for opt in gui.settings_config:
+        with ui.group(horizontal=True, parent="settings_menu"):
             if opt["type"] == "checkbox":
                 ui.add_checkbox(
                     tag=opt["tag"],
-                    label=opt["label"],
+                    label=opt.get("label_text", opt["label"]),
                     default_value=mpaths.get_config(opt["key"], opt["default"]),
                 )
             elif opt["type"] == "combo":
-                ui.add_text(f"{opt['label']}:")
+                ui.add_text(f"{opt.get('label_text', opt['label'])}:")
                 raw_items = opt["items_getter"]() if "items_getter" in opt else []
                 if raw_items and isinstance(raw_items[0], dict):
                     items = [f"{item['id']} - {item['name']}" for item in raw_items]
@@ -280,17 +280,17 @@ def create_ui():
                     width=-1,
                 )
             else:
-                ui.add_text(f"{opt['label']}:")
+                ui.add_text(f"{opt.get('label_text', opt['label'])}:")
                 ui.add_input_text(
                     tag=opt["tag"],
                     default_value=mpaths.get_config(opt["key"], opt["default"]),
                     width=-1,
                 )
 
-    ui.add_spacer(parent="options_menu", height=10)
-    with ui.group(horizontal=True, parent="options_menu"):
-        ui.add_button(label="Save", callback=gui.save_options, width=100)
-        ui.add_button(label="Refresh", callback=gui.refresh_options, width=100)
+    ui.add_spacer(parent="settings_menu", height=10)
+    with ui.group(horizontal=True, parent="settings_menu"):
+        ui.add_button(label="Save", callback=gui.save_settings, width=100)
+        ui.add_button(label="Refresh", callback=gui.refresh_settings, width=100)
 
     ui.add_window(
         modal=True,
@@ -375,6 +375,12 @@ with ui.font_registry():
         ui.add_font_range(0x0370, 0x03FF)  # Greek set
         ui.bind_font(main_font)
     with ui.font(os.path.join("bin", "FiraMono-Medium.ttf"), 16) as combo_font:
+        ui.add_font_range_hint(ui.mvFontRangeHint_Default)
+        ui.add_font_range_hint(ui.mvFontRangeHint_Cyrillic)
+        ui.add_font_range(0x0100, 0x017F)  # Turkish set
+        ui.add_font_range(0x0370, 0x03FF)  # Greek set
+
+    with ui.font(os.path.join("bin", "FiraMono-Medium.ttf"), 20, tag="large_font"):
         ui.add_font_range_hint(ui.mvFontRangeHint_Default)
         ui.add_font_range_hint(ui.mvFontRangeHint_Cyrillic)
         ui.add_font_range(0x0100, 0x017F)  # Turkish set

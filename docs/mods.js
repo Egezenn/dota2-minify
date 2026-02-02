@@ -48,7 +48,8 @@ function processMods(mods) {
       notesModal.show();
 
       if (cachedNotes && now - cachedNotes.timestamp < 60000) {
-        notesContent.innerHTML = imageHtml + marked.parse(cachedNotes.content);
+        notesContent.innerHTML =
+          imageHtml + marked.parse(cachedNotes.content).replace(/<p>\s*!!:\s*/g, '<p class="note-emphasized">');
       } else {
         const notesUrl = `https://raw.githubusercontent.com/Egezenn/dota2-minify/main/Minify/mods/${encodeURIComponent(mod)}/notes.md`;
         notesContent.innerHTML = "<p>Loading...</p>";
@@ -64,7 +65,8 @@ function processMods(mods) {
             const enMatch = text.match(/<!-- LANG:en -->([\s\S]*?)(?=<!-- LANG:\w+ -->|$)/i);
             const content = enMatch ? enMatch[1].trim() : text;
 
-            notesContent.innerHTML = imageHtml + marked.parse(content);
+            notesContent.innerHTML =
+              imageHtml + marked.parse(content).replace(/<p>\s*!!:\s*/g, '<p class="note-emphasized">');
             sessionStorage.setItem(notesCacheKey, JSON.stringify({ timestamp: now, content: content }));
           })
           .catch((error) => {

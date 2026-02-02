@@ -1,59 +1,59 @@
 <!-- LANG:EN -->
-Mutes the sounds of taunts.
+Mutes taunt sounds.
 
 <!-- LANG:BG -->
-Заглушава звуците на подигравките.
+Заглушава подигравателните звуци.
 
 <!-- LANG:CS -->
-Ztlumí zvuky posměšků.
+Ztlumí zvuky posměchu.
 
 <!-- LANG:DA -->
-Dæmper lyden af ​​drilleri.
+Dæmper hånlyde.
 
 <!-- LANG:DE -->
-Die Geräusche von Schmähungen werden gedämpft.
+Stummschaltet Spottgeräusche.
 
 <!-- LANG:EL -->
-Σίγαση των ήχων των κοροϊδιών.
+Σίγαση των χλευαστικών ήχων.
 
 <!-- LANG:ES -->
-Silencia el sonido de las burlas.
+Silencia los sonidos de burla.
 
 <!-- LANG:FI -->
-Vaimentaa pilkan äänet.
+Mykistää pilkkaäänet.
 
 <!-- LANG:FR -->
-Il atténue les sons des railleries.
+Les sourdines provoquent des sons.
 
 <!-- LANG:HU -->
-Elnémítja a gúnyolódás hangjait.
+Némítja a gúnyolódás hangjait.
 
 <!-- LANG:IT -->
-Disattiva i suoni delle provocazioni.
+I suoni muti provocano.
 
 <!-- LANG:NL -->
-Dempt het geluid van hoon.
+Dempt uitdagende geluiden.
 
 <!-- LANG:NO -->
-Demper lydene av ertninger.
+Demper ertende lyder.
 
 <!-- LANG:PL -->
 Wycisza dźwięki drwin.
 
 <!-- LANG:PT -->
-Silencia os sons de provocações.
+Silencia os sons de provocação.
 
 <!-- LANG:RO -->
-Dezactivează sunetele batjocurilor.
+Dezactivează sunetele provocatoare.
 
 <!-- LANG:RU -->
-Убирает реплики и звуки насмешек.
+Приглушает звуки насмешек.
 
 <!-- LANG:SV -->
-Dämpar ljudet av glåpord.
+Dämpar hånljud.
 
 <!-- LANG:TR -->
-Alay hareketlerinin seslerini susturur.
+Sessizler alaycı sesler çıkarır.
 
 <!-- LANG:UK -->
-Приглушує звуки глузувань.
+Вимкнути звуки глузування.

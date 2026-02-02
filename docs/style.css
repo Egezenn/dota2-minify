@@ -76,7 +76,7 @@ body:not(.home) {
   max-width: 100%;
 }
 
-#notes-content>div:not(:last-of-type) {
+#notes-content > div:not(:last-of-type) {
   margin-bottom: 2rem;
 }
 
@@ -86,12 +86,12 @@ h3,
 h4,
 h5,
 h6,
-h1>a,
-h2>a,
-h3>a,
-h4>a,
-h5>a,
-h6>a {
+h1 > a,
+h2 > a,
+h3 > a,
+h4 > a,
+h5 > a,
+h6 > a {
   align-items: center;
   display: flex;
   gap: 0.5rem;
@@ -128,4 +128,18 @@ h6>a {
 #tools-section,
 #skins-section {
   display: none;
+}
+
+/* Note Emphasis */
+.note-emphasized {
+  color: red;
+  font-size: 20px;
+}
+
+.note-emphasized code {
+  color: #ff69b4;
+}
+
+.note-emphasized a {
+  color: orange;
 }

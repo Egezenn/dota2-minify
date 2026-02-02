@@ -1,99 +1,59 @@
 <!-- LANG:EN -->
-Simplifies every spell and item in the game.
-
-* Mostly modifies default spells.
+Simplifies default spells and items in the game.
 
 <!-- LANG:BG -->
-Опростява всяко заклинание и предмет в играта.
-
-* Най-вече променя заклинанията по подразбиране.
+Опростява магиите и предметите по подразбиране в играта.
 
 <!-- LANG:CS -->
-Zjednodušuje každé kouzlo a předmět ve hře.
-
-* Většinou upravuje výchozí kouzla.
+Zjednodušuje výchozí kouzla a předměty ve hře.
 
 <!-- LANG:DA -->
-Forenkler alle trylleformularer og genstande i spillet.
-
-* Ændrer for det meste standardtrylleformularer.
+Forenkler standardbesværgelser og genstande i spillet.
 
 <!-- LANG:DE -->
-Vereinfacht alle Zauber und Gegenstände im Spiel.
-
-* Modifiziert hauptsächlich Standardzauber.
+Vereinfacht die Standardzauber und -gegenstände im Spiel.
 
 <!-- LANG:EL -->
-Απλοποιεί κάθε ξόρκι και αντικείμενο στο παιχνίδι.
-
-* Τροποποιεί κυρίως τα προεπιλεγμένα ξόρκια.
+Απλοποιεί τα προεπιλεγμένα ξόρκια και αντικείμενα στο παιχνίδι.
 
 <!-- LANG:ES -->
-Simplifica todas las habilidades y objetos del juego.
-
-* Modifica principalmente los hechizos predeterminados.
+Simplifica los hechizos y elementos predeterminados del juego.
 
 <!-- LANG:FI -->
-Yksinkertaistaa jokaista pelin loitsua ja esinettä.
-
-* Muokkaa enimmäkseen oletusloitsuja.
+Yksinkertaistaa pelin oletusloitsuja ja -esineitä.
 
 <!-- LANG:FR -->
-Simplifie tous les sorts et objets du jeu.
-
-* Modifie principalement les sorts de base.
+Simplifie les sorts et objets par défaut du jeu.
 
 <!-- LANG:HU -->
-Leegyszerűsíti a játékban található összes varázslatot és tárgyat.
-
-* Leginkább az alapértelmezett varázslatokat módosítja.
+Leegyszerűsíti a játék alapértelmezett varázslatait és tárgyait.
 
 <!-- LANG:IT -->
-Semplifica ogni incantesimo e oggetto del gioco.
-
-* Modifica principalmente gli incantesimi predefiniti.
+Semplifica gli incantesimi e gli oggetti predefiniti nel gioco.
 
 <!-- LANG:NL -->
-Vereenvoudigt elke spreuk en elk item in het spel.
-
-* Wijzigt voornamelijk standaardspreuken.
+Vereenvoudigt de standaardspreuken en -voorwerpen in het spel.
 
 <!-- LANG:NO -->
-Forenkler alle trylleformler og gjenstander i spillet.
-
-* Endrer stort sett standardformler.
+Forenkler standardformler og gjenstander i spillet.
 
 <!-- LANG:PL -->
-Upraszcza wszystkie zaklęcia i przedmioty w grze.
-
-* Modyfikuje głównie domyślne zaklęcia.
+Uproszczono domyślne zaklęcia i przedmioty w grze.
 
 <!-- LANG:PT -->
-Simplifica todas as magias e itens do jogo.
-
-* Modifica principalmente as magias padrão.
+Simplifica as magias e itens padrão do jogo.
 
 <!-- LANG:RO -->
-Simplifică fiecare vrajă și obiect din joc.
-
-* Modifică în mare parte vrăjile implicite.
+Simplifică vrăjile și obiectele implicite din joc.
 
 <!-- LANG:RU -->
-Упрощает каждое заклинание и предмет в игре.
-
-* В основном изменяет заклинания по умолчанию.
+Упрощает использование стандартных заклинаний и предметов в игре.
 
 <!-- LANG:SV -->
-Förenklar varje besvärjelse och föremål i spelet.
-
-* Modifierar mestadels standardbesvärjelser.
+Förenklar standardformler och föremål i spelet.
 
 <!-- LANG:TR -->
-Oyundaki her büyüyü ve eşyayı basitleştirir.
-
-* Çoğunlukla varsayılan büyüleri değiştirir.
+Oyundaki varsayılan büyüleri ve eşyaları basitleştirir.
 
 <!-- LANG:UK -->
-Спрощує кожне заклинання та предмет у грі.
-
-* Здебільшого змінює стандартні заклинання.
+Спрощує стандартні заклинання та предмети в грі.

@@ -1,3 +1,4 @@
+import concurrent.futures
 import ctypes
 import os
 import re
@@ -193,6 +194,34 @@ def save_checkbox_state():
 def create_checkboxes():
     global checkboxes_state
 
+    mod_details_cache = {}
+
+    def scan_mod_details(mod_name):
+        mod_p = os.path.join(mpaths.mods_dir, mod_name)
+        img_p = os.path.join(mod_p, "preview.png")
+        notes_p = os.path.join(mod_p, "notes.md")
+
+        image_data = None
+        has_notes = False
+
+        if os.path.exists(img_p):
+            try:
+                image_data = ui.load_image(img_p)
+            except Exception as err:
+                print(f"Failed to load image for {mod_name}: {err}")
+
+        if os.path.exists(notes_p) and os.path.getsize(notes_p) > 0:
+            has_notes = True
+
+        return mod_name, image_data, has_notes
+
+    mods_to_scan = [m for m in mpaths.visually_available_mods if not m.endswith(".vpk")]
+
+    with concurrent.futures.ThreadPoolExecutor() as executor:
+        results = executor.map(scan_mod_details, mods_to_scan)
+        for m_name, img_data, notes_exist in results:
+            mod_details_cache[m_name] = (img_data, notes_exist)
+
     for mod in mpaths.visually_available_mods:
         mod_path = os.path.join(mpaths.mods_dir, mod)
         if is_vpk := mod.endswith(".vpk"):
@@ -220,72 +249,67 @@ def create_checkboxes():
         )
 
         if not is_vpk:
+            img_data, has_notes = mod_details_cache.get(mod, (None, False))
 
-            tag_data = f"{mod}_details_window_tag"
-            ui.add_button(
-                parent=f"{mod}_group_tag",
-                small=True,
-                indent=mpaths.main_window_width - 244,
-                tag=f"{mod}_button_show_details_tag",
-                label=f"{helper.details_label_text_var}",
-                callback=show_details,
-                user_data=tag_data,
-            )
+            if img_data or has_notes:
+                tag_data = f"{mod}_details_window_tag"
+                ui.add_button(
+                    parent=f"{mod}_group_tag",
+                    small=True,
+                    indent=mpaths.main_window_width - 244,
+                    tag=f"{mod}_button_show_details_tag",
+                    label=f"{helper.details_label_text_var}",
+                    callback=show_details,
+                    user_data=tag_data,
+                )
 
-            ui.add_window(
-                tag=tag_data,
-                pos=(0, 0),
-                show=False,
-                width=mpaths.main_window_width,
-                height=mpaths.main_window_height,
-                no_resize=True,
-                no_move=True,
-                no_collapse=True,
-                label=mod,
-            )
+                ui.add_window(
+                    tag=tag_data,
+                    pos=(0, 0),
+                    show=False,
+                    width=mpaths.main_window_width,
+                    height=mpaths.main_window_height,
+                    no_resize=True,
+                    no_move=True,
+                    no_collapse=True,
+                    label=mod,
+                )
 
-            image_path = os.path.join(mod_path, "mod.png")
-            if os.path.exists(image_path):
-                try:
-                    w, h, _, d = ui.load_image(image_path)
-                    image_tag = f"{mod}_image_texture"
-                    ui.add_static_texture(
-                        width=w, height=h, default_value=d, tag=image_tag, parent="mod_images_registry"
-                    )
+                if img_data:
+                    try:
+                        w, h, _, d = img_data
+                        image_tag = f"{mod}_image_texture"
+                        ui.add_static_texture(
+                            width=w, height=h, default_value=d, tag=image_tag, parent="mod_images_registry"
+                        )
 
-                    avail_width = mpaths.main_window_width - 25
-                    max_height = mpaths.main_window_height // 2 - 20
+                        avail_width = mpaths.main_window_width - 25
+                        max_height = mpaths.main_window_height - 50 - 20
 
-                    aspect_ratio = w / h
+                        aspect_ratio = w / h
 
-                    display_w = avail_width
-                    display_h = display_w / aspect_ratio
+                        display_w = avail_width
+                        display_h = display_w / aspect_ratio
 
-                    if display_h > max_height:
-                        display_h = max_height
-                        display_w = display_h * aspect_ratio
+                        if display_h > max_height:
+                            display_h = max_height
+                            display_w = display_h * aspect_ratio
 
-                    scale = min(1.0, avail_width / w, max_height / h)
-                    display_w = int(w * scale)
-                    display_h = int(h * scale)
+                        scale = min(1.0, avail_width / w, max_height / h)
+                        display_w = int(w * scale)
+                        display_h = int(h * scale)
 
-                    indent_val = (mpaths.main_window_width - display_w) / 2
+                        ui.add_image(image_tag, width=display_w, height=display_h, parent=tag_data)
+                        ui.add_separator(parent=tag_data)
+                    except Exception as e:
+                        print(f"Failed to display image for {mod}: {e}")
 
-                    with ui.group(horizontal=True, parent=tag_data):
-                        if indent_val > 0:
-                            ui.add_spacer(width=indent_val)
-                        ui.add_image(image_tag, width=display_w, height=display_h)
+                container = f"{mod}_markdown_container"
+                with ui.group(parent=tag_data, tag=container):
+                    pass
 
-                    ui.add_separator(parent=tag_data)
-                except Exception as e:
-                    print(f"Failed to load image for {mod}: {e}")
-
-            container = f"{mod}_markdown_container"
-            with ui.group(parent=tag_data, tag=container):
-                pass
-
-            text = helper.parse_markdown_notes(mod_path, helper.locale)
-            helper.render_markdown(container, text)
+                text = helper.parse_markdown_notes(mod_path, helper.locale)
+                helper.render_markdown(container, text)
 
         checkboxes.append(mod)
 
@@ -413,7 +437,7 @@ def drag_viewport(sender, app_data, user_data):
         or ui.is_item_hovered("terminal_window")
         or ui.is_item_hovered("top_bar")
         or ui.is_item_hovered("mod_menu")
-        or ui.is_item_hovered("options_menu")
+        or ui.is_item_hovered("settings_menu")
         or ui.get_item_alias(ui.get_active_window()).endswith("details_window_tag")
     ):  # Note: If local pos [1] < *Height_of_top_bar is buggy)
         is_moving_viewport = True
@@ -434,21 +458,39 @@ def open_mod_menu():
     ui.configure_item("mod_menu", show=True)
 
 
-def open_options_menu():
-    ui.configure_item("options_menu", show=True)
+def open_settings_menu():
+    ui.configure_item("settings_menu", show=True)
 
 
-options_config = [
+settings_config = [
     {
         "key": "steam_root",
         "label": "steam_root",
+        "label_text": "Steam Root",
         "tag": "opt_steam_root",
+        "default": "",
+        "type": "text",
+    },
+    {
+        "key": "steam_library",
+        "label": "steam_library",
+        "label_text": "Steam Library",
+        "tag": "opt_steam_library",
+        "default": "",
+        "type": "text",
+    },
+    {
+        "key": "output_path",
+        "label": "output_path",
+        "label_text": "Output Path",
+        "tag": "opt_output_path",
         "default": "",
         "type": "text",
     },
     {
         "key": "steam_id",
         "label": "steam_id",
+        "label_text": "Steam ID",
         "tag": "opt_steam_id",
         "default": "",
         "type": "combo",
@@ -457,6 +499,7 @@ options_config = [
     {
         "key": "opt_into_rcs",
         "label": "opt_into_rcs",
+        "label_text": "Opt into RCs",
         "tag": "opt_opt_into_rcs",
         "default": False,
         "type": "checkbox",
@@ -497,16 +540,16 @@ def get_steam_user_list():
     return sorted(users)
 
 
-def save_options():
-    for opt in options_config:
+def save_settings():
+    for opt in settings_config:
         val = ui.get_value(opt["tag"])
         if opt["key"] == "steam_id" and val:
             val = val.split(" - ")[0]
         mpaths.set_config(opt["key"], val)
 
 
-def refresh_options():
-    for opt in options_config:
+def refresh_settings():
+    for opt in settings_config:
         if opt["type"] == "combo" and "items_getter" in opt:
             raw_items = opt["items_getter"]()
             if raw_items and isinstance(raw_items[0], dict):

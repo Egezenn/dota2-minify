@@ -201,6 +201,89 @@ def parse_markdown_notes(mod_path, locale):
     return ""
 
 
+def render_rich_text(parent, text, font=None, base_color=(0, 230, 230), bullet=False):
+    """
+    Renders text with inline code blocks (wrapped in backticks) in pink.
+    Manually handles text wrapping.
+    Supports urls (orange), custom font, base color, and bullets.
+    """
+    if not text:
+        return
+
+    avail_width = mpaths.main_window_width - 20
+
+    # Tokenize: Split by backticks
+    parts = text.split("`")
+    tokens = []
+
+    for i, part in enumerate(parts):
+        is_code = i % 2 == 1
+        if not part:
+            continue
+
+        if is_code:
+            tokens.append({"text": part, "type": "code"})
+        else:
+            words = part.split(" ")
+            for j, word in enumerate(words):
+                if word:
+                    if word.startswith("http://") or word.startswith("https://"):
+                        tokens.append({"text": word, "type": "link"})
+                    else:
+                        tokens.append({"text": word, "type": "normal"})
+                if j < len(words) - 1:
+                    tokens.append({"text": " ", "type": "normal"})
+
+    # Layout tokens
+    lines = []
+    current_line = []
+    current_line_width = 0
+
+    for token in tokens:
+        token_text = token["text"]
+        token_width = ui.get_text_size(token_text)[0]
+
+        if font == "large_font":
+            token_width *= 1.4
+
+        if token_text == " " and current_line_width == 0:
+            continue
+
+        if current_line_width + token_width > avail_width and current_line_width > 0:
+            lines.append(current_line)
+            current_line = []
+            current_line_width = 0
+
+            if token_text == " ":
+                continue
+
+        current_line.append(token)
+        current_line_width += token_width
+
+    if current_line:
+        lines.append(current_line)
+
+    # Render lines
+    first_token_rendered = False
+    for line_tokens in lines:
+        with ui.group(horizontal=True, parent=parent, horizontal_spacing=0):
+            for token in line_tokens:
+                if token["type"] == "code":
+                    color = (255, 105, 180)
+                elif token["type"] == "link":
+                    color = (255, 165, 0)
+                else:
+                    color = base_color
+
+                show_bullet = bullet and not first_token_rendered
+
+                text_item = ui.add_text(token["text"], color=color, bullet=show_bullet)
+                if font:
+                    ui.bind_item_font(text_item, font)
+
+                first_token_rendered = True
+
+
 def render_markdown(parent, text):
     for line in text.split("\n"):
         line = line.strip()
@@ -208,7 +291,14 @@ def render_markdown(parent, text):
             ui.add_spacer(parent=parent, height=5)
             continue
 
-        ui.add_text(line, parent=parent, wrap=mpaths.main_window_width - 20)
+        if line.startswith("!!:"):
+            content = line[3:].strip()
+            render_rich_text(parent, content, font="large_font", base_color=(255, 0, 0))
+        elif line.startswith("-"):
+            content = line[1:].strip()
+            render_rich_text(parent, content, bullet=True)
+        else:
+            render_rich_text(parent, line)
 
 
 # TODO: also revise this

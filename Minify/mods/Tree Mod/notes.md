@@ -1,99 +1,99 @@
 <!-- LANG:EN -->
-Turns all trees into small circle bushes
+Turns all trees into small circle bushes.
 
-* Requires default terrain
+!!: Default terrain is required.
 
 <!-- LANG:BG -->
-Превръща всички дървета в малки кръгли храсти
+Превръща всички дървета в малки кръгли храсти.
 
-* Изисква терен по подразбиране
+!!: Изисква се терен по подразбиране.
 
 <!-- LANG:CS -->
-Promění všechny stromy v malé kruhové keře
+Promění všechny stromy v malé kruhové keře.
 
-* Vyžaduje výchozí terén
+!!: Je vyžadován výchozí terén.
 
 <!-- LANG:DA -->
-Forvandler alle træer til små cirkler af buske
+Forvandler alle træer til små cirkler af buske.
 
-* Kræver standardterræn
+!!: Standardterræn er påkrævet.
 
 <!-- LANG:DE -->
-Verwandelt alle Bäume in kleine, kreisförmige Büsche.
+Verwandelt alle Bäume in kleine, runde Büsche.
 
-* Erfordert Standardgelände.
+!!: Standardterrain erforderlich.
 
 <!-- LANG:EL -->
-Μετατρέπει όλα τα δέντρα σε μικρούς κυκλικούς θάμνους
+Μετατρέπει όλα τα δέντρα σε μικρούς κυκλικούς θάμνους.
 
-* Απαιτεί προεπιλεγμένο έδαφος
+!!: Απαιτείται το προεπιλεγμένο έδαφος.
 
 <!-- LANG:ES -->
-Convierte todos los árboles en arbustos circulares pequeños.
+Convierte todos los árboles en pequeños arbustos circulares.
 
-* Requiere el terreno predeterminado
+!!: Se requiere el terreno predeterminado.
 
 <!-- LANG:FI -->
-Muuttaa kaikki puut pieniksi pyöreiksi pensaiksi
+Muuttaa kaikki puut pieniksi pyöreiksi pensaiksi.
 
-* Vaatii oletusmaaston
+!!: Oletusmaasto vaaditaan.
 
 <!-- LANG:FR -->
 Transforme tous les arbres en petits buissons circulaires.
 
-* Nécessite le terrain par défaut
+!!: Le terrain par défaut est requis.
 
 <!-- LANG:HU -->
-Minden fát apró, kör alakú bokrokká alakít
+Minden fát apró, kör alakú bokrokká alakít.
 
-* Alapértelmezett tereptárgyat igényel
+!!: Az alapértelmezett terep megadása kötelező.
 
 <!-- LANG:IT -->
-Trasforma tutti gli alberi in piccoli cespugli circolari
+Trasforma tutti gli alberi in piccoli cespugli circolari.
 
-* Richiede terreno predefinito
+!!: È richiesto il terreno predefinito.
 
 <!-- LANG:NL -->
-Verandert alle bomen in kleine cirkelvormige struiken
+Verandert alle bomen in kleine ronde struiken.
 
-* Vereist standaardterrein
+!!: Standaard terrein is vereist.
 
 <!-- LANG:NO -->
-Gjør alle trær om til små, sirkelformede busker
+Gjør alle trær om til små, sirkelformede busker.
 
-* Krever standardterreng
+!!: Standardterreng er påkrevd.
 
 <!-- LANG:PL -->
 Zamienia wszystkie drzewa w małe, okrągłe krzewy.
 
-* Wymaga domyślnego terenu.
+!!: Wymagany jest domyślny teren.
 
 <!-- LANG:PT -->
-Transforma todas as árvores em pequenos arbustos circulares
+Transforma todas as árvores em pequenos arbustos circulares.
 
-* Requer terreno padrão
+!!: O terreno padrão é necessário.
 
 <!-- LANG:RO -->
-Transformă toți copacii în tufișuri mici și circulare
+Transformă toți copacii în tufișuri mici și circulare.
 
-* Necesită teren implicit
+!!: Este necesar terenul implicit.
 
 <!-- LANG:RU -->
-Заменяет все деревья, на малые круглые кусты.
+Превращает все деревья в маленькие круглые кусты.
 
-* Работает только на стандартном ландшафте
+!!: Требуется стандартный ландшафт.
 
 <!-- LANG:SV -->
-Förvandlar alla träd till små cirklar av buskar
+Förvandlar alla träd till små cirklar.
 
-* Kräver standardterräng
+!!: Standardterräng krävs.
 
 <!-- LANG:TR -->
-Tüm ağaçları küçük yuvarlak çalılara dönüştürür
+Tüm ağaçları küçük yuvarlak çalılara dönüştürür.
 
-* Varsayılan araziyi gerektirir
+!!: Varsayılan arazi gereklidir.
 
 <!-- LANG:UK -->
-Перетворює всі дерева на маленькі круглі кущі
+Перетворює всі дерева на маленькі круглі кущі.
 
-* Потрібен ландшафт за замовчуванням
+!!: Потрібен ландшафт за замовчуванням.

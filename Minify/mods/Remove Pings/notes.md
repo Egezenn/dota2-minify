@@ -1,59 +1,59 @@
 <!-- LANG:EN -->
-Removes all ping particles, sounds except for the default one.
+Removes all ping particles, sounds.
 
 <!-- LANG:BG -->
-Премахва всички ping частици, звуци, с изключение на този по подразбиране.
+Премахва всички пинг частици, звуци.
 
 <!-- LANG:CS -->
-Odstraní všechny částice pingu, zvuky kromě výchozího.
+Odstraňuje všechny částice a zvuky pingu.
 
 <!-- LANG:DA -->
-Fjerner alle ping-partikler og lyde undtagen standardlyden.
+Fjerner alle ping-partikler og -lyde.
 
 <!-- LANG:DE -->
-Entfernt alle Ping-Partikel und -Geräusche außer dem Standardgeräusch.
+Entfernt alle Ping-Partikel und -Geräusche.
 
 <!-- LANG:EL -->
-Αφαιρεί όλα τα σωματίδια ping και τους ήχους εκτός από το προεπιλεγμένο.
+Αφαιρεί όλα τα σωματίδια ping, τους ήχους.
 
 <!-- LANG:ES -->
-Elimina todas las partículas de ping y los sonidos, excepto el predeterminado.
+Elimina todas las partículas de ping y los sonidos.
 
 <!-- LANG:FI -->
-Poistaa kaikki ping-partikkelit ja äänet paitsi oletusäänen.
+Poistaa kaikki ping-hiukkaset ja äänet.
 
 <!-- LANG:FR -->
-Supprime tous les sons et particules de ping, à l'exception de celui par défaut.
+Supprime tous les sons et particules de ping.
 
 <!-- LANG:HU -->
-Eltávolítja az összes ping részecskét és hangot, kivéve az alapértelmezettet.
+Eltávolítja az összes ping részecskét és hangot.
 
 <!-- LANG:IT -->
-Rimuove tutte le particelle ping, i suoni tranne quello predefinito.
+Rimuove tutte le particelle ping e i suoni.
 
 <!-- LANG:NL -->
-Verwijdert alle pingdeeltjes en geluiden, behalve het standaardgeluid.
+Verwijdert alle ping-deeltjes en geluiden.
 
 <!-- LANG:NO -->
-Fjerner alle ping-partikler og lyder bortsett fra standardlyden.
+Fjerner alle ping-partikler og lyder.
 
 <!-- LANG:PL -->
-Usuwa wszystkie cząsteczki i dźwięki pingu oprócz domyślnych.
+Usuwa wszystkie cząsteczki i dźwięki pingowania.
 
 <!-- LANG:PT -->
-Remove todas as partículas e sons de ping, exceto o padrão.
+Remove todas as partículas e sons de ping.
 
 <!-- LANG:RO -->
-Elimină toate particulele de ping și sunetele, cu excepția celui implicit.
+Elimină toate particulele de ping și sunetele.
 
 <!-- LANG:RU -->
-Удаляет все частицы пинга, звуки, кроме стандартного.
+Удаляет все частицы пинга и звуки.
 
 <!-- LANG:SV -->
-Tar bort alla ping-partiklar och ljud förutom standardljudet.
+Tar bort alla ping-partiklar och ljud.
 
 <!-- LANG:TR -->
-Varsayılan hariç tüm ping parçacıklarını ve seslerini kaldırır.
+Tüm ping parçacıklarını ve seslerini kaldırır.
 
 <!-- LANG:UK -->
-Видаляє всі частинки пінгу, звуки, окрім стандартного.
+Видаляє всі частинки пінгу, звуки.
