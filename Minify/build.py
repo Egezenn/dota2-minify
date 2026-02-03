@@ -75,7 +75,15 @@ def patcher(mod=None, pakname=None):
                     if ui.get_value(dependant):
                         for dependency in dependencies:
                             try:
-                                ui.set_value(dependency, True)
+                                if not helper.workshop_installed:
+                                    workshop = False
+                                    for method_file in helper.workshop_required_methods:
+                                        if os.path.exists(os.path.join(mpaths.mods_dir, dependency, method_file)):
+                                            workshop = True
+                                            break
+                                    ui.set_value(dependency, False) if workshop else ui.set_value(dependency, True)
+                                else:
+                                    ui.set_value(dependency, True)
                             except:
                                 mpaths.write_warning(
                                     f"Mod dependency {dependency} for {mod} couldn't be resolved, might be that the mod doesn't exist."

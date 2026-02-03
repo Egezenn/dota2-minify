@@ -24,6 +24,7 @@ localizations = []
 mod_selection_window_var = ""
 output_path = mpaths.get_config("output_path", mpaths.minify_dota_pak_output_path)
 workshop_installed = False
+workshop_required_methods = ["styling.css", "xml_mod.json"]
 
 
 def download_file(url, target_path, progress_tag=None):
@@ -127,13 +128,8 @@ def disable_workshop_mods():
     if not workshop_installed:
         for folder in mpaths.mods_with_order:
             mod_path = os.path.join(mpaths.mods_dir, folder)
-            worskhop_required_modification_methods = [
-                "styling.css",
-                "menu.xml",
-                "xml_mod.json",
-            ]
 
-            for method_file in worskhop_required_modification_methods:
+            for method_file in workshop_required_methods:
                 if os.path.exists(os.path.join(mod_path, method_file)):
                     ui.configure_item(folder, enabled=False, default_value=False)
                     break

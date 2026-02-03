@@ -414,7 +414,7 @@ ui.create_viewport(
     width=mpaths.main_window_width,
     height=mpaths.main_window_height,
     x_pos=min(widths) // 2 - mpaths.main_window_width // 2,
-    y_pos=min(heights) // 2 - mpaths.main_window_height // 2 - 80,
+    y_pos=min(heights) // 2 - mpaths.main_window_height // 2 - 120,
     resizable=False,
     decorated=False,
     vsync=True,
