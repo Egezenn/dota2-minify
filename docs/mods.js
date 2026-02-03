@@ -17,7 +17,7 @@ function processMods(mods) {
     card.setAttribute("role", "button");
 
     const img = document.createElement("img");
-    img.src = `https://raw.githubusercontent.com/Egezenn/dota2-minify/main/Minify/mods/${encodeURIComponent(mod)}/image.png`;
+    img.src = `https://raw.githubusercontent.com/Egezenn/dota2-minify/main/Minify/mods/${encodeURIComponent(mod)}/preview.png`;
     img.className = "card-img-top";
     img.alt = `${mod} image`;
     img.style.objectFit = "cover";
@@ -41,7 +41,7 @@ function processMods(mods) {
       const notesCacheKey = `mod-notes-${mod}`;
       const cachedNotes = JSON.parse(sessionStorage.getItem(notesCacheKey));
       const now = new Date().getTime();
-      const imageUrl = `https://raw.githubusercontent.com/Egezenn/dota2-minify/main/Minify/mods/${encodeURIComponent(mod)}/image.png`;
+      const imageUrl = `https://raw.githubusercontent.com/Egezenn/dota2-minify/main/Minify/mods/${encodeURIComponent(mod)}/preview.png`;
       const imageHtml = `<img src="${imageUrl}" class="mb-3" style="display: block; margin-left: auto; margin-right: auto;" onerror="this.style.display='none'" alt="${mod}">`;
 
       notesModalLabel.textContent = `${mod} Notes`;
