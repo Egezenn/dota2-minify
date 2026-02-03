@@ -55,9 +55,9 @@ def create_ui():
         ui.set_primary_window("primary_window", True)
         ui.add_child_window(
             tag="top_bar",
-            pos=(-5, -5),
-            height=30,
-            width=mpaths.main_window_width + 5,
+            pos=(0, 0),
+            height=25,
+            width=mpaths.main_window_width,
             no_scrollbar=True,
             no_scroll_with_mouse=True,
         )
@@ -67,7 +67,7 @@ def create_ui():
             items=(helper.localizations),
             default_value="EN",
             width=50,
-            pos=(5, 6),
+            pos=(5, 2),
             callback=helper.change_localization,
         )
         ui.add_image_button(
@@ -75,7 +75,7 @@ def create_ui():
             parent="top_bar",
             width=21,
             height=16,
-            pos=(55, 7),
+            pos=(55, 2),
             callback=gui.open_discord_link,
         )
         ui.add_image_button(
@@ -83,7 +83,7 @@ def create_ui():
             parent="top_bar",
             width=18,
             height=18,
-            pos=(87, 6),
+            pos=(87, 1),
             callback=gui.open_github_link,
         )
         ui.add_image_button(
@@ -91,7 +91,7 @@ def create_ui():
             parent="top_bar",
             width=16,
             height=16,
-            pos=(115, 6),
+            pos=(115, 2),
             callback=gui.open_settings_menu,
         )
         ui.add_image_button(
@@ -100,42 +100,39 @@ def create_ui():
             parent="top_bar",
             width=16,
             height=16,
-            pos=(141, 6),
+            pos=(141, 2),
             callback=gui.dev_mode,
         )
-        ui.add_text(tag="language_select", pos=(176, 3))
+        ui.add_text(tag="language_select", pos=(170, 2))
         ui.add_combo(
             parent="top_bar",
             tag="output_select",
             items=(mpaths.minify_output_list),
             default_value=mpaths.get_config("output_locale", "minify"),
             width=95,
-            pos=(246, 8),
+            pos=(246, 2),
             callback=helper.change_output_path,
         )
-        ui.add_text(gui.title, pos=(mpaths.main_window_width - 190, 3))
+        ui.add_text(gui.title, pos=(mpaths.main_window_width - 200, 2))
         ui.add_button(
             parent="top_bar",
             tag="button_minimize",
             label="-",
             callback=lambda: ui.minimize_viewport(),
-            height=28,
             width=28,
-            pos=(mpaths.main_window_width - 84, 4),
+            pos=(mpaths.main_window_width - 90, 2),
         )
         ui.add_button(
             parent="top_bar",
             tag="button_exit",
             label="Close",
             callback=helper.close,
-            height=28,
             width=60,
-            pos=(mpaths.main_window_width - 54, 4),
+            pos=(mpaths.main_window_width - 60, 2),
         )
 
-        ui.bind_item_font("lang_select", combo_font)
         with ui.group(horizontal=True):
-            with ui.group(pos=(mpaths.main_window_width - 103, 29)):
+            with ui.group(pos=(mpaths.main_window_width - 100, 32)):
                 ui.add_button(
                     tag="button_patch",
                     label="Patch",
@@ -155,14 +152,13 @@ def create_ui():
                     width=92,
                     callback=gui.uninstall_popup_show,
                 )
-            with ui.group(pos=(-45, 4)):
+            with ui.group(pos=(10, 20)):
                 ui.add_text(
-                    r"""
-         __    __    __    __   __    __    ______  __  __
-        /\ "-./  \  /\ \  /\ "-.\ \  /\ \  /\  ___\/\ \_\ \  
-        \ \ \-./\ \ \ \ \ \ \ \-.  \ \ \ \ \ \  __\\ \____ \ 
-         \ \_\ \ \_\ \ \_\ \ \_\\"\_\ \ \_\ \ \_\_/ \/\_____\
-          \/_/  \/_/  \/_/  \/_/ \/_/  \/_/  \/_/    \/_____/"""
+                    r""" __    __    __    __   __    __    ______  __  __
+/\ "-./  \  /\ \  /\ "-.\ \  /\ \  /\  ___\/\ \_\ \  
+\ \ \-./\ \ \ \ \ \ \ \-.  \ \ \ \ \ \  __\\ \____ \ 
+ \ \_\ \ \_\ \ \_\ \ \_\\"\_\ \ \_\ \ \_\_/ \/\_____\
+  \/_/  \/_/  \/_/  \/_/ \/_/  \/_/  \/_/    \/_____/"""
                 )
         # Creating log terminal
         with ui.group():
@@ -176,11 +172,12 @@ def create_ui():
                 no_close=True,
                 no_saved_settings=True,
                 show=True,
-                height=mpaths.main_window_height - 100,
+                height=mpaths.main_window_height - gui.banner_height,
                 width=mpaths.main_window_width,
-                pos=(0, 100),
+                pos=(0, gui.banner_height),
                 no_resize=True,
             )
+            ui.bind_item_font("terminal_window", "small_font")
 
     ui.add_window(
         label="Uninstall",
@@ -220,7 +217,6 @@ def create_ui():
             width=100,
         )
 
-    # Creating mod selection menu as popup/modal
     ui.add_window(
         modal=False,
         pos=(0, 0),
@@ -239,7 +235,6 @@ def create_ui():
         on_close=gui.save_checkbox_state,
     )
 
-    # Creating settings menu as popup/modal
     ui.add_window(
         modal=False,
         pos=(0, 0),
@@ -368,19 +363,20 @@ def create_base_ui():
 
 # Adding font to the ui registry
 with ui.font_registry():
-    with ui.font(os.path.join("bin", "FiraMono-Medium.ttf"), 14) as main_font:
+    with ui.font(os.path.join("bin", "FiraMono-Medium.ttf"), 16, tag="main_font") as main_font:
         ui.add_font_range_hint(ui.mvFontRangeHint_Default)
         ui.add_font_range_hint(ui.mvFontRangeHint_Cyrillic)
         ui.add_font_range(0x0100, 0x017F)  # Turkish set
         ui.add_font_range(0x0370, 0x03FF)  # Greek set
         ui.bind_font(main_font)
-    with ui.font(os.path.join("bin", "FiraMono-Medium.ttf"), 16) as combo_font:
+
+    with ui.font(os.path.join("bin", "FiraMono-Medium.ttf"), 14, tag="small_font") as small_font:
         ui.add_font_range_hint(ui.mvFontRangeHint_Default)
         ui.add_font_range_hint(ui.mvFontRangeHint_Cyrillic)
         ui.add_font_range(0x0100, 0x017F)  # Turkish set
         ui.add_font_range(0x0370, 0x03FF)  # Greek set
 
-    with ui.font(os.path.join("bin", "FiraMono-Medium.ttf"), 20, tag="large_font"):
+    with ui.font(os.path.join("bin", "FiraMono-Medium.ttf"), 20, tag="large_font") as large_font:
         ui.add_font_range_hint(ui.mvFontRangeHint_Default)
         ui.add_font_range_hint(ui.mvFontRangeHint_Cyrillic)
         ui.add_font_range(0x0100, 0x017F)  # Turkish set
@@ -418,7 +414,7 @@ ui.create_viewport(
     width=mpaths.main_window_width,
     height=mpaths.main_window_height,
     x_pos=min(widths) // 2 - mpaths.main_window_width // 2,
-    y_pos=min(heights) // 2 - mpaths.main_window_height // 2 - 40,
+    y_pos=min(heights) // 2 - mpaths.main_window_height // 2 - 80,
     resizable=False,
     decorated=False,
     vsync=True,

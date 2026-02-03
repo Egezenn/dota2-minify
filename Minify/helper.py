@@ -201,7 +201,7 @@ def parse_markdown_notes(mod_path, locale):
     return ""
 
 
-def render_rich_text(parent, text, font=None, base_color=(0, 230, 230), bullet=False):
+def render_rich_text(parent, text, font="main_font", base_color=(0, 230, 230), bullet=False):
     """
     Renders text with inline code blocks (wrapped in backticks) in pink.
     Manually handles text wrapping.
@@ -210,7 +210,7 @@ def render_rich_text(parent, text, font=None, base_color=(0, 230, 230), bullet=F
     if not text:
         return
 
-    avail_width = mpaths.main_window_width - 20
+    avail_width = mpaths.main_window_width - 40
 
     # Tokenize: Split by backticks
     parts = text.split("`")
@@ -244,7 +244,7 @@ def render_rich_text(parent, text, font=None, base_color=(0, 230, 230), bullet=F
         token_width = ui.get_text_size(token_text)[0]
 
         if font == "large_font":
-            token_width *= 1.4
+            token_width *= 1.25
 
         if token_text == " " and current_line_width == 0:
             continue

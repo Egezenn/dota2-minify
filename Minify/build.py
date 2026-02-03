@@ -408,7 +408,7 @@ def patcher(mod=None, pakname=None):
         )
 
         gui.unlock_interaction()
-        helper.add_text_to_terminal("-" * 75, "spacer1_text")
+        helper.add_text_to_terminal("-" * gui.spacer_amt, "spacer1_text")
         helper.add_text_to_terminal(
             helper.localization_dict["success_terminal_text_var"],
             "success_text_tag",
@@ -439,7 +439,7 @@ def patcher(mod=None, pakname=None):
         mpaths.write_crashlog()
         helper.open_thing(mpaths.log_crashlog)
 
-        helper.add_text_to_terminal("-" * 75, "spacer2_text")
+        helper.add_text_to_terminal("-" * gui.spacer_amt, "spacer2_text")
         helper.add_text_to_terminal(
             helper.localization_dict["failure_terminal_text_var"],
             "patching_failed_text_tag",

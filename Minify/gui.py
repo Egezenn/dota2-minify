@@ -33,6 +33,8 @@ except:
     version = ""
 
 title = f"Minify {version}" if version else "Minify"
+spacer_amt = 75
+banner_height = 120
 
 
 def version_check():
@@ -256,7 +258,7 @@ def create_checkboxes():
                 ui.add_button(
                     parent=f"{mod}_group_tag",
                     small=True,
-                    indent=mpaths.main_window_width - 244,
+                    indent=mpaths.main_window_width - 150,
                     tag=f"{mod}_button_show_details_tag",
                     label=f"{helper.details_label_text_var}",
                     callback=show_details,
@@ -283,7 +285,7 @@ def create_checkboxes():
                             width=w, height=h, default_value=d, tag=image_tag, parent="mod_images_registry"
                         )
 
-                        avail_width = mpaths.main_window_width - 25
+                        avail_width = mpaths.main_window_width - 40
                         max_height = mpaths.main_window_height - 50 - 20
 
                         aspect_ratio = w / h
@@ -621,7 +623,7 @@ def start_text():
     ui.add_text(source="start_text_4_var", parent="terminal_window")
     ui.add_text(source="start_text_5_var", parent="terminal_window")
     ui.add_text(
-        default_value="-" * 75,
+        default_value="-" * spacer_amt,
         parent="terminal_window",
         tag="spacer_start_text_tag",
     )
@@ -699,7 +701,7 @@ def theme():
             ui.add_theme_color(ui.mvThemeCol_FrameBg, (29, 29, 30, 255))
             ui.add_theme_color(ui.mvThemeCol_FrameBgHovered, (29, 29, 30, 255))
             ui.add_theme_color(ui.mvThemeCol_FrameBgActive, (29, 29, 30, 255))
-            ui.add_theme_color(ui.mvThemeCol_CheckMark, (29, 29, 30, 255))
+            ui.add_theme_color(ui.mvThemeCol_CheckMark, (0, 70, 70, 255))
         with ui.theme_component():
             ui.add_theme_color(ui.mvThemeCol_Text, (0, 230, 230))
             ui.add_theme_color(ui.mvThemeCol_Button, (29, 29, 30, 255))
@@ -753,13 +755,15 @@ def theme():
 
 def dev_mode():
     global dev_mode_state
+    height_increase = 400
+    tools_height = 220
     if dev_mode_state == -1:  # init
         dev_mode_state = 1
         ui.configure_viewport(
             item="main_viewport",
             resizable=False,
             width=mpaths.main_window_width,
-            height=mpaths.main_window_height + 350,
+            height=mpaths.main_window_height + height_increase,
         )
         ui.configure_viewport(item="primary_window", resizable=False)
         with ui.window(
@@ -767,7 +771,7 @@ def dev_mode():
             tag="opener",
             pos=(0, mpaths.main_window_height),
             width=mpaths.main_window_width // 2,
-            height=350,
+            height=height_increase,
             no_resize=True,
             no_move=True,
             no_close=True,
@@ -832,7 +836,7 @@ def dev_mode():
             tag="mod_tools",
             pos=(mpaths.main_window_width // 2, mpaths.main_window_height),
             width=mpaths.main_window_width // 2,
-            height=200,
+            height=tools_height,
             no_resize=True,
             no_move=True,
             no_close=True,
@@ -862,9 +866,9 @@ def dev_mode():
         with ui.window(
             label="Maintenance Tools",
             tag="maintenance_tools",
-            pos=(mpaths.main_window_width // 2, mpaths.main_window_height + 200),
+            pos=(mpaths.main_window_width // 2, mpaths.main_window_height + tools_height),
             width=mpaths.main_window_width // 2,
-            height=150,
+            height=height_increase - tools_height,
             no_resize=True,
             no_move=True,
             no_close=True,
