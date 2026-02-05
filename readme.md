@@ -2,16 +2,16 @@
 
 # [Dota2 Minify](https://egezenn.github.io/dota2-minify)
 
-[[![logo](Minify/bin/images/logo.png)](https://egezenn.github.io/dota2-minify)](https://egezenn.github.io/dota2-minify)
+[![logo](Minify/bin/images/logo.png)](https://egezenn.github.io/dota2-minify)
 
 [![discord](https://img.shields.io/badge/Discord-%237289DA.svg?style=for-the-badge&logo=discord&logoColor=white)](https://discord.com/invite/2YDnqpbcKM)
 ![license](https://img.shields.io/github/license/Egezenn/dota2-minify?style=for-the-badge)
 
-![latest-release](https://img.shields.io/github/v/release/Egezenn/dota2-minify?style=for-the-badge)
-![build-state](https://img.shields.io/github/actions/workflow/status/Egezenn/dota2-minify/release.yml?style=for-the-badge)
+[![latest-release](https://img.shields.io/github/v/release/Egezenn/dota2-minify?style=for-the-badge)](https://egezenn.github.io/dota2-minify)
+[![build-state](https://img.shields.io/github/actions/workflow/status/Egezenn/dota2-minify/release.yml?style=for-the-badge)](https://egezenn.github.io/dota2-minify)
 
-![downloads](https://img.shields.io/github/downloads/Egezenn/dota2-minify/total?style=for-the-badge)
-![downloads-latest](https://img.shields.io/github/downloads/Egezenn/dota2-minify/latest/total?style=for-the-badge)
+[![downloads](https://img.shields.io/github/downloads/Egezenn/dota2-minify/total?style=for-the-badge)](https://egezenn.github.io/dota2-minify)
+[![downloads-latest](https://img.shields.io/github/downloads/Egezenn/dota2-minify/latest/total?style=for-the-badge)](https://egezenn.github.io/dota2-minify)
 
 [![platform-windows](https://custom-icon-badges.demolab.com/badge/Windows-0078D6?style=for-the-badge&logo=windows11&logoColor=white)](https://egezenn.github.io/dota2-minify)
 [![platform-linux](https://img.shields.io/badge/Linux-FCC624?style=for-the-badge&logo=linux&logoColor=black)](https://egezenn.github.io/dota2-minify)
