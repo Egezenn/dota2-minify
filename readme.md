@@ -2,7 +2,7 @@
 
 # [Dota2 Minify](https://egezenn.github.io/dota2-minify)
 
-[![logo](Minify/bin/images/logo.png)](https://egezenn.github.io/dota2-minify)
+[[![logo](Minify/bin/images/logo.png)](https://egezenn.github.io/dota2-minify)](https://egezenn.github.io/dota2-minify)
 
 [![discord](https://img.shields.io/badge/Discord-%237289DA.svg?style=for-the-badge&logo=discord&logoColor=white)](https://discord.com/invite/2YDnqpbcKM)
 ![license](https://img.shields.io/github/license/Egezenn/dota2-minify?style=for-the-badge)
@@ -13,12 +13,12 @@
 ![downloads](https://img.shields.io/github/downloads/Egezenn/dota2-minify/total?style=for-the-badge)
 ![downloads-latest](https://img.shields.io/github/downloads/Egezenn/dota2-minify/latest/total?style=for-the-badge)
 
-![platform-windows](https://custom-icon-badges.demolab.com/badge/Windows-0078D6?style=for-the-badge&logo=windows11&logoColor=white)
-![platform-linux](https://img.shields.io/badge/Linux-FCC624?style=for-the-badge&logo=linux&logoColor=black)
-![platform-macos](https://img.shields.io/badge/macOS%20(Partial)-000000?style=for-the-badge&logo=apple&logoColor=white)
+[![platform-windows](https://custom-icon-badges.demolab.com/badge/Windows-0078D6?style=for-the-badge&logo=windows11&logoColor=white)](https://egezenn.github.io/dota2-minify)
+[![platform-linux](https://img.shields.io/badge/Linux-FCC624?style=for-the-badge&logo=linux&logoColor=black)](https://egezenn.github.io/dota2-minify)
+[![platform-macos](https://img.shields.io/badge/macOS%20(Partial)-000000?style=for-the-badge&logo=apple&logoColor=white)](https://egezenn.github.io/dota2-minify)
 
-![ss1](assets/screenshot-1.jpg)
-![ss2](assets/screenshot-2.png)
+![ss1](docs/assets/screenshot-1.jpg)
+![ss2](docs/assets/screenshot-2.png)
 
 </div>
 
@@ -45,6 +45,7 @@
       - [`files` directory](#files-directory)
       - [`notes.md`](#notesmd)
       - [`blacklist.txt`](#blacklisttxt)
+      - [`replacer.csv`](#replacercsv)
       - [`script.py`](#scriptpy)
       - [`styling.css`](#stylingcss)
       - [`xml_mod.json`](#xml_modjson)
@@ -75,12 +76,12 @@ No one has ever been banned for the use of these mods and alike. Minify strictly
    - These tools enable HUD/Interface mods. **Skip this step if you don't need them.**
    - Right-click on Dota 2 in Steam.
 
-![tools-instruction-1](assets/tools-instruction-1.png)
+![tools-instruction-1](docs/assets/tools-instruction-1.png)
 
 - Select **Properties** > **DLC**.
   - On Linux, you need to force the use of `Proton Experimental` and have `wine` package installed. Relaunch steam if you still don't see the DLC.
 
-![tools-instruction-2](assets/tools-instruction-2.png)
+![tools-instruction-2](docs/assets/tools-instruction-2.png)
 
 - Install `Dota 2 Workshop Tools DLC`.
 
@@ -89,16 +90,16 @@ No one has ever been banned for the use of these mods and alike. Minify strictly
 >
 > After patching, extract your workshop tools using the `Hammer button` > `Extract workshop tools` (this is for later use so that you won't have to switch back and forth again) and go back to using a `Steam Runtime` as you'll not be able to queue games with `Proton Experimental`.
 
-![tools-instruction-3](assets/tools-instruction-3.png)
+![tools-instruction-3](docs/assets/tools-instruction-3.png)
 
 1. **Run Minify**
 
    - Extract the ZIP file.
    - Ensure that you have execution permissions for the `Minify` executable, run and patch with the mods and the language you want to use.
 
-![language-instruction-1](assets/language-instruction-1.png)
+![language-instruction-1](docs/assets/language-instruction-1.png)
 
-![language-instruction-2](assets/language-instruction-2.png)
+![language-instruction-2](docs/assets/language-instruction-2.png)
 
 3. **Setting the language argument for Dota2 on Steam**
 
@@ -106,7 +107,7 @@ No one has ever been banned for the use of these mods and alike. Minify strictly
    - **For English:** Add `-language minify` to your launch options.
    - **For Other Languages:** Select the language you want to patch with on the top bar and add `-language language_id`
 
-![language-instruction-3](assets/language-instruction-3.png)
+![language-instruction-3](docs/assets/language-instruction-3.png)
 
 4. **Start Dota 2**
    - Launch Dota2 and enjoy!
@@ -151,7 +152,7 @@ Verify your files from Steam, this happens every so often randomly and is NOT re
 
 Try uninstalling the mods. If that doesn't work aswell try using the feature below (it'll delete all the contents of `dota 2 beta/game/dota_<language>`!)
 
-![clean-all-language-paths](assets/wipe-language-paths.png)
+![clean-all-language-paths](docs/assets/wipe-language-paths.png)
 
 ### It doesn't work / open!
 
@@ -176,6 +177,7 @@ mods
 │   ├── modcfg.json
 │   ├── notes.md
 │   ├── preview.png
+│   ├── replacer.csv
 │   ├── script.py
 │   ├── script_after_decompile.py
 │   ├── script_after_recompile.py
@@ -220,7 +222,7 @@ Normal text supports `inline code` (pink) and https://example.com (orange).
 !!: And https://example.com links.
 ```
 
-![notes](assets/notes-preview.png)
+![notes](docs/assets/example-notes.png)
 
 #### `blacklist.txt`
 
@@ -244,6 +246,23 @@ particles/base_attacks/ranged_goodguy_launch.vpcf_c
 >>particles/sprays
 **taunt.*\.vsnd_c
 ```
+
+#### `replacer.csv`
+
+This file allows you to replace file(s) with other file(s) inside the game VPK (can be used for skin swappers etc.).
+
+Format:  
+`file_to_be_replaced,replacement_file`
+
+Example:
+
+```csv
+panorama/images/spellicons/nevermore_shadowraze1_png.vtex_c,panorama/images/spellicons/nevermore_shadowraze1_demon_png.vtex_c
+panorama/images/spellicons/nevermore_shadowraze2_png.vtex_c,panorama/images/spellicons/nevermore_shadowraze2_demon_png.vtex_c
+panorama/images/spellicons/nevermore_shadowraze3_png.vtex_c,panorama/images/spellicons/nevermore_shadowraze3_demon_png.vtex_c
+```
+
+![example-replacer](docs/assets/example-replacer.png)
 
 #### `script.py`
 
@@ -293,8 +312,6 @@ For Source 2 flavored CSS properties, refer to: [Valve Developer Community Wiki]
 To live inspect the layout, open the workshop tools and press <kbd>F6</kbd> and select the element you'd like to select from the XML.
 
 Syntax for this file starting from the line beginning is as follows:  
-`/* c:path */`: By default, the file is pulled from `dota 2 beta/game/dota/pak01_dir.vpk`.  
-However to change this behavior and pull files from `dota 2 beta/game/core/pak01_dir.vpk`, you can use this.  
 
 ```css
 /* g|c:path/to/vcss_file_without_extension */

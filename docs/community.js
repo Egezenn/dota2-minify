@@ -1,4 +1,5 @@
 const modsContainer = document.getElementById("mods-container");
+const modpacksContainer = document.getElementById("modpacks-container");
 const toolsContainer = document.getElementById("tools-container");
 const skinsContainer = document.getElementById("skins-container");
 const notesModal = new bootstrap.Modal(document.getElementById("notesModal"));
@@ -92,6 +93,7 @@ function createCard(item) {
 
 function processData(items, meta) {
   modsContainer.innerHTML = "";
+  modpacksContainer.innerHTML = "";
   toolsContainer.innerHTML = "";
   skinsContainer.innerHTML = "";
 
@@ -102,6 +104,8 @@ function processData(items, meta) {
 
     if (type === "tool") {
       toolsContainer.appendChild(card);
+    } else if (type === "modpack") {
+      modpacksContainer.appendChild(card);
     } else if (type === "skin") {
       skinsContainer.appendChild(card);
     } else {
@@ -110,6 +114,7 @@ function processData(items, meta) {
   });
 
   document.getElementById("mods-section").style.display = modsContainer.hasChildNodes() ? "block" : "none";
+  document.getElementById("modpacks-section").style.display = modsContainer.hasChildNodes() ? "block" : "none";
   document.getElementById("tools-section").style.display = toolsContainer.hasChildNodes() ? "block" : "none";
   document.getElementById("skins-section").style.display = skinsContainer.hasChildNodes() ? "block" : "none";
 }

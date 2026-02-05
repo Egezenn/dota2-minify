@@ -182,18 +182,11 @@ def patcher(mod=None, pakname=None):
                     if os.path.exists(replacer_file):
                         with open(replacer_file, newline="") as file:
                             for row in csv.reader(file):
-                                try:
-                                    if not (row[0] == "" and row[1] == ""):
-                                        replacer_source_extracts.append(row[0])
-                                        replacer_targets.append(row[1])
-                                except:
-                                    min_len = min(
-                                        len(replacer_source_extracts),
-                                        len(replacer_targets),
-                                    )
-                                    replacer_source_extracts = replacer_source_extracts[:min_len]
-                                    replacer_targets = replacer_targets[:min_len]
-                                    mpaths.write_warning()
+                                if len(row) >= 2 and row[0] and row[1]:
+                                    replacer_source_extracts.append(row[1])  # Source (content)
+                                    replacer_targets.append((row[1], row[0]))  # (Source, Target)
+                                else:
+                                    mpaths.write_warning(f"Invalid row in replacer.csv for {folder}: {row}")
 
             except:
                 mpaths.write_warning()
@@ -316,7 +309,7 @@ def patcher(mod=None, pakname=None):
                 #     raise Exception(decoded_err)
         gui.bulk_exec_script("after_recompile")
 
-        if replacer_source_extracts and replacer_targets and (len(replacer_source_extracts) == len(replacer_targets)):
+        if replacer_source_extracts:
             vpk_extractor(dota_pak_contents, replacer_source_extracts, mpaths.replace_dir)
             with ThreadPoolExecutor() as executor:
                 executor.map(process_replacer, replacer_targets)
@@ -491,6 +484,7 @@ def uninstaller():
                     mod_names_with_txt = [s + ".txt" for s in mpaths.visually_available_mods]
                     for file in [
                         "minify_mods.json",
+                        # TODO if this exists, pull & parse to enable uninstallers
                         "minify_vpk_mods.txt",
                         "minify_version.txt",
                         *mod_names_with_txt,
@@ -759,13 +753,14 @@ def process_blacklist(blacklist_txt, folder, blank_file_extensions):
         executor.map(copy_blank_file, blacklist_data)
 
 
-def process_replacer(target):
-    helper.add_text_to_terminal(helper.localization_dict["replacing_terminal_text_var"].format(target, target))
+def process_replacer(item):
+    source, target = item
+    helper.add_text_to_terminal(helper.localization_dict["replacing_terminal_text_var"].format(source, target))
     os.makedirs(
         os.path.dirname(target_dir := os.path.join(mpaths.minify_dota_compile_output_path, target)),
         exist_ok=True,
     )
-    shutil.copy(os.path.join(mpaths.replace_dir, target), target_dir)
+    shutil.copy(os.path.join(mpaths.replace_dir, source), target_dir)
 
 
 def process_blacklist_dir(index, line, folder):
