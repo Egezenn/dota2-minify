@@ -57,6 +57,8 @@
     - [Python packages](#python-packages)
   - [License](#license)
 
+[<img alt="Back to top" align="right" height="64px" src="docs/assets/caret-up-solid-full.svg">](#table-of-contents)
+
 ## Is this safe to use?
 
 This project has been around since [2022](https://github.com/Egezenn/dota2-minify/commit/825ed37e6007577b98c3003fe0bdab6410ba87db) with thousands of downloads and users. While binaries are offered for ease of use, anyone can compile it themselves.
@@ -64,6 +66,8 @@ This project has been around since [2022](https://github.com/Egezenn/dota2-minif
 The only valid source to get the software is from [GitHub Releases](https://github.com/Egezenn/dota2-minify/releases/latest) or [the website](https://egezenn.github.io/dota2-minify). Releases are built via [GitHub Workflows](https://github.com/Egezenn/dota2-minify/blob/main/.github/workflows/release.yml) with no intervention, we do not distribute elsewhere.
 
 No one has ever been banned for the use of these mods and alike. Minify strictly deals with VPK modifications and not hacking concepts like memory/file manipulation. It utilizes Valve's approved methods (VPK loading) for creating assets, as documented on the [official Valve Wiki](https://developer.valvesoftware.com/wiki/VPK). Historically Valve has only disabled assets from loading and never punished modders. The worst thing that can happen is a mod stops working and that's it.
+
+[<img alt="Back to top" align="right" height="64px" src="docs/assets/caret-up-solid-full.svg">](#table-of-contents)
 
 ## Installation
 
@@ -130,6 +134,8 @@ Prerequisites are `git`, `python` and `uv`. (also `tk` for tkinter and `wine` fo
 
 For instructions, refer to the [workflow](https://github.com/Egezenn/dota2-minify/blob/main/.github/workflows/release.yml).
 
+[<img alt="Back to top" align="right" height="64px" src="docs/assets/caret-up-solid-full.svg">](#table-of-contents)
+
 ## Troubleshooting
 
 ### Antivirus software flagged it / I don't see an executable
@@ -157,6 +163,8 @@ Try uninstalling the mods. If that doesn't work aswell try using the feature bel
 ### It doesn't work / open!
 
 Make a bug report on GitHub or Discord with the contents of your `logs` folder.
+
+[<img alt="Back to top" align="right" height="64px" src="docs/assets/caret-up-solid-full.svg">](#table-of-contents)
 
 ## Developing mods
 
@@ -368,9 +376,13 @@ Example:
 
 _to be written_
 
+[<img alt="Back to top" align="right" height="64px" src="docs/assets/caret-up-solid-full.svg">](#table-of-contents)
+
 ## Thanks
 
 This project wouldn't be available without the work of the community. Thanks to everyone that has contributed to the project over GitHub with issues & contributions or Discord!
+
+[<img alt="Back to top" align="right" height="64px" src="docs/assets/caret-up-solid-full.svg">](#table-of-contents)
 
 ## Special thanks to
 
@@ -409,29 +421,33 @@ This project wouldn't be available without the work of the community. Thanks to 
 | [`Tree Mod`](./Minify/mods/Tree%20Mod)                                                          | [robbyz512](https://github.com/robbyz512)          |                                                                                                              |
 | [`User Styles`](./Minify/mods/User%20Styles)                                                    | [Egezenn](https://github.com/Egezenn)              |                                                                                                              |
 
+[<img alt="Back to top" align="right" height="64px" src="docs/assets/caret-up-solid-full.svg">](#table-of-contents)
+
 ## Dependencies
 
 ### Binaries
 
-| Name                                                                          | Usage                                            | License                                                                                                                                                 |
-| ----------------------------------------------------------------------------- | ------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [Python](https://www.python.org/)                                             | Core language                                    | [PSFL license](https://github.com/python/cpython/blob/main/LICENSE)                                                                                     |
-| [Source 2 Viewer](https://github.com/ValveResourceFormat/ValveResourceFormat) | Decompilation of assets and game VPK filelisting | [MIT license](https://github.com/ValveResourceFormat/ValveResourceFormat/blob/master/LICENSE)                                                           |
-| [ripgrep](https://github.com/BurntSushi/ripgrep)                              | Blacklist generation with RegExp patterns        | [Unlicense](https://github.com/BurntSushi/ripgrep/blob/master/UNLICENSE) & [MIT license](https://github.com/BurntSushi/ripgrep/blob/master/LICENSE-MIT) |
+| Name                                                                          | Usage                                 | License                                                                                                                                                 |
+| ----------------------------------------------------------------------------- | ------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [Python](https://www.python.org/)                                             | Core language                         | [PSFL license](https://github.com/python/cpython/blob/main/LICENSE)                                                                                     |
+| [ripgrep](https://github.com/BurntSushi/ripgrep)                              | RegExp patterns                       | [Unlicense](https://github.com/BurntSushi/ripgrep/blob/master/UNLICENSE) & [MIT license](https://github.com/BurntSushi/ripgrep/blob/master/LICENSE-MIT) |
+| [Source 2 Viewer](https://github.com/ValveResourceFormat/ValveResourceFormat) | VPK interaction & asset decompilation | [MIT license](https://github.com/ValveResourceFormat/ValveResourceFormat/blob/master/LICENSE)                                                           |
 
 ### Python packages
 
-| Name                                                                   | Usage                                                   | License                                                                                                       |
-| ---------------------------------------------------------------------- | ------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------- |
-| [dearpygui](https://github.com/hoffstadt/DearPyGui)                    | GUI                                                     | [MIT license](https://github.com/hoffstadt/DearPyGui/blob/master/LICENSE)                                     |
-| [json-with-comments](https://github.com/n-takumasa/json-with-comments) | JSON parsing with comments                              | [MIT license](https://github.com/n-takumasa/json-with-comments/blob/main/LICENSE)                             |
-| [playsound3](https://github.com/szmikler/playsound3)                   | Playing simple sounds                                   | [MIT license](https://github.com/szmikler/playsound3/blob/main/LICENSE)                                       |
-| [psutil](https://github.com/giampaolo/psutil)                          | Checking Dota2 processes existence                      | [BSD-3-Clause license](https://github.com/giampaolo/psutil/blob/master/LICENSE)                               |
-| [PyInstaller](https://pyinstaller.org)                                 | Compilation                                             | [GPLv2 or later + additional properties](https://github.com/pyinstaller/pyinstaller/blob/develop/COPYING.txt) |
-| [requests](https://github.com/psf/requests)                            | Downloading/querying project dependencies               | [Apache-2.0 license](https://github.com/psf/requests/blob/main/LICENSE)                                       |
-| [screeninfo](https://github.com/rr-/screeninfo)                        | Calculation of the initial position for the main window | [MIT license](https://github.com/rr-/screeninfo/blob/master/LICENSE.md)                                       |
-| [vdf](https://github.com/ValvePython/vdf)                              | Serializing VDFs                                        | [MIT license](https://github.com/ValvePython/vdf/blob/master/LICENSE)                                         |
-| [vpk](https://github.com/ValvePython/vpk)                              | Creating VPKs and getting file content list in VPKs     | [MIT license](https://github.com/ValvePython/vpk/blob/master/LICENSE)                                         |
+| Name                                                                   | Usage                                     | License                                                                                                       |
+| ---------------------------------------------------------------------- | ----------------------------------------- | ------------------------------------------------------------------------------------------------------------- |
+| [dearpygui](https://github.com/hoffstadt/DearPyGui)                    | GUI                                       | [MIT license](https://github.com/hoffstadt/DearPyGui/blob/master/LICENSE)                                     |
+| [json-with-comments](https://github.com/n-takumasa/json-with-comments) | JSON parsing with comments                | [MIT license](https://github.com/n-takumasa/json-with-comments/blob/main/LICENSE)                             |
+| [playsound3](https://github.com/szmikler/playsound3)                   | Playing sounds                            | [MIT license](https://github.com/szmikler/playsound3/blob/main/LICENSE)                                       |
+| [psutil](https://github.com/giampaolo/psutil)                          | Checking Dota2 processes existence        | [BSD-3-Clause license](https://github.com/giampaolo/psutil/blob/master/LICENSE)                               |
+| [PyInstaller](https://pyinstaller.org)                                 | Compilation                               | [GPLv2 or later + additional properties](https://github.com/pyinstaller/pyinstaller/blob/develop/COPYING.txt) |
+| [requests](https://github.com/psf/requests)                            | Downloading/querying project dependencies | [Apache-2.0 license](https://github.com/psf/requests/blob/main/LICENSE)                                       |
+| [screeninfo](https://github.com/rr-/screeninfo)                        | Position calculation                      | [MIT license](https://github.com/rr-/screeninfo/blob/master/LICENSE.md)                                       |
+| [vdf](https://github.com/ValvePython/vdf)                              | Serializing VDFs                          | [MIT license](https://github.com/ValvePython/vdf/blob/master/LICENSE)                                         |
+| [vpk](https://github.com/ValvePython/vpk)                              | VPK interaction                           | [MIT license](https://github.com/ValvePython/vpk/blob/master/LICENSE)                                         |
+
+[<img alt="Back to top" align="right" height="64px" src="docs/assets/caret-up-solid-full.svg">](#table-of-contents)
 
 ## License
 
