@@ -195,7 +195,6 @@ def write_warning(header=None):
         else:
             file.write(f"{header}\n{'-' * 50}\n\n")
     add_text_to_terminal(message, type="warning")
-    open_thing(log_warnings)
 
 
 def unhandled_handler(handled=False):
