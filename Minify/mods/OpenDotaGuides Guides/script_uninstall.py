@@ -33,9 +33,6 @@ def main():
                     )
                 helper.remove_path(os.path.join(dota_itembuilds_path, "bkup"))
     except FileNotFoundError:
-        helper.add_text_to_terminal(
-            "Unable to recover backed up default guides or the itembuilds directory is empty, verify files to get the default guides back"
-        )
         mpaths.write_warning(
             "Unable to recover backed up default guides or the itembuilds directory is empty, verify files to get the default guides back"
         )

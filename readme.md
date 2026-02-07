@@ -310,7 +310,7 @@ if __name__ == "__main__":
 
 #### `styling.css`
 
-This file is a list of VCSS filepaths and styling that will be appended to them.  
+This file is a list of VCSS paths and styling that will be appended to them.  
 By the nature of this method modifications done here may break the original XML or CSS that gets updated resulting in a bad layout.  
 In such cases, a repatch or a slight modification is required.
 
@@ -319,11 +319,20 @@ If you encounter errors while patching, it's most likely that your CSS is invali
 For Source 2 flavored CSS properties, refer to: [Valve Developer Community Wiki](https://developer.valvesoftware.com/wiki/Dota_2_Workshop_Tools/Panorama/CSS_Properties).  
 To live inspect the layout, open the workshop tools and press <kbd>F6</kbd> and select the element you'd like to select from the XML.
 
-Syntax for this file starting from the line beginning is as follows:  
+Syntax :
 
 ```css
 /* g|c:path/to/vcss_file_without_extension */
 example_selector { property: value; }
+/* it can also override definitions */
+@define foo: bar;
+@keyframes 'anim-name'
+{
+  progress
+  {
+    property: value;
+  }
+}
 ```
 
 #### `xml_mod.json`
@@ -393,6 +402,7 @@ This project wouldn't be available without the work of the community. Thanks to 
 | [`Auto Accept Match`](./Minify/mods/Auto%20Accept%20Match)                                      | [MeGaNeKoS](https://github.com/MeGaNeKoS)          |                                                                                                              |
 | [`Auto Language Dialog Accept`](./Minify/mods/#base/files/panorama/scripts/popup_generic.vjs_c) | [MeGaNeKoS](https://github.com/MeGaNeKoS)          |                                                                                                              |
 | [`Custom Backgrounds`](./Minify/mods/Custom%20Backgrounds)                                      | [Egezenn](https://github.com/Egezenn)              |                                                                                                              |
+| [`Custom Fonts`](./Minify/mods/Custom%20Backgrounds)                                            | [Egezenn](https://github.com/Egezenn)              |                                                                                                              |
 | [`D2PT Hero Grids`](./Minify/mods/D2PT%20Hero%20Grids/)                                         | [Egezenn](https://github.com/Egezenn)              | [Dota2ProTracker Meta Hero Grids](https://dota2protracker.com/meta-hero-grids)                               |
 | [`Dark Terrain`](./Minify/mods/Dark%20Terrain)                                                  | [robbyz512](https://github.com/robbyz512)          |                                                                                                              |
 | [`Minify Base Attacks`](./Minify/mods/Minify%20Base%20Attacks)                                  | [robbyz512](https://github.com/robbyz512)          |                                                                                                              |

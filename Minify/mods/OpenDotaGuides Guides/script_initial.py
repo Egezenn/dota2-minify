@@ -9,12 +9,11 @@ if os.getcwd() != minify_root:
 if minify_root not in sys.path:
     sys.path.insert(0, minify_root)
 
+import dearpygui.dearpygui as ui
+
 import helper
 
 
 def main():
-    try:
-        if helper.workshop_installed:
-            helper.remove_path(os.path.join(current_dir, "styling.css"))
-    except:
-        pass
+    if not helper.workshop_installed:
+        ui.configure_item(os.path.basename(current_dir), enabled=True)

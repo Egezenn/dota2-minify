@@ -1,0 +1,22 @@
+/* g:panorama/styles/dashboard_page_credits */
+#Minify {
+	flow-children: down;
+	horizontal-align: center;
+	margin-bottom: 40px;
+	width: 800px;
+}
+
+#MTitle {
+	color: white;
+	font-size: 36px;
+	horizontal-align: center;
+	text-align: center;
+	text-transform: uppercase;
+}
+
+#MText1,#MText2 {
+	color: #aaa;
+	font-size: 24px;
+	horizontal-align: center;
+	text-align: center;
+}

@@ -1,0 +1,13 @@
+/* g:panorama/styles/dotastyles */
+/* Do not modify this file manually!
+Even if you do, remove this mod's scripts, otherwise it won't work.
+Set your fonts on font_string from the config */
+@define defaultFont: <insert_fonts_here>;
+@define monospaceNumbersFont: <insert_fonts_here>;
+@define titleFont: <insert_fonts_here>;
+@define monospaceFont: <insert_fonts_here>;
+@define diretideFont: <insert_fonts_here>;
+@define diretideFontX: <insert_fonts_here>;
+@define diretideFontXX: <insert_fonts_here>;
+@define comicFont: <insert_fonts_here>;
+@define underlordsTitleFont: <insert_fonts_here>;

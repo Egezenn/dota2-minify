@@ -165,27 +165,37 @@ def set_mod_config(mod_name, config_data):
 
 
 def write_crashlog(exc_type=None, exc_value=None, exc_traceback=None, header=None, handled=True):
+    from helper import add_text_to_terminal, open_thing
+
     path = log_crashlog if handled else log_unhandled
     with open(path, "w") as file:
         if handled:
-            file.write(f"{header}\n\n{traceback.format_exc()}") if header else file.write(traceback.format_exc())
+            if header:
+                file.write(message := f"{header}\n\n{traceback.format_exc()}")
+            else:
+                file.write(message := traceback.format_exc())
         else:
-            file.write(f"{''.join(traceback.format_exception(exc_type, exc_value, exc_traceback))}")
+            file.write(message := f"{''.join(traceback.format_exception(exc_type, exc_value, exc_traceback))}")
+    add_text_to_terminal(message, type="error")
+    open_thing(log_crashlog) if handled else open_thing(log_unhandled)
 
 
 def write_warning(header=None):
+    from helper import add_text_to_terminal, open_thing
+
     if not os.path.exists(log_warnings):
         open(log_warnings, "w").close()
 
     with open(log_warnings, "a") as file:
         if "NoneType: None" not in traceback.format_exc():
-            (
-                file.write(f"{header}\n\n{traceback.format_exc()}\n{'-' * 50}\n\n")
-                if header
-                else file.write(traceback.format_exc() + f"\n{'-' * 50}\n\n")
-            )
+            if header:
+                file.write(message := f"{header}\n\n{traceback.format_exc()}\n{'-' * 50}\n\n")
+            else:
+                file.write(message := traceback.format_exc() + f"\n{'-' * 50}\n\n")
         else:
             file.write(f"{header}\n{'-' * 50}\n\n")
+    add_text_to_terminal(message, type="warning")
+    open_thing(log_warnings)
 
 
 def unhandled_handler(handled=False):
@@ -337,7 +347,7 @@ def get_steam_accounts():
         return accounts
 
     try:
-        for user_id in os.listdir(os.path.join(steam_root, "userdata")):
+        for user_id in sorted(os.listdir(os.path.join(steam_root, "userdata")), key=lambda x: int(x)):
             localconfig_path = os.path.join(steam_root, "userdata", user_id, "config", "localconfig.vdf")
             if os.path.exists(localconfig_path):
                 try:

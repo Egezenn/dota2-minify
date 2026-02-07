@@ -1,0 +1,9 @@
+{
+  "panorama/layout/dashboard_page_credits.xml": [
+    {
+      "action": "insert_after",
+      "target_id": "SpecialThanks",
+      "xml": "<Panel id=\"Minify\"> <Label id=\"MTitle\" text=\"Minify\" /> <Label id=\"MText1\" text=\"Customizing clients since 2022!\" /><Label id=\"MText2\" text=\"robbyz512, Egezenn, ZerdacK and contributors\" /></Panel>"
+    }
+  ]
+}

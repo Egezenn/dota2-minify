@@ -33,7 +33,7 @@ except:
     version = ""
 
 title = f"Minify {version}" if version else "Minify"
-spacer_amt = 75
+spacer = "-" * 75
 banner_height = 120
 
 
@@ -506,6 +506,7 @@ settings_config = [
         "default": False,
         "type": "checkbox",
     },
+    # TODO: add a way to append mod settings here
 ]
 
 
@@ -623,7 +624,7 @@ def start_text():
     ui.add_text(source="start_text_4_var", parent="terminal_window")
     ui.add_text(source="start_text_5_var", parent="terminal_window")
     ui.add_text(
-        default_value="-" * spacer_amt,
+        default_value=spacer,
         parent="terminal_window",
         tag="spacer_start_text_tag",
     )
@@ -884,7 +885,7 @@ def dev_mode():
             item="main_viewport",
             resizable=False,
             width=mpaths.main_window_width,
-            height=mpaths.main_window_height + 350,
+            height=mpaths.main_window_height + height_increase,
         )
         ui.configure_item("opener", show=True)
         ui.configure_item("mod_tools", show=True)

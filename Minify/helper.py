@@ -74,7 +74,7 @@ def extract_archive(archive_path, extract_dir=".", target_file=None):
     """
     try:
         if archive_path.endswith(".zip"):
-            with zipfile.ZipFile(archive_path, "r") as zip_ref:
+            with zipfile.ZipFile(archive_path) as zip_ref:
                 if target_file:
                     zip_ref.extract(target_file, path=extract_dir)
                 else:
@@ -440,6 +440,7 @@ def compile(sender, app_data, user_data):
                 command.insert(0, "wine")
 
             subprocess.run(
+                command,
                 stdout=file,
                 creationflags=subprocess.CREATE_NO_WINDOW if mpaths.OS == mpaths.WIN else 0,
             )

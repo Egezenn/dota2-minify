@@ -409,7 +409,7 @@ def patcher(mod=None, pakname=None):
         )
 
         gui.unlock_interaction()
-        helper.add_text_to_terminal("-" * gui.spacer_amt, "spacer1_text")
+        helper.add_text_to_terminal(gui.spacer, "spacer1_text")
         helper.add_text_to_terminal(
             helper.localization_dict["success_terminal_text_var"],
             "success_text_tag",
@@ -438,9 +438,8 @@ def patcher(mod=None, pakname=None):
 
     except:
         mpaths.write_crashlog()
-        helper.open_thing(mpaths.log_crashlog)
 
-        helper.add_text_to_terminal("-" * gui.spacer_amt, "spacer2_text")
+        helper.add_text_to_terminal(gui.spacer, "spacer2_text")
         helper.add_text_to_terminal(
             helper.localization_dict["failure_terminal_text_var"],
             "patching_failed_text_tag",
@@ -673,14 +672,63 @@ def apply_xml_modifications(xml_file, modifications):
 
 def apply_styles_to_file(item):
     file_path, styles_to_apply = item
-    with open(file_path, "r+") as file:
+
+    def remove_braced_block(text, start_pattern):
+        while True:
+            match = re.search(start_pattern, text)
+            if not match:
+                break
+
+            start_index = match.start()
+
+            open_brace_index = text.find("{", match.end())
+            if open_brace_index == -1:
+                break
+
+            brace_count = 1
+            current_index = open_brace_index + 1
+            while brace_count > 0 and current_index < len(text):
+                if text[current_index] == "{":
+                    brace_count += 1
+                elif text[current_index] == "}":
+                    brace_count -= 1
+                current_index += 1
+
+            if brace_count == 0:
+
+                text = text[:start_index] + text[current_index:]
+            else:
+                break
+        return text
+
+    with open(file_path, encoding="utf-8") as file:
         content = file.read()
 
-        unique_styles_to_add = []
-        for style in styles_to_apply:
-            if style not in content and style not in unique_styles_to_add:
-                unique_styles_to_add.append(style)
+    new_defines = set()
+    new_keyframes = set()
 
+    for style in styles_to_apply:
+        defines = re.findall(r"@define\s+([\w-]+)\s*:", style)
+        new_defines.update(defines)
+
+        keyframes = re.findall(r"@keyframes\s+(?:'|\")?([\w\s-]+)(?:'|\")?", style)
+        new_keyframes.update(keyframes)
+
+    for define_name in new_defines:
+        pattern = rf"@define\s+{re.escape(define_name)}\s*:\s*.*?(?:;|$)"
+        content = re.sub(pattern, "", content, flags=re.DOTALL)
+
+    for keyframe_name in new_keyframes:
+        start_pattern = rf"@keyframes\s+(?:'|\")?{re.escape(keyframe_name)}(?:'|\")?"
+        content = remove_braced_block(content, start_pattern)
+
+    unique_styles_to_add = []
+    for style in styles_to_apply:
+        if style not in content and style not in unique_styles_to_add:
+            unique_styles_to_add.append(style)
+
+    with open(file_path, "w", encoding="utf-8") as file:
+        file.write(content)
         if unique_styles_to_add:
             file.write("\n" + "\n".join(unique_styles_to_add))
 
