@@ -176,7 +176,8 @@ def write_crashlog(exc_type=None, exc_value=None, exc_traceback=None, header=Non
                 file.write(message := traceback.format_exc())
         else:
             file.write(message := f"{''.join(traceback.format_exception(exc_type, exc_value, exc_traceback))}")
-    add_text_to_terminal(message, type="error")
+    if message:
+        add_text_to_terminal(message, type="error")
     open_thing(log_crashlog) if handled else open_thing(log_unhandled)
 
 
@@ -193,8 +194,9 @@ def write_warning(header=None):
             else:
                 file.write(message := traceback.format_exc() + f"\n{'-' * 50}\n\n")
         else:
-            file.write(f"{header}\n{'-' * 50}\n\n")
-    add_text_to_terminal(message, type="warning")
+            file.write(message := f"{header}\n{'-' * 50}\n\n")
+    if message:
+        add_text_to_terminal(message, type="warning")
 
 
 def unhandled_handler(handled=False):
