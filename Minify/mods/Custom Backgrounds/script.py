@@ -1,4 +1,5 @@
 import os
+import re
 import shutil
 import subprocess
 import sys
@@ -26,7 +27,6 @@ def main():
             break
         elif file.endswith((".mp4", ".webm")):
             vid_available = True
-            file_ext = os.path.splitext(file)[1]
             break
 
     if helper.workshop_installed and (img_available or vid_available):
@@ -69,9 +69,34 @@ def main():
                     xml.write(xml_template)
 
         elif vid_available:
-            # TODO implement panorama side of things
-            os.makedirs(
-                compile_location := os.path.join(mpaths.minify_dota_compile_output_path, "panorama", "videos"),
-                exist_ok=True,
-            )
-            shutil.copy(filepath, os.path.join(compile_location, "background" + file_ext))
+            if not filepath.endswith(".webm"):
+                if (ffmpeg_path := shutil.which("ffmpeg")) is not None:
+                    subprocess.run(
+                        [
+                            ffmpeg_path,
+                            "-y",
+                            "-i",
+                            filepath,
+                            filepath := os.path.join(current_dir, "background.webm"),
+                        ],
+                        creationflags=subprocess.CREATE_NO_WINDOW if mpaths.OS == mpaths.WIN else 0,
+                    )
+                else:
+                    helper.add_text_to_terminal(f"ffmpeg is not available on path, unable to convert {file}")
+
+            if filepath.endswith(".webm"):
+                os.makedirs(
+                    compile_location := os.path.join(mpaths.minify_dota_compile_output_path, "panorama", "videos"),
+                    exist_ok=True,
+                )
+                shutil.copy(filepath, os.path.join(compile_location, "background.webm"))
+
+                with open(os.path.join(current_dir, "styling.css")) as f:
+                    data = f.read()
+
+                data = re.sub(r"(\s*)(background-image: .*?;)(\s*/\* replace \*/)", r"\1/* \2 */\3", data)
+
+                with open(os.path.join(current_dir, "styling.css"), "w") as f:
+                    f.write(data)
+
+                open(os.path.join(current_dir, "video_success"), "w").close()

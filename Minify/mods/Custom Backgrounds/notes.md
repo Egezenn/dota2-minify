@@ -1,139 +1,239 @@
 <!-- LANG:EN -->
-Replaces main menu background, player showcase background and pick screen background.
+Replaces most backgrounds.
 
-You can drop an image to this mod's folder and it will use that for the background.
+You can drop an image (`.png`) or a video(`.webm`) to this mod's folder and it will use that as the background. By default it'll use an image from Dota.
 
-!!: You need `magick` utility on your path variable if your image isn't a png and needs to be converted.
+!!: The file that is alphabethically higher will be used! e.g having the files `example.png` and `another.jpg` will select `another.jpg`.
+
+Formats below will be automatically converted if the tool exists.
+
+- `magick`: `.jpg`, `.jpeg`, `.webp`
+- `ffmpeg`: `.mp4`
 
 <!-- LANG:BG -->
-Заменя фона на главното меню, фона на витрината на играча и фона на екрана за избор.
+Заменя повечето фонове.
 
-Можете да пуснете изображение в папката на този мод и той ще го използва за фон.
+Можете да пуснете изображение (`.png`) или видеоклип (`.webm`) в папката на този мод и той ще го използва като фон. По подразбиране ще използва изображение от Dota.
 
-!!: Необходима ви е помощната програма `magick` в променливата path, ако изображението ви не е png и трябва да бъде конвертирано.
+!!: Ще се използва файлът, който е по-висок по азбучен ред! Например, ако файловете са `example.png` и `another.jpg`, ще се избере `another.jpg`.
+
+Форматите по-долу ще бъдат конвертирани автоматично, ако инструментът съществува.
+
+- `magick`: `.jpg`, `.jpeg`, `.webp`
+- `ffmpeg`: `.mp4`
 
 <!-- LANG:CS -->
-Nahrazuje pozadí hlavní nabídky, pozadí přehrávače a pozadí obrazovky pro výběr.
+Nahrazuje většinu pozadí.
 
-Můžete vložit obrázek do složky tohoto modu a mod ho použije jako pozadí.
+Do složky tohoto modu můžete vložit obrázek (`.png`) nebo video (`.webm`) a mod je použije jako pozadí. Ve výchozím nastavení použije obrázek z Doty.
 
-!!: Pokud váš obrázek není ve formátu png a je třeba jej převést, potřebujete v proměnné path utilitu `magick`.
+!!: Bude použit soubor, který je abecedně vyšší! Např. pokud máte soubory `example.png` a `another.jpg`, vybere se `another.jpg`.
+
+Níže uvedené formáty budou automaticky převedeny, pokud existuje nástroj.
+
+- `magick`: `.jpg`, `.jpeg`, `.webp`
+- `ffmpeg`: `.mp4`
 
 <!-- LANG:DA -->
-Erstatter baggrunden for hovedmenuen, baggrunden for spillerens showcase og baggrunden for valgskærmen.
+Erstatter de fleste baggrunde.
 
-Du kan slippe et billede i denne mods mappe, og den vil bruge det som baggrund.
+Du kan slippe et billede (`.png`) eller en video (`.webm`) til denne mods mappe, og den vil bruge det som baggrund. Som standard vil den bruge et billede fra Dota.
 
-!!: Du skal bruge `magick`-værktøjet på din path-variabel, hvis dit billede ikke er en png og skal konverteres.
+!!: Den fil, der er alfabetisk højere, vil blive brugt! F.eks. hvis du har filerne `example.png` og `another.jpg`, vil `another.jpg` blive valgt.
+
+Formaterne nedenfor vil automatisk blive konverteret, hvis værktøjet findes.
+
+- `magick`: `.jpg`, `.jpeg`, `.webp`
+- `ffmpeg`: `.mp4`
 
 <!-- LANG:DE -->
-Ersetzt den Hintergrund des Hauptmenüs, der Spielerpräsentation und des Auswahlbildschirms.
+Ersetzt die meisten Hintergründe.
 
-Sie können ein Bild in den Ordner dieser Mod ziehen; es wird dann als Hintergrund verwendet.
+Du kannst ein Bild (`.png`) oder ein Video (`.webm`) in den Ordner dieser Mod ziehen. Es wird dann als Hintergrund verwendet. Standardmäßig wird ein Bild aus Dota verwendet.
 
-!!: Falls Ihr Bild kein PNG ist und konvertiert werden muss, benötigen Sie das Dienstprogramm `magick` in Ihrer Pfadvariablen.
+!!: Die alphabetisch höher stehende Datei wird verwendet! Wenn du beispielsweise die Dateien `example.png` und `another.jpg` hast, wird `another.jpg` ausgewählt.
+
+Die folgenden Formate werden automatisch konvertiert, sofern das entsprechende Tool vorhanden ist:
+
+- `magick`: `.jpg`, `.jpeg`, `.webp`
+- `ffmpeg`: `.mp4`
 
 <!-- LANG:EL -->
-Αντικαθιστά το φόντο του κύριου μενού, το φόντο της παρουσίασης του παίκτη και το φόντο της οθόνης επιλογής.
+Αντικαθιστά τα περισσότερα φόντα.
 
-Μπορείτε να αποθέσετε μια εικόνα στον φάκελο αυτού του mod και θα τη χρησιμοποιήσει ως φόντο.
+Μπορείτε να αποθέσετε μια εικόνα (`.png`) ή ένα βίντεο (`.webm`) στον φάκελο αυτού του mod και θα το χρησιμοποιήσει ως φόντο. Από προεπιλογή, θα χρησιμοποιήσει μια εικόνα από το Dota.
 
-!!: Χρειάζεστε το βοηθητικό πρόγραμμα `magick` στη μεταβλητή διαδρομής σας εάν η εικόνα σας δεν είναι png και πρέπει να μετατραπεί.
+!!: Θα χρησιμοποιηθεί το αρχείο που είναι αλφαβητικά υψηλότερο! π.χ. αν έχετε τα αρχεία `example.png` και `another.jpg`, θα επιλέξετε `another.jpg`.
+
+Οι παρακάτω μορφές θα μετατραπούν αυτόματα εάν το εργαλείο υπάρχει.
+
+- `magick`: `.jpg`, `.jpeg`, `.webp`
+- `ffmpeg`: `.mp4`
 
 <!-- LANG:ES -->
-Reemplaza el fondo del menú principal, el fondo de la vitrina del jugador y el fondo de la pantalla de selección.
+Reemplaza la mayoría de los fondos.
 
-Puedes soltar una imagen en la carpeta de este mod y la utilizará como fondo.
+Puedes arrastrar una imagen (`.png`) o un vídeo (`.webm`) a la carpeta de este mod y lo usará como fondo. Por defecto, usará una imagen de Dota.
 
-!!: * Necesitas la utilidad `magick` en tu variable de ruta si tu imagen no es un png y necesita ser convertida.
+!!: ¡Se usará el archivo con orden alfabético más alto! Por ejemplo, si tienes los archivos `example.png` y `another.jpg`, se seleccionará `another.jpg`.
+
+Los siguientes formatos se convertirán automáticamente si la herramienta existe.
+
+- `magick`: `.jpg`, `.jpeg`, `.webp`
+- `ffmpeg`: `.mp4`
 
 <!-- LANG:FI -->
-Korvaa päävalikon taustan, pelaajan esittelyn taustan ja valintanäytön taustan.
+Korvaa useimmat taustat.
 
-Voit pudottaa kuvan tämän modin kansioon, ja se käyttää sitä taustana.
+Voit pudottaa kuvan (`.png`) tai videon (`.webm`) tämän modin kansioon, ja se käyttää sitä taustakuvana. Oletusarvoisesti se käyttää kuvaa Dotasta.
 
-!!: Tarvitset `magick`-apuohjelman polkumuuttujaasi, jos kuvasi ei ole png ja se on muunnettava.
+!!: Käytetään aakkosjärjestyksessä korkeampaa tiedostoa! Esim. tiedostot `example.png` ja `another.jpg` valitsevat tiedoston `another.jpg`.
+
+Alla olevat muodot muunnetaan automaattisesti, jos työkalu on olemassa.
+
+- `magick`: `.jpg`, `.jpeg`, `.webp`
+- `ffmpeg`: `.mp4`
 
 <!-- LANG:FR -->
-Remplace l'arrière-plan du menu principal, de la présentation des joueurs et de l'écran de sélection.
+Remplace la plupart des arrière-plans.
 
-Vous pouvez glisser-déposer une image dans le dossier de ce mod ; elle sera utilisée comme arrière-plan.
+Vous pouvez glisser-déposer une image `(.png)` ou une vidéo `(.webm)` dans le dossier de ce mod pour qu'elle serve d'arrière-plan. Par défaut, une image de Dota est utilisée.
 
-!!: Si votre image n'est pas au format PNG et doit être convertie, vous devez ajouter l'utilitaire `magick` à votre variable d'environnement PATH.
+!!: Le fichier le plus ancien dans l'ordre alphabétique sera utilisé ! Par exemple, si vous avez les fichiers `example.png` et `another.jpg`, c'est `another.jpg` qui sera sélectionné.
+
+Les formats ci-dessous seront convertis automatiquement si l'outil est disponible.
+
+- `magick` : `.jpg`, `.jpeg`, `.webp`
+- `ffmpeg` : `.mp4`
 
 <!-- LANG:HU -->
-Lecseréli a főmenü hátterét, a játékos bemutató hátterét és a képernyőválasztó hátterét.
+A legtöbb hátteret lecseréli.
 
-A mod mappájába másolhatsz egy képet, és az azt fogja használni háttérként.
+Bedobhatsz egy képet (`.png`) vagy egy videót (`.webm`) a mod mappájába, és az azt fogja használni háttérként. Alapértelmezés szerint egy Dotából származó képet fog használni.
 
-!!: A `magick` segédprogramra van szükséged az elérési út változódban, ha a képed nem png, és konvertálni kell.
+!!: Az ábécésorrendben magasabban lévő fájl lesz használva! Pl. ha az `example.png` és az `another.jpg` fájlok vannak, akkor az `another.jpg` lesz kiválasztva.
+
+Az alábbi formátumok automatikusan konvertálódnak, ha létezik az eszköz.
+
+- `magick`: `.jpg`, `.jpeg`, `.webp`
+- `ffmpeg`: `.mp4`
 
 <!-- LANG:IT -->
-Sostituisce lo sfondo del menu principale, lo sfondo della vetrina del giocatore e lo sfondo della schermata di selezione.
+Sostituisce la maggior parte degli sfondi.
 
-È possibile trascinare un'immagine nella cartella di questa mod e verrà utilizzata come sfondo.
+Puoi trascinare un'immagine (`.png`) o un video (`.webm`) nella cartella di questa mod e verrà utilizzato come sfondo. Per impostazione predefinita, verrà utilizzata un'immagine di Dota.
 
-!!: È necessario avere l'utilità `magick` nella variabile del percorso se l'immagine non è in formato PNG e deve essere convertita.
+!!: Verrà utilizzato il file alfabeticamente più in alto! Ad esempio, se hai i file `example.png` e `another.jpg`, verrà selezionato `another.jpg`.
+
+I formati seguenti verranno convertiti automaticamente se lo strumento esiste.
+
+- `magick`: `.jpg`, `.jpeg`, `.webp`
+- `ffmpeg`: `.mp4`
 
 <!-- LANG:NL -->
-Vervangt de achtergrond van het hoofdmenu, de showcase van de speler en de achtergrond van het keuzescherm.
+Vervangt de meeste achtergronden.
 
-Je kunt een afbeelding naar de map van deze mod slepen en deze wordt dan als achtergrond gebruikt.
+Je kunt een afbeelding (`.png`) of een video (`.webm`) naar de map van deze mod slepen en deze zal als achtergrond worden gebruikt. Standaard wordt een afbeelding uit Dota gebruikt.
 
-!!: Je hebt het hulpprogramma `magick` nodig voor je padvariabele als je afbeelding geen png is en moet worden geconverteerd.
+!!: Het bestand met de hoogste alfabetische volgorde wordt gebruikt! Bijvoorbeeld: als je de bestanden `example.png` en `another.jpg` hebt, wordt `another.jpg` geselecteerd.
+
+De onderstaande formaten worden automatisch geconverteerd als de tool aanwezig is.
+
+- `magick`: `.jpg`, `.jpeg`, `.webp`
+- `ffmpeg`: `.mp4`
 
 <!-- LANG:NO -->
-Erstatter bakgrunnen for hovedmenyen, bakgrunnen for spillerens presentasjon og bakgrunnen for valgskjermen.
+Erstatter de fleste bakgrunner.
 
-Du kan slippe et bilde i mappen til denne modden, og den vil bruke det som bakgrunn.
+Du kan slippe et bilde (`.png`) eller en video (`.webm`) i mappen til denne modden, og den vil bruke det som bakgrunn. Som standard vil den bruke et bilde fra Dota.
 
-!!: Du trenger verktøyet `magick` på path-variabelen din hvis bildet ikke er en png og må konverteres.
+!!: Filen som er alfabetisk høyere vil bli brukt! F.eks. hvis du har filene `example.png` og `another.jpg`, vil `another.jpg` bli valgt.
+
+Formatene nedenfor vil automatisk bli konvertert hvis verktøyet finnes.
+
+- `magick`: `.jpg`, `.jpeg`, `.webp`
+- `ffmpeg`: `.mp4`
 
 <!-- LANG:PL -->
-Zastępuje tło menu głównego, tło prezentacji gracza i tło ekranu wyboru.
+Zastępuje większość teł.
 
-Możesz upuścić obraz do folderu tego moda, a zostanie on użyty jako tło.
+Możesz upuścić obraz (`.png`) lub film (`.webm`) do folderu tego moda, a zostanie on użyty jako tło. Domyślnie używany jest obraz z Dota.
 
-!!: Jeśli obraz nie jest w formacie PNG i wymaga konwersji, musisz dodać narzędzie `magick` do zmiennej ścieżki.
+!!: Zostanie użyty plik znajdujący się wyżej w kolejności alfabetycznej! Np. połączenie plików `example.png` i `another.jpg` spowoduje wybranie pliku `another.jpg`.
+
+Poniższe formaty zostaną automatycznie przekonwertowane, jeśli narzędzie istnieje.
+
+- `magick`: `.jpg`, `.jpeg`, `.webp`
+- `ffmpeg`: `.mp4`
 
 <!-- LANG:PT -->
-Substitui o fundo do menu principal, o fundo da tela de apresentação do jogador e o fundo da tela de seleção.
+Substitui a maioria dos planos de fundo.
 
-Você pode adicionar uma imagem à pasta deste mod e ela será usada como fundo.
+Você pode arrastar e soltar uma imagem (`.png`) ou um vídeo (`.webm`) na pasta deste mod e ele usará o arquivo como plano de fundo. Por padrão, será usada uma imagem do Dota.
 
-!!: Você precisa do utilitário `magick` na sua variável de ambiente PATH se a sua imagem não for PNG e precisar ser convertida.
+!!: O arquivo que estiver em ordem alfabética mais alta será usado! Por exemplo, se você tiver os arquivos `example.png` e `another.jpg`, `another.jpg` será selecionado.
+
+Os formatos abaixo serão convertidos automaticamente se a ferramenta existir.
+
+- `magick`: `.jpg`, `.jpeg`, `.webp`
+- `ffmpeg`: `.mp4`
 
 <!-- LANG:RO -->
-Înlocuiește fundalul meniului principal, fundalul prezentării jucătorului și fundalul ecranului de selectare.
+Înlocuiește majoritatea fundalurilor.
 
-Poți plasa o imagine în folderul acestui mod, iar acesta o va folosi pentru fundal.
+Puteți plasa o imagine (`.png`) sau un videoclip (`.webm`) în folderul acestui mod și acesta îl va folosi ca fundal. În mod implicit, va folosi o imagine din Dota.
 
-!!: Ai nevoie de utilitarul `magick` pe variabila de cale dacă imaginea nu este un png și trebuie convertită.
+!!: Fișierul care este mai sus în ordine alfabetică va fi utilizat! de exemplu, dacă aveți fișierele `example.png` și `another.jpg`, `another.jpg` va fi selectat.
+
+Formatele de mai jos vor fi convertite automat dacă instrumentul există.
+
+- `magick`: `.jpg`, `.jpeg`, `.webp`
+- `ffmpeg`: `.mp4`
 
 <!-- LANG:RU -->
-Заменяет фон главного меню, фон витрины игроков и фон экрана выбора.
+Заменяет большинство фоновых изображений.
 
-Вы можете перетащить изображение в папку этого мода, и оно будет использоваться в качестве фона.
+Вы можете перетащить изображение (`.png`) или видео (`.webm`) в папку этого мода, и он будет использовать его в качестве фона. По умолчанию будет использоваться изображение из Dota.
 
-!!: * Вам понадобится утилита `magick` в переменной пути, если ваше изображение не является png и требует конвертации.
+!!: Будет использован файл, расположенный в алфавитном порядке выше! Например, если файлы `example.png` и `another.jpg` находятся в папке, будет выбран файл `another.jpg`.
+
+Форматы, указанные ниже, будут автоматически преобразованы, если существует соответствующая программа.
+
+- `magick`: `.jpg`, `.jpeg`, `.webp`
+- `ffmpeg`: `.mp4`
 
 <!-- LANG:SV -->
-Ersätter huvudmenybakgrunden, spelarens visningsbakgrund och plockskärmens bakgrund.
+Ersätter de flesta bakgrunder.
 
-Du kan släppa en bild till den här moddens mapp och den kommer att använda den som bakgrund.
+Du kan släppa en bild (`.png`) eller en video (`.webm`) till den här moddens mapp och den kommer att användas som bakgrund. Som standard använder den en bild från Dota.
 
-!!: Du behöver `magick`-verktyget på din path-variabel om din bild inte är en png och behöver konverteras.
+!!: Filen som är alfabetiskt högre upp kommer att användas! t.ex. om du har filerna `example.png` och `another.jpg` kommer `another.jpg` att välja.
+
+Formaten nedan kommer att konverteras automatiskt om verktyget finns.
+
+- `magick`: `.jpg`, `.jpeg`, `.webp`
+- `ffmpeg`: `.mp4`
 
 <!-- LANG:TR -->
-Ana menü arka planını, oyuncu vitrin arka planını ve seçim ekranı arka planını değiştirir.
+Çoğu arka planı değiştirir.
 
-Bu modun klasörüne bir resim bırakırsanız mod bunu arka plan olarak kullanacaktır.
+Bu modun klasörüne bir resim `(.png)` veya video `(.webm)` bırakabilirsiniz ve bu, arka plan olarak kullanılacaktır. Varsayılan olarak Dota'dan bir resim kullanacaktır.
 
-!!: * Kullanacağınız resim png formatında değilse ve dönüştürülmesi gerekiyorsa, yol değişkeninizde `magick` yardımcı programına ihtiyacınız var.
+!!: Alfabetik olarak daha üst sırada olan dosya kullanılacaktır! Örneğin, `example.png` ve `another.jpg` dosyalarına sahipseniz, `another.jpg` seçilecektir.
+
+Aşağıdaki formatlar, araç mevcutsa otomatik olarak dönüştürülecektir.
+
+- `magick`: `.jpg`, `.jpeg`, `.webp`
+- `ffmpeg`: `.mp4`
 
 <!-- LANG:UK -->
-Замінює фон головного меню, фон вітрини гравця та фон екрана вибору.
+Замінює більшість фонів.
 
-Ви можете перетягнути зображення в папку цього мода, і воно буде використано як фон.
+Ви можете перетягнути зображення (`.png`) або відео (`.webm`) до папки цього мода, і він використовуватиме їх як фон. За замовчуванням використовуватиметься зображення з Dota.
 
-!!: Вам потрібна утиліта `magick` у вашій змінній шляху, якщо ваше зображення не є png і його потрібно конвертувати.
+!!: Буде використано файл, який знаходиться вище в алфавітному порядку! Наприклад, якщо файли `example.png` та `another.jpg`, буде вибрано `another.jpg`.
+
+Наведені нижче формати будуть автоматично конвертовані, якщо інструмент існує.
+
+- `magick`: `.jpg`, `.jpeg`, `.webp`
+- `ffmpeg`: `.mp4`

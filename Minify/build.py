@@ -538,6 +538,9 @@ def vpk_extractor(vpk_to_extract_from, paths, path_to_extract_to=mpaths.build_di
 
 
 def apply_xml_modifications(xml_file, modifications):
+    # TODO: implement selectors like
+    # DOTAXThing#Thing.Thing[attrib="val"]
+
     if not os.path.exists(xml_file):
         mpaths.write_warning(f"[Missing XML] '{xml_file}' not found; skipping modifications")
         return

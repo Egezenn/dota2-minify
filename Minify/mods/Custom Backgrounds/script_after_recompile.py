@@ -17,6 +17,8 @@ def main():
     img_available = False
 
     for file in sorted(os.listdir(current_dir)):
+        if file == "preview.png":
+            continue
         if file.endswith((".png", ".jpg", ".jpeg", ".webp")):
             img_available = True
             break

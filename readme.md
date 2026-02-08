@@ -189,6 +189,7 @@ mods
 │   ├── script.py
 │   ├── script_after_decompile.py
 │   ├── script_after_recompile.py
+│   ├── script_after_patch.py
 │   ├── script_uninstall.py
 │   ├── styling.css
 │   └── xml_mod.json

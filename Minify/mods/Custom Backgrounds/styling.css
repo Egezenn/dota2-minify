@@ -3,7 +3,7 @@ DOTADashboard,
 #DashboardCore,
 #DashboardOverlay,
 #DashboardForeground {
-    background-image: url("s2r://panorama/images/backgrounds/background_png.vtex"), url("s2r://panorama/images/loadingscreens/international_2025_ls_3/loadingscreen.vtex");
+    background-image: url("s2r://panorama/images/backgrounds/background_png.vtex"), url("s2r://panorama/images/loadingscreens/international_2025_ls_3/loadingscreen.vtex"); /* replace */
     background-repeat: no-repeat;
     background-size: 100% 100%;
 }
@@ -15,7 +15,44 @@ DOTADashboard,
 
 /* g:panorama/styles/hud/dota_hud_pregame */
 .LowVisualQuality #PregameBGStatic {
-    background-image: url("s2r://panorama/images/backgrounds/background_png.vtex"), url("s2r://panorama/images/loadingscreens/international_2025_ls_3/loadingscreen.vtex");
+    background-image: url("s2r://panorama/images/backgrounds/background_png.vtex"), url("s2r://panorama/images/loadingscreens/international_2025_ls_3/loadingscreen.vtex");  /* replace */
     background-repeat: no-repeat;
     background-size: 100% 100%;
+}
+
+/* VIDEO */
+
+/* g:panorama/styles/dashboard_background_last_match */
+#BackgroundMovie
+{
+    /* width & height can be removed if the stretch effect isn't desired */
+    width: 100%; 
+    height: 100%;
+    vertical-align: center;
+    horizontal-align: center;
+    z-index: 1;
+}
+
+/* removes the last match details */
+/* .OnHomePage #MissingDataContainer,.OnHomePage #DetailsContainer
+{
+    visibility: collapse;
+} */
+
+/* g:panorama/styles/dashboard_page_home */
+/* removes the event containers */
+/* #FrontpageContents {
+    visibility: collapse;
+} */
+
+/* g:panorama/styles/dashboard_background_manager */
+.DashboardBackground
+{
+	visibility: visible;
+}
+
+/* g:panorama/styles/hero_loadout_background_images */
+#HeroLoadoutBackgroundImageContainer
+{
+	visibility: collapse;
 }

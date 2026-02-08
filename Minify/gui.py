@@ -240,7 +240,6 @@ def create_checkboxes():
             value = mpaths.get_config__dict(checkboxes_state, mod, False)
 
         ui.add_group(parent="mod_menu", tag=f"{mod}_group_tag", horizontal=True, width=mpaths.main_window_width)
-        # enabled=False default_value=True doesn't show up as ticked
         ui.add_checkbox(
             parent=f"{mod}_group_tag",
             label=mod[:-4] if is_vpk else mod,
