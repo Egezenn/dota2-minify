@@ -505,41 +505,16 @@ settings_config = [
         "default": False,
         "type": "checkbox",
     },
+    {
+        "key": "fix_parameters",
+        "label": "fix_parameters",
+        "label_text": "Handle language parameter for current ID",
+        "tag": "opt_fix_parameters",
+        "default": True,
+        "type": "checkbox",
+    },
     # TODO: add a way to append mod settings here
 ]
-
-
-def get_steam_user_list():
-    steam_root = mpaths.get_config("steam_root", "")
-    if not steam_root:
-        return []
-
-    userdata = os.path.join(steam_root, "userdata")
-    if not os.path.exists(userdata):
-        return []
-
-    users = []
-
-    for folder in os.listdir(userdata):
-        if folder.isdigit():
-            try:
-                config_path = os.path.join(userdata, folder, "config", "localconfig.vdf")
-                if os.path.exists(config_path):
-                    with open(config_path, encoding="utf-8") as f:
-                        data = vdf.load(f)
-
-                    try:
-                        name = data.get("UserLocalConfigStore", {}).get("friends", {})
-                    except:
-                        name = "Unknown"
-
-                    users.append(f"{folder} - {name}")
-                else:
-                    users.append(folder)
-            except:
-                users.append(folder)
-
-    return sorted(users)
 
 
 def save_settings():
@@ -822,13 +797,15 @@ def dev_mode():
                 label="Executable: Dota2 Tools",
                 callback=lambda: helper.open_thing(
                     mpaths.dota2_tools_executable,
-                    "-addon a -language minify -novid -console",
+                    f"-addon a -language {mpaths.get_config("output_locale")} -novid -console",
                 ),
             )
             ui.add_text("^ Requires steam to be open")
             ui.add_button(
                 label="Executable: Dota2",
-                callback=lambda: helper.open_thing(mpaths.dota2_executable, "-language minify -novid -console"),
+                callback=lambda: helper.open_thing(
+                    mpaths.dota2_executable, f"-language {mpaths.get_config("output_locale")} -novid -console"
+                ),
             )
 
         with ui.window(
@@ -877,6 +854,13 @@ def dev_mode():
             ui.add_button(label="Wipe language paths", callback=build.wipe_lang_dirs)
             ui.add_spacer(width=0, height=5)
             ui.add_button(label="Extract workshop tools", callback=extract_workshop_tools)
+            ui.add_spacer(width=0, height=5)
+            ui.add_button(
+                label="Open Steam", callback=lambda: helper.open_thing(mpaths.steam_executable_path, "-silent")
+            )
+            ui.add_button(
+                label="Kill Steam", callback=lambda: helper.open_thing(mpaths.steam_executable_path, "-exitsteam")
+            )
 
     elif dev_mode_state == 0:  # open
         dev_mode_state = 1
@@ -948,7 +932,6 @@ def is_dota_running():
         except (psutil.NoSuchProcess, psutil.AccessDenied, psutil.ZombieProcess):
             continue
     if running:
-        lock_interaction()
         helper.add_text_to_terminal(
             helper.localization_dict["error_please_close_dota_terminal_text_var"],
             "please_close_dota_text_tag",

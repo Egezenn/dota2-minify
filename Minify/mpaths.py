@@ -116,45 +116,36 @@ def update_json_file(path, key, value):
 def get_config(key, default_value=None):
     "Get config value from the main config file with default and set the default onto config."
     data = read_json_file(main_config_file_dir)
-    try:
+    if key in data:
         return data[key]
-    except KeyError:
-        if default_value is not None:
-            update_json_file(main_config_file_dir, key, default_value)
-            return default_value
-        else:
-            return None
+
+    if default_value is not None:
+        return update_json_file(main_config_file_dir, key, default_value)
+
+    return None
 
 
 def set_config(key, value):
     "Set config value for the main config file."
-    update_json_file(main_config_file_dir, key, value)
-    return value
+    return update_json_file(main_config_file_dir, key, value)
 
 
 def get_config__file(file, key, default=None):
     "Get config value from a file with default and return the dict for later use."
-    try:
-        data = read_json_file(file)
-        return get_config__dict(data, key, default), data
-    except FileNotFoundError:
-        return default, {}
+    data = read_json_file(file)
+    return data.get(key, default), data
 
 
-def get_config__dict(dict, key, default=None):
+def get_config__dict(data, key, default=None):
     "Get config value from preexisting dict."
-    try:
-        return dict[key]
-    except:
-        return default
+    return data.get(key, default)
 
 
 def get_mod_config(mod_name, default=None):
     "Get config value for mods and return the dict for later use."
     if default is None:
         default = {}
-    modconf = get_config("modconf", {})
-    return get_config__dict(modconf, mod_name, default)
+    return get_config("modconf", {}).get(mod_name, default)
 
 
 def set_mod_config(mod_name, config_data):
@@ -349,6 +340,9 @@ def get_steam_accounts():
 
     try:
         for user_id in sorted(os.listdir(os.path.join(steam_root, "userdata")), key=lambda x: int(x)):
+            if not os.path.exists(os.path.join(steam_root, "userdata", user_id, "570")):
+                continue
+
             localconfig_path = os.path.join(steam_root, "userdata", user_id, "config", "localconfig.vdf")
             if os.path.exists(localconfig_path):
                 try:
@@ -380,10 +374,8 @@ def get_steam_accounts():
 current_steam_id = get_config("steam_id")
 if not current_steam_id and steam_root:
     for account in get_steam_accounts():
-        acc_id = account["id"]
-        if os.path.exists(os.path.join(steam_root, "userdata", acc_id, "570")):
-            set_config("steam_id", acc_id)
-            break
+        set_config("steam_id", account["id"])
+        break
 
 
 # links
@@ -395,6 +387,10 @@ rg_ver = "15.1.0"
 
 try:
     if OS == WIN:
+        steam_executable_path = os.path.join(
+            get_config("steam_root", os.path.join(STEAM_DEFAULT_INSTALLATION_PATH)), "steam.exe"
+        )
+
         s2v_executable = "Source2Viewer-CLI.exe"
 
         if MACHINE in ["aarch64", "arm64"]:
@@ -409,6 +405,10 @@ try:
             rg_latest = f"https://github.com/BurntSushi/ripgrep/releases/download/{rg_ver}/ripgrep-{rg_ver}-i686-pc-windows-msvc.zip"
 
     elif OS == LINUX:
+        steam_executable_path = os.path.join(
+            get_config("steam_root", os.path.join(STEAM_DEFAULT_INSTALLATION_PATH)), "steam.exe"
+        )
+
         s2v_executable = "Source2Viewer-CLI"
         if MACHINE in ["aarch64", "arm64"]:
             s2v_latest = f"https://github.com/ValveResourceFormat/ValveResourceFormat/releases/download/{s2v_cli_ver}/cli-linux-arm64.zip"
@@ -432,6 +432,10 @@ try:
             rg_latest = f"https://github.com/BurntSushi/ripgrep/releases/download/{rg_ver}/ripgrep-{rg_ver}-i686-unknown-linux-gnu.tar.gz"
 
     elif OS == MAC:
+        steam_executable_path = os.path.join(
+            get_config("steam_root", os.path.join(STEAM_DEFAULT_INSTALLATION_PATH)), "steam"  # ?
+        )
+
         s2v_executable = "Source2Viewer-CLI"
         if MACHINE in ["aarch64", "arm64"]:
             s2v_latest = f"https://github.com/ValveResourceFormat/ValveResourceFormat/releases/download/{s2v_cli_ver}/cli-macos-arm64.zip"

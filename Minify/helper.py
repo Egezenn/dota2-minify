@@ -555,3 +555,23 @@ def exec_script(script_path, mod_name, order_name, _terminal_output=True):
                 localization_dict["script_no_main_text_var"].format(mod_name, order_name),
                 type="warning",
             )
+
+
+def remove_lang_args(arg_string):
+    tokens = arg_string.split()
+    cleaned = []
+    skip_next = False
+
+    for i, token in enumerate(tokens):
+        if skip_next:
+            skip_next = False
+            continue
+
+        if token == "-language":
+            if i + 1 < len(tokens) and not tokens[i + 1].startswith(("-", "+")):
+                skip_next = True
+            continue
+
+        cleaned.append(token)
+
+    return " ".join(cleaned)

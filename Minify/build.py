@@ -12,6 +12,7 @@ import dearpygui.dearpygui as ui
 import jsonc
 import playsound3
 import psutil
+import vdf
 import vpk
 
 import gui
@@ -24,22 +25,16 @@ game_contents_file_init = False
 def patcher(mod=None, pakname=None):
     gui.lock_interaction()
     helper.clean_terminal()
+
     target = "dota2.exe" if mpaths.OS == mpaths.WIN else "dota2"
-    running = False
-    for p in psutil.process_iter(attrs=["name"]):
-        try:
-            name = p.name() or ""
-            if name == target:
-                running = True
-                break
-        except (psutil.NoSuchProcess, psutil.AccessDenied, psutil.ZombieProcess):
-            continue
+    running = any(p.info.get("name") == target for p in psutil.process_iter(attrs=["name"]))
     if running:
         helper.add_text_to_terminal(
             helper.localization_dict["close_dota_terminal_text_var"],
             "close_dota_text_tag",
             "warning",
         )
+        gui.unlock_interaction()
         return
 
     try:
@@ -407,6 +402,46 @@ def patcher(mod=None, pakname=None):
             mpaths.replace_dir,
             mpaths.merge_dir,
         )
+
+        # handle language param automatically
+        if mpaths.get_config("fix_parameters", True):
+            with open(
+                vdf_path := os.path.join(
+                    mpaths.get_config("steam_root"),
+                    "userdata",
+                    steam_id := mpaths.get_config("steam_id"),
+                    "config",
+                    "localconfig.vdf",
+                ),
+                encoding="utf-8",
+            ) as file:
+                helper.add_text_to_terminal(helper.localization_dict["checking_launch_options_text_var"])
+                data = vdf.load(file)
+                locale = mpaths.get_config("output_locale")
+                launch_options = data["UserLocalConfigStore"]["Software"]["Valve"]["Steam"]["apps"]["570"][
+                    "LaunchOptions"
+                ]
+                if not f"-language {locale}" in launch_options:
+                    for user in mpaths.get_steam_accounts():
+                        if steam_id in user:
+                            break
+                    helper.add_text_to_terminal(
+                        helper.localization_dict["discrepancy_launch_options_text_var"].format(user["name"], locale)
+                    )
+                    helper.open_thing(mpaths.steam_executable_path, "-exitsteam")
+                    data["UserLocalConfigStore"]["Software"]["Valve"]["Steam"]["apps"]["570"][
+                        "LaunchOptions"
+                    ] = f"-language {locale} {helper.remove_lang_args(launch_options)}"
+                    with open(vdf_path, "w", encoding="utf-8") as file:
+                        vdf.dump(data, file, pretty=True)
+
+                    while any(
+                        p.info.get("name") == os.path.basename(mpaths.steam_executable_path)
+                        for p in psutil.process_iter(attrs=["name"])
+                    ):
+                        helper.add_text_to_terminal(helper.localization_dict["waiting_steam_to_close_text_var"])
+                        time.sleep(2)
+                    helper.open_thing(mpaths.steam_executable_path, "-silent")
 
         gui.unlock_interaction()
         helper.add_text_to_terminal(gui.spacer, "spacer1_text")

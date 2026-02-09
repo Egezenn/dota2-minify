@@ -24,7 +24,6 @@ ui.create_context()
 ui.add_value_registry(tag="details_tags")
 
 with ui.value_registry():
-    ui.add_string_value(default_value="Checking map file...", tag="checking_map_file_var")
     ui.add_string_value(
         default_value="Want to contribute to the project's growth?",
         tag="start_text_1_var",
