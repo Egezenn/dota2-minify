@@ -95,7 +95,7 @@ rescomp_override = True if os.path.exists(rescomp_override_dir) else False
 
 def read_json_file(path):
     try:
-        with open(path) as file:
+        with open(path, encoding="utf-8") as file:
             return jsonc.load(file)
     except (FileNotFoundError, jsonc.JSONDecodeError):
         return {}
@@ -169,7 +169,8 @@ def write_crashlog(exc_type=None, exc_value=None, exc_traceback=None, header=Non
             file.write(message := f"{''.join(traceback.format_exception(exc_type, exc_value, exc_traceback))}")
     if message:
         add_text_to_terminal(message, type="error")
-    open_thing(log_crashlog) if handled else open_thing(log_unhandled)
+    if frozen:
+        open_thing(log_crashlog) if handled else open_thing(log_unhandled)
 
 
 def write_warning(header=None):

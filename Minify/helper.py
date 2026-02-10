@@ -1,5 +1,6 @@
 import importlib.util
 import os
+from pathlib import Path
 import re
 import shlex
 import shutil
@@ -400,8 +401,8 @@ def open_thing(path, args=""):
         add_text_to_terminal(f"{path}{localization_dict['open_dir_fail_text_var']}", type="error")
 
 
-def compile(sender, app_data, user_data):
-    folder = compile_path
+def compile(sender=None, app_data=None, user_data=None):
+    folder = compile_path  # provided from dpg
     compile_output_path = os.path.join(folder, "compiled")
     clean_terminal()
 
@@ -410,11 +411,17 @@ def compile(sender, app_data, user_data):
         folder = os.path.join(mpaths.config_dir, "custom")
         compile_output_path = os.path.join(mpaths.config_dir, "compiled")
 
+    img_list = [str(f.relative_to(folder)) for f in Path(folder).rglob("*.png") if f.is_file()]
+
     if folder:
         remove_path(mpaths.minify_dota_compile_input_path, compile_output_path)
         os.makedirs(mpaths.minify_dota_compile_input_path)
 
+        with open(os.path.join(folder, "ref.xml"), "w") as file:
+            file.write(create_img_ref_xml(img_list))
+
         items = os.listdir(folder)
+
         try:
             items.remove("compiled")
         except ValueError:
@@ -451,12 +458,28 @@ def compile(sender, app_data, user_data):
         remove_path(
             mpaths.minify_dota_compile_input_path,
             mpaths.minify_dota_compile_output_path,
+            os.path.join(folder, "ref.xml"),
+            os.path.join(compile_output_path, "ref.vxml_c"),
         )
         os.makedirs(mpaths.minify_dota_tools_required_path, exist_ok=True)
 
         add_text_to_terminal(localization_dict["compile_successful_text_var"])
     else:
         add_text_to_terminal(localization_dict["compile_no_path_text_var"])
+
+
+def create_img_ref_xml(img_path_list):
+    "Helper function to create reference XMLs for images"
+    xml_list = []
+    for img_path in img_path_list:
+        xml_list.append(f'\t\t\t<Image src="file://{img_path}" />')
+
+    return rf"""<root>
+    <Panel class="AddonLoadingRoot">
+{"\n".join(xml_list)}
+    </Panel>
+</root>
+"""
 
 
 def select_compile_dir(sender, app_data):

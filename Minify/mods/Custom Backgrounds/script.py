@@ -33,12 +33,7 @@ def main():
         filepath = os.path.join(current_dir, file)
         if img_available:
             # reference to the file to compile to vtex
-            xml_template = r"""<root>
-    <Panel class="AddonLoadingRoot">
-        <Image src="file://{images}/backgrounds/background.png" />
-    </Panel>
-</root>
-"""
+            xml_template = helper.create_img_ref_xml(["panorama/images/backgrounds/background.png"])
             if not filepath.endswith(".png"):
                 if (magick_path := shutil.which("magick")) is not None:
                     subprocess.run(

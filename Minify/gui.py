@@ -12,7 +12,6 @@ import dearpygui.dearpygui as ui
 import jsonc
 import psutil
 import requests
-import vdf
 
 import build
 import helper
@@ -856,7 +855,7 @@ def dev_mode():
             ui.add_button(label="Extract workshop tools", callback=extract_workshop_tools)
             ui.add_spacer(width=0, height=5)
             ui.add_button(
-                label="Open Steam", callback=lambda: helper.open_thing(mpaths.steam_executable_path, "-silent")
+                label="Launch Steam", callback=lambda: helper.open_thing(mpaths.steam_executable_path, "-silent")
             )
             ui.add_button(
                 label="Kill Steam", callback=lambda: helper.open_thing(mpaths.steam_executable_path, "-exitsteam")
@@ -1005,6 +1004,8 @@ def bulk_exec_script(order_name, terminal_output=True):
 
 def tick_batch(state: bool):
     for box in checkboxes:
-        ui.set_value(box, state)
+        box_cfg = ui.get_item_configuration(box)
+        if box_cfg["enabled"]:
+            ui.set_value(box, state)
     save_checkbox_state()
     setup_button_state()

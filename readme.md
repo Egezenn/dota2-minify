@@ -170,7 +170,20 @@ Make a bug report on GitHub or Discord with the contents of your `logs` folder.
 
 Minify has a programmatical approach to most modifications to keep everything minimal and simple. If there isn't a method available for your needs, you can always upload your mod files in `mods/<mod_name>/files` to be directly included into the pak minify is going to create or include a python script to accomodate specific behavior.
 
-For most changes, you do not need to reopen the application. Try opening it again if you encounter undesired behavior.
+| Modifications to file            | Restart required for changes |
+| -------------------------------- | ---------------------------- |
+| [`modcfg.json`](#modcfgjson)     | Yes<sup>1</sup>              |
+| [`notes.md`](#notesmd)           | Yes                          |
+| `preview.png`                    | Yes                          |
+| [`blacklist.txt`](#blacklisttxt) | No                           |
+| [`replacer.csv`](#replacercsv)   | No                           |
+| [`replacer.csv`](#replacercsv)   | No                           |
+| [`script.py`](#scriptpy)         | No<sup>2</sup>               |
+| [`styling.css`](#stylingcss)     | No                           |
+| [`xml_mod.json`](#xml_modjson)   | No                           |
+
+<sup>1</sup>: The keys `always` and `dependencies` will be pulled at patch time, others require reinitialization.  
+<sup>2</sup>: Initial scripts(`script_initial.py`).
 
 ### Mod files and explanations
 
@@ -181,12 +194,13 @@ mods
 │   │   ├── <path_to_file_in_pak>
 │   │   ├── <...>
 │   │   └── <...>
-│   ├── blacklist.txt
 │   ├── modcfg.json
 │   ├── notes.md
 │   ├── preview.png
+│   ├── blacklist.txt
 │   ├── replacer.csv
 │   ├── script.py
+│   ├── script_initial.py
 │   ├── script_after_decompile.py
 │   ├── script_after_recompile.py
 │   ├── script_after_patch.py

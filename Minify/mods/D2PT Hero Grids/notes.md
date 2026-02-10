@@ -3,16 +3,16 @@ Lets you use Dota2ProTracker's hero grids. Merges the grids to your existing lay
 
 You can specify the steam ID you want to use it for from the settings. By default Minify selects the lowest ID (oldest).
 
-To use a different grid, specify `grid_type` from the config manually. By default `d2ptrating` is used.
+To use a different grid, specify `grid_type` from the config manually. By default `d2ptrating` is used, other values are `matches` and `matches_wr`.
 
 Alternatively, you can download a hero grid of your choosing from https://dota2protracker.com/meta-hero-grids and drop into this mod's folder.
 
 <!-- LANG:BG -->
 Позволява ви да използвате геройските мрежи на Dota2ProTracker. Обединява мрежите със съществуващите ви оформления.
 
-Можете да посочите Steam ID, за който искате да я използвате, от настройките. По подразбиране Minify избира най-ниския ID (най-стария).
+Можете да посочите Steam ID, за който искате да го използвате, от настройките. По подразбиране Minify избира най-ниския ID (най-стария).
 
-За да използвате различна мрежа, посочете ръчно `grid_type` от конфигурацията. По подразбиране се използва `d2ptrating`.
+За да използвате различна мрежа, посочете ръчно `grid_type` от конфигурацията. По подразбиране се използва `d2ptrating`, другите стойности са `matches` и `matches_wr`.
 
 Като алтернатива, можете да изтеглите геройска мрежа по ваш избор от https://dota2protracker.com/meta-hero-grids и да я пуснете в папката на този мод.
 
@@ -21,25 +21,25 @@ Umožňuje používat mřížky hrdinů z Dota2ProTracker. Slučuje mřížky s 
 
 V nastavení můžete zadat Steam ID, pro které ji chcete použít. Ve výchozím nastavení Minify vybere nejnižší ID (nejstarší).
 
-Chcete-li použít jinou mřížku, zadejte ručně v konfiguraci `grid_type`. Ve výchozím nastavení se používá `d2ptrating`.
+Chcete-li použít jinou mřížku, zadejte ručně v konfiguraci `grid_type`. Ve výchozím nastavení se používá `d2ptrating`, další hodnoty jsou `matches` a `matches_wr`.
 
-Případně si můžete stáhnout mřížku hrdinů dle vlastního výběru z https://dota2protracker.com/meta-hero-grids a přetáhnout ji do složky s tímto modem.
+Případně si můžete stáhnout mřížku hrdinů dle vlastního výběru z https://dota2protracker.com/meta-hero-grids a vložit ji do složky s tímto modem.
 
 <!-- LANG:DA -->
 Lader dig bruge Dota2ProTrackers heltegitter. Fletter gitrene sammen med dine eksisterende layouts.
 
 Du kan angive det Steam-ID, du vil bruge det til, fra indstillingerne. Som standard vælger Minify det laveste ID (ældste).
 
-For at bruge et andet gitter skal du manuelt angive `grid_type` fra konfigurationen. Som standard bruges `d2ptrating`.
+For at bruge et andet gitter skal du angive `grid_type` manuelt fra konfigurationen. Som standard bruges `d2ptrating`, andre værdier er `matches` og `matches_wr`.
 
 Alternativt kan du downloade et heltegitter efter eget valg fra https://dota2protracker.com/meta-hero-grids og slippe det i denne mods mappe.
 
 <!-- LANG:DE -->
 Ermöglicht die Verwendung der Heldenraster von Dota2ProTracker. Die Raster werden in deine bestehenden Layouts integriert.
 
-In den Einstellungen kannst du die gewünschte Steam-ID festlegen. Standardmäßig wählt Minify die niedrigste (älteste) ID aus.
+In den Einstellungen kannst du die gewünschte Steam-ID festlegen. Standardmäßig wählt Minify die niedrigste (älteste) ID.
 
-Um ein anderes Raster zu verwenden, gib `grid_type` manuell in der Konfiguration an. Standardmäßig wird `d2ptrating` verwendet.
+Um ein anderes Raster zu verwenden, gib `grid_type` manuell in der Konfiguration an. Standardmäßig wird `d2ptrating` verwendet; weitere Werte sind `matches` und `matches_wr`.
 
 Alternativ kannst du ein Heldenraster deiner Wahl von https://dota2protracker.com/meta-hero-grids herunterladen und in den Ordner dieser Mod einfügen.
 
@@ -48,7 +48,7 @@ Alternativ kannst du ein Heldenraster deiner Wahl von https://dota2protracker.co
 
 Μπορείτε να καθορίσετε το αναγνωριστικό steam για το οποίο θέλετε να το χρησιμοποιήσετε από τις ρυθμίσεις. Από προεπιλογή, το Minify επιλέγει το χαμηλότερο αναγνωριστικό (παλαιότερο).
 
-Για να χρησιμοποιήσετε διαφορετικό πλέγμα, καθορίστε χειροκίνητα το `grid_type` από τη διαμόρφωση. Από προεπιλογή χρησιμοποιείται το `d2ptrating`.
+Για να χρησιμοποιήσετε διαφορετικό πλέγμα, καθορίστε χειροκίνητα το `grid_type` από τη διαμόρφωση. Από προεπιλογή χρησιμοποιείται το `d2ptrating`, άλλες τιμές είναι `matches` και `matches_wr`.
 
 Εναλλακτικά, μπορείτε να κατεβάσετε ένα πλέγμα ηρώων της επιλογής σας από το https://dota2protracker.com/meta-hero-grids και να το αποθέσετε στον φάκελο αυτού του mod.
 
@@ -57,7 +57,7 @@ Te permite usar las cuadrículas de héroes de Dota2ProTracker. Combina las cuad
 
 Puedes especificar el ID de Steam para el que quieres usarlo desde la configuración. Por defecto, Minificar selecciona el ID más bajo (el más antiguo).
 
-Para usar una cuadrícula diferente, especifica manualmente `grid_type` en la configuración. Por defecto, se usa `d2ptrating`.
+Para usar una cuadrícula diferente, especifica manualmente `grid_type` en la configuración. Por defecto, se usa `d2ptrating`; los otros valores son `matches` y `matches_wr`.
 
 También puedes descargar la cuadrícula de héroes que elijas desde https://dota2protracker.com/meta-hero-grids y colocarla en la carpeta de este mod.
 
@@ -66,7 +66,7 @@ Voit käyttää Dota2ProTrackerin sankariruudukoita. Yhdistää ruudukot olemass
 
 Voit määrittää asetuksista Steam-tunnuksen, jolle haluat käyttää sitä. Oletusarvoisesti Minify valitsee pienimmän tunnuksen (vanhimman).
 
-Jos haluat käyttää eri ruudukkoa, määritä `grid_type` manuaalisesti asetuksista. Oletusarvoisesti käytetään `d2ptrating`-tunnusta.
+Jos haluat käyttää eri ruudukkoa, määritä `grid_type` manuaalisesti asetuksista. Oletusarvoisesti käytetään `d2ptrating`-tunnusta, muita arvoja ovat `matches` ja `matches_wr`.
 
 Vaihtoehtoisesti voit ladata haluamasi sankariruudukon osoitteesta https://dota2protracker.com/meta-hero-grids ja pudottaa sen tämän modin kansioon.
 
@@ -75,7 +75,7 @@ Permet d'utiliser les grilles de héros de Dota2ProTracker. Fusionne ces grilles
 
 Vous pouvez spécifier l'identifiant Steam à utiliser dans les paramètres. Par défaut, Minify sélectionne l'identifiant le plus ancien.
 
-Pour utiliser une autre grille, spécifiez manuellement `grid_type` dans la configuration. Par défaut, `d2ptrating` est utilisé.
+Pour utiliser une autre grille, spécifiez manuellement `grid_type` dans la configuration. Par défaut, `d2ptrating` est utilisé ; les autres valeurs possibles sont `matches` et `matches_wr`.
 
 Vous pouvez également télécharger une grille de héros de votre choix depuis https://dota2protracker.com/meta-hero-grids et la déposer dans le dossier de ce mod.
 
@@ -84,7 +84,7 @@ Lehetővé teszi a Dota2ProTracker hősrácsainak használatát. Egyesíti a rá
 
 A beállításokban megadhatod a használni kívánt Steam ID-t. Alapértelmezés szerint a Minify a legalacsonyabb (legrégebbi) ID-t választja ki.
 
-Eltérő rács használatához manuálisan add meg a `grid_type`-ot a konfigurációban. Alapértelmezés szerint a `d2ptrating` kerül felhasználásra.
+Eltérő rács használatához add meg manuálisan a `grid_type` értéket a konfigurációban. Alapértelmezés szerint a `d2ptrating` érték használatos, a többi érték a `matches` és a `matches_wr`.
 
 Alternatív megoldásként letölthetsz egy általad választott hősrácsot a https://dota2protracker.com/meta-hero-grids oldalról, és bedobhatod a mod mappájába.
 
@@ -93,25 +93,25 @@ Ti permette di usare le griglie degli eroi di Dota2ProTracker. Unisce le griglie
 
 Puoi specificare l'ID Steam per cui vuoi usarla dalle impostazioni. Per impostazione predefinita, Minify seleziona l'ID più basso (il più vecchio).
 
-Per usare una griglia diversa, specifica manualmente `grid_type` dalla configurazione. Per impostazione predefinita, viene utilizzato `d2ptrating`.
+Per usare una griglia diversa, specifica manualmente `grid_type` dalla configurazione. Per impostazione predefinita viene utilizzato `d2ptrating`, gli altri valori sono `matches` e `matches_wr`.
 
 In alternativa, puoi scaricare una griglia degli eroi a tua scelta da https://dota2protracker.com/meta-hero-grids e inserirla nella cartella di questa mod.
 
 <!-- LANG:NL -->
-Hiermee kun je de heldenroosters van Dota2ProTracker gebruiken. De roosters worden samengevoegd met je bestaande lay-outs.
+Hiermee kun je de heldenroosters van Dota2ProTracker gebruiken. Het voegt de roosters samen met je bestaande lay-outs.
 
 Je kunt in de instellingen de Steam ID opgeven waarvoor je het wilt gebruiken. Standaard selecteert Minify de laagste ID (de oudste).
 
-Om een ​​ander rooster te gebruiken, geef je handmatig `grid_type` op in de configuratie. Standaard wordt `d2ptrating` gebruikt.
+Om een ​​ander rooster te gebruiken, geef je handmatig `grid_type` op in de configuratie. Standaard wordt `d2ptrating` gebruikt, andere waarden zijn `matches` en `matches_wr`.
 
 Je kunt ook een heldenrooster naar keuze downloaden van https://dota2protracker.com/meta-hero-grids en dit in de map van deze mod plaatsen.
 
 <!-- LANG:NO -->
 Lar deg bruke Dota2ProTrackers helte-rutenett. Slår sammen rutene med dine eksisterende oppsett.
 
-Du kan angi Steam-ID-en du vil bruke den til fra innstillingene. Som standard velger Minify den laveste ID-en (eldste).
+Du kan spesifisere Steam-ID-en du vil bruke den til fra innstillingene. Som standard velger Minify den laveste ID-en (eldste).
 
-For å bruke et annet rutenett, angi `grid_type` manuelt fra konfigurasjonen. Som standard brukes `d2ptrating`.
+For å bruke et annet rutenett, spesifiser `grid_type` manuelt fra konfigurasjonen. Som standard brukes `d2ptrating`, andre verdier er `matches` og `matches_wr`.
 
 Alternativt kan du laste ned et helte-rutenett du velger fra https://dota2protracker.com/meta-hero-grids og slippe det i mappen til denne modden.
 
@@ -120,16 +120,16 @@ Umożliwia korzystanie z siatek bohaterów Dota2ProTracker. Łączy siatki z ist
 
 Możesz określić identyfikator Steam, dla którego chcesz go użyć, w ustawieniach. Domyślnie Minify wybiera najniższy (najstarszy) identyfikator.
 
-Aby użyć innej siatki, ręcznie określ `grid_type` w konfiguracji. Domyślnie używany jest `d2ptrating`.
+Aby użyć innej siatki, ręcznie określ `grid_type` w konfiguracji. Domyślnie używany jest `d2ptrating`, pozostałe wartości to `matches` i `matches_wr`.
 
 Alternatywnie możesz pobrać wybraną siatkę bohaterów ze strony https://dota2protracker.com/meta-hero-grids i umieścić ją w folderze tego moda.
 
 <!-- LANG:PT -->
 Permite usar as grades de heróis do Dota2ProTracker. Mescla as grades aos seus layouts existentes.
 
-Você pode especificar o ID da Steam que deseja usar nas configurações. Por padrão, o Minify seleciona o ID mais baixo (o mais antigo).
+Você pode especificar o ID do Steam que deseja usar nas configurações. Por padrão, o Minify seleciona o ID mais baixo (o mais antigo).
 
-Para usar uma grade diferente, especifique `grid_type` manualmente na configuração. Por padrão, `d2ptrating` é usado.
+Para usar uma grade diferente, especifique `grid_type` manualmente na configuração. Por padrão, `d2ptrating` é usado; outros valores são `matches` e `matches_wr`.
 
 Alternativamente, você pode baixar uma grade de heróis de sua escolha em https://dota2protracker.com/meta-hero-grids e colocá-la na pasta deste mod.
 
@@ -138,7 +138,7 @@ Alternativamente, você pode baixar uma grade de heróis de sua escolha em https
 
 Poți specifica ID-ul Steam pentru care dorești să îl utilizezi din setări. În mod implicit, Minify selectează cel mai mic ID (cel mai vechi).
 
-Pentru a utiliza o altă grilă, specifică manual `grid_type` din configurație. În mod implicit, se utilizează `d2ptrating`.
+Pentru a utiliza o altă grilă, specifică manual `grid_type` din configurație. În mod implicit, se folosește `d2ptrating`, alte valori sunt `matches` și `matches_wr`.
 
 Alternativ, poți descărca o grilă de eroi la alegere de pe https://dota2protracker.com/meta-hero-grids și o poți plasa în folderul acestui mod.
 
@@ -147,7 +147,7 @@ Alternativ, poți descărca o grilă de eroi la alegere de pe https://dota2protr
 
 Вы можете указать желаемый Steam ID в настройках. По умолчанию Minify выбирает самый старый ID (самый старый).
 
-Чтобы использовать другую сетку, укажите `grid_type` в конфигурации вручную. По умолчанию используется `d2ptrating`.
+Чтобы использовать другую сетку, укажите `grid_type` в конфигурации вручную. По умолчанию используется `d2ptrating`, другие значения — `matches` и `matches_wr`.
 
 В качестве альтернативы вы можете загрузить выбранную вами сетку героев с сайта https://dota2protracker.com/meta-hero-grids и поместить её в папку этого мода.
 
@@ -156,7 +156,7 @@ Låter dig använda Dota2ProTrackers hjälte-rutnät. Sammanfogar rutnäten med 
 
 Du kan ange vilket Steam-ID du vill använda det för från inställningarna. Som standard väljer Minify det lägsta ID:t (äldsta).
 
-För att använda ett annat rutnät, ange `grid_type` manuellt från konfigurationen. Som standard används `d2ptrating`.
+För att använda ett annat rutnät, ange `grid_type` manuellt från konfigurationen. Som standard används `d2ptrating`, andra värden är `matches` och `matches_wr`.
 
 Alternativt kan du ladda ner ett hjälte-rutnät som du väljer från https://dota2protracker.com/meta-hero-grids och släppa det i den här moddens mapp.
 
@@ -165,7 +165,7 @@ Dota2ProTracker'ın kahraman ızgaralarını kullanmanıza olanak tanır. Izgara
 
 Ayarlardan kullanmak istediğiniz Steam ID'sini belirtebilirsiniz. Varsayılan olarak Minify en düşük ID'yi (en eski) seçer.
 
-Farklı bir ızgara kullanmak için, yapılandırma dosyasından `grid_type` değerini manuel olarak belirtin. Varsayılan olarak `d2ptrating` kullanılır.
+Farklı bir ızgara kullanmak için, yapılandırma dosyasından `grid_type` değerini manuel olarak belirtin. Varsayılan olarak `d2ptrating` kullanılır, diğer değerler `matches` ve `matches_wr`'dir.
 
 Alternatif olarak, https://dota2protracker.com/meta-hero-grids adresinden istediğiniz bir kahraman ızgarasını indirip bu modun klasörüne bırakabilirsiniz.
 
@@ -174,6 +174,6 @@ Alternatif olarak, https://dota2protracker.com/meta-hero-grids adresinden istedi
 
 Ви можете вказати потрібний Steam ID у налаштуваннях. За замовчуванням Minify вибирає найменший ID (найстаріший).
 
-Щоб використовувати іншу сітку, вручну вкажіть `grid_type` у конфігурації. За замовчуванням використовується `d2ptrating`.
+Щоб використовувати іншу сітку, вручну вкажіть `grid_type` у конфігурації. За замовчуванням використовується `d2ptrating`, інші значення - `matches` та `matches_wr`.
 
 Крім того, ви можете завантажити сітку героя на ваш вибір з https://dota2protracker.com/meta-hero-grids та перетягнути її до папки цього мода.

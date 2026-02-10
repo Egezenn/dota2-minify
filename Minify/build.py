@@ -557,16 +557,14 @@ def vpk_extractor(vpk_to_extract_from, paths, path_to_extract_to=mpaths.build_di
                 helper.localization_dict["extracting_terminal_text_var"].format(path),
                 f"extracting_{path}_tag",
             )
-            vpk_path = path.replace(os.sep, "/")
-
             with vpk_lock:
-                pakfile = vpk_to_extract_from.get_file(vpk_path)
+                pakfile = vpk_to_extract_from.get_file(path)
 
             if pakfile:
                 os.makedirs(os.path.dirname(full_path), exist_ok=True)
                 pakfile.save(full_path)
             else:
-                mpaths.write_warning(f"File not found in VPK: {vpk_path}")
+                mpaths.write_warning(f"File not found in VPK: {path}")
 
     with ThreadPoolExecutor() as executor:
         executor.map(extract_file, paths)
