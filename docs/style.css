@@ -1,5 +1,6 @@
 .btn {
   align-items: center;
+  border: none;
   display: inline-flex;
   gap: 0.5rem;
   transition: filter 0.3s ease;
@@ -119,8 +120,20 @@ h6 > a {
   color: brown;
 }
 
+.btn-discord {
+  background-color: #7289DA !important; 
+}
+
+.btn-telegram {
+  background-color: #2CA5E0 !important;
+}
+
+.btn-telegram img {
+  height: 27px !important;
+}
+
 .btn-buymeacoffee {
-  background-color: #c6c635;
+  background-color: #c6c635 !important;
   color: black;
 }
 

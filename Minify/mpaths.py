@@ -49,6 +49,9 @@ DOTA_TOOLS_EXECUTABLE_PATH = os.path.join("steamapps", "common", "dota 2 beta", 
 # launchers for dota2 won't work as it presumes native version, doesn't really matter
 DOTA_EXECUTABLE_PATH_FALLBACK = os.path.join("steamapps", "common", "dota 2 beta", "game", "bin", "win64", "dota2.exe")
 
+STEAM_DOTA_ID = "570"
+STEAM_DOTA_WORKSHOP_TOOLS_ID = "313250"
+
 # minify project paths
 bin_dir = "bin"
 build_dir = "vpk_build"
@@ -174,7 +177,7 @@ def write_crashlog(exc_type=None, exc_value=None, exc_traceback=None, header=Non
 
 
 def write_warning(header=None):
-    from helper import add_text_to_terminal, open_thing
+    from helper import add_text_to_terminal
 
     if not os.path.exists(log_warnings):
         open(log_warnings, "w").close()
@@ -341,7 +344,7 @@ def get_steam_accounts():
 
     try:
         for user_id in sorted(os.listdir(os.path.join(steam_root, "userdata")), key=lambda x: int(x)):
-            if not os.path.exists(os.path.join(steam_root, "userdata", user_id, "570")):
+            if not os.path.exists(os.path.join(steam_root, "userdata", user_id, STEAM_DOTA_ID)):
                 continue
 
             localconfig_path = os.path.join(steam_root, "userdata", user_id, "config", "localconfig.vdf")
@@ -382,8 +385,9 @@ if not current_steam_id and steam_root:
 # links
 version_query = f"https://raw.githubusercontent.com/{head_owner}/{repo_name}/refs/heads/main/version"
 discord = "https://discord.com/invite/2YDnqpbcKM"
-latest_release = f"https://github.com/{head_owner}/{repo_name}/releases"
-s2v_cli_ver = "17.0"
+telegram = "https://t.me/dota2minify"
+github = f"https://github.com/{head_owner}/{repo_name}"
+s2v_cli_ver = "18.0"
 rg_ver = "15.1.0"
 
 try:
@@ -538,7 +542,6 @@ dota2_executable = os.path.join(steam_library, DOTA_EXECUTABLE_PATH)
 dota2_tools_executable = os.path.join(steam_library, DOTA_TOOLS_EXECUTABLE_PATH)
 dota_game_pak_path = os.path.join(steam_library, "steamapps", "common", "dota 2 beta", "game", "dota", "pak01_dir.vpk")
 dota_core_pak_path = os.path.join(steam_library, "steamapps", "common", "dota 2 beta", "game", "core", "pak01_dir.vpk")
-dota_map_path = os.path.join(steam_library, "steamapps", "common", "dota 2 beta", "game", "dota", "maps", "dota.vpk")
 dota_resource_compiler_path = os.path.join(
     steam_library,
     "steamapps",

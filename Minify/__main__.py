@@ -2,6 +2,7 @@ import os
 import sys
 import threading
 import time
+import webbrowser
 
 # Ensure root directories
 if getattr(sys, "frozen", False):
@@ -11,33 +12,16 @@ else:
     if current_dir not in sys.path:
         sys.path.insert(0, current_dir)
 
-import mpaths
-
 import dearpygui.dearpygui as ui
 import screeninfo
 
 import build
 import gui
 import helper
+import mpaths
+
 
 ui.create_context()
-ui.add_value_registry(tag="details_tags")
-
-with ui.value_registry():
-    ui.add_string_value(
-        default_value="Want to contribute to the project's growth?",
-        tag="start_text_1_var",
-    )
-    ui.add_string_value(default_value="-> Join our Discord community!", tag="start_text_2_var")
-    ui.add_string_value(
-        default_value="-> Share Minify with your friends and online groups",
-        tag="start_text_3_var",
-    )
-    ui.add_string_value(default_value="-> Star the project on GitHub", tag="start_text_4_var")
-    ui.add_string_value(
-        default_value="-> Create and maintain mods for this project",
-        tag="start_text_5_var",
-    )
 
 
 def patcher_start():
@@ -66,7 +50,7 @@ def create_ui():
             items=(helper.localizations),
             default_value="EN",
             width=50,
-            pos=(5, 2),
+            pos=(x := 2, 2),
             callback=helper.change_localization,
         )
         ui.add_image_button(
@@ -74,23 +58,33 @@ def create_ui():
             parent="top_bar",
             width=21,
             height=16,
-            pos=(55, 2),
-            callback=gui.open_discord_link,
+            pos=(x := x + 50, 2),
+            callback=lambda: webbrowser.open(mpaths.discord),
+        )
+
+        ui.add_image_button(
+            "telegram_texture_tag",
+            tag="telegram",
+            parent="top_bar",
+            width=20,
+            height=20,
+            pos=(x := x + 26, 0),
+            callback=lambda: webbrowser.open(mpaths.telegram),
         )
         ui.add_image_button(
             "git_texture_tag",
             parent="top_bar",
             width=18,
             height=18,
-            pos=(87, 1),
-            callback=gui.open_github_link,
+            pos=(x := x + 24, 1),
+            callback=lambda: webbrowser.open(mpaths.github),
         )
         ui.add_image_button(
             "settings_texture_tag",
             parent="top_bar",
             width=16,
             height=16,
-            pos=(115, 2),
+            pos=(x := x + 24, 2),
             callback=gui.open_settings_menu,
         )
         ui.add_image_button(
@@ -99,20 +93,20 @@ def create_ui():
             parent="top_bar",
             width=16,
             height=16,
-            pos=(141, 2),
+            pos=(x := x + 24, 2),
             callback=gui.dev_mode,
         )
-        ui.add_text(tag="language_select", pos=(170, 2))
+        ui.add_text(tag="language_select", pos=(x := x + 28, 2))
         ui.add_combo(
             parent="top_bar",
             tag="output_select",
             items=(mpaths.minify_output_list),
             default_value=mpaths.get_config("output_locale", "minify"),
             width=95,
-            pos=(246, 2),
+            pos=(x := x + 80, 2),
             callback=helper.change_output_path,
         )
-        ui.add_text(gui.title, pos=(mpaths.main_window_width - 200, 2))
+        ui.add_text(gui.title, pos=(mpaths.main_window_width - 180, 2))
         ui.add_button(
             parent="top_bar",
             tag="button_minimize",
@@ -253,14 +247,18 @@ def create_ui():
 
     for opt in gui.settings_config:
         with ui.group(horizontal=True, parent="settings_menu"):
+            _tag = f"opt_{opt["key"]}"
+            _text = opt.get("text") if opt["type"] == "checkbox" else f"{opt.get("text")}:"
+            _default_value = mpaths.get_config(opt["key"], opt["default"])
+
             if opt["type"] == "checkbox":
                 ui.add_checkbox(
-                    tag=opt["tag"],
-                    label=opt.get("label_text", opt["label"]),
-                    default_value=mpaths.get_config(opt["key"], opt["default"]),
+                    tag=_tag,
+                    label=_text,
+                    default_value=_default_value,
                 )
             elif opt["type"] == "combo":
-                ui.add_text(f"{opt.get('label_text', opt['label'])}:")
+                ui.add_text(_text)
                 raw_items = opt["items_getter"]() if "items_getter" in opt else []
                 if raw_items and isinstance(raw_items[0], dict):
                     items = [f"{item['id']} - {item['name']}" for item in raw_items]
@@ -268,16 +266,16 @@ def create_ui():
                     items = raw_items
 
                 ui.add_combo(
-                    tag=opt["tag"],
+                    tag=_tag,
                     items=items,
-                    default_value=mpaths.get_config(opt["key"], opt["default"]),
+                    default_value=_default_value,
                     width=-1,
                 )
             else:
-                ui.add_text(f"{opt.get('label_text', opt['label'])}:")
+                ui.add_text(_text)
                 ui.add_input_text(
-                    tag=opt["tag"],
-                    default_value=mpaths.get_config(opt["key"], opt["default"]),
+                    tag=_tag,
+                    default_value=_default_value,
                     width=-1,
                 )
 
@@ -347,9 +345,9 @@ def create_base_ui():
     create_ui()
     gui.lock_interaction()
     gui.focus_window()
-    gui.start_text()
     gui.theme()
     helper.change_localization(init=True)
+    gui.start_text()
     gui.version_check()
     gui.initiate_conditionals()
     helper.disable_workshop_mods()
@@ -399,6 +397,9 @@ with ui.texture_registry(show=False):
 
     w, h, _, d = ui.load_image(os.path.join(mpaths.img_dir, "dev.png"))
     ui.add_static_texture(width=w, height=h, default_value=d, tag="dev_texture_tag")
+
+    w, h, _, d = ui.load_image(os.path.join(mpaths.img_dir, "telegram.png"))
+    ui.add_static_texture(width=w, height=h, default_value=d, tag="telegram_texture_tag")
 
 # Creating_main_viewport
 widths = []

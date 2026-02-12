@@ -3,12 +3,15 @@
 import argparse
 import glob
 import os
+import platform
 import shutil
 import subprocess
 import sys
 import tempfile
 import time
 import zipfile
+
+import psutil
 
 # Configuration
 # - bin/rescomproot -> keep
@@ -57,7 +60,10 @@ def main():
 
     print("Starting update process...")
 
-    time.sleep(2)  # Give a moment for Minify to close
+    target = "Minify.exe" if platform.system() == "Windows" else "Minify"
+    while any(p.info.get("name") == target for p in psutil.process_iter(attrs=["name"])):
+        print(f"Waiting for {target} to close...")
+        time.sleep(2)
 
     current_version = get_current_version()
     print(f"Current Version: {current_version}")

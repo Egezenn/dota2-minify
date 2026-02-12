@@ -18,11 +18,12 @@ import requests
 import mpaths
 
 compile_path = ""
-details_label_text_var = ""
+details_label = ""
 locale = ""
 localization_dict = {}
 localizations = []
 mod_selection_window_var = ""
+terminal_history = []
 output_path = mpaths.get_config("output_path", mpaths.minify_dota_pak_output_path)
 workshop_installed = False
 workshop_required_methods = ["styling.css", "xml_mod.json"]
@@ -101,11 +102,12 @@ def scroll_to_terminal_end():
     ui.set_y_scroll("terminal_window", ui.get_y_scroll_max("terminal_window"))
 
 
-# TODO: revise
-def add_text_to_terminal(text, tag: int | str | None = None, type: str | None = None):
-    kwargs = {}
-    if tag is not None:
-        kwargs["tag"] = tag
+def add_text_to_terminal(text_or_key, *args, type: str | None = None, **kwargs):
+    # loose, fine_if_we_don't_add_text_like_this_that_also_matches_keys
+    text = localization_dict.get(text_or_key, text_or_key)
+    if args:
+        text = text.format(*args)
+
     if type is not None:
         if type == "error":
             color = (255, 0, 0)
@@ -121,8 +123,10 @@ def add_text_to_terminal(text, tag: int | str | None = None, type: str | None = 
 
         kwargs["color"] = color
 
-    ui.add_text(default_value=text, parent="terminal_window", wrap=mpaths.main_window_width - 20, **kwargs)
+    item = ui.add_text(default_value=text, parent="terminal_window", wrap=mpaths.main_window_width - 24, **kwargs)
+    terminal_history.append({"id": item, "key": text_or_key, "args": args})
     scroll_to_terminal_end()
+    return item
 
 
 def disable_workshop_mods():
@@ -136,10 +140,6 @@ def disable_workshop_mods():
                     break
 
 
-def url_dispatcher(url):
-    webbrowser.open(url)
-
-
 def get_blank_file_extensions():
     extensions = []
     for file in os.listdir(mpaths.blank_files_dir):
@@ -148,7 +148,6 @@ def get_blank_file_extensions():
 
 
 def get_available_localizations():
-    "Initializes `localization_dict` at startup"
     global localizations
     # get available variables for text
     with open(mpaths.localization_file_dir, encoding="utf-8") as file:
@@ -166,6 +165,7 @@ def get_available_localizations():
 
 def clean_terminal():
     ui.delete_item("terminal_window", children_only=True)
+    terminal_history.clear()
 
 
 def close():
@@ -298,45 +298,54 @@ def render_markdown(parent, text):
             render_rich_text(parent, line)
 
 
-# TODO: also revise this
-def change_localization(init=False):
+def change_localization(sender=None, app_data=None, user_data=None, init=False):
     global locale
     with open(mpaths.localization_file_dir, encoding="utf-8") as localization_file:
         localization_data = jsonc.load(localization_file)
-    if init == True:  # gets broken equality check is not there # noqa: E712
-        if (locale := mpaths.get_config("locale", ui.get_value("lang_select"))) is not None:
-            ui.configure_item("lang_select", default_value=locale)
-        else:
+
+    if init == True:  # noqa: E712
+        locale = mpaths.get_config("locale", ui.get_value("lang_select"))
+        if locale is None:
             locale = mpaths.set_config("locale", ui.get_value("lang_select"))
         ui.configure_item("lang_select", default_value=locale)
-
-    for key, value in localization_data.items():
+    else:
         locale = ui.get_value("lang_select")
-        if key.endswith("var"):
-            if ui.does_item_exist(key):
-                if locale in localization_data[key]:
-                    localization_dict[key] = value[locale]
-                    ui.set_value(key, value=value[locale])
-                else:
-                    ui.set_value(key, value=value["EN"])
-            else:
-                if locale in localization_data[key]:
-                    localization_dict[key] = value[locale]
-                else:
-                    localization_dict[key] = value["EN"]
-        if ui.does_item_exist(key):
-            if not key.endswith("var") and ui.get_item_info(key).get("type") == "mvAppItemType::mvButton":
-                if locale in localization_data[key]:
-                    ui.configure_item(key, label=value[locale])
-                else:  # default to english if the line isn't available on selected locale
-                    ui.configure_item(key, label=value["EN"])
-            if not key.endswith("var") and ui.get_item_info(key).get("type") == "mvAppItemType::mvText":
-                if locale in localization_data[key]:
-                    ui.configure_item(key, default_value=value[locale])
-                else:
-                    ui.configure_item(key, default_value=value["EN"])
-            mpaths.set_config("locale", locale)
+        mpaths.set_config("locale", locale)
 
+    for key, values in localization_data.items():
+        text = values.get(locale, values.get("EN", ""))
+        localization_dict[key] = text
+
+        if ui.does_item_exist(key):
+            item_type = ui.get_item_info(key).get("type")
+            if item_type in [
+                "mvAppItemType::mvText",
+                "mvAppItemType::mvInputText",
+                "mvAppItemType::mvInputInt",
+            ]:
+                # For input/text items, set value
+                ui.set_value(key, text)
+            else:
+                # For buttons, menus, etc., set label
+                ui.configure_item(key, label=text)
+
+    # Update terminal history
+    for item in terminal_history:
+        if ui.does_item_exist(item["id"]):
+            key_data = localization_data.get(item["key"])
+            if key_data:
+                new_text = key_data.get(locale, key_data.get("EN", item["key"]))
+            else:
+                new_text = item["key"]
+
+            if item["args"]:
+                try:
+                    new_text = new_text.format(*item["args"])
+                except Exception:
+                    pass  # Keep original text if formatting fails
+            ui.set_value(item["id"], new_text)
+
+    # Re-render markdown for available mods
     for mod in mpaths.visually_available_mods:
         container = f"{mod}_markdown_container"
         if ui.does_item_exist(container):
@@ -345,17 +354,20 @@ def change_localization(init=False):
             ui.delete_item(container, children_only=True)
             render_markdown(container, text)
 
-    global details_label_text_var, mod_selection_window_var
-    details_label_text_var = localization_data["details_button_label_var"][locale]
-    mod_selection_window_var = localization_data["mod_selection_window_var"][locale]
-    ui.configure_item("mod_menu", label=mod_selection_window_var)
-    for id in ui.get_item_children("mod_menu")[1]:
-        for item in ui.get_item_children(id)[1]:
-            if ui.get_item_alias(item).endswith("_button_show_details_tag"):
-                ui.configure_item(
-                    item,
-                    label=localization_data["details_button_label_var"][locale],
-                )
+    # Update dynamic detail buttons
+    global details_label, mod_selection_window_var
+    details_label = localization_data.get("details_button_label_var", {}).get(
+        locale, localization_data["details_button_label_var"]["EN"]
+    )
+    mod_selection_window_var = localization_data.get("mod_selection_window_var", {}).get(
+        locale, localization_data["mod_selection_window_var"]["EN"]
+    )
+
+    if ui.does_item_exist("mod_menu"):
+        for child_group in ui.get_item_children("mod_menu", 1):
+            for item in ui.get_item_children(child_group, 1):
+                if ui.get_item_alias(item).endswith("_button_show_details_tag"):
+                    ui.configure_item(item, label=details_label)
 
 
 def change_output_path():
@@ -398,7 +410,7 @@ def open_thing(path, args=""):
             else:
                 subprocess.run(["xdg-open", path])
     except FileNotFoundError:
-        add_text_to_terminal(f"{path}{localization_dict['open_dir_fail_text_var']}", type="error")
+        add_text_to_terminal("open_dir_fail", path, type="error")
 
 
 def compile(sender=None, app_data=None, user_data=None):
@@ -407,7 +419,7 @@ def compile(sender=None, app_data=None, user_data=None):
     clean_terminal()
 
     if not folder and os.path.exists(os.path.join(mpaths.config_dir, "custom")):
-        add_text_to_terminal(localization_dict["compile_fallback_path_usage_text_var"])
+        add_text_to_terminal("compile_fallback_path_usage")
         folder = os.path.join(mpaths.config_dir, "custom")
         compile_output_path = os.path.join(mpaths.config_dir, "compiled")
 
@@ -463,9 +475,9 @@ def compile(sender=None, app_data=None, user_data=None):
         )
         os.makedirs(mpaths.minify_dota_tools_required_path, exist_ok=True)
 
-        add_text_to_terminal(localization_dict["compile_successful_text_var"])
+        add_text_to_terminal("compile_successful")
     else:
-        add_text_to_terminal(localization_dict["compile_no_path_text_var"])
+        add_text_to_terminal("compile_no_path")
 
 
 def create_img_ref_xml(img_path_list):
@@ -563,21 +575,12 @@ def exec_script(script_path, mod_name, order_name, _terminal_output=True):
         main_func = getattr(module, "main", None)
         if callable(main_func):
             if _terminal_output:
-                add_text_to_terminal(
-                    localization_dict["script_execution_text_var"].format(mod_name, order_name),
-                )
+                add_text_to_terminal("script_execution", mod_name, order_name)
             main_func()
             if _terminal_output:
-                add_text_to_terminal(
-                    localization_dict["script_success_text_var"].format(mod_name, order_name),
-                    type="success",
-                )
+                add_text_to_terminal("script_success", mod_name, order_name, type="success")
         else:
-            mpaths.write_warning(localization_dict["script_no_main_text_var"].format(mod_name, order_name))
-            add_text_to_terminal(
-                localization_dict["script_no_main_text_var"].format(mod_name, order_name),
-                type="warning",
-            )
+            mpaths.write_warning("script_no_main", mod_name, order_name)
 
 
 def remove_lang_args(arg_string):

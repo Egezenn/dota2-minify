@@ -7,6 +7,7 @@ import stat
 import subprocess
 import threading
 import time
+import webbrowser
 
 import dearpygui.dearpygui as ui
 import jsonc
@@ -105,7 +106,7 @@ def update_popup_show():
 
 def setup_system():
     os.makedirs("logs", exist_ok=True)
-    is_dota_running()
+    is_dota_running("error_please_close_dota_terminal", "error")
     is_compiler_found()
     download_dependencies()
 
@@ -113,17 +114,13 @@ def setup_system():
 def download_dependencies():
     try:
         if not os.path.exists(mpaths.s2v_executable):
-            helper.add_text_to_terminal(
-                helper.localization_dict["downloading_cli_terminal_text_var"], "downloading_cli_terminal_text_var"
-            )
+            tag = helper.add_text_to_terminal("downloading_cli_terminal")
             zip_path = mpaths.s2v_latest.split("/")[-1]
-            if helper.download_file(mpaths.s2v_latest, zip_path, "downloading_cli_terminal_text_var"):
-                helper.add_text_to_terminal(f"{helper.localization_dict['downloaded_cli_terminal_text_var']}{zip_path}")
+            if helper.download_file(mpaths.s2v_latest, zip_path, tag):
+                helper.add_text_to_terminal("downloaded_cli_terminal", zip_path)
                 if helper.extract_archive(zip_path, "."):
                     helper.remove_path(zip_path)
-                    helper.add_text_to_terminal(
-                        f"{helper.localization_dict['extracted_cli_terminal_text_var']}{zip_path}"
-                    )
+                    helper.add_text_to_terminal("extracted_cli_terminal", zip_path)
                     if mpaths.OS != mpaths.WIN and not os.access(mpaths.s2v_executable, os.X_OK):
                         current_permissions = os.stat(mpaths.s2v_executable).st_mode
                         os.chmod(
@@ -136,17 +133,12 @@ def download_dependencies():
         if rg_on_path:
             mpaths.rg_executable = rg_on_path
         elif not os.path.exists(mpaths.rg_executable):
-            helper.add_text_to_terminal(
-                helper.localization_dict["downloading_ripgrep_terminal_text_var"],
-                "downloading_ripgrep_terminal_text_var",
-            )
+            tag = helper.add_text_to_terminal("downloading_ripgrep_terminal")
             archive_path = mpaths.rg_latest.split("/")[-1]
             archive_name = archive_path[:-4] if archive_path[-4:] == ".zip" else archive_path[:-7]
 
-            if helper.download_file(mpaths.rg_latest, archive_path, "downloading_ripgrep_terminal_text_var"):
-                helper.add_text_to_terminal(
-                    f"{helper.localization_dict['downloaded_cli_terminal_text_var']}{archive_path}"
-                )
+            if helper.download_file(mpaths.rg_latest, archive_path, tag):
+                helper.add_text_to_terminal("downloaded_cli_terminal", archive_path)
 
                 success = False
                 success = helper.extract_archive(archive_path, ".", f"{archive_name}/{mpaths.rg_executable}")
@@ -157,9 +149,7 @@ def download_dependencies():
                         mpaths.rg_executable,
                     )
                     helper.remove_path(archive_path)
-                    helper.add_text_to_terminal(
-                        f"{helper.localization_dict['extracted_cli_terminal_text_var']}{archive_path}"
-                    )
+                    helper.add_text_to_terminal("extracted_cli_terminal", archive_path)
                     if mpaths.OS in (mpaths.LINUX, mpaths.MAC) and not os.access(mpaths.rg_executable, os.X_OK):
                         current_permissions = os.stat(mpaths.rg_executable).st_mode
                         os.chmod(
@@ -169,10 +159,7 @@ def download_dependencies():
 
     except:
         mpaths.write_crashlog()
-        helper.add_text_to_terminal(
-            helper.localization_dict["failed_download_retrying_terminal_text_var"],
-            type="error",
-        )
+        helper.add_text_to_terminal("failed_download_retrying_terminal", type="error")
         return download_dependencies()
 
 
@@ -258,7 +245,7 @@ def create_checkboxes():
                     small=True,
                     indent=mpaths.main_window_width - 150,
                     tag=f"{mod}_button_show_details_tag",
-                    label=f"{helper.details_label_text_var}",
+                    label=f"{helper.details_label}",
                     callback=show_details,
                     user_data=tag_data,
                 )
@@ -385,12 +372,12 @@ def update():
             download_url = latest_download_url
 
             if download_url:
-                helper.add_text_to_terminal("Downloading update...", "update_download_progress_tag")
+                tag = helper.add_text_to_terminal("Downloading update...")
 
                 target_zip = "update.zip"
                 helper.remove_path(target_zip)
 
-                if not helper.download_file(download_url, target_zip, "update_download_progress_tag"):
+                if not helper.download_file(download_url, target_zip, tag):
                     open_github_link()
                     helper.close()
                     return
@@ -465,60 +452,59 @@ def open_settings_menu():
 settings_config = [
     {
         "key": "steam_root",
-        "label": "steam_root",
-        "label_text": "Steam Root",
-        "tag": "opt_steam_root",
+        "text": "Steam Root",
         "default": "",
-        "type": "text",
+        "type": "inputbox",
     },
     {
         "key": "steam_library",
-        "label": "steam_library",
-        "label_text": "Steam Library",
-        "tag": "opt_steam_library",
+        "text": "Steam Library",
         "default": "",
-        "type": "text",
+        "type": "inputbox",
     },
     {
         "key": "output_path",
-        "label": "output_path",
-        "label_text": "Output Path",
-        "tag": "opt_output_path",
+        "text": "Output Path",
         "default": "",
-        "type": "text",
+        "type": "inputbox",
     },
     {
         "key": "steam_id",
-        "label": "steam_id",
-        "label_text": "Steam ID",
-        "tag": "opt_steam_id",
+        "text": "Steam ID",
         "default": "",
         "type": "combo",
         "items_getter": mpaths.get_steam_accounts,
     },
     {
         "key": "opt_into_rcs",
-        "label": "opt_into_rcs",
-        "label_text": "Opt into RCs",
-        "tag": "opt_opt_into_rcs",
+        "text": "Opt into RCs",
         "default": False,
         "type": "checkbox",
     },
     {
         "key": "fix_parameters",
-        "label": "fix_parameters",
-        "label_text": "Handle language parameter for current ID",
-        "tag": "opt_fix_parameters",
+        "text": "Handle language parameter for current ID",
         "default": True,
         "type": "checkbox",
     },
-    # TODO: add a way to append mod settings here
+    {
+        "key": "launch_dota_after_patch",
+        "text": "Launch Dota2 after patching",
+        "default": False,
+        "type": "checkbox",
+    },
+    {
+        "key": "kill_self_after_patch",
+        "text": "Close Minify after patching",
+        "default": False,
+        "type": "checkbox",
+    },
 ]
 
 
 def save_settings():
     for opt in settings_config:
-        val = ui.get_value(opt["tag"])
+        val = ui.get_value(f"opt_{opt["key"]}")
         if opt["key"] == "steam_id" and val:
             val = val.split(" - ")[0]
         mpaths.set_config(opt["key"], val)
@@ -532,26 +518,18 @@ def refresh_settings():
                 items = [f"{item['id']} - {item['name']}" for item in raw_items]
             else:
                 items = raw_items
-            ui.configure_item(opt["tag"], items=items)
+            ui.configure_item(f"opt_{opt["key"]}", items=items)
 
         val = mpaths.get_config(opt["key"], opt["default"])
 
         if opt["type"] == "combo" and val:
-            current_items = ui.get_item_configuration(opt["tag"])["items"]
+            current_items = ui.get_item_configuration(f"opt_{opt["key"]}")["items"]
             for item in current_items:
                 if item.startswith(f"{val} - "):
                     val = item
                     break
 
-        ui.set_value(opt["tag"], val)
-
-
-def open_discord_link():
-    helper.url_dispatcher(mpaths.discord)
-
-
-def open_github_link():
-    helper.url_dispatcher(mpaths.latest_release)
+        ui.set_value(f"opt_{opt["key"]}", val)
 
 
 def uninstall_popup_show():
@@ -591,17 +569,12 @@ def configure_uninstall_popup():
 
 
 def start_text():
-    ui.add_text(source="start_text_1_var", parent="terminal_window")
-    ui.add_text(source="start_text_2_var", parent="terminal_window")
-    ui.add_text(source="start_text_3_var", parent="terminal_window")
-    ui.add_text(source="start_text_4_var", parent="terminal_window")
-    ui.add_text(source="start_text_5_var", parent="terminal_window")
-    ui.add_text(
-        default_value=spacer,
-        parent="terminal_window",
-        tag="spacer_start_text_tag",
-    )
-    helper.scroll_to_terminal_end()
+    helper.add_text_to_terminal("start_text_1_var")
+    helper.add_text_to_terminal("start_text_2_var")
+    helper.add_text_to_terminal("start_text_3_var")
+    helper.add_text_to_terminal("start_text_4_var")
+    helper.add_text_to_terminal("start_text_5_var")
+    helper.add_text_to_terminal(spacer)
 
 
 def close_active_window():
@@ -860,6 +833,26 @@ def dev_mode():
             ui.add_button(
                 label="Kill Steam", callback=lambda: helper.open_thing(mpaths.steam_executable_path, "-exitsteam")
             )
+            ui.add_button(
+                label="Validate Dota2", callback=lambda: webbrowser.open(f"steam://validate/{mpaths.STEAM_DOTA_ID}")
+            )
+        if not mpaths.frozen:
+            with ui.window(
+                label="Debug tools",
+                tag="debug_tools",
+                pos=(0, mpaths.main_window_height + height_increase),
+                width=mpaths.main_window_width,
+                height=300,
+                no_resize=True,
+                no_move=True,
+                no_close=True,
+                no_collapse=True,
+            ):
+                ui.add_button(label="debug", callback=ui.show_debug)
+                ui.add_button(label="item_registry", callback=ui.show_item_registry)
+                ui.add_button(label="metrics", callback=ui.show_metrics)
+                ui.add_button(label="style_editor", callback=ui.show_style_editor)
+                ui.add_button(label="font_manager", callback=ui.show_font_manager)
 
     elif dev_mode_state == 0:  # open
         dev_mode_state = 1
@@ -872,6 +865,8 @@ def dev_mode():
         ui.configure_item("opener", show=True)
         ui.configure_item("mod_tools", show=True)
         ui.configure_item("maintenance_tools", show=True)
+        if not mpaths.frozen:
+            ui.configure_item("debug_tools", show=True)
 
     else:  # close
         dev_mode_state = 0
@@ -884,6 +879,8 @@ def dev_mode():
         ui.configure_item("opener", show=False)
         ui.configure_item("mod_tools", show=False)
         ui.configure_item("maintenance_tools", show=False)
+        if not mpaths.frozen:
+            ui.configure_item("debug_tools", show=False)
 
 
 def configure_update_popup():
@@ -919,33 +916,19 @@ def configure_update_popup():
     )
 
 
-def is_dota_running():
+def is_dota_running(text_tag, text_type):
     target = "dota2.exe" if mpaths.OS == mpaths.WIN else "dota2"
-    running = False
-    for p in psutil.process_iter(attrs=["name"]):
-        try:
-            name = p.name() or ""
-            if name == target:
-                running = True
-                break
-        except (psutil.NoSuchProcess, psutil.AccessDenied, psutil.ZombieProcess):
-            continue
+    running = any(p.info.get("name") == target for p in psutil.process_iter(attrs=["name"]))
+
     if running:
-        helper.add_text_to_terminal(
-            helper.localization_dict["error_please_close_dota_terminal_text_var"],
-            "please_close_dota_text_tag",
-            "error",
-        )
+        helper.add_text_to_terminal(text_tag, type=text_type)
+    return running
 
 
 def is_compiler_found():
     if not os.path.exists(mpaths.dota_resource_compiler_path):
         helper.workshop_installed = False
-        helper.add_text_to_terminal(
-            helper.localization_dict["error_no_workshop_tools_found_terminal_text_var"],
-            "no_workshop_tools_found_text_tag",
-            "warning",
-        )
+        helper.add_text_to_terminal("error_no_workshop_tools_found_terminal", type="warning")
     else:
         helper.workshop_installed = True
 
@@ -976,15 +959,15 @@ def extract_workshop_tools():
                 shutil.copy(path, mpaths.dota_tools_extraction_paths[i])
 
         else:
-            helper.add_text_to_terminal(helper.localization_dict["extraction_of_failed_text_var"].format(path))
+            helper.add_text_to_terminal("extraction_of_failed", path)
             fails += 1
 
     if not fails:
         recalc_rescomp_dirs()
         if os.path.exists(mpaths.dota_resource_compiler_path):
-            helper.add_text_to_terminal(helper.localization_dict["extracted_text_var"])
+            helper.add_text_to_terminal("extracted")
         else:
-            helper.add_text_to_terminal(helper.localization_dict["extraction_of_failed_text_var"].format(path))
+            helper.add_text_to_terminal("extraction_of_failed", path)
 
 
 def bulk_exec_script(order_name, terminal_output=True):

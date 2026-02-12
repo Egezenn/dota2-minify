@@ -87,29 +87,7 @@
     "TR": "Kaldır",
     "UK": "Видалити"
   },
-  "check_crashlog_terminal_text_var": {
-    "EN": "Check 'logs/crashlog.txt' for more info.",
-    "BG": "Проверете „logs/crashlog.txt“ за повече информация.",
-    "CS": "Více informací naleznete v souboru 'logs/crashlog.txt'.",
-    "DA": "Se 'logs/crashlog.txt' for yderligere information.",
-    "DE": "Weitere Informationen finden Sie in der Datei 'logs/crashlog.txt'.",
-    "EL": "Ελέγξτε το 'logs/crashlog.txt' για περισσότερες πληροφορίες.",
-    "ES": "Revisa 'logs/crashlog.txt' para más información.",
-    "FI": "Lisätietoja on tiedostossa 'logs/crashlog.txt'.",
-    "FR": "Consultez le fichier 'logs/crashlog.txt' pour plus d'informations.",
-    "HU": "További információért lásd a „logs/crashlog.txt” fájlt.",
-    "IT": "Per maggiori informazioni, consultare 'logs/crashlog.txt'.",
-    "NL": "Zie 'logs/crashlog.txt' voor meer informatie.",
-    "NO": "Sjekk «logs/crashlog.txt» for mer informasjon.",
-    "PL": "Więcej informacji znajdziesz w pliku „logs/crashlog.txt”.",
-    "PT": "Consulte o arquivo 'logs/crashlog.txt' para obter mais informações.",
-    "RO": "Consultați fișierul „logs/crashlog.txt” pentru mai multe informații.",
-    "RU": "Проверь 'logs/crashlog.txt' для детальной информации.",
-    "SV": "Se 'logs/crashlog.txt' för mer information.",
-    "TR": "Daha fazla bilgi için 'logs/crashlog.txt' dosyasını kontrol et.",
-    "UK": "Більше інформації дивіться у файлі «logs/crashlog.txt»."
-  },
-  "check_logs_terminal_text_var": {
+  "check_logs_terminal": {
     "EN": "Check 'logs/crashlog.txt' for more info.",
     "BG": "Проверете „logs/crashlog.txt“ за повече информация.",
     "CS": "Více informací naleznete v souboru 'logs/crashlog.txt'.",
@@ -131,7 +109,7 @@
     "TR": "Ayrıntılar için 'logs/crashlog.txt' dosyasını kontrol et.",
     "UK": "Більше інформації дивіться у файлі «logs/crashlog.txt»."
   },
-  "clean_lang_dirs_text_var": {
+  "clean_lang_dirs": {
     "EN": "Deleted path {}",
     "BG": "Изтрит път {}",
     "CS": "Smazaná cesta {}",
@@ -153,7 +131,7 @@
     "TR": "{} silindi",
     "UK": "Видалений шлях {}"
   },
-  "close_dota_terminal_text_var": {
+  "close_dota_terminal": {
     "EN": "Please close Dota 2 first and then patch.",
     "BG": "Моля, първо затворете Dota 2 и след това инсталирайте пач.",
     "CS": "Nejdřív prosím zavřete Dotu 2 a pak nainstalujte patch.",
@@ -175,7 +153,7 @@
     "TR": "Lütfen önce Dota 2'yi kapatın ve sonra yamalama işlemini gerçekleştirin.",
     "UK": "Будь ласка, спочатку закрийте Dota 2, а потім встановіть патч."
   },
-  "compile_fallback_path_usage_text_var": {
+  "compile_fallback_path_usage": {
     "EN": "No path selected, using default path.",
     "BG": "Не е избран път, използва се пътят по подразбиране.",
     "CS": "Nebyla vybrána žádná cesta, používá se výchozí cesta.",
@@ -197,7 +175,7 @@
     "TR": "Hiçbir yol seçilmedi, varsayılan yol kullanılıyor.",
     "UK": "Шлях не вибрано, використовується шлях за замовчуванням."
   },
-  "compile_no_path_text_var": {
+  "compile_no_path": {
     "EN": "Select a path first!",
     "BG": "Първо изберете път!",
     "CS": "Nejprve si vyberte cestu!",
@@ -219,7 +197,7 @@
     "TR": "Önce bir yol seçin!",
     "UK": "Спочатку оберіть шлях!"
   },
-  "compile_successful_text_var": {
+  "compile_successful": {
     "EN": "Compiled successfully!",
     "BG": "Компилирано успешно!",
     "CS": "Úspěšně zkompilováno!",
@@ -241,7 +219,7 @@
     "TR": "Başarıyla derlendi!",
     "UK": "Успішно скомпільовано!"
   },
-  "compiling_resource_terminal_text_var": {
+  "compiling_resource_terminal": {
     "EN": "-> Compiling extracted files via resourcecompiler",
     "BG": "-> Компилиране на извлечени файлове чрез resourcecompiler",
     "CS": "-> Kompilace extrahovaných souborů pomocí resourcecompileru",
@@ -263,7 +241,7 @@
     "TR": "-> Çıkarılan dosyaların kaynak derleyicisi aracılığıyla derlenmesi",
     "UK": "-> Компіляція витягнутих файлів за допомогою resourcecompiler"
   },
-  "compiling_terminal_text_var": {
+  "compiling_terminal": {
     "EN": "-> Compiling VPK",
     "BG": "-> Компилиране на VPK",
     "CS": "-> Kompilace VPK",
@@ -285,7 +263,7 @@
     "TR": "-> VPK Derleniyor",
     "UK": "-> Компіляція VPK"
   },
-  "creating_merged_vpk_text_var": {
+  "creating_merged_vpk": {
     "EN": "-> Creating merged vpk...",
     "BG": "-> Създаване на обединен vpk...",
     "CS": "-> Vytváření sloučeného vpk...",
@@ -307,7 +285,7 @@
     "TR": "-> Birleştirilmiş vpk oluşturuluyor...",
     "UK": "-> Створення об'єднаного vpk..."
   },
-  "decompiling_terminal_text_var": {
+  "decompiling_terminal": {
     "EN": "-> Decompiling extracted files via Source2Viewer",
     "BG": "-> Декомпилиране на извлечени файлове чрез Source2Viewer",
     "CS": "-> Dekompilace extrahovaných souborů pomocí Source2Viewer",
@@ -351,7 +329,7 @@
     "TR": "Ayrıntılar",
     "UK": "Деталі"
   },
-  "downloaded_cli_terminal_text_var": {
+  "downloaded_cli_terminal": {
     "EN": "-> Downloaded ",
     "BG": "-> Изтеглено",
     "CS": "-> Staženo",
@@ -373,7 +351,7 @@
     "TR": "-> Yüklendi ",
     "UK": "-> Завантажено"
   },
-  "downloading_cli_terminal_text_var": {
+  "downloading_cli_terminal": {
     "EN": "-> Downloading Source2Viewer-CLI...",
     "BG": "-> Изтегляне на Source2Viewer-CLI...",
     "CS": "-> Stahování CLI Source2Viewer...",
@@ -395,7 +373,7 @@
     "TR": "-> Source2Viewer-CLI yükleniyor...",
     "UK": "-> Завантаження Source2Viewer-CLI..."
   },
-  "downloading_ripgrep_terminal_text_var": {
+  "downloading_ripgrep_terminal": {
     "EN": "-> Downloading ripgrep...",
     "BG": "-> Изтегляне на ripgrep...",
     "CS": "-> Stahování ripgrepu...",
@@ -417,51 +395,7 @@
     "TR": "-> ripgrep indiriliyor...",
     "UK": "-> Завантаження ripgrep..."
   },
-  "error_no_blacklist_txt_found_terminal_text_var": {
-    "EN": "Missing 'blacklist.txt' file in ",
-    "BG": "Липсва файлът „blacklist.txt“ в",
-    "CS": "Chybí soubor 'blacklist.txt' v",
-    "DA": "Manglende 'blacklist.txt'-fil i",
-    "DE": "Die Datei „blacklist.txt“ fehlt in",
-    "EL": "Λείπει το αρχείο 'blacklist.txt'",
-    "ES": "Falta el archivo 'blacklist.txt' en ",
-    "FI": "Puuttuu tiedosto 'blacklist.txt'",
-    "FR": "Fichier 'blacklist.txt' manquant dans",
-    "HU": "Hiányzik a 'blacklist.txt' fájl a következőből:",
-    "IT": "File 'blacklist.txt' mancante in",
-    "NL": "Ontbrekend 'blacklist.txt'-bestand in",
-    "NO": "Mangler «blacklist.txt»-fil i",
-    "PL": "Brak pliku „blacklist.txt” w",
-    "PT": "Arquivo 'blacklist.txt' ausente em",
-    "RO": "Lipsește fișierul „blacklist.txt” din",
-    "RU": "Отсутсвует файл 'blacklist.txt' в ",
-    "SV": "Filen 'blacklist.txt' saknas i",
-    "TR": "Burada 'blacklist.txt' dosyası eksik ",
-    "UK": "Відсутній файл 'blacklist.txt' у"
-  },
-  "error_no_files_path_found_terminal_text_var": {
-    "EN": "Missing 'files' path in ",
-    "BG": "Липсва път до „файлове“ в",
-    "CS": "Chybí cesta k souborům v",
-    "DA": "Manglende sti til 'filer' i",
-    "DE": "Fehlender Pfad zu 'files' in",
-    "EL": "Λείπει η διαδρομή 'αρχεία' στο",
-    "ES": "Falta la carpeta 'files' en ",
-    "FI": "Puuttuva 'tiedostot'-polku kohdassa",
-    "FR": "Chemin d'accès aux fichiers manquant dans",
-    "HU": "Hiányzó „fájlok” elérési út a következőben:",
-    "IT": "Percorso 'file' mancante in",
-    "NL": "Ontbrekend 'bestanden'-pad in",
-    "NO": "Mangler filsti i",
-    "PL": "Brak ścieżki „pliki” w",
-    "PT": "Caminho 'files' ausente em",
-    "RO": "Calea „fișiere” lipsește în",
-    "RU": "Отсутсвует папка 'files' в ",
-    "SV": "Saknar sökväg till 'filer' i",
-    "TR": "Burada 'files' dizini eksik ",
-    "UK": "Відсутній шлях до файлів у"
-  },
-  "error_no_workshop_tools_found_terminal_text_var": {
+  "error_no_workshop_tools_found_terminal": {
     "EN": "Some mods have been disabled because have Workshop Tools aren't installed.",
     "BG": "Някои модификации са деактивирани, защото не са инсталирани инструменти за работилница.",
     "CS": "Některé mody byly deaktivovány, protože nemají nainstalované nástroje pro dílnu.",
@@ -483,7 +417,7 @@
     "TR": "Atölye araçları yüklü olmadığı için bazı modlar kullanılamıyor.",
     "UK": "Деякі моди були вимкнені, оскільки для них не встановлені інструменти майстерні."
   },
-  "error_please_close_dota_terminal_text_var": {
+  "error_please_close_dota_terminal": {
     "EN": "Error: Please close Dota 2 and restart Minify.",
     "BG": "Грешка: Моля, затворете Dota 2 и рестартирайте Minify.",
     "CS": "Chyba: Zavřete prosím Dota 2 a restartujte Minify.",
@@ -505,29 +439,29 @@
     "TR": "Hata: Lütfen Dota 2'yi kapatın ve Minify'ı yeniden başlatın.",
     "UK": "Помилка: Будь ласка, закрийте Dota 2 та перезапустіть Minify."
   },
-  "extracted_cli_terminal_text_var": {
-    "EN": "-> Extracted ",
-    "BG": "-> Извлечено",
-    "CS": "-> Extrahováno",
-    "DA": "-> Udtrukket",
-    "DE": "-> Extrahiert",
-    "EL": "-> Εξάγεται",
-    "ES": "-> Extraído ",
-    "FI": "-> Uutettu",
-    "FR": "-> Extrait",
-    "HU": "-> Kivont",
-    "IT": "-> Estratto",
-    "NL": "-> Geëxtraheerd",
-    "NO": "-> Utvunnet",
-    "PL": "-> Wyekstrahowano",
-    "PT": "-> Extraído",
-    "RO": "-> Extras",
-    "RU": "-> Завершена распаковка ",
-    "SV": "-> Extraherad",
-    "TR": "-> Çıkartıldı ",
-    "UK": "-> Витягнуто"
+  "extracted_cli_terminal": {
+    "EN": "-> Extracted {}",
+    "BG": "-> Извлечено {}",
+    "CS": "-> Extrahováno {}",
+    "DA": "-> Udtrukket {}",
+    "DE": "-> Extrahiert {}",
+    "EL": "-> Εξάγεται {}",
+    "ES": "-> Extraído  {}",
+    "FI": "-> Uutettu {}",
+    "FR": "-> Extrait {}",
+    "HU": "-> Kivont {}",
+    "IT": "-> Estratto {}",
+    "NL": "-> Geëxtraheerd {}",
+    "NO": "-> Utvunnet {}",
+    "PL": "-> Wyekstrahowano {}",
+    "PT": "-> Extraído {}",
+    "RO": "-> Extras {}",
+    "RU": "-> Завершена распаковка  {}",
+    "SV": "-> Extraherad {}",
+    "TR": "-> Çıkartıldı {}",
+    "UK": "-> Витягнуто {}"
   },
-  "extracted_text_var": {
+  "extracted": {
     "EN": "Workshop tools have been extracted!",
     "BG": "Инструментите от работилницата са извадени!",
     "CS": "Dílenské nářadí bylo vytaženo!",
@@ -549,7 +483,7 @@
     "TR": "Atölye araçları çekildi!",
     "UK": "Інструменти майстерні витягнуті!"
   },
-  "extracting_terminal_text_var": {
+  "extracting_terminal": {
     "EN": "   Extracting: {}",
     "BG": "   Извличане: {}",
     "CS": "   Extrahování: {}",
@@ -571,7 +505,7 @@
     "TR": "   Çıkartılıyor: {}",
     "UK": "   Видобування: {}"
   },
-  "extraction_of_failed_text_var": {
+  "extraction_of_failed": {
     "EN": "Unable to extract {}, path or file does not exist!",
     "BG": "Не може да се извлече {}, пътят или файлът не съществува!",
     "CS": "Nelze extrahovat {}, cesta nebo soubor neexistuje!",
@@ -593,7 +527,7 @@
     "TR": "{} çekilemedi, dizin veya dosya bulunamadı!",
     "UK": "Не вдалося видобути {}, шлях або файл не існує!"
   },
-  "failed_download_retrying_terminal_text_var": {
+  "failed_download_retrying_terminal": {
     "EN": "Failed to download, retrying.",
     "BG": "Неуспешно изтегляне, повторен опит.",
     "CS": "Stažení se nezdařilo, pokus o opětovné stažení.",
@@ -615,7 +549,7 @@
     "TR": "İndirme başarısız oldu, tekrar deneniyor.",
     "UK": "Не вдалося завантажити, повторна спроба."
   },
-  "failed_merge_text_var": {
+  "failed_merge": {
     "EN": "   Failed to merge {}",
     "BG": "   Неуспешно сливане {}",
     "CS": "   Sloučení {} se nezdařilo",
@@ -637,7 +571,7 @@
     "TR": "   {} birleştirilemedi",
     "UK": "   Не вдалося об'єднати {}"
   },
-  "failure_terminal_text_var": {
+  "failure_terminal": {
     "EN": "Patching failed!",
     "BG": "Кръпката не бе успешна!",
     "CS": "Oprava selhala!",
@@ -659,27 +593,27 @@
     "TR": "Yama başarısız!",
     "UK": "Не вдалося встановити патч!"
   },
-  "installing_terminal_text_var": {
-    "EN": "-> Installing",
-    "BG": "-> Инсталиране",
-    "CS": "-> Instalace",
-    "DA": "-> Installation",
-    "DE": "-> Installation",
-    "EL": "-> Εγκατάσταση",
-    "ES": "-> Instalando",
-    "FI": "-> Asentaminen",
-    "FR": "-> Installation",
-    "HU": "-> Telepítés",
-    "IT": "-> Installazione",
-    "NL": "-> Installeren",
-    "NO": "-> Installering",
-    "PL": "-> Instalowanie",
-    "PT": "-> Instalando",
-    "RO": "-> Instalare",
-    "RU": "-> Установка",
-    "SV": "-> Installera",
-    "TR": "-> Yükleniyor",
-    "UK": "-> Встановлення"
+  "installing_terminal": {
+    "EN": "-> Installing {}",
+    "BG": "-> Инсталиране {}",
+    "CS": "-> Instalace {}",
+    "DA": "-> Installation {}",
+    "DE": "-> Installation {}",
+    "EL": "-> Εγκατάσταση {}",
+    "ES": "-> Instalando {}",
+    "FI": "-> Asentaminen {}",
+    "FR": "-> Installation {}",
+    "HU": "-> Telepítés {}",
+    "IT": "-> Installazione {}",
+    "NL": "-> Installeren {}",
+    "NO": "-> Installering {}",
+    "PL": "-> Instalowanie {}",
+    "PT": "-> Instalando {}",
+    "RO": "-> Instalare {}",
+    "RU": "-> Установка {}",
+    "SV": "-> Installera {}",
+    "TR": "-> Yükleniyor {}",
+    "UK": "-> Встановлення {}"
   },
   "language_select": {
     "EN": "Language:",
@@ -703,7 +637,7 @@
     "TR": "Dil:",
     "UK": "Мова:"
   },
-  "launch_option_text_var": {
+  "launch_option": {
     "EN": "Remember to add '-language {}' to Dota 2 launch options",
     "BG": "Не забравяйте да добавите '-language {}' към опциите за стартиране на Dota 2",
     "CS": "Nezapomeňte přidat '-language {}' do možností spuštění Dota 2",
@@ -725,7 +659,7 @@
     "TR": "Dota2 komutlarına '-language {}' eklemeyi unutmayın",
     "UK": "Не забудьте додати '-language {}' до параметрів запуску Dota 2"
   },
-  "merged_mod_text_var": {
+  "merged_mod": {
     "EN": "   Merged {}",
     "BG": "   Обединено {}",
     "CS": "   Sloučeno {}",
@@ -747,7 +681,7 @@
     "TR": "   Birleştirilmiş {}",
     "UK": "   Об'єднано {}"
   },
-  "merging_vpks_text_var": {
+  "merging_vpks": {
     "EN": "-> Merging VPKs...",
     "BG": "-> Сливане на VPK...",
     "CS": "-> Sloučení VPK...",
@@ -769,7 +703,7 @@
     "TR": "-> VPK'lar birleştiriliyor...",
     "UK": "-> Об'єднання VPK..."
   },
-  "minify_encountered_errors_terminal_text_var": {
+  "minify_encountered_errors_terminal": {
     "EN": "Minify encountered errors. Check Minify/logs/warnings.txt for details.",
     "BG": "Възникнаха грешки при Minify. Проверете Minify/logs/warnings.txt за подробности.",
     "CS": "Při Minify se vyskytly chyby. Podrobnosti naleznete v souboru Minify/logs/warnings.txt.",
@@ -813,7 +747,7 @@
     "TR": "Mod Seçme Menüsü",
     "UK": "Меню вибору модів"
   },
-  "mods_removed_terminal_text_var": {
+  "mods_removed_terminal": {
     "EN": "All Minify mods have been removed.",
     "BG": "Всички Minify модове са премахнати.",
     "CS": "Všechny mody Minify byly odstraněny.",
@@ -835,49 +769,27 @@
     "TR": "Tüm Minify modları kaldırıldı.",
     "UK": "Всі моди Minify були видалені."
   },
-  "no_notes_found_text_var": {
-    "EN": "An English note or a note in your locale couldn't be found in the mod {}",
-    "BG": "В мода не можа да бъде намерена бележка на английски или на вашия език {}",
-    "CS": "V modu {} se nenašla anglická poznámka ani poznámka ve vašem jazyce.",
-    "DA": "En engelsk note eller en note på din sprogindstilling blev ikke fundet i mod {}",
-    "DE": "Es konnte keine englische Notiz oder eine Notiz in Ihrer Sprache im Mod gefunden werden {}",
-    "EL": "Δεν βρέθηκε σημείωση στα Αγγλικά ή σημείωση στις τοπικές ρυθμίσεις σας στη λειτουργία {}",
-    "ES": "No se pudo encontrar una nota en inglés o una nota en su configuración regional en el mod {}",
-    "FI": "Modista {} ei löytynyt englanninkielistä tai omalla kielelläsi olevaa huomautusta.",
-    "FR": "Impossible de trouver une note en anglais ou dans votre langue dans le mod {}",
-    "HU": "Nem található angol vagy a te területi beállításodnak megfelelő megjegyzés a {} modban.",
-    "IT": "Non è stato possibile trovare una nota in inglese o una nota nella tua lingua nella mod {}",
-    "NL": "Een Engelse notitie of een notitie in uw taal kon niet worden gevonden in de mod {}",
-    "NO": "En engelsk merknad eller en merknad på din språkbruk ble ikke funnet i mod {}",
-    "PL": "Nie znaleziono notatki w języku angielskim lub w Twojej lokalizacji w modzie {}",
-    "PT": "Não foi possível encontrar uma nota em inglês ou uma nota no seu idioma no mod {}",
-    "RO": "O notă în limba engleză sau o notă în setările regionale nu a putut fi găsită în mod {}",
-    "RU": "В моде {} не удалось найти заметку на английском языке или на вашем языке.",
-    "SV": "En engelsk anteckning eller en anteckning på din språkinställning kunde inte hittas i mod {}",
-    "TR": "Mod {}'da İngilizce veya yerel ayarlarınızdaki bir not bulunamadı",
-    "UK": "Англійська примітка або примітка для вашої локалізації не знайдена в моді {}"
-  },
-  "open_dir_fail_text_var": {
-    "EN": " doesn't exist!",
-    "BG": " не съществува!",
-    "CS": " neexistuje!",
-    "DA": " findes ikke!",
-    "DE": " Existiert nicht!",
-    "EL": " δεν υπάρχει!",
-    "ES": " ¡No existe!",
-    "FI": " ei ole olemassa!",
-    "FR": " n'existe pas !",
-    "HU": " nem létezik!",
-    "IT": " non esiste!",
-    "NL": " bestaat niet!",
-    "NO": " finnes ikke!",
-    "PL": " nie istnieje!",
-    "PT": " Não existe!",
-    "RO": " nu există!",
-    "RU": " не существует!",
-    "SV": " finns inte!",
-    "TR": " yok!",
-    "UK": " не існує!"
+  "open_dir_fail": {
+    "EN": "{} doesn't exist!",
+    "BG": "{} не съществува!",
+    "CS": "{} neexistuje!",
+    "DA": "{} findes ikke!",
+    "DE": "{} Existiert nicht!",
+    "EL": "{} δεν υπάρχει!",
+    "ES": "{} ¡No existe!",
+    "FI": "{} ei ole olemassa!",
+    "FR": "{} n'existe pas !",
+    "HU": "{} nem létezik!",
+    "IT": "{} non esiste!",
+    "NL": "{} bestaat niet!",
+    "NO": "{} finnes ikke!",
+    "PL": "{} nie istnieje!",
+    "PT": "{} Não existe!",
+    "RO": "{} nu există!",
+    "RU": "{} не существует!",
+    "SV": "{} finns inte!",
+    "TR": "{} yok!",
+    "UK": "{} не існує!"
   },
   "remove_mods_text_tag": {
     "EN": "Remove all mods?",
@@ -901,7 +813,7 @@
     "TR": "Bütün modları kaldırmak istediğine emin misin?",
     "UK": "Видалити всі моди?"
   },
-  "replacing_terminal_text_var": {
+  "replacing_terminal": {
     "EN": "   Replacing {} -> {}",
     "BG": "   Замяна на {} -> {}",
     "CS": "   Nahrazení {} -> {}",
@@ -923,7 +835,7 @@
     "TR": "   {} -> {} yerine",
     "UK": "   Заміна {} -> {}"
   },
-  "script_execution_text_var": {
+  "script_execution": {
     "EN": "   Executing {} script on step \"{}\".",
     "BG": "   Изпълняване на {} скрипт на стъпка \"{}\".",
     "CS": "   Spuštění skriptu {} v kroku \"{}\".",
@@ -945,7 +857,7 @@
     "TR": "   \"{}\" adımında {} betiği çalıştırılıyor.",
     "UK": "   Виконання скрипта {} на кроці \"{}\"."
   },
-  "script_no_main_text_var": {
+  "script_no_main": {
     "EN": "   {} \"{}\" script has no main function!",
     "BG": "   Скриптът {} \"{}\" няма основна функция!",
     "CS": "   Skript {} \"{}\" nemá žádnou hlavní funkci!",
@@ -967,7 +879,7 @@
     "TR": "   {} \"{}\" betiğinin ana fonksiyonu yoktur!",
     "UK": "   Скрипт {} \"{}\" не має основної функції!"
   },
-  "script_success_text_var": {
+  "script_success": {
     "EN": "   Successfully executed {} \"{}\" script.",
     "BG": "   Скриптът {} \"{}\" е изпълнен успешно.",
     "CS": "   Skript {} \"{}\" byl úspěšně spuštěn.",
@@ -1099,7 +1011,7 @@
     "TR": "-> Bu proje için modlar oluşturun ve bakımını üstlenin",
     "UK": "-> Створити та підтримувати моди для цього проєкту"
   },
-  "starting_extraction_text_var": {
+  "starting_extraction": {
     "EN": "-> Beginning to extract CSS files",
     "BG": "-> Започва се извличането на CSS файлове",
     "CS": "-> Začínáme extrahovat soubory CSS",
@@ -1121,7 +1033,7 @@
     "TR": "-> CSS dosyalarını çıkarmaya başlıyoruz",
     "UK": "-> Початок вилучення CSS-файлів"
   },
-  "success_merged_vpk_text_var": {
+  "success_merged_vpk": {
     "EN": "-> Created merged vpk",
     "BG": "-> Създаден обединен vpk",
     "CS": "-> Vytvořeno sloučené vpk",
@@ -1143,7 +1055,7 @@
     "TR": "-> Birleştirilmiş vpk oluşturuldu",
     "UK": "-> Створено об'єднаний vpk"
   },
-  "success_terminal_text_var": {
+  "success_terminal": {
     "EN": "Patch was successful!",
     "BG": "Пачът беше успешен!",
     "CS": "Oprava byla úspěšná!",
@@ -1319,7 +1231,7 @@
     "TR": "Evet",
     "UK": "Так"
   },
-  "checking_launch_options_text_var": {
+  "checking_launch_options": {
     "EN": "-> Checking language parameters",
     "BG": "-> Проверка на езиковите параметри",
     "CS": "-> Kontrola jazykových parametrů",
@@ -1341,7 +1253,7 @@
     "TR": "-> Dil parametrelerinin kontrol edilmesi",
     "UK": "-> Перевірка мовних параметрів"
   },
-  "discrepancy_launch_options_text_var": {
+  "discrepancy_launch_options": {
     "EN": "   Discrepancy detected for the current user, switching parameters...\n   {}, {}",
     "BG": "   Открито е несъответствие за текущия потребител, превключване на параметрите...\n   {}, {}",
     "CS": "   Zjištěna nesrovnalost u aktuálního uživatele, přepínání parametrů...\n   {}, {}",
@@ -1363,7 +1275,7 @@
     "TR": "   Mevcut kullanıcı için tutarsızlık tespit edildi, parametreler değiştiriliyor...\n   {}, {}",
     "UK": "   Виявлено розбіжність для поточного користувача, перемикання параметрів...\n   {}, {}"
   },
-  "waiting_steam_to_close_text_var": {
+  "waiting_steam_to_close": {
     "EN": "   Waiting for steam to close...",
     "BG": "   Чакам steam да затвори...",
     "CS": "   Čekání na zavření steam...",

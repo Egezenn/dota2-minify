@@ -30,7 +30,7 @@ def main():
 
     if steam_id_config and os.path.exists(userdata_path):
         id_to_use_path = os.path.join(userdata_path, str(steam_id_config))
-        dest_path = os.path.join(id_to_use_path, "570", "remote", "cfg")
+        dest_path = os.path.join(id_to_use_path, mpaths.STEAM_DOTA_ID, "remote", "cfg")
         if os.path.exists(dest_path):
             found = True
 

@@ -6,6 +6,7 @@ import shutil
 import subprocess
 import threading
 import time
+import webbrowser
 import xml.etree.ElementTree as ET
 
 import dearpygui.dearpygui as ui
@@ -26,14 +27,7 @@ def patcher(mod=None, pakname=None):
     gui.lock_interaction()
     helper.clean_terminal()
 
-    target = "dota2.exe" if mpaths.OS == mpaths.WIN else "dota2"
-    running = any(p.info.get("name") == target for p in psutil.process_iter(attrs=["name"]))
-    if running:
-        helper.add_text_to_terminal(
-            helper.localization_dict["close_dota_terminal_text_var"],
-            "close_dota_text_tag",
-            "warning",
-        )
+    if gui.is_dota_running("close_dota_terminal", "warning"):
         gui.unlock_interaction()
         return
 
@@ -116,7 +110,7 @@ def patcher(mod=None, pakname=None):
                     files_dir = os.path.join(mod_path, "files")
 
                     helper.exec_script(script_file, folder, "loop")
-                    helper.add_text_to_terminal(f"{helper.localization_dict['installing_terminal_text_var']} {folder}")
+                    helper.add_text_to_terminal("installing_terminal", folder)
                     if os.path.exists(files_dir):
                         shutil.copytree(
                             files_dir,
@@ -219,7 +213,7 @@ def patcher(mod=None, pakname=None):
             game_contents_file_init = True
 
         if helper.workshop_installed:
-            helper.add_text_to_terminal(helper.localization_dict["starting_extraction_text_var"])
+            helper.add_text_to_terminal("starting_extraction")
             core_extracts = list(set(core_extracts))
             dota_extracts = list(set(dota_extracts))
             vpk_extractor(core_pak_contents, core_extracts)
@@ -227,10 +221,7 @@ def patcher(mod=None, pakname=None):
             # ---------------------------------- STEP 2 ---------------------------------- #
             # ------------------- Decompile all files in "build" folder ------------------ #
             # ---------------------------------------------------------------------------- #
-            helper.add_text_to_terminal(
-                helper.localization_dict["decompiling_terminal_text_var"],
-                "decompiling_text",
-            )
+            helper.add_text_to_terminal("decompiling_terminal")
             with open(mpaths.log_s2v, "w") as file:
                 try:
                     subprocess.run(
@@ -258,10 +249,7 @@ def patcher(mod=None, pakname=None):
             # ---------------------------------- STEP 3 ---------------------------------- #
             # ---------------------------- CSS resourcecompile --------------------------- #
             # ---------------------------------------------------------------------------- #
-            helper.add_text_to_terminal(
-                helper.localization_dict["compiling_resource_terminal_text_var"],
-                "compiling_resourcecompiler_text_tag",
-            )
+            helper.add_text_to_terminal("compiling_resource_terminal")
             styles_by_file = {}
             for path, style in styling_dictionary.values():
                 sanitized_path = path[1:] if path.startswith("!") else path
@@ -331,10 +319,7 @@ def patcher(mod=None, pakname=None):
 
         os.makedirs(helper.output_path, exist_ok=True)
         native_mods = vpk.new(mpaths.minify_dota_compile_output_path)
-        helper.add_text_to_terminal(
-            helper.localization_dict["compiling_terminal_text_var"],
-            "compiling_text",
-        )
+        helper.add_text_to_terminal("compiling_terminal")
         pakname = "pak66" if pakname is None else pakname
         native_mods.save(os.path.join(helper.output_path, f"{pakname}_dir.vpk"))
 
@@ -350,16 +335,16 @@ def patcher(mod=None, pakname=None):
 
         # Only create pak65 if there are VPK mods to merge
         if vpk_mods_to_merge:
-            helper.add_text_to_terminal(helper.localization_dict["merging_vpks_text_var"])
+            helper.add_text_to_terminal("merging_vpks")
 
             for mod_name in vpk_mods_to_merge:
                 mod_path = os.path.join(mpaths.mods_dir, mod_name)
                 try:
                     mod_vpk = vpk.open(mod_path)
                     dump_vpk(mod_vpk, mpaths.merge_dir, check_exists=True)
-                    helper.add_text_to_terminal(helper.localization_dict["merged_mod_text_var"].format(mod_name))
+                    helper.add_text_to_terminal("merged_mod", mod_name)
                 except:
-                    mpaths.write_warning(helper.localization_dict["failed_merge_mod_text_var"].format(mod_name))
+                    mpaths.write_warning("failed_merge_mod", mod_name)
 
             # Insert metadata to pak65
             # Create a metadata file listing the VPK mods included
@@ -374,11 +359,11 @@ def patcher(mod=None, pakname=None):
             except FileNotFoundError:  # update ignore
                 pass
 
-            helper.add_text_to_terminal(helper.localization_dict["creating_merged_vpk_text_var"])
+            helper.add_text_to_terminal("creating_merged_vpk")
             merged_mods = vpk.new(mpaths.merge_dir)
             merged_mods.save(os.path.join(helper.output_path, "pak65_dir.vpk"))
 
-            helper.add_text_to_terminal(helper.localization_dict["success_merged_vpk_text_var"], type="success")
+            helper.add_text_to_terminal("success_merged_vpk", type="success")
         else:
             # No VPK mods selected - remove pak65 if it exists from previous patches
             pak65_path = os.path.join(helper.output_path, "pak65_dir.vpk")
@@ -415,21 +400,19 @@ def patcher(mod=None, pakname=None):
                 ),
                 encoding="utf-8",
             ) as file:
-                helper.add_text_to_terminal(helper.localization_dict["checking_launch_options_text_var"])
+                helper.add_text_to_terminal("checking_launch_options")
                 data = vdf.load(file)
                 locale = mpaths.get_config("output_locale")
-                launch_options = data["UserLocalConfigStore"]["Software"]["Valve"]["Steam"]["apps"]["570"][
-                    "LaunchOptions"
-                ]
-                if not f"-language {locale}" in launch_options:
+                launch_options = data["UserLocalConfigStore"]["Software"]["Valve"]["Steam"]["apps"][
+                    mpaths.STEAM_DOTA_ID
+                ]["LaunchOptions"]
+                if f"-language {locale}" not in launch_options:
                     for user in mpaths.get_steam_accounts():
                         if steam_id in user:
                             break
-                    helper.add_text_to_terminal(
-                        helper.localization_dict["discrepancy_launch_options_text_var"].format(user["name"], locale)
-                    )
+                    helper.add_text_to_terminal("discrepancy_launch_options", user["name"], locale)
                     helper.open_thing(mpaths.steam_executable_path, "-exitsteam")
-                    data["UserLocalConfigStore"]["Software"]["Valve"]["Steam"]["apps"]["570"][
+                    data["UserLocalConfigStore"]["Software"]["Valve"]["Steam"]["apps"][mpaths.STEAM_DOTA_ID][
                         "LaunchOptions"
                     ] = f"-language {locale} {helper.remove_lang_args(launch_options)}"
                     with open(vdf_path, "w", encoding="utf-8") as file:
@@ -439,33 +422,25 @@ def patcher(mod=None, pakname=None):
                         p.info.get("name") == os.path.basename(mpaths.steam_executable_path)
                         for p in psutil.process_iter(attrs=["name"])
                     ):
-                        helper.add_text_to_terminal(helper.localization_dict["waiting_steam_to_close_text_var"])
+                        helper.add_text_to_terminal("waiting_steam_to_close")
                         time.sleep(2)
                     helper.open_thing(mpaths.steam_executable_path, "-silent")
 
         gui.unlock_interaction()
-        helper.add_text_to_terminal(gui.spacer, "spacer1_text")
-        helper.add_text_to_terminal(
-            helper.localization_dict["success_terminal_text_var"],
-            "success_text_tag",
-            "success",
-        )
-        # TODO: Use strings like this, without fstrings
-        helper.add_text_to_terminal(
-            helper.localization_dict["launch_option_text_var"].format(ui.get_value("output_select")),
-            "launch_option_text",
-            "warning",
-        )
+        helper.add_text_to_terminal(gui.spacer)
+        helper.add_text_to_terminal("success_terminal", type="success")
+        helper.add_text_to_terminal("launch_option", ui.get_value("output_select"), type="warning")
 
         gui.bulk_exec_script("after_patch", False)
 
         if os.path.exists(mpaths.log_warnings) and os.path.getsize(mpaths.log_warnings) != 0:
-            helper.add_text_to_terminal(
-                helper.localization_dict["minify_encountered_errors_terminal_text_var"],
-                "minify_error_var",
-                "warning",
-            )
+            helper.add_text_to_terminal("minify_encountered_errors_terminal", type="warning")
         playsound3.playsound(os.path.join(mpaths.sounds_dir, "success.wav"), block=False)
+
+        if mpaths.get_config("launch_dota_after_patch", False):
+            webbrowser.open(f"steam://rungameid/{mpaths.STEAM_DOTA_ID}")
+        if mpaths.get_config("kill_self_after_patch", False):
+            helper.close()
 
     # chimes are from pixabay.com/sound-effects/chime-74910/
     except (PermissionError, playsound3.PlaysoundException):
@@ -474,17 +449,9 @@ def patcher(mod=None, pakname=None):
     except:
         mpaths.write_crashlog()
 
-        helper.add_text_to_terminal(gui.spacer, "spacer2_text")
-        helper.add_text_to_terminal(
-            helper.localization_dict["failure_terminal_text_var"],
-            "patching_failed_text_tag",
-            "error",
-        )
-        helper.add_text_to_terminal(
-            helper.localization_dict["check_logs_terminal_text_var"],
-            "check_logs_text_tag",
-            "warning",
-        )
+        helper.add_text_to_terminal(gui.spacer)
+        helper.add_text_to_terminal("failure_terminal", type="error")
+        helper.add_text_to_terminal("check_logs_terminal", type="warning")
         gui.unlock_interaction()
         playsound3.playsound(os.path.join(mpaths.sounds_dir, "fail.wav"), block=False)
 
@@ -528,10 +495,7 @@ def uninstaller():
                             break
 
     gui.bulk_exec_script("uninstall")
-    helper.add_text_to_terminal(
-        helper.localization_dict["mods_removed_terminal_text_var"],
-        "uninstaller_text_tag",
-    )
+    helper.add_text_to_terminal("mods_removed_terminal")
     gui.unlock_interaction()
 
 
@@ -553,10 +517,7 @@ def vpk_extractor(vpk_to_extract_from, paths, path_to_extract_to=mpaths.build_di
 
     def extract_file(path):
         if not os.path.exists(full_path := os.path.join(path_to_extract_to, path)):  # extract files from VPK only once
-            helper.add_text_to_terminal(
-                helper.localization_dict["extracting_terminal_text_var"].format(path),
-                f"extracting_{path}_tag",
-            )
+            helper.add_text_to_terminal("extracting_terminal", path)
             with vpk_lock:
                 pakfile = vpk_to_extract_from.get_file(path)
 
@@ -839,7 +800,7 @@ def process_blacklist(blacklist_txt, folder, blank_file_extensions):
 
 def process_replacer(item):
     source, target = item
-    helper.add_text_to_terminal(helper.localization_dict["replacing_terminal_text_var"].format(source, target))
+    helper.add_text_to_terminal("replacing_terminal", source, target)
     os.makedirs(
         os.path.dirname(target_dir := os.path.join(mpaths.minify_dota_compile_output_path, target)),
         exist_ok=True,
@@ -883,7 +844,7 @@ def wipe_lang_dirs():
     for path in mpaths.minify_dota_possible_language_output_paths:
         if os.path.isdir(path):
             helper.remove_path(path)
-            helper.add_text_to_terminal(helper.localization_dict["clean_lang_dirs_text_var"].format(path))
+            helper.add_text_to_terminal("clean_lang_dirs", path)
 
 
 def create_blank_mod():
