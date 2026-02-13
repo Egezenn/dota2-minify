@@ -5,6 +5,7 @@ import glob
 import os
 import platform
 import shutil
+import stat
 import subprocess
 import sys
 import tempfile
@@ -21,6 +22,9 @@ import psutil
 # - Source2Viewer-CLI.exe -> keep
 # - rg.exe -> keep
 # - updater.exe -> keep (self)
+
+
+host = platform.system()
 
 
 def get_current_version():
@@ -60,7 +64,7 @@ def main():
 
     print("Starting update process...")
 
-    target = "Minify.exe" if platform.system() == "Windows" else "Minify"
+    target = "Minify.exe" if host == "Windows" else "Minify"
     while any(p.info.get("name") == target for p in psutil.process_iter(attrs=["name"])):
         print(f"Waiting for {target} to close...")
         time.sleep(2)
@@ -135,10 +139,19 @@ def main():
             shutil.move(s, d)
 
         print("Update complete!")
-        if os.path.exists("Minify.exe"):
-            subprocess.Popen(["Minify.exe"])
-        elif os.path.exists("Minify"):
-            subprocess.Popen(["./Minify"])
+        if host == "Windows":
+            subprocess.Popen(
+                ["Minify.exe"],
+                creationflags=subprocess.DETACHED_PROCESS | subprocess.CREATE_NEW_PROCESS_GROUP,
+                close_fds=True,
+            )
+        else:
+            current_permissions = os.stat("Minify").st_mode
+            os.chmod(
+                "Minify",
+                current_permissions | stat.S_IXUSR | stat.S_IXGRP | stat.S_IXOTH,
+            )
+            subprocess.Popen(["./Minify"], start_new_session=True, close_fds=True)
 
     except Exception as e:
         print(f"Error: {e}")

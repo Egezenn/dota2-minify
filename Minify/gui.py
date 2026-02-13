@@ -385,15 +385,20 @@ def update():
 
                 helper.add_text_to_terminal("Download complete. Launching updater...")
 
-                cmd = ["updater.exe" if mpaths.OS == mpaths.WIN else "./updater", target_zip]
-
                 if mpaths.OS == mpaths.WIN:
+                    cmd = ["updater.exe", target_zip]
                     subprocess.Popen(
                         cmd,
                         creationflags=subprocess.DETACHED_PROCESS | subprocess.CREATE_NEW_PROCESS_GROUP,
                         close_fds=True,
                     )
                 else:
+                    cmd = ["./updater", target_zip]
+                    current_permissions = os.stat(cmd[0]).st_mode
+                    os.chmod(
+                        cmd[0],
+                        current_permissions | stat.S_IXUSR | stat.S_IXGRP | stat.S_IXOTH,
+                    )
                     subprocess.Popen(cmd, start_new_session=True, close_fds=True)
 
                 helper.close()
