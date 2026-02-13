@@ -1,5 +1,6 @@
 import concurrent.futures
 import ctypes
+from gc import enable
 import os
 import re
 import shutil
@@ -114,13 +115,13 @@ def setup_system():
 def download_dependencies():
     try:
         if not os.path.exists(mpaths.s2v_executable):
-            tag = helper.add_text_to_terminal("downloading_cli_terminal")
+            tag = helper.add_text_to_terminal("&downloading_cli_terminal")
             zip_path = mpaths.s2v_latest.split("/")[-1]
             if helper.download_file(mpaths.s2v_latest, zip_path, tag):
-                helper.add_text_to_terminal("downloaded_cli_terminal", zip_path)
+                helper.add_text_to_terminal("&downloaded_cli_terminal", zip_path)
                 if helper.extract_archive(zip_path, "."):
                     helper.remove_path(zip_path)
-                    helper.add_text_to_terminal("extracted_cli_terminal", zip_path)
+                    helper.add_text_to_terminal("&extracted_cli_terminal", zip_path)
                     if mpaths.OS != mpaths.WIN and not os.access(mpaths.s2v_executable, os.X_OK):
                         current_permissions = os.stat(mpaths.s2v_executable).st_mode
                         os.chmod(
@@ -133,12 +134,12 @@ def download_dependencies():
         if rg_on_path:
             mpaths.rg_executable = rg_on_path
         elif not os.path.exists(mpaths.rg_executable):
-            tag = helper.add_text_to_terminal("downloading_ripgrep_terminal")
+            tag = helper.add_text_to_terminal("&downloading_ripgrep_terminal")
             archive_path = mpaths.rg_latest.split("/")[-1]
             archive_name = archive_path[:-4] if archive_path[-4:] == ".zip" else archive_path[:-7]
 
             if helper.download_file(mpaths.rg_latest, archive_path, tag):
-                helper.add_text_to_terminal("downloaded_cli_terminal", archive_path)
+                helper.add_text_to_terminal("&downloaded_cli_terminal", archive_path)
 
                 success = False
                 success = helper.extract_archive(archive_path, ".", f"{archive_name}/{mpaths.rg_executable}")
@@ -149,7 +150,7 @@ def download_dependencies():
                         mpaths.rg_executable,
                     )
                     helper.remove_path(archive_path)
-                    helper.add_text_to_terminal("extracted_cli_terminal", archive_path)
+                    helper.add_text_to_terminal("&extracted_cli_terminal", archive_path)
                     if mpaths.OS in (mpaths.LINUX, mpaths.MAC) and not os.access(mpaths.rg_executable, os.X_OK):
                         current_permissions = os.stat(mpaths.rg_executable).st_mode
                         os.chmod(
@@ -159,7 +160,7 @@ def download_dependencies():
 
     except:
         mpaths.write_crashlog()
-        helper.add_text_to_terminal("failed_download_retrying_terminal", type="error")
+        helper.add_text_to_terminal("&failed_download_retrying_terminal", type="error")
         return download_dependencies()
 
 
@@ -378,7 +379,7 @@ def update():
                 helper.remove_path(target_zip)
 
                 if not helper.download_file(download_url, target_zip, tag):
-                    open_github_link()
+                    webbrowser.open(mpaths.github_latest)
                     helper.close()
                     return
 
@@ -400,7 +401,7 @@ def update():
 
         except Exception as e:
             print(f"Update failed: {e}")
-            open_github_link()
+            webbrowser.open(mpaths.github_latest)
             helper.close()
 
     delete_update_popup(ignore=False)
@@ -569,11 +570,11 @@ def configure_uninstall_popup():
 
 
 def start_text():
-    helper.add_text_to_terminal("start_text_1_var")
-    helper.add_text_to_terminal("start_text_2_var")
-    helper.add_text_to_terminal("start_text_3_var")
-    helper.add_text_to_terminal("start_text_4_var")
-    helper.add_text_to_terminal("start_text_5_var")
+    helper.add_text_to_terminal("&start_text_1_var")
+    helper.add_text_to_terminal("&start_text_2_var")
+    helper.add_text_to_terminal("&start_text_3_var")
+    helper.add_text_to_terminal("&start_text_4_var")
+    helper.add_text_to_terminal("&start_text_5_var")
     helper.add_text_to_terminal(spacer)
 
 
@@ -704,6 +705,8 @@ def dev_mode():
     global dev_mode_state
     height_increase = 400
     tools_height = 220
+    debug_env = mpaths.get_config("debug_env", False)
+
     if dev_mode_state == -1:  # init
         dev_mode_state = 1
         ui.configure_viewport(
@@ -803,7 +806,13 @@ def dev_mode():
                 tag="compile_file_dialog",
                 directory_selector=True,
             )
-            ui.add_button(label="Compile items from path", callback=helper.compile)
+            ui.add_button(
+                label="Compile items from path",
+                callback=lambda: helper.compile(
+                    input_path=os.path.join(mpaths.config_dir, "custom"),
+                    output_path=os.path.join(mpaths.config_dir, "compiled"),
+                ),
+            )
             ui.add_spacer(width=0, height=5)
             ui.add_button(label="Create a blank mod", callback=build.create_blank_mod)
             ui.add_spacer(width=0, height=5)
@@ -837,6 +846,7 @@ def dev_mode():
                 label="Validate Dota2", callback=lambda: webbrowser.open(f"steam://validate/{mpaths.STEAM_DOTA_ID}")
             )
         if not mpaths.frozen:
+
             with ui.window(
                 label="Debug tools",
                 tag="debug_tools",
@@ -865,7 +875,7 @@ def dev_mode():
         ui.configure_item("opener", show=True)
         ui.configure_item("mod_tools", show=True)
         ui.configure_item("maintenance_tools", show=True)
-        if not mpaths.frozen:
+        if not mpaths.frozen and debug_env:
             ui.configure_item("debug_tools", show=True)
 
     else:  # close
@@ -879,7 +889,7 @@ def dev_mode():
         ui.configure_item("opener", show=False)
         ui.configure_item("mod_tools", show=False)
         ui.configure_item("maintenance_tools", show=False)
-        if not mpaths.frozen:
+        if not mpaths.frozen and debug_env:
             ui.configure_item("debug_tools", show=False)
 
 
@@ -928,7 +938,7 @@ def is_dota_running(text_tag, text_type):
 def is_compiler_found():
     if not os.path.exists(mpaths.dota_resource_compiler_path):
         helper.workshop_installed = False
-        helper.add_text_to_terminal("error_no_workshop_tools_found_terminal", type="warning")
+        helper.add_text_to_terminal("&error_no_workshop_tools_found_terminal", type="warning")
     else:
         helper.workshop_installed = True
 
@@ -959,15 +969,15 @@ def extract_workshop_tools():
                 shutil.copy(path, mpaths.dota_tools_extraction_paths[i])
 
         else:
-            helper.add_text_to_terminal("extraction_of_failed", path)
+            helper.add_text_to_terminal("&extraction_of_failed", path)
             fails += 1
 
     if not fails:
         recalc_rescomp_dirs()
         if os.path.exists(mpaths.dota_resource_compiler_path):
-            helper.add_text_to_terminal("extracted")
+            helper.add_text_to_terminal("&extracted")
         else:
-            helper.add_text_to_terminal("extraction_of_failed", path)
+            helper.add_text_to_terminal("&extraction_of_failed", path)
 
 
 def bulk_exec_script(order_name, terminal_output=True):

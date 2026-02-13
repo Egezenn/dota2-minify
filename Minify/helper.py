@@ -8,16 +8,16 @@ import stat
 import subprocess
 import tarfile
 import time
-import webbrowser
 import zipfile
 
 import dearpygui.dearpygui as ui
 import jsonc
 import requests
+import vpk
 
 import mpaths
 
-compile_path = ""
+compiler_filepicker_path = ""
 details_label = ""
 locale = ""
 localization_dict = {}
@@ -102,9 +102,12 @@ def scroll_to_terminal_end():
     ui.set_y_scroll("terminal_window", ui.get_y_scroll_max("terminal_window"))
 
 
-def add_text_to_terminal(text_or_key, *args, type: str | None = None, **kwargs):
-    # loose, fine_if_we_don't_add_text_like_this_that_also_matches_keys
-    text = localization_dict.get(text_or_key, text_or_key)
+def add_text_to_terminal(text_or_id, *args, type: str | None = None, **kwargs):
+    if text_or_id.startswith("&"):
+        text = localization_dict.get(text_or_id.replace("&", ""), text_or_id)
+    else:
+        text = text_or_id
+
     if args:
         text = text.format(*args)
 
@@ -124,7 +127,7 @@ def add_text_to_terminal(text_or_key, *args, type: str | None = None, **kwargs):
         kwargs["color"] = color
 
     item = ui.add_text(default_value=text, parent="terminal_window", wrap=mpaths.main_window_width - 24, **kwargs)
-    terminal_history.append({"id": item, "key": text_or_key, "args": args})
+    terminal_history.append({"id": item, "key": text_or_id.replace("&", ""), "args": args})
     scroll_to_terminal_end()
     return item
 
@@ -410,43 +413,38 @@ def open_thing(path, args=""):
             else:
                 subprocess.run(["xdg-open", path])
     except FileNotFoundError:
-        add_text_to_terminal("open_dir_fail", path, type="error")
+        add_text_to_terminal("&open_dir_fail", path, type="error")
 
 
-def compile(sender=None, app_data=None, user_data=None):
-    folder = compile_path  # provided from dpg
-    compile_output_path = os.path.join(folder, "compiled")
-    clean_terminal()
+def compile(input_path=None, output_path=None, pak_path=None, sender=None, app_data=None, user_data=None):
+    if compiler_filepicker_path:
+        input_path = compiler_filepicker_path
+        output_path = os.path.join(input_path, os.pardir, "compiled")
+        clean_terminal()
+    if not output_path:
+        output_path = os.path.join(input_path, os.pardir, "compiled")
 
-    if not folder and os.path.exists(os.path.join(mpaths.config_dir, "custom")):
-        add_text_to_terminal("compile_fallback_path_usage")
-        folder = os.path.join(mpaths.config_dir, "custom")
-        compile_output_path = os.path.join(mpaths.config_dir, "compiled")
+    img_list = [str(f.relative_to(input_path)) for f in Path(input_path).rglob("*.png") if f.is_file()]
 
-    img_list = [str(f.relative_to(folder)) for f in Path(folder).rglob("*.png") if f.is_file()]
-
-    if folder:
-        remove_path(mpaths.minify_dota_compile_input_path, compile_output_path)
+    if input_path:
+        add_text_to_terminal("&compile_init", input_path)
+        remove_path(mpaths.minify_dota_compile_input_path, output_path)
         os.makedirs(mpaths.minify_dota_compile_input_path)
 
-        with open(os.path.join(folder, "ref.xml"), "w") as file:
+        with open(os.path.join(input_path, "ref.xml"), "w") as file:
             file.write(create_img_ref_xml(img_list))
 
-        items = os.listdir(folder)
-
-        try:
-            items.remove("compiled")
-        except ValueError:
-            pass
+        items = os.listdir(input_path)
 
         for item in items:
-            if os.path.isdir(os.path.join(folder, item)):
+            if os.path.isdir(os.path.join(input_path, item)):
                 shutil.copytree(
-                    os.path.join(folder, item),
+                    os.path.join(input_path, item),
                     os.path.join(mpaths.minify_dota_compile_input_path, item),
                 )
             else:
-                shutil.copy(os.path.join(folder, item), mpaths.minify_dota_compile_input_path)
+                shutil.copy(os.path.join(input_path, item), mpaths.minify_dota_compile_input_path)
+
         with open(mpaths.log_rescomp, "w") as file:
             command = (
                 mpaths.dota_resource_compiler_path,
@@ -465,19 +463,24 @@ def compile(sender=None, app_data=None, user_data=None):
             )
 
         os.makedirs(mpaths.minify_dota_compile_output_path, exist_ok=True)
-        shutil.copytree(os.path.join(mpaths.minify_dota_compile_output_path), compile_output_path)
+        shutil.copytree(os.path.join(mpaths.minify_dota_compile_output_path), output_path)
 
         remove_path(
             mpaths.minify_dota_compile_input_path,
             mpaths.minify_dota_compile_output_path,
-            os.path.join(folder, "ref.xml"),
-            os.path.join(compile_output_path, "ref.vxml_c"),
+            os.path.join(input_path, "ref.xml"),
+            os.path.join(output_path, "ref.vxml_c"),
         )
         os.makedirs(mpaths.minify_dota_tools_required_path, exist_ok=True)
 
-        add_text_to_terminal("compile_successful")
+        add_text_to_terminal("&compile_successful", output_path)
+
+        if pak_path:
+            vpk_file = vpk.new(output_path)
+            vpk_file.save(pak_path)
+            add_text_to_terminal("&compile_created_pak", pak_path)
     else:
-        add_text_to_terminal("compile_no_path")
+        add_text_to_terminal("&compile_no_path")
 
 
 def create_img_ref_xml(img_path_list):
@@ -495,8 +498,8 @@ def create_img_ref_xml(img_path_list):
 
 
 def select_compile_dir(sender, app_data):
-    global compile_path
-    compile_path = app_data["current_path"]
+    global compiler_filepicker_path
+    compiler_filepicker_path = app_data["current_path"]
 
 
 def move_path(src, dst):
@@ -575,12 +578,12 @@ def exec_script(script_path, mod_name, order_name, _terminal_output=True):
         main_func = getattr(module, "main", None)
         if callable(main_func):
             if _terminal_output:
-                add_text_to_terminal("script_execution", mod_name, order_name)
+                add_text_to_terminal("&script_execution", mod_name, order_name)
             main_func()
             if _terminal_output:
-                add_text_to_terminal("script_success", mod_name, order_name, type="success")
+                add_text_to_terminal("&script_success", mod_name, order_name, type="success")
         else:
-            mpaths.write_warning("script_no_main", mod_name, order_name)
+            mpaths.write_warning("&script_no_main", mod_name, order_name)
 
 
 def remove_lang_args(arg_string):

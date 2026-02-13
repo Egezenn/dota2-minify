@@ -153,28 +153,6 @@
     "TR": "Lütfen önce Dota 2'yi kapatın ve sonra yamalama işlemini gerçekleştirin.",
     "UK": "Будь ласка, спочатку закрийте Dota 2, а потім встановіть патч."
   },
-  "compile_fallback_path_usage": {
-    "EN": "No path selected, using default path.",
-    "BG": "Не е избран път, използва се пътят по подразбиране.",
-    "CS": "Nebyla vybrána žádná cesta, používá se výchozí cesta.",
-    "DA": "Ingen sti valgt, standardstien bruges.",
-    "DE": "Kein Pfad ausgewählt, Standardpfad wird verwendet.",
-    "EL": "Δεν έχει επιλεγεί διαδρομή, χρησιμοποιείται η προεπιλεγμένη διαδρομή.",
-    "ES": "No se seleccionó ninguna ruta, se utiliza la ruta predeterminada.",
-    "FI": "Polkua ei ole valittu, käytetään oletuspolkua.",
-    "FR": "Aucun chemin sélectionné, utilisation du chemin par défaut.",
-    "HU": "Nincs kiválasztva elérési út, az alapértelmezett elérési utat használjuk.",
-    "IT": "Nessun percorso selezionato, verrà utilizzato il percorso predefinito.",
-    "NL": "Geen pad geselecteerd, standaardpad wordt gebruikt.",
-    "NO": "Ingen sti valgt, standardsti brukes.",
-    "PL": "Nie wybrano ścieżki, użyto ścieżki domyślnej.",
-    "PT": "Nenhum caminho selecionado, usando o caminho padrão.",
-    "RO": "Nicio cale selectată, se folosește calea implicită.",
-    "RU": "Путь не выбран, используется путь по умолчанию.",
-    "SV": "Ingen sökväg vald, standardsökvägen används.",
-    "TR": "Hiçbir yol seçilmedi, varsayılan yol kullanılıyor.",
-    "UK": "Шлях не вибрано, використовується шлях за замовчуванням."
-  },
   "compile_no_path": {
     "EN": "Select a path first!",
     "BG": "Първо изберете път!",
@@ -197,27 +175,14 @@
     "TR": "Önce bir yol seçin!",
     "UK": "Спочатку оберіть шлях!"
   },
+  "compile_init": {
+    "EN": "-> Compiling files at\n   {}"
+  },
   "compile_successful": {
-    "EN": "Compiled successfully!",
-    "BG": "Компилирано успешно!",
-    "CS": "Úspěšně zkompilováno!",
-    "DA": "Kompileret med succes!",
-    "DE": "Erfolgreich kompiliert!",
-    "EL": "Η μεταγλώττιση ολοκληρώθηκε με επιτυχία!",
-    "ES": "¡Compilado exitosamente!",
-    "FI": "Käännetty onnistuneesti!",
-    "FR": "Compilation réussie !",
-    "HU": "Sikeresen lefordítva!",
-    "IT": "Compilato con successo!",
-    "NL": "Succesvol gecompileerd!",
-    "NO": "Kompilert!",
-    "PL": "Kompilacja zakończona sukcesem!",
-    "PT": "Compilado com sucesso!",
-    "RO": "Compilat cu succes!",
-    "RU": "Компиляция успешна!",
-    "SV": "Kompilerad!",
-    "TR": "Başarıyla derlendi!",
-    "UK": "Успішно скомпільовано!"
+    "EN": "-> Compiled files successfully at\n   {}"
+  },
+  "compile_created_pak": {
+    "EN": "-> Created vpk at\n   {}"
   },
   "compiling_resource_terminal": {
     "EN": "-> Compiling extracted files via resourcecompiler",

@@ -79,10 +79,14 @@ def main():
         items_to_keep = [
             ("bin/rescomproot", "bin/rescomproot"),
             ("config", "config"),
-            ("Source2Viewer-CLI.exe", "Source2Viewer-CLI.exe"),
-            ("Source2Viewer-CLI", "Source2Viewer-CLI"),
             ("rg.exe", "rg.exe"),
             ("rg", "rg"),
+            ("Source2Viewer-CLI.exe", "Source2Viewer-CLI.exe"),
+            ("Source2Viewer-CLI", "Source2Viewer-CLI"),
+            ("updater-new.exe", "updater-new.exe"),
+            ("updater-new", "updater-new"),
+            ("updater.exe", "updater.exe"),
+            ("updater", "updater"),
         ]
 
         if os.path.exists("mods"):
@@ -109,7 +113,7 @@ def main():
         zip_name = os.path.basename(zip_path)
 
         for item in os.listdir("."):
-            if item.lower() == self_name.lower() or item.lower() == zip_name.lower():
+            if item.lower() in [self_name.lower(), zip_name.lower()]:
                 continue
 
             safe_rmtree(item)

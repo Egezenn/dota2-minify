@@ -387,6 +387,7 @@ version_query = f"https://raw.githubusercontent.com/{head_owner}/{repo_name}/ref
 discord = "https://discord.com/invite/2YDnqpbcKM"
 telegram = "https://t.me/dota2minify"
 github = f"https://github.com/{head_owner}/{repo_name}"
+github_latest = github + "/releases/latest"
 s2v_cli_ver = "18.0"
 rg_ver = "15.1.0"
 
