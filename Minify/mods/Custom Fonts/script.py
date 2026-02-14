@@ -14,7 +14,7 @@ import mpaths
 
 def main():
     config_data = mpaths.get_mod_config(mod_name)
-    font_string = mpaths.get_config__dict(config_data, "font_string", "Calibri, sans-serif")
+    font_string = config_data.get("font_string", "Calibri, sans-serif")
     config_data["font_string"] = font_string
     mpaths.set_mod_config(mod_name, config_data)
 

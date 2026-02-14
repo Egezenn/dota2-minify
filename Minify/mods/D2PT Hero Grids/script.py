@@ -20,7 +20,7 @@ def main():
     steam_id_config = mpaths.get_config("steam_id", "")
 
     config_data = mpaths.get_mod_config(mod_name)
-    grid_type = mpaths.get_config__dict(config_data, "grid_type", "d2ptrating")
+    grid_type = config_data.get("grid_type", "d2ptrating")
     config_data["grid_type"] = grid_type
     mpaths.set_mod_config(mod_name, config_data)
 
@@ -41,9 +41,12 @@ def main():
             with open(grid_path, encoding="utf-8") as f:
                 new_grid_data = jsonc.load(f)
         else:
-            response = requests.get(
-                f"https://dota2protracker.com/meta-hero-grids/download?mode={grid_type}&patch=latest"
-            )
+            try:
+                response = requests.get(
+                    f"https://dota2protracker.com/meta-hero-grids/download?mode={grid_type}&patch=latest"
+                )
+            except requests.exceptions.ConnectionError:
+                return
             if response.status_code == 200:
                 grid_path = os.path.join(current_dir, "grid.json")
                 if "application/json" in response.headers.get("Content-Type", ""):

@@ -13,6 +13,7 @@ import zipfile
 import dearpygui.dearpygui as ui
 import jsonc
 import requests
+import vdf
 import vpk
 
 import mpaths
@@ -604,3 +605,69 @@ def remove_lang_args(arg_string):
         cleaned.append(token)
 
     return " ".join(cleaned)
+
+
+def fix_parameters():
+    steam_ids = []
+    successful_ids = []
+    if mpaths.get_config("change_parameters_for_all", True):
+        for account in mpaths.get_steam_accounts():
+            steam_ids.append(account["id"])
+    else:
+        steam_ids.append(mpaths.get_config("steam_id"))
+
+    for steam_id in steam_ids:
+        with open(
+            vdf_path := os.path.join(
+                mpaths.get_config("steam_root"), "userdata", steam_id, "config", "localconfig.vdf"
+            ),
+            encoding="utf-8",
+        ) as file:
+            add_text_to_terminal("&checking_launch_options")
+            data = vdf.load(file)
+        locale = mpaths.get_config("output_locale")
+        try:
+            launch_options = data["UserLocalConfigStore"]["Software"]["Valve"]["Steam"]["apps"][mpaths.STEAM_DOTA_ID][
+                "LaunchOptions"
+            ]
+        except KeyError:
+            continue
+        if f"-language {locale}" not in launch_options or launch_options.count("-language") >= 2:
+            for user in mpaths.get_steam_accounts():
+                if steam_id in user:
+                    break
+            add_text_to_terminal("&discrepancy_launch_options", user["name"], locale)
+            open_thing(mpaths.steam_executable_path, "-exitsteam")
+            data["UserLocalConfigStore"]["Software"]["Valve"]["Steam"]["apps"][mpaths.STEAM_DOTA_ID][
+                "LaunchOptions"
+            ] = f"-language {locale} {remove_lang_args(launch_options)}"
+        with open(vdf_path, "w", encoding="utf-8") as file:
+            vdf.dump(data, file, pretty=True)
+        successful_ids.append(steam_id)
+    return successful_ids
+
+
+def create_debug_zip():
+    try:
+        timestamp = time.strftime("%Y%m%d-%H%M%S")
+        zip_filename = f"minify_debug_{timestamp}.zip"
+
+        files_to_include = [
+            mpaths.main_config_file_dir,
+            mpaths.mods_config_dir,
+        ]
+
+        if os.path.exists(mpaths.logs_dir):
+            for file in os.listdir(mpaths.logs_dir):
+                files_to_include.append(os.path.join(mpaths.logs_dir, file))
+
+        with zipfile.ZipFile(zip_filename, "w", zipfile.ZIP_DEFLATED) as zipf:
+            for file_path in files_to_include:
+                if os.path.exists(file_path):
+                    zipf.write(file_path)
+
+        add_text_to_terminal("&heeeeeeeeeeeeeelp", zip_filename)
+        open_thing(".")
+
+    except:
+        pass

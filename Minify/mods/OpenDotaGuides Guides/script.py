@@ -36,7 +36,10 @@ def main():
 
     helper.remove_path(zip_path)
 
-    response = requests.get(odg_latest)
+    try:
+        response = requests.get(odg_latest)
+    except requests.exceptions.ConnectionError:
+        return
     if response.status_code == 200:
         with open(zip_path, "wb") as file:
             file.write(response.content)

@@ -13,7 +13,6 @@ import dearpygui.dearpygui as ui
 import jsonc
 import playsound3
 import psutil
-import vdf
 import vpk
 
 import gui
@@ -87,10 +86,11 @@ def patcher(mod=None, pakname=None):
             mod_path = os.path.join(mpaths.mods_dir, folder)
             cfg_path = os.path.join(mod_path, "modcfg.json")
 
-            visual, mod_cfg = mpaths.get_config__file(cfg_path, "visual", True)
+            mod_cfg = mpaths.read_json_file(cfg_path)
+            visual = mod_cfg.get("visual", True)
 
             if mod is None:
-                apply_without_user_confirmation = mpaths.get_config__dict(mod_cfg, "always", False)
+                apply_without_user_confirmation = mod_cfg.get("always", False)
             else:  # will not be in mods.json
                 apply_without_user_confirmation = False
 
@@ -390,41 +390,14 @@ def patcher(mod=None, pakname=None):
 
         # handle language param automatically
         if mpaths.get_config("fix_parameters", True):
-            with open(
-                vdf_path := os.path.join(
-                    mpaths.get_config("steam_root"),
-                    "userdata",
-                    steam_id := mpaths.get_config("steam_id"),
-                    "config",
-                    "localconfig.vdf",
-                ),
-                encoding="utf-8",
-            ) as file:
-                helper.add_text_to_terminal("&checking_launch_options")
-                data = vdf.load(file)
-                locale = mpaths.get_config("output_locale")
-                launch_options = data["UserLocalConfigStore"]["Software"]["Valve"]["Steam"]["apps"][
-                    mpaths.STEAM_DOTA_ID
-                ]["LaunchOptions"]
-                if f"-language {locale}" not in launch_options:
-                    for user in mpaths.get_steam_accounts():
-                        if steam_id in user:
-                            break
-                    helper.add_text_to_terminal("&discrepancy_launch_options", user["name"], locale)
-                    helper.open_thing(mpaths.steam_executable_path, "-exitsteam")
-                    data["UserLocalConfigStore"]["Software"]["Valve"]["Steam"]["apps"][mpaths.STEAM_DOTA_ID][
-                        "LaunchOptions"
-                    ] = f"-language {locale} {helper.remove_lang_args(launch_options)}"
-                    with open(vdf_path, "w", encoding="utf-8") as file:
-                        vdf.dump(data, file, pretty=True)
-
-                    while any(
-                        p.info.get("name") == os.path.basename(mpaths.steam_executable_path)
-                        for p in psutil.process_iter(attrs=["name"])
-                    ):
-                        helper.add_text_to_terminal("&waiting_steam_to_close")
-                        time.sleep(2)
-                    helper.open_thing(mpaths.steam_executable_path, "-silent")
+            if helper.fix_parameters():
+                while any(
+                    p.info.get("name") == os.path.basename(mpaths.steam_executable_path)
+                    for p in psutil.process_iter(attrs=["name"])
+                ):
+                    helper.add_text_to_terminal("&waiting_steam_to_close")
+                    time.sleep(2)
+                helper.open_thing(mpaths.steam_executable_path, "-silent")
 
         gui.bulk_exec_script("after_patch", False)
 

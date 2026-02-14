@@ -14,15 +14,6 @@ import zipfile
 
 import psutil
 
-# Configuration
-# - bin/rescomproot -> keep
-# - config -> keep
-# - mods -> rename to mods_old_v{version}
-# - mods* -> keep
-# - Source2Viewer-CLI.exe -> keep
-# - rg.exe -> keep
-# - updater.exe -> keep (self)
-
 
 host = platform.system()
 
@@ -67,7 +58,7 @@ def main():
     target = "Minify.exe" if host == "Windows" else "Minify"
     while any(p.info.get("name") == target for p in psutil.process_iter(attrs=["name"])):
         print(f"Waiting for {target} to close...")
-        time.sleep(2)
+        time.sleep(5)
 
     current_version = get_current_version()
     print(f"Current Version: {current_version}")
@@ -81,16 +72,8 @@ def main():
         backup_dir = tempfile.mkdtemp()
 
         items_to_keep = [
-            ("bin/rescomproot", "bin/rescomproot"),
-            ("config", "config"),
-            ("rg.exe", "rg.exe"),
-            ("rg", "rg"),
-            ("Source2Viewer-CLI.exe", "Source2Viewer-CLI.exe"),
-            ("Source2Viewer-CLI", "Source2Viewer-CLI"),
-            ("updater-new.exe", "updater-new.exe"),
-            ("updater-new", "updater-new"),
-            ("updater.exe", "updater.exe"),
-            ("updater", "updater"),
+            os.path.join("bin", "rescomproot"),
+            "config",
         ]
 
         if os.path.exists("mods"):
@@ -102,10 +85,10 @@ def main():
             print(f"Preserving {item}...")
             shutil.move(item, os.path.join(backup_dir, item))
 
-        for item_path, item_name in items_to_keep:
+        for item_path in items_to_keep:
             if os.path.exists(item_path):
                 print(f"Preserving {item_path}...")
-                dest = os.path.join(backup_dir, item_name)
+                dest = os.path.join(backup_dir, item_path)
                 os.makedirs(os.path.dirname(dest), exist_ok=True)
                 shutil.move(item_path, dest)
 
@@ -116,8 +99,17 @@ def main():
         # Also avoid deleting the zip file we are using!
         zip_name = os.path.basename(zip_path)
 
+        ignore_list = [
+            self_name,
+            zip_name,
+            "updater.exe",
+            "updater",
+            "updater-new.exe",
+            "updater-new",
+        ]
+
         for item in os.listdir("."):
-            if item.lower() in [self_name.lower(), zip_name.lower()]:
+            if item in ignore_list:
                 continue
 
             safe_rmtree(item)

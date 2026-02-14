@@ -14,7 +14,7 @@ import mpaths
 
 def main():
     config_data = mpaths.get_mod_config(mod_name)
-    font_string = mpaths.get_config__dict(config_data, "font_string", "Calibri, sans-serif")
+    font_string = config_data.get("font_string", "Calibri, sans-serif")
 
     css = os.path.join(current_dir, "styling.css")
     target_string = f": {font_string};"

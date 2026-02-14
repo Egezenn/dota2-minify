@@ -133,19 +133,8 @@ def set_config(key, value):
     return update_json_file(main_config_file_dir, key, value)
 
 
-def get_config__file(file, key, default=None):
-    "Get config value from a file with default and return the dict for later use."
-    data = read_json_file(file)
-    return data.get(key, default), data
-
-
-def get_config__dict(data, key, default=None):
-    "Get config value from preexisting dict."
-    return data.get(key, default)
-
-
 def get_mod_config(mod_name, default=None):
-    "Get config value for mods and return the dict for later use."
+    "Get config value for mods."
     if default is None:
         default = {}
     return get_config("modconf", {}).get(mod_name, default)
@@ -159,7 +148,7 @@ def set_mod_config(mod_name, config_data):
 
 
 def write_crashlog(exc_type=None, exc_value=None, exc_traceback=None, header=None, handled=True):
-    from helper import add_text_to_terminal, open_thing
+    from helper import add_text_to_terminal, create_debug_zip
 
     path = log_crashlog if handled else log_unhandled
     with open(path, "w") as file:
@@ -173,7 +162,7 @@ def write_crashlog(exc_type=None, exc_value=None, exc_traceback=None, header=Non
     if message:
         add_text_to_terminal(message, type="error")
     if frozen:
-        open_thing(log_crashlog) if handled else open_thing(log_unhandled)
+        create_debug_zip()
 
 
 def write_warning(header=None):
@@ -583,9 +572,10 @@ for mod in sorted(os.listdir(mods_dir)):
             cfg_exist = os.path.exists(mod_cfg := os.path.join(mod_path, "modcfg.json"))
             blacklist_exist = os.path.exists(os.path.join(mod_path, "blacklist.txt"))
 
-            order, cfg = get_config__file(mod_cfg, "order", 1)
-            dependencies = get_config__dict(cfg, "dependencies", None)
-            visual = get_config__dict(cfg, "visual", True)
+            cfg = read_json_file(mod_cfg)
+            order = cfg.get("order", 1)
+            dependencies = cfg.get("dependencies", None)
+            visual = cfg.get("visual", True)
             visually_available_mods.append(mod) if visual else visually_unavailable_mods.append(mod)
             if dependencies is not None:
                 mod_dependencies_list.append({mod: dependencies})
