@@ -94,24 +94,22 @@ def main():
 
         print("Cleaning up old files...")
 
-        # Identify self executable name to avoid deleting it
-        self_name = os.path.basename(sys.argv[0])
-        # Also avoid deleting the zip file we are using!
-        zip_name = os.path.basename(zip_path)
-
-        ignore_list = [
-            self_name,
-            zip_name,
-            "updater.exe",
-            "updater",
-            "updater-new.exe",
-            "updater-new",
+        items_to_delete = [
+            "_internal",
+            "bin",
+            "mods",
+            "LICENSE",
+            "Minify.exe",
+            "Minify",
+            "readme.md",
+            "version",
+            "Source2Viewer-CLI.exe",
+            "Source2Viewer-CLI",
+            "rg.exe",
+            "rg",
         ]
 
-        for item in os.listdir("."):
-            if item in ignore_list:
-                continue
-
+        for item in items_to_delete:
             safe_rmtree(item)
 
         print("Installing new files...")

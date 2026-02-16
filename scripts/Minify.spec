@@ -114,7 +114,7 @@ exe_updater = EXE(
     a_updater.binaries,
     a_updater.datas,
     [],
-    name="updater",
+    name="updater-new",
     icon=["..\\Minify\\bin\\images\\favicon.ico"],
     version="ffi_updater.txt" if os.path.exists("ffi_updater.txt") else None,
 )

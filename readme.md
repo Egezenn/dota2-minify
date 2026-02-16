@@ -43,7 +43,7 @@
   - [Developing mods](#developing-mods)
     - [Mod files and explanations](#mod-files-and-explanations)
       - [`modcfg.json`](#modcfgjson)
-      - [`files` directory](#files-directory)
+      - [`files` and `files_uncompiled` directory](#files-and-files_uncompiled-directory)
       - [`notes.md`](#notesmd)
       - [`blacklist.txt`](#blacklisttxt)
       - [`replacer.csv`](#replacercsv)
@@ -171,17 +171,18 @@ Make a bug report on GitHub or Discord with the contents of your `logs` folder.
 
 Minify has a programmatical approach to most modifications to keep everything minimal and simple. If there isn't a method available for your needs, you can always upload your mod files in `mods/<mod_name>/files` to be directly included into the pak minify is going to create or include a python script to accomodate specific behavior.
 
-| Modifications to file            | Restart required for changes |
-| -------------------------------- | ---------------------------- |
-| [`modcfg.json`](#modcfgjson)     | Yes<sup>1</sup>              |
-| [`notes.md`](#notesmd)           | Yes                          |
-| `preview.png`                    | Yes                          |
-| [`blacklist.txt`](#blacklisttxt) | No                           |
-| [`replacer.csv`](#replacercsv)   | No                           |
-| [`replacer.csv`](#replacercsv)   | No                           |
-| [`script.py`](#scriptpy)         | No<sup>2</sup>               |
-| [`styling.css`](#stylingcss)     | No                           |
-| [`xml_mod.json`](#xml_modjson)   | No                           |
+| Modifications to file                            | Restart required for changes |
+| ------------------------------------------------ | ---------------------------- |
+| [`files`](#files-and-files_uncompiled-directory) | No                           |
+| [`modcfg.json`](#modcfgjson)                     | Yes<sup>1</sup>              |
+| [`notes.md`](#notesmd)                           | Yes                          |
+| `preview.png`                                    | Yes                          |
+| [`blacklist.txt`](#blacklisttxt)                 | No                           |
+| [`replacer.csv`](#replacercsv)                   | No                           |
+| [`replacer.csv`](#replacercsv)                   | No                           |
+| [`script.py`](#scriptpy)                         | No<sup>2</sup>               |
+| [`styling.css`](#stylingcss)                     | No                           |
+| [`xml_mod.json`](#xml_modjson)                   | No                           |
 
 <sup>1</sup>: The keys `always` and `dependencies` will be pulled at patch time, others require reinitialization.  
 <sup>2</sup>: Initial scripts(`script_initial.py`).
@@ -192,6 +193,10 @@ Minify has a programmatical approach to most modifications to keep everything mi
 mods
 ├── <mod_name>
 │   ├── files
+│   │   ├── <path_to_file_in_pak>
+│   │   ├── <...>
+│   │   └── <...>
+│   ├── files_uncompiled
 │   │   ├── <path_to_file_in_pak>
 │   │   ├── <...>
 │   │   └── <...>
@@ -221,9 +226,11 @@ mods
 }
 ```
 
-#### `files` directory
+#### `files` and `files_uncompiled` directory
 
-This directory will include any files put here into the pak that minify is going to create. These files should be compiled.
+`files` directory will drop the files put here into the pak that minify is going to create. These files should already be compiled.
+
+`files_uncompiled` will drop the files onto the input folder **if the workshop tools are available**.
 
 If not specifically protected by Dota2, these files will override any game content. This also applies for the rest of the modification methods available.
 

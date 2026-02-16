@@ -27,7 +27,7 @@ mod_selection_window_var = ""
 terminal_history = []
 output_path = mpaths.get_config("output_path", mpaths.minify_dota_pak_output_path)
 workshop_installed = False
-workshop_required_methods = ["styling.css", "xml_mod.json"]
+workshop_required_methods = ["styling.css", "xml_mod.json", "files_uncompiled"]
 
 
 def download_file(url, target_path, progress_tag=None):
@@ -138,8 +138,8 @@ def disable_workshop_mods():
         for folder in mpaths.mods_with_order:
             mod_path = os.path.join(mpaths.mods_dir, folder)
 
-            for method_file in workshop_required_methods:
-                if os.path.exists(os.path.join(mod_path, method_file)):
+            for method_path in workshop_required_methods:
+                if os.path.exists(os.path.join(mod_path, method_path)):
                     ui.configure_item(folder, enabled=False, default_value=False)
                     break
 

@@ -716,7 +716,8 @@ def dev_mode():
     global dev_mode_state
     height_increase = 400
     tools_height = 220
-    debug_env = mpaths.get_config("debug_env", False)
+    if not mpaths.frozen:
+        debug_env = mpaths.get_config("debug_env", False)
 
     if dev_mode_state == -1:  # init
         dev_mode_state = 1
@@ -857,8 +858,8 @@ def dev_mode():
             ui.add_button(
                 label="Validate Dota2", callback=lambda: webbrowser.open(f"steam://validate/{mpaths.STEAM_DOTA_ID}")
             )
-        if not mpaths.frozen:
 
+        if not mpaths.frozen and debug_env:
             with ui.window(
                 label="Debug tools",
                 tag="debug_tools",

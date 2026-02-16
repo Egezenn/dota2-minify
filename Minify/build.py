@@ -65,8 +65,8 @@ def patcher(mod=None, pakname=None):
                             try:
                                 if not helper.workshop_installed:
                                     workshop = False
-                                    for method_file in helper.workshop_required_methods:
-                                        if os.path.exists(os.path.join(mpaths.mods_dir, dependency, method_file)):
+                                    for method_path in helper.workshop_required_methods:
+                                        if os.path.exists(os.path.join(mpaths.mods_dir, dependency, method_path)):
                                             workshop = True
                                             break
                                     ui.set_value(dependency, False) if workshop else ui.set_value(dependency, True)
@@ -105,12 +105,21 @@ def patcher(mod=None, pakname=None):
                     if helper.workshop_installed:
                         styling_css = os.path.join(mod_path, "styling.css")
                         xml_mod_file = os.path.join(mod_path, "xml_mod.json")
+                        files_uncompiled_dir = os.path.join(mod_path, "files_uncompiled")
                     script_file = os.path.join(mod_path, "script.py")
                     replacer_file = os.path.join(mod_path, "replacer.csv")
                     files_dir = os.path.join(mod_path, "files")
 
                     helper.exec_script(script_file, folder, "loop")
                     helper.add_text_to_terminal("&installing_terminal", folder)
+                    if helper.workshop_installed:
+                        if os.path.exists(files_uncompiled_dir):
+                            shutil.copytree(
+                                files_uncompiled_dir,
+                                mpaths.minify_dota_compile_input_path,
+                                dirs_exist_ok=True,
+                                ignore=shutil.ignore_patterns("*.gitkeep"),
+                            )
                     if os.path.exists(files_dir):
                         shutil.copytree(
                             files_dir,
@@ -466,7 +475,7 @@ def uninstaller():
                         if file in pak_contents:
                             helper.remove_path(os.path.join(dir, item))
                             break
-
+    # TODO remove lang param if out locale is minify
     gui.bulk_exec_script("uninstall")
     helper.add_text_to_terminal("&mods_removed_terminal")
     gui.unlock_interaction()
