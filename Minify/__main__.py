@@ -1,7 +1,9 @@
 import os
+from re import U
 import sys
 import threading
 import time
+from tkinter import EventType
 import webbrowser
 
 # Ensure root directories
@@ -13,7 +15,6 @@ else:
         sys.path.insert(0, current_dir)
 
 import dearpygui.dearpygui as ui
-import screeninfo
 
 import build
 import gui
@@ -34,142 +35,108 @@ def patcher_start():
 
 
 def create_ui():
-    with ui.window(tag="primary_window", no_close=True, no_title_bar=True):
+    with ui.window(tag="primary_window"):
         ui.set_primary_window("primary_window", True)
         ui.add_child_window(
             tag="top_bar",
-            pos=(0, 0),
-            height=25,
-            width=mpaths.main_window_width,
             no_scrollbar=True,
             no_scroll_with_mouse=True,
+            auto_resize_y=True,
+            autosize_x=True,
         )
+        ui.add_group(tag="top_bar_main_group", parent="top_bar", horizontal=True, horizontal_spacing=0)
+        ui.add_group(tag="top_bar_left_group", parent="top_bar_main_group", horizontal=True, horizontal_spacing=0)
         ui.add_combo(
-            parent="top_bar",
+            parent="top_bar_left_group",
             tag="lang_select",
             items=(helper.localizations),
             default_value="EN",
-            width=50,
-            pos=(x := 2, 2),
             callback=helper.change_localization,
+            fit_width=True,
         )
         ui.add_image_button(
             "discord_texture_tag",
-            parent="top_bar",
+            parent="top_bar_left_group",
             width=21,
             height=16,
-            pos=(x := x + 50, 2),
             callback=lambda: webbrowser.open(mpaths.discord),
         )
-
         ui.add_image_button(
             "telegram_texture_tag",
             tag="telegram",
-            parent="top_bar",
+            parent="top_bar_left_group",
             width=20,
             height=20,
-            pos=(x := x + 26, 0),
             callback=lambda: webbrowser.open(mpaths.telegram),
         )
         ui.add_image_button(
             "git_texture_tag",
-            parent="top_bar",
+            parent="top_bar_left_group",
             width=18,
             height=18,
-            pos=(x := x + 24, 1),
             callback=lambda: webbrowser.open(mpaths.github),
         )
         ui.add_image_button(
             "settings_texture_tag",
-            parent="top_bar",
+            parent="top_bar_left_group",
             width=16,
             height=16,
-            pos=(x := x + 24, 2),
             callback=gui.open_settings_menu,
         )
         ui.add_image_button(
             "dev_texture_tag",
             tag="dev",
-            parent="top_bar",
+            parent="top_bar_left_group",
             width=16,
             height=16,
-            pos=(x := x + 24, 2),
             callback=gui.dev_mode,
         )
-        ui.add_text(tag="language_select", pos=(x := x + 28, 2))
+        ui.add_text(tag="language_select", parent="top_bar_left_group")
         ui.add_combo(
-            parent="top_bar",
+            parent="top_bar_left_group",
             tag="output_select",
             items=(mpaths.minify_output_list),
             default_value=mpaths.get_config("output_locale", "minify"),
-            width=95,
-            pos=(x := x + 80, 2),
             callback=helper.change_output_path,
+            fit_width=True,
         )
-        ui.add_text(gui.title, pos=(mpaths.main_window_width - 180, 2))
+        ui.add_text(gui.title, parent="top_bar_left_group")
+        ui.add_group(tag="top_bar_right_group", parent="top_bar_main_group", horizontal=True, horizontal_spacing=0)
         ui.add_button(
-            parent="top_bar",
+            parent="top_bar_right_group",
             tag="button_minimize",
             label="-",
             callback=lambda: ui.minimize_viewport(),
-            width=28,
-            pos=(mpaths.main_window_width - 90, 2),
         )
         ui.add_button(
-            parent="top_bar",
+            parent="top_bar_right_group",
+            tag="button_maximize",
+            label="M",
+            # callback=gui.maximize,
+        )
+        ui.add_button(
+            parent="top_bar_right_group",
             tag="button_exit",
-            label="Close",
             callback=helper.close,
-            width=60,
-            pos=(mpaths.main_window_width - 60, 2),
         )
 
-        with ui.group(horizontal=True):
-            with ui.group(pos=(mpaths.main_window_width - 100, 32)):
-                ui.add_button(
-                    tag="button_patch",
-                    label="Patch",
-                    width=92,
-                    callback=patcher_start,
-                    enabled=False,
-                )
-                ui.add_button(
-                    tag="button_select_mods",
-                    label="Select Mods",
-                    width=92,
-                    callback=gui.open_mod_menu,
-                )
-                ui.add_button(
-                    tag="button_uninstall",
-                    label="Uninstall",
-                    width=92,
-                    callback=gui.uninstall_popup_show,
-                )
-            with ui.group(pos=(10, 20)):
-                ui.add_text(
-                    r""" __    __    __    __   __    __    ______  __  __
+        with ui.group(tag="center_group", horizontal=True):
+            ui.group(tag="text_group")
+            ui.add_text(
+                default_value=r""" __    __    __    __   __    __    ______  __  __
 /\ "-./  \  /\ \  /\ "-.\ \  /\ \  /\  ___\/\ \_\ \  
 \ \ \-./\ \ \ \ \ \ \ \-.  \ \ \ \ \ \  __\\ \____ \ 
  \ \_\ \ \_\ \ \_\ \ \_\\"\_\ \ \_\ \ \_\_/ \/\_____\
-  \/_/  \/_/  \/_/  \/_/ \/_/  \/_/  \/_/    \/_____/"""
-                )
-        # Creating log terminal
-        with ui.group():
-            ui.add_window(
-                tag="terminal_window",
-                no_scrollbar=False,
-                no_title_bar=True,
-                no_move=True,
-                no_collapse=True,
-                modal=False,
-                no_close=True,
-                no_saved_settings=True,
-                show=True,
-                height=mpaths.main_window_height - gui.banner_height,
-                width=mpaths.main_window_width,
-                pos=(0, gui.banner_height),
-                no_resize=True,
+  \/_/  \/_/  \/_/  \/_/ \/_/  \/_/  \/_/    \/_____/""",
+                parent="text_group",
             )
+            # Creating log terminal
+            with ui.group(parent="center_group", tag="button_group"):
+                ui.add_button(tag="button_patch", label="Patch", callback=patcher_start, enabled=False, width=-1)
+                ui.add_button(tag="button_select_mods", label="Select Mods", callback=gui.open_mod_menu, width=-1)
+                ui.add_button(tag="button_uninstall", label="Uninstall", callback=gui.uninstall_popup_show, width=-1)
+        with ui.group():
+            ui.add_child_window(tag="terminal_window", no_scrollbar=False, show=True, autosize_x=True)
             ui.bind_item_font("terminal_window", "small_font")
 
     ui.add_window(
@@ -211,8 +178,6 @@ def create_ui():
         )
 
     ui.add_window(
-        modal=False,
-        pos=(0, 0),
         tag="mod_menu",
         label=helper.mod_selection_window_var,
         menubar=False,
@@ -221,10 +186,10 @@ def create_ui():
         no_collapse=True,
         no_close=False,
         no_open_over_existing_popup=True,
-        height=mpaths.main_window_height,
-        width=mpaths.main_window_width,
         show=False,
         no_resize=True,
+        width=ui.get_viewport_width(),
+        height=ui.get_viewport_height(),
         on_close=gui.save_checkbox_state,
     )
 
@@ -337,6 +302,7 @@ def create_ui():
             callback=lambda: gui.delete_update_popup(False),
             tag="update_popup_no_button",
         )
+    ui.configure_item("primary_window", no_scrollbar=True, no_close=True, no_title_bar=True, autosize=True)
 
 
 def create_base_ui():
@@ -356,6 +322,11 @@ def create_base_ui():
     gui.bulk_exec_script("initial", False)
     gui.setup_button_state()
     gui.unlock_interaction()
+    cursor_manager_thread = threading.Thread(target=gui.cursor_manager_check, daemon=True)
+    cursor_manager_thread.start()
+    ui.show_style_editor()
+    ui.show_debug()
+    ui.show_metrics()
 
 
 # Adding font to the ui registry
@@ -379,11 +350,19 @@ with ui.font_registry():
         ui.add_font_range(0x0100, 0x017F)  # Turkish set
         ui.add_font_range(0x0370, 0x03FF)  # Greek set
 
+    with ui.font(os.path.join("bin", "FiraMono-Medium.ttf"), 32, tag="very_large_font") as very_large_font:
+        ui.add_font_range_hint(ui.mvFontRangeHint_Default)
+        ui.add_font_range_hint(ui.mvFontRangeHint_Cyrillic)
+        ui.add_font_range(0x0100, 0x017F)  # Turkish set
+        ui.add_font_range(0x0370, 0x03FF)  # Greek set
+
 # Adding mouse handler to ui registry
 with ui.handler_registry():
-    ui.add_mouse_drag_handler(parent="top_bar", button=0, threshold=4, callback=gui.drag_viewport)
+    ui.add_mouse_drag_handler(tag="drag_handler", button=0, threshold=4, callback=gui.drag_viewport)
     ui.add_mouse_release_handler(button=0, callback=gui.stop_drag_viewport)
     ui.add_key_release_handler(0x20E, callback=gui.close_active_window)
+    ui.add_mouse_click_handler(callback=gui.resize)
+
 
 with ui.texture_registry(show=False):
     w, h, _, d = ui.load_image(os.path.join(mpaths.img_dir, "Discord.png"))
@@ -402,19 +381,13 @@ with ui.texture_registry(show=False):
     ui.add_static_texture(width=w, height=h, default_value=d, tag="telegram_texture_tag")
 
 # Creating_main_viewport
-widths = []
-heights = []
-
-for monitor in screeninfo.get_monitors():
-    widths.append(monitor.width)
-    heights.append(monitor.height)
 
 ui.create_viewport(
     title=gui.title,
     width=mpaths.main_window_width,
     height=mpaths.main_window_height,
-    x_pos=min(widths) // 2 - mpaths.main_window_width // 2,
-    y_pos=max(0, min(heights) // 2 - mpaths.main_window_height // 2 - 120),
+    x_pos=min(gui.widths) // 2 - mpaths.main_window_width // 2,
+    y_pos=max(0, min(gui.heights) // 2 - mpaths.main_window_height // 2 - 120),
     resizable=False,
     decorated=False,
     vsync=True,

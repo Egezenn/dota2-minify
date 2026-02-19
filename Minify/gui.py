@@ -14,6 +14,7 @@ import dearpygui.dearpygui as ui
 import jsonc
 import psutil
 import requests
+import screeninfo
 
 import build
 import helper
@@ -26,6 +27,33 @@ gui_lock = False
 is_moving_viewport = False
 version = None
 latest_download_url = None
+
+main_window_width = 494
+main_window_width_dev = 494
+main_window_height = 300
+main_window_height_dev = 650
+
+widths = []
+heights = []
+
+cursor_manager_should_run = True
+cursor_state = "none"
+
+mouse_x = 0
+mouse_y = 0
+
+viewport_height = 0
+viewport_width = 0
+
+viewport_x = 0
+viewport_y = 0
+
+# cursor_delta_time = 0
+
+for monitor in screeninfo.get_monitors():
+    widths.append(monitor.width)
+    heights.append(monitor.height)
+
 
 try:
     with open(mpaths.version_file_dir) as file:
@@ -447,6 +475,176 @@ def stop_drag_viewport():
     is_moving_viewport = False
 
 
+def toggle_cursor_manager_state():
+    global cursor_manager_should_run
+    if cursor_manager_should_run == True:
+        cursor_manager_should_run = False
+    else:
+        cursor_manager_should_run = True
+        cursor_manager_thread = threading.Thread(target=cursor_manager_check, daemon=True)
+        cursor_manager_thread.start()
+
+
+def cursor_manager_check():
+    global cursor_manager_should_run
+    global cursor_state
+    global mouse_x
+    global mouse_y
+    global viewport_height
+    global viewport_width
+    global viewport_x
+    global viewport_y
+
+    prev_time = time.perf_counter()
+    count = 0
+
+    while cursor_manager_should_run == True:
+
+        count += 1
+        now = time.perf_counter()
+        time.sleep(0.008)
+        viewport_height = ui.get_viewport_height()
+        viewport_width = ui.get_viewport_width()
+        x, y = ui.get_mouse_pos(local=False)
+        mouse_x, mouse_y = int(x), int(y)
+        viewport_x, viewport_y = ui.get_viewport_pos()
+        left_limit = viewport_width - 4
+        top_limit = viewport_height - 4
+        if mouse_x <= 4 and mouse_y <= 4:
+            cursor_state = "top_left"
+        elif mouse_x >= left_limit and mouse_y <= 4:
+            cursor_state = "top_right"
+        elif mouse_x >= left_limit and mouse_y >= top_limit:
+            cursor_state = "bottom_right"
+        elif mouse_x <= 4 and mouse_y >= top_limit:
+            cursor_state = "bottom_left"
+        elif mouse_y <= 4:
+            cursor_state = "top"
+        elif mouse_x >= left_limit:
+            cursor_state = "right"
+        elif mouse_y >= top_limit:
+            cursor_state = "bottom"
+        elif mouse_x <= 4:
+            cursor_state = "left"
+        else:
+            cursor_state = "none"
+
+        dt_since_last = now - prev_time
+
+        if dt_since_last >= 1:
+            hz = count / dt_since_last if dt_since_last > 0 else 0
+
+            status = (
+                f"\rHz: {hz:5.1f} | "
+                f"mouse: {mouse_x:4d},{mouse_y:4d} | "
+                f"state: {cursor_state:12} | "
+                f"view: {viewport_x:4d},{viewport_y:4d} "
+                f"{viewport_width:d}×{viewport_height:d}"
+                f" | dt: {ui.get_delta_time():.3f}s"
+                f" | CursorManagerState: {cursor_manager_should_run}"
+            )
+            print(status + "   ", end="", flush=True)
+
+
+def resize():  # if outside the windows aka <0 and more than size of the window
+    global cursor_state
+    global cursor_manager_should_run
+    ui.delete_item("drag_handler")
+    toggle_cursor_manager_state()
+    if cursor_state == "bottom_right":
+        while ui.is_mouse_button_down(0) == True:
+            time.sleep(0.008)
+            x, y = ui.get_mouse_pos(local=False)
+            mouse_x, mouse_y = int(x), int(y)
+            ui.configure_viewport(f"{title}", width=mouse_x, height=mouse_y)
+    if cursor_state == "bottom":
+        while ui.is_mouse_button_down(0) == True:
+            time.sleep(0.008)
+            x, y = ui.get_mouse_pos(local=False)
+            mouse_x, mouse_y = int(x), int(y)
+            ui.configure_viewport(f"{title}", height=mouse_y)
+    if cursor_state == "right":
+        while ui.is_mouse_button_down(0) == True:
+            time.sleep(0.008)
+            x, y = ui.get_mouse_pos(local=False)
+            mouse_x, mouse_y = int(x), int(y)
+            ui.configure_viewport(f"{title}", width=mouse_x)
+    if cursor_state == "top_right":
+        while ui.is_mouse_button_down(0) == True:
+            time.sleep(0.008)
+            x, y = ui.get_mouse_pos(local=False)
+            mouse_x, mouse_y = int(x), int(y)
+            viewport_x, viewport_y = ui.get_viewport_pos()
+            viewport_height = ui.get_viewport_height()
+            ui.configure_viewport(
+                f"{title}",
+                y_pos=viewport_y + mouse_y,
+                height=viewport_height - mouse_y,
+                width=mouse_x,
+            )
+    if cursor_state == "bottom_left":
+        while ui.is_mouse_button_down(0) == True:
+            time.sleep(0.008)
+            x, y = ui.get_mouse_pos(local=False)
+            mouse_x, mouse_y = int(x), int(y)
+            viewport_x, viewport_y = ui.get_viewport_pos()
+            viewport_width = ui.get_viewport_width()
+            ui.configure_viewport(
+                f"{title}",
+                x_pos=viewport_x + mouse_x,
+                height=mouse_y,
+                width=viewport_width - mouse_x,
+            )
+    if cursor_state == "top":
+        while ui.is_mouse_button_down(0) == True:
+            time.sleep(0.008)
+            x, y = ui.get_mouse_pos(local=False)
+            mouse_x, mouse_y = int(x), int(y)
+            viewport_x, viewport_y = ui.get_viewport_pos()
+            viewport_height = ui.get_viewport_height()
+            ui.configure_viewport(
+                f"{title}",
+                y_pos=viewport_y + mouse_y,
+                height=viewport_height - mouse_y,
+            )
+    if cursor_state == "left":
+        while ui.is_mouse_button_down(0) == True:
+            time.sleep(0.008)
+            x, y = ui.get_mouse_pos(local=False)
+            mouse_x, mouse_y = int(x), int(y)
+            viewport_x, viewport_y = ui.get_viewport_pos()
+            viewport_width = ui.get_viewport_width()
+            ui.configure_viewport(
+                f"{title}",
+                x_pos=viewport_x + mouse_x,
+                width=viewport_width - mouse_x,
+            )
+    if cursor_state == "top_left":
+        while ui.is_mouse_button_down(0) == True:
+            time.sleep(0.008)
+            x, y = ui.get_mouse_pos(local=False)
+            mouse_x, mouse_y = int(x), int(y)
+            viewport_x, viewport_y = ui.get_viewport_pos()
+            viewport_width = ui.get_viewport_width()
+            viewport_height = ui.get_viewport_height()
+            ui.configure_viewport(
+                f"{title}",
+                x_pos=viewport_x + mouse_x,
+                y_pos=viewport_y + mouse_y,
+                width=viewport_width - mouse_x,
+                height=viewport_height - mouse_y,
+            )
+    else:
+        time.sleep(0.008)  # Avoiding thread acummulation bug
+    toggle_cursor_manager_state()
+    with ui.handler_registry():
+        ui.add_mouse_drag_handler(tag="drag_handler", button=0, threshold=4, callback=drag_viewport)
+
+
+def minimize():
+    ui.minimize_viewport()
+
+
 def open_mod_menu():
     ui.configure_item("mod_menu", show=True)
 
@@ -608,7 +806,7 @@ def close_active_window():
 def theme():
     with ui.theme() as global_theme:
         with ui.theme_component(ui.mvAll):
-            ui.add_theme_style(ui.mvStyleVar_WindowPadding, x=12, y=4)
+            ui.add_theme_style(ui.mvStyleVar_WindowPadding, x=0, y=0)
             ui.add_theme_color(ui.mvThemeCol_Text, (0, 230, 230))
             ui.add_theme_color(ui.mvThemeCol_WindowBg, (29, 29, 30, 255))
             ui.add_theme_color(ui.mvThemeCol_ChildBg, (29, 29, 30, 255))
@@ -722,7 +920,7 @@ def dev_mode():
     if dev_mode_state == -1:  # init
         dev_mode_state = 1
         ui.configure_viewport(
-            item="main_viewport",
+            item=f"{title}",
             resizable=False,
             width=mpaths.main_window_width,
             height=mpaths.main_window_height + height_increase,
@@ -880,7 +1078,7 @@ def dev_mode():
     elif dev_mode_state == 0:  # open
         dev_mode_state = 1
         ui.configure_viewport(
-            item="main_viewport",
+            item=f"{title}",
             resizable=False,
             width=mpaths.main_window_width,
             height=mpaths.main_window_height + height_increase,
@@ -894,7 +1092,7 @@ def dev_mode():
     else:  # close
         dev_mode_state = 0
         ui.configure_viewport(
-            item="main_viewport",
+            item=f"{title}",
             resizable=False,
             width=mpaths.main_window_width,
             height=mpaths.main_window_height,

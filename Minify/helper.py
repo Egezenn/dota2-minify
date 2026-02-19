@@ -174,6 +174,7 @@ def clean_terminal():
 
 def close():
     ui.stop_dearpygui()
+    time.sleep(0.1)  # Fixed proper saving
 
 
 def parse_markdown_notes(mod_path, locale):
