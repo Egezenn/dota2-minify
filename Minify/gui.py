@@ -28,10 +28,13 @@ is_moving_viewport = False
 version = None
 latest_download_url = None
 
-main_window_width = 494
-main_window_width_dev = 494
-main_window_height = 300
+main_window_width = 550
+main_window_width_dev = 550
+main_window_height = 400
 main_window_height_dev = 650
+
+terminal_window_wrap = main_window_width - 10
+tag_data_for_details_windows = []
 
 widths = []
 heights = []
@@ -62,7 +65,7 @@ except:
     version = ""
 
 title = f"Minify {version}" if version else "Minify"
-spacer = "-" * 75
+spacer = "-" * 51
 banner_height = 120
 
 
@@ -278,17 +281,18 @@ def create_checkboxes():
                     callback=show_details,
                     user_data=tag_data,
                 )
-
+                global tag_data_for_details_windows
+                tag_data_for_details_windows.append(tag_data)
                 ui.add_window(
                     tag=tag_data,
+                    modal=True,
                     pos=(0, 0),
                     show=False,
-                    width=mpaths.main_window_width,
-                    height=mpaths.main_window_height,
+                    label=mod,
                     no_resize=True,
                     no_move=True,
+                    no_close=False,
                     no_collapse=True,
-                    label=mod,
                 )
 
                 if img_data:
@@ -362,6 +366,26 @@ def unlock_interaction():
 
 def show_details(sender, app_data, user_data):
     ui.configure_item(user_data, show=True)
+    ui.focus_item(user_data)
+
+
+def on_primary_window_resize():
+
+    # terminal wrap size
+    window_width = ui.get_item_width("primary_window")
+    window_height = ui.get_item_height("primary_window")
+    details_window_width = window_width - 6
+    details_window_height = window_height - 6
+    helper.wrap_size = window_width - 10
+
+    for item in helper.terminal_history:
+        idx = item["id"]
+        if ui.does_item_exist(idx):
+            ui.configure_item(idx, wrap=helper.wrap_size)
+    # details windows resize
+    for window_tag in tag_data_for_details_windows:
+        if ui.does_item_exist(window_tag):
+            ui.configure_item(window_tag, width=details_window_width, height=details_window_height)
 
 
 def focus_window():
@@ -546,94 +570,163 @@ def cursor_manager_check():
             print(status + "   ", end="", flush=True)
 
 
-def resize():  # if outside the windows aka <0 and more than size of the window
+# There is a bug... Edge case, if you slam resising corner(has to be the one that changes windows position) in windows min limit size,
+# window might overshoot the position in the slam's direction vector, i assume it's either timing or renderer fighting with DWM
+# It's a minor issue
+def resize():
     global cursor_state
     global cursor_manager_should_run
+    global main_window_width
+    global main_window_height
     ui.delete_item("drag_handler")
     toggle_cursor_manager_state()
+
+    def min_width_processing(width):
+        if width < main_window_width:
+            width = main_window_width
+        return width
+
+    def min_height_processing(height):
+        if height < main_window_height:
+            height = main_window_height
+        return height
+
     if cursor_state == "bottom_right":
         while ui.is_mouse_button_down(0) == True:
             time.sleep(0.008)
             x, y = ui.get_mouse_pos(local=False)
-            mouse_x, mouse_y = int(x), int(y)
-            ui.configure_viewport(f"{title}", width=mouse_x, height=mouse_y)
+            new_width = min_width_processing(x)
+            new_height = min_height_processing(y)
+            ui.configure_viewport(f"{title}", width=new_width, height=new_height)
+            ui.configure_item("mod_menu", width=new_width, height=new_height)
+            ui.configure_item("settings_menu", width=new_width, height=new_height)
+
     if cursor_state == "bottom":
         while ui.is_mouse_button_down(0) == True:
             time.sleep(0.008)
             x, y = ui.get_mouse_pos(local=False)
-            mouse_x, mouse_y = int(x), int(y)
-            ui.configure_viewport(f"{title}", height=mouse_y)
+            new_height = min_height_processing(y)
+            ui.configure_viewport(f"{title}", height=new_height)
+            ui.configure_item("mod_menu", height=new_height)
+            ui.configure_item("settings_menu", height=new_height)
+
     if cursor_state == "right":
         while ui.is_mouse_button_down(0) == True:
             time.sleep(0.008)
             x, y = ui.get_mouse_pos(local=False)
-            mouse_x, mouse_y = int(x), int(y)
-            ui.configure_viewport(f"{title}", width=mouse_x)
+            new_width = min_width_processing(x)
+            ui.configure_viewport(f"{title}", width=new_width)
+            ui.configure_item("mod_menu", width=new_width)
+            ui.configure_item("settings_menu", width=new_width)
+
     if cursor_state == "top_right":
         while ui.is_mouse_button_down(0) == True:
             time.sleep(0.008)
             x, y = ui.get_mouse_pos(local=False)
-            mouse_x, mouse_y = int(x), int(y)
             viewport_x, viewport_y = ui.get_viewport_pos()
             viewport_height = ui.get_viewport_height()
+            if viewport_height > main_window_height:
+                new_pos = viewport_y + y
+            else:
+                new_pos = viewport_y
+            new_height = min_height_processing(viewport_height - y)
+            new_width = min_width_processing(x)
             ui.configure_viewport(
                 f"{title}",
-                y_pos=viewport_y + mouse_y,
-                height=viewport_height - mouse_y,
-                width=mouse_x,
+                y_pos=new_pos,
+                height=new_height,
+                width=new_width,
             )
+            ui.configure_item("mod_menu", width=new_width, height=new_height)
+            ui.configure_item("settings_menu", width=new_width, height=new_height)
+
     if cursor_state == "bottom_left":
         while ui.is_mouse_button_down(0) == True:
             time.sleep(0.008)
             x, y = ui.get_mouse_pos(local=False)
-            mouse_x, mouse_y = int(x), int(y)
             viewport_x, viewport_y = ui.get_viewport_pos()
             viewport_width = ui.get_viewport_width()
+            new_width = min_width_processing(viewport_width - x)
+            new_height = min_height_processing(y)
+            if viewport_width > main_window_width:
+                new_pos = viewport_x + x
+            else:
+                new_pos = viewport_x
             ui.configure_viewport(
                 f"{title}",
-                x_pos=viewport_x + mouse_x,
-                height=mouse_y,
-                width=viewport_width - mouse_x,
+                x_pos=new_pos,
+                height=new_height,
+                width=new_width,
             )
+            ui.configure_item("mod_menu", width=new_width, height=new_height)
+            ui.configure_item("settings_menu", width=new_width, height=new_height)
+
     if cursor_state == "top":
         while ui.is_mouse_button_down(0) == True:
             time.sleep(0.008)
             x, y = ui.get_mouse_pos(local=False)
-            mouse_x, mouse_y = int(x), int(y)
             viewport_x, viewport_y = ui.get_viewport_pos()
             viewport_height = ui.get_viewport_height()
+            new_height = min_height_processing(viewport_height - y)
+            if viewport_height > main_window_height:
+                new_pos = viewport_y + y
+            else:
+                new_pos = viewport_y
             ui.configure_viewport(
                 f"{title}",
-                y_pos=viewport_y + mouse_y,
-                height=viewport_height - mouse_y,
+                y_pos=new_pos,
+                height=new_height,
             )
+            ui.configure_item("mod_menu", height=new_height)
+            ui.configure_item("settings_menu", height=new_height)
+
     if cursor_state == "left":
         while ui.is_mouse_button_down(0) == True:
             time.sleep(0.008)
             x, y = ui.get_mouse_pos(local=False)
-            mouse_x, mouse_y = int(x), int(y)
             viewport_x, viewport_y = ui.get_viewport_pos()
             viewport_width = ui.get_viewport_width()
+            new_width = min_width_processing(viewport_width - x)
+            if viewport_width > main_window_width:
+                new_pos = viewport_x + x
+            else:
+                new_pos = viewport_x
             ui.configure_viewport(
                 f"{title}",
-                x_pos=viewport_x + mouse_x,
-                width=viewport_width - mouse_x,
+                x_pos=new_pos,
+                width=new_width,
             )
+            ui.configure_item("mod_menu", width=new_width)
+            ui.configure_item("settings_menu", width=new_width)
+
     if cursor_state == "top_left":
         while ui.is_mouse_button_down(0) == True:
             time.sleep(0.008)
             x, y = ui.get_mouse_pos(local=False)
-            mouse_x, mouse_y = int(x), int(y)
             viewport_x, viewport_y = ui.get_viewport_pos()
             viewport_width = ui.get_viewport_width()
             viewport_height = ui.get_viewport_height()
+            new_width = min_width_processing(viewport_width - x)
+            new_height = min_height_processing(viewport_height - y)
+            if viewport_width > main_window_width:
+                new_pos_x = viewport_x + x
+            else:
+                new_pos_x = viewport_x
+
+            if viewport_height > main_window_height:
+                new_pos_y = viewport_y + y
+            else:
+                new_pos_y = viewport_y
+
             ui.configure_viewport(
                 f"{title}",
-                x_pos=viewport_x + mouse_x,
-                y_pos=viewport_y + mouse_y,
-                width=viewport_width - mouse_x,
-                height=viewport_height - mouse_y,
+                x_pos=new_pos_x,
+                y_pos=new_pos_y,
+                width=new_width,
+                height=new_height,
             )
+            ui.configure_item("mod_menu", width=new_width, height=new_height)
+            ui.configure_item("settings_menu", width=new_width, height=new_height)
     else:
         time.sleep(0.008)  # Avoiding thread acummulation bug
     toggle_cursor_manager_state()

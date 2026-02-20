@@ -121,7 +121,7 @@ def create_ui():
         )
 
         with ui.group(tag="center_group", horizontal=True):
-            ui.group(tag="text_group")
+            ui.group(tag="text_group", xoffset=50)
             ui.add_text(
                 default_value=r""" __    __    __    __   __    __    ______  __  __
 /\ "-./  \  /\ \  /\ "-.\ \  /\ \  /\  ___\/\ \_\ \  
@@ -137,7 +137,7 @@ def create_ui():
                 ui.add_button(tag="button_uninstall", label="Uninstall", callback=gui.uninstall_popup_show, width=-1)
         with ui.group():
             ui.add_child_window(tag="terminal_window", no_scrollbar=False, show=True, autosize_x=True)
-            ui.bind_item_font("terminal_window", "small_font")
+            ui.bind_item_font("terminal_window", "main_font")
 
     ui.add_window(
         label="Uninstall",
@@ -327,6 +327,10 @@ def create_base_ui():
     ui.show_style_editor()
     ui.show_debug()
     ui.show_metrics()
+    ui.show_item_registry()
+    with ui.item_handler_registry(tag="widget_handler") as handler:
+        ui.add_item_resize_handler(callback=gui.on_primary_window_resize)
+    ui.bind_item_handler_registry("primary_window", "widget_handler")
 
 
 # Adding font to the ui registry

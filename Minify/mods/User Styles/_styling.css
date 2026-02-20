@@ -212,3 +212,9 @@ DOTAHUDShop {
 .Season_MonsterHunter #MonsterHunterHeroAtlasProgressionOverlay {
     visibility: collapse;
 }
+
+/* g:panorama/styles/hud/hud_reborn */
+/* removes sesonal ability bar(snowballs, penguins, etc.) */
+#SecondaryAbilityContainer {
+    visibility: collapse;
+}

@@ -28,6 +28,7 @@ terminal_history = []
 output_path = mpaths.get_config("output_path", mpaths.minify_dota_pak_output_path)
 workshop_installed = False
 workshop_required_methods = ["styling.css", "xml_mod.json", "files_uncompiled"]
+wrap_size = mpaths.main_window_width - 10
 
 
 def download_file(url, target_path, progress_tag=None):
@@ -127,7 +128,7 @@ def add_text_to_terminal(text_or_id, *args, type: str | None = None, **kwargs):
 
         kwargs["color"] = color
 
-    item = ui.add_text(default_value=text, parent="terminal_window", wrap=mpaths.main_window_width - 24, **kwargs)
+    item = ui.add_text(default_value=text, parent="terminal_window", wrap=wrap_size, indent=10, **kwargs)
     terminal_history.append({"id": item, "key": text_or_id.replace("&", ""), "args": args})
     scroll_to_terminal_end()
     return item
