@@ -477,6 +477,7 @@ def drag_viewport(sender, app_data, user_data):
         new_y_position = viewport_current_pos[1] + drag_deltas[2]
         new_y_position = max(new_y_position, 0)  # prevent the viewport to go off the top of the screen
         ui.set_viewport_pos([new_x_position, new_y_position])
+    # TODO: add dev windows conditionally
     elif ui.get_item_alias(ui.get_active_window()) is not None and (
         ui.is_item_hovered("primary_window")
         or ui.is_item_hovered("terminal_window")

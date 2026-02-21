@@ -20,7 +20,10 @@ function processReleases(releases) {
     stableLink.innerHTML = `<ion-icon name="download-outline"></ion-icon> Download (${version})`;
   }
 
-  if (latestPrerelease) {
+  if (
+    latestPrerelease &&
+    (!latestStable || new Date(latestPrerelease.published_at) > new Date(latestStable.published_at))
+  ) {
     window.latestPrereleaseRelease = latestPrerelease;
     const downloadButtons = document.getElementById("download-buttons");
     let prereleaseLink = document.getElementById("latest-prerelease");
