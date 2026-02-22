@@ -51,6 +51,8 @@ viewport_width = 0
 viewport_x = 0
 viewport_y = 0
 
+social_button_size = (18, 18)
+
 # cursor_delta_time = 0
 
 for monitor in screeninfo.get_monitors():

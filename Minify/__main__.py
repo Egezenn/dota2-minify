@@ -35,6 +35,7 @@ def patcher_start():
 
 
 def create_ui():
+    button_size_x, button_size_y = gui.social_button_size
     with ui.window(tag="primary_window"):
         ui.set_primary_window("primary_window", True)
         ui.add_child_window(
@@ -56,39 +57,42 @@ def create_ui():
         )
         ui.add_image_button(
             "discord_texture_tag",
+            tag="button_discord",
             parent="top_bar_left_group",
-            width=21,
-            height=16,
+            width=button_size_x,
+            height=button_size_y,
             callback=lambda: webbrowser.open(mpaths.discord),
         )
         ui.add_image_button(
             "telegram_texture_tag",
-            tag="telegram",
+            tag="button_telegram",
             parent="top_bar_left_group",
-            width=20,
-            height=20,
+            width=button_size_x,
+            height=button_size_y,
             callback=lambda: webbrowser.open(mpaths.telegram),
         )
         ui.add_image_button(
             "git_texture_tag",
+            tag="button_git",
             parent="top_bar_left_group",
-            width=18,
-            height=18,
+            width=button_size_x,
+            height=button_size_y,
             callback=lambda: webbrowser.open(mpaths.github),
         )
         ui.add_image_button(
             "settings_texture_tag",
+            tag="button_settings",
             parent="top_bar_left_group",
-            width=16,
-            height=16,
+            width=button_size_x,
+            height=button_size_y,
             callback=gui.open_settings_menu,
         )
         ui.add_image_button(
             "dev_texture_tag",
-            tag="dev",
+            tag="button_dev",
             parent="top_bar_left_group",
-            width=16,
-            height=16,
+            width=button_size_x,
+            height=button_size_y,
             callback=gui.dev_mode,
         )
         ui.add_text(tag="language_select", parent="top_bar_left_group")
@@ -100,7 +104,6 @@ def create_ui():
             callback=helper.change_output_path,
             fit_width=True,
         )
-        ui.add_text(gui.title, parent="top_bar_left_group")
         ui.add_group(tag="top_bar_right_group", parent="top_bar_main_group", horizontal=True, horizontal_spacing=0)
         ui.add_button(
             parent="top_bar_right_group",
@@ -176,6 +179,7 @@ def create_ui():
             callback=gui.hide_uninstall_popup,
             width=100,
         )
+    ui.add_text(gui.title, tag="version_text", parent="primary_window", color=(80, 80, 80, 255), pos=(6, 380))
 
     ui.add_window(
         tag="mod_menu",
@@ -360,13 +364,28 @@ with ui.font_registry():
         ui.add_font_range(0x0100, 0x017F)  # Turkish set
         ui.add_font_range(0x0370, 0x03FF)  # Greek set
 
+
+def increase_scale():  # prototype
+    height, width = gui.social_button_size
+    height += 14
+    width += 14
+    ui.configure_item("button_discord", height=height, width=width)
+    ui.configure_item("button_telegram", height=height, width=width)
+    ui.configure_item("button_git", height=height, width=width)
+    ui.configure_item("button_dev", height=height, width=width)
+    ui.configure_item("button_settings", height=height, width=width)
+    font = ui.get_alias_id("very_large_font")
+    ui.bind_item_font("primary_window", font)
+    ui.configure_viewport(f"{gui.title}", width=1040, height=700)
+
+
 # Adding mouse handler to ui registry
 with ui.handler_registry():
     ui.add_mouse_drag_handler(tag="drag_handler", button=0, threshold=4, callback=gui.drag_viewport)
     ui.add_mouse_release_handler(button=0, callback=gui.stop_drag_viewport)
     ui.add_key_release_handler(0x20E, callback=gui.close_active_window)
     ui.add_mouse_click_handler(callback=gui.resize)
-
+    ui.add_key_release_handler(0x20, callback=increase_scale)
 
 with ui.texture_registry(show=False):
     w, h, _, d = ui.load_image(os.path.join(mpaths.img_dir, "Discord.png"))
