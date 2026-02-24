@@ -132,7 +132,8 @@ h6 > a {
   height: 27px !important;
 }
 
-.btn-buymeacoffee {
+.btn-buymeacoffee,
+.btn-buymeacoffee:hover {
   background-color: #c6c635 !important;
   color: black;
 }

@@ -6,7 +6,9 @@
 
 [![discord](https://img.shields.io/badge/Discord-7289DA?style=for-the-badge&logo=discord&logoColor=white)](https://discord.com/invite/2YDnqpbcKM)
 [![telegram](https://img.shields.io/badge/Telegram-2CA5E0?style=for-the-badge&logo=telegram&logoColor=white)](https://t.me/dota2minify)
-![license](https://img.shields.io/github/license/Egezenn/dota2-minify?style=for-the-badge)
+
+[![website](https://custom-icon-badges.demolab.com/badge/Website-17bebe?style=for-the-badge&logo=globe&logoColor=white)](https://egezenn.github.io/dota2-minify)
+[![wiki](https://custom-icon-badges.demolab.com/badge/Wiki-1D1D1E?style=for-the-badge&logo=book&logoColor=white)](https://egezenn.github.io/dota2-minify/wiki)
 
 [![latest-release](https://img.shields.io/github/v/release/Egezenn/dota2-minify?style=for-the-badge)](https://egezenn.github.io/dota2-minify)
 [![build-state](https://img.shields.io/github/actions/workflow/status/Egezenn/dota2-minify/release.yml?style=for-the-badge)](https://egezenn.github.io/dota2-minify)
@@ -16,405 +18,20 @@
 
 [![platform-windows](https://custom-icon-badges.demolab.com/badge/Windows-0078D6?style=for-the-badge&logo=windows11&logoColor=white)](https://egezenn.github.io/dota2-minify)
 [![platform-linux](https://img.shields.io/badge/Linux-FCC624?style=for-the-badge&logo=linux&logoColor=black)](https://egezenn.github.io/dota2-minify)
-[![platform-macos](https://img.shields.io/badge/macOS%20(Partial)-000000?style=for-the-badge&logo=apple&logoColor=white)](https://egezenn.github.io/dota2-minify)
+[![platform-macos](https://img.shields.io/badge/macOS%20(Partial)-000000?style=for-the-badge&logo=apple&logoColor=white)](https://egezenn.github.io/dota2-minify/wiki/#/development?id=running-from-the-source)
 
 ![ss1](docs/assets/screenshot-1.jpg)
 ![ss2](docs/assets/screenshot-2.png)
 
 </div>
 
-## Table of contents
+## Wiki
 
-- [Dota2 Minify](#dota2-minify)
-  - [Table of contents](#table-of-contents)
-  - [Is this safe to use?](#is-this-safe-to-use)
-  - [Installation](#installation)
-    - [Community](#community)
-    - [Optional Setup](#optional-setup)
-      - [Using the project locally](#using-the-project-locally)
-      - [Compilation from source](#compilation-from-source)
-  - [Troubleshooting](#troubleshooting)
-    - [Antivirus software flagged it / I don't see an executable](#antivirus-software-flagged-it--i-dont-see-an-executable)
-      - [Why though?](#why-though)
-      - [How do I trust it?](#how-do-i-trust-it)
-    - [VAC dialog](#vac-dialog)
-    - [Things are broken!](#things-are-broken)
-    - [It doesn't work / open!](#it-doesnt-work--open)
-  - [Developing mods](#developing-mods)
-    - [Mod files and explanations](#mod-files-and-explanations)
-      - [`modcfg.json`](#modcfgjson)
-      - [`files` and `files_uncompiled` directory](#files-and-files_uncompiled-directory)
-      - [`notes.md`](#notesmd)
-      - [`blacklist.txt`](#blacklisttxt)
-      - [`replacer.csv`](#replacercsv)
-      - [`script.py`](#scriptpy)
-      - [`styling.css`](#stylingcss)
-      - [`xml_mod.json`](#xml_modjson)
-    - [Tools of the trade](#tools-of-the-trade)
-  - [Thanks](#thanks)
-  - [Special thanks to](#special-thanks-to)
-  - [Dependencies](#dependencies)
-    - [Binaries](#binaries)
-    - [Python packages](#python-packages)
-  - [License](#license)
-
-[<img alt="Back to top" align="right" height="64px" src="docs/assets/caret-up-solid-full.svg">](#table-of-contents)
-
-## Is this safe to use?
-
-This project has been around since [2022](https://github.com/Egezenn/dota2-minify/commit/825ed37e6007577b98c3003fe0bdab6410ba87db) with thousands of downloads and users. While binaries are offered for ease of use, anyone can compile it themselves.
-
-The only valid source to get the software is from [GitHub Releases](https://github.com/Egezenn/dota2-minify/releases/latest) or [the website](https://egezenn.github.io/dota2-minify). Releases are built via [GitHub Workflows](https://github.com/Egezenn/dota2-minify/blob/main/.github/workflows/release.yml) with no intervention, we do not distribute elsewhere.
-
-No one has ever been banned for the use of these mods and alike. Minify strictly deals with VPK modifications and not hacking concepts like memory/file manipulation. It utilizes Valve's approved methods (VPK loading) for creating assets, as documented on the [official Valve Wiki](https://developer.valvesoftware.com/wiki/VPK). Historically Valve has only disabled assets from loading and never punished modders. The worst thing that can happen is a mod stops working and that's it.
-
-[<img alt="Back to top" align="right" height="64px" src="docs/assets/caret-up-solid-full.svg">](#table-of-contents)
-
-## Installation
-
-1. **Download Minify**
-
-   - [Click here to download the latest Minify release](https://github.com/Egezenn/dota2-minify/releases/latest)
-
-     **(Optional) Install Dota 2 Workshop Tools DLC**
-
-   - These tools enable HUD/Interface mods. **Skip this step if you don't need them.**
-   - Right-click on Dota 2 in Steam.
-
-![tools-instruction-1](docs/assets/tools-instruction-1.png)
-
-- Select **Properties** > **DLC**.
-  - On Linux, you need to force the use of `Proton Experimental` and have `wine` package installed. Relaunch steam if you still don't see the DLC.
-
-![tools-instruction-2](docs/assets/tools-instruction-2.png)
-
-- Install `Dota 2 Workshop Tools DLC`.
-
-> [!WARNING]
-> For people using Minify on Linux with workshop tools!
->
-> After patching, extract your workshop tools using the `Hammer button` > `Extract workshop tools` (this is for later use so that you won't have to switch back and forth again) and go back to using a `Steam Runtime` as you'll not be able to queue games with `Proton Experimental`.
-
-![tools-instruction-3](docs/assets/tools-instruction-3.png)
-
-1. **Run Minify**
-
-   - Extract the ZIP file.
-   - Ensure that you have execution permissions for the `Minify` executable, run and patch with the mods and the language you want to use.
-
-![language-instruction-1](docs/assets/language-instruction-1.png)
-
-![language-instruction-2](docs/assets/language-instruction-2.png)
-
-3. **Setting the language argument for Dota2 on Steam**
-
-   - Right-click on Dota2 in Steam and click **Properties**.
-   - **For English:** Add `-language minify` to your launch options.
-   - **For Other Languages:** Select the language you want to patch with on the top bar and add `-language language_id`
-
-![language-instruction-3](docs/assets/language-instruction-3.png)
-
-4. **Start Dota 2**
-   - Launch Dota2 and enjoy!
-
-### Community
-
-You can find more mods, tooling and skins at the [website](https://egezenn.github.io/dota2-minify/community.html) or our [Discord server](https://discord.com/invite/2YDnqpbcKM).
-
-### Optional Setup
-
-#### Using the project locally
-
-Prerequisites are `git`, `python` and `uv`. (also `tk` for tkinter and `wine` for workshop tools executables)
-
-- `git clone https://github.com/Egezenn/dota2-minify`
-- `cd dota2-minify`
-- `uv run Minify`
-
-#### Compilation from source
-
-For instructions, refer to the [workflow](https://github.com/Egezenn/dota2-minify/blob/main/.github/workflows/release.yml).
-
-[<img alt="Back to top" align="right" height="64px" src="docs/assets/caret-up-solid-full.svg">](#table-of-contents)
-
-## Troubleshooting
-
-### Antivirus software flagged it / I don't see an executable
-
-Exclude the folder from your antivirus software(s).
-
-#### Why though?
-
-These are false-positives caused by people generating similiar compilation/hashes for malwares via the same compilers we're using and we don't have a signing certificate to resolve this as the project is relatively small.
-
-#### How do I trust it?
-
-Binaries are released directly from GitHub's build system and there aren't any modifications done from us after releases. If you don't like the executable we're providing, you can run it with Python or build it completely yourself. Instructions for both are included in [the readme](#optional-setup).
-
-### VAC dialog
-
-Verify your files from Steam, this happens every so often randomly and is NOT related to anything the program does.
-
-### Things are broken!
-
-Try uninstalling the mods. If that doesn't work aswell try using the feature below (it'll delete all the contents of `dota 2 beta/game/dota_<language>`!)
-
-![clean-all-language-paths](docs/assets/wipe-language-paths.png)
-
-### It doesn't work / open!
-
-Make a bug report on GitHub or Discord with the contents of your `logs` folder.
-
-[<img alt="Back to top" align="right" height="64px" src="docs/assets/caret-up-solid-full.svg">](#table-of-contents)
-
-## Developing mods
-
-Minify has a programmatical approach to most modifications to keep everything minimal and simple. If there isn't a method available for your needs, you can always upload your mod files in `mods/<mod_name>/files` to be directly included into the pak minify is going to create or include a python script to accomodate specific behavior.
-
-| Modifications to file                            | Restart required for changes |
-| ------------------------------------------------ | ---------------------------- |
-| [`files`](#files-and-files_uncompiled-directory) | No                           |
-| [`modcfg.json`](#modcfgjson)                     | Yes<sup>1</sup>              |
-| [`notes.md`](#notesmd)                           | Yes                          |
-| `preview.png`                                    | Yes                          |
-| [`blacklist.txt`](#blacklisttxt)                 | No                           |
-| [`replacer.csv`](#replacercsv)                   | No                           |
-| [`replacer.csv`](#replacercsv)                   | No                           |
-| [`script.py`](#scriptpy)                         | No<sup>2</sup>               |
-| [`styling.css`](#stylingcss)                     | No                           |
-| [`xml_mod.json`](#xml_modjson)                   | No                           |
-
-<sup>1</sup>: The keys `always` and `dependencies` will be pulled at patch time, others require reinitialization.  
-<sup>2</sup>: Initial scripts(`script_initial.py`).
-
-### Mod files and explanations
-
-```plaintext
-mods
-├── <mod_name>
-│   ├── files
-│   │   ├── <path_to_file_in_pak>
-│   │   ├── <...>
-│   │   └── <...>
-│   ├── files_uncompiled
-│   │   ├── <path_to_file_in_pak>
-│   │   ├── <...>
-│   │   └── <...>
-│   ├── modcfg.json
-│   ├── notes.md
-│   ├── preview.png
-│   ├── blacklist.txt
-│   ├── replacer.csv
-│   ├── script.py
-│   ├── script_initial.py
-│   ├── script_after_decompile.py
-│   ├── script_after_recompile.py
-│   ├── script_after_patch.py
-│   ├── script_uninstall.py
-│   ├── styling.css
-│   └── xml_mod.json
-```
-
-#### `modcfg.json`
-
-```jsonc
-{ // defaults doesn't need to be indicated
-  "always": false, // false by default, apply them without checking mods.json or checkbox
-  "dependencies": ["<mod>"], // None by default, add a mod dependency's name here 
-  "order": 1, // default is 1, ordered from negative to positive to resolve any conflicts
-  "visual": true // true by default, show it in the UI as a checkbox
-}
-```
-
-#### `files` and `files_uncompiled` directory
-
-`files` directory will drop the files put here into the pak that minify is going to create. These files should already be compiled.
-
-`files_uncompiled` will drop the files onto the input folder **if the workshop tools are available**.
-
-If not specifically protected by Dota2, these files will override any game content. This also applies for the rest of the modification methods available.
-
-#### `notes.md`
-
-Displays information about a mod on `Details` window.
-
-An image is rendered at the top if the file `preview.png` exists.
-
-```markdown
-<!-- LANG:EN -->
-Normal text supports `inline code` (pink) and https://example.com (orange).
-
-- This is a list item.
-- List items support `inline code` too.
-- And they support https://example.com as well.
-
-!!: This is an emphasized warning (Red & Large).
-!!: It supports `pink code` blocks.
-!!: And https://example.com links.
-```
-
-![notes](docs/assets/example-notes.png)
-
-#### `blacklist.txt`
-
-This file is a list of path to files used to override those with blanks.
-Supported file types can be found in [`bin/blank-files`](Minify/bin/blank-files).
-
-A list of all the files (from the game pak) can be found in [`bin/gamepakcontents.txt`](Minify/bin/gamepakcontents.txt).
-
-Syntax for this file starting from the line beginning is as follows:  
-`#`: Comments  
-`>>`: Directories  
-`**`: RegExp patterns  
-`*-`: RegExp patterns for exclusion  
-`--`: Exclusions
-
-After that with no blank spaces you put the path to the file you want to override.
-`path/to/file`
-
-```plaintext
-particles/base_attacks/ranged_goodguy_launch.vpcf_c
->>particles/sprays
-**taunt.*\.vsnd_c
-```
-
-#### `replacer.csv`
-
-This file allows you to replace file(s) with other file(s) inside the game VPK (can be used for skin swappers etc.).
-
-Format:  
-`file_to_be_replaced,replacement_file`
-
-Example:
-
-```csv
-panorama/images/spellicons/nevermore_shadowraze1_png.vtex_c,panorama/images/spellicons/nevermore_shadowraze1_demon_png.vtex_c
-panorama/images/spellicons/nevermore_shadowraze2_png.vtex_c,panorama/images/spellicons/nevermore_shadowraze2_demon_png.vtex_c
-panorama/images/spellicons/nevermore_shadowraze3_png.vtex_c,panorama/images/spellicons/nevermore_shadowraze3_demon_png.vtex_c
-```
-
-![example-replacer](docs/assets/example-replacer.png)
-
-#### `script.py`
-
-If and when there is a specific behavior to be automated you can include a python script along with your mod. You can find the template below.
-
-Appending `_initial, _after_decompile, _after_recompile, _uninstall` to your script's name will adjust when it'll be executed. Thus giving you the full control of how your mod can be handled. By default it executes while iterating over each mod when you are patching.
-
-```python
-# This script template can be run both manually and from minify.
-# You are able to use packages and modules from minify (you need an activated environment from the minify root or running with the tool `uv` can automatically handle this.)
-import os
-import sys
-
-current_dir = os.path.dirname(os.path.abspath(__file__))
-minify_root = os.path.abspath(os.path.join(current_dir, os.pardir, os.pardir))
-os.chdir(minify_root)
-
-if minify_root not in sys.path:
-    sys.path.insert(0, minify_root)
-
-# Any package or module native to minify can be imported here
-# import requests
-#
-# import mpaths
-# ...
-
-
-def main():
-    pass
-    # Code specific to your mod goes here, minify will try to execute this block.
-    # If any exceptions occur, it'll be written to `logs` directory
-
-
-if __name__ == "__main__":
-    main()
-```
-
-#### `styling.css`
-
-This file is a list of VCSS paths and styling that will be appended to them.  
-By the nature of this method modifications done here may break the original XML or CSS that gets updated resulting in a bad layout.  
-In such cases, a repatch or a slight modification is required.
-
-If you encounter errors while patching, it's most likely that your CSS is invalid or the path is wrong. Check [`logs/resourcecompiler.txt`](Minify/logs/resourcecompiler.txt) for more information.
-
-For Source 2 flavored CSS properties, refer to: [Valve Developer Community Wiki](https://developer.valvesoftware.com/wiki/Dota_2_Workshop_Tools/Panorama/CSS_Properties).  
-To live inspect the layout, open the workshop tools and press <kbd>F6</kbd> and select the element you'd like to select from the XML.
-
-Syntax:
-
-```css
-/* g|c:path/to/vcss_file_without_extension */
-example_selector { property: value; }
-/* it can also override definitions */
-@define foo: bar;
-@keyframes 'anim-name'
-{
-  progress
-  {
-    property: value;
-  }
-}
-```
-
-#### `xml_mod.json`
-
-This file allows you to modify Valve's XML (Panorama) files. It uses a key-value structure where the key is the path to the XML file in the VPK (e.g., `panorama/layout/popups/popup_accept_match.xml`) and the value is a list of modification actions.
-
-Supported actions:
-
-- `add_script`: Adds a script include to the `<scripts>` section.
-  - `src`: Path to the script (e.g., `s2r://panorama/scripts/popups/popup_auto_accept_match.vjs_c`)
-- `add_style_include`: Adds a style include to the `<styles>` section.
-  - `src`: Path to the style (e.g., `s2r://panorama/styles/popups/popup_accept_match.vcss_c`)
-- `set_attribute`: Sets an attribute on an element.
-  - `tag`: The tag name or ID of the element.
-  - `attribute`: Name of the attribute to set.
-  - `value`: Value of the attribute.
-- `add_child`: Appends a child element to a parent.
-  - `parent_id`: ID of the parent element.
-  - `xml`: The XML string of the child element.
-- `move_into`: Moves an element into a new parent.
-  - `target_id`: ID of the element to move.
-  - `new_parent_id`: ID of the new parent element.
-- `insert_after`: Inserts an element after a target element.
-  - `target_id`: ID of the reference element.
-  - `xml`: The XML string to insert.
-- `insert_before`: Inserts an element before a target element.
-  - `target_id`: ID of the reference element.
-  - `xml`: The XML string to insert.
-
-Example:
-
-```jsonc
-{
-  "panorama/layout/popups/popup_accept_match.xml": [
-    {
-      "action": "add_script",
-      "src": "s2r://panorama/scripts/popups/popup_auto_accept_match.vjs_c"
-    },
-    {
-      "action": "set_attribute",
-      "tag": "PopupAcceptMatch",
-      "attribute": "onload",
-      "value": "AcceptMatchPopup()"
-    }
-  ]
-}
-```
-
-### Tools of the trade
-
-_to be written_
-
-[<img alt="Back to top" align="right" height="64px" src="docs/assets/caret-up-solid-full.svg">](#table-of-contents)
+The contents of the readme has been moved to [the new wiki](https://egezenn.github.io/dota2-minify/wiki) for better structure and readability.
 
 ## Thanks
 
-This project wouldn't be available without the work of the community. Thanks to everyone that has contributed to the project over GitHub with issues & contributions or Discord!
-
-[<img alt="Back to top" align="right" height="64px" src="docs/assets/caret-up-solid-full.svg">](#table-of-contents)
+This project wouldn't be available without the work of the community. Thanks to everyone that has contributed to the project over at GitHub and Discord!
 
 ## Special thanks to
 
@@ -454,8 +71,6 @@ This project wouldn't be available without the work of the community. Thanks to 
 | [`Tree Mod`](./Minify/mods/Tree%20Mod)                                                          | [robbyz512](https://github.com/robbyz512)          |                                                                                                              |
 | [`User Styles`](./Minify/mods/User%20Styles)                                                    | [Egezenn](https://github.com/Egezenn)              |                                                                                                              |
 
-[<img alt="Back to top" align="right" height="64px" src="docs/assets/caret-up-solid-full.svg">](#table-of-contents)
-
 ## Dependencies
 
 ### Binaries
@@ -479,8 +94,6 @@ This project wouldn't be available without the work of the community. Thanks to 
 | [screeninfo](https://github.com/rr-/screeninfo)                        | Position calculation                      | [MIT license](https://github.com/rr-/screeninfo/blob/master/LICENSE.md)                                       |
 | [vdf](https://github.com/ValvePython/vdf)                              | Serializing VDFs                          | [MIT license](https://github.com/ValvePython/vdf/blob/master/LICENSE)                                         |
 | [vpk](https://github.com/ValvePython/vpk)                              | VPK interaction                           | [MIT license](https://github.com/ValvePython/vpk/blob/master/LICENSE)                                         |
-
-[<img alt="Back to top" align="right" height="64px" src="docs/assets/caret-up-solid-full.svg">](#table-of-contents)
 
 ## License
 

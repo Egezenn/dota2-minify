@@ -1,0 +1,88 @@
+:root {
+    --theme-color: #01E6E6; 
+}
+* {
+    font-family: Inter, Roboto, sans-serif;
+}
+body {
+    color: white;
+    background-color: #1D1D1E;
+}
+
+.sidebar,
+nav > ul ul {
+    color: white;
+    background-color: rgb(24, 24, 26) !important;
+}
+.sidebar-toggle {
+    background-color: rgb(24, 24, 26, 0) !important;
+}
+
+#main {
+    min-height: 100vh;
+}
+
+.markdown-section p,
+.markdown-section span
+.markdown-section em
+{
+    color: white
+}
+.markdown-section a {
+    color: #64FF63;
+    text-decoration: none;
+}
+.markdown-section code {
+    background-color: #2e2e2e;
+    font-family: monospace;
+}
+.markdown-section pre,
+.markdown-section pre > code {
+    color: white;
+    background-color: #18181a !important;
+    font-family: monospace;
+}
+.markdown-section .token {
+    font-family: monospace;
+}
+.markdown-section strong,
+body[data-page="README.md"] a[href="https://egezenn.github.io/dota2-minify"] {
+    color: #01E6E6;
+}
+
+.sidebar ul li a,
+.markdown-section h1,
+.markdown-section h1 a,
+.markdown-section h1 span,
+.markdown-section h2,
+.markdown-section h2 a,
+.markdown-section h2 span,
+.markdown-section h3,
+.markdown-section h3 a,
+.markdown-section h3 span,
+.markdown-section h4,
+.markdown-section h4 a,
+.markdown-section h4 span,
+.markdown-section h5,
+.markdown-section h5 a,
+.markdown-section h5 span,
+.markdown-section h6,
+.markdown-section h6 a,
+.markdown-section h6 span {
+    color: #17bebe;
+}
+
+.markdown-section tr {
+    background-color: #1D1D1E !important;
+}
+.markdown-section th,
+.markdown-section tr,
+.markdown-section td {
+    border: 2px solid #134e4e !important;
+}
+
+.callout {
+    border-right: #18181a !important;
+    border-top: #18181a !important;
+    border-bottom: #18181a !important;
+}
