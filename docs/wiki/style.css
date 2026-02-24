@@ -45,8 +45,7 @@ nav > ul ul {
 .markdown-section .token {
     font-family: monospace;
 }
-.markdown-section strong,
-body[data-page="README.md"] a[href="https://egezenn.github.io/dota2-minify"] {
+.markdown-section strong {
     color: #01E6E6;
 }
 
