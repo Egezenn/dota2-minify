@@ -13,7 +13,7 @@ https://egezenn.github.io/dota2-minify
 Extract the contents of the `.zip` file you've downloaded to someplace you like. You can run the `Minify` executable afterwards.
 
 > [!WARNING]
-> On Linux you may have to run `chmod +x ./Minify` to grant execution permissions after extracting if nothing happens.
+> On Linux you may have to run `chmod +x ./Minify` to grant execution permissions if nothing happens after running the executable.
 
 Select the mods you'd like, the language you want to use and patch!
 

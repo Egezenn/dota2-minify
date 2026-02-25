@@ -84,7 +84,7 @@ Verify your files from Steam, this happens every so often randomly and is NOT re
 
 Try uninstalling the mods. If that doesn't work aswell try using the feature below (it'll delete all the contents of `dota 2 beta/game/dota_<language>`!)
 
-![clean-all-language-paths](docs/assets/wipe-language-paths.png)
+![clean-all-language-paths](https://github.com/Egezenn/dota2-minify/raw/main/docs/assets/wipe-language-paths.png)
 
 ## Not working / Crashes
 

@@ -133,9 +133,10 @@ h6 > a {
 }
 
 .btn-buymeacoffee,
+.btn-buymeacoffee:active,
 .btn-buymeacoffee:hover {
   background-color: #c6c635 !important;
-  color: black;
+  color: black !important;
 }
 
 #mods-section,

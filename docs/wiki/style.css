@@ -1,21 +1,57 @@
+@media (width > 800px) {
+#main {
+    padding-left: 10vw;
+    padding-right: 10vw;
+}
+
+#main img {
+    max-width: 40vw;
+}
+}
+
 :root {
     --theme-color: #01E6E6; 
 }
+
 * {
     font-family: Inter, Roboto, sans-serif;
 }
+
 body {
-    color: white;
     background-color: #1D1D1E;
+    color: white;
 }
 
 .sidebar,
 nav > ul ul {
+    background-color: rgb(24 24 26) !important;
     color: white;
-    background-color: rgb(24, 24, 26) !important;
 }
+
 .sidebar-toggle {
-    background-color: rgb(24, 24, 26, 0) !important;
+    background-color: rgb(24 24 26 / 0%) !important;
+}
+
+.sidebar nav {
+    margin-bottom: 3rem;
+    text-align: center;
+}
+
+.sidebar nav ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+    padding: 0;
+}
+
+.sidebar nav li {
+    margin: 0;
+}
+
+.sidebar nav a {
+    border: #134e4e 2px solid !important;
+    padding: 5px;
 }
 
 #main {
@@ -28,23 +64,28 @@ nav > ul ul {
 {
     color: white
 }
+
 .markdown-section a {
     color: #64FF63;
     text-decoration: none;
 }
+
 .markdown-section code {
     background-color: #2e2e2e;
     font-family: monospace;
 }
+
 .markdown-section pre,
 .markdown-section pre > code {
-    color: white;
     background-color: #18181a !important;
+    color: white;
     font-family: monospace;
 }
+
 .markdown-section .token {
     font-family: monospace;
 }
+
 .markdown-section strong {
     color: #01E6E6;
 }
@@ -74,6 +115,7 @@ nav > ul ul {
 .markdown-section tr {
     background-color: #1D1D1E !important;
 }
+
 .markdown-section th,
 .markdown-section tr,
 .markdown-section td {
@@ -81,7 +123,7 @@ nav > ul ul {
 }
 
 .callout {
+    border-bottom: #18181a !important;
     border-right: #18181a !important;
     border-top: #18181a !important;
-    border-bottom: #18181a !important;
 }

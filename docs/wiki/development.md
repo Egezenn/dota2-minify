@@ -1,6 +1,6 @@
 ## Running from the source
 
-Prerequisites are `git`, `python` and `uv`. (also `tk` for tkinter and `wine` for workshop tools executables)
+Prerequisites are `git`, `python` and `uv`. (also `tk` for tkinter and `wine` for workshop tools executables on Linux)
 
 ```shell
 git clone https://github.com/Egezenn/dota2-minify
