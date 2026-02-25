@@ -104,7 +104,7 @@
     "PL": "Więcej informacji znajdziesz w pliku „logs/crashlog.txt”.",
     "PT": "Consulte o arquivo 'logs/crashlog.txt' para obter mais informações.",
     "RO": "Consultați fișierul „logs/crashlog.txt” pentru mai multe informații.",
-    "RU": "Проверь 'logs/crashlog.txt' для детальной информации.",
+    "RU": "Проверьте 'logs/crashlog.txt' для более детальной информации.",
     "SV": "Se 'logs/crashlog.txt' för mer information.",
     "TR": "Ayrıntılar için 'logs/crashlog.txt' dosyasını kontrol et.",
     "UK": "Більше інформації дивіться у файлі «logs/crashlog.txt»."
@@ -148,7 +148,7 @@
     "PL": "Zamknij najpierw Dota 2 i dopiero potem zainstaluj aktualizację.",
     "PT": "Por favor, feche o Dota 2 primeiro e depois atualize.",
     "RO": "Te rog să închizi mai întâi Dota 2 și apoi să instalezi patch-ul.",
-    "RU": "Пожалуйста сначала закрой Dota 2, после чего приступай к патчу.",
+    "RU": "Пожалуйста, сначала закройте Dota 2, а затем приступайте к патчу.",
     "SV": "Stäng Dota 2 först och uppdatera sedan.",
     "TR": "Lütfen önce Dota 2'yi kapatın ve sonra yamalama işlemini gerçekleştirin.",
     "UK": "Будь ласка, спочатку закрийте Dota 2, а потім встановіть патч."
@@ -170,7 +170,7 @@
     "PL": "Najpierw wybierz ścieżkę!",
     "PT": "Selecione um caminho primeiro!",
     "RO": "Selectează mai întâi o cale!",
-    "RU": "Сначала выбери папку!",
+    "RU": "Сначала выберите папку!",
     "SV": "Välj en väg först!",
     "TR": "Önce bir yol seçin!",
     "UK": "Спочатку оберіть шлях!"
@@ -324,7 +324,7 @@
     "PL": "-> Dekompilowanie wyodrębnionych plików za pomocą Source2Viewer",
     "PT": "-> Descompilando arquivos extraídos via Source2Viewer",
     "RO": "-> Decompilarea fișierelor extrase prin Source2Viewer",
-    "RU": "-> Декомпиляция извлеченных файлов через Source2Viewer",
+    "RU": "-> Декомпиляция извлеченных файлов с помощью Source2Viewer",
     "SV": "-> Dekompilera extraherade filer via Source2Viewer",
     "TR": "-> Çıkarılan dosyaların Source2Viewer aracılığıyla derlenmesi",
     "UK": "-> Декомпіляція витягнутих файлів через Source2Viewer"
@@ -368,7 +368,7 @@
     "PL": "-> Pobrano",
     "PT": "-> Baixado",
     "RO": "-> Descărcat",
-    "RU": "-> Завершили скачивание ",
+    "RU": "-> Скачано",
     "SV": "-> Nedladdad",
     "TR": "-> Yüklendi ",
     "UK": "-> Завантажено"
@@ -434,7 +434,7 @@
     "PL": "Niektóre mody zostały wyłączone, ponieważ Narzędzia Warsztatu nie zostały zainstalowane.",
     "PT": "Alguns mods foram desativados porque as Ferramentas da Oficina não estão instaladas.",
     "RO": "Unele moduri au fost dezactivate deoarece instrumentele Workshop nu sunt instalate.",
-    "RU": "Некоторые моды недоступны, так как Workshop Tools не установлены.",
+    "RU": "Некоторые моды недоступны, так как не установлены Workshop Tools.",
     "SV": "Vissa moddar har inaktiverats eftersom verkstadsverktygen inte är installerade.",
     "TR": "Atölye araçları yüklü olmadığı için bazı modlar kullanılamıyor.",
     "UK": "Деякі моди були вимкнені, оскільки для них не встановлені інструменти майстерні."
@@ -456,7 +456,7 @@
     "PL": "Błąd: Zamknij Dota 2 i uruchom ponownie Minify.",
     "PT": "Erro: Feche o Dota 2 e reinicie o Minify.",
     "RO": "Eroare: Vă rugăm să închideți Dota 2 și să reporniți Minify.",
-    "RU": "Ошибка: Пожалуйста закрой Dota 2 и перезапусти Minify.",
+    "RU": "Ошибка: Пожалуйста, закройте Dota 2 и перезапустите Minify.",
     "SV": "Fel: Stäng Dota 2 och starta om Minify.",
     "TR": "Hata: Lütfen Dota 2'yi kapatın ve Minify'ı yeniden başlatın.",
     "UK": "Помилка: Будь ласка, закрийте Dota 2 та перезапустіть Minify."
@@ -478,7 +478,7 @@
     "PL": "-> Wyekstrahowano {}",
     "PT": "-> Extraído {}",
     "RO": "-> Extras {}",
-    "RU": "-> Завершена распаковка  {}",
+    "RU": "-> Распаковка завершена {}",
     "SV": "-> Extraherad {}",
     "TR": "-> Çıkartıldı {}",
     "UK": "-> Витягнуто {}"
@@ -500,7 +500,7 @@
     "PL": "Wyciągnięto narzędzia warsztatowe!",
     "PT": "As ferramentas da oficina foram retiradas!",
     "RO": "Uneltele atelierului au fost extrase!",
-    "RU": "Инструменты мастерской извлечены!",
+    "RU": "Workshop tools извлечены!",
     "SV": "Verkstadsverktygen har tagits fram!",
     "TR": "Atölye araçları çekildi!",
     "UK": "Інструменти майстерні витягнуті!"
@@ -544,7 +544,7 @@
     "PL": "Nie można wyodrębnić {}, ścieżka lub plik nie istnieje!",
     "PT": "Não foi possível extrair {}, o caminho ou arquivo não existe!",
     "RO": "Nu se poate extrage {}, calea sau fișierul nu există!",
-    "RU": "Невозможно извлечь {}, путь или файл не существует!",
+    "RU": "Невозможно извлечь {}, пути или файла не существует!",
     "SV": "Det gick inte att extrahera {}, sökvägen eller filen finns inte!",
     "TR": "{} çekilemedi, dizin veya dosya bulunamadı!",
     "UK": "Не вдалося видобути {}, шлях або файл не існує!"
@@ -676,7 +676,7 @@
     "PL": "Pamiętaj o dodaniu „-language {}” do opcji uruchamiania Dota 2",
     "PT": "Lembre-se de adicionar '-language {}' às opções de inicialização do Dota 2.",
     "RO": "Nu uita să adaugi „-language {}” la opțiunile de lansare Dota 2",
-    "RU": "Не забудь добавить '-language {}' в параметры запуска Dota 2",
+    "RU": "Не забудьте добавить '-language {}' в параметры запуска Dota 2",
     "SV": "Kom ihåg att lägga till '-language {}' i Dota 2:s startalternativ",
     "TR": "Dota2 komutlarına '-language {}' eklemeyi unutmayın",
     "UK": "Не забудьте додати '-language {}' до параметрів запуску Dota 2"
@@ -742,7 +742,7 @@
     "PL": "Minify napotkał błędy. Szczegóły znajdziesz w pliku Minify/logs/warnings.txt.",
     "PT": "O Minify encontrou erros. Verifique o arquivo Minify/logs/warnings.txt para obter detalhes.",
     "RO": "Minify a întâmpinat erori. Consultați fișierul Minify/logs/warnings.txt pentru detalii.",
-    "RU": "Minify столкнулся с ошибками. Проверь Minify/logs/warnings.txt для подробностей.",
+    "RU": "Minify столкнулся с ошибками. Проверьте Minify/logs/warnings.txt для более детальной информации.",
     "SV": "Fel uppstod i Minify. Se Minify/logs/warnings.txt för mer information.",
     "TR": "Minify hatalarla karşılaştı. Ayrıntılar için Minify/logs/warnings.txt dosyasını kontrol edin.",
     "UK": "Виявлені помилки під час мінімізації. Перегляньте файл Minify/logs/warnings.txt для отримання детальної інформації."
@@ -764,7 +764,7 @@
     "PL": "Menu wyboru modów",
     "PT": "Menu de seleção de mods",
     "RO": "Meniul de selecție a modurilor",
-    "RU": "Меню Выбора Модов",
+    "RU": "Меню выбора модов",
     "SV": "Modvalsmeny",
     "TR": "Mod Seçme Menüsü",
     "UK": "Меню вибору модів"
@@ -940,7 +940,7 @@
     "PL": "Chcesz przyczynić się do rozwoju projektu?",
     "PT": "Deseja contribuir para o crescimento do projeto?",
     "RO": "Vrei să contribui la creșterea proiectului?",
-    "RU": "Хочешь помочь проекту развиваться?",
+    "RU": "Хотите помочь проекту развиваться?",
     "SV": "Vill du bidra till projektets tillväxt?",
     "TR": "Projenin büyümesine katkıda bulunmak ister misiniz?",
     "UK": "Хочете зробити свій внесок у розвиток проєкту?"
@@ -962,7 +962,7 @@
     "PL": "-> Dołącz do naszej społeczności Discord!",
     "PT": "-> Junte-se à nossa comunidade no Discord!",
     "RO": "-> Alătură-te comunității noastre Discord!",
-    "RU": "-> Заходи в наше Дискорд сообщество!",
+    "RU": "-> Заходите в наше Дискорд сообщество!",
     "SV": "-> Gå med i vår Discord-community!",
     "TR": "-> Discord topluluğumuza katılın!",
     "UK": "-> Приєднуйтесь до нашої спільноти Discord!"
@@ -984,7 +984,7 @@
     "PL": "-> Udostępnij Minify znajomym i grupom internetowym",
     "PT": "-> Compartilhe o Minify com seus amigos e grupos online.",
     "RO": "-> Distribuie Minify prietenilor și grupurilor online",
-    "RU": "-> Делись Minify со своими друзьями и сообществами",
+    "RU": "-> Делитесь Minify со своими друзьями и сообществами",
     "SV": "-> Dela Minify med dina vänner och onlinegrupper",
     "TR": "-> Minify'ı arkadaşlarınızla ve çevrimiçi gruplarınızla paylaşın",
     "UK": "-> Поділіться Minify зі своїми друзями та онлайн-групами"
@@ -1006,7 +1006,7 @@
     "PL": "-> Oznacz projekt gwiazdką na GitHub",
     "PT": "-> Dê uma estrela ao projeto no GitHub",
     "RO": "-> Marchează proiectul cu stea pe GitHub",
-    "RU": "-> Ставь звездочку проекту на GitHub",
+    "RU": "-> Ставьте звездочку проекту на GitHub",
     "SV": "-> Stjärnmärk projektet på GitHub",
     "TR": "-> Projeyi GitHub'da yıldızlayın",
     "UK": "-> Позначити проєкт зірочкою на GitHub"
@@ -1028,7 +1028,7 @@
     "PL": "-> Twórz i utrzymuj mody dla tego projektu",
     "PT": "-> Criar e manter mods para este projeto",
     "RO": "-> Creați și întrețineți moduri pentru acest proiect",
-    "RU": "-> Создавай и поддерживай моды для этого проекта",
+    "RU": "-> Создавайте и поддерживайте моды для этого проекта",
     "SV": "-> Skapa och underhåll moddar för detta projekt",
     "TR": "-> Bu proje için modlar oluşturun ve bakımını üstlenin",
     "UK": "-> Створити та підтримувати моди для цього проєкту"
@@ -1050,7 +1050,7 @@
     "PL": "-> Rozpoczęcie wyodrębniania plików CSS",
     "PT": "-> Iniciando a extração de arquivos CSS",
     "RO": "-> Începerea extragerii fișierelor CSS",
-    "RU": "-> Начинаем извлекать CSS-файлы",
+    "RU": "-> Начинается извлечение CSS-файлов",
     "SV": "-> Börjar extrahera CSS-filer",
     "TR": "-> CSS dosyalarını çıkarmaya başlıyoruz",
     "UK": "-> Початок вилучення CSS-файлів"
