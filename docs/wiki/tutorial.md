@@ -26,6 +26,6 @@ After the sound, Steam may restart while Minify is adjusting your Dota2 launch p
 
 ## Installing mods
 
-You can find more mods, tooling and skins at our [website](https://egezenn.github.io/dota2-minify/community.html) or [Discord server](https://discord.com/invite/2YDnqpbcKM).
+You can find more mods, tooling and skins at our [website](https://egezenn.github.io/dota2-minify/community.html) or [Discord server](https://discord.com/invite/9867CPv7cy).
 
 <!-- TODO: settings, dev panel, pictures.. -->

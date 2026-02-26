@@ -373,7 +373,7 @@ if not current_steam_id and steam_root:
 
 # links
 version_query = f"https://raw.githubusercontent.com/{head_owner}/{repo_name}/refs/heads/main/version"
-discord = "https://discord.com/invite/2YDnqpbcKM"
+discord = "https://discord.com/invite/9867CPv7cy"
 telegram = "https://t.me/dota2minify"
 github = f"https://github.com/{head_owner}/{repo_name}"
 github_latest = github + "/releases/latest"

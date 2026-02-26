@@ -4,7 +4,7 @@
 
 [![logo](Minify/bin/images/logo.png)](https://egezenn.github.io/dota2-minify)
 
-[![discord](https://img.shields.io/badge/Discord-7289DA?style=for-the-badge&logo=discord&logoColor=white)](https://discord.com/invite/2YDnqpbcKM)
+[![discord](https://img.shields.io/badge/Discord-7289DA?style=for-the-badge&logo=discord&logoColor=white)](https://discord.com/invite/9867CPv7cy)
 [![telegram](https://img.shields.io/badge/Telegram-2CA5E0?style=for-the-badge&logo=telegram&logoColor=white)](https://t.me/dota2minify)
 
 [![website](https://custom-icon-badges.demolab.com/badge/Website-17bebe?style=for-the-badge&logo=globe&logoColor=white)](https://egezenn.github.io/dota2-minify)

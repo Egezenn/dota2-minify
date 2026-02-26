@@ -88,4 +88,4 @@ Try uninstalling the mods. If that doesn't work aswell try using the feature bel
 
 ## Not working / Crashes
 
-Make a bug report on [GitHub](https://github.com/Egezenn/dota2-minify/issues) or [Discord](https://discord.com/invite/2YDnqpbcKM) with `minify_debug_<timestamp>.zip` that's created on crashes or the contents of your `logs` folder.
+Make a bug report on [GitHub](https://github.com/Egezenn/dota2-minify/issues) or [Discord](https://discord.com/invite/9867CPv7cy) with `minify_debug_<timestamp>.zip` that's created on crashes or the contents of your `logs` folder.
