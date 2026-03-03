@@ -370,6 +370,7 @@ def change_localization(sender=None, app_data=None, user_data=None, init=False):
     )
 
     if ui.does_item_exist("mod_menu"):
+        ui.configure_item("mod_menu", label=mod_selection_window_var)
         for child_group in ui.get_item_children("mod_menu", 1):
             for item in ui.get_item_children(child_group, 1):
                 if ui.get_item_alias(item).endswith("_button_show_details_tag"):

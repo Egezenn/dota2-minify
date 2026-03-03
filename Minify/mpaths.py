@@ -372,7 +372,6 @@ if not current_steam_id and steam_root:
 
 
 # links
-version_query = f"https://raw.githubusercontent.com/{head_owner}/{repo_name}/refs/heads/main/version"
 discord = "https://discord.com/invite/9867CPv7cy"
 telegram = "https://t.me/dota2minify"
 github = f"https://github.com/{head_owner}/{repo_name}"
@@ -595,4 +594,4 @@ mods_with_order = sorted(mods_with_order, key=lambda d: list(d.values())[0])
 mods_with_order = [list(d.keys())[0] for d in mods_with_order]
 
 main_window_width = 550
-main_window_height = 400
+main_window_height = 440

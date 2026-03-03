@@ -1,6 +1,5 @@
 import concurrent.futures
 import ctypes
-from gc import enable
 import os
 import re
 import shutil
@@ -28,32 +27,14 @@ is_moving_viewport = False
 version = None
 latest_download_url = None
 
-main_window_width = 550
-main_window_width_dev = 550
-main_window_height = 400
-main_window_height_dev = 650
-
-terminal_window_wrap = main_window_width - 10
+terminal_window_wrap = mpaths.main_window_width - 10
 tag_data_for_details_windows = []
 
 widths = []
 heights = []
 
-cursor_manager_should_run = True
-cursor_state = "none"
-
-mouse_x = 0
-mouse_y = 0
-
-viewport_height = 0
-viewport_width = 0
-
-viewport_x = 0
-viewport_y = 0
 
 social_button_size = (18, 18)
-
-# cursor_delta_time = 0
 
 for monitor in screeninfo.get_monitors():
     widths.append(monitor.width)
@@ -147,20 +128,23 @@ def setup_system():
 
 def download_dependencies():
     try:
-        if not os.path.exists(mpaths.s2v_executable):
-            tag = helper.add_text_to_terminal("&downloading_cli_terminal")
-            zip_path = mpaths.s2v_latest.split("/")[-1]
-            if helper.download_file(mpaths.s2v_latest, zip_path, tag):
-                helper.add_text_to_terminal("&downloaded_cli_terminal", zip_path)
-                if helper.extract_archive(zip_path, "."):
-                    helper.remove_path(zip_path)
-                    helper.add_text_to_terminal("&extracted_cli_terminal", zip_path)
-                    if mpaths.OS != mpaths.WIN and not os.access(mpaths.s2v_executable, os.X_OK):
-                        current_permissions = os.stat(mpaths.s2v_executable).st_mode
-                        os.chmod(
-                            mpaths.s2v_executable,
-                            current_permissions | stat.S_IXUSR | stat.S_IXGRP | stat.S_IXOTH,
-                        )
+        if helper.workshop_installed:
+            if not os.path.exists(mpaths.s2v_executable):
+                tag = helper.add_text_to_terminal("&downloading_cli_terminal")
+                zip_path = mpaths.s2v_latest.split("/")[-1]
+                if helper.download_file(mpaths.s2v_latest, zip_path, tag):
+                    helper.add_text_to_terminal("&downloaded_cli_terminal", zip_path)
+                    if helper.extract_archive(zip_path, "."):
+                        helper.remove_path(zip_path)
+                        helper.add_text_to_terminal("&extracted_cli_terminal", zip_path)
+                        if mpaths.OS != mpaths.WIN and not os.access(mpaths.s2v_executable, os.X_OK):
+                            current_permissions = os.stat(mpaths.s2v_executable).st_mode
+                            os.chmod(
+                                mpaths.s2v_executable,
+                                current_permissions | stat.S_IXUSR | stat.S_IXGRP | stat.S_IXOTH,
+                            )
+        elif os.path.exists(mpaths.s2v_executable):
+            helper.remove_path(mpaths.s2v_executable)
 
         # Prefer system-installed ripgrep when available
         rg_on_path = shutil.which(mpaths.rg_executable)
@@ -295,6 +279,8 @@ def create_checkboxes():
                     no_move=True,
                     no_close=False,
                     no_collapse=True,
+                    width=mpaths.main_window_width,
+                    height=mpaths.main_window_height,
                 )
 
                 if img_data:
@@ -372,12 +358,9 @@ def show_details(sender, app_data, user_data):
 
 
 def on_primary_window_resize():
-
     # terminal wrap size
     window_width = ui.get_item_width("primary_window")
     window_height = ui.get_item_height("primary_window")
-    details_window_width = window_width - 6
-    details_window_height = window_height - 6
     helper.wrap_size = window_width - 10
 
     for item in helper.terminal_history:
@@ -387,7 +370,25 @@ def on_primary_window_resize():
     # details windows resize
     for window_tag in tag_data_for_details_windows:
         if ui.does_item_exist(window_tag):
-            ui.configure_item(window_tag, width=details_window_width, height=details_window_height)
+            ui.configure_item(window_tag, width=window_width, height=window_height)
+
+    # menus resize
+    if ui.does_item_exist("mod_menu"):
+        ui.configure_item("mod_menu", width=window_width, height=window_height)
+
+    if ui.does_item_exist("settings_menu"):
+        ui.configure_item("settings_menu", width=window_width, height=window_height)
+
+
+def enable_dark_titlebar():
+    if mpaths.OS == mpaths.WIN:
+        try:
+            hwnd = ctypes.windll.user32.FindWindowW(None, title)
+            if hwnd != 0:
+                value = ctypes.c_int(1)
+                ctypes.windll.dwmapi.DwmSetWindowAttribute(hwnd, 20, ctypes.byref(value), ctypes.sizeof(value))
+        except:
+            pass
 
 
 def focus_window():
@@ -483,11 +484,11 @@ def drag_viewport(sender, app_data, user_data):
     elif ui.get_item_alias(ui.get_active_window()) is not None and (
         ui.is_item_hovered("primary_window")
         or ui.is_item_hovered("terminal_window")
-        or ui.is_item_hovered("top_bar")
+        or ui.is_item_hovered("footer")
         or ui.is_item_hovered("mod_menu")
         or ui.is_item_hovered("settings_menu")
         or ui.get_item_alias(ui.get_active_window()).endswith("details_window_tag")
-    ):  # Note: If local pos [1] < *Height_of_top_bar is buggy)
+    ):  # Note: If local pos [1] < *Height_of_footer is buggy)
         is_moving_viewport = True
         drag_deltas = app_data
         viewport_current_pos = ui.get_viewport_pos()
@@ -500,245 +501,6 @@ def drag_viewport(sender, app_data, user_data):
 def stop_drag_viewport():
     global is_moving_viewport
     is_moving_viewport = False
-
-
-def toggle_cursor_manager_state():
-    global cursor_manager_should_run
-    if cursor_manager_should_run == True:
-        cursor_manager_should_run = False
-    else:
-        cursor_manager_should_run = True
-        cursor_manager_thread = threading.Thread(target=cursor_manager_check, daemon=True)
-        cursor_manager_thread.start()
-
-
-def cursor_manager_check():
-    global cursor_manager_should_run
-    global cursor_state
-    global mouse_x
-    global mouse_y
-    global viewport_height
-    global viewport_width
-    global viewport_x
-    global viewport_y
-
-    prev_time = time.perf_counter()
-    count = 0
-
-    while cursor_manager_should_run == True:
-
-        count += 1
-        now = time.perf_counter()
-        time.sleep(0.008)
-        viewport_height = ui.get_viewport_height()
-        viewport_width = ui.get_viewport_width()
-        x, y = ui.get_mouse_pos(local=False)
-        mouse_x, mouse_y = int(x), int(y)
-        viewport_x, viewport_y = ui.get_viewport_pos()
-        left_limit = viewport_width - 4
-        top_limit = viewport_height - 4
-        if mouse_x <= 4 and mouse_y <= 4:
-            cursor_state = "top_left"
-        elif mouse_x >= left_limit and mouse_y <= 4:
-            cursor_state = "top_right"
-        elif mouse_x >= left_limit and mouse_y >= top_limit:
-            cursor_state = "bottom_right"
-        elif mouse_x <= 4 and mouse_y >= top_limit:
-            cursor_state = "bottom_left"
-        elif mouse_y <= 4:
-            cursor_state = "top"
-        elif mouse_x >= left_limit:
-            cursor_state = "right"
-        elif mouse_y >= top_limit:
-            cursor_state = "bottom"
-        elif mouse_x <= 4:
-            cursor_state = "left"
-        else:
-            cursor_state = "none"
-
-        dt_since_last = now - prev_time
-
-        if dt_since_last >= 1:
-            hz = count / dt_since_last if dt_since_last > 0 else 0
-
-            status = (
-                f"\rHz: {hz:5.1f} | "
-                f"mouse: {mouse_x:4d},{mouse_y:4d} | "
-                f"state: {cursor_state:12} | "
-                f"view: {viewport_x:4d},{viewport_y:4d} "
-                f"{viewport_width:d}×{viewport_height:d}"
-                f" | dt: {ui.get_delta_time():.3f}s"
-                f" | CursorManagerState: {cursor_manager_should_run}"
-            )
-            print(status + "   ", end="", flush=True)
-
-
-# There is a bug... Edge case, if you slam resising corner(has to be the one that changes windows position) in windows min limit size,
-# window might overshoot the position in the slam's direction vector, i assume it's either timing or renderer fighting with DWM
-# It's a minor issue
-def resize():
-    global cursor_state
-    global cursor_manager_should_run
-    global main_window_width
-    global main_window_height
-    ui.delete_item("drag_handler")
-    toggle_cursor_manager_state()
-
-    def min_width_processing(width):
-        if width < main_window_width:
-            width = main_window_width
-        return width
-
-    def min_height_processing(height):
-        if height < main_window_height:
-            height = main_window_height
-        return height
-
-    if cursor_state == "bottom_right":
-        while ui.is_mouse_button_down(0) == True:
-            time.sleep(0.008)
-            x, y = ui.get_mouse_pos(local=False)
-            new_width = min_width_processing(x)
-            new_height = min_height_processing(y)
-            ui.configure_viewport(f"{title}", width=new_width, height=new_height)
-            ui.configure_item("mod_menu", width=new_width, height=new_height)
-            ui.configure_item("settings_menu", width=new_width, height=new_height)
-
-    if cursor_state == "bottom":
-        while ui.is_mouse_button_down(0) == True:
-            time.sleep(0.008)
-            x, y = ui.get_mouse_pos(local=False)
-            new_height = min_height_processing(y)
-            ui.configure_viewport(f"{title}", height=new_height)
-            ui.configure_item("mod_menu", height=new_height)
-            ui.configure_item("settings_menu", height=new_height)
-
-    if cursor_state == "right":
-        while ui.is_mouse_button_down(0) == True:
-            time.sleep(0.008)
-            x, y = ui.get_mouse_pos(local=False)
-            new_width = min_width_processing(x)
-            ui.configure_viewport(f"{title}", width=new_width)
-            ui.configure_item("mod_menu", width=new_width)
-            ui.configure_item("settings_menu", width=new_width)
-
-    if cursor_state == "top_right":
-        while ui.is_mouse_button_down(0) == True:
-            time.sleep(0.008)
-            x, y = ui.get_mouse_pos(local=False)
-            viewport_x, viewport_y = ui.get_viewport_pos()
-            viewport_height = ui.get_viewport_height()
-            if viewport_height > main_window_height:
-                new_pos = viewport_y + y
-            else:
-                new_pos = viewport_y
-            new_height = min_height_processing(viewport_height - y)
-            new_width = min_width_processing(x)
-            ui.configure_viewport(
-                f"{title}",
-                y_pos=new_pos,
-                height=new_height,
-                width=new_width,
-            )
-            ui.configure_item("mod_menu", width=new_width, height=new_height)
-            ui.configure_item("settings_menu", width=new_width, height=new_height)
-
-    if cursor_state == "bottom_left":
-        while ui.is_mouse_button_down(0) == True:
-            time.sleep(0.008)
-            x, y = ui.get_mouse_pos(local=False)
-            viewport_x, viewport_y = ui.get_viewport_pos()
-            viewport_width = ui.get_viewport_width()
-            new_width = min_width_processing(viewport_width - x)
-            new_height = min_height_processing(y)
-            if viewport_width > main_window_width:
-                new_pos = viewport_x + x
-            else:
-                new_pos = viewport_x
-            ui.configure_viewport(
-                f"{title}",
-                x_pos=new_pos,
-                height=new_height,
-                width=new_width,
-            )
-            ui.configure_item("mod_menu", width=new_width, height=new_height)
-            ui.configure_item("settings_menu", width=new_width, height=new_height)
-
-    if cursor_state == "top":
-        while ui.is_mouse_button_down(0) == True:
-            time.sleep(0.008)
-            x, y = ui.get_mouse_pos(local=False)
-            viewport_x, viewport_y = ui.get_viewport_pos()
-            viewport_height = ui.get_viewport_height()
-            new_height = min_height_processing(viewport_height - y)
-            if viewport_height > main_window_height:
-                new_pos = viewport_y + y
-            else:
-                new_pos = viewport_y
-            ui.configure_viewport(
-                f"{title}",
-                y_pos=new_pos,
-                height=new_height,
-            )
-            ui.configure_item("mod_menu", height=new_height)
-            ui.configure_item("settings_menu", height=new_height)
-
-    if cursor_state == "left":
-        while ui.is_mouse_button_down(0) == True:
-            time.sleep(0.008)
-            x, y = ui.get_mouse_pos(local=False)
-            viewport_x, viewport_y = ui.get_viewport_pos()
-            viewport_width = ui.get_viewport_width()
-            new_width = min_width_processing(viewport_width - x)
-            if viewport_width > main_window_width:
-                new_pos = viewport_x + x
-            else:
-                new_pos = viewport_x
-            ui.configure_viewport(
-                f"{title}",
-                x_pos=new_pos,
-                width=new_width,
-            )
-            ui.configure_item("mod_menu", width=new_width)
-            ui.configure_item("settings_menu", width=new_width)
-
-    if cursor_state == "top_left":
-        while ui.is_mouse_button_down(0) == True:
-            time.sleep(0.008)
-            x, y = ui.get_mouse_pos(local=False)
-            viewport_x, viewport_y = ui.get_viewport_pos()
-            viewport_width = ui.get_viewport_width()
-            viewport_height = ui.get_viewport_height()
-            new_width = min_width_processing(viewport_width - x)
-            new_height = min_height_processing(viewport_height - y)
-            if viewport_width > main_window_width:
-                new_pos_x = viewport_x + x
-            else:
-                new_pos_x = viewport_x
-
-            if viewport_height > main_window_height:
-                new_pos_y = viewport_y + y
-            else:
-                new_pos_y = viewport_y
-
-            ui.configure_viewport(
-                f"{title}",
-                x_pos=new_pos_x,
-                y_pos=new_pos_y,
-                width=new_width,
-                height=new_height,
-            )
-            ui.configure_item("mod_menu", width=new_width, height=new_height)
-            ui.configure_item("settings_menu", width=new_width, height=new_height)
-    else:
-        time.sleep(0.008)  # Avoiding thread acummulation bug
-    toggle_cursor_manager_state()
-    with ui.handler_registry():
-        ui.add_mouse_drag_handler(tag="drag_handler", button=0, threshold=4, callback=drag_viewport)
-
-
-def minimize():
-    ui.minimize_viewport()
 
 
 def open_mod_menu():
@@ -874,6 +636,39 @@ def configure_uninstall_popup():
     )
 
 
+def configure_update_popup():
+    ui.configure_item(
+        "update_popup",
+        pos=(
+            ui.get_viewport_width() / 2 - ui.get_item_rect_size("update_popup")[0] / 2,
+            ui.get_viewport_height() / 2 - ui.get_item_rect_size("update_popup")[1] / 2,
+        ),
+    )
+    ui.configure_item(
+        "popup_text_wraper_1",
+        pos=(
+            ui.get_item_rect_size("update_popup")[0] / 2 - ui.get_item_rect_size("popup_text_wraper_1")[0] / 2,
+            ui.get_item_rect_size("update_popup")[1] / 2 - ui.get_item_rect_size("popup_text_wraper_1")[1] / 2 - 30,
+        ),
+    )
+    ui.configure_item(
+        "popup_text_wraper_2",
+        pos=(
+            ui.get_item_rect_size("update_popup")[0] / 2 - ui.get_item_rect_size("popup_text_wraper_2")[0] / 2,
+            ui.get_item_rect_size("update_popup")[1] / 2 - ui.get_item_rect_size("popup_text_wraper_2")[1] / 2 - 8,
+        ),
+    )
+    ui.configure_item(
+        "update_popup_button_group",
+        pos=(
+            ui.get_item_rect_size("update_popup")[0] / 2 - ui.get_item_rect_size("update_popup_button_group")[0] / 2,
+            ui.get_item_rect_size("update_popup")[1] / 2
+            - ui.get_item_rect_size("update_popup_button_group")[1] / 2
+            + 26,
+        ),
+    )
+
+
 def start_text():
     helper.add_text_to_terminal("&start_text_1_var")
     helper.add_text_to_terminal("&start_text_2_var")
@@ -888,7 +683,7 @@ def close_active_window():
     if active_window not in [
         "terminal_window",
         "primary_window",
-        "top_bar",
+        "footer",
         "opener",
         "mod_tools",
         "maintenance_tools",
@@ -899,117 +694,10 @@ def close_active_window():
             ui.configure_item(active_window, show=False)
 
 
-def theme():
-    with ui.theme() as global_theme:
-        with ui.theme_component(ui.mvAll):
-            ui.add_theme_style(ui.mvStyleVar_WindowPadding, x=0, y=0)
-            ui.add_theme_color(ui.mvThemeCol_Text, (0, 230, 230))
-            ui.add_theme_color(ui.mvThemeCol_WindowBg, (29, 29, 30, 255))
-            ui.add_theme_color(ui.mvThemeCol_ChildBg, (29, 29, 30, 255))
-            ui.add_theme_color(ui.mvThemeCol_ScrollbarBg, (29, 29, 30, 255))
-            ui.add_theme_color(ui.mvThemeCol_ScrollbarGrab, (0, 200, 200))
-            ui.add_theme_color(ui.mvThemeCol_ScrollbarGrabHovered, (0, 170, 170))
-            ui.add_theme_color(ui.mvThemeCol_ScrollbarGrabActive, (0, 120, 120))
-            ui.add_theme_color(ui.mvThemeCol_TitleBg, (35, 35, 35, 255))
-            ui.add_theme_color(ui.mvThemeCol_TitleBgActive, (35, 35, 35, 255))
-            ui.add_theme_color(ui.mvThemeCol_Header, (29, 29, 30, 255))
-            ui.add_theme_color(ui.mvThemeCol_HeaderHovered, (29, 29, 30, 255))
-            ui.add_theme_color(ui.mvThemeCol_HeaderActive, (17, 17, 18, 255))
-
-    ui.bind_theme(global_theme)
-
-    with ui.theme() as main_buttons_theme:
-        with ui.theme_component():
-            ui.add_theme_color(ui.mvThemeCol_Button, (0, 230, 230, 6))
-            ui.add_theme_color(ui.mvThemeCol_ButtonHovered, (17, 17, 18, 255))
-            ui.add_theme_color(ui.mvThemeCol_ButtonActive, (15, 15, 15, 255))
-            ui.add_theme_style(ui.mvStyleVar_ButtonTextAlign, x=0, y=0.5)
-        with ui.theme_component(enabled_state=False):
-            ui.add_theme_color(ui.mvThemeCol_Text, (0, 100, 100))
-            ui.add_theme_color(ui.mvThemeCol_Button, (29, 29, 30, 255))
-            ui.add_theme_color(ui.mvThemeCol_ButtonHovered, (29, 29, 30, 255))
-            ui.add_theme_color(ui.mvThemeCol_ButtonActive, (29, 29, 30, 255))
-            ui.add_theme_style(ui.mvStyleVar_ButtonTextAlign, x=0, y=0.5)
-
-    with ui.theme() as close_button_theme:
-        with ui.theme_component():
-            ui.add_theme_color(ui.mvThemeCol_Text, (0, 230, 230))
-            ui.add_theme_color(ui.mvThemeCol_Button, (29, 29, 30, 255))
-            ui.add_theme_color(ui.mvThemeCol_ButtonHovered, (17, 17, 18, 255))
-            ui.add_theme_color(ui.mvThemeCol_ButtonActive, (15, 15, 15, 255))
-        with ui.theme_component(enabled_state=False):
-            ui.add_theme_color(ui.mvThemeCol_Text, (0, 100, 100))
-            ui.add_theme_color(ui.mvThemeCol_Button, (29, 29, 30, 255))
-            ui.add_theme_color(ui.mvThemeCol_ButtonHovered, (29, 29, 30, 255))
-            ui.add_theme_color(ui.mvThemeCol_ButtonActive, (29, 29, 30, 255))
-
-    with ui.theme() as mod_menu_theme:
-        with ui.theme_component():
-            ui.add_theme_color(ui.mvThemeCol_FrameBg, (24, 24, 24, 255))
-            ui.add_theme_color(ui.mvThemeCol_CheckMark, (0, 230, 230, 255))
-            ui.add_theme_color(ui.mvThemeCol_FrameBgHovered, (20, 20, 20, 255))
-            ui.add_theme_color(ui.mvThemeCol_FrameBgActive, (20, 20, 20, 255))
-        with ui.theme_component(ui.mvCheckbox, enabled_state=False):
-            ui.add_theme_color(ui.mvThemeCol_Text, (0, 100, 100))
-            ui.add_theme_color(ui.mvThemeCol_FrameBg, (29, 29, 30, 255))
-            ui.add_theme_color(ui.mvThemeCol_FrameBgHovered, (29, 29, 30, 255))
-            ui.add_theme_color(ui.mvThemeCol_FrameBgActive, (29, 29, 30, 255))
-            ui.add_theme_color(ui.mvThemeCol_CheckMark, (0, 70, 70, 255))
-        with ui.theme_component():
-            ui.add_theme_color(ui.mvThemeCol_Text, (0, 230, 230))
-            ui.add_theme_color(ui.mvThemeCol_Button, (29, 29, 30, 255))
-            ui.add_theme_color(ui.mvThemeCol_ButtonHovered, (17, 17, 18, 255))
-            ui.add_theme_color(ui.mvThemeCol_ButtonActive, (29, 29, 30, 255))
-        with ui.theme_component(enabled_state=False):
-            ui.add_theme_color(ui.mvThemeCol_Button, (29, 29, 30, 255))
-            ui.add_theme_color(ui.mvThemeCol_Text, (0, 100, 100))
-            ui.add_theme_color(ui.mvThemeCol_ButtonHovered, (29, 29, 30, 255))
-            ui.add_theme_color(ui.mvThemeCol_ButtonActive, (29, 29, 30, 255))
-
-    with ui.theme() as top_bar_theme:
-        with ui.theme_component():
-            ui.add_theme_color(ui.mvThemeCol_Text, (0, 230, 230))
-            ui.add_theme_color(ui.mvThemeCol_Button, (29, 29, 30, 255))
-            ui.add_theme_color(ui.mvThemeCol_ButtonHovered, (17, 17, 18, 255))
-            ui.add_theme_color(ui.mvThemeCol_ButtonActive, (29, 29, 30, 255))
-            ui.add_theme_color(ui.mvThemeCol_FrameBg, (29, 29, 30, 255))
-            ui.add_theme_color(ui.mvThemeCol_FrameBgHovered, (29, 29, 30, 255))
-            ui.add_theme_color(ui.mvThemeCol_FrameBgActive, (29, 29, 30, 255))
-        with ui.theme_component(enabled_state=False):
-            ui.add_theme_color(ui.mvThemeCol_Button, (29, 29, 30, 255))
-            ui.add_theme_color(ui.mvThemeCol_Text, (0, 100, 100))
-            ui.add_theme_color(ui.mvThemeCol_ButtonHovered, (29, 29, 30, 255))
-            ui.add_theme_color(ui.mvThemeCol_ButtonActive, (29, 29, 30, 255))
-        with ui.theme_component(ui.mvCheckbox):
-            ui.add_theme_color(ui.mvThemeCol_FrameBg, (29, 29, 30, 255))
-            ui.add_theme_color(ui.mvThemeCol_FrameBgHovered, (29, 29, 30, 255))
-            ui.add_theme_color(ui.mvThemeCol_FrameBgActive, (29, 29, 30, 255))
-
-    with ui.theme() as popup_theme:
-        with ui.theme_component():
-            ui.add_theme_color(ui.mvThemeCol_Text, (0, 230, 230))
-            ui.add_theme_color(ui.mvThemeCol_Button, (29, 29, 30, 255))
-            ui.add_theme_color(ui.mvThemeCol_ButtonHovered, (17, 17, 18, 255))
-            ui.add_theme_color(ui.mvThemeCol_ButtonActive, (29, 29, 30, 255))
-            ui.add_theme_color(ui.mvThemeCol_FrameBg, (29, 29, 30, 255))
-            ui.add_theme_color(ui.mvThemeCol_FrameBgHovered, (29, 29, 30, 255))
-            ui.add_theme_color(ui.mvThemeCol_FrameBgActive, (29, 29, 30, 255))
-
-    ui.bind_item_theme("button_patch", main_buttons_theme)
-    ui.bind_item_theme("button_select_mods", main_buttons_theme)
-    ui.bind_item_theme("button_uninstall", main_buttons_theme)
-    ui.bind_item_theme("button_exit", close_button_theme)
-    ui.bind_item_theme("button_minimize", close_button_theme)
-    ui.bind_item_theme("mod_menu", mod_menu_theme)
-    ui.bind_item_theme("top_bar", top_bar_theme)
-    ui.bind_item_theme("update_popup", popup_theme)
-    ui.bind_item_theme("uninstall_popup", popup_theme)
-
-
 def dev_mode():
     global dev_mode_state
-    height_increase = 400
-    tools_height = 220
+    width_increase = 600
+    tools_height = mpaths.main_window_height // 2
     if not mpaths.frozen:
         debug_env = mpaths.get_config("debug_env", False)
 
@@ -1017,17 +705,17 @@ def dev_mode():
         dev_mode_state = 1
         ui.configure_viewport(
             item=f"{title}",
-            resizable=False,
-            width=mpaths.main_window_width,
-            height=mpaths.main_window_height + height_increase,
+            resizable=True,
+            width=mpaths.main_window_width + width_increase,
+            height=mpaths.main_window_height,
         )
-        ui.configure_viewport(item="primary_window", resizable=False)
+        ui.configure_viewport(item="primary_window", resizable=True)
         with ui.window(
             label="Path & File Opener",
             tag="opener",
-            pos=(0, mpaths.main_window_height),
-            width=mpaths.main_window_width // 2,
-            height=height_increase,
+            pos=(mpaths.main_window_width, 0),
+            width=width_increase // 2,
+            height=mpaths.main_window_height,
             no_resize=True,
             no_move=True,
             no_close=True,
@@ -1093,8 +781,8 @@ def dev_mode():
         with ui.window(
             label="Mod Tools",
             tag="mod_tools",
-            pos=(mpaths.main_window_width // 2, mpaths.main_window_height),
-            width=mpaths.main_window_width // 2,
+            pos=(mpaths.main_window_width + width_increase // 2, 0),
+            width=width_increase // 2,
             height=tools_height,
             no_resize=True,
             no_move=True,
@@ -1131,9 +819,9 @@ def dev_mode():
         with ui.window(
             label="Maintenance Tools",
             tag="maintenance_tools",
-            pos=(mpaths.main_window_width // 2, mpaths.main_window_height + tools_height),
-            width=mpaths.main_window_width // 2,
-            height=height_increase - tools_height,
+            pos=(mpaths.main_window_width + width_increase // 2, tools_height),
+            width=width_increase // 2,
+            height=mpaths.main_window_height - tools_height,
             no_resize=True,
             no_move=True,
             no_close=True,
@@ -1157,9 +845,9 @@ def dev_mode():
             with ui.window(
                 label="Debug tools",
                 tag="debug_tools",
-                pos=(0, mpaths.main_window_height + height_increase),
-                width=mpaths.main_window_width,
-                height=300,
+                pos=(mpaths.main_window_width, mpaths.main_window_height),
+                width=width_increase,
+                height=150,
                 no_resize=True,
                 no_move=True,
                 no_close=True,
@@ -1174,10 +862,10 @@ def dev_mode():
     elif dev_mode_state == 0:  # open
         dev_mode_state = 1
         ui.configure_viewport(
-            item=f"{title}",
-            resizable=False,
-            width=mpaths.main_window_width,
-            height=mpaths.main_window_height + height_increase,
+            item=title,
+            resizable=True,
+            width=mpaths.main_window_width + width_increase,
+            height=mpaths.main_window_height,
         )
         ui.configure_item("opener", show=True)
         ui.configure_item("mod_tools", show=True)
@@ -1188,7 +876,7 @@ def dev_mode():
     else:  # close
         dev_mode_state = 0
         ui.configure_viewport(
-            item=f"{title}",
+            item=title,
             resizable=False,
             width=mpaths.main_window_width,
             height=mpaths.main_window_height,
@@ -1198,39 +886,6 @@ def dev_mode():
         ui.configure_item("maintenance_tools", show=False)
         if not mpaths.frozen and debug_env:
             ui.configure_item("debug_tools", show=False)
-
-
-def configure_update_popup():
-    ui.configure_item(
-        "update_popup",
-        pos=(
-            ui.get_viewport_width() / 2 - ui.get_item_rect_size("update_popup")[0] / 2,
-            ui.get_viewport_height() / 2 - ui.get_item_rect_size("update_popup")[1] / 2,
-        ),
-    )
-    ui.configure_item(
-        "popup_text_wraper_1",
-        pos=(
-            ui.get_item_rect_size("update_popup")[0] / 2 - ui.get_item_rect_size("popup_text_wraper_1")[0] / 2,
-            ui.get_item_rect_size("update_popup")[1] / 2 - ui.get_item_rect_size("popup_text_wraper_1")[1] / 2 - 30,
-        ),
-    )
-    ui.configure_item(
-        "popup_text_wraper_2",
-        pos=(
-            ui.get_item_rect_size("update_popup")[0] / 2 - ui.get_item_rect_size("popup_text_wraper_2")[0] / 2,
-            ui.get_item_rect_size("update_popup")[1] / 2 - ui.get_item_rect_size("popup_text_wraper_2")[1] / 2 - 8,
-        ),
-    )
-    ui.configure_item(
-        "update_popup_button_group",
-        pos=(
-            ui.get_item_rect_size("update_popup")[0] / 2 - ui.get_item_rect_size("update_popup_button_group")[0] / 2,
-            ui.get_item_rect_size("update_popup")[1] / 2
-            - ui.get_item_rect_size("update_popup_button_group")[1] / 2
-            + 26,
-        ),
-    )
 
 
 def is_dota_running(text_tag, text_type):
@@ -1310,3 +965,96 @@ def tick_batch(state: bool):
             ui.set_value(box, state)
     save_checkbox_state()
     setup_button_state()
+
+
+def theme():
+    with ui.theme() as global_theme:
+        with ui.theme_component(ui.mvAll):
+            ui.add_theme_style(ui.mvStyleVar_WindowPadding, x=0, y=0)
+            ui.add_theme_color(ui.mvThemeCol_Text, (0, 230, 230))
+            ui.add_theme_color(ui.mvThemeCol_WindowBg, (29, 29, 30, 255))
+            ui.add_theme_color(ui.mvThemeCol_ChildBg, (29, 29, 30, 255))
+            ui.add_theme_color(ui.mvThemeCol_ScrollbarBg, (29, 29, 30, 255))
+            ui.add_theme_color(ui.mvThemeCol_ScrollbarGrab, (0, 200, 200))
+            ui.add_theme_color(ui.mvThemeCol_ScrollbarGrabHovered, (0, 170, 170))
+            ui.add_theme_color(ui.mvThemeCol_ScrollbarGrabActive, (0, 120, 120))
+            ui.add_theme_color(ui.mvThemeCol_TitleBg, (35, 35, 35, 255))
+            ui.add_theme_color(ui.mvThemeCol_TitleBgActive, (35, 35, 35, 255))
+            ui.add_theme_color(ui.mvThemeCol_Header, (29, 29, 30, 255))
+            ui.add_theme_color(ui.mvThemeCol_HeaderHovered, (29, 29, 30, 255))
+            ui.add_theme_color(ui.mvThemeCol_HeaderActive, (17, 17, 18, 255))
+            ui.add_theme_style(ui.mvStyleVar_WindowBorderSize, 0)
+    ui.bind_theme(global_theme)
+
+    with ui.theme() as main_buttons_theme:
+        with ui.theme_component():
+            ui.add_theme_color(ui.mvThemeCol_Button, (0, 230, 230, 6))
+            ui.add_theme_color(ui.mvThemeCol_ButtonHovered, (17, 17, 18, 255))
+            ui.add_theme_color(ui.mvThemeCol_ButtonActive, (15, 15, 15, 255))
+            ui.add_theme_style(ui.mvStyleVar_ButtonTextAlign, x=0, y=0.5)
+        with ui.theme_component(enabled_state=False):
+            ui.add_theme_color(ui.mvThemeCol_Text, (0, 100, 100))
+            ui.add_theme_color(ui.mvThemeCol_Button, (29, 29, 30, 255))
+            ui.add_theme_color(ui.mvThemeCol_ButtonHovered, (29, 29, 30, 255))
+            ui.add_theme_color(ui.mvThemeCol_ButtonActive, (29, 29, 30, 255))
+            ui.add_theme_style(ui.mvStyleVar_ButtonTextAlign, x=0, y=0.5)
+
+    with ui.theme() as mod_menu_theme:
+        with ui.theme_component():
+            ui.add_theme_color(ui.mvThemeCol_FrameBg, (24, 24, 24, 255))
+            ui.add_theme_color(ui.mvThemeCol_CheckMark, (0, 230, 230, 255))
+            ui.add_theme_color(ui.mvThemeCol_FrameBgHovered, (20, 20, 20, 255))
+            ui.add_theme_color(ui.mvThemeCol_FrameBgActive, (20, 20, 20, 255))
+        with ui.theme_component(ui.mvCheckbox, enabled_state=False):
+            ui.add_theme_color(ui.mvThemeCol_Text, (0, 100, 100))
+            ui.add_theme_color(ui.mvThemeCol_FrameBg, (29, 29, 30, 255))
+            ui.add_theme_color(ui.mvThemeCol_FrameBgHovered, (29, 29, 30, 255))
+            ui.add_theme_color(ui.mvThemeCol_FrameBgActive, (29, 29, 30, 255))
+            ui.add_theme_color(ui.mvThemeCol_CheckMark, (0, 70, 70, 255))
+        with ui.theme_component():
+            ui.add_theme_color(ui.mvThemeCol_Text, (0, 230, 230))
+            ui.add_theme_color(ui.mvThemeCol_Button, (29, 29, 30, 255))
+            ui.add_theme_color(ui.mvThemeCol_ButtonHovered, (17, 17, 18, 255))
+            ui.add_theme_color(ui.mvThemeCol_ButtonActive, (29, 29, 30, 255))
+        with ui.theme_component(enabled_state=False):
+            ui.add_theme_color(ui.mvThemeCol_Button, (29, 29, 30, 255))
+            ui.add_theme_color(ui.mvThemeCol_Text, (0, 100, 100))
+            ui.add_theme_color(ui.mvThemeCol_ButtonHovered, (29, 29, 30, 255))
+            ui.add_theme_color(ui.mvThemeCol_ButtonActive, (29, 29, 30, 255))
+
+    with ui.theme() as footer_theme:
+        with ui.theme_component():
+            ui.add_theme_color(ui.mvThemeCol_Text, (0, 230, 230))
+            ui.add_theme_color(ui.mvThemeCol_Button, (29, 29, 30, 255))
+            ui.add_theme_color(ui.mvThemeCol_ButtonHovered, (17, 17, 18, 255))
+            ui.add_theme_color(ui.mvThemeCol_ButtonActive, (29, 29, 30, 255))
+            ui.add_theme_color(ui.mvThemeCol_FrameBg, (29, 29, 30, 255))
+            ui.add_theme_color(ui.mvThemeCol_FrameBgHovered, (29, 29, 30, 255))
+            ui.add_theme_color(ui.mvThemeCol_FrameBgActive, (29, 29, 30, 255))
+        with ui.theme_component(enabled_state=False):
+            ui.add_theme_color(ui.mvThemeCol_Button, (29, 29, 30, 255))
+            ui.add_theme_color(ui.mvThemeCol_Text, (0, 100, 100))
+            ui.add_theme_color(ui.mvThemeCol_ButtonHovered, (29, 29, 30, 255))
+            ui.add_theme_color(ui.mvThemeCol_ButtonActive, (29, 29, 30, 255))
+        with ui.theme_component(ui.mvCheckbox):
+            ui.add_theme_color(ui.mvThemeCol_FrameBg, (29, 29, 30, 255))
+            ui.add_theme_color(ui.mvThemeCol_FrameBgHovered, (29, 29, 30, 255))
+            ui.add_theme_color(ui.mvThemeCol_FrameBgActive, (29, 29, 30, 255))
+
+    with ui.theme() as popup_theme:
+        with ui.theme_component():
+            ui.add_theme_color(ui.mvThemeCol_Text, (0, 230, 230))
+            ui.add_theme_color(ui.mvThemeCol_Button, (29, 29, 30, 255))
+            ui.add_theme_color(ui.mvThemeCol_ButtonHovered, (17, 17, 18, 255))
+            ui.add_theme_color(ui.mvThemeCol_ButtonActive, (29, 29, 30, 255))
+            ui.add_theme_color(ui.mvThemeCol_FrameBg, (29, 29, 30, 255))
+            ui.add_theme_color(ui.mvThemeCol_FrameBgHovered, (29, 29, 30, 255))
+            ui.add_theme_color(ui.mvThemeCol_FrameBgActive, (29, 29, 30, 255))
+
+    ui.bind_item_theme("button_patch", main_buttons_theme)
+    ui.bind_item_theme("button_select_mods", main_buttons_theme)
+    ui.bind_item_theme("button_uninstall", main_buttons_theme)
+    ui.bind_item_theme("mod_menu", mod_menu_theme)
+    ui.bind_item_theme("footer", footer_theme)
+    ui.bind_item_theme("update_popup", popup_theme)
+    ui.bind_item_theme("uninstall_popup", popup_theme)

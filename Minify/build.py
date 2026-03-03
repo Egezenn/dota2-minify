@@ -134,6 +134,17 @@ def patcher(mod=None, pakname=None):
                         for path, mods in mod_xml.items():
                             xml_modifications.setdefault(path, []).extend(mods)
 
+                    global game_contents_file_init
+                    if not game_contents_file_init:
+                        # TODO: check pak01 hash, log it & run this only if it's different
+                        with open(
+                            os.path.join(mpaths.bin_dir, "gamepakcontents.txt"),
+                            "w",
+                        ) as file:
+                            for filepath in dota_pak_contents:
+                                file.write(filepath + "\n")
+                        game_contents_file_init = True
+
                     # ------------------------------- blacklist.txt ------------------------------ #
                     if os.path.exists(blacklist_txt):
                         process_blacklist(blacklist_txt, folder, blank_file_extensions)
@@ -194,32 +205,6 @@ def patcher(mod=None, pakname=None):
                 for path in xml_modifications.keys():
                     compiled = path.replace(".xml", ".vxml_c")
                     dota_extracts.append(compiled)
-
-        global game_contents_file_init
-        if not game_contents_file_init:
-            # TODO: check pak01 hash, log it & run this only if it's different
-            extract = subprocess.run(
-                [
-                    os.path.join(".", mpaths.s2v_executable),
-                    "-i",
-                    mpaths.dota_game_pak_path,
-                    "-l",
-                ],
-                capture_output=True,
-                text=True,
-                creationflags=subprocess.CREATE_NO_WINDOW if mpaths.OS == mpaths.WIN else 0,
-            )
-            pattern = r"(.*) CRC:.*"
-            replacement = r"\1"
-
-            with open(
-                os.path.join(mpaths.bin_dir, "gamepakcontents.txt"),
-                "w",
-            ) as file:
-                for extract_line in extract.stdout.splitlines():
-                    new_line = re.sub(pattern, replacement, extract_line.rstrip())
-                    file.write(new_line + "\n")
-            game_contents_file_init = True
 
         if helper.workshop_installed:
             helper.add_text_to_terminal("&starting_extraction")

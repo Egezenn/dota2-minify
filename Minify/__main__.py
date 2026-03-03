@@ -1,9 +1,7 @@
 import os
-from re import U
 import sys
 import threading
 import time
-from tkinter import EventType
 import webbrowser
 
 # Ensure root directories
@@ -38,91 +36,6 @@ def create_ui():
     button_size_x, button_size_y = gui.social_button_size
     with ui.window(tag="primary_window"):
         ui.set_primary_window("primary_window", True)
-        ui.add_child_window(
-            tag="top_bar",
-            no_scrollbar=True,
-            no_scroll_with_mouse=True,
-            auto_resize_y=True,
-            autosize_x=True,
-        )
-        ui.add_group(tag="top_bar_main_group", parent="top_bar", horizontal=True, horizontal_spacing=0)
-        ui.add_group(tag="top_bar_left_group", parent="top_bar_main_group", horizontal=True, horizontal_spacing=0)
-        ui.add_combo(
-            parent="top_bar_left_group",
-            tag="lang_select",
-            items=(helper.localizations),
-            default_value="EN",
-            callback=helper.change_localization,
-            fit_width=True,
-        )
-        ui.add_image_button(
-            "discord_texture_tag",
-            tag="button_discord",
-            parent="top_bar_left_group",
-            width=button_size_x,
-            height=button_size_y,
-            callback=lambda: webbrowser.open(mpaths.discord),
-        )
-        ui.add_image_button(
-            "telegram_texture_tag",
-            tag="button_telegram",
-            parent="top_bar_left_group",
-            width=button_size_x,
-            height=button_size_y,
-            callback=lambda: webbrowser.open(mpaths.telegram),
-        )
-        ui.add_image_button(
-            "git_texture_tag",
-            tag="button_git",
-            parent="top_bar_left_group",
-            width=button_size_x,
-            height=button_size_y,
-            callback=lambda: webbrowser.open(mpaths.github),
-        )
-        ui.add_image_button(
-            "settings_texture_tag",
-            tag="button_settings",
-            parent="top_bar_left_group",
-            width=button_size_x,
-            height=button_size_y,
-            callback=gui.open_settings_menu,
-        )
-        ui.add_image_button(
-            "dev_texture_tag",
-            tag="button_dev",
-            parent="top_bar_left_group",
-            width=button_size_x,
-            height=button_size_y,
-            callback=gui.dev_mode,
-        )
-        ui.add_text(tag="language_select", parent="top_bar_left_group")
-        ui.add_combo(
-            parent="top_bar_left_group",
-            tag="output_select",
-            items=(mpaths.minify_output_list),
-            default_value=mpaths.get_config("output_locale", "minify"),
-            callback=helper.change_output_path,
-            fit_width=True,
-        )
-        ui.add_group(tag="top_bar_right_group", parent="top_bar_main_group", horizontal=True, horizontal_spacing=0)
-        ui.add_button(
-            parent="top_bar_right_group",
-            tag="button_minimize",
-            label="-",
-            callback=lambda: ui.minimize_viewport(),
-        )
-        ui.add_button(
-            parent="top_bar_right_group",
-            tag="button_maximize",
-            label="M",
-            # callback=gui.maximize,
-        )
-        ui.add_button(
-            parent="top_bar_right_group",
-            tag="button_exit",
-            callback=helper.close,
-        )
-
         with ui.group(tag="center_group", horizontal=True):
             ui.group(tag="text_group", xoffset=50)
             ui.add_text(
@@ -139,8 +52,75 @@ def create_ui():
                 ui.add_button(tag="button_select_mods", label="Select Mods", callback=gui.open_mod_menu, width=-1)
                 ui.add_button(tag="button_uninstall", label="Uninstall", callback=gui.uninstall_popup_show, width=-1)
         with ui.group():
-            ui.add_child_window(tag="terminal_window", no_scrollbar=False, show=True, autosize_x=True)
-            ui.bind_item_font("terminal_window", "main_font")
+            ui.add_child_window(tag="terminal_window", no_scrollbar=False, show=True, autosize_x=True, height=-35)
+            ui.bind_item_font("terminal_window", "small_font")
+
+        ui.add_child_window(
+            tag="footer",
+            no_scrollbar=True,
+            no_scroll_with_mouse=True,
+            auto_resize_y=True,
+            autosize_x=True,
+        )
+        ui.add_group(tag="footer_main_group", parent="footer", horizontal=True, horizontal_spacing=0)
+        ui.add_group(tag="footer_left_group", parent="footer_main_group", horizontal=True, horizontal_spacing=0)
+        ui.add_combo(
+            parent="footer_left_group",
+            tag="lang_select",
+            items=(helper.localizations),
+            default_value="EN",
+            callback=helper.change_localization,
+            fit_width=True,
+        )
+        ui.add_image_button(
+            "discord_texture_tag",
+            tag="button_discord",
+            parent="footer_left_group",
+            width=button_size_x,
+            height=button_size_y,
+            callback=lambda: webbrowser.open(mpaths.discord),
+        )
+        ui.add_image_button(
+            "telegram_texture_tag",
+            tag="button_telegram",
+            parent="footer_left_group",
+            width=button_size_x,
+            height=button_size_y,
+            callback=lambda: webbrowser.open(mpaths.telegram),
+        )
+        ui.add_image_button(
+            "git_texture_tag",
+            tag="button_git",
+            parent="footer_left_group",
+            width=button_size_x,
+            height=button_size_y,
+            callback=lambda: webbrowser.open(mpaths.github),
+        )
+        ui.add_image_button(
+            "settings_texture_tag",
+            tag="button_settings",
+            parent="footer_left_group",
+            width=button_size_x,
+            height=button_size_y,
+            callback=gui.open_settings_menu,
+        )
+        ui.add_image_button(
+            "dev_texture_tag",
+            tag="button_dev",
+            parent="footer_left_group",
+            width=button_size_x,
+            height=button_size_y,
+            callback=gui.dev_mode,
+        )
+        ui.add_text(tag="language_select", parent="footer_left_group")
+        ui.add_combo(
+            parent="footer_left_group",
+            tag="output_select",
+            items=(mpaths.minify_output_list),
+            default_value=mpaths.get_config("output_locale", "minify"),
+            callback=helper.change_output_path,
+            fit_width=True,
+        )
 
     ui.add_window(
         label="Uninstall",
@@ -179,7 +159,6 @@ def create_ui():
             callback=gui.hide_uninstall_popup,
             width=100,
         )
-    ui.add_text(gui.title, tag="version_text", parent="primary_window", color=(80, 80, 80, 255), pos=(6, 380))
 
     ui.add_window(
         tag="mod_menu",
@@ -315,6 +294,7 @@ def create_base_ui():
     create_ui()
     gui.lock_interaction()
     gui.focus_window()
+    gui.enable_dark_titlebar()
     gui.theme()
     helper.change_localization(init=True)
     gui.start_text()
@@ -326,13 +306,7 @@ def create_base_ui():
     gui.bulk_exec_script("initial", False)
     gui.setup_button_state()
     gui.unlock_interaction()
-    cursor_manager_thread = threading.Thread(target=gui.cursor_manager_check, daemon=True)
-    cursor_manager_thread.start()
-    ui.show_style_editor()
-    ui.show_debug()
-    ui.show_metrics()
-    ui.show_item_registry()
-    with ui.item_handler_registry(tag="widget_handler") as handler:
+    with ui.item_handler_registry(tag="widget_handler"):
         ui.add_item_resize_handler(callback=gui.on_primary_window_resize)
     ui.bind_item_handler_registry("primary_window", "widget_handler")
 
@@ -376,7 +350,7 @@ def increase_scale():  # prototype
     ui.configure_item("button_settings", height=height, width=width)
     font = ui.get_alias_id("very_large_font")
     ui.bind_item_font("primary_window", font)
-    ui.configure_viewport(f"{gui.title}", width=1040, height=700)
+    ui.configure_viewport(gui.title, width=1040, height=700)
 
 
 # Adding mouse handler to ui registry
@@ -384,8 +358,8 @@ with ui.handler_registry():
     ui.add_mouse_drag_handler(tag="drag_handler", button=0, threshold=4, callback=gui.drag_viewport)
     ui.add_mouse_release_handler(button=0, callback=gui.stop_drag_viewport)
     ui.add_key_release_handler(0x20E, callback=gui.close_active_window)
-    ui.add_mouse_click_handler(callback=gui.resize)
-    ui.add_key_release_handler(0x20, callback=increase_scale)
+    if mpaths.get_config("debug_env", False):
+        ui.add_key_release_handler(0x20, callback=increase_scale)
 
 with ui.texture_registry(show=False):
     w, h, _, d = ui.load_image(os.path.join(mpaths.img_dir, "Discord.png"))
@@ -411,8 +385,8 @@ ui.create_viewport(
     height=mpaths.main_window_height,
     x_pos=min(gui.widths) // 2 - mpaths.main_window_width // 2,
     y_pos=max(0, min(gui.heights) // 2 - mpaths.main_window_height // 2 - 120),
-    resizable=False,
-    decorated=False,
+    resizable=True,
+    decorated=True,
     vsync=True,
     clear_color=(0, 0, 0, 255),
 )
