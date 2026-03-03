@@ -396,7 +396,7 @@ def patcher(mod=None, pakname=None):
         gui.bulk_exec_script("after_patch", False)
 
         gui.unlock_interaction()
-        helper.add_text_to_terminal(gui.spacer)
+        ui.add_separator(parent="terminal_window")
         helper.add_text_to_terminal("&success_terminal", type="success")
         helper.add_text_to_terminal("&launch_option", ui.get_value("output_select"), type="warning")
 
@@ -416,7 +416,7 @@ def patcher(mod=None, pakname=None):
     except:
         mpaths.write_crashlog()
 
-        helper.add_text_to_terminal(gui.spacer)
+        ui.add_separator(parent="terminal_window")
         helper.add_text_to_terminal("&failure_terminal", type="error")
         helper.add_text_to_terminal("&check_logs_terminal", type="warning")
         gui.unlock_interaction()

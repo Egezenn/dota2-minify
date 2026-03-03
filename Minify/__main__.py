@@ -49,7 +49,12 @@ def create_ui():
             # Creating log terminal
             with ui.group(parent="center_group", tag="button_group"):
                 ui.add_button(tag="button_patch", label="Patch", callback=patcher_start, enabled=False, width=-1)
-                ui.add_button(tag="button_select_mods", label="Select Mods", callback=gui.open_mod_menu, width=-1)
+                ui.add_button(
+                    tag="button_select_mods",
+                    label="Select Mods",
+                    callback=lambda: ui.configure_item("mod_menu", show=True),
+                    width=-1,
+                )
                 ui.add_button(tag="button_uninstall", label="Uninstall", callback=gui.uninstall_popup_show, width=-1)
         with ui.group():
             ui.add_child_window(tag="terminal_window", no_scrollbar=False, show=True, autosize_x=True, height=-35)
@@ -102,7 +107,7 @@ def create_ui():
             parent="footer_left_group",
             width=button_size_x,
             height=button_size_y,
-            callback=gui.open_settings_menu,
+            callback=lambda: ui.configure_item("settings_menu", show=True),
         )
         ui.add_image_button(
             "dev_texture_tag",
@@ -285,7 +290,7 @@ def create_ui():
             callback=lambda: gui.delete_update_popup(False),
             tag="update_popup_no_button",
         )
-    ui.configure_item("primary_window", no_scrollbar=True, no_close=True, no_title_bar=True, autosize=True)
+    ui.configure_item("primary_window", no_scrollbar=True, no_close=True, autosize=True)
 
 
 def create_base_ui():
@@ -293,8 +298,8 @@ def create_base_ui():
     helper.get_available_localizations()
     create_ui()
     gui.lock_interaction()
-    gui.focus_window()
     gui.enable_dark_titlebar()
+    gui.focus_window()
     gui.theme()
     helper.change_localization(init=True)
     gui.start_text()
@@ -309,6 +314,7 @@ def create_base_ui():
     with ui.item_handler_registry(tag="widget_handler"):
         ui.add_item_resize_handler(callback=gui.on_primary_window_resize)
     ui.bind_item_handler_registry("primary_window", "widget_handler")
+    gui.on_primary_window_resize()
 
 
 # Adding font to the ui registry

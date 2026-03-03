@@ -48,7 +48,7 @@ except:
     version = ""
 
 title = f"Minify {version}" if version else "Minify"
-spacer = "-" * 51
+
 banner_height = 120
 
 
@@ -503,14 +503,6 @@ def stop_drag_viewport():
     is_moving_viewport = False
 
 
-def open_mod_menu():
-    ui.configure_item("mod_menu", show=True)
-
-
-def open_settings_menu():
-    ui.configure_item("settings_menu", show=True)
-
-
 settings_config = [
     {
         "key": "steam_root",
@@ -675,7 +667,7 @@ def start_text():
     helper.add_text_to_terminal("&start_text_3_var")
     helper.add_text_to_terminal("&start_text_4_var")
     helper.add_text_to_terminal("&start_text_5_var")
-    helper.add_text_to_terminal(spacer)
+    ui.add_separator(parent="terminal_window")
 
 
 def close_active_window():
