@@ -22,6 +22,8 @@ import mpaths
 checkboxes = []
 checkboxes_state = {}
 dev_mode_state = -1
+prev_width = None
+prev_height = None
 gui_lock = False
 is_moving_viewport = False
 version = None
@@ -29,6 +31,7 @@ latest_download_url = None
 
 terminal_window_wrap = mpaths.main_window_width - 10
 tag_data_for_details_windows = []
+mod_details_image_cache = {}
 
 widths = []
 heights = []
@@ -283,6 +286,10 @@ def create_checkboxes():
                     height=mpaths.main_window_height,
                 )
 
+                content_group = f"{mod}_details_content_group"
+                with ui.group(parent=tag_data, tag=content_group):
+                    pass
+
                 if img_data:
                     try:
                         w, h, _, d = img_data
@@ -290,34 +297,11 @@ def create_checkboxes():
                         ui.add_static_texture(
                             width=w, height=h, default_value=d, tag=image_tag, parent="mod_images_registry"
                         )
-
-                        avail_width = mpaths.main_window_width - 40
-                        max_height = mpaths.main_window_height - 50 - 20
-
-                        aspect_ratio = w / h
-
-                        display_w = avail_width
-                        display_h = display_w / aspect_ratio
-
-                        if display_h > max_height:
-                            display_h = max_height
-                            display_w = display_h * aspect_ratio
-
-                        scale = min(1.0, avail_width / w, max_height / h)
-                        display_w = int(w * scale)
-                        display_h = int(h * scale)
-
-                        ui.add_image(image_tag, width=display_w, height=display_h, parent=tag_data)
-                        ui.add_separator(parent=tag_data)
+                        mod_details_image_cache[mod] = (w, h, image_tag)
                     except Exception as e:
                         print(f"Failed to display image for {mod}: {e}")
 
-                container = f"{mod}_markdown_container"
-                with ui.group(parent=tag_data, tag=container):
-                    pass
-
-                text = helper.parse_markdown_notes(mod_path, helper.locale)
-                helper.render_markdown(container, text)
+                render_details_window(mod)
 
         checkboxes.append(mod)
 
@@ -352,12 +336,54 @@ def unlock_interaction():
     ui.configure_item("output_select", enabled=True)
 
 
+def render_details_window(mod):
+    content_group = f"{mod}_details_content_group"
+    if not ui.does_item_exist(content_group):
+        return
+
+    ui.delete_item(content_group, children_only=True)
+
+    try:
+        window_width = ui.get_item_width("primary_window")
+        window_height = ui.get_item_height("primary_window")
+    except:
+        window_width = mpaths.main_window_width
+        window_height = mpaths.main_window_height
+
+    avail_width = window_width - 40
+    max_height = window_height - 50 - 20
+
+    if mod in mod_details_image_cache:
+        w, h, image_tag = mod_details_image_cache[mod]
+
+        scale = min(1.0, avail_width / w, max_height / h) * 0.7
+        display_w = int(w * scale)
+        display_h = int(h * scale)
+
+        ui.add_image(image_tag, width=display_w, height=display_h, parent=content_group)
+        ui.add_separator(parent=content_group)
+
+    mod_path = os.path.join(mpaths.mods_dir, mod)
+    text = helper.parse_markdown_notes(mod_path, helper.locale)
+
+    container = f"{mod}_markdown_container"
+    with ui.group(parent=content_group, tag=container):
+        pass
+    helper.render_markdown(container, text)
+
+
 def show_details(sender, app_data, user_data):
+    mod = user_data.replace("_details_window_tag", "")
+    render_details_window(mod)
     ui.configure_item(user_data, show=True)
     ui.focus_item(user_data)
 
 
 def on_primary_window_resize():
+    global prev_width, prev_height
+    if dev_mode_state != 1:
+        prev_width = ui.get_viewport_width()
+        prev_height = ui.get_viewport_height()
     # terminal wrap size
     window_width = ui.get_item_width("primary_window")
     window_height = ui.get_item_height("primary_window")
@@ -371,6 +397,9 @@ def on_primary_window_resize():
     for window_tag in tag_data_for_details_windows:
         if ui.does_item_exist(window_tag):
             ui.configure_item(window_tag, width=window_width, height=window_height)
+            if ui.is_item_shown(window_tag):
+                mod = window_tag.replace("_details_window_tag", "")
+                render_details_window(mod)
 
     # menus resize
     if ui.does_item_exist("mod_menu"):
@@ -687,8 +716,19 @@ def close_active_window():
 
 
 def dev_mode():
-    global dev_mode_state
-    width_increase = 600
+    global dev_mode_state, prev_width, prev_height
+    width_increase = 450
+    height_increase = 200 if mpaths.get_config("debug_env", False) else 0
+
+    target_width = mpaths.main_window_width + width_increase
+    target_height = mpaths.main_window_height + height_increase
+
+    current_w = prev_width if prev_width is not None else mpaths.main_window_width
+    current_h = prev_height if prev_height is not None else mpaths.main_window_height
+
+    expanded_w = max(current_w, target_width)
+    expanded_h = max(current_h, target_height)
+
     tools_height = mpaths.main_window_height // 2
     if not mpaths.frozen:
         debug_env = mpaths.get_config("debug_env", False)
@@ -696,12 +736,12 @@ def dev_mode():
     if dev_mode_state == -1:  # init
         dev_mode_state = 1
         ui.configure_viewport(
-            item=f"{title}",
-            resizable=True,
-            width=mpaths.main_window_width + width_increase,
-            height=mpaths.main_window_height,
+            item=title,
+            width=expanded_w,
+            height=expanded_h,
+            min_width=target_width,
+            min_height=target_height,
         )
-        ui.configure_viewport(item="primary_window", resizable=True)
         with ui.window(
             label="Path & File Opener",
             tag="opener",
@@ -855,9 +895,10 @@ def dev_mode():
         dev_mode_state = 1
         ui.configure_viewport(
             item=title,
-            resizable=True,
-            width=mpaths.main_window_width + width_increase,
-            height=mpaths.main_window_height,
+            width=expanded_w,
+            height=expanded_h,
+            min_width=target_width,
+            min_height=target_height,
         )
         ui.configure_item("opener", show=True)
         ui.configure_item("mod_tools", show=True)
@@ -869,9 +910,10 @@ def dev_mode():
         dev_mode_state = 0
         ui.configure_viewport(
             item=title,
-            resizable=False,
-            width=mpaths.main_window_width,
-            height=mpaths.main_window_height,
+            width=current_w,
+            height=current_h,
+            min_width=mpaths.main_window_width,
+            min_height=mpaths.main_window_height,
         )
         ui.configure_item("opener", show=False)
         ui.configure_item("mod_tools", show=False)
@@ -964,18 +1006,19 @@ def theme():
         with ui.theme_component(ui.mvAll):
             ui.add_theme_style(ui.mvStyleVar_WindowPadding, x=0, y=0)
             ui.add_theme_color(ui.mvThemeCol_Text, (0, 230, 230))
-            ui.add_theme_color(ui.mvThemeCol_WindowBg, (29, 29, 30, 255))
-            ui.add_theme_color(ui.mvThemeCol_ChildBg, (29, 29, 30, 255))
-            ui.add_theme_color(ui.mvThemeCol_ScrollbarBg, (29, 29, 30, 255))
+            ui.add_theme_color(ui.mvThemeCol_WindowBg, (32, 32, 32, 255))
+            ui.add_theme_color(ui.mvThemeCol_ChildBg, (32, 32, 32, 255))
+            ui.add_theme_color(ui.mvThemeCol_ScrollbarBg, (32, 32, 32, 255))
             ui.add_theme_color(ui.mvThemeCol_ScrollbarGrab, (0, 200, 200))
             ui.add_theme_color(ui.mvThemeCol_ScrollbarGrabHovered, (0, 170, 170))
             ui.add_theme_color(ui.mvThemeCol_ScrollbarGrabActive, (0, 120, 120))
             ui.add_theme_color(ui.mvThemeCol_TitleBg, (35, 35, 35, 255))
             ui.add_theme_color(ui.mvThemeCol_TitleBgActive, (35, 35, 35, 255))
-            ui.add_theme_color(ui.mvThemeCol_Header, (29, 29, 30, 255))
-            ui.add_theme_color(ui.mvThemeCol_HeaderHovered, (29, 29, 30, 255))
+            ui.add_theme_color(ui.mvThemeCol_Header, (32, 32, 32, 255))
+            ui.add_theme_color(ui.mvThemeCol_HeaderHovered, (32, 32, 32, 255))
             ui.add_theme_color(ui.mvThemeCol_HeaderActive, (17, 17, 18, 255))
             ui.add_theme_style(ui.mvStyleVar_WindowBorderSize, 0)
+            ui.add_theme_style(ui.mvStyleVar_ScrollbarRounding, 0)
     ui.bind_theme(global_theme)
 
     with ui.theme() as main_buttons_theme:
@@ -986,9 +1029,9 @@ def theme():
             ui.add_theme_style(ui.mvStyleVar_ButtonTextAlign, x=0, y=0.5)
         with ui.theme_component(enabled_state=False):
             ui.add_theme_color(ui.mvThemeCol_Text, (0, 100, 100))
-            ui.add_theme_color(ui.mvThemeCol_Button, (29, 29, 30, 255))
-            ui.add_theme_color(ui.mvThemeCol_ButtonHovered, (29, 29, 30, 255))
-            ui.add_theme_color(ui.mvThemeCol_ButtonActive, (29, 29, 30, 255))
+            ui.add_theme_color(ui.mvThemeCol_Button, (32, 32, 32, 255))
+            ui.add_theme_color(ui.mvThemeCol_ButtonHovered, (32, 32, 32, 255))
+            ui.add_theme_color(ui.mvThemeCol_ButtonActive, (32, 32, 32, 255))
             ui.add_theme_style(ui.mvStyleVar_ButtonTextAlign, x=0, y=0.5)
 
     with ui.theme() as mod_menu_theme:
@@ -999,49 +1042,50 @@ def theme():
             ui.add_theme_color(ui.mvThemeCol_FrameBgActive, (20, 20, 20, 255))
         with ui.theme_component(ui.mvCheckbox, enabled_state=False):
             ui.add_theme_color(ui.mvThemeCol_Text, (0, 100, 100))
-            ui.add_theme_color(ui.mvThemeCol_FrameBg, (29, 29, 30, 255))
-            ui.add_theme_color(ui.mvThemeCol_FrameBgHovered, (29, 29, 30, 255))
-            ui.add_theme_color(ui.mvThemeCol_FrameBgActive, (29, 29, 30, 255))
+            ui.add_theme_color(ui.mvThemeCol_FrameBg, (32, 32, 32, 255))
+            ui.add_theme_color(ui.mvThemeCol_FrameBgHovered, (32, 32, 32, 255))
+            ui.add_theme_color(ui.mvThemeCol_FrameBgActive, (32, 32, 32, 255))
             ui.add_theme_color(ui.mvThemeCol_CheckMark, (0, 70, 70, 255))
         with ui.theme_component():
             ui.add_theme_color(ui.mvThemeCol_Text, (0, 230, 230))
-            ui.add_theme_color(ui.mvThemeCol_Button, (29, 29, 30, 255))
+            ui.add_theme_color(ui.mvThemeCol_Button, (32, 32, 32, 255))
             ui.add_theme_color(ui.mvThemeCol_ButtonHovered, (17, 17, 18, 255))
-            ui.add_theme_color(ui.mvThemeCol_ButtonActive, (29, 29, 30, 255))
+            ui.add_theme_color(ui.mvThemeCol_ButtonActive, (32, 32, 32, 255))
         with ui.theme_component(enabled_state=False):
-            ui.add_theme_color(ui.mvThemeCol_Button, (29, 29, 30, 255))
+            ui.add_theme_color(ui.mvThemeCol_Button, (32, 32, 32, 255))
             ui.add_theme_color(ui.mvThemeCol_Text, (0, 100, 100))
-            ui.add_theme_color(ui.mvThemeCol_ButtonHovered, (29, 29, 30, 255))
-            ui.add_theme_color(ui.mvThemeCol_ButtonActive, (29, 29, 30, 255))
+            ui.add_theme_color(ui.mvThemeCol_ButtonHovered, (32, 32, 32, 255))
+            ui.add_theme_color(ui.mvThemeCol_ButtonActive, (32, 32, 32, 255))
 
     with ui.theme() as footer_theme:
         with ui.theme_component():
+            ui.add_theme_style(ui.mvStyleVar_WindowPadding, x=0, y=0)
             ui.add_theme_color(ui.mvThemeCol_Text, (0, 230, 230))
-            ui.add_theme_color(ui.mvThemeCol_Button, (29, 29, 30, 255))
+            ui.add_theme_color(ui.mvThemeCol_Button, (32, 32, 32, 255))
             ui.add_theme_color(ui.mvThemeCol_ButtonHovered, (17, 17, 18, 255))
-            ui.add_theme_color(ui.mvThemeCol_ButtonActive, (29, 29, 30, 255))
-            ui.add_theme_color(ui.mvThemeCol_FrameBg, (29, 29, 30, 255))
-            ui.add_theme_color(ui.mvThemeCol_FrameBgHovered, (29, 29, 30, 255))
-            ui.add_theme_color(ui.mvThemeCol_FrameBgActive, (29, 29, 30, 255))
+            ui.add_theme_color(ui.mvThemeCol_ButtonActive, (32, 32, 32, 255))
+            ui.add_theme_color(ui.mvThemeCol_FrameBg, (32, 32, 32, 255))
+            ui.add_theme_color(ui.mvThemeCol_FrameBgHovered, (32, 32, 32, 255))
+            ui.add_theme_color(ui.mvThemeCol_FrameBgActive, (32, 32, 32, 255))
         with ui.theme_component(enabled_state=False):
-            ui.add_theme_color(ui.mvThemeCol_Button, (29, 29, 30, 255))
+            ui.add_theme_color(ui.mvThemeCol_Button, (32, 32, 32, 255))
             ui.add_theme_color(ui.mvThemeCol_Text, (0, 100, 100))
-            ui.add_theme_color(ui.mvThemeCol_ButtonHovered, (29, 29, 30, 255))
-            ui.add_theme_color(ui.mvThemeCol_ButtonActive, (29, 29, 30, 255))
+            ui.add_theme_color(ui.mvThemeCol_ButtonHovered, (32, 32, 32, 255))
+            ui.add_theme_color(ui.mvThemeCol_ButtonActive, (32, 32, 32, 255))
         with ui.theme_component(ui.mvCheckbox):
-            ui.add_theme_color(ui.mvThemeCol_FrameBg, (29, 29, 30, 255))
-            ui.add_theme_color(ui.mvThemeCol_FrameBgHovered, (29, 29, 30, 255))
-            ui.add_theme_color(ui.mvThemeCol_FrameBgActive, (29, 29, 30, 255))
+            ui.add_theme_color(ui.mvThemeCol_FrameBg, (32, 32, 32, 255))
+            ui.add_theme_color(ui.mvThemeCol_FrameBgHovered, (32, 32, 32, 255))
+            ui.add_theme_color(ui.mvThemeCol_FrameBgActive, (32, 32, 32, 255))
 
     with ui.theme() as popup_theme:
         with ui.theme_component():
             ui.add_theme_color(ui.mvThemeCol_Text, (0, 230, 230))
-            ui.add_theme_color(ui.mvThemeCol_Button, (29, 29, 30, 255))
+            ui.add_theme_color(ui.mvThemeCol_Button, (32, 32, 32, 255))
             ui.add_theme_color(ui.mvThemeCol_ButtonHovered, (17, 17, 18, 255))
-            ui.add_theme_color(ui.mvThemeCol_ButtonActive, (29, 29, 30, 255))
-            ui.add_theme_color(ui.mvThemeCol_FrameBg, (29, 29, 30, 255))
-            ui.add_theme_color(ui.mvThemeCol_FrameBgHovered, (29, 29, 30, 255))
-            ui.add_theme_color(ui.mvThemeCol_FrameBgActive, (29, 29, 30, 255))
+            ui.add_theme_color(ui.mvThemeCol_ButtonActive, (32, 32, 32, 255))
+            ui.add_theme_color(ui.mvThemeCol_FrameBg, (32, 32, 32, 255))
+            ui.add_theme_color(ui.mvThemeCol_FrameBgHovered, (32, 32, 32, 255))
+            ui.add_theme_color(ui.mvThemeCol_FrameBgActive, (32, 32, 32, 255))
 
     ui.bind_item_theme("button_patch", main_buttons_theme)
     ui.bind_item_theme("button_select_mods", main_buttons_theme)

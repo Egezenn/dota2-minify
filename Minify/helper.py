@@ -213,7 +213,7 @@ def render_rich_text(parent, text, font="main_font", base_color=(0, 230, 230), b
     if not text:
         return
 
-    avail_width = mpaths.main_window_width - 40
+    avail_width = ui.get_item_width("primary_window") - 40
 
     # Tokenize: Split by backticks
     parts = text.split("`")

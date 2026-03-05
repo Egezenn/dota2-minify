@@ -37,7 +37,7 @@ def create_ui():
     with ui.window(tag="primary_window"):
         ui.set_primary_window("primary_window", True)
         with ui.group(tag="center_group", horizontal=True):
-            ui.group(tag="text_group", xoffset=50)
+            ui.group(tag="text_group")
             ui.add_text(
                 default_value=r""" __    __    __    __   __    __    ______  __  __
 /\ "-./  \  /\ \  /\ "-.\ \  /\ \  /\  ___\/\ \_\ \  
@@ -45,9 +45,11 @@ def create_ui():
  \ \_\ \ \_\ \ \_\ \ \_\\"\_\ \ \_\ \ \_\_/ \/\_____\
   \/_/  \/_/  \/_/  \/_/ \/_/  \/_/  \/_/    \/_____/""",
                 parent="text_group",
+                pos=(4, -12),
             )
             # Creating log terminal
             with ui.group(parent="center_group", tag="button_group"):
+                ui.add_spacer(height=6)
                 ui.add_button(tag="button_patch", label="Patch", callback=patcher_start, enabled=False, width=-1)
                 ui.add_button(
                     tag="button_select_mods",
@@ -56,17 +58,11 @@ def create_ui():
                     width=-1,
                 )
                 ui.add_button(tag="button_uninstall", label="Uninstall", callback=gui.uninstall_popup_show, width=-1)
-        with ui.group():
-            ui.add_child_window(tag="terminal_window", no_scrollbar=False, show=True, autosize_x=True, height=-35)
+        with ui.group(tag="terminal_and_footer_group"):
+            ui.add_child_window(tag="terminal_window", no_scrollbar=False, show=True, autosize_x=True, height=-27)
             ui.bind_item_font("terminal_window", "small_font")
 
-        ui.add_child_window(
-            tag="footer",
-            no_scrollbar=True,
-            no_scroll_with_mouse=True,
-            auto_resize_y=True,
-            autosize_x=True,
-        )
+            ui.add_child_window(tag="footer", no_scrollbar=True, no_scroll_with_mouse=True, autosize_x=True)
         ui.add_group(tag="footer_main_group", parent="footer", horizontal=True, horizontal_spacing=0)
         ui.add_group(tag="footer_left_group", parent="footer_main_group", horizontal=True, horizontal_spacing=0)
         ui.add_combo(
@@ -389,6 +385,8 @@ ui.create_viewport(
     title=gui.title,
     width=mpaths.main_window_width,
     height=mpaths.main_window_height,
+    min_width=mpaths.main_window_width,
+    min_height=mpaths.main_window_height,
     x_pos=min(gui.widths) // 2 - mpaths.main_window_width // 2,
     y_pos=max(0, min(gui.heights) // 2 - mpaths.main_window_height // 2 - 120),
     resizable=True,
