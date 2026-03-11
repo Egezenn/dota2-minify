@@ -87,13 +87,9 @@ log_rescomp = os.path.join(logs_dir, "resourcecompiler.txt")
 main_config_file_dir = os.path.join(config_dir, "minify_config.json")
 mods_config_dir = os.path.join(config_dir, "mods.json")
 
-# killswitch accident 2025-09-25
-if frozen:
-    version_file_dir = "version"
-else:
-    version_file_dir = os.path.join(os.pardir, "version")
-
 rescomp_override = True if os.path.exists(rescomp_override_dir) else False
+
+version = "1.13"
 
 
 def read_json_file(path):
@@ -333,7 +329,12 @@ def get_steam_accounts():
 
     try:
         for user_id in sorted(
-            [x for x in os.listdir(os.path.join(steam_root, "userdata")) if x.isdigit()], key=lambda x: int(x)
+            [
+                x
+                for x in os.listdir(os.path.join(steam_root, "userdata"))
+                if x.isdigit() and os.path.isdir(os.path.join(steam_root, "userdata", x))
+            ],
+            key=lambda x: int(x),
         ):
             if not os.path.exists(os.path.join(steam_root, "userdata", user_id, STEAM_DOTA_ID)):
                 continue

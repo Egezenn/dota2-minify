@@ -1,3 +1,4 @@
+import argparse
 import os
 import sys
 import threading
@@ -19,6 +20,13 @@ import gui
 import helper
 import mpaths
 
+parser = argparse.ArgumentParser(description="Minify")
+parser.add_argument("-v", "--version", action="store_true", help="Print version and exit")
+args = parser.parse_args()
+
+if args.version:
+    print(mpaths.version)
+    sys.exit(0)
 
 ui.create_context()
 

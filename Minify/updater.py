@@ -19,11 +19,15 @@ host = platform.system()
 
 
 def get_current_version():
-    try:
-        with open("version") as f:
-            return f.read().strip()
-    except FileNotFoundError:
-        return "unknown"
+    target = "Minify.exe" if host == "Windows" else "./Minify"
+    if os.path.exists(target):
+        try:
+            result = subprocess.run([target, "-v"], capture_output=True, text=True, timeout=5)
+            if result.returncode == 0:
+                return result.stdout.strip()
+        except Exception:
+            pass
+    return "unknown"
 
 
 def safe_rmtree(path):
@@ -102,7 +106,6 @@ def main():
             "Minify.exe",
             "Minify",
             "readme.md",
-            "version",
             "Source2Viewer-CLI.exe",
             "Source2Viewer-CLI",
             "rg.exe",

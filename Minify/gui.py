@@ -26,7 +26,6 @@ prev_width = None
 prev_height = None
 gui_lock = False
 is_moving_viewport = False
-version = None
 latest_download_url = None
 
 terminal_window_wrap = mpaths.main_window_width - 10
@@ -60,6 +59,9 @@ def version_check():
     global latest_download_url
 
     if version and mpaths.frozen:
+        if mpaths.get_config("ignore_update") == version:
+            return
+
         try:
             api_url = f"https://api.github.com/repos/{mpaths.head_owner}/{mpaths.repo_name}/releases"
 
@@ -129,7 +131,7 @@ def setup_system():
     download_dependencies()
 
 
-def download_dependencies():
+def download_dependencies(retries=0):
     try:
         if helper.workshop_installed:
             if not os.path.exists(mpaths.s2v_executable):
@@ -181,7 +183,15 @@ def download_dependencies():
     except:
         mpaths.write_crashlog()
         helper.add_text_to_terminal("&failed_download_retrying_terminal", type="error")
-        return download_dependencies()
+        if retries < 3:
+            return download_dependencies(retries + 1)
+        else:
+            helper.add_text_to_terminal(
+                "&failed_download",
+                3,
+                type="error",
+            )
+            return
 
 
 def load_checkboxes_state():
@@ -441,7 +451,7 @@ def focus_window():
 
 def delete_update_popup(ignore):
     if ignore:
-        helper.remove_path(mpaths.version_file_dir)
+        mpaths.set_config("ignore_update", version)
     ui.configure_item("update_popup", show=False)
     ui.delete_item("update_popup")
 

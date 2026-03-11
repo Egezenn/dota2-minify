@@ -161,7 +161,8 @@ def get_available_localizations():
     for header in localization_data.values():
         if isinstance(header, dict):
             sub_headers.update(header.keys())
-    localizations = sorted(list(sub_headers))
+    sorted_langs = sorted(l for l in sub_headers if l != "EN")
+    localizations = ["EN"] + sorted_langs
 
     for key, value in localization_data.items():
         if key.endswith("var"):

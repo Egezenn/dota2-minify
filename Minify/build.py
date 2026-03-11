@@ -262,6 +262,7 @@ def patcher(mod=None, pakname=None):
                 ignore=shutil.ignore_patterns("*.vcss_c", "*.vxml_c"),
             )
 
+            # TODO: use helper.compile instead
             with open(mpaths.log_rescomp, "wb") as file:
                 command = [
                     mpaths.dota_resource_compiler_path,
@@ -303,13 +304,8 @@ def patcher(mod=None, pakname=None):
         else:
             open(os.path.join(mpaths.minify_dota_compile_output_path, f"{mod}.txt"), "w").close()
 
-        try:
-            shutil.copy(
-                mpaths.version_file_dir,
-                os.path.join(mpaths.minify_dota_compile_output_path, "minify_version.txt"),
-            )
-        except FileNotFoundError:  # update ignore
-            pass
+        with open(os.path.join(mpaths.minify_dota_compile_output_path, "minify_version.txt"), "w") as f:
+            f.write(mpaths.version)
 
         os.makedirs(helper.output_path, exist_ok=True)
         native_mods = vpk.new(mpaths.minify_dota_compile_output_path)
@@ -345,13 +341,8 @@ def patcher(mod=None, pakname=None):
             with open(os.path.join(mpaths.merge_dir, "minify_vpk_mods.txt"), "w") as f:
                 f.write("\n".join(vpk_mods_to_merge))
 
-            try:
-                shutil.copy(
-                    mpaths.version_file_dir,
-                    os.path.join(mpaths.merge_dir, "minify_version.txt"),
-                )
-            except FileNotFoundError:  # update ignore
-                pass
+            with open(os.path.join(mpaths.merge_dir, "minify_version.txt"), "w") as f:
+                f.write(mpaths.version)
 
             helper.add_text_to_terminal("&creating_merged_vpk")
             merged_mods = vpk.new(mpaths.merge_dir)
@@ -385,13 +376,19 @@ def patcher(mod=None, pakname=None):
         # handle language param automatically
         if mpaths.get_config("fix_parameters", True):
             if helper.fix_parameters():
+                steam_close_retries = 0
                 while any(
                     p.info.get("name") == os.path.basename(mpaths.steam_executable_path)
                     for p in psutil.process_iter(attrs=["name"])
                 ):
+                    if steam_close_retries >= 3:
+                        helper.add_text_to_terminal("&failed_steam_close", 3, type="error")
+                        break
                     helper.add_text_to_terminal("&waiting_steam_to_close")
                     time.sleep(2)
-                helper.open_thing(mpaths.steam_executable_path, "-silent")
+                    steam_close_retries += 1
+                if steam_close_retries < 3:
+                    helper.open_thing(mpaths.steam_executable_path, "-silent")
 
         gui.bulk_exec_script("after_patch", False)
 
