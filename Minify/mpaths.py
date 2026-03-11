@@ -332,7 +332,9 @@ def get_steam_accounts():
         return accounts
 
     try:
-        for user_id in sorted(os.listdir(os.path.join(steam_root, "userdata")), key=lambda x: int(x)):
+        for user_id in sorted(
+            [x for x in os.listdir(os.path.join(steam_root, "userdata")) if x.isdigit()], key=lambda x: int(x)
+        ):
             if not os.path.exists(os.path.join(steam_root, "userdata", user_id, STEAM_DOTA_ID)):
                 continue
 
