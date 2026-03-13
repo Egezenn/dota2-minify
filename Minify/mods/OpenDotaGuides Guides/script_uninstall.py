@@ -9,12 +9,11 @@ if os.getcwd() != minify_root:
 if minify_root not in sys.path:
     sys.path.insert(0, minify_root)
 
-import mpaths
-import helper
+# isort: split
 
-dota_itembuilds_path = os.path.join(
-    mpaths.steam_library, "steamapps", "common", "dota 2 beta", "game", "dota", "itembuilds"
-)
+from core import fs, log, steam
+
+dota_itembuilds_path = os.path.join(steam.LIBRARY, "steamapps", "common", "dota 2 beta", "game", "dota", "itembuilds")
 
 
 def main():
@@ -25,15 +24,15 @@ def main():
             if "OpenDotaGuides" in lines[2]:
                 for name in os.listdir(dota_itembuilds_path):
                     if name != "bkup":
-                        helper.remove_path(os.path.join(dota_itembuilds_path, name))
+                        fs.remove_path(os.path.join(dota_itembuilds_path, name))
                 for name in os.listdir(os.path.join(dota_itembuilds_path, "bkup")):
-                    helper.move_path(
+                    fs.move_path(
                         os.path.join(dota_itembuilds_path, "bkup", name),
                         os.path.join(dota_itembuilds_path, name),
                     )
-                helper.remove_path(os.path.join(dota_itembuilds_path, "bkup"))
+                fs.remove_path(os.path.join(dota_itembuilds_path, "bkup"))
     except FileNotFoundError:
-        mpaths.write_warning(
+        log.write_warning(
             "Unable to recover backed up default guides or the itembuilds directory is empty, verify files to get the default guides back"
         )
 

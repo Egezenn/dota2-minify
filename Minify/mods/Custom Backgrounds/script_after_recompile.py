@@ -9,8 +9,10 @@ if os.getcwd() != minify_root:
 if minify_root not in sys.path:
     sys.path.insert(0, minify_root)
 
-import mpaths
-import helper
+# isort: split
+
+import conditions
+from core import constants, fs
 
 
 def main():
@@ -23,10 +25,10 @@ def main():
             img_available = True
             break
 
-    if helper.workshop_installed and img_available:
-        helper.remove_path(
+    if conditions.workshop_installed and img_available:
+        fs.remove_path(
             os.path.join(
-                mpaths.minify_dota_compile_output_path,
+                constants.minify_dota_compile_output_path,
                 "panorama",
                 "images",
                 "backgrounds",

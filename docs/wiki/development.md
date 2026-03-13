@@ -157,10 +157,12 @@ os.chdir(minify_root)
 if minify_root not in sys.path:
     sys.path.insert(0, minify_root)
 
+# isort: split
+
 # Any package or module native to minify can be imported here
 # import requests
 #
-# import mpaths
+# import fs
 # ...
 
 

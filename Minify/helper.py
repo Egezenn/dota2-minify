@@ -1,14 +1,12 @@
 import importlib.util
 import os
-from pathlib import Path
 import re
-import shlex
 import shutil
-import stat
 import subprocess
 import tarfile
 import time
 import zipfile
+from pathlib import Path
 
 import dearpygui.dearpygui as ui
 import jsonc
@@ -16,7 +14,9 @@ import requests
 import vdf
 import vpk
 
-import mpaths
+# isort: split
+
+from core import base, constants, fs, log, steam
 
 compiler_filepicker_path = ""
 details_label = ""
@@ -25,10 +25,8 @@ localization_dict = {}
 localizations = []
 mod_selection_window_var = ""
 terminal_history = []
-output_path = mpaths.get_config("output_path", mpaths.minify_dota_pak_output_path)
-workshop_installed = False
-workshop_required_methods = ["styling.css", "xml_mod.json", "files_uncompiled"]
-wrap_size = mpaths.main_window_width - 10
+output_path = fs.get_config("output_path", constants.minify_dota_pak_output_path)
+wrap_size = constants.main_window_width - 10
 
 
 def download_file(url, target_path, progress_tag=None):
@@ -134,20 +132,9 @@ def add_text_to_terminal(text_or_id, *args, type: str | None = None, **kwargs):
     return item
 
 
-def disable_workshop_mods():
-    if not workshop_installed:
-        for folder in mpaths.mods_with_order:
-            mod_path = os.path.join(mpaths.mods_dir, folder)
-
-            for method_path in workshop_required_methods:
-                if os.path.exists(os.path.join(mod_path, method_path)):
-                    ui.configure_item(folder, enabled=False, default_value=False)
-                    break
-
-
 def get_blank_file_extensions():
     extensions = []
-    for file in os.listdir(mpaths.blank_files_dir):
+    for file in os.listdir(base.blank_files_dir):
         extensions.append(os.path.splitext(file)[1])
     return extensions
 
@@ -155,13 +142,13 @@ def get_blank_file_extensions():
 def get_available_localizations():
     global localizations
     # get available variables for text
-    with open(mpaths.localization_file_dir, encoding="utf-8") as file:
+    with open(base.localization_file_dir, encoding="utf-8") as file:
         localization_data = jsonc.load(file)
     sub_headers = set()
     for header in localization_data.values():
         if isinstance(header, dict):
             sub_headers.update(header.keys())
-    sorted_langs = sorted(l for l in sub_headers if l != "EN")
+    sorted_langs = sorted(lang for lang in sub_headers if lang != "EN")
     localizations = ["EN"] + sorted_langs
 
     for key, value in localization_data.items():
@@ -307,17 +294,17 @@ def render_markdown(parent, text):
 
 def change_localization(sender=None, app_data=None, user_data=None, init=False):
     global locale
-    with open(mpaths.localization_file_dir, encoding="utf-8") as localization_file:
+    with open(base.localization_file_dir, encoding="utf-8") as localization_file:
         localization_data = jsonc.load(localization_file)
 
     if init == True:  # noqa: E712
-        locale = mpaths.get_config("locale", ui.get_value("lang_select"))
+        locale = fs.get_config("locale", ui.get_value("lang_select"))
         if locale is None:
-            locale = mpaths.set_config("locale", ui.get_value("lang_select"))
+            locale = fs.set_config("locale", ui.get_value("lang_select"))
         ui.configure_item("lang_select", default_value=locale)
     else:
         locale = ui.get_value("lang_select")
-        mpaths.set_config("locale", locale)
+        fs.set_config("locale", locale)
 
     for key, values in localization_data.items():
         text = values.get(locale, values.get("EN", ""))
@@ -353,10 +340,10 @@ def change_localization(sender=None, app_data=None, user_data=None, init=False):
             ui.set_value(item["id"], new_text)
 
     # Re-render markdown for available mods
-    for mod in mpaths.visually_available_mods:
+    for mod in constants.visually_available_mods:
         container = f"{mod}_markdown_container"
         if ui.does_item_exist(container):
-            mod_path = os.path.join(mpaths.mods_dir, mod)
+            mod_path = os.path.join(base.mods_dir, mod)
             text = parse_markdown_notes(mod_path, locale)
             ui.delete_item(container, children_only=True)
             render_markdown(container, text)
@@ -381,44 +368,9 @@ def change_localization(sender=None, app_data=None, user_data=None, init=False):
 def change_output_path():
     global output_path
     selection = ui.get_value("output_select")
-    output_path = [lang for lang in mpaths.minify_dota_possible_language_output_paths if selection in lang][0]
-    mpaths.set_config("output_locale", selection)
-    mpaths.set_config("output_path", output_path)
-
-
-def open_thing(path, args=""):
-    try:
-        # If args are provided and target is executable, prefer launching directly
-        if args:
-            if mpaths.OS == mpaths.WIN:
-                os.startfile(path, arguments=args)
-                return
-            # POSIX: launch executable directly when possible
-            if os.access(path, os.X_OK) and os.path.isfile(path):
-                cmd = [path] + shlex.split(args)
-                subprocess.Popen(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-                return
-            # Non-executables with args: fall back to opening container directory
-            path = os.path.dirname(path) or "."
-
-        # No args path open
-        if os.path.isdir(path):
-            if mpaths.OS == mpaths.WIN:
-                os.startfile(path)
-            elif mpaths.OS == mpaths.MAC:
-                subprocess.run(["open", path])
-            else:
-                subprocess.run(["xdg-open", path])
-        else:
-            if mpaths.OS == mpaths.WIN:
-                os.startfile(path)
-            elif mpaths.OS == mpaths.MAC:
-                # Reveal the file in Finder to avoid missing-app association errors
-                subprocess.run(["open", "-R", path])
-            else:
-                subprocess.run(["xdg-open", path])
-    except FileNotFoundError:
-        add_text_to_terminal("&open_dir_fail", path, type="error")
+    output_path = [lang for lang in constants.minify_dota_possible_language_output_paths if selection in lang][0]
+    fs.set_config("output_locale", selection)
+    fs.set_config("output_path", output_path)
 
 
 def compile(input_path=None, output_path=None, pak_path=None, sender=None, app_data=None, user_data=None):
@@ -433,8 +385,8 @@ def compile(input_path=None, output_path=None, pak_path=None, sender=None, app_d
 
     if input_path:
         add_text_to_terminal("&compile_init", input_path)
-        remove_path(mpaths.minify_dota_compile_input_path, output_path)
-        os.makedirs(mpaths.minify_dota_compile_input_path)
+        fs.remove_path(constants.minify_dota_compile_input_path, output_path)
+        fs.create_dirs(constants.minify_dota_compile_input_path)
 
         with open(os.path.join(input_path, "ref.xml"), "w") as file:
             file.write(create_img_ref_xml(img_list))
@@ -445,38 +397,38 @@ def compile(input_path=None, output_path=None, pak_path=None, sender=None, app_d
             if os.path.isdir(os.path.join(input_path, item)):
                 shutil.copytree(
                     os.path.join(input_path, item),
-                    os.path.join(mpaths.minify_dota_compile_input_path, item),
+                    os.path.join(constants.minify_dota_compile_input_path, item),
                 )
             else:
-                shutil.copy(os.path.join(input_path, item), mpaths.minify_dota_compile_input_path)
+                shutil.copy(os.path.join(input_path, item), constants.minify_dota_compile_input_path)
 
-        with open(mpaths.log_rescomp, "w") as file:
+        with open(base.log_rescomp, "w") as file:
             command = (
-                mpaths.dota_resource_compiler_path,
+                constants.dota_resource_compiler_path,
                 "-i",
-                mpaths.minify_dota_compile_input_path + "/*",
+                constants.minify_dota_compile_input_path + "/*",
                 "-r",
             )
 
-            if mpaths.OS != mpaths.WIN:
+            if base.OS != base.WIN:
                 command.insert(0, "wine")
 
             subprocess.run(
                 command,
                 stdout=file,
-                creationflags=subprocess.CREATE_NO_WINDOW if mpaths.OS == mpaths.WIN else 0,
+                creationflags=subprocess.CREATE_NO_WINDOW if base.OS == base.WIN else 0,
             )
 
-        os.makedirs(mpaths.minify_dota_compile_output_path, exist_ok=True)
-        shutil.copytree(os.path.join(mpaths.minify_dota_compile_output_path), output_path)
+        fs.create_dirs(constants.minify_dota_compile_output_path)
+        shutil.copytree(os.path.join(constants.minify_dota_compile_output_path), output_path)
 
-        remove_path(
-            mpaths.minify_dota_compile_input_path,
-            mpaths.minify_dota_compile_output_path,
+        fs.remove_path(
+            constants.minify_dota_compile_input_path,
+            constants.minify_dota_compile_output_path,
             os.path.join(input_path, "ref.xml"),
             os.path.join(output_path, "ref.vxml_c"),
         )
-        os.makedirs(mpaths.minify_dota_tools_required_path, exist_ok=True)
+        fs.create_dirs(constants.minify_dota_tools_required_path)
 
         add_text_to_terminal("&compile_successful", output_path)
 
@@ -507,72 +459,6 @@ def select_compile_dir(sender, app_data):
     compiler_filepicker_path = app_data["current_path"]
 
 
-def move_path(src, dst):
-    "Superset of `shutil.move`, `os.rename` to handle permissions for moving and renaming."
-    try:
-        shutil.move(src, dst)
-    except PermissionError:
-        try:
-            paths_to_chmod = []
-            if os.path.exists(src):
-                paths_to_chmod.append(src)
-            if os.path.exists(dst):
-                paths_to_chmod.append(dst)
-
-            for path in paths_to_chmod:
-                if os.path.isdir(path):
-                    for dir, _, filenames in os.walk(path):
-                        current_dir_mode = os.stat(dir).st_mode
-                        os.chmod(dir, current_dir_mode | stat.S_IWUSR)
-
-                        for filename in filenames:
-                            filepath = os.path.join(dir, filename)
-                            current_file_mode = os.stat(filepath).st_mode
-                            os.chmod(filepath, current_file_mode | stat.S_IWUSR)
-                else:
-                    current_file_mode = os.stat(path).st_mode
-                    os.chmod(path, current_file_mode | stat.S_IWUSR)
-
-            return move_path(src, dst)
-        except:
-            mpaths.write_warning()
-    except FileNotFoundError:
-        print(f"Skipped move of: {src} (not found)")
-
-
-def remove_path(*paths):
-    "Superset of `shutil.rmtree` to handle permissions and take in list of paths and also delete files."
-    try:
-        for path in paths:
-            try:
-                if os.path.isdir(path):
-                    shutil.rmtree(path)
-                else:
-                    os.remove(path)
-            except FileNotFoundError:
-                print(f"Skipped deletion of: {path}")
-
-    except PermissionError:
-        try:
-            for path in paths:
-                if os.path.isdir(path):
-                    for dir, _, filenames in os.walk(path):
-                        current_dir_mode = os.stat(dir).st_mode
-                        os.chmod(dir, current_dir_mode | stat.S_IWUSR)
-
-                        for filename in filenames:
-                            filepath = os.path.join(dir, filename)
-                            current_file_mode = os.stat(filepath).st_mode
-                            os.chmod(filepath, current_file_mode | stat.S_IWUSR)
-                else:
-                    current_file_mode = os.stat(path).st_mode
-                    os.chmod(path, current_file_mode | stat.S_IWUSR)
-
-            return remove_path(*paths)
-        except:
-            mpaths.write_warning()
-
-
 def exec_script(script_path, mod_name, order_name, _terminal_output=True):
     if os.path.exists(script_path):
         module_name = mod_name.replace(" ", "").lower() + f"_{order_name}_script"
@@ -588,7 +474,23 @@ def exec_script(script_path, mod_name, order_name, _terminal_output=True):
             if _terminal_output:
                 add_text_to_terminal("&script_success", mod_name, order_name, type="success")
         else:
-            mpaths.write_warning("&script_no_main", mod_name, order_name)
+            log.write_warning("&script_no_main", mod_name, order_name)
+
+
+def bulk_exec_script(order_name, terminal_output=True):
+    bulk_name = f"script_{order_name}.py"
+    for root, _, files in os.walk(base.mods_dir):
+        if bulk_name in files and not os.path.basename(root).startswith("_"):
+            mod_cfg_path = os.path.join(root, "modcfg.json")
+            cfg = fs.read_json_file(mod_cfg_path)
+            always = cfg.get("always", False)
+            visual = cfg.get("visual", True)
+
+            # TODO: pull the file from pak66 to check if it was enabled for uninstallers
+            if always or order_name in ["initial", "uninstall"] or (visual and ui.get_value(os.path.basename(root))):
+                exec_script(
+                    os.path.join(root, bulk_name), os.path.basename(root), order_name, _terminal_output=terminal_output
+                )
 
 
 def remove_lang_args(arg_string):
@@ -614,35 +516,33 @@ def remove_lang_args(arg_string):
 def fix_parameters():
     steam_ids = []
     successful_ids = []
-    if mpaths.get_config("change_parameters_for_all", True):
-        for account in mpaths.get_steam_accounts():
+    if fs.get_config("change_parameters_for_all", True):
+        for account in steam.get_steam_accounts():
             steam_ids.append(account["id"])
     else:
-        steam_ids.append(mpaths.get_config("steam_id"))
+        steam_ids.append(fs.get_config("steam_id"))
 
     for steam_id in steam_ids:
         with open(
-            vdf_path := os.path.join(
-                mpaths.get_config("steam_root"), "userdata", steam_id, "config", "localconfig.vdf"
-            ),
+            vdf_path := os.path.join(fs.get_config("steam_root"), "userdata", steam_id, "config", "localconfig.vdf"),
             encoding="utf-8",
         ) as file:
             add_text_to_terminal("&checking_launch_options")
             data = vdf.load(file)
-        locale = mpaths.get_config("output_locale")
+        locale = fs.get_config("output_locale")
         try:
-            launch_options = data["UserLocalConfigStore"]["Software"]["Valve"]["Steam"]["apps"][mpaths.STEAM_DOTA_ID][
+            launch_options = data["UserLocalConfigStore"]["Software"]["Valve"]["Steam"]["apps"][base.STEAM_DOTA_ID][
                 "LaunchOptions"
             ]
         except KeyError:
             continue
         if f"-language {locale}" not in launch_options or launch_options.count("-language") >= 2:
-            for user in mpaths.get_steam_accounts():
+            for user in steam.get_steam_accounts():
                 if steam_id in user:
                     break
             add_text_to_terminal("&discrepancy_launch_options", user["name"], locale)
-            open_thing(mpaths.steam_executable_path, "-exitsteam")
-            data["UserLocalConfigStore"]["Software"]["Valve"]["Steam"]["apps"][mpaths.STEAM_DOTA_ID][
+            fs.open_thing(constants.steam_executable_path, "-exitsteam")
+            data["UserLocalConfigStore"]["Software"]["Valve"]["Steam"]["apps"][base.STEAM_DOTA_ID][
                 "LaunchOptions"
             ] = f"-language {locale} {remove_lang_args(launch_options)}"
         with open(vdf_path, "w", encoding="utf-8") as file:
@@ -657,13 +557,13 @@ def create_debug_zip():
         zip_filename = f"minify_debug_{timestamp}.zip"
 
         files_to_include = [
-            mpaths.main_config_file_dir,
-            mpaths.mods_config_dir,
+            base.main_config_file_dir,
+            base.mods_config_dir,
         ]
 
-        if os.path.exists(mpaths.logs_dir):
-            for file in os.listdir(mpaths.logs_dir):
-                files_to_include.append(os.path.join(mpaths.logs_dir, file))
+        if os.path.exists(base.logs_dir):
+            for file in os.listdir(base.logs_dir):
+                files_to_include.append(os.path.join(base.logs_dir, file))
 
         with zipfile.ZipFile(zip_filename, "w", zipfile.ZIP_DEFLATED) as zipf:
             for file_path in files_to_include:
@@ -671,7 +571,7 @@ def create_debug_zip():
                     zipf.write(file_path)
 
         add_text_to_terminal("&heeeeeeeeeeeeeelp", zip_filename)
-        open_thing(".")
+        fs.open_thing(".")
 
     except:
         pass

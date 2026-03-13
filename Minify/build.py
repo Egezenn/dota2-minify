@@ -1,4 +1,5 @@
-from concurrent.futures import ThreadPoolExecutor
+"The universe"
+
 import csv
 import os
 import re
@@ -8,6 +9,7 @@ import threading
 import time
 import webbrowser
 import xml.etree.ElementTree as ET
+from concurrent.futures import ThreadPoolExecutor
 
 import dearpygui.dearpygui as ui
 import jsonc
@@ -15,9 +17,12 @@ import playsound3
 import psutil
 import vpk
 
-import gui
+# isort: split
+
+import conditions
 import helper
-import mpaths
+from core import base, constants, fs, log
+from ui import gui
 
 game_contents_file_init = False
 
@@ -26,29 +31,31 @@ def patcher(mod=None, pakname=None):
     gui.lock_interaction()
     helper.clean_terminal()
 
-    if gui.is_dota_running("close_dota_terminal", "warning"):
+    if conditions.is_dota_running("&close_dota_terminal", "warning"):
         gui.unlock_interaction()
         return
 
     try:
-        mod_list = mpaths.mods_with_order if mod is None else [mod]
+        mod_list = constants.mods_with_order if mod is None else [mod]
 
-        for item in os.listdir(mpaths.logs_dir):
-            helper.remove_path(os.path.join(mpaths.logs_dir, item))
+        for item in os.listdir(base.logs_dir):
+            fs.remove_path(os.path.join(base.logs_dir, item))
 
-        os.makedirs(mpaths.build_dir, exist_ok=True)
-        os.makedirs(mpaths.replace_dir, exist_ok=True)
-        os.makedirs(mpaths.merge_dir, exist_ok=True)
-        os.makedirs(mpaths.minify_dota_compile_input_path, exist_ok=True)
-        os.makedirs(mpaths.minify_dota_tools_required_path, exist_ok=True)
+        fs.create_dirs(
+            base.build_dir,
+            base.replace_dir,
+            base.merge_dir,
+            constants.minify_dota_compile_input_path,
+            constants.minify_dota_tools_required_path,
+        )
 
         blank_file_extensions = helper.get_blank_file_extensions()  # list of extensions in bin/blank-files
-        dota_pak_contents = vpk.open(mpaths.dota_game_pak_path)
-        core_pak_contents = vpk.open(mpaths.dota_core_pak_path)
+        dota_pak_contents = vpk.open(constants.dota_game_pak_path)
+        core_pak_contents = vpk.open(constants.dota_core_pak_path)
         dota_extracts = []
         core_extracts = []
 
-        if helper.workshop_installed:
+        if conditions.workshop_installed:
             styling_dictionary = {}
             xml_modifications = {}
         replacer_source_extracts = []
@@ -58,22 +65,22 @@ def patcher(mod=None, pakname=None):
         dependencies_resolved = False
 
         while not dependencies_resolved:
-            for dependency_dict in mpaths.mod_dependencies_list:
+            for dependency_dict in constants.mod_dependencies_list:
                 for dependant, dependencies in dependency_dict.items():
                     if ui.get_value(dependant):
                         for dependency in dependencies:
                             try:
-                                if not helper.workshop_installed:
+                                if not conditions.workshop_installed:
                                     workshop = False
-                                    for method_path in helper.workshop_required_methods:
-                                        if os.path.exists(os.path.join(mpaths.mods_dir, dependency, method_path)):
+                                    for method_path in conditions.workshop_required_methods:
+                                        if os.path.exists(os.path.join(base.mods_dir, dependency, method_path)):
                                             workshop = True
                                             break
                                     ui.set_value(dependency, False) if workshop else ui.set_value(dependency, True)
                                 else:
                                     ui.set_value(dependency, True)
                             except:
-                                mpaths.write_warning(
+                                log.write_warning(
                                     f"Mod dependency {dependency} for {mod} couldn't be resolved, might be that the mod doesn't exist."
                                 )
             if sum(dependency_checkbox_states) == (sum(dependency_checkbox_states := ui.get_values(gui.checkboxes))):
@@ -83,10 +90,10 @@ def patcher(mod=None, pakname=None):
             gui.save_checkbox_state()
 
         for folder in mod_list:
-            mod_path = os.path.join(mpaths.mods_dir, folder)
+            mod_path = os.path.join(base.mods_dir, folder)
             cfg_path = os.path.join(mod_path, "modcfg.json")
 
-            mod_cfg = mpaths.read_json_file(cfg_path)
+            mod_cfg = fs.read_json_file(cfg_path)
             visual = mod_cfg.get("visual", True)
 
             if mod is None:
@@ -102,7 +109,7 @@ def patcher(mod=None, pakname=None):
                     mod is not None or apply_without_user_confirmation or (visual and ui.get_value(folder))
                 ):  # step into folders that have ticked checkboxes only
                     blacklist_txt = os.path.join(mod_path, "blacklist.txt")
-                    if helper.workshop_installed:
+                    if conditions.workshop_installed:
                         styling_css = os.path.join(mod_path, "styling.css")
                         xml_mod_file = os.path.join(mod_path, "xml_mod.json")
                         files_uncompiled_dir = os.path.join(mod_path, "files_uncompiled")
@@ -112,23 +119,23 @@ def patcher(mod=None, pakname=None):
 
                     helper.exec_script(script_file, folder, "loop")
                     helper.add_text_to_terminal("&installing_terminal", folder)
-                    if helper.workshop_installed:
+                    if conditions.workshop_installed:
                         if os.path.exists(files_uncompiled_dir):
                             shutil.copytree(
                                 files_uncompiled_dir,
-                                mpaths.minify_dota_compile_input_path,
+                                constants.minify_dota_compile_input_path,
                                 dirs_exist_ok=True,
                                 ignore=shutil.ignore_patterns("*.gitkeep"),
                             )
                     if os.path.exists(files_dir):
                         shutil.copytree(
                             files_dir,
-                            mpaths.minify_dota_compile_output_path,
+                            constants.minify_dota_compile_output_path,
                             dirs_exist_ok=True,
                             ignore=shutil.ignore_patterns("*.gitkeep"),
                         )
 
-                    if helper.workshop_installed and os.path.exists(xml_mod_file):
+                    if conditions.workshop_installed and os.path.exists(xml_mod_file):
                         with open(xml_mod_file, encoding="utf-8") as file:
                             mod_xml = jsonc.load(file)
                         for path, mods in mod_xml.items():
@@ -138,7 +145,7 @@ def patcher(mod=None, pakname=None):
                     if not game_contents_file_init:
                         # TODO: check pak01 hash, log it & run this only if it's different
                         with open(
-                            os.path.join(mpaths.bin_dir, "gamepakcontents.txt"),
+                            os.path.join(base.bin_dir, "gamepakcontents.txt"),
                             "w",
                         ) as file:
                             for filepath in dota_pak_contents:
@@ -150,7 +157,7 @@ def patcher(mod=None, pakname=None):
                         process_blacklist(blacklist_txt, folder, blank_file_extensions)
 
                     # --------------------------------- styling.css --------------------------------- #
-                    if helper.workshop_installed and os.path.exists(styling_css):
+                    if conditions.workshop_installed and os.path.exists(styling_css):
                         with open(styling_css, encoding="utf-8") as file:
                             content = file.read()
 
@@ -171,20 +178,14 @@ def patcher(mod=None, pakname=None):
                             sanitized_path = (
                                 path_style[0][1:] if path_style[0].startswith("!") else path_style[0]
                             )  # horrible hack
-                            os.makedirs(
-                                os.path.join(
-                                    mpaths.build_dir,
-                                    os.path.dirname(sanitized_path),
-                                ),
-                                exist_ok=True,
-                            )
+                            fs.create_dirs(os.path.join(base.build_dir, os.path.dirname(sanitized_path)))
                             try:
                                 if path_style[0].startswith("!"):
                                     core_extracts.append(f"{sanitized_path}.vcss_c")
                                 else:
                                     dota_extracts.append(f"{sanitized_path}.vcss_c")
                             except KeyError:
-                                mpaths.write_warning(
+                                log.write_warning(
                                     f"Path does not exist in VPK -> '{sanitized_path}.vcss_c', error in 'mods/{folder}/styling.css'"
                                 )
                     # --------------------------------- replacer.csv --------------------------------- #
@@ -195,18 +196,18 @@ def patcher(mod=None, pakname=None):
                                     replacer_source_extracts.append(row[1])  # Source (content)
                                     replacer_targets.append((row[1], row[0]))  # (Source, Target)
                                 else:
-                                    mpaths.write_warning(f"Invalid row in replacer.csv for {folder}: {row}")
+                                    log.write_warning(f"Invalid row in replacer.csv for {folder}: {row}")
 
             except:
-                mpaths.write_warning()
+                log.write_warning()
 
             # Extract XMLs to be modified (assume they are in game VPK)
-            if helper.workshop_installed:
+            if conditions.workshop_installed:
                 for path in xml_modifications.keys():
                     compiled = path.replace(".xml", ".vxml_c")
                     dota_extracts.append(compiled)
 
-        if helper.workshop_installed:
+        if conditions.workshop_installed:
             helper.add_text_to_terminal("&starting_extraction")
             core_extracts = list(set(core_extracts))
             dota_extracts = list(set(dota_extracts))
@@ -216,30 +217,28 @@ def patcher(mod=None, pakname=None):
             # ------------------- Decompile all files in "build" folder ------------------ #
             # ---------------------------------------------------------------------------- #
             helper.add_text_to_terminal("&decompiling_terminal")
-            with open(mpaths.log_s2v, "w") as file:
+            with open(base.log_s2v, "w") as file:
                 try:
                     subprocess.run(
                         [
-                            os.path.join(".", mpaths.s2v_executable),
+                            os.path.join(".", constants.s2v_executable),
                             "--input",
-                            mpaths.build_dir,
+                            base.build_dir,
                             "--recursive",
                             "--vpk_decompile",
                             "--output",
-                            mpaths.build_dir,
+                            base.build_dir,
                         ],
                         stdout=file,
-                        creationflags=subprocess.CREATE_NO_WINDOW if mpaths.OS == mpaths.WIN else 0,
+                        creationflags=subprocess.CREATE_NO_WINDOW if base.OS == base.WIN else 0,
                     )
                 except:
-                    mpaths.write_crashlog()
+                    log.write_crashlog()
 
             with ThreadPoolExecutor() as executor:
-                xml_mod_args = [
-                    (os.path.join(mpaths.build_dir, path), mods) for path, mods in xml_modifications.items()
-                ]
+                xml_mod_args = [(os.path.join(base.build_dir, path), mods) for path, mods in xml_modifications.items()]
                 executor.map(lambda p: apply_xml_modifications(*p), xml_mod_args)
-            gui.bulk_exec_script("after_decompile")
+            helper.bulk_exec_script("after_decompile")
             # ---------------------------------- STEP 3 ---------------------------------- #
             # ---------------------------- CSS resourcecompile --------------------------- #
             # ---------------------------------------------------------------------------- #
@@ -247,7 +246,7 @@ def patcher(mod=None, pakname=None):
             styles_by_file = {}
             for path, style in styling_dictionary.values():
                 sanitized_path = path[1:] if path.startswith("!") else path
-                css_file_path = os.path.join(mpaths.build_dir, f"{sanitized_path}.css")
+                css_file_path = os.path.join(base.build_dir, f"{sanitized_path}.css")
                 if css_file_path not in styles_by_file:
                     styles_by_file[css_file_path] = []
                 styles_by_file[css_file_path].append(style)
@@ -256,28 +255,28 @@ def patcher(mod=None, pakname=None):
                 executor.map(apply_styles_to_file, styles_by_file.items())
 
             shutil.copytree(
-                mpaths.build_dir,
-                mpaths.minify_dota_compile_input_path,
+                base.build_dir,
+                constants.minify_dota_compile_input_path,
                 dirs_exist_ok=True,
                 ignore=shutil.ignore_patterns("*.vcss_c", "*.vxml_c"),
             )
 
             # TODO: use helper.compile instead
-            with open(mpaths.log_rescomp, "wb") as file:
+            with open(base.log_rescomp, "wb") as file:
                 command = [
-                    mpaths.dota_resource_compiler_path,
+                    constants.dota_resource_compiler_path,
                     "-i",
-                    mpaths.minify_dota_compile_input_path + "/*",
+                    constants.minify_dota_compile_input_path + "/*",
                     "-r",
                 ]
-                if mpaths.OS != mpaths.WIN:
+                if base.OS != base.WIN:
                     command.insert(0, "wine")
 
                 rescomp = subprocess.run(
                     command,
                     stdout=subprocess.PIPE,
                     stderr=subprocess.PIPE,  # compiler complains if minify_dota_compile_input_path is empty
-                    creationflags=subprocess.CREATE_NO_WINDOW if mpaths.OS == mpaths.WIN else 0,
+                    creationflags=subprocess.CREATE_NO_WINDOW if base.OS == base.WIN else 0,
                 )
                 if rescomp.stdout != b"":
                     file.write(rescomp.stdout)
@@ -285,10 +284,10 @@ def patcher(mod=None, pakname=None):
                 # if sp_compiler.stderr != b"":
                 #     decoded_err = sp_compiler.stderr.decode("utf-8")
                 #     raise Exception(decoded_err)
-        gui.bulk_exec_script("after_recompile")
+        helper.bulk_exec_script("after_recompile")
 
         if replacer_source_extracts:
-            vpk_extractor(dota_pak_contents, replacer_source_extracts, mpaths.replace_dir)
+            vpk_extractor(dota_pak_contents, replacer_source_extracts, base.replace_dir)
             with ThreadPoolExecutor() as executor:
                 executor.map(process_replacer, replacer_targets)
 
@@ -298,17 +297,17 @@ def patcher(mod=None, pakname=None):
         # insert metadata to pak
         if mod is None:
             shutil.copy(
-                mpaths.mods_config_dir,
-                os.path.join(mpaths.minify_dota_compile_output_path, "minify_mods.json"),
+                base.mods_config_dir,
+                os.path.join(constants.minify_dota_compile_output_path, "minify_mods.json"),
             )
         else:
-            open(os.path.join(mpaths.minify_dota_compile_output_path, f"{mod}.txt"), "w").close()
+            open(os.path.join(constants.minify_dota_compile_output_path, f"{mod}.txt"), "w").close()
 
-        with open(os.path.join(mpaths.minify_dota_compile_output_path, "minify_version.txt"), "w") as f:
-            f.write(mpaths.version)
+        with open(os.path.join(constants.minify_dota_compile_output_path, "minify_version.txt"), "w") as f:
+            f.write(base.VERSION)
 
-        os.makedirs(helper.output_path, exist_ok=True)
-        native_mods = vpk.new(mpaths.minify_dota_compile_output_path)
+        fs.create_dirs(helper.output_path)
+        native_mods = vpk.new(constants.minify_dota_compile_output_path)
         helper.add_text_to_terminal("&compiling_terminal")
         pakname = "pak66" if pakname is None else pakname
         native_mods.save(os.path.join(helper.output_path, f"{pakname}_dir.vpk"))
@@ -328,24 +327,24 @@ def patcher(mod=None, pakname=None):
             helper.add_text_to_terminal("&merging_vpks")
 
             for mod_name in vpk_mods_to_merge:
-                mod_path = os.path.join(mpaths.mods_dir, mod_name)
+                mod_path = os.path.join(base.mods_dir, mod_name)
                 try:
                     mod_vpk = vpk.open(mod_path)
-                    dump_vpk(mod_vpk, mpaths.merge_dir, check_exists=True)
+                    dump_vpk(mod_vpk, base.merge_dir, check_exists=True)
                     helper.add_text_to_terminal("&merged_mod", mod_name)
                 except:
-                    mpaths.write_warning("&failed_merge_mod", mod_name)
+                    log.write_warning("&failed_merge_mod", mod_name)
 
             # Insert metadata to pak65
             # Create a metadata file listing the VPK mods included
-            with open(os.path.join(mpaths.merge_dir, "minify_vpk_mods.txt"), "w") as f:
+            with open(os.path.join(base.merge_dir, "minify_vpk_mods.txt"), "w") as f:
                 f.write("\n".join(vpk_mods_to_merge))
 
-            with open(os.path.join(mpaths.merge_dir, "minify_version.txt"), "w") as f:
-                f.write(mpaths.version)
+            with open(os.path.join(base.merge_dir, "minify_version.txt"), "w") as f:
+                f.write(base.VERSION)
 
             helper.add_text_to_terminal("&creating_merged_vpk")
-            merged_mods = vpk.new(mpaths.merge_dir)
+            merged_mods = vpk.new(base.merge_dir)
             merged_mods.save(os.path.join(helper.output_path, "pak65_dir.vpk"))
 
             helper.add_text_to_terminal("&success_merged_vpk", type="success")
@@ -357,7 +356,7 @@ def patcher(mod=None, pakname=None):
                     # Verify it's a Minify-created pak65 by checking metadata
                     pak65_contents = vpk.open(pak65_path)
                     if "minify_vpk_mods.txt" in pak65_contents or "minify_version.txt" in pak65_contents:
-                        helper.remove_path(pak65_path)
+                        fs.remove_path(pak65_path)
                 except:
                     pass
 
@@ -365,20 +364,20 @@ def patcher(mod=None, pakname=None):
         # -------------------------- Clean paths and inform -------------------------- #
         # ---------------------------------------------------------------------------- #
 
-        helper.remove_path(
-            mpaths.minify_dota_compile_input_path,
-            mpaths.minify_dota_compile_output_path,
-            mpaths.build_dir,
-            mpaths.replace_dir,
-            mpaths.merge_dir,
+        fs.remove_path(
+            constants.minify_dota_compile_input_path,
+            constants.minify_dota_compile_output_path,
+            base.build_dir,
+            base.replace_dir,
+            base.merge_dir,
         )
 
         # handle language param automatically
-        if mpaths.get_config("fix_parameters", True):
+        if fs.get_config("fix_parameters", True):
             if helper.fix_parameters():
                 steam_close_retries = 0
                 while any(
-                    p.info.get("name") == os.path.basename(mpaths.steam_executable_path)
+                    p.info.get("name") == os.path.basename(constants.steam_executable_path)
                     for p in psutil.process_iter(attrs=["name"])
                 ):
                     if steam_close_retries >= 3:
@@ -388,42 +387,42 @@ def patcher(mod=None, pakname=None):
                     time.sleep(2)
                     steam_close_retries += 1
                 if steam_close_retries < 3:
-                    helper.open_thing(mpaths.steam_executable_path, "-silent")
+                    fs.open_thing(constants.steam_executable_path, "-silent")
 
-        gui.bulk_exec_script("after_patch", False)
+        helper.bulk_exec_script("after_patch", False)
 
         gui.unlock_interaction()
         ui.add_separator(parent="terminal_window")
         helper.add_text_to_terminal("&success_terminal", type="success")
         helper.add_text_to_terminal("&launch_option", ui.get_value("output_select"), type="warning")
 
-        if os.path.exists(mpaths.log_warnings) and os.path.getsize(mpaths.log_warnings) != 0:
+        if os.path.exists(base.log_warnings) and os.path.getsize(base.log_warnings) != 0:
             helper.add_text_to_terminal("&minify_encountered_errors_terminal", type="warning")
-        playsound3.playsound(os.path.join(mpaths.sounds_dir, "success.wav"), block=False)
+        playsound3.playsound(os.path.join(base.sounds_dir, "success.wav"), block=False)
 
-        if mpaths.get_config("launch_dota_after_patch", False):
-            webbrowser.open(f"steam://rungameid/{mpaths.STEAM_DOTA_ID}")
-        if mpaths.get_config("kill_self_after_patch", False):
+        if fs.get_config("launch_dota_after_patch", False):
+            webbrowser.open(f"steam://rungameid/{base.STEAM_DOTA_ID}")
+        if fs.get_config("kill_self_after_patch", False):
             helper.close()
 
     # chimes are from pixabay.com/sound-effects/chime-74910/
     except (PermissionError, playsound3.PlaysoundException):
-        mpaths.write_warning()
+        log.write_warning()
 
     except:
-        mpaths.write_crashlog()
+        log.write_crashlog()
 
         ui.add_separator(parent="terminal_window")
         helper.add_text_to_terminal("&failure_terminal", type="error")
         helper.add_text_to_terminal("&check_logs_terminal", type="warning")
         gui.unlock_interaction()
-        playsound3.playsound(os.path.join(mpaths.sounds_dir, "fail.wav"), block=False)
+        playsound3.playsound(os.path.join(base.sounds_dir, "fail.wav"), block=False)
 
 
 def patch_seperate():
     # Mods that don't end up in config file will not be included (mods that are non-visual), fix?
     # Mods that have nothing to do with the built pak, will also create a pak
-    with open(mpaths.mods_config_dir) as file:
+    with open(base.mods_config_dir) as file:
         mods = jsonc.load(file)
     i = 20
     for mod in mods:
@@ -433,20 +432,19 @@ def patch_seperate():
             print(f"Created pak{i} with the mod {mod}")
 
 
-def uninstaller():
-    gui.hide_uninstall_popup()
+def uninstaller(sender=None, app_data=None, user_data=None):
     helper.clean_terminal()
     time.sleep(0.05)
     gui.lock_interaction()
 
     # smart uninstall
     pak_pattern = r"^pak\d{2}_dir\.vpk$"
-    for dir in mpaths.minify_dota_possible_language_output_paths:
+    for dir in constants.minify_dota_possible_language_output_paths:
         if os.path.isdir(dir):
             for item in os.listdir(dir):
                 if os.path.isfile(os.path.join(dir, item)) and re.fullmatch(pak_pattern, item):
                     pak_contents = vpk.open(os.path.join(dir, item))
-                    mod_names_with_txt = [s + ".txt" for s in mpaths.visually_available_mods]
+                    mod_names_with_txt = [s + ".txt" for s in constants.visually_available_mods]
                     for file in [
                         "minify_mods.json",
                         # TODO if this exists, pull & parse to enable uninstallers
@@ -455,10 +453,10 @@ def uninstaller():
                         *mod_names_with_txt,
                     ]:
                         if file in pak_contents:
-                            helper.remove_path(os.path.join(dir, item))
+                            fs.remove_path(os.path.join(dir, item))
                             break
     # TODO remove lang param if out locale is minify
-    gui.bulk_exec_script("uninstall")
+    helper.bulk_exec_script("uninstall")
     helper.add_text_to_terminal("&mods_removed_terminal")
     gui.unlock_interaction()
 
@@ -469,11 +467,11 @@ def dump_vpk(vpk_obj, output_dir, check_exists=True):
         if check_exists and os.path.exists(full_path):
             continue
 
-        os.makedirs(os.path.dirname(full_path), exist_ok=True)
+        fs.create_dirs(os.path.dirname(full_path))
         vpk_obj.get_file(filepath).save(full_path)
 
 
-def vpk_extractor(vpk_to_extract_from, paths, path_to_extract_to=mpaths.build_dir):
+def vpk_extractor(vpk_to_extract_from, paths, path_to_extract_to=base.build_dir):
     if isinstance(paths, str):
         paths = [paths]
 
@@ -486,10 +484,10 @@ def vpk_extractor(vpk_to_extract_from, paths, path_to_extract_to=mpaths.build_di
                 pakfile = vpk_to_extract_from.get_file(path)
 
             if pakfile:
-                os.makedirs(os.path.dirname(full_path), exist_ok=True)
+                fs.create_dirs(os.path.dirname(full_path))
                 pakfile.save(full_path)
             else:
-                mpaths.write_warning(f"File not found in VPK: {path}")
+                log.write_warning(f"File not found in VPK: {path}")
 
     with ThreadPoolExecutor() as executor:
         executor.map(extract_file, paths)
@@ -500,7 +498,7 @@ def apply_xml_modifications(xml_file, modifications):
     # DOTAXThing#Thing.Thing[attrib="val"]
 
     if not os.path.exists(xml_file):
-        mpaths.write_warning(f"[Missing XML] '{xml_file}' not found; skipping modifications")
+        log.write_warning(f"[Missing XML] '{xml_file}' not found; skipping modifications")
         return
     tree = ET.parse(xml_file)
     root = tree.getroot()
@@ -564,11 +562,9 @@ def apply_xml_modifications(xml_file, modifications):
                         child = ET.fromstring(xml_snippet)
                         parent_elem.append(child)
                     except ET.ParseError:
-                        mpaths.write_warning("[XML ParseError] add_child")
+                        log.write_warning("[XML ParseError] add_child")
                 else:
-                    mpaths.write_warning(
-                        f"[add_child] parent id '{parent_id}' not found in {os.path.basename(xml_file)}"
-                    )
+                    log.write_warning(f"[add_child] parent id '{parent_id}' not found in {os.path.basename(xml_file)}")
 
         elif action == "move_into":
             target_id = mod.get("target_id")
@@ -582,11 +578,11 @@ def apply_xml_modifications(xml_file, modifications):
                     new_parent.append(elem)
                 else:
                     if elem is None:
-                        mpaths.write_warning(
+                        log.write_warning(
                             f"[move_into] target id '{target_id}' not found in {os.path.basename(xml_file)}"
                         )
                     if new_parent is None:
-                        mpaths.write_warning(
+                        log.write_warning(
                             f"[move_into] new_parent id '{new_parent_id}' not found in {os.path.basename(xml_file)}"
                         )
 
@@ -601,9 +597,9 @@ def apply_xml_modifications(xml_file, modifications):
                         idx = list(parent).index(target)
                         parent.insert(idx + 1, new_elem)
                     except ET.ParseError:
-                        mpaths.write_warning("[XML ParseError] insert_after")
+                        log.write_warning("[XML ParseError] insert_after")
                 else:
-                    mpaths.write_warning(
+                    log.write_warning(
                         f"[insert_after] target id '{target_id}' not found in {os.path.basename(xml_file)}"
                     )
 
@@ -618,9 +614,9 @@ def apply_xml_modifications(xml_file, modifications):
                         idx = list(parent).index(target)
                         parent.insert(idx, new_elem)
                     except ET.ParseError:
-                        mpaths.write_warning("[XML ParseError] insert_before")
+                        log.write_warning("[XML ParseError] insert_before")
                 else:
-                    mpaths.write_warning(
+                    log.write_warning(
                         f"[insert_before] target id '{target_id}' not found in {os.path.basename(xml_file)}"
                     )
 
@@ -721,7 +717,7 @@ def process_blacklist(blacklist_txt, folder, blank_file_extensions):
                 if line.endswith(tuple(blank_file_extensions)):
                     blacklist_data.append(line)
                 else:
-                    mpaths.write_warning(
+                    log.write_warning(
                         f"[Invalid Extension] '{line}' in 'mods/{folder}/blacklist.txt' [line: {index + 1}] does not end in one of the valid extensions -> {blank_file_extensions}"
                     )
 
@@ -737,24 +733,18 @@ def process_blacklist(blacklist_txt, folder, blank_file_extensions):
         line = line.strip()
         path, extension = os.path.splitext(line)
 
-        os.makedirs(
-            os.path.join(
-                mpaths.minify_dota_compile_output_path,
-                os.path.dirname(path),
-            ),
-            exist_ok=True,
-        )
+        fs.create_dirs(os.path.join(constants.minify_dota_compile_output_path, os.path.dirname(path)))
 
         try:
             shutil.copy(
-                os.path.join(mpaths.blank_files_dir, f"blank{extension}"),
+                os.path.join(base.blank_files_dir, f"blank{extension}"),
                 os.path.join(
-                    mpaths.minify_dota_compile_output_path,
+                    constants.minify_dota_compile_output_path,
                     path + extension,
                 ),
             )
         except FileNotFoundError:
-            mpaths.write_warning(
+            log.write_warning(
                 f"[Invalid Extension] '{line}' in 'mods/{os.path.basename(folder)}/blacklist.txt' does not end in one of the valid extensions -> {blank_file_extensions}"
             )
 
@@ -765,11 +755,8 @@ def process_blacklist(blacklist_txt, folder, blank_file_extensions):
 def process_replacer(item):
     source, target = item
     helper.add_text_to_terminal("&replacing_terminal", source, target)
-    os.makedirs(
-        os.path.dirname(target_dir := os.path.join(mpaths.minify_dota_compile_output_path, target)),
-        exist_ok=True,
-    )
-    shutil.copy(os.path.join(mpaths.replace_dir, source), target_dir)
+    fs.create_dirs(os.path.dirname(target_dir := os.path.join(constants.minify_dota_compile_output_path, target)))
+    shutil.copy(os.path.join(base.replace_dir, source), target_dir)
 
 
 def process_blacklist_dir(index, line, folder):
@@ -781,21 +768,21 @@ def process_blacklist_dir(index, line, folder):
 
     lines = subprocess.run(
         [
-            os.path.join(".", mpaths.rg_executable),
+            os.path.join(".", constants.rg_executable),
             "--no-filename",
             "--no-line-number",
             "--color=never",
             line,
-            os.path.join(mpaths.bin_dir, "gamepakcontents.txt"),
+            os.path.join(base.bin_dir, "gamepakcontents.txt"),
         ],
         capture_output=True,
         text=True,
-        creationflags=subprocess.CREATE_NO_WINDOW if mpaths.OS == mpaths.WIN else 0,
+        creationflags=subprocess.CREATE_NO_WINDOW if base.OS == base.WIN else 0,
     )
     data = lines.stdout.splitlines()
 
     if not data:
-        mpaths.write_warning(
+        log.write_warning(
             f"[Directory Not Found] Could not find '{line}' in pak01_dir.vpk -> mods/{folder}/blacklist.txt [line: {index + 1}]"
         )
 
@@ -805,15 +792,15 @@ def process_blacklist_dir(index, line, folder):
 def wipe_lang_dirs():
     helper.clean_terminal()
     uninstaller()
-    for path in mpaths.minify_dota_possible_language_output_paths:
+    for path in constants.minify_dota_possible_language_output_paths:
         if os.path.isdir(path):
-            helper.remove_path(path)
+            fs.remove_path(path)
             helper.add_text_to_terminal("&clean_lang_dirs", path)
 
 
 def create_blank_mod():
     mod_name = "!Your-Mod-Name"
-    path_to_mod = os.path.join(mpaths.mods_dir, mod_name)
+    path_to_mod = os.path.join(base.mods_dir, mod_name)
 
     blacklist_template = r"""# This file is a list of path to files used to override those with blanks.
 # Supported file types are can be found in `bin/blank-files`.
@@ -863,10 +850,12 @@ if os.getcwd() != minify_root:
 if minify_root not in sys.path:
     sys.path.insert(0, minify_root)
 
+# isort: split
+
 # Any package or module native to minify can be imported here
 # import requests
 #
-# import mpaths
+# import fs
 # ...
 
 
@@ -932,7 +921,7 @@ Example:
 */
 """
 
-    helper.remove_path(path_to_mod)
+    fs.remove_path(path_to_mod)
     os.mkdir(path_to_mod)
     os.mkdir(os.path.join(path_to_mod, "files"))
     open(os.path.join(path_to_mod, "files", ".gitkeep"), "w").close()

@@ -9,16 +9,18 @@ if os.getcwd() != minify_root:
 if minify_root not in sys.path:
     sys.path.insert(0, minify_root)
 
+# isort: split
+
 import shutil
 
 import requests
 
-import helper
-import mpaths
+# isort: split
 
-dota_itembuilds_path = os.path.join(
-    mpaths.steam_library, "steamapps", "common", "dota 2 beta", "game", "dota", "itembuilds"
-)
+import conditions
+from core import fs, steam
+
+dota_itembuilds_path = os.path.join(steam.LIBRARY, "steamapps", "common", "dota 2 beta", "game", "dota", "itembuilds")
 odg_latest = "https://github.com/Egezenn/OpenDotaGuides/releases/latest/download/itembuilds.zip"
 zip_path = os.path.join(current_dir, "files", "OpenDotaGuides.zip")
 temp_dump_path = os.path.join(current_dir, "files", "temp")
@@ -26,7 +28,7 @@ temp_dump_path = os.path.join(current_dir, "files", "temp")
 
 def main():
     try:
-        if helper.workshop_installed:
+        if conditions.workshop_installed:
             shutil.copy(
                 os.path.join(current_dir, "_styling.css"),
                 os.path.join(current_dir, "styling.css"),
@@ -34,7 +36,7 @@ def main():
     except:
         pass
 
-    helper.remove_path(zip_path)
+    fs.remove_path(zip_path)
 
     try:
         response = requests.get(odg_latest)
@@ -43,11 +45,11 @@ def main():
     if response.status_code == 200:
         with open(zip_path, "wb") as file:
             file.write(response.content)
-        os.makedirs(os.path.join(dota_itembuilds_path, "bkup"), exist_ok=True)
+        fs.create_dirs(os.path.join(dota_itembuilds_path, "bkup"))
         try:
             for name in os.listdir(dota_itembuilds_path):
                 if name != "bkup":
-                    helper.move_path(
+                    fs.move_path(
                         os.path.join(dota_itembuilds_path, name),
                         os.path.join(dota_itembuilds_path, "bkup", name),
                     )
@@ -59,7 +61,7 @@ def main():
                 os.path.join(temp_dump_path, file),
                 os.path.join(dota_itembuilds_path, file),
             )
-        helper.remove_path(temp_dump_path, zip_path)
+        fs.remove_path(temp_dump_path, zip_path)
 
 
 if __name__ == "__main__":

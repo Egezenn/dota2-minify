@@ -9,12 +9,14 @@ os.chdir(minify_root)
 if minify_root not in sys.path:
     sys.path.insert(0, minify_root)
 
-import helper
-import mpaths
+# isort: split
+
+import conditions
+from core import base, log
 
 
 def main():
-    if not helper.workshop_installed:
+    if not conditions.workshop_installed:
         return
 
     menu_xml_path = os.path.join(current_dir, "menu.xml")
@@ -25,11 +27,11 @@ def main():
         with open(menu_xml_path, encoding="utf-8") as file:
             menu_data = file.read()
             if not menu_data.strip().startswith(r"<Panel "):
-                mpaths.write_warning(f"Improper mod menu on {os.path.basename(current_dir)}!")
+                log.write_warning(f"Improper mod menu on {os.path.basename(current_dir)}!")
                 return
             menu_element = ET.fromstring(menu_data)
     except Exception as e:
-        mpaths.write_warning(f"Failed to read/parse menu.xml: {e}")
+        log.write_warning(f"Failed to read/parse menu.xml: {e}")
         return
 
     minify_section_xml = r"""
@@ -42,7 +44,7 @@ def main():
 """
 
     settings_path = os.path.join(
-        mpaths.build_dir,
+        base.build_dir,
         "panorama",
         "layout",
         "popups",
@@ -50,7 +52,7 @@ def main():
     )
 
     if not os.path.exists(settings_path):
-        mpaths.write_warning(f"Settings file not found at {settings_path}")
+        log.write_warning(f"Settings file not found at {settings_path}")
         return
 
     try:
@@ -65,6 +67,6 @@ def main():
             tree.write(settings_path, encoding="utf-8")
 
     except ET.ParseError:
-        mpaths.write_warning(f"Failed to parse {settings_path}")
+        log.write_warning(f"Failed to parse {settings_path}")
     except Exception as e:
-        mpaths.write_warning(f"Error applying menu mod: {e}")
+        log.write_warning(f"Error applying menu mod: {e}")

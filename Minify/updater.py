@@ -14,7 +14,6 @@ import zipfile
 
 import psutil
 
-
 host = platform.system()
 
 

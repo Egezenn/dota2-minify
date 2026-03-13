@@ -9,11 +9,12 @@ if os.getcwd() != minify_root:
 if minify_root not in sys.path:
     sys.path.insert(0, minify_root)
 
-import dearpygui.dearpygui as ui
+# isort: split
 
-import helper
+import conditions
+import dearpygui.dearpygui as ui
 
 
 def main():
-    if not helper.workshop_installed:
+    if not conditions.workshop_installed:
         ui.configure_item(os.path.basename(current_dir), enabled=True)

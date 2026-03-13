@@ -8,8 +8,10 @@ os.chdir(minify_root)
 if minify_root not in sys.path:
     sys.path.insert(0, minify_root)
 
+# isort: split
 
 import helper
+from core import fs
 
 
 def main():
@@ -19,5 +21,5 @@ def main():
             "To prevent breaking changes without your consent we insist you to take a glance at the file first and keep only the snippets you'd like then rename _styling.css back to styling.css.",
             type="warning",
         )
-        helper.open_thing(os.path.join(current_dir, "_styling.css"))
-        helper.open_thing(current_dir)
+        fs.open_thing(os.path.join(current_dir, "_styling.css"))
+        fs.open_thing(current_dir)

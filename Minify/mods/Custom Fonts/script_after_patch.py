@@ -9,11 +9,13 @@ os.chdir(minify_root)
 if minify_root not in sys.path:
     sys.path.insert(0, minify_root)
 
-import mpaths
+# isort: split
+
+from core import fs
 
 
 def main():
-    config_data = mpaths.get_mod_config(mod_name)
+    config_data = fs.get_mod_config(mod_name)
     font_string = config_data.get("font_string", "Calibri, sans-serif")
 
     css = os.path.join(current_dir, "styling.css")

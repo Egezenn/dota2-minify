@@ -25,7 +25,6 @@ Minify/steam_appid.txt
 !Minify/mods/Auto Accept Match
 !Minify/mods/Custom Backgrounds
 !Minify/mods/Custom Fonts
-!Minify/mods/D2PT Hero Grids
 !Minify/mods/Dark Terrain
 !Minify/mods/Minify Base Attacks
 !Minify/mods/Minify Spells & Items
@@ -58,8 +57,6 @@ Minify/mods/Custom Backgrounds/*.png
 Minify/mods/Custom Backgrounds/*.web[mp]
 Minify/mods/Custom Backgrounds/video_success
 !Minify/mods/Custom Backgrounds/preview.png
-Minify/mods/D2PT Hero Grids/*.json
-Minify/mods/D2PT Hero Grids/backup
 Minify/mods/User Styles/styling.css
 
 # misc

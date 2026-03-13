@@ -12,8 +12,11 @@ if os.getcwd() != minify_root:
 if minify_root not in sys.path:
     sys.path.insert(0, minify_root)
 
+# isort: split
+
+import conditions
 import helper
-import mpaths
+from core import base, constants, fs
 
 
 def main():
@@ -29,7 +32,7 @@ def main():
             vid_available = True
             break
 
-    if helper.workshop_installed and (img_available or vid_available):
+    if conditions.workshop_installed and (img_available or vid_available):
         filepath = os.path.join(current_dir, file)
         if img_available:
             # reference to the file to compile to vtex
@@ -42,20 +45,16 @@ def main():
                             filepath,
                             filepath := os.path.join(current_dir, "background.png"),
                         ],
-                        creationflags=subprocess.CREATE_NO_WINDOW if mpaths.OS == mpaths.WIN else 0,
+                        creationflags=subprocess.CREATE_NO_WINDOW if base.OS == base.WIN else 0,
                     )
                 else:
                     helper.add_text_to_terminal(f"imagemagick is not available on path, unable to convert {file}")
 
             if filepath.endswith(".png"):
-                os.makedirs(
+                fs.create_dirs(
                     compile_location := os.path.join(
-                        mpaths.minify_dota_compile_input_path,
-                        "panorama",
-                        "images",
-                        "backgrounds",
-                    ),
-                    exist_ok=True,
+                        constants.minify_dota_compile_input_path, "panorama", "images", "backgrounds"
+                    )
                 )
 
                 shutil.copy(filepath, os.path.join(compile_location, "background.png"))
@@ -74,15 +73,14 @@ def main():
                             filepath,
                             filepath := os.path.join(current_dir, "background.webm"),
                         ],
-                        creationflags=subprocess.CREATE_NO_WINDOW if mpaths.OS == mpaths.WIN else 0,
+                        creationflags=subprocess.CREATE_NO_WINDOW if base.OS == base.WIN else 0,
                     )
                 else:
                     helper.add_text_to_terminal(f"ffmpeg is not available on path, unable to convert {file}")
 
             if filepath.endswith(".webm"):
-                os.makedirs(
-                    compile_location := os.path.join(mpaths.minify_dota_compile_output_path, "panorama", "videos"),
-                    exist_ok=True,
+                fs.create_dirs(
+                    compile_location := os.path.join(constants.minify_dota_compile_output_path, "panorama", "videos"),
                 )
                 shutil.copy(filepath, os.path.join(compile_location, "background.webm"))
 
