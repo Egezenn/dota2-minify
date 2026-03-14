@@ -12,9 +12,9 @@ if minify_root not in sys.path:
 # isort: split
 
 import conditions
-import dearpygui.dearpygui as ui
+import dearpygui.dearpygui as dpg
 
 
 def main():
     if not conditions.workshop_installed:
-        ui.configure_item(os.path.basename(current_dir), enabled=True)
+        dpg.configure_item(os.path.basename(current_dir), enabled=True)

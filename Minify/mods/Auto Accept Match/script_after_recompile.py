@@ -11,11 +11,8 @@ if minify_root not in sys.path:
 
 # isort: split
 
-import requests
-
-# isort: split
-
 import conditions
+import requests
 from core import constants, fs
 
 before_workshop_req = "https://github.com/Egezenn/dota2-minify/blob/Minify-v1.11.2/mods/Auto%20Accept%20Match/files/panorama/layout/popups/popup_accept_match.vxml_c"

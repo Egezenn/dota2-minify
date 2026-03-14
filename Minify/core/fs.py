@@ -5,13 +5,19 @@ import shlex
 import shutil
 import stat
 import subprocess
+import tarfile
+import time
+import zipfile
 
-import jsonc
+import dearpygui.dearpygui as dpg
+import requests
 
-from . import base, log
+from core import base, log
 
 
 def open_thing(path, args=""):
+    from ui import terminal
+
     try:
         # If args are provided and target is executable, prefer launching directly
         if args:
@@ -43,9 +49,7 @@ def open_thing(path, args=""):
             else:
                 subprocess.run(["xdg-open", path])
     except FileNotFoundError:
-        import helper
-
-        helper.add_text_to_terminal("&open_dir_fail", path, type="error")
+        terminal.add_text_to_terminal("&open_dir_fail", path, msg_type="error")
 
 
 def move_path(src, dst):
@@ -62,12 +66,12 @@ def move_path(src, dst):
 
             for path in paths_to_chmod:
                 if os.path.isdir(path):
-                    for dir, _, filenames in os.walk(path):
-                        current_dir_mode = os.stat(dir).st_mode
-                        os.chmod(dir, current_dir_mode | stat.S_IWUSR)
+                    for root, _, filenames in os.walk(path):
+                        current_dir_mode = os.stat(root).st_mode
+                        os.chmod(root, current_dir_mode | stat.S_IWUSR)
 
                         for filename in filenames:
-                            filepath = os.path.join(dir, filename)
+                            filepath = os.path.join(root, filename)
                             current_file_mode = os.stat(filepath).st_mode
                             os.chmod(filepath, current_file_mode | stat.S_IWUSR)
                 else:
@@ -97,12 +101,12 @@ def remove_path(*paths):
         try:
             for path in paths:
                 if os.path.isdir(path):
-                    for dir, _, filenames in os.walk(path):
-                        current_dir_mode = os.stat(dir).st_mode
-                        os.chmod(dir, current_dir_mode | stat.S_IWUSR)
+                    for root, _, filenames in os.walk(path):
+                        current_dir_mode = os.stat(root).st_mode
+                        os.chmod(root, current_dir_mode | stat.S_IWUSR)
 
                         for filename in filenames:
-                            filepath = os.path.join(dir, filename)
+                            filepath = os.path.join(root, filename)
                             current_file_mode = os.stat(filepath).st_mode
                             os.chmod(filepath, current_file_mode | stat.S_IWUSR)
                 else:
@@ -119,52 +123,73 @@ def create_dirs(*paths):
         os.makedirs(path, exist_ok=True)
 
 
-def read_json_file(path):
+def download_file(url, target_path, progress_tag=None):
+    """
+    Downloads a file from url to target_path using requests.
+    Updates the UI progress_tag with "Downloading: X.XX/Y.YY MB" if provided.
+    """
+    from ui import terminal
+
     try:
-        with open(path, encoding="utf-8") as file:
-            return jsonc.load(file)
-    except (FileNotFoundError, jsonc.JSONDecodeError):
-        return {}
+        response = requests.get(url, stream=True)
+        response.raise_for_status()
+        total_size = int(response.headers.get("content-length", 0))
+        block_size = 8192
+        downloaded = 0
+        last_report_time = 0
+
+        with open(target_path, "wb") as f:
+            for chunk in response.iter_content(chunk_size=block_size):
+                if chunk:
+                    f.write(chunk)
+                    downloaded += len(chunk)
+                    if progress_tag:
+                        current_time = time.time()
+                        if current_time - last_report_time >= 0.1:
+                            downloaded_mb = downloaded / (1024 * 1024)
+                            total_size_mb = total_size / (1024 * 1024)
+                            if total_size > 0:
+                                # TODO: localize texts, use single string for downloads
+                                #       "Downloading {}".format(item)
+                                #       "Downloading {}".format(progress)
+                                dpg.set_value(
+                                    progress_tag,
+                                    f"Downloading: {downloaded_mb:.2f}/{total_size_mb:.2f} MB",
+                                )
+                            else:
+                                dpg.set_value(progress_tag, f"Downloading: {downloaded_mb:.2f} MB")
+                            last_report_time = current_time
+        return True
+    except Exception as e:
+        terminal.add_text_to_terminal(f"Failed to open {target_path}: {e}", msg_type="error")
+        return False
 
 
-def write_json_file(path, data):
-    with open(path, "w", encoding="utf-8") as file:
-        jsonc.dump(data, file, indent=2)
+def extract_archive(archive_path, extract_dir=".", target_file=None):
+    """
+    Extracts an archive (zip or tar.gz).
+    If target_file is provided, extracts only that file (or directory structure leading to it).
+    """
+    from ui import terminal
 
-
-def update_json_file(path, key, value):
-    data = read_json_file(path)
-    data[key] = value
-    write_json_file(path, data)
-    return value
-
-
-def get_config(key, default_value=None):
-    "Get config value from the main config file with default and set the default onto config."
-    data = read_json_file(base.main_config_file_dir)
-    if key in data:
-        return data[key]
-
-    if default_value is not None:
-        return update_json_file(base.main_config_file_dir, key, default_value)
-
-    return None
-
-
-def set_config(key, value):
-    "Set config value for the main config file."
-    return update_json_file(base.main_config_file_dir, key, value)
-
-
-def get_mod_config(mod_name, default=None):
-    "Get config value for mods."
-    if default is None:
-        default = {}
-    return get_config("modconf", {}).get(mod_name, default)
-
-
-def set_mod_config(mod_name, config_data):
-    "Set config value for mods."
-    modconf = get_config("modconf", {})
-    modconf[mod_name] = config_data
-    set_config("modconf", modconf)
+    try:
+        if archive_path.endswith(".zip"):
+            with zipfile.ZipFile(archive_path) as zip_ref:
+                if target_file:
+                    zip_ref.extract(target_file, path=extract_dir)
+                else:
+                    zip_ref.extractall(extract_dir)
+        elif archive_path.endswith((".tar.gz", ".tgz")):
+            with tarfile.open(archive_path, "r:gz") as tar:
+                if target_file:
+                    member = tar.getmember(target_file)
+                    tar.extract(member, path=extract_dir)
+                else:
+                    tar.extractall(extract_dir)
+        else:
+            terminal.add_text_to_terminal(f"Unsupported archive format: {archive_path}", msg_type="error")
+            return False
+        return True
+    except Exception as e:
+        terminal.add_text_to_terminal(f"Extraction failed: {e}", msg_type="error")
+        return False

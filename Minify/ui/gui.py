@@ -1,26 +1,21 @@
 import concurrent.futures
 import os
 import threading
-
-import dearpygui.dearpygui as ui
-import jsonc
-import screeninfo
-
-# isort: split
+import time
 
 import conditions
-import helper
-from core import base, constants, fs, log
+import dearpygui.dearpygui as dpg
+import jsonc
+import screeninfo
+from core import base, config, constants, fs, localization, log
 
-from . import modal_shared
+from ui import details, modal_shared, shared, terminal
 
 checkboxes = []
 checkboxes_state = {}
 gui_lock = False
 
-terminal_window_wrap = constants.main_window_width - 10
-tag_data_for_details_windows = []
-mod_details_image_cache = {}
+terminal_window_wrap = base.main_window_width - 10
 
 widths = []
 heights = []
@@ -53,7 +48,7 @@ def initiate_conditionals():
     setup_system_thread.join()
     load_state_checkboxes_thread.join()
 
-    with ui.texture_registry(tag="mod_images_registry", show=False):
+    with dpg.texture_registry(tag="mod_images_registry", show=False):
         pass
 
     create_checkboxes()
@@ -77,7 +72,7 @@ def load_checkboxes_state():
 
 def save_checkbox_state():
     for box in checkboxes:
-        checkboxes_state[box] = ui.get_value(box)
+        checkboxes_state[box] = dpg.get_value(box)
     with open(base.mods_config_dir, "w", encoding="utf-8") as file:
         jsonc.dump(checkboxes_state, file, indent=2)
 
@@ -95,7 +90,7 @@ def create_checkboxes():
 
         if os.path.exists(img_p):
             try:
-                image_data = ui.load_image(img_p)
+                image_data = dpg.load_image(img_p)
             except Exception as err:
                 print(f"Failed to load image for {mod_name}: {err}")
 
@@ -117,7 +112,7 @@ def create_checkboxes():
             always_val = False
         else:
             mod_cfg_path = os.path.join(mod_path, "modcfg.json")
-            always_val = fs.read_json_file(mod_cfg_path).get("always", False)
+            always_val = config.read_json_file(mod_cfg_path).get("always", False)
 
         if always_val:
             enable_ticking = False
@@ -126,8 +121,8 @@ def create_checkboxes():
             enable_ticking = True
             value = checkboxes_state.get(mod, False)
 
-        ui.add_group(parent="mod_menu", tag=f"{mod}_group_tag", horizontal=True, width=constants.main_window_width)
-        ui.add_checkbox(
+        dpg.add_group(parent="mod_menu", tag=f"{mod}_group_tag", horizontal=True, width=base.main_window_width)
+        dpg.add_checkbox(
             parent=f"{mod}_group_tag",
             label=mod[:-4] if is_vpk else mod,
             tag=mod,
@@ -141,17 +136,17 @@ def create_checkboxes():
 
             if img_data or has_notes:
                 tag_data = f"{mod}_details_window_tag"
-                ui.add_button(
+                dpg.add_button(
                     parent=f"{mod}_group_tag",
                     small=True,
-                    indent=constants.main_window_width - 150,
+                    indent=base.main_window_width - 150,
                     tag=f"{mod}_button_show_details_tag",
-                    label=f"{helper.details_label}",
+                    label=f"{localization.details_label}",
                     callback=show_details,
                     user_data=tag_data,
                 )
-                tag_data_for_details_windows.append(tag_data)
-                ui.add_window(
+                shared.tag_data_for_details_windows.append(tag_data)
+                dpg.add_window(
                     tag=tag_data,
                     modal=True,
                     pos=(0, 0),
@@ -161,26 +156,26 @@ def create_checkboxes():
                     no_move=True,
                     no_close=False,
                     no_collapse=True,
-                    width=constants.main_window_width,
-                    height=constants.main_window_height,
+                    width=base.main_window_width,
+                    height=base.main_window_height,
                 )
 
                 content_group = f"{mod}_details_content_group"
-                with ui.group(parent=tag_data, tag=content_group):
+                with dpg.group(parent=tag_data, tag=content_group):
                     pass
 
                 if img_data:
                     try:
                         w, h, _, d = img_data
                         image_tag = f"{mod}_image_texture"
-                        ui.add_static_texture(
+                        dpg.add_static_texture(
                             width=w, height=h, default_value=d, tag=image_tag, parent="mod_images_registry"
                         )
-                        mod_details_image_cache[mod] = (w, h, image_tag)
+                        shared.mod_details_image_cache[mod] = (w, h, image_tag)
                     except Exception as e:
                         print(f"Failed to display image for {mod}: {e}")
 
-                render_details_window(mod)
+                details.render_details_window(mod)
 
         checkboxes.append(mod)
 
@@ -200,74 +195,38 @@ def setup_button_state():
 def lock_interaction():
     global gui_lock
     gui_lock = True
-    ui.configure_item("button_patch", enabled=False)
-    ui.configure_item("button_select_mods", enabled=False)
-    ui.configure_item("button_uninstall", enabled=False)
-    ui.configure_item("lang_select", enabled=False)
-    ui.configure_item("output_select", enabled=False)
+    dpg.configure_item("button_patch", enabled=False)
+    dpg.configure_item("button_select_mods", enabled=False)
+    dpg.configure_item("button_uninstall", enabled=False)
+    dpg.configure_item("lang_select", enabled=False)
+    dpg.configure_item("output_select", enabled=False)
 
 
 def unlock_interaction():
     global gui_lock
     gui_lock = False
-    ui.configure_item("button_patch", enabled=True)
-    ui.configure_item("button_select_mods", enabled=True)
-    ui.configure_item("button_uninstall", enabled=True)
-    ui.configure_item("lang_select", enabled=True)
-    ui.configure_item("output_select", enabled=True)
-
-
-def render_details_window(mod):
-    content_group = f"{mod}_details_content_group"
-    if not ui.does_item_exist(content_group):
-        return
-
-    ui.delete_item(content_group, children_only=True)
-
-    try:
-        window_width = ui.get_item_width("primary_window")
-        window_height = ui.get_item_height("primary_window")
-    except:
-        window_width = constants.main_window_width
-        window_height = constants.main_window_height
-
-    avail_width = window_width - 40
-    max_height = window_height - 50 - 20
-
-    if mod in mod_details_image_cache:
-        w, h, image_tag = mod_details_image_cache[mod]
-
-        scale = min(1.0, avail_width / w, max_height / h) * 0.7
-        display_w = int(w * scale)
-        display_h = int(h * scale)
-
-        ui.add_image(image_tag, width=display_w, height=display_h, parent=content_group)
-        ui.add_separator(parent=content_group)
-
-    mod_path = os.path.join(base.mods_dir, mod)
-    text = helper.parse_markdown_notes(mod_path, helper.locale)
-
-    container = f"{mod}_markdown_container"
-    with ui.group(parent=content_group, tag=container):
-        pass
-    helper.render_markdown(container, text)
+    dpg.configure_item("button_patch", enabled=True)
+    dpg.configure_item("button_select_mods", enabled=True)
+    dpg.configure_item("button_uninstall", enabled=True)
+    dpg.configure_item("lang_select", enabled=True)
+    dpg.configure_item("output_select", enabled=True)
 
 
 def show_details(sender, app_data, user_data):
     mod = user_data.replace("_details_window_tag", "")
-    render_details_window(mod)
-    ui.configure_item(user_data, show=True)
-    ui.focus_item(user_data)
+    details.render_details_window(mod)
+    dpg.configure_item(user_data, show=True)
+    dpg.focus_item(user_data)
 
 
 def start_text():
     for i in range(1, 6):
-        helper.add_text_to_terminal(f"&start_text_{i}_var")
-    ui.add_separator(parent="terminal_window")
+        terminal.add_text_to_terminal(f"&start_text_{i}_var")
+    dpg.add_separator(parent="terminal_window")
 
 
 def close_active_window():
-    active_window = ui.get_item_alias(ui.get_active_window())
+    active_window = dpg.get_item_alias(dpg.get_active_window())
     if active_window not in [
         "terminal_window",
         "primary_window",
@@ -277,7 +236,12 @@ def close_active_window():
         "maintenance_tools",
     ]:
         if active_window == "modal_popup":
-            ui.configure_item("modal_popup", show=False)
-            threading.Timer(0.1, modal_shared._show_next_modal_from_queue).start()
+            dpg.configure_item("modal_popup", show=False)
+            threading.Timer(0.1, modal_shared.show_next_modal_from_queue).start()
         else:
-            ui.configure_item(active_window, show=False)
+            dpg.configure_item(active_window, show=False)
+
+
+def close():
+    dpg.stop_dearpygui()
+    time.sleep(0.1)  # Fixed proper saving

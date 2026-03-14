@@ -2,13 +2,11 @@ import os
 import shutil
 import webbrowser
 
-import dearpygui.dearpygui as ui
-
-# isort: split
-
-import build
+import dearpygui.dearpygui as dpg
 import helper
-from core import base, constants, fs, steam
+from core import base, config, constants, fs, log, steam
+
+from ui import gui, terminal
 
 # Developer tools state
 dev_mode_state = -1
@@ -30,7 +28,7 @@ def recalc_rescomp_dirs():
 
 
 def extract_workshop_tools():
-    helper.clean_terminal()
+    terminal.clean_terminal()
     fs.remove_path(base.rescomp_override_dir)
     fails = 0
 
@@ -41,124 +39,125 @@ def extract_workshop_tools():
             else:
                 shutil.copy(path, constants.dota_tools_extraction_paths[i])
         else:
-            helper.add_text_to_terminal("&extraction_of_failed", path)
+            terminal.add_text_to_terminal("&extraction_of_failed", path)
             fails += 1
 
     if not fails:
         recalc_rescomp_dirs()
         if os.path.exists(constants.dota_resource_compiler_path):
-            helper.add_text_to_terminal("&extracted")
+            terminal.add_text_to_terminal("&extracted")
         else:
-            helper.add_text_to_terminal("&extraction_of_failed", path)
+            terminal.add_text_to_terminal("&extraction_of_failed", path)
 
 
-def tick_batch(state: bool, checkboxes, save_cb, setup_cb):
-    for box in checkboxes:
-        box_cfg = ui.get_item_configuration(box)
+def tick_batch(state: bool):
+    for box in gui.checkboxes:
+        box_cfg = dpg.get_item_configuration(box)
         if box_cfg["enabled"]:
-            ui.set_value(box, state)
-    if save_cb:
-        save_cb()
-    if setup_cb:
-        setup_cb()
+            dpg.set_value(box, state)
+    gui.save_checkbox_state()
 
 
-def toggle_dev_tools(title, checkboxes, save_cb, setup_cb):
+def toggle_dev_tools():
+    import build
+
     global dev_mode_state
     width_increase = 450
-    height_increase = 200 if fs.get_config("debug_env", False) else 0
+    height_increase = 200 if config.get_config("debug_env", False) else 0
 
-    target_width = constants.main_window_width + width_increase
-    target_height = constants.main_window_height + height_increase
+    target_width = base.main_window_width + width_increase
+    target_height = base.main_window_height + height_increase
 
-    current_w = prev_width if prev_width is not None else constants.main_window_width
-    current_h = prev_height if prev_height is not None else constants.main_window_height
+    current_w = prev_width if prev_width is not None else base.main_window_width
+    current_h = prev_height if prev_height is not None else base.main_window_height
 
     expanded_w = max(current_w, target_width)
     expanded_h = max(current_h, target_height)
 
-    tools_height = constants.main_window_height // 2
-    debug_env = fs.get_config("debug_env", False) if not base.FROZEN else False
+    tools_height = base.main_window_height // 2
+    debug_env = config.get_config("debug_env", False) if not base.FROZEN else False
 
     if dev_mode_state == -1:  # init
         dev_mode_state = 1
-        ui.configure_viewport(
-            item=title,
+        dpg.configure_viewport(
+            item=base.TITLE,
             width=expanded_w,
             height=expanded_h,
             min_width=target_width,
             min_height=target_height,
         )
-        with ui.window(
+        with dpg.window(
             label="Path & File Opener",
             tag="opener",
-            pos=(constants.main_window_width, 0),
+            pos=(base.main_window_width, 0),
             width=width_increase // 2,
-            height=constants.main_window_height,
+            height=base.main_window_height,
             no_resize=True,
             no_move=True,
             no_close=True,
             no_collapse=True,
         ):
-            ui.add_button(
+            dpg.add_button(
                 label="Path: Compile output path",
                 callback=lambda: fs.open_thing(os.path.join(helper.output_path)),
             )
-            ui.add_button(
+            dpg.add_button(
                 label="File: Compiled pak66 VPK",
                 callback=lambda: fs.open_thing(os.path.join(helper.output_path, "pak66_dir.vpk")),
             )
-            ui.add_spacer(width=0, height=5)
-            ui.add_button(
+            dpg.add_spacer(width=0, height=5)
+            dpg.add_button(
                 label="Path: Minify root",
                 callback=lambda: fs.open_thing(os.getcwd()),
             )
-            ui.add_button(
+            dpg.add_button(
                 label="Path: Logs",
                 callback=lambda: fs.open_thing(base.logs_dir),
             )
-            ui.add_button(
+            dpg.add_button(
                 label="Path: Config",
                 callback=lambda: fs.open_thing(base.config_dir),
             )
-            ui.add_button(
+            dpg.add_button(
                 label="Path: Mods",
                 callback=lambda: fs.open_thing(base.mods_dir),
             )
-            ui.add_spacer(width=0, height=5)
-            ui.add_button(
+            dpg.add_spacer(width=0, height=5)
+            dpg.add_button(
                 label="Path: Dota2",
-                callback=lambda: fs.open_thing(os.path.join(steam.steam_library, "steamapps", "common", "dota 2 beta")),
+                callback=lambda: fs.open_thing(
+                    os.path.join(config.get_config("steam_library"), "steamapps", "common", "dota 2 beta")
+                ),
             )
-            ui.add_button(
+            dpg.add_button(
                 label="File: Dota2 pak01 VPK",
                 callback=lambda: fs.open_thing(constants.dota_game_pak_path),
             )
-            ui.add_button(
+            dpg.add_button(
                 label="File: Dota2 pak01(core) VPK",
                 callback=lambda: fs.open_thing(constants.dota_core_pak_path),
             )
-            ui.add_spacer(width=0, height=5)
-            ui.add_button(
+            dpg.add_spacer(width=0, height=5)
+            dpg.add_button(
                 label="Executable: Dota2 Tools",
                 callback=lambda: fs.open_thing(
                     constants.dota2_tools_executable,
-                    f"-addon a -language {fs.get_config('output_locale')} -novid -console",
+                    f"-addon a -language {config.get_config('output_locale')} -novid -console",
                 ),
             )
-            ui.add_text("^ Requires steam to be open")
-            ui.add_button(
+            dpg.add_text("^ Requires steam to be open")
+            dpg.add_button(
                 label="Executable: Dota2",
                 callback=lambda: fs.open_thing(
-                    constants.dota2_executable, f"-language {fs.get_config('output_locale')} -novid -console"
+                    constants.dota2_executable, f"-language {config.get_config('output_locale')} -novid -console"
                 ),
             )
-            ui.add_button(label="Create debug zip", callback=helper.create_debug_zip)
+            dpg.add_button(label="Create debug zip", callback=log.create_debug_zip)
 
-        with ui.window(
+        with dpg.window(
             label="Mod Tools",
             tag="mod_tools",
-            pos=(constants.main_window_width + width_increase // 2, 0),
+            pos=(base.main_window_width + width_increase // 2, 0),
             width=width_increase // 2,
             height=tools_height,
             no_resize=True,
@@ -166,11 +165,11 @@ def toggle_dev_tools(title, checkboxes, save_cb, setup_cb):
             no_close=True,
             no_collapse=True,
         ):
-            ui.add_button(
+            dpg.add_button(
                 label="Select path to compile",
-                callback=lambda: ui.show_item("compile_file_dialog"),
+                callback=lambda: dpg.show_item("compile_file_dialog"),
             )
-            ui.add_file_dialog(
+            dpg.add_file_dialog(
                 show=False,
                 modal=False,
                 min_size=(480, 260),
@@ -178,51 +177,49 @@ def toggle_dev_tools(title, checkboxes, save_cb, setup_cb):
                 tag="compile_file_dialog",
                 directory_selector=True,
             )
-            ui.add_button(
+            dpg.add_button(
                 label="Compile items from path",
-                callback=lambda: helper.compile(
+                callback=lambda: helper.compile_assets(
                     input_path=os.path.join(base.config_dir, "custom"),
                     output_path=os.path.join(base.config_dir, "compiled"),
                 ),
             )
-            ui.add_spacer(width=0, height=5)
-            ui.add_button(label="Create a blank mod", callback=build.create_blank_mod)
+            dpg.add_spacer(width=0, height=5)
+            dpg.add_button(label="Create a blank mod", callback=build.create_blank_mod)
             # ui.add_spacer(width=0, height=5)
             # ui.add_button(label="Patch with seperate paks", callback=build.patch_seperate) # broken
-            ui.add_spacer(width=0, height=5)
-            ui.add_button(label="Untick all mods", callback=lambda: tick_batch(False, checkboxes, save_cb, setup_cb))
-            ui.add_button(label="Tick all mods", callback=lambda: tick_batch(True, checkboxes, save_cb, setup_cb))
+            dpg.add_spacer(width=0, height=5)
+            dpg.add_button(label="Untick all mods", callback=lambda: tick_batch(False))
+            dpg.add_button(label="Tick all mods", callback=lambda: tick_batch(True))
 
-        with ui.window(
+        with dpg.window(
             label="Maintenance Tools",
             tag="maintenance_tools",
-            pos=(constants.main_window_width + width_increase // 2, tools_height),
+            pos=(base.main_window_width + width_increase // 2, tools_height),
             width=width_increase // 2,
-            height=constants.main_window_height - tools_height,
+            height=base.main_window_height - tools_height,
             no_resize=True,
             no_move=True,
             no_close=True,
             no_collapse=True,
         ):
-            ui.add_button(label="Wipe language paths", callback=build.wipe_lang_dirs)
-            ui.add_spacer(width=0, height=5)
-            ui.add_button(label="Extract workshop tools", callback=extract_workshop_tools)
-            ui.add_spacer(width=0, height=5)
-            ui.add_button(
-                label="Launch Steam", callback=lambda: fs.open_thing(constants.steam_executable_path, "-silent")
+            dpg.add_button(label="Wipe language paths", callback=build.wipe_lang_dirs)
+            dpg.add_spacer(width=0, height=5)
+            dpg.add_button(label="Extract workshop tools", callback=extract_workshop_tools)
+            dpg.add_spacer(width=0, height=5)
+            dpg.add_button(label="Launch Steam", callback=lambda: fs.open_thing(steam.steam_executable_path, "-silent"))
+            dpg.add_button(
+                label="Kill Steam", callback=lambda: fs.open_thing(steam.steam_executable_path, "-exitsteam")
             )
-            ui.add_button(
-                label="Kill Steam", callback=lambda: fs.open_thing(constants.steam_executable_path, "-exitsteam")
-            )
-            ui.add_button(
+            dpg.add_button(
                 label="Validate Dota2", callback=lambda: webbrowser.open(f"steam://validate/{base.STEAM_DOTA_ID}")
             )
 
         if not base.FROZEN and debug_env:
-            with ui.window(
+            with dpg.window(
                 label="Debug tools",
                 tag="debug_tools",
-                pos=(constants.main_window_width, constants.main_window_height),
+                pos=(base.main_window_width, base.main_window_height),
                 width=width_increase,
                 height=150,
                 no_resize=True,
@@ -230,38 +227,38 @@ def toggle_dev_tools(title, checkboxes, save_cb, setup_cb):
                 no_close=True,
                 no_collapse=True,
             ):
-                ui.add_button(label="debug", callback=ui.show_debug)
-                ui.add_button(label="item_registry", callback=ui.show_item_registry)
-                ui.add_button(label="metrics", callback=ui.show_metrics)
-                ui.add_button(label="style_editor", callback=ui.show_style_editor)
-                ui.add_button(label="font_manager", callback=ui.show_font_manager)
+                dpg.add_button(label="debug", callback=dpg.show_debug)
+                dpg.add_button(label="item_registry", callback=dpg.show_item_registry)
+                dpg.add_button(label="metrics", callback=dpg.show_metrics)
+                dpg.add_button(label="style_editor", callback=dpg.show_style_editor)
+                dpg.add_button(label="font_manager", callback=dpg.show_font_manager)
 
     elif dev_mode_state == 1:  # Currently open -> Close
         dev_mode_state = 0
-        ui.configure_viewport(
-            item=title,
+        dpg.configure_viewport(
+            item=base.TITLE,
             width=current_w,
             height=current_h,
-            min_width=constants.main_window_width,
-            min_height=constants.main_window_height,
+            min_width=base.main_window_width,
+            min_height=base.main_window_height,
         )
-        ui.configure_item("opener", show=False)
-        ui.configure_item("mod_tools", show=False)
-        ui.configure_item("maintenance_tools", show=False)
+        dpg.configure_item("opener", show=False)
+        dpg.configure_item("mod_tools", show=False)
+        dpg.configure_item("maintenance_tools", show=False)
         if not base.FROZEN and debug_env:
-            ui.configure_item("debug_tools", show=False)
+            dpg.configure_item("debug_tools", show=False)
 
     else:  # Currently closed (0) -> Open
         dev_mode_state = 1
-        ui.configure_viewport(
-            item=title,
+        dpg.configure_viewport(
+            item=base.TITLE,
             width=expanded_w,
             height=expanded_h,
             min_width=target_width,
             min_height=target_height,
         )
-        ui.configure_item("opener", show=True)
-        ui.configure_item("mod_tools", show=True)
-        ui.configure_item("maintenance_tools", show=True)
+        dpg.configure_item("opener", show=True)
+        dpg.configure_item("mod_tools", show=True)
+        dpg.configure_item("maintenance_tools", show=True)
         if not base.FROZEN and debug_env:
-            ui.configure_item("debug_tools", show=True)
+            dpg.configure_item("debug_tools", show=True)

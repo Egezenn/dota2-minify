@@ -17,6 +17,7 @@ if minify_root not in sys.path:
 import conditions
 import helper
 from core import base, constants, fs
+from ui import terminal
 
 
 def main():
@@ -48,7 +49,7 @@ def main():
                         creationflags=subprocess.CREATE_NO_WINDOW if base.OS == base.WIN else 0,
                     )
                 else:
-                    helper.add_text_to_terminal(f"imagemagick is not available on path, unable to convert {file}")
+                    terminal.add_text_to_terminal(f"imagemagick is not available on path, unable to convert {file}")
 
             if filepath.endswith(".png"):
                 fs.create_dirs(
@@ -76,7 +77,7 @@ def main():
                         creationflags=subprocess.CREATE_NO_WINDOW if base.OS == base.WIN else 0,
                     )
                 else:
-                    helper.add_text_to_terminal(f"ffmpeg is not available on path, unable to convert {file}")
+                    terminal.add_text_to_terminal(f"ffmpeg is not available on path, unable to convert {file}")
 
             if filepath.endswith(".webm"):
                 fs.create_dirs(

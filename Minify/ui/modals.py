@@ -5,39 +5,36 @@ import subprocess
 import threading
 import webbrowser
 
-import dearpygui.dearpygui as ui
-import requests
-
-# isort: split
-
 import build
-import helper
-from core import base, fs, log
+import dearpygui.dearpygui as dpg
+import requests
+from core import base, config, fs, log
 
-from . import announcements
-from .modal_shared import show_modal
+from ui import announcements, modal_shared, terminal
 
 latest_download_url = None
 
 
 def update(sender=None, app_data=None, user_data=None):
     def threaded_update():
+        from ui import gui
+
         try:
             global latest_download_url
             download_url = latest_download_url
 
             if download_url:
-                tag = helper.add_text_to_terminal("Downloading update...")
+                tag = terminal.add_text_to_terminal("Downloading update...")
 
                 target_zip = "update.zip"
                 fs.remove_path(target_zip)
 
-                if not helper.download_file(download_url, target_zip, tag):
+                if not fs.download_file(download_url, target_zip, tag):
                     webbrowser.open(base.github_latest)
-                    helper.close()
+                    gui.close()
                     return
 
-                helper.add_text_to_terminal("Download complete. Launching updater...")
+                terminal.add_text_to_terminal("Download complete. Launching updater...")
 
                 if base.OS == base.WIN:
                     cmd = ["updater.exe", target_zip]
@@ -55,13 +52,13 @@ def update(sender=None, app_data=None, user_data=None):
                     )
                     subprocess.Popen(cmd, start_new_session=True, close_fds=True)
 
-                helper.close()
+                gui.close()
                 return
 
         except Exception as e:
             print(f"Update failed: {e}")
             webbrowser.open(base.github_latest)
-            helper.close()
+            gui.close()
 
     Update.delete(ignore=False)
 
@@ -73,7 +70,7 @@ def update(sender=None, app_data=None, user_data=None):
 class Announcements:
     @staticmethod
     def show(announcement):
-        show_modal(
+        modal_shared.show_modal(
             title="Announcement",
             messages=[announcement.get("text", "")],
             buttons=[
@@ -94,7 +91,7 @@ class Announcements:
 
     @staticmethod
     def callback(sender, app_data, user_data):
-        action = "OK" if ui.get_item_label(sender) == "OK" else "Ignore"
+        action = "OK" if dpg.get_item_label(sender) == "OK" else "Ignore"
         announcements.handle_announcement_action(user_data, action)
 
     @staticmethod
@@ -107,7 +104,7 @@ class Announcements:
 class Uninstall:
     @staticmethod
     def show():
-        show_modal(
+        modal_shared.show_modal(
             title="Uninstall",
             messages=["Remove all mods?"],
             buttons=[
@@ -124,7 +121,7 @@ class Uninstall:
 class Update:
     @staticmethod
     def show(version):
-        show_modal(
+        modal_shared.show_modal(
             title="Update",
             messages=["New update is available!", f"Version {version} is available. Would you like to update?"],
             buttons=[
@@ -137,7 +134,7 @@ class Update:
     @staticmethod
     def delete(ignore, version=None):
         if ignore and version:
-            fs.set_config("ignore_update", version)
+            config.set_config("ignore_update", version)
 
     @staticmethod
     def check():
@@ -157,7 +154,7 @@ class Update:
                 suffix = base.OS.lower() + ".zip"
 
                 if suffix:
-                    opt_in = fs.get_config("opt_into_rcs", False)
+                    opt_in = config.get_config("opt_into_rcs", False)
                     for release in releases:
                         if release["prerelease"] and not re.search(r"rc\d+$", base.VERSION) and not opt_in:
                             continue  # Show only if the current version is a pre-release
@@ -171,7 +168,7 @@ class Update:
                 if download_url and tag_name:
                     remote_version = tag_name[8:] if len(tag_name) > 8 else tag_name
                     if base.VERSION != remote_version:
-                        if fs.get_config("ignore_update") == remote_version:
+                        if config.get_config("ignore_update") == remote_version:
                             return
 
                         latest_download_url = download_url

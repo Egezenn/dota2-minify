@@ -3,10 +3,7 @@ import webbrowser
 
 import jsonc
 import requests
-
-# isort: split
-
-from core import base, fs
+from core import base, config
 
 
 def parse_time_condition(time_str):
@@ -71,7 +68,7 @@ def get_pending_announcements():
     if not announcements:
         return []
 
-    seen = fs.get_config("announcements_seen", [])
+    seen = config.get_config("announcements_seen", [])
     current_version = base.VERSION
 
     pending = []
@@ -101,10 +98,10 @@ def get_pending_announcements():
 
 
 def mark_as_seen(identifier):
-    seen = fs.get_config("announcements_seen", [])
+    seen = config.get_config("announcements_seen", [])
     if identifier not in seen:
         seen.append(identifier)
-        fs.set_config("announcements_seen", seen)
+        config.set_config("announcements_seen", seen)
 
 
 def handle_announcement_action(announcement, action):

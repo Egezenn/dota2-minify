@@ -1,11 +1,10 @@
 import ctypes
 import subprocess
 
-import dearpygui.dearpygui as ui
-import helper
-from core import base, constants, log
+import dearpygui.dearpygui as dpg
 
-from . import dev_tools, modal_shared
+from core import base, log
+from ui import details, shared, terminal
 
 is_moving_viewport = False
 
@@ -15,27 +14,27 @@ def drag_viewport(sender, app_data, user_data):
 
     if is_moving_viewport:
         drag_deltas = app_data
-        viewport_current_pos = ui.get_viewport_pos()
+        viewport_current_pos = dpg.get_viewport_pos()
         new_x_position = viewport_current_pos[0] + drag_deltas[1]
         new_y_position = viewport_current_pos[1] + drag_deltas[2]
         new_y_position = max(new_y_position, 0)  # prevent the viewport to go off the top of the screen
-        ui.set_viewport_pos([new_x_position, new_y_position])
+        dpg.set_viewport_pos([new_x_position, new_y_position])
     # TODO: add dev windows conditionally
-    elif ui.get_item_alias(ui.get_active_window()) is not None and (
-        ui.is_item_hovered("primary_window")
-        or ui.is_item_hovered("terminal_window")
-        or ui.is_item_hovered("footer")
-        or ui.is_item_hovered("mod_menu")
-        or ui.is_item_hovered("settings_menu")
-        or ui.get_item_alias(ui.get_active_window()).endswith("details_window_tag")
+    elif dpg.get_item_alias(dpg.get_active_window()) is not None and (
+        dpg.is_item_hovered("primary_window")
+        or dpg.is_item_hovered("terminal_window")
+        or dpg.is_item_hovered("footer")
+        or dpg.is_item_hovered("mod_menu")
+        or dpg.is_item_hovered("settings_menu")
+        or dpg.get_item_alias(dpg.get_active_window()).endswith("details_window_tag")
     ):
         is_moving_viewport = True
         drag_deltas = app_data
-        viewport_current_pos = ui.get_viewport_pos()
+        viewport_current_pos = dpg.get_viewport_pos()
         new_x_position = viewport_current_pos[0] + drag_deltas[1]
         new_y_position = viewport_current_pos[1] + drag_deltas[2]
         new_y_position = max(new_y_position, 0)  # prevent the viewport to go off the top of the screen
-        ui.set_viewport_pos([new_x_position, new_y_position])
+        dpg.set_viewport_pos([new_x_position, new_y_position])
 
 
 def stop_drag_viewport():
@@ -62,36 +61,42 @@ def focus_window():
             pass
 
 
+def toggle_dev_tools():
+    from ui import dev_tools
+
+    dev_tools.toggle_dev_tools()
+
+
 def on_primary_window_resize():
+    from ui import dev_tools, modal_shared
+
     if dev_tools.dev_mode_state != 1:
-        dev_tools.prev_width = ui.get_viewport_width()
-        dev_tools.prev_height = ui.get_viewport_height()
+        dev_tools.prev_width = dpg.get_viewport_width()
+        dev_tools.prev_height = dpg.get_viewport_height()
     # terminal wrap size
-    window_width = ui.get_item_width("primary_window")
-    window_height = ui.get_item_height("primary_window")
-    helper.wrap_size = constants.main_window_width - 20 if dev_tools.dev_mode_state == 1 else window_width - 10
+    window_width = dpg.get_item_width("primary_window")
+    window_height = dpg.get_item_height("primary_window")
+    terminal.wrap_size = base.main_window_width - 20 if dev_tools.dev_mode_state == 1 else window_width - 10
 
-    for item in helper.terminal_history:
+    for item in shared.terminal_history:
         idx = item["id"]
-        if ui.does_item_exist(idx):
-            ui.configure_item(idx, wrap=helper.wrap_size)
-
-    from .gui import render_details_window, tag_data_for_details_windows
+        if dpg.does_item_exist(idx):
+            dpg.configure_item(idx, wrap=terminal.wrap_size)
 
     # details windows resize
-    for window_tag in tag_data_for_details_windows:
-        if ui.does_item_exist(window_tag):
-            ui.configure_item(window_tag, width=window_width, height=window_height)
-            if ui.is_item_shown(window_tag):
+    for window_tag in shared.tag_data_for_details_windows:
+        if dpg.does_item_exist(window_tag):
+            dpg.configure_item(window_tag, width=window_width, height=window_height)
+            if dpg.is_item_shown(window_tag):
                 mod = window_tag.replace("_details_window_tag", "")
-                render_details_window(mod)
+                details.render_details_window(mod)
 
     # menus resize
-    if ui.does_item_exist("mod_menu"):
-        ui.configure_item("mod_menu", width=window_width, height=window_height)
+    if dpg.does_item_exist("mod_menu"):
+        dpg.configure_item("mod_menu", width=window_width, height=window_height)
 
-    if ui.does_item_exist("settings_menu"):
-        ui.configure_item("settings_menu", width=window_width, height=window_height)
+    if dpg.does_item_exist("settings_menu"):
+        dpg.configure_item("settings_menu", width=window_width, height=window_height)
 
-    if ui.is_item_shown("modal_popup"):
+    if dpg.is_item_shown("modal_popup"):
         modal_shared.configure_modal_popup()

@@ -11,7 +11,7 @@ import webbrowser
 import xml.etree.ElementTree as ET
 from concurrent.futures import ThreadPoolExecutor
 
-import dearpygui.dearpygui as ui
+import dearpygui.dearpygui as dpg
 import jsonc
 import playsound3
 import psutil
@@ -21,15 +21,17 @@ import vpk
 
 import conditions
 import helper
-from core import base, constants, fs, log
-from ui import gui
+from core import base, config, constants, fs, localization, log, steam
+from ui import terminal
 
 game_contents_file_init = False
 
 
 def patcher(mod=None, pakname=None):
+    from ui import gui
+
     gui.lock_interaction()
-    helper.clean_terminal()
+    terminal.clean_terminal()
 
     if conditions.is_dota_running("&close_dota_terminal", "warning"):
         gui.unlock_interaction()
@@ -61,13 +63,13 @@ def patcher(mod=None, pakname=None):
         replacer_source_extracts = []
         replacer_targets = []
 
-        dependency_checkbox_states = ui.get_values(gui.checkboxes)
+        dependency_checkbox_states = [dpg.get_value(cb) for cb in gui.checkboxes]
         dependencies_resolved = False
 
         while not dependencies_resolved:
             for dependency_dict in constants.mod_dependencies_list:
                 for dependant, dependencies in dependency_dict.items():
-                    if ui.get_value(dependant):
+                    if dpg.get_value(dependant):
                         for dependency in dependencies:
                             try:
                                 if not conditions.workshop_installed:
@@ -76,15 +78,17 @@ def patcher(mod=None, pakname=None):
                                         if os.path.exists(os.path.join(base.mods_dir, dependency, method_path)):
                                             workshop = True
                                             break
-                                    ui.set_value(dependency, False) if workshop else ui.set_value(dependency, True)
+                                    dpg.set_value(dependency, False) if workshop else dpg.set_value(dependency, True)
                                 else:
-                                    ui.set_value(dependency, True)
+                                    dpg.set_value(dependency, True)
                             except:
                                 log.write_warning(
                                     f"Mod dependency {dependency} for {mod} couldn't be resolved, might be that the mod doesn't exist."
                                 )
-            if sum(dependency_checkbox_states) == (sum(dependency_checkbox_states := ui.get_values(gui.checkboxes))):
+            new_states = [dpg.get_value(cb) for cb in gui.checkboxes]
+            if sum(dependency_checkbox_states) == sum(new_states):
                 dependencies_resolved = True
+            dependency_checkbox_states = new_states
 
         if mod is None:
             gui.save_checkbox_state()
@@ -93,7 +97,7 @@ def patcher(mod=None, pakname=None):
             mod_path = os.path.join(base.mods_dir, folder)
             cfg_path = os.path.join(mod_path, "modcfg.json")
 
-            mod_cfg = fs.read_json_file(cfg_path)
+            mod_cfg = config.read_json_file(cfg_path)
             visual = mod_cfg.get("visual", True)
 
             if mod is None:
@@ -106,7 +110,7 @@ def patcher(mod=None, pakname=None):
             # ---------------------------------------------------------------------------- #
             try:
                 if (
-                    mod is not None or apply_without_user_confirmation or (visual and ui.get_value(folder))
+                    mod is not None or apply_without_user_confirmation or (visual and dpg.get_value(folder))
                 ):  # step into folders that have ticked checkboxes only
                     blacklist_txt = os.path.join(mod_path, "blacklist.txt")
                     if conditions.workshop_installed:
@@ -118,7 +122,7 @@ def patcher(mod=None, pakname=None):
                     files_dir = os.path.join(mod_path, "files")
 
                     helper.exec_script(script_file, folder, "loop")
-                    helper.add_text_to_terminal("&installing_terminal", folder)
+                    terminal.add_text_to_terminal("&installing_terminal", folder)
                     if conditions.workshop_installed:
                         if os.path.exists(files_uncompiled_dir):
                             shutil.copytree(
@@ -174,7 +178,7 @@ def patcher(mod=None, pakname=None):
                                 path = f"!{path}" if indicator == "c" else path
                                 styling_dictionary[f"styling-css-{folder}-{i}"] = (path, style)
 
-                        for key, path_style in list(styling_dictionary.items()):
+                        for _, path_style in list(styling_dictionary.items()):
                             sanitized_path = (
                                 path_style[0][1:] if path_style[0].startswith("!") else path_style[0]
                             )  # horrible hack
@@ -208,7 +212,7 @@ def patcher(mod=None, pakname=None):
                     dota_extracts.append(compiled)
 
         if conditions.workshop_installed:
-            helper.add_text_to_terminal("&starting_extraction")
+            terminal.add_text_to_terminal("&starting_extraction")
             core_extracts = list(set(core_extracts))
             dota_extracts = list(set(dota_extracts))
             vpk_extractor(core_pak_contents, core_extracts)
@@ -216,7 +220,7 @@ def patcher(mod=None, pakname=None):
             # ---------------------------------- STEP 2 ---------------------------------- #
             # ------------------- Decompile all files in "build" folder ------------------ #
             # ---------------------------------------------------------------------------- #
-            helper.add_text_to_terminal("&decompiling_terminal")
+            terminal.add_text_to_terminal("&decompiling_terminal")
             with open(base.log_s2v, "w") as file:
                 try:
                     subprocess.run(
@@ -242,7 +246,7 @@ def patcher(mod=None, pakname=None):
             # ---------------------------------- STEP 3 ---------------------------------- #
             # ---------------------------- CSS resourcecompile --------------------------- #
             # ---------------------------------------------------------------------------- #
-            helper.add_text_to_terminal("&compiling_resource_terminal")
+            terminal.add_text_to_terminal("&compiling_resource_terminal")
             styles_by_file = {}
             for path, style in styling_dictionary.values():
                 sanitized_path = path[1:] if path.startswith("!") else path
@@ -308,7 +312,7 @@ def patcher(mod=None, pakname=None):
 
         fs.create_dirs(helper.output_path)
         native_mods = vpk.new(constants.minify_dota_compile_output_path)
-        helper.add_text_to_terminal("&compiling_terminal")
+        terminal.add_text_to_terminal("&compiling_terminal")
         pakname = "pak66" if pakname is None else pakname
         native_mods.save(os.path.join(helper.output_path, f"{pakname}_dir.vpk"))
 
@@ -319,19 +323,19 @@ def patcher(mod=None, pakname=None):
         # Check if there are any VPK mods selected
         vpk_mods_to_merge = []
         for mod_name in mod_list:
-            if mod_name.endswith(".vpk") and (mod is not None or ui.get_value(mod_name)):
+            if mod_name.endswith(".vpk") and (mod is not None or dpg.get_value(mod_name)):
                 vpk_mods_to_merge.append(mod_name)
 
         # Only create pak65 if there are VPK mods to merge
         if vpk_mods_to_merge:
-            helper.add_text_to_terminal("&merging_vpks")
+            terminal.add_text_to_terminal("&merging_vpks")
 
             for mod_name in vpk_mods_to_merge:
                 mod_path = os.path.join(base.mods_dir, mod_name)
                 try:
                     mod_vpk = vpk.open(mod_path)
                     dump_vpk(mod_vpk, base.merge_dir, check_exists=True)
-                    helper.add_text_to_terminal("&merged_mod", mod_name)
+                    terminal.add_text_to_terminal("&merged_mod", mod_name)
                 except:
                     log.write_warning("&failed_merge_mod", mod_name)
 
@@ -343,11 +347,11 @@ def patcher(mod=None, pakname=None):
             with open(os.path.join(base.merge_dir, "minify_version.txt"), "w") as f:
                 f.write(base.VERSION)
 
-            helper.add_text_to_terminal("&creating_merged_vpk")
+            terminal.add_text_to_terminal("&creating_merged_vpk")
             merged_mods = vpk.new(base.merge_dir)
             merged_mods.save(os.path.join(helper.output_path, "pak65_dir.vpk"))
 
-            helper.add_text_to_terminal("&success_merged_vpk", type="success")
+            terminal.add_text_to_terminal("&success_merged_vpk", msg_type="success")
         else:
             # No VPK mods selected - remove pak65 if it exists from previous patches
             pak65_path = os.path.join(helper.output_path, "pak65_dir.vpk")
@@ -373,37 +377,37 @@ def patcher(mod=None, pakname=None):
         )
 
         # handle language param automatically
-        if fs.get_config("fix_parameters", True):
-            if helper.fix_parameters():
+        if config.get_config("fix_parameters", True):
+            if steam.fix_parameters():
                 steam_close_retries = 0
                 while any(
-                    p.info.get("name") == os.path.basename(constants.steam_executable_path)
+                    p.info.get("name") == os.path.basename(steam.steam_executable_path)
                     for p in psutil.process_iter(attrs=["name"])
                 ):
                     if steam_close_retries >= 3:
-                        helper.add_text_to_terminal("&failed_steam_close", 3, type="error")
+                        terminal.add_text_to_terminal("&failed_steam_close", 3, msg_type="error")
                         break
-                    helper.add_text_to_terminal("&waiting_steam_to_close")
+                    terminal.add_text_to_terminal("&waiting_steam_to_close")
                     time.sleep(2)
                     steam_close_retries += 1
                 if steam_close_retries < 3:
-                    fs.open_thing(constants.steam_executable_path, "-silent")
+                    fs.open_thing(steam.steam_executable_path)
 
         helper.bulk_exec_script("after_patch", False)
 
         gui.unlock_interaction()
-        ui.add_separator(parent="terminal_window")
-        helper.add_text_to_terminal("&success_terminal", type="success")
-        helper.add_text_to_terminal("&launch_option", ui.get_value("output_select"), type="warning")
+        dpg.add_separator(parent="terminal_window")
+        terminal.add_text_to_terminal("&success_terminal", msg_type="success")
+        terminal.add_text_to_terminal("&launch_option", dpg.get_value("output_select"), msg_type="warning")
 
         if os.path.exists(base.log_warnings) and os.path.getsize(base.log_warnings) != 0:
-            helper.add_text_to_terminal("&minify_encountered_errors_terminal", type="warning")
+            terminal.add_text_to_terminal("&minify_encountered_errors_terminal", msg_type="warning")
         playsound3.playsound(os.path.join(base.sounds_dir, "success.wav"), block=False)
 
-        if fs.get_config("launch_dota_after_patch", False):
+        if config.get_config("launch_dota_after_patch", False):
             webbrowser.open(f"steam://rungameid/{base.STEAM_DOTA_ID}")
-        if fs.get_config("kill_self_after_patch", False):
-            helper.close()
+        if config.get_config("kill_self_after_patch", False):
+            gui.close()
 
     # chimes are from pixabay.com/sound-effects/chime-74910/
     except (PermissionError, playsound3.PlaysoundException):
@@ -412,9 +416,9 @@ def patcher(mod=None, pakname=None):
     except:
         log.write_crashlog()
 
-        ui.add_separator(parent="terminal_window")
-        helper.add_text_to_terminal("&failure_terminal", type="error")
-        helper.add_text_to_terminal("&check_logs_terminal", type="warning")
+        dpg.add_separator(parent="terminal_window")
+        terminal.add_text_to_terminal("&failure_terminal", msg_type="error")
+        terminal.add_text_to_terminal("&check_logs_terminal", msg_type="warning")
         gui.unlock_interaction()
         playsound3.playsound(os.path.join(base.sounds_dir, "fail.wav"), block=False)
 
@@ -433,17 +437,19 @@ def patch_seperate():
 
 
 def uninstaller(sender=None, app_data=None, user_data=None):
-    helper.clean_terminal()
+    from ui import gui
+
+    terminal.clean_terminal()
     time.sleep(0.05)
     gui.lock_interaction()
 
     # smart uninstall
     pak_pattern = r"^pak\d{2}_dir\.vpk$"
-    for dir in constants.minify_dota_possible_language_output_paths:
-        if os.path.isdir(dir):
-            for item in os.listdir(dir):
-                if os.path.isfile(os.path.join(dir, item)) and re.fullmatch(pak_pattern, item):
-                    pak_contents = vpk.open(os.path.join(dir, item))
+    for path in constants.minify_dota_possible_language_output_paths:
+        if os.path.isdir(path):
+            for item in os.listdir(path):
+                if os.path.isfile(os.path.join(path, item)) and re.fullmatch(pak_pattern, item):
+                    pak_contents = vpk.open(os.path.join(path, item))
                     mod_names_with_txt = [s + ".txt" for s in constants.visually_available_mods]
                     for file in [
                         "minify_mods.json",
@@ -453,11 +459,11 @@ def uninstaller(sender=None, app_data=None, user_data=None):
                         *mod_names_with_txt,
                     ]:
                         if file in pak_contents:
-                            fs.remove_path(os.path.join(dir, item))
+                            fs.remove_path(os.path.join(path, item))
                             break
     # TODO remove lang param if out locale is minify
     helper.bulk_exec_script("uninstall")
-    helper.add_text_to_terminal("&mods_removed_terminal")
+    terminal.add_text_to_terminal("&mods_removed_terminal")
     gui.unlock_interaction()
 
 
@@ -479,7 +485,7 @@ def vpk_extractor(vpk_to_extract_from, paths, path_to_extract_to=base.build_dir)
 
     def extract_file(path):
         if not os.path.exists(full_path := os.path.join(path_to_extract_to, path)):  # extract files from VPK only once
-            helper.add_text_to_terminal("&extracting_terminal", path)
+            terminal.add_text_to_terminal("&extracting_terminal", path)
             with vpk_lock:
                 pakfile = vpk_to_extract_from.get_file(path)
 
@@ -754,7 +760,7 @@ def process_blacklist(blacklist_txt, folder, blank_file_extensions):
 
 def process_replacer(item):
     source, target = item
-    helper.add_text_to_terminal("&replacing_terminal", source, target)
+    terminal.add_text_to_terminal("&replacing_terminal", source, target)
     fs.create_dirs(os.path.dirname(target_dir := os.path.join(constants.minify_dota_compile_output_path, target)))
     shutil.copy(os.path.join(base.replace_dir, source), target_dir)
 
@@ -790,12 +796,12 @@ def process_blacklist_dir(index, line, folder):
 
 
 def wipe_lang_dirs():
-    helper.clean_terminal()
+    terminal.clean_terminal()
     uninstaller()
     for path in constants.minify_dota_possible_language_output_paths:
         if os.path.isdir(path):
             fs.remove_path(path)
-            helper.add_text_to_terminal("&clean_lang_dirs", path)
+            terminal.add_text_to_terminal("&clean_lang_dirs", path)
 
 
 def create_blank_mod():
@@ -922,11 +928,10 @@ Example:
 """
 
     fs.remove_path(path_to_mod)
-    os.mkdir(path_to_mod)
-    os.mkdir(os.path.join(path_to_mod, "files"))
+    fs.create_dirs(path_to_mod, os.path.join(path_to_mod, "files"))
     open(os.path.join(path_to_mod, "files", ".gitkeep"), "w").close()
     with open(os.path.join(path_to_mod, "notes.md"), "w") as file:
-        file.write("\n\n".join([f"<!-- LANG:{locale} -->" for locale in helper.localizations]))
+        file.write("\n\n".join([f"<!-- LANG:{locale} -->" for locale in localization.localization_dict]))
     with open(os.path.join(path_to_mod, "blacklist.txt"), "w") as file:
         file.write(blacklist_template)
     with open(os.path.join(path_to_mod, "styling.css"), "w") as file:

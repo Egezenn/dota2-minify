@@ -13,11 +13,8 @@ if minify_root not in sys.path:
 
 import shutil
 
-import requests
-
-# isort: split
-
 import conditions
+import requests
 from core import fs, steam
 
 dota_itembuilds_path = os.path.join(steam.LIBRARY, "steamapps", "common", "dota 2 beta", "game", "dota", "itembuilds")

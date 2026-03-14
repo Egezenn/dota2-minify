@@ -88,7 +88,7 @@ wheels = [
 
 [[package]]
 name = "dota2-minify"
-version = "3"
+version = "3.1"
 source = { virtual = "." }
 dependencies = [
     { name = "dearpygui" },

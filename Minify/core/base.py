@@ -1,3 +1,5 @@
+"Variables that almost never change"
+
 import getpass
 import os
 import platform
@@ -84,5 +86,5 @@ github = f"https://github.com/{OWNER}/{REPO}"
 github_latest = github + "/releases/latest"
 github_io = f"https://{OWNER}.github.io/{REPO}"
 
-s2v_cli_ver = "18.0"
-rg_ver = "15.1.0"
+main_window_width = 550
+main_window_height = 440
