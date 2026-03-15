@@ -15,10 +15,10 @@ from core import config
 
 
 def main():
-    config_data = config.get_mod_config(mod_name)
+    config_data = config.get_mod(mod_name)
     font_string = config_data.get("font_string", "Calibri, sans-serif")
     config_data["font_string"] = font_string
-    config.set_mod_config(mod_name, config_data)
+    config.set_mod(mod_name, config_data)
 
     css = os.path.join(current_dir, "styling.css")
     target_string = "<insert_fonts_here>"

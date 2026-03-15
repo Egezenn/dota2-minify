@@ -15,7 +15,7 @@ from core import config
 
 
 def main():
-    config_data = config.get_mod_config(mod_name)
+    config_data = config.get_mod(mod_name)
     font_string = config_data.get("font_string", "Calibri, sans-serif")
 
     css = os.path.join(current_dir, "styling.css")

@@ -21,8 +21,8 @@ import vpk
 
 import conditions
 import helper
-from core import base, config, constants, fs, localization, log, steam
-from ui import terminal
+from core import base, config, constants, fs, log, steam
+from ui import checkboxes, localization, terminal
 
 game_contents_file_init = False
 
@@ -31,7 +31,7 @@ def patcher(mod=None, pakname=None):
     from ui import gui
 
     gui.lock_interaction()
-    terminal.clean_terminal()
+    terminal.clean()
 
     if conditions.is_dota_running("&close_dota_terminal", "warning"):
         gui.unlock_interaction()
@@ -63,7 +63,7 @@ def patcher(mod=None, pakname=None):
         replacer_source_extracts = []
         replacer_targets = []
 
-        dependency_checkbox_states = [dpg.get_value(cb) for cb in gui.checkboxes]
+        dependency_checkbox_states = [dpg.get_value(cb) for cb in checkboxes.checkboxes]
         dependencies_resolved = False
 
         while not dependencies_resolved:
@@ -85,13 +85,13 @@ def patcher(mod=None, pakname=None):
                                 log.write_warning(
                                     f"Mod dependency {dependency} for {mod} couldn't be resolved, might be that the mod doesn't exist."
                                 )
-            new_states = [dpg.get_value(cb) for cb in gui.checkboxes]
+            new_states = [dpg.get_value(cb) for cb in checkboxes.checkboxes]
             if sum(dependency_checkbox_states) == sum(new_states):
                 dependencies_resolved = True
             dependency_checkbox_states = new_states
 
         if mod is None:
-            gui.save_checkbox_state()
+            checkboxes.save()
 
         for folder in mod_list:
             mod_path = os.path.join(base.mods_dir, folder)
@@ -122,7 +122,7 @@ def patcher(mod=None, pakname=None):
                     files_dir = os.path.join(mod_path, "files")
 
                     helper.exec_script(script_file, folder, "loop")
-                    terminal.add_text_to_terminal("&installing_terminal", folder)
+                    terminal.add_text("&installing_terminal", folder)
                     if conditions.workshop_installed:
                         if os.path.exists(files_uncompiled_dir):
                             shutil.copytree(
@@ -212,7 +212,7 @@ def patcher(mod=None, pakname=None):
                     dota_extracts.append(compiled)
 
         if conditions.workshop_installed:
-            terminal.add_text_to_terminal("&starting_extraction")
+            terminal.add_text("&starting_extraction")
             core_extracts = list(set(core_extracts))
             dota_extracts = list(set(dota_extracts))
             vpk_extractor(core_pak_contents, core_extracts)
@@ -220,7 +220,7 @@ def patcher(mod=None, pakname=None):
             # ---------------------------------- STEP 2 ---------------------------------- #
             # ------------------- Decompile all files in "build" folder ------------------ #
             # ---------------------------------------------------------------------------- #
-            terminal.add_text_to_terminal("&decompiling_terminal")
+            terminal.add_text("&decompiling_terminal")
             with open(base.log_s2v, "w") as file:
                 try:
                     subprocess.run(
@@ -246,7 +246,7 @@ def patcher(mod=None, pakname=None):
             # ---------------------------------- STEP 3 ---------------------------------- #
             # ---------------------------- CSS resourcecompile --------------------------- #
             # ---------------------------------------------------------------------------- #
-            terminal.add_text_to_terminal("&compiling_resource_terminal")
+            terminal.add_text("&compiling_resource_terminal")
             styles_by_file = {}
             for path, style in styling_dictionary.values():
                 sanitized_path = path[1:] if path.startswith("!") else path
@@ -312,7 +312,7 @@ def patcher(mod=None, pakname=None):
 
         fs.create_dirs(helper.output_path)
         native_mods = vpk.new(constants.minify_dota_compile_output_path)
-        terminal.add_text_to_terminal("&compiling_terminal")
+        terminal.add_text("&compiling_terminal")
         pakname = "pak66" if pakname is None else pakname
         native_mods.save(os.path.join(helper.output_path, f"{pakname}_dir.vpk"))
 
@@ -328,14 +328,14 @@ def patcher(mod=None, pakname=None):
 
         # Only create pak65 if there are VPK mods to merge
         if vpk_mods_to_merge:
-            terminal.add_text_to_terminal("&merging_vpks")
+            terminal.add_text("&merging_vpks")
 
             for mod_name in vpk_mods_to_merge:
                 mod_path = os.path.join(base.mods_dir, mod_name)
                 try:
                     mod_vpk = vpk.open(mod_path)
                     dump_vpk(mod_vpk, base.merge_dir, check_exists=True)
-                    terminal.add_text_to_terminal("&merged_mod", mod_name)
+                    terminal.add_text("&merged_mod", mod_name)
                 except:
                     log.write_warning("&failed_merge_mod", mod_name)
 
@@ -347,11 +347,11 @@ def patcher(mod=None, pakname=None):
             with open(os.path.join(base.merge_dir, "minify_version.txt"), "w") as f:
                 f.write(base.VERSION)
 
-            terminal.add_text_to_terminal("&creating_merged_vpk")
+            terminal.add_text("&creating_merged_vpk")
             merged_mods = vpk.new(base.merge_dir)
             merged_mods.save(os.path.join(helper.output_path, "pak65_dir.vpk"))
 
-            terminal.add_text_to_terminal("&success_merged_vpk", msg_type="success")
+            terminal.add_text("&success_merged_vpk", msg_type="success")
         else:
             # No VPK mods selected - remove pak65 if it exists from previous patches
             pak65_path = os.path.join(helper.output_path, "pak65_dir.vpk")
@@ -376,18 +376,19 @@ def patcher(mod=None, pakname=None):
             base.merge_dir,
         )
 
-        # handle language param automatically
-        if config.get_config("fix_parameters", True):
-            if steam.fix_parameters():
+        # handle language option automatically
+        if config.get("fix_options", True):
+            if steam.fix_launch_options():
+                fs.open_thing(steam.steam_executable_path, "-exitsteam")
                 steam_close_retries = 0
                 while any(
                     p.info.get("name") == os.path.basename(steam.steam_executable_path)
                     for p in psutil.process_iter(attrs=["name"])
                 ):
                     if steam_close_retries >= 3:
-                        terminal.add_text_to_terminal("&failed_steam_close", 3, msg_type="error")
+                        terminal.add_text("&failed_steam_close", 3, msg_type="error")
                         break
-                    terminal.add_text_to_terminal("&waiting_steam_to_close")
+                    terminal.add_text("&waiting_steam_to_close")
                     time.sleep(2)
                     steam_close_retries += 1
                 if steam_close_retries < 3:
@@ -396,17 +397,17 @@ def patcher(mod=None, pakname=None):
         helper.bulk_exec_script("after_patch", False)
 
         gui.unlock_interaction()
-        dpg.add_separator(parent="terminal_window")
-        terminal.add_text_to_terminal("&success_terminal", msg_type="success")
-        terminal.add_text_to_terminal("&launch_option", dpg.get_value("output_select"), msg_type="warning")
+        terminal.add_seperator()
+        terminal.add_text("&success_terminal", msg_type="success")
+        terminal.add_text("&launch_option", dpg.get_value("output_select"), msg_type="warning")
 
         if os.path.exists(base.log_warnings) and os.path.getsize(base.log_warnings) != 0:
-            terminal.add_text_to_terminal("&minify_encountered_errors_terminal", msg_type="warning")
+            terminal.add_text("&minify_encountered_errors_terminal", msg_type="warning")
         playsound3.playsound(os.path.join(base.sounds_dir, "success.wav"), block=False)
 
-        if config.get_config("launch_dota_after_patch", False):
+        if config.get("launch_dota_after_patch", False):
             webbrowser.open(f"steam://rungameid/{base.STEAM_DOTA_ID}")
-        if config.get_config("kill_self_after_patch", False):
+        if config.get("kill_self_after_patch", False):
             gui.close()
 
     # chimes are from pixabay.com/sound-effects/chime-74910/
@@ -416,9 +417,9 @@ def patcher(mod=None, pakname=None):
     except:
         log.write_crashlog()
 
-        dpg.add_separator(parent="terminal_window")
-        terminal.add_text_to_terminal("&failure_terminal", msg_type="error")
-        terminal.add_text_to_terminal("&check_logs_terminal", msg_type="warning")
+        terminal.add_seperator()
+        terminal.add_text("&failure_terminal", msg_type="error")
+        terminal.add_text("&check_logs_terminal", msg_type="warning")
         gui.unlock_interaction()
         playsound3.playsound(os.path.join(base.sounds_dir, "fail.wav"), block=False)
 
@@ -439,7 +440,7 @@ def patch_seperate():
 def uninstaller(sender=None, app_data=None, user_data=None):
     from ui import gui
 
-    terminal.clean_terminal()
+    terminal.clean()
     time.sleep(0.05)
     gui.lock_interaction()
 
@@ -463,7 +464,7 @@ def uninstaller(sender=None, app_data=None, user_data=None):
                             break
     # TODO remove lang param if out locale is minify
     helper.bulk_exec_script("uninstall")
-    terminal.add_text_to_terminal("&mods_removed_terminal")
+    terminal.add_text("&mods_removed_terminal")
     gui.unlock_interaction()
 
 
@@ -485,7 +486,7 @@ def vpk_extractor(vpk_to_extract_from, paths, path_to_extract_to=base.build_dir)
 
     def extract_file(path):
         if not os.path.exists(full_path := os.path.join(path_to_extract_to, path)):  # extract files from VPK only once
-            terminal.add_text_to_terminal("&extracting_terminal", path)
+            terminal.add_text("&extracting_terminal", path)
             with vpk_lock:
                 pakfile = vpk_to_extract_from.get_file(path)
 
@@ -760,7 +761,7 @@ def process_blacklist(blacklist_txt, folder, blank_file_extensions):
 
 def process_replacer(item):
     source, target = item
-    terminal.add_text_to_terminal("&replacing_terminal", source, target)
+    terminal.add_text("&replacing_terminal", source, target)
     fs.create_dirs(os.path.dirname(target_dir := os.path.join(constants.minify_dota_compile_output_path, target)))
     shutil.copy(os.path.join(base.replace_dir, source), target_dir)
 
@@ -796,12 +797,12 @@ def process_blacklist_dir(index, line, folder):
 
 
 def wipe_lang_dirs():
-    terminal.clean_terminal()
+    terminal.clean()
     uninstaller()
     for path in constants.minify_dota_possible_language_output_paths:
         if os.path.isdir(path):
             fs.remove_path(path)
-            terminal.add_text_to_terminal("&clean_lang_dirs", path)
+            terminal.add_text("&clean_lang_dirs", path)
 
 
 def create_blank_mod():

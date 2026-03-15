@@ -49,7 +49,7 @@ def main():
                         creationflags=subprocess.CREATE_NO_WINDOW if base.OS == base.WIN else 0,
                     )
                 else:
-                    terminal.add_text_to_terminal(f"imagemagick is not available on path, unable to convert {file}")
+                    terminal.add_text(f"imagemagick is not available on path, unable to convert {file}")
 
             if filepath.endswith(".png"):
                 fs.create_dirs(
@@ -77,7 +77,7 @@ def main():
                         creationflags=subprocess.CREATE_NO_WINDOW if base.OS == base.WIN else 0,
                     )
                 else:
-                    terminal.add_text_to_terminal(f"ffmpeg is not available on path, unable to convert {file}")
+                    terminal.add_text(f"ffmpeg is not available on path, unable to convert {file}")
 
             if filepath.endswith(".webm"):
                 fs.create_dirs(

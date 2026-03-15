@@ -3,22 +3,25 @@ import ctypes
 import dearpygui.dearpygui as dpg
 from core import base
 
+BACKGROUND = (32, 32, 32)
+# TODO: generalize
 
-def theme():
+
+def apply():
     with dpg.theme() as global_theme:
         with dpg.theme_component(dpg.mvAll):
             dpg.add_theme_style(dpg.mvStyleVar_WindowPadding, x=0, y=0)
             dpg.add_theme_color(dpg.mvThemeCol_Text, (0, 230, 230))
-            dpg.add_theme_color(dpg.mvThemeCol_WindowBg, (32, 32, 32, 255))
-            dpg.add_theme_color(dpg.mvThemeCol_ChildBg, (32, 32, 32, 255))
-            dpg.add_theme_color(dpg.mvThemeCol_ScrollbarBg, (32, 32, 32, 255))
+            dpg.add_theme_color(dpg.mvThemeCol_WindowBg, BACKGROUND)
+            dpg.add_theme_color(dpg.mvThemeCol_ChildBg, BACKGROUND)
+            dpg.add_theme_color(dpg.mvThemeCol_ScrollbarBg, BACKGROUND)
             dpg.add_theme_color(dpg.mvThemeCol_ScrollbarGrab, (0, 200, 200))
             dpg.add_theme_color(dpg.mvThemeCol_ScrollbarGrabHovered, (0, 170, 170))
             dpg.add_theme_color(dpg.mvThemeCol_ScrollbarGrabActive, (0, 120, 120))
             dpg.add_theme_color(dpg.mvThemeCol_TitleBg, (35, 35, 35, 255))
             dpg.add_theme_color(dpg.mvThemeCol_TitleBgActive, (35, 35, 35, 255))
-            dpg.add_theme_color(dpg.mvThemeCol_Header, (32, 32, 32, 255))
-            dpg.add_theme_color(dpg.mvThemeCol_HeaderHovered, (32, 32, 32, 255))
+            dpg.add_theme_color(dpg.mvThemeCol_Header, BACKGROUND)
+            dpg.add_theme_color(dpg.mvThemeCol_HeaderHovered, BACKGROUND)
             dpg.add_theme_color(dpg.mvThemeCol_HeaderActive, (17, 17, 18, 255))
             dpg.add_theme_style(dpg.mvStyleVar_WindowBorderSize, 0)
             dpg.add_theme_style(dpg.mvStyleVar_ScrollbarRounding, 0)
@@ -32,9 +35,9 @@ def theme():
             dpg.add_theme_style(dpg.mvStyleVar_ButtonTextAlign, x=0, y=0.5)
         with dpg.theme_component(enabled_state=False):
             dpg.add_theme_color(dpg.mvThemeCol_Text, (0, 100, 100))
-            dpg.add_theme_color(dpg.mvThemeCol_Button, (32, 32, 32, 255))
-            dpg.add_theme_color(dpg.mvThemeCol_ButtonHovered, (32, 32, 32, 255))
-            dpg.add_theme_color(dpg.mvThemeCol_ButtonActive, (32, 32, 32, 255))
+            dpg.add_theme_color(dpg.mvThemeCol_Button, BACKGROUND)
+            dpg.add_theme_color(dpg.mvThemeCol_ButtonHovered, BACKGROUND)
+            dpg.add_theme_color(dpg.mvThemeCol_ButtonActive, BACKGROUND)
             dpg.add_theme_style(dpg.mvStyleVar_ButtonTextAlign, x=0, y=0.5)
 
     with dpg.theme() as mod_menu_theme:
@@ -45,40 +48,40 @@ def theme():
             dpg.add_theme_color(dpg.mvThemeCol_FrameBgActive, (20, 20, 20, 255))
         with dpg.theme_component(dpg.mvCheckbox, enabled_state=False):
             dpg.add_theme_color(dpg.mvThemeCol_Text, (0, 100, 100))
-            dpg.add_theme_color(dpg.mvThemeCol_FrameBg, (32, 32, 32, 255))
-            dpg.add_theme_color(dpg.mvThemeCol_FrameBgHovered, (32, 32, 32, 255))
-            dpg.add_theme_color(dpg.mvThemeCol_FrameBgActive, (32, 32, 32, 255))
+            dpg.add_theme_color(dpg.mvThemeCol_FrameBg, BACKGROUND)
+            dpg.add_theme_color(dpg.mvThemeCol_FrameBgHovered, BACKGROUND)
+            dpg.add_theme_color(dpg.mvThemeCol_FrameBgActive, BACKGROUND)
             dpg.add_theme_color(dpg.mvThemeCol_CheckMark, (0, 70, 70, 255))
         with dpg.theme_component():
             dpg.add_theme_color(dpg.mvThemeCol_Text, (0, 230, 230))
-            dpg.add_theme_color(dpg.mvThemeCol_Button, (32, 32, 32, 255))
+            dpg.add_theme_color(dpg.mvThemeCol_Button, BACKGROUND)
             dpg.add_theme_color(dpg.mvThemeCol_ButtonHovered, (17, 17, 18, 255))
-            dpg.add_theme_color(dpg.mvThemeCol_ButtonActive, (32, 32, 32, 255))
+            dpg.add_theme_color(dpg.mvThemeCol_ButtonActive, BACKGROUND)
         with dpg.theme_component(enabled_state=False):
-            dpg.add_theme_color(dpg.mvThemeCol_Button, (32, 32, 32, 255))
+            dpg.add_theme_color(dpg.mvThemeCol_Button, BACKGROUND)
             dpg.add_theme_color(dpg.mvThemeCol_Text, (0, 100, 100))
-            dpg.add_theme_color(dpg.mvThemeCol_ButtonHovered, (32, 32, 32, 255))
-            dpg.add_theme_color(dpg.mvThemeCol_ButtonActive, (32, 32, 32, 255))
+            dpg.add_theme_color(dpg.mvThemeCol_ButtonHovered, BACKGROUND)
+            dpg.add_theme_color(dpg.mvThemeCol_ButtonActive, BACKGROUND)
 
     with dpg.theme() as footer_theme:
         with dpg.theme_component():
             dpg.add_theme_style(dpg.mvStyleVar_WindowPadding, x=0, y=0)
             dpg.add_theme_color(dpg.mvThemeCol_Text, (0, 230, 230))
-            dpg.add_theme_color(dpg.mvThemeCol_Button, (32, 32, 32, 255))
+            dpg.add_theme_color(dpg.mvThemeCol_Button, BACKGROUND)
             dpg.add_theme_color(dpg.mvThemeCol_ButtonHovered, (17, 17, 18, 255))
-            dpg.add_theme_color(dpg.mvThemeCol_ButtonActive, (32, 32, 32, 255))
-            dpg.add_theme_color(dpg.mvThemeCol_FrameBg, (32, 32, 32, 255))
-            dpg.add_theme_color(dpg.mvThemeCol_FrameBgHovered, (32, 32, 32, 255))
-            dpg.add_theme_color(dpg.mvThemeCol_FrameBgActive, (32, 32, 32, 255))
+            dpg.add_theme_color(dpg.mvThemeCol_ButtonActive, BACKGROUND)
+            dpg.add_theme_color(dpg.mvThemeCol_FrameBg, BACKGROUND)
+            dpg.add_theme_color(dpg.mvThemeCol_FrameBgHovered, BACKGROUND)
+            dpg.add_theme_color(dpg.mvThemeCol_FrameBgActive, BACKGROUND)
         with dpg.theme_component(enabled_state=False):
-            dpg.add_theme_color(dpg.mvThemeCol_Button, (32, 32, 32, 255))
+            dpg.add_theme_color(dpg.mvThemeCol_Button, BACKGROUND)
             dpg.add_theme_color(dpg.mvThemeCol_Text, (0, 100, 100))
-            dpg.add_theme_color(dpg.mvThemeCol_ButtonHovered, (32, 32, 32, 255))
-            dpg.add_theme_color(dpg.mvThemeCol_ButtonActive, (32, 32, 32, 255))
+            dpg.add_theme_color(dpg.mvThemeCol_ButtonHovered, BACKGROUND)
+            dpg.add_theme_color(dpg.mvThemeCol_ButtonActive, BACKGROUND)
         with dpg.theme_component(dpg.mvCheckbox):
-            dpg.add_theme_color(dpg.mvThemeCol_FrameBg, (32, 32, 32, 255))
-            dpg.add_theme_color(dpg.mvThemeCol_FrameBgHovered, (32, 32, 32, 255))
-            dpg.add_theme_color(dpg.mvThemeCol_FrameBgActive, (32, 32, 32, 255))
+            dpg.add_theme_color(dpg.mvThemeCol_FrameBg, BACKGROUND)
+            dpg.add_theme_color(dpg.mvThemeCol_FrameBgHovered, BACKGROUND)
+            dpg.add_theme_color(dpg.mvThemeCol_FrameBgActive, BACKGROUND)
 
     with dpg.theme() as terminal_theme:
         with dpg.theme_component(dpg.mvChildWindow):
@@ -87,12 +90,12 @@ def theme():
     with dpg.theme() as popup_theme:
         with dpg.theme_component():
             dpg.add_theme_color(dpg.mvThemeCol_Text, (0, 230, 230))
-            dpg.add_theme_color(dpg.mvThemeCol_Button, (32, 32, 32, 255))
+            dpg.add_theme_color(dpg.mvThemeCol_Button, BACKGROUND)
             dpg.add_theme_color(dpg.mvThemeCol_ButtonHovered, (17, 17, 18, 255))
-            dpg.add_theme_color(dpg.mvThemeCol_ButtonActive, (32, 32, 32, 255))
-            dpg.add_theme_color(dpg.mvThemeCol_FrameBg, (32, 32, 32, 255))
-            dpg.add_theme_color(dpg.mvThemeCol_FrameBgHovered, (32, 32, 32, 255))
-            dpg.add_theme_color(dpg.mvThemeCol_FrameBgActive, (32, 32, 32, 255))
+            dpg.add_theme_color(dpg.mvThemeCol_ButtonActive, BACKGROUND)
+            dpg.add_theme_color(dpg.mvThemeCol_FrameBg, BACKGROUND)
+            dpg.add_theme_color(dpg.mvThemeCol_FrameBgHovered, BACKGROUND)
+            dpg.add_theme_color(dpg.mvThemeCol_FrameBgActive, BACKGROUND)
             dpg.add_theme_color(dpg.mvThemeCol_Border, (0, 230, 230, 150))
             dpg.add_theme_color(dpg.mvThemeCol_ModalWindowDimBg, (0, 0, 0, 200))
             dpg.add_theme_style(dpg.mvStyleVar_WindowBorderSize, 1)
@@ -108,10 +111,10 @@ def theme():
     dpg.bind_item_theme("terminal_window", terminal_theme)
 
 
-def enable_dark_titlebar(title):
+def enable_dark_titlebar():
     if base.OS == base.WIN:
         try:
-            hwnd = ctypes.windll.user32.FindWindowW(None, title)
+            hwnd = ctypes.windll.user32.FindWindowW(None, base.TITLE)
             if hwnd != 0:
                 value = ctypes.c_int(1)
                 ctypes.windll.dwmapi.DwmSetWindowAttribute(hwnd, 20, ctypes.byref(value), ctypes.sizeof(value))

@@ -1,3 +1,5 @@
+"Unified modal internals"
+
 import threading
 import time
 import traceback
@@ -7,7 +9,7 @@ import dearpygui.dearpygui as dpg
 modal_queue = []
 
 
-def show_modal(title, messages, buttons):
+def show(title, messages, buttons):
     """
     Shows a unified modal popup or queues it if one is already active.
     messages: list of strings
@@ -15,10 +17,10 @@ def show_modal(title, messages, buttons):
     """
     modal_queue.append({"messages": messages, "buttons": buttons})
     if not dpg.is_item_shown("modal_popup"):
-        show_next_modal_from_queue()
+        show_next_from_queue()
 
 
-def show_next_modal_from_queue():
+def show_next_from_queue():
     if not modal_queue:
         return
 
@@ -45,7 +47,7 @@ def show_next_modal_from_queue():
                 except Exception:
                     traceback.print_exc()
 
-                threading.Timer(0.1, show_next_modal_from_queue).start()
+                threading.Timer(0.1, show_next_from_queue).start()
 
             return wrapped_callback
 
@@ -59,15 +61,15 @@ def show_next_modal_from_queue():
 
     dpg.configure_item("modal_popup", show=True)
     time.sleep(0.1)
-    configure_modal_popup()
+    configure()
     time.sleep(0.1)
 
     from ui import window
 
-    window.on_primary_window_resize()
+    window.on_resize()
 
 
-def configure_modal_popup():
+def configure():
     if not dpg.does_item_exist("modal_popup"):
         return
 

@@ -18,8 +18,18 @@ import build
 import conditions
 import dearpygui.dearpygui as dpg
 import helper
-from core import base, config, constants, fs, localization, log
-from ui import dev_tools, fonts, gui, modals, settings, theme, window
+from core import base, config, constants, fs, log
+from ui import (
+    checkboxes,
+    dev_tools,
+    fonts,
+    gui,
+    localization,
+    modals,
+    settings,
+    theme,
+    window,
+)
 
 sys.excepthook = log.unhandled_handler()
 
@@ -76,7 +86,7 @@ def create_ui():
             tag="lang_select",
             items=(localization.localizations),
             default_value="EN",
-            callback=localization.change_localization,
+            callback=localization.change,
             fit_width=True,
         )
         dpg.add_image_button(
@@ -117,14 +127,22 @@ def create_ui():
             parent="footer_left_group",
             width=button_size_x,
             height=button_size_y,
-            callback=lambda: dev_tools.toggle_dev_tools(),
+            callback=dev_tools.toggle,
+        )
+        dpg.add_image_button(
+            "refresh_texture_tag",
+            tag="button_refresh",
+            parent="footer_left_group",
+            width=button_size_x,
+            height=button_size_y,
+            callback=checkboxes.refresh,
         )
         dpg.add_text(tag="language_select", parent="footer_left_group")
         dpg.add_combo(
             parent="footer_left_group",
             tag="output_select",
             items=(constants.minify_output_list),
-            default_value=config.get_config("output_locale", "minify"),
+            default_value=config.get("output_locale", "minify"),
             callback=helper.change_output_path,
             fit_width=True,
         )
@@ -163,7 +181,7 @@ def create_ui():
         no_resize=True,
         width=base.main_window_width,
         height=base.main_window_height,
-        on_close=gui.save_checkbox_state,
+        on_close=checkboxes.save,
     )
 
     dpg.add_window(
@@ -183,23 +201,23 @@ def create_ui():
         no_resize=True,
     )
 
-    settings.render_settings_menu()
+    settings.render_menu()
 
     dpg.add_spacer(parent="settings_menu", height=10)
     with dpg.group(horizontal=True, parent="settings_menu"):
-        dpg.add_button(label="Save", callback=settings.save_settings, width=100)
-        dpg.add_button(label="Refresh", callback=settings.refresh_settings, width=100)
+        dpg.add_button(label="Save", callback=settings.save, width=100)
+        dpg.add_button(label="Refresh", callback=settings.refresh, width=100)
 
 
 def create_base_ui():
     dev_tools.recalc_rescomp_dirs()
-    localization.get_available_localizations()
+    localization.get_available()
     create_ui()
     gui.lock_interaction()
-    theme.enable_dark_titlebar(base.TITLE)
-    window.focus_window()
-    theme.theme()
-    localization.change_localization(init=True)
+    theme.enable_dark_titlebar()
+    window.focus()
+    theme.apply()
+    localization.change(init=True)
     gui.start_text()
     modals.Update.check()
     modals.Announcements.check()
@@ -207,15 +225,15 @@ def create_base_ui():
     conditions.disable_workshop_mods()
     time.sleep(0.05)
     helper.bulk_exec_script("initial", False)
-    gui.setup_button_state()
+    checkboxes.setup_state()
     gui.unlock_interaction()
     with dpg.item_handler_registry(tag="widget_handler"):
-        dpg.add_item_resize_handler(callback=window.on_primary_window_resize)
+        dpg.add_item_resize_handler(callback=window.on_resize)
     dpg.bind_item_handler_registry("primary_window", "widget_handler")
-    window.on_primary_window_resize()
+    window.on_resize()
 
 
-fonts.register_fonts()
+fonts.register()
 
 
 def increase_scale():  # prototype
@@ -234,10 +252,10 @@ def increase_scale():  # prototype
 
 # Adding mouse handler to dpg registry
 with dpg.handler_registry():
-    dpg.add_mouse_drag_handler(tag="drag_handler", button=0, threshold=4, callback=window.drag_viewport)
-    dpg.add_mouse_release_handler(button=0, callback=window.stop_drag_viewport)
+    dpg.add_mouse_drag_handler(tag="drag_handler", button=0, threshold=4, callback=window.drag)
+    dpg.add_mouse_release_handler(button=0, callback=window.stop_drag)
     dpg.add_key_release_handler(dpg.mvKey_Escape, callback=gui.close_active_window)
-    if config.get_config("debug_env", False):
+    if config.get("debug_env", False):
         dpg.add_key_release_handler(dpg.mvKey_Spacebar, callback=increase_scale)
 
 with dpg.texture_registry(show=False):
@@ -255,6 +273,9 @@ with dpg.texture_registry(show=False):
 
     w, h, _, d = dpg.load_image(os.path.join(base.img_dir, "telegram.png"))
     dpg.add_static_texture(width=w, height=h, default_value=d, tag="telegram_texture_tag")
+
+    w, h, _, d = dpg.load_image(os.path.join(base.img_dir, "refresh.png"))
+    dpg.add_static_texture(width=w, height=h, default_value=d, tag="refresh_texture_tag")
 
 # Creating_main_viewport
 

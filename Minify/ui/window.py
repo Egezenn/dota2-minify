@@ -1,15 +1,17 @@
+"Main window dragging, resizing and focus"
+
 import ctypes
 import subprocess
 
 import dearpygui.dearpygui as dpg
-
 from core import base, log
+
 from ui import details, shared, terminal
 
 is_moving_viewport = False
 
 
-def drag_viewport(sender, app_data, user_data):
+def drag(sender, app_data, user_data):
     global is_moving_viewport
 
     if is_moving_viewport:
@@ -37,12 +39,12 @@ def drag_viewport(sender, app_data, user_data):
         dpg.set_viewport_pos([new_x_position, new_y_position])
 
 
-def stop_drag_viewport():
+def stop_drag():
     global is_moving_viewport
     is_moving_viewport = False
 
 
-def focus_window():
+def focus():
     if base.OS == base.WIN:
         try:
             hwnd = ctypes.windll.user32.FindWindowW(None, "Minify")
@@ -61,13 +63,7 @@ def focus_window():
             pass
 
 
-def toggle_dev_tools():
-    from ui import dev_tools
-
-    dev_tools.toggle_dev_tools()
-
-
-def on_primary_window_resize():
+def on_resize():
     from ui import dev_tools, modal_shared
 
     if dev_tools.dev_mode_state != 1:
@@ -99,4 +95,4 @@ def on_primary_window_resize():
         dpg.configure_item("settings_menu", width=window_width, height=window_height)
 
     if dpg.is_item_shown("modal_popup"):
-        modal_shared.configure_modal_popup()
+        modal_shared.configure()

@@ -1,10 +1,12 @@
+"Custom markdown parsing & rendering for details pages"
+
 import os
 import re
 
 import dearpygui.dearpygui as dpg
 
 
-def parse_markdown_notes(mod_path, locale):
+def parse_notes(mod_path, locale):
     try:
         notes_md_path = os.path.join(mod_path, "notes.md")
         if os.path.exists(notes_md_path):
@@ -115,7 +117,7 @@ def render_rich_text(parent, text, font="main_font", base_color=(0, 230, 230), b
                 first_token_rendered = True
 
 
-def render_markdown(parent, text):
+def render(parent, text):
     for line in text.split("\n"):
         line = line.strip()
         if not line:

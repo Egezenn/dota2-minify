@@ -1,3 +1,8 @@
+"""
+Module to find steam root and library that Dota2 is in (always accounts the Windows' executable path to find if used through an emulation layer).
+Also fixes language argument for the user(s)
+"""
+
 import os
 import sys
 
@@ -7,6 +12,8 @@ from core import base, config, log
 
 
 def remove_lang_args(arg_string):
+    "Parse launch options, remove language argument and return a clean string"
+
     if not arg_string:
         return ""
     tokens = arg_string.split()
@@ -28,29 +35,31 @@ def remove_lang_args(arg_string):
     return " ".join(cleaned)
 
 
-def fix_parameters():
+def fix_launch_options():
+    """
+    Fixes user(s) launch options with the language argument that has the current output path.
+    Does it for all accounts available if "change_options_for_all" key is set.
+    """
     from ui import terminal
-
-    from core import fs
 
     steam_ids = []
     successful_ids = []
-    if config.get_config("change_parameters_for_all", True):
+    if config.get("change_options_for_all", True):
         for account in get_steam_accounts():
             steam_ids.append(account["id"])
     else:
-        steam_ids.append(config.get_config("steam_id"))
+        steam_ids.append(config.get("steam_id"))
 
     for steam_id in steam_ids:
-        vdf_path = os.path.join(config.get_config("steam_root"), "userdata", steam_id, "config", "localconfig.vdf")
+        vdf_path = os.path.join(config.get("steam_root"), "userdata", steam_id, "config", "localconfig.vdf")
         if not os.path.exists(vdf_path):
             continue
 
         with open(vdf_path, encoding="utf-8") as file:
-            terminal.add_text_to_terminal("&checking_launch_options")
+            terminal.add_text("&checking_launch_options")
             data = vdf.load(file)
 
-        locale = config.get_config("output_locale")
+        locale = config.get("output_locale")
         try:
             launch_options = data["UserLocalConfigStore"]["Software"]["Valve"]["Steam"]["apps"][base.STEAM_DOTA_ID][
                 "LaunchOptions"
@@ -64,8 +73,7 @@ def fix_parameters():
                     user_name = user["name"]
                     break
 
-            terminal.add_text_to_terminal("&discrepancy_launch_options", user_name, locale)
-            fs.open_thing(steam_executable_path, "-exitsteam")
+            terminal.add_text("&discrepancy_launch_options", user_name, locale)
 
             data["UserLocalConfigStore"]["Software"]["Valve"]["Steam"]["apps"][base.STEAM_DOTA_ID][
                 "LaunchOptions"
@@ -77,6 +85,7 @@ def fix_parameters():
 
 
 def find_library_from_vdf(steam_root):
+    "Find the Dota2 library from VDF"
     try:
         if (
             steam_root
@@ -97,16 +106,24 @@ def find_library_from_vdf(steam_root):
                 if os.path.exists(os.path.join(path, base.DOTA_EXECUTABLE_PATH)) or os.path.exists(
                     os.path.join(path, base.DOTA_EXECUTABLE_PATH_FALLBACK)
                 ):
-                    config.set_config("steam_library", path)
-                    break
+                    config.set("steam_library", path)
+                    return True
+        return False
 
     except:
         log.write_warning("Error reading libraryfolders.vdf")
-        config.set_config("steam_library", "")
+        config.set("steam_library", "")
+        return False
 
 
 def get_steam_root_path():
-    steam_root = config.get_config("steam_root", "")
+    """
+    Get steam root path via
+    Windows: registry, default
+    Linux: default(`.local/share/Steam` for most major distrubitions)
+    MacOS: default
+    """
+    steam_root = config.get("steam_root", "")
 
     if steam_root and os.path.exists(steam_root):
         return steam_root
@@ -129,19 +146,24 @@ def get_steam_root_path():
         found_path = base.STEAM_DEFAULT_INSTALLATION_PATH
 
     if found_path:
-        config.set_config("steam_root", found_path)
-        config.set_config("steam_library", found_path)  # assume, will be checked anyway
+        config.set("steam_root", found_path)
+        config.set("steam_library", found_path)  # assume, will be checked anyway
         return found_path
 
     return ""
 
 
 def handle_non_default_path(steam_root):
-    steam_library = config.get_config("steam_library", "")
-    # when dota2 is not inside root steam installation directory, use library VDFs to determine where it's at
+    """
+    Handles Dota2 finding
+    root = library: found
+    root != library: find from library VDF
+    if root is unknown: user is manually prompted to select root, library will be found via VDF
+    """
+    steam_library = config.get("steam_library", "")
     if not os.path.exists(os.path.join(steam_library, base.DOTA_EXECUTABLE_PATH)):
         find_library_from_vdf(steam_root)
-        steam_library = config.get_config("steam_library", "")
+        steam_library = config.get("steam_library", "")
 
     # last line of defense
     while not steam_library or (
@@ -157,41 +179,37 @@ def handle_non_default_path(steam_root):
             root.wm_attributes("-topmost", 1)
             choice = messagebox.askokcancel(
                 "Minify Install Path Handler",
-                "We couldn't find your Dota2 install path, please select your steam installation directory or the library that Dota2 is located in",
+                "We couldn't find your Steam installation, please select your Steam installation directory",
                 parent=root,
             )
             root.lift()
             root.focus_force()
 
             if choice:
-                steam_library = os.path.normpath(filedialog.askdirectory())
-                config.set_config("steam_library", steam_library)
-
-                # if user selected installdir instead of library(steamapps|steamlibrary) try to get vdf
-                if (
-                    os.path.exists(os.path.join(steam_library, "config", "libraryfolders.vdf"))
-                    and not steam_library
-                    or (
-                        not os.path.exists(os.path.join(steam_library, base.DOTA_EXECUTABLE_PATH))
-                        and not os.path.exists(os.path.join(steam_library, base.DOTA_EXECUTABLE_PATH_FALLBACK))
-                    )
-                ):
-                    find_library_from_vdf(steam_root)
+                steam_root = os.path.normpath(filedialog.askdirectory())
+                config.set("steam_root", steam_root)
+                find_library_from_vdf(steam_root)
+                steam_library = config.get("steam_library")
 
             else:
                 sys.exit()
 
             root.destroy()
-            break
-        except:
-            log.write_crashlog(
-                "Could not open directory picker. Set your Steam library path in 'config/minify_config.json[\"steam_library\"]' and restart Minify.\n"
-                f"Expected something like: {base.STEAM_DEFAULT_INSTALLATION_PATH}\n",
+
+        except Exception as e:
+            messagebox.showerror(
+                "Minify Install Path Handler",
+                f'An unexpected error happened. Set your Steam paths in \'config/minify_config.json > "steam_root", "steam_library"\' and restart Minify.\n\nError: {e}',
+                parent=root,
             )
+            root.lift()
+            root.focus_force()
             break
+    return steam_root
 
 
 def get_steam_accounts():
+    "Get all users that have Dota2 data"
     accounts = []
     if not ROOT or not os.path.exists(os.path.join(ROOT, "userdata")):
         return accounts
@@ -225,27 +243,21 @@ def get_steam_accounts():
     return accounts
 
 
-# case 1: got steam path from query_steam_path and dota exists under the installdir => pass
-# case 2: got steam path from query_steam_path but dota doesn't exist under the installdir => read vdf
-# case 3: query_steam_path failed
-#         => try to get it with default installdirs
-#                 => steam exists under default installdirs => read vdf
-#                 => steam doesn't exist under default installdirs => prompt user for the library dota OR steam installdir
 ROOT = get_steam_root_path()
-handle_non_default_path(ROOT)
-LIBRARY = config.get_config("steam_library")
+ROOT = handle_non_default_path(ROOT)
+LIBRARY = config.get("steam_library")
 
 # Auto-determine a steam_id if not set
-current_steam_id = config.get_config("steam_id")
+current_steam_id = config.get("steam_id")
 if not current_steam_id and ROOT:
     for account in get_steam_accounts():
-        config.set_config("steam_id", account["id"])
+        config.set("steam_id", account["id"])
         break
 
 # paths
 if base.OS == base.WIN:
     steam_executable_path = os.path.join(ROOT, "steam.exe")
 elif base.OS == base.LINUX:
-    steam_executable_path = os.path.join(ROOT, "steam.exe")
+    steam_executable_path = os.path.join(ROOT, "steam")
 elif base.OS == base.MAC:
     steam_executable_path = os.path.join(ROOT, "steam")  # ?

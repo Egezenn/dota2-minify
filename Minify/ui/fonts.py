@@ -3,7 +3,7 @@ import os
 import dearpygui.dearpygui as dpg
 
 
-def register_fonts():
+def register():
     with dpg.font_registry():
         with dpg.font(os.path.join("bin", "FiraMono-Medium.ttf"), 16, tag="main_font") as main_font:
             dpg.add_font_range_hint(dpg.mvFontRangeHint_Default)

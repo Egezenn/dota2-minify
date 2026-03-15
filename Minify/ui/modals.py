@@ -1,3 +1,5 @@
+"Modal types"
+
 import os
 import re
 import stat
@@ -14,6 +16,8 @@ from ui import announcements, modal_shared, terminal
 
 latest_download_url = None
 
+# TODO: translations
+
 
 def update(sender=None, app_data=None, user_data=None):
     def threaded_update():
@@ -24,7 +28,7 @@ def update(sender=None, app_data=None, user_data=None):
             download_url = latest_download_url
 
             if download_url:
-                tag = terminal.add_text_to_terminal("Downloading update...")
+                tag = terminal.add_text("Downloading update...")
 
                 target_zip = "update.zip"
                 fs.remove_path(target_zip)
@@ -34,7 +38,7 @@ def update(sender=None, app_data=None, user_data=None):
                     gui.close()
                     return
 
-                terminal.add_text_to_terminal("Download complete. Launching updater...")
+                terminal.add_text("Download complete. Launching updater...")
 
                 if base.OS == base.WIN:
                     cmd = ["updater.exe", target_zip]
@@ -66,11 +70,10 @@ def update(sender=None, app_data=None, user_data=None):
     t.start()
 
 
-# TODO: translations
 class Announcements:
     @staticmethod
     def show(announcement):
-        modal_shared.show_modal(
+        modal_shared.show(
             title="Announcement",
             messages=[announcement.get("text", "")],
             buttons=[
@@ -104,7 +107,7 @@ class Announcements:
 class Uninstall:
     @staticmethod
     def show():
-        modal_shared.show_modal(
+        modal_shared.show(
             title="Uninstall",
             messages=["Remove all mods?"],
             buttons=[
@@ -121,7 +124,7 @@ class Uninstall:
 class Update:
     @staticmethod
     def show(version):
-        modal_shared.show_modal(
+        modal_shared.show(
             title="Update",
             messages=["New update is available!", f"Version {version} is available. Would you like to update?"],
             buttons=[
@@ -134,7 +137,7 @@ class Update:
     @staticmethod
     def delete(ignore, version=None):
         if ignore and version:
-            config.set_config("ignore_update", version)
+            config.set("ignore_update", version)
 
     @staticmethod
     def check():
@@ -154,7 +157,7 @@ class Update:
                 suffix = base.OS.lower() + ".zip"
 
                 if suffix:
-                    opt_in = config.get_config("opt_into_rcs", False)
+                    opt_in = config.get("opt_into_rcs", False)
                     for release in releases:
                         if release["prerelease"] and not re.search(r"rc\d+$", base.VERSION) and not opt_in:
                             continue  # Show only if the current version is a pre-release
@@ -168,7 +171,7 @@ class Update:
                 if download_url and tag_name:
                     remote_version = tag_name[8:] if len(tag_name) > 8 else tag_name
                     if base.VERSION != remote_version:
-                        if config.get_config("ignore_update") == remote_version:
+                        if config.get("ignore_update") == remote_version:
                             return
 
                         latest_download_url = download_url

@@ -16,6 +16,7 @@ from core import base, log
 
 
 def open_thing(path, args=""):
+    "Opens files or directories in their regsitered applications"
     from ui import terminal
 
     try:
@@ -49,7 +50,7 @@ def open_thing(path, args=""):
             else:
                 subprocess.run(["xdg-open", path])
     except FileNotFoundError:
-        terminal.add_text_to_terminal("&open_dir_fail", path, msg_type="error")
+        terminal.add_text("&open_thing_fail", path, msg_type="error")
 
 
 def move_path(src, dst):
@@ -86,7 +87,7 @@ def move_path(src, dst):
 
 
 def remove_path(*paths):
-    "Superset of `shutil.rmtree` to handle permissions and take in list of paths and also delete files."
+    "Superset of `shutil.rmtree` & `os.remove` to handle permissions. Takes in list of paths."
     try:
         for path in paths:
             try:
@@ -119,6 +120,7 @@ def remove_path(*paths):
 
 
 def create_dirs(*paths):
+    "`os.makedirs(path, exist_ok=True)` that takes list of paths."
     for path in paths:
         os.makedirs(path, exist_ok=True)
 
@@ -161,7 +163,7 @@ def download_file(url, target_path, progress_tag=None):
                             last_report_time = current_time
         return True
     except Exception as e:
-        terminal.add_text_to_terminal(f"Failed to open {target_path}: {e}", msg_type="error")
+        terminal.add_text(f"Failed to open {target_path}: {e}", msg_type="error")
         return False
 
 
@@ -187,9 +189,9 @@ def extract_archive(archive_path, extract_dir=".", target_file=None):
                 else:
                     tar.extractall(extract_dir)
         else:
-            terminal.add_text_to_terminal(f"Unsupported archive format: {archive_path}", msg_type="error")
+            terminal.add_text(f"Unsupported archive format: {archive_path}", msg_type="error")
             return False
         return True
     except Exception as e:
-        terminal.add_text_to_terminal(f"Extraction failed: {e}", msg_type="error")
+        terminal.add_text(f"Extraction failed: {e}", msg_type="error")
         return False

@@ -10,7 +10,7 @@ from core import base, config, constants, fs, log
 from ui import terminal
 
 compiler_filepicker_path = ""
-output_path = config.get_config("output_path", constants.minify_dota_pak_output_path)
+output_path = config.get("output_path", constants.minify_default_dota_pak_output_path)
 
 
 def get_blank_file_extensions():
@@ -24,22 +24,26 @@ def change_output_path():
     global output_path
     selection = dpg.get_value("output_select")
     output_path = [lang for lang in constants.minify_dota_possible_language_output_paths if selection in lang][0]
-    config.set_config("output_locale", selection)
-    config.set_config("output_path", output_path)
+    config.set("output_locale", selection)
+    config.set("output_path", output_path)
 
 
 def compile_assets(input_path=None, output_path=None, pak_path=None, sender=None, app_data=None, user_data=None):
+    """
+    resourcecompiler's friendly cousin
+    Automagically handles image compilation
+    """
     if compiler_filepicker_path:
         input_path = compiler_filepicker_path
         output_path = os.path.join(input_path, os.pardir, "compiled")
-        terminal.clean_terminal()
+        terminal.clean()
     if not output_path:
         output_path = os.path.join(input_path, os.pardir, "compiled")
 
     img_list = [str(f.relative_to(input_path)) for f in Path(input_path).rglob("*.png") if f.is_file()]
 
     if os.path.exists(input_path):
-        terminal.add_text_to_terminal("&compile_init", input_path)
+        terminal.add_text("&compile_init", input_path)
         fs.remove_path(constants.minify_dota_compile_input_path, output_path)
         fs.create_dirs(constants.minify_dota_compile_input_path)
 
@@ -85,14 +89,14 @@ def compile_assets(input_path=None, output_path=None, pak_path=None, sender=None
         )
         fs.create_dirs(constants.minify_dota_tools_required_path)
 
-        terminal.add_text_to_terminal("&compile_successful", output_path)
+        terminal.add_text("&compile_successful", output_path)
 
         if pak_path:
             vpk_file = vpk.new(output_path)
             vpk_file.save(pak_path)
-            terminal.add_text_to_terminal("&compile_created_pak", pak_path)
+            terminal.add_text("&compile_created_pak", pak_path)
     else:
-        terminal.add_text_to_terminal("&compile_no_path")
+        terminal.add_text("&compile_no_path")
 
 
 def create_img_ref_xml(img_path_list):
@@ -115,6 +119,10 @@ def select_compile_dir(sender, app_data):
 
 
 def exec_script(script_path, mod_name, order_name, _terminal_output=True):
+    """
+    Injects code
+    Only called for `script.py`
+    """
     if os.path.exists(script_path):
         module_name = mod_name.replace(" ", "").lower() + f"_{order_name}_script"
         spec = importlib.util.spec_from_file_location(module_name, script_path)
@@ -124,15 +132,24 @@ def exec_script(script_path, mod_name, order_name, _terminal_output=True):
         main_func = getattr(module, "main", None)
         if callable(main_func):
             if _terminal_output:
-                terminal.add_text_to_terminal("&script_execution", mod_name, order_name)
+                terminal.add_text("&script_execution", mod_name, order_name)
             main_func()
             if _terminal_output:
-                terminal.add_text_to_terminal("&script_success", mod_name, order_name, msg_type="success")
+                terminal.add_text("&script_success", mod_name, order_name, msg_type="success")
         else:
             log.write_warning("&script_no_main", mod_name, order_name)
 
 
 def bulk_exec_script(order_name, terminal_output=True):
+    """
+    Injects required mod instructions in bulk
+
+    `script_initial.py`
+    `script_after_decompile.py`
+    `script_after_recompile.py`
+    `script_after_patch.py`
+    `script_uninstall.py`
+    """
     bulk_name = f"script_{order_name}.py"
     for root, _, files in os.walk(base.mods_dir):
         if bulk_name in files and not os.path.basename(root).startswith("_"):

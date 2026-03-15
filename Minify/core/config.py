@@ -1,4 +1,8 @@
-"JSON(C) config files"
+"""
+JSON(C) config files
+
+Interactions with main config and mod configs
+"""
 
 import jsonc
 
@@ -25,8 +29,7 @@ def update_json_file(path, key, value):
     return value
 
 
-def get_config(key, default_value=None):
-    "Get config value from the main config file with default and set the default onto config."
+def get(key, default_value=None):
     data = read_json_file(base.main_config_file_dir)
     if key in data:
         return data[key]
@@ -37,20 +40,17 @@ def get_config(key, default_value=None):
     return None
 
 
-def set_config(key, value):
-    "Set config value for the main config file."
+def set(key, value):
     return update_json_file(base.main_config_file_dir, key, value)
 
 
-def get_mod_config(mod_name, default=None):
-    "Get config value for mods."
+def get_mod(mod_name, default=None):
     if default is None:
         default = {}
-    return get_config("modconf", {}).get(mod_name, default)
+    return get("modconf", {}).get(mod_name, default)
 
 
-def set_mod_config(mod_name, config_data):
-    "Set config value for mods."
-    modconf = get_config("modconf", {})
+def set_mod(mod_name, config_data):
+    modconf = get("modconf", {})
     modconf[mod_name] = config_data
-    set_config("modconf", modconf)
+    set("modconf", modconf)

@@ -1,3 +1,5 @@
+"Unix timestamp based announcement system internals"
+
 import time
 import webbrowser
 
@@ -68,7 +70,7 @@ def get_pending_announcements():
     if not announcements:
         return []
 
-    seen = config.get_config("announcements_seen", [])
+    seen = config.get("announcements_seen", [])
     current_version = base.VERSION
 
     pending = []
@@ -98,10 +100,10 @@ def get_pending_announcements():
 
 
 def mark_as_seen(identifier):
-    seen = config.get_config("announcements_seen", [])
+    seen = config.get("announcements_seen", [])
     if identifier not in seen:
         seen.append(identifier)
-        config.set_config("announcements_seen", seen)
+        config.set("announcements_seen", seen)
 
 
 def handle_announcement_action(announcement, action):

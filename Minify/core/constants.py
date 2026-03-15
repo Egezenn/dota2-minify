@@ -15,7 +15,9 @@ minify_dota_compile_output_path = os.path.join(
 minify_dota_tools_required_path = os.path.join(
     steam.LIBRARY, "steamapps", "common", "dota 2 beta", "content", "dota_minify"
 )
-minify_dota_pak_output_path = os.path.join(steam.LIBRARY, "steamapps", "common", "dota 2 beta", "game", "dota_minify")
+minify_default_dota_pak_output_path = os.path.join(
+    steam.LIBRARY, "steamapps", "common", "dota 2 beta", "game", "dota_minify"
+)
 minify_dota_possible_language_output_paths = [
     os.path.join(steam.LIBRARY, "steamapps", "common", "dota 2 beta", "game", "dota_minify"),
     os.path.join(steam.LIBRARY, "steamapps", "common", "dota 2 beta", "game", "dota_brazilian"),

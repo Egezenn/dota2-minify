@@ -3,9 +3,9 @@
 import os
 
 import dearpygui.dearpygui as dpg
-from core import base, localization
+from core import base
 
-from ui import markdown, shared
+from ui import localization, markdown, shared
 
 
 def render_details_window(mod):
@@ -36,9 +36,9 @@ def render_details_window(mod):
         dpg.add_separator(parent=content_group)
 
     mod_path = os.path.join(base.mods_dir, mod)
-    text = markdown.parse_markdown_notes(mod_path, localization.locale)
+    text = markdown.parse_notes(mod_path, localization.locale)
 
     container = f"{mod}_markdown_container"
     with dpg.group(parent=content_group, tag=container):
         pass
-    markdown.render_markdown(container, text)
+    markdown.render(container, text)

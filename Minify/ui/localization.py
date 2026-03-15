@@ -1,10 +1,12 @@
+"Dynamic localization handling"
+
 import os
 
 import dearpygui.dearpygui as dpg
 import jsonc
-from ui import markdown, shared
-
 from core import base, config, constants
+
+from ui import markdown, shared
 
 locale = ""
 localization_dict = {}
@@ -13,7 +15,7 @@ details_label = ""
 mod_selection_window_var = ""
 
 
-def get_available_localizations():
+def get_available():
     global localizations
     # get available variables for text
     with open(base.localization_file_dir, encoding="utf-8") as file:
@@ -30,20 +32,20 @@ def get_available_localizations():
             localization_dict[key] = value["EN"]
 
 
-def change_localization(sender=None, app_data=None, user_data=None, init=False):
+def change(sender=None, app_data=None, user_data=None, init=False):
     global locale, details_label, mod_selection_window_var
 
     with open(base.localization_file_dir, encoding="utf-8") as localization_file:
         localization_data = jsonc.load(localization_file)
 
     if init == True:  # noqa: E712
-        locale = config.get_config("locale", dpg.get_value("lang_select"))
+        locale = config.get("locale", dpg.get_value("lang_select"))
         if locale is None:
-            locale = config.set_config("locale", dpg.get_value("lang_select"))
+            locale = config.set("locale", dpg.get_value("lang_select"))
         dpg.configure_item("lang_select", default_value=locale)
     else:
         locale = dpg.get_value("lang_select")
-        config.set_config("locale", locale)
+        config.set("locale", locale)
 
     for key, values in localization_data.items():
         text = values.get(locale, values.get("EN", ""))
@@ -83,9 +85,9 @@ def change_localization(sender=None, app_data=None, user_data=None, init=False):
         container = f"{mod}_markdown_container"
         if dpg.does_item_exist(container):
             mod_path = os.path.join(base.mods_dir, mod)
-            text = markdown.parse_markdown_notes(mod_path, locale)
+            text = markdown.parse_notes(mod_path, locale)
             dpg.delete_item(container, children_only=True)
-            markdown.render_markdown(container, text)
+            markdown.render(container, text)
 
     # Update dynamic detail buttons
     details_label = localization_data.get("details_button_label_var", {}).get(

@@ -448,7 +448,7 @@
     "EL": "Σφάλμα: Κλείστε το Dota 2 και επανεκκινήστε το Minify.",
     "ES": "Error: Por favor cierra Dota 2 y reinicia Minify.",
     "FI": "Virhe: Sulje Dota 2 ja käynnistä Minify uudelleen.",
-    "FR": "Erreur : Veuillez fermer Dota 2 et redémarrer Minify.",
+    "FR": "Erreur: Veuillez fermer Dota 2 et redémarrer Minify.",
     "HU": "Hiba: Zárd be a Dota 2-t és indítsd újra a Minify-t.",
     "IT": "Errore: chiudere Dota 2 e riavviare Minify.",
     "NL": "Fout: sluit Dota 2 en start Minify opnieuw.",
@@ -624,7 +624,7 @@
     "EL": "Η ενημέρωση κώδικα απέτυχε!",
     "ES": "¡Error al aplicar el parche!",
     "FI": "Korjaus epäonnistui!",
-    "FR": "La mise à jour a échoué !",
+    "FR": "La mise à jour a échoué!",
     "HU": "A javítás sikertelen!",
     "IT": "Patching fallito!",
     "NL": "Patchen mislukt!",
@@ -813,7 +813,7 @@
     "TR": "Tüm Minify modları kaldırıldı.",
     "UK": "Всі моди Minify були видалені."
   },
-  "open_dir_fail": {
+  "open_thing_fail": {
     "EN": "{} doesn't exist!",
     "BG": "{} не съществува!",
     "CS": "{} neexistuje!",
@@ -986,7 +986,8 @@
     "RU": "-> Присоединяйтесь к нашему сообществу в Discord или Telegram!",
     "SV": "-> Gå med i vår Discord- eller Telegram-community!",
     "TR": "-> Discord veya Telegram topluluğumuza katılın!",
-    "UK": "-> Приєднуйтесь до нашої спільноти Discord або Telegram!"
+    "UK": "-> Приєднуйтесь до нашої спільноти Discord або Telegram!",
+    "IT": "-> Unisciti alla nostra community su Discord o Telegram!"
   },
   "start_text_3_var": {
     "EN": "-> Share Minify with your friends and online groups",
@@ -1229,5 +1230,49 @@
     "SV": "Felsökningszip-filen skapades på\n{}\nVänligen skicka den via kommunikationskanalerna så att vi kan åtgärda problemet.",
     "TR": "Hata ayıklama zip dosyası şu adreste oluşturuldu:\n{}\nLütfen sorunu çözebilmemiz için dosyayı iletişim kanalları aracılığıyla bize gönderin.",
     "UK": "Налагоджdувальний zip-архів створено о\n{}\nБудь ласка, надішліть його через канали зв'язку, щоб ми могли виправити проблему."
+  },
+  "refreshing_mod_list": {
+    "EN": "Refreshing...",
+    "BG": "Освежаващо...",
+    "CS": "Osvěžující...",
+    "DA": "Forfriskende...",
+    "DE": "Erfrischend...",
+    "EL": "Δροσιστικός...",
+    "ES": "Refrescante...",
+    "FI": "Virkistävä...",
+    "FR": "Rafraîchissant...",
+    "HU": "Üdítő...",
+    "IT": "Rinfrescante...",
+    "NL": "Verfrissend...",
+    "NO": "Forfriskende...",
+    "PL": "Orzeźwiający...",
+    "PT": "Refrescante...",
+    "RO": "Răcoritor...",
+    "RU": "Освежающе...",
+    "SV": "Uppfriskande...",
+    "TR": "Ferahlatıcı...",
+    "UK": "Освіжає..."
+  },
+  "refreshed_mod_list": {
+    "EN": "Refreshed the mod list!",
+    "BG": "Обновен е списъкът с модове!",
+    "CS": "Aktualizován seznam modů!",
+    "DA": "Opdateret mod-listen!",
+    "DE": "Die Mod-Liste wurde aktualisiert!",
+    "EL": "Ανανεώθηκε η λίστα mods!",
+    "ES": "¡Lista de mods actualizada!",
+    "FI": "Mod-listaa päivitetty!",
+    "FR": "Liste des mods mise à jour !",
+    "HU": "Frissült a modlista!",
+    "IT": "Lista delle mod aggiornata!",
+    "NL": "De modlijst is vernieuwd!",
+    "NO": "Oppdaterte modlisten!",
+    "PL": "Odświeżono listę modów!",
+    "PT": "Lista de mods atualizada!",
+    "RO": "Am actualizat lista de mod-uri!",
+    "RU": "Список модов обновлен!",
+    "SV": "Uppdaterade moddistan!",
+    "TR": "Mod listesini güncellendi!",
+    "UK": "Оновлено список модів!"
   }
 }

@@ -1,3 +1,5 @@
+"Dev tools pane that contains things for easy navigation, workarounds and debugging"
+
 import os
 import shutil
 import webbrowser
@@ -15,6 +17,7 @@ prev_height = None
 
 
 def recalc_rescomp_dirs():
+    "Swaps the variables for resourcecompiler.exe when extracted"
     if constants.rescomp_override:
         constants.minify_dota_compile_input_path = os.path.join(
             base.rescomp_override_dir, "content", "dota_addons", "minify"
@@ -28,7 +31,8 @@ def recalc_rescomp_dirs():
 
 
 def extract_workshop_tools():
-    terminal.clean_terminal()
+    "Extracts the bare minimum requirements for resourcecompiler.exe"
+    terminal.clean()
     fs.remove_path(base.rescomp_override_dir)
     fails = 0
 
@@ -39,15 +43,15 @@ def extract_workshop_tools():
             else:
                 shutil.copy(path, constants.dota_tools_extraction_paths[i])
         else:
-            terminal.add_text_to_terminal("&extraction_of_failed", path)
+            terminal.add_text("&extraction_of_failed", path)
             fails += 1
 
     if not fails:
         recalc_rescomp_dirs()
         if os.path.exists(constants.dota_resource_compiler_path):
-            terminal.add_text_to_terminal("&extracted")
+            terminal.add_text("&extracted")
         else:
-            terminal.add_text_to_terminal("&extraction_of_failed", path)
+            terminal.add_text("&extraction_of_failed", path)
 
 
 def tick_batch(state: bool):
@@ -58,12 +62,12 @@ def tick_batch(state: bool):
     gui.save_checkbox_state()
 
 
-def toggle_dev_tools():
+def toggle():
     import build
 
     global dev_mode_state
     width_increase = 450
-    height_increase = 200 if config.get_config("debug_env", False) else 0
+    height_increase = 200 if config.get("debug_env", False) else 0
 
     target_width = base.main_window_width + width_increase
     target_height = base.main_window_height + height_increase
@@ -75,7 +79,7 @@ def toggle_dev_tools():
     expanded_h = max(current_h, target_height)
 
     tools_height = base.main_window_height // 2
-    debug_env = config.get_config("debug_env", False) if not base.FROZEN else False
+    debug_env = config.get("debug_env", False) if not base.FROZEN else False
 
     if dev_mode_state == -1:  # init
         dev_mode_state = 1
@@ -126,7 +130,7 @@ def toggle_dev_tools():
             dpg.add_button(
                 label="Path: Dota2",
                 callback=lambda: fs.open_thing(
-                    os.path.join(config.get_config("steam_library"), "steamapps", "common", "dota 2 beta")
+                    os.path.join(config.get("steam_library"), "steamapps", "common", "dota 2 beta")
                 ),
             )
             dpg.add_button(
@@ -142,14 +146,14 @@ def toggle_dev_tools():
                 label="Executable: Dota2 Tools",
                 callback=lambda: fs.open_thing(
                     constants.dota2_tools_executable,
-                    f"-addon a -language {config.get_config('output_locale')} -novid -console",
+                    f"-addon a -language {config.get('output_locale')} -novid -console",
                 ),
             )
             dpg.add_text("^ Requires steam to be open")
             dpg.add_button(
                 label="Executable: Dota2",
                 callback=lambda: fs.open_thing(
-                    constants.dota2_executable, f"-language {config.get_config('output_locale')} -novid -console"
+                    constants.dota2_executable, f"-language {config.get('output_locale')} -novid -console"
                 ),
             )
             dpg.add_button(label="Create debug zip", callback=log.create_debug_zip)

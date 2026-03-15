@@ -142,7 +142,7 @@ panorama/images/spellicons/nevermore_shadowraze3_png.vtex_c,panorama/images/spel
 
 If and when there is a specific behavior to be automated you can include a python script along with your mod. You can find the template below.
 
-Appending `_initial, _after_decompile, _after_recompile, _uninstall` to your script's name will adjust when it'll be executed. Thus giving you the full control of how your mod can be handled. By default it executes while iterating over each mod when you are patching.
+Appending `_initial, _after_decompile, _after_recompile, _after_patch, _uninstall` to your script's name will adjust when it'll be executed. Thus giving you the full control of how your mod can be handled. By default it executes while iterating over each mod when you are patching.
 
 ```python
 # This script template can be run both manually and from minify.

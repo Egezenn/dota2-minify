@@ -19,7 +19,7 @@ Select the mods you'd like, the language you want to use and patch!
 
 You can view information about a mod on their respective `Details` page. You can also look at them through [here](https://egezenn.github.io/dota2-minify/mods.html).
 
-After the sound, Steam may restart while Minify is adjusting your Dota2 launch parameters. Then you're good to go!
+After the sound, Steam may restart while Minify is adjusting your Dota2 launch options. Then you're good to go!
 
 > [!INFO]
 > You may see some mods grayed out/untickable. For these, you need the [Workshop DLC](troubleshooting_faq.md?id=workshop-tools-dlc).

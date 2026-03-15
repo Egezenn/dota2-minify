@@ -1,3 +1,5 @@
+"Settings menu"
+
 import dearpygui.dearpygui as dpg
 from core import config, steam
 
@@ -34,14 +36,14 @@ SETTINGS = [
         "type": "checkbox",
     },
     {
-        "key": "fix_parameters",
-        "text": "Handle language parameter (current ID)",
+        "key": "fix_options",
+        "text": "Handle language option (current ID)",
         "default": True,
         "type": "checkbox",
     },
     {
-        "key": "change_parameters_for_all",
-        "text": "Change language parameter for all IDs",
+        "key": "change_options_for_all",
+        "text": "Change language option for all IDs",
         "default": True,
         "type": "checkbox",
     },
@@ -60,15 +62,15 @@ SETTINGS = [
 ]
 
 
-def save_settings(sender=None, app_data=None, user_data=None):
+def save(sender=None, app_data=None, user_data=None):
     for opt in SETTINGS:
         val = dpg.get_value(f"opt_{opt['key']}")
         if opt["key"] == "steam_id" and val:
             val = val.split(" - ")[0]
-        config.set_config(opt["key"], val)
+        config.set(opt["key"], val)
 
 
-def refresh_settings(sender=None, app_data=None, user_data=None):
+def refresh(sender=None, app_data=None, user_data=None):
     for opt in SETTINGS:
         if opt["type"] == "combo" and "items_getter" in opt:
             raw_items = opt["items_getter"]()
@@ -78,7 +80,7 @@ def refresh_settings(sender=None, app_data=None, user_data=None):
                 items = raw_items
             dpg.configure_item(f"opt_{opt['key']}", items=items)
 
-        val = config.get_config(opt["key"], opt["default"])
+        val = config.get(opt["key"], opt["default"])
 
         if opt["type"] == "combo" and val:
             current_items = dpg.get_item_configuration(f"opt_{opt['key']}")["items"]
@@ -90,12 +92,12 @@ def refresh_settings(sender=None, app_data=None, user_data=None):
         dpg.set_value(f"opt_{opt['key']}", val)
 
 
-def render_settings_menu():
+def render_menu():
     for opt in SETTINGS:
         with dpg.group(horizontal=True, parent="settings_menu"):
             _tag = f"opt_{opt['key']}"
             _text = opt.get("text") if opt["type"] == "checkbox" else f"{opt.get('text')}:"
-            _default_value = config.get_config(opt["key"], opt["default"])
+            _default_value = config.get(opt["key"], opt["default"])
 
             if opt["type"] == "checkbox":
                 dpg.add_checkbox(
