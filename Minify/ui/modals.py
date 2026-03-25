@@ -1,73 +1,16 @@
 "Modal types"
 
-import os
 import re
-import stat
-import subprocess
-import threading
 import webbrowser
 
 import build
 import dearpygui.dearpygui as dpg
 import requests
-from core import base, config, fs, log
+from core import base, config, utils
 
-from ui import announcements, modal_shared, terminal
-
-latest_download_url = None
+from ui import announcements, modal_shared
 
 # TODO: translations
-
-
-def update(sender=None, app_data=None, user_data=None):
-    def threaded_update():
-        from ui import gui
-
-        try:
-            global latest_download_url
-            download_url = latest_download_url
-
-            if download_url:
-                tag = terminal.add_text("Downloading update...")
-
-                target_zip = "update.zip"
-                fs.remove_path(target_zip)
-
-                if not fs.download_file(download_url, target_zip, tag):
-                    webbrowser.open(base.github_latest)
-                    gui.close()
-                    return
-
-                terminal.add_text("Download complete. Launching updater...")
-
-                if base.OS == base.WIN:
-                    cmd = ["updater.exe", target_zip]
-                    subprocess.Popen(
-                        cmd,
-                        creationflags=subprocess.DETACHED_PROCESS | subprocess.CREATE_NEW_PROCESS_GROUP,
-                        close_fds=True,
-                    )
-                else:
-                    cmd = ["./updater", target_zip]
-                    current_permissions = os.stat(cmd[0]).st_mode
-                    os.chmod(
-                        cmd[0],
-                        current_permissions | stat.S_IXUSR | stat.S_IXGRP | stat.S_IXOTH,
-                    )
-                    subprocess.Popen(cmd, start_new_session=True, close_fds=True)
-
-                gui.close()
-                return
-
-        except Exception as e:
-            print(f"Update failed: {e}")
-            webbrowser.open(base.github_latest)
-            gui.close()
-
-    Update.delete(ignore=False)
-
-    t = threading.Thread(target=threaded_update)
-    t.start()
 
 
 class Announcements:
@@ -128,7 +71,7 @@ class Update:
             title="Update",
             messages=["New update is available!", f"Version {version} is available. Would you like to update?"],
             buttons=[
-                {"label": "Yes", "callback": update, "width": 120},
+                {"label": "Yes", "callback": lambda s, a, u: webbrowser.open(base.github_io), "width": 120},
                 {"label": "Ignore update", "callback": lambda s, a, u: Update.delete(True, version), "width": 120},
                 {"label": "No", "callback": lambda s, a, u: Update.delete(False), "width": 120},
             ],
@@ -141,10 +84,8 @@ class Update:
 
     @staticmethod
     def check():
-        global latest_download_url
-
         if base.FROZEN:
-            try:
+            with utils.try_pass():
                 api_url = f"https://api.github.com/repos/{base.OWNER}/{base.REPO}/releases"
 
                 response = requests.get(api_url)
@@ -173,8 +114,3 @@ class Update:
                     if base.VERSION != remote_version:
                         if config.get("ignore_update") == remote_version:
                             return
-
-                        latest_download_url = download_url
-                        Update.show(remote_version)
-            except Exception:
-                log.write_warning()

@@ -159,7 +159,7 @@ try:
     else:
         raise Exception("Unsupported platform!")
 
-except:
+except Exception:
     from core import log
 
     log.write_crashlog(f"Unsupported configuration ({base.OS}/{base.MACHINE}/{base.ARCHITECTURE})")

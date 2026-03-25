@@ -80,7 +80,7 @@ def move_path(src, dst):
                     os.chmod(path, current_file_mode | stat.S_IWUSR)
 
             return move_path(src, dst)
-        except:
+        except Exception:
             log.write_warning()
     except FileNotFoundError:
         print(f"Skipped move of: {src} (not found)")
@@ -115,7 +115,7 @@ def remove_path(*paths):
                     os.chmod(path, current_file_mode | stat.S_IWUSR)
 
             return remove_path(*paths)
-        except:
+        except Exception:
             log.write_warning()
 
 

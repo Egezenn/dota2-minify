@@ -18,7 +18,7 @@ def render_details_window(mod):
     try:
         window_width = dpg.get_item_width("primary_window")
         window_height = dpg.get_item_height("primary_window")
-    except:
+    except Exception:
         window_width = base.main_window_width
         window_height = base.main_window_height
 

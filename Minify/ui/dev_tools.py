@@ -8,7 +8,7 @@ import dearpygui.dearpygui as dpg
 import helper
 from core import base, config, constants, fs, log, steam
 
-from ui import gui, terminal
+from ui import checkboxes, terminal
 
 # Developer tools state
 dev_mode_state = -1
@@ -55,11 +55,11 @@ def extract_workshop_tools():
 
 
 def tick_batch(state: bool):
-    for box in gui.checkboxes:
+    for box in checkboxes.checkboxes:
         box_cfg = dpg.get_item_configuration(box)
         if box_cfg["enabled"]:
             dpg.set_value(box, state)
-    gui.save_checkbox_state()
+    checkboxes.save()
 
 
 def toggle():

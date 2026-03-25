@@ -8,6 +8,12 @@ import dearpygui.dearpygui as dpg
 
 modal_queue = []
 
+MODAL_WIDTH = 500
+MODAL_HEIGHT = 300
+TEXT_WRAPPER_WIDTH = MODAL_WIDTH - 16
+TEXT_WRAPPER_HEIGHT = MODAL_HEIGHT - 80
+TEXT_WRAP = MODAL_WIDTH - 40
+
 
 def show(title, messages, buttons):
     """
@@ -33,8 +39,11 @@ def show_next_from_queue():
     if dpg.does_item_exist("modal_button_wrapper"):
         dpg.delete_item("modal_button_wrapper", children_only=True)
 
-    for msg in messages:
-        dpg.add_text(msg, parent="modal_text_wrapper", indent=1)
+    with dpg.child_window(
+        parent="modal_text_wrapper", width=TEXT_WRAPPER_WIDTH, height=TEXT_WRAPPER_HEIGHT, border=False
+    ):
+        for msg in messages:
+            dpg.add_text(msg, wrap=TEXT_WRAP)
 
     for btn in buttons:
 
@@ -73,17 +82,18 @@ def configure():
     if not dpg.does_item_exist("modal_popup"):
         return
 
-    window_width, window_height = dpg.get_item_rect_size("modal_popup")
     dpg.configure_item(
         "modal_popup",
+        width=MODAL_WIDTH,
+        height=MODAL_HEIGHT,
+        autosize=False,
         pos=(
-            dpg.get_viewport_width() / 2 - window_width / 2,
-            dpg.get_viewport_height() / 2 - window_height / 2,
+            dpg.get_viewport_width() / 2 - MODAL_WIDTH / 2,
+            dpg.get_viewport_height() / 2 - MODAL_HEIGHT / 2,
         ),
     )
 
-    text_width, text_height = dpg.get_item_rect_size("modal_text_wrapper")
-    dpg.configure_item("modal_text_wrapper", pos=(window_width / 2 - text_width / 2, 20))
+    dpg.configure_item("modal_text_wrapper", pos=[8, 8])
 
     btn_width, _ = dpg.get_item_rect_size("modal_button_wrapper")
-    dpg.configure_item("modal_button_wrapper", pos=(window_width / 2 - btn_width / 2, text_height + 40))
+    dpg.configure_item("modal_button_wrapper", pos=(MODAL_WIDTH / 2 - btn_width / 2 - 8, MODAL_HEIGHT - 50))

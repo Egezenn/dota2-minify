@@ -21,7 +21,7 @@ import vpk
 
 import conditions
 import helper
-from core import base, config, constants, fs, log, steam
+from core import base, config, constants, fs, log, steam, utils
 from ui import checkboxes, localization, terminal
 
 game_contents_file_init = False
@@ -81,7 +81,7 @@ def patcher(mod=None, pakname=None):
                                     dpg.set_value(dependency, False) if workshop else dpg.set_value(dependency, True)
                                 else:
                                     dpg.set_value(dependency, True)
-                            except:
+                            except Exception:
                                 log.write_warning(
                                     f"Mod dependency {dependency} for {mod} couldn't be resolved, might be that the mod doesn't exist."
                                 )
@@ -202,7 +202,7 @@ def patcher(mod=None, pakname=None):
                                 else:
                                     log.write_warning(f"Invalid row in replacer.csv for {folder}: {row}")
 
-            except:
+            except Exception:
                 log.write_warning()
 
             # Extract XMLs to be modified (assume they are in game VPK)
@@ -222,22 +222,19 @@ def patcher(mod=None, pakname=None):
             # ---------------------------------------------------------------------------- #
             terminal.add_text("&decompiling_terminal")
             with open(base.log_s2v, "w") as file:
-                try:
-                    subprocess.run(
-                        [
-                            os.path.join(".", constants.s2v_executable),
-                            "--input",
-                            base.build_dir,
-                            "--recursive",
-                            "--vpk_decompile",
-                            "--output",
-                            base.build_dir,
-                        ],
-                        stdout=file,
-                        creationflags=subprocess.CREATE_NO_WINDOW if base.OS == base.WIN else 0,
-                    )
-                except:
-                    log.write_crashlog()
+                subprocess.run(
+                    [
+                        os.path.join(".", constants.s2v_executable),
+                        "--input",
+                        base.build_dir,
+                        "--recursive",
+                        "--vpk_decompile",
+                        "--output",
+                        base.build_dir,
+                    ],
+                    stdout=file,
+                    creationflags=subprocess.CREATE_NO_WINDOW if base.OS == base.WIN else 0,
+                )
 
             with ThreadPoolExecutor() as executor:
                 xml_mod_args = [(os.path.join(base.build_dir, path), mods) for path, mods in xml_modifications.items()]
@@ -336,7 +333,7 @@ def patcher(mod=None, pakname=None):
                     mod_vpk = vpk.open(mod_path)
                     dump_vpk(mod_vpk, base.merge_dir, check_exists=True)
                     terminal.add_text("&merged_mod", mod_name)
-                except:
+                except Exception:
                     log.write_warning("&failed_merge_mod", mod_name)
 
             # Insert metadata to pak65
@@ -356,13 +353,11 @@ def patcher(mod=None, pakname=None):
             # No VPK mods selected - remove pak65 if it exists from previous patches
             pak65_path = os.path.join(helper.output_path, "pak65_dir.vpk")
             if os.path.exists(pak65_path):
-                try:
+                with utils.try_pass():
                     # Verify it's a Minify-created pak65 by checking metadata
                     pak65_contents = vpk.open(pak65_path)
                     if "minify_vpk_mods.txt" in pak65_contents or "minify_version.txt" in pak65_contents:
                         fs.remove_path(pak65_path)
-                except:
-                    pass
 
         # ---------------------------------- STEP 6 ---------------------------------- #
         # -------------------------- Clean paths and inform -------------------------- #
@@ -391,7 +386,7 @@ def patcher(mod=None, pakname=None):
                     terminal.add_text("&waiting_steam_to_close")
                     time.sleep(2)
                     steam_close_retries += 1
-                if steam_close_retries < 3:
+                if steam_close_retries < 5:
                     fs.open_thing(steam.steam_executable_path)
 
         helper.bulk_exec_script("after_patch", False)
@@ -414,7 +409,7 @@ def patcher(mod=None, pakname=None):
     except (PermissionError, playsound3.PlaysoundException):
         log.write_warning()
 
-    except:
+    except Exception:
         log.write_crashlog()
 
         terminal.add_seperator()

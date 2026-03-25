@@ -15,7 +15,7 @@ import shutil
 
 import conditions
 import requests
-from core import fs, steam
+from core import fs, steam, utils
 
 dota_itembuilds_path = os.path.join(steam.LIBRARY, "steamapps", "common", "dota 2 beta", "game", "dota", "itembuilds")
 odg_latest = "https://github.com/Egezenn/OpenDotaGuides/releases/latest/download/itembuilds.zip"
@@ -24,14 +24,12 @@ temp_dump_path = os.path.join(current_dir, "files", "temp")
 
 
 def main():
-    try:
+    with utils.try_pass():
         if conditions.workshop_installed:
             shutil.copy(
                 os.path.join(current_dir, "_styling.css"),
                 os.path.join(current_dir, "styling.css"),
             )
-    except:
-        pass
 
     fs.remove_path(zip_path)
 

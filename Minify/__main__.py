@@ -12,6 +12,9 @@ else:
     if current_dir not in sys.path:
         sys.path.insert(0, current_dir)
 
+os.makedirs("config", exist_ok=True)
+os.makedirs("logs", exist_ok=True)
+
 # isort: split
 
 import build
@@ -41,7 +44,6 @@ if args.version:
     print(base.VERSION)
     sys.exit(0)
 
-fs.create_dirs(base.logs_dir, base.config_dir)
 
 dpg.create_context()
 
@@ -111,7 +113,7 @@ def create_ui():
             parent="footer_left_group",
             width=button_size_x,
             height=button_size_y,
-            callback=lambda: webbrowser.open(base.github),
+            callback=lambda: webbrowser.open(base.github_io),
         )
         dpg.add_image_button(
             "settings_texture_tag",
@@ -159,6 +161,7 @@ def create_ui():
         autosize=True,
         no_resize=True,
         no_title_bar=True,
+        no_scrollbar=True,
     )
     dpg.add_group(tag="modal_text_wrapper", parent="modal_popup")
     dpg.add_group(

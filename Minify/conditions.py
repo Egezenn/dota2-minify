@@ -80,7 +80,7 @@ def download_dependencies(retries=0):
                             current_permissions | stat.S_IXUSR | stat.S_IXGRP | stat.S_IXOTH,
                         )
 
-    except:
+    except Exception:
         log.write_crashlog()
         terminal.add_text("&failed_download_retrying_terminal", msg_type="error")
         if retries < 3:

@@ -1,7 +1,0 @@
-"chat_wheel"
-{
-	"hero_messages"
-	{
-	
-	}
-}

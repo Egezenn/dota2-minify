@@ -8,7 +8,7 @@ import sys
 
 import vdf
 
-from core import base, config, log
+from core import base, config, log, utils
 
 
 def remove_lang_args(arg_string):
@@ -110,7 +110,7 @@ def find_library_from_vdf(steam_root):
                     return True
         return False
 
-    except:
+    except Exception:
         log.write_warning("Error reading libraryfolders.vdf")
         config.set("steam_library", "")
         return False
@@ -131,15 +131,13 @@ def get_steam_root_path():
     found_path = ""
     # registry
     if base.OS == base.WIN:
-        try:
+        with utils.try_pass():
             import winreg
 
             hkey = winreg.OpenKey(winreg.HKEY_LOCAL_MACHINE, r"SOFTWARE\WOW6432Node\Valve\Steam")
             steam_path = winreg.QueryValueEx(hkey, "InstallPath")[0]
             if os.path.exists(steam_path):
                 found_path = steam_path
-        except:
-            pass
 
     # defaults
     if not found_path and os.path.exists(base.STEAM_DEFAULT_INSTALLATION_PATH):
@@ -235,9 +233,9 @@ def get_steam_accounts():
                         friends = data.get("UserLocalConfigStore", {}).get("friends", {})
                         username = friends.get("PersonaName", "?")
                         accounts.append({"id": user_id, "name": username})
-                except:
+                except Exception:
                     accounts.append({"id": user_id, "name": "?"})
-    except:
+    except Exception:
         log.write_warning("Failed to fetch steam accounts")
 
     return accounts

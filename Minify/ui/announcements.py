@@ -36,12 +36,11 @@ def parse_time_condition(time_str):
         return True
 
 
-def check_version(versions_str, current_version):
-    if not versions_str:
+def check_version(versions, current_version):
+    if not versions:
         return True
 
-    allowed_versions = [v.strip() for v in versions_str.split(",")]
-    return current_version in allowed_versions
+    return current_version in versions
 
 
 def fetch_remote_announcements():
@@ -54,7 +53,7 @@ def fetch_remote_announcements():
         response = requests.get(url, timeout=5)
         response.raise_for_status()
         return jsonc.loads(response.text)
-    except:
+    except Exception:
         return []
 
 
@@ -112,8 +111,8 @@ def handle_announcement_action(announcement, action):
     identifier = time_cond.replace("-", "").replace("+", "").split("=")[0]
 
     if action == "OK":
-        url = announcement.get("url")
-        if url:
+        urls = announcement.get("urls", [])
+        for url in urls:
             webbrowser.open(url)
 
     mark_as_seen(identifier)

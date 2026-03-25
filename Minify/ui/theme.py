@@ -1,7 +1,7 @@
 import ctypes
 
 import dearpygui.dearpygui as dpg
-from core import base
+from core import base, utils
 
 BACKGROUND = (32, 32, 32)
 # TODO: generalize
@@ -113,10 +113,8 @@ def apply():
 
 def enable_dark_titlebar():
     if base.OS == base.WIN:
-        try:
+        with utils.try_pass():
             hwnd = ctypes.windll.user32.FindWindowW(None, base.TITLE)
             if hwnd != 0:
                 value = ctypes.c_int(1)
                 ctypes.windll.dwmapi.DwmSetWindowAttribute(hwnd, 20, ctypes.byref(value), ctypes.sizeof(value))
-        except:
-            pass

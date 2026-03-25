@@ -4,7 +4,7 @@ import ctypes
 import subprocess
 
 import dearpygui.dearpygui as dpg
-from core import base, log
+from core import base, utils
 
 from ui import details, shared, terminal
 
@@ -45,22 +45,18 @@ def stop_drag():
 
 
 def focus():
-    if base.OS == base.WIN:
-        try:
+    with utils.try_pass():
+        if base.OS == base.WIN:
             hwnd = ctypes.windll.user32.FindWindowW(None, "Minify")
             if hwnd != 0:
                 ctypes.windll.user32.ShowWindow(hwnd, 9)
                 ctypes.windll.user32.SetForegroundWindow(hwnd)
-        except:
-            log.write_warning()
-    else:
-        try:
+
+        else:
             subprocess.run(
                 ["wmctrl", "-a", "Minify"],
                 check=True,
             )
-        except:
-            pass
 
 
 def on_resize():

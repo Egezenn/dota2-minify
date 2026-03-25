@@ -1,11 +1,10 @@
-import os
 import threading
 import time
 
 import conditions
 import dearpygui.dearpygui as dpg
 import screeninfo
-from core import base, fs, log
+from core import base, fs
 
 from ui import checkboxes, modal_shared, terminal
 
@@ -24,19 +23,6 @@ for monitor in screeninfo.get_monitors():
 
 
 def initiate_conditionals():
-    # Updater self-update
-    updater = "updater.exe" if base.OS == base.WIN else "updater"
-    updater_new = "updater-new.exe" if base.OS == base.WIN else "updater"
-
-    if os.path.exists(updater_new):
-        try:
-            fs.remove_path(updater)
-            fs.move_path(updater_new, updater)
-            if base.OS != base.WIN:
-                os.chmod(updater, 0o755)
-        except:
-            log.write_warning()
-
     setup_system_thread = threading.Thread(target=setup_system)
     load_state_checkboxes_thread = threading.Thread(target=checkboxes.load)
     setup_system_thread.start()

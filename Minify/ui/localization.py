@@ -4,7 +4,7 @@ import os
 
 import dearpygui.dearpygui as dpg
 import jsonc
-from core import base, config, constants
+from core import base, config, constants, utils
 
 from ui import markdown, shared
 
@@ -74,10 +74,8 @@ def change(sender=None, app_data=None, user_data=None, init=False):
                 new_text = item["key"]
 
             if item["args"]:
-                try:
+                with utils.try_pass():
                     new_text = new_text.format(*item["args"])
-                except Exception:
-                    pass  # Keep original text if formatting fails
             dpg.set_value(item["id"], new_text)
 
     # Re-render markdown for available mods

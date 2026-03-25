@@ -1,8 +1,10 @@
 [
   {
-    "time": "1773360000=1773619200",
-    "text": "sike i lied, soon though :P\nsome things might be broken, please report them if you encounter any, thanks!",
-    "url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
-    "versions": "1.13.1rc6"
+    "time": "1774828800-",
+    "text": "Patch 7.41 is out!\n\nSimply repatch if you encounter any issues.\n\nThe codebase has been recently redesigned for better structure and readability, if you encounter any errors please report them.",
+    "urls": [
+      "https://github.com/Egezenn/dota2-minify/issues",
+      "https://egezenn.github.io/dota2-minify/wiki/#/troubleshooting_faq?id=things-are-broken"
+    ]
   }
 ]

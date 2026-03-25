@@ -102,26 +102,8 @@ exe = EXE(
     version="ffi_main.txt" if os.path.exists("ffi_main.txt") else None,
 )
 
-a_updater = Analysis(
-    ["../Minify/updater.py"],
-    pathex=["../Minify"],
-)
-pyz_updater = PYZ(a_updater.pure)
-
-exe_updater = EXE(
-    pyz_updater,
-    a_updater.scripts,
-    a_updater.binaries,
-    a_updater.datas,
-    [],
-    name="updater-new",
-    icon=["..\\Minify\\bin\\images\\favicon.ico"],
-    version="ffi_updater.txt" if os.path.exists("ffi_updater.txt") else None,
-)
-
 coll = COLLECT(
     exe,
-    exe_updater,
     a.binaries,
     a.datas,
     name="Minify",

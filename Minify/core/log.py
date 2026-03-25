@@ -5,7 +5,7 @@ import time
 import traceback
 import zipfile
 
-from core import base
+from core import base, utils
 
 
 def write_crashlog(exc_type=None, exc_value=None, exc_traceback=None, header=None, handled=True):
@@ -20,12 +20,17 @@ def write_crashlog(exc_type=None, exc_value=None, exc_traceback=None, header=Non
                 file.write(message := traceback.format_exc())
         else:
             file.write(message := f"{''.join(traceback.format_exception(exc_type, exc_value, exc_traceback))}")
-    if message:
-        terminal.add_text(message, msg_type="error")
+
+    with utils.try_pass():
+        from ui import terminal
+
+        if message and not handled:
+            terminal.add_text(message, msg_type="error")
     if base.FROZEN:
         create_debug_zip()
 
 
+# TODO: add texts without dashes
 def write_warning(header=None):
     from ui import terminal
 
@@ -52,11 +57,9 @@ def unhandled_handler(handled=False):
 
 
 def create_debug_zip():
-    from ui import terminal
-
     from core import fs
 
-    try:
+    with utils.try_pass():
         timestamp = time.strftime("%Y%m%d-%H%M%S")
         zip_filename = f"minify_debug_{timestamp}.zip"
 
@@ -74,8 +77,8 @@ def create_debug_zip():
                 if os.path.exists(file_path):
                     zipf.write(file_path)
 
-        terminal.add_text("&heeeeeeeeeeeeeelp", zip_filename)
-        fs.open_thing(".")
+        with utils.try_pass():
+            from ui import terminal
 
-    except:
-        pass
+            terminal.add_text("&heeeeeeeeeeeeeelp", zip_filename)
+        fs.open_thing(".")
