@@ -70,8 +70,21 @@ def start_text():
 
 
 def close_active_window():
-    active_window = dpg.get_item_alias(dpg.get_active_window())
-    if active_window not in [
+    active_window_id = dpg.get_active_window()
+    if not active_window_id:
+        return
+
+    active_window = dpg.get_item_alias(active_window_id) or active_window_id
+    is_modal_active = (
+        active_window == "modal_popup"
+        or active_window_id == dpg.get_alias_id("modal_popup")
+        or active_window in ["modal_text_wrapper", "modal_button_wrapper"]
+    )
+
+    if is_modal_active:
+        dpg.configure_item("modal_popup", show=False)
+        threading.Timer(0.1, modal_shared.show_next_from_queue).start()
+    elif active_window not in [
         "terminal_window",
         "primary_window",
         "footer",
@@ -79,11 +92,7 @@ def close_active_window():
         "mod_tools",
         "maintenance_tools",
     ]:
-        if active_window == "modal_popup":
-            dpg.configure_item("modal_popup", show=False)
-            threading.Timer(0.1, modal_shared.show_next_from_queue).start()
-        else:
-            dpg.configure_item(active_window, show=False)
+        dpg.configure_item(active_window, show=False)
 
 
 def close():

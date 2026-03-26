@@ -12,16 +12,14 @@ if minify_root not in sys.path:
 # isort: split
 
 import conditions
-from core import constants, fs
+from core import base, constants, fs
 
 
 def main():
     img_available = False
 
-    for file in sorted(os.listdir(current_dir)):
-        if file == "preview.png":
-            continue
-        if file.endswith((".png", ".jpg", ".jpeg", ".webp")):
+    for ext in (".png", ".jpg", ".jpeg", ".webp"):
+        if os.path.exists(os.path.join(base.config_dir, f"background{ext}")):
             img_available = True
             break
 

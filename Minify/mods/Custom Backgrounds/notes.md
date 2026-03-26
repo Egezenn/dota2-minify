@@ -1,239 +1,201 @@
 <!-- LANG:EN -->
 Replaces most backgrounds.
 
-You can drop an image (`.png`) or a video(`.webm`) to this mod's folder and it will use that as the background. By default it'll use an image from Dota.
+Drop an image or video named `background.<ext>` into the `config` folder. By default, it uses an image from Dota.
 
-!!: The file that is alphabethically higher will be used! e.g having the files `example.png` and `another.jpg` will select `another.jpg`.
+Formats below will be automatically converted if the tool exists:
 
-Formats below will be automatically converted if the tool exists.
-
-- `magick`: `.jpg`, `.jpeg`, `.webp`
-- `ffmpeg`: `.mp4`
+- `magick`: `.jpg`, `.jpeg`, `.webp` (converted to `.png`)
+- `ffmpeg`: `.mp4` (converted to `.webm`)
 
 <!-- LANG:BG -->
 Заменя повечето фонове.
 
-Можете да пуснете изображение (`.png`) или видеоклип (`.webm`) в папката на този мод и той ще го използва като фон. По подразбиране ще използва изображение от Dota.
+Качете изображение или видеоклип с име `background.<ext>` в папката `config`. По подразбиране използва изображение от Dota.
 
-!!: Ще се използва файлът, който е по-висок по азбучен ред! Например, ако файловете са `example.png` и `another.jpg`, ще се избере `another.jpg`.
+Форматите по-долу ще бъдат автоматично конвертирани, ако инструментът съществува:
 
-Форматите по-долу ще бъдат конвертирани автоматично, ако инструментът съществува.
-
-- `magick`: `.jpg`, `.jpeg`, `.webp`
-- `ffmpeg`: `.mp4`
+- `magick`: `.jpg`, `.jpeg`, `.webp` (конвертирано в `.png`)
+- `ffmpeg`: `.mp4` (конвертирано в `.webm`)
 
 <!-- LANG:CS -->
 Nahrazuje většinu pozadí.
 
-Do složky tohoto modu můžete vložit obrázek (`.png`) nebo video (`.webm`) a mod je použije jako pozadí. Ve výchozím nastavení použije obrázek z Doty.
+Vložte obrázek nebo video s názvem `background.<ext>` do složky `config`. Ve výchozím nastavení používá obrázek z Doty.
 
-!!: Bude použit soubor, který je abecedně vyšší! Např. pokud máte soubory `example.png` a `another.jpg`, vybere se `another.jpg`.
+Níže uvedené formáty budou automaticky převedeny, pokud nástroj existuje:
 
-Níže uvedené formáty budou automaticky převedeny, pokud existuje nástroj.
-
-- `magick`: `.jpg`, `.jpeg`, `.webp`
-- `ffmpeg`: `.mp4`
+- `magick`: `.jpg`, `.jpeg`, `.webp` (převedeno na `.png`)
+- `ffmpeg`: `.mp4` (převedeno na `.webm`)
 
 <!-- LANG:DA -->
 Erstatter de fleste baggrunde.
 
-Du kan slippe et billede (`.png`) eller en video (`.webm`) til denne mods mappe, og den vil bruge det som baggrund. Som standard vil den bruge et billede fra Dota.
+Slip et billede eller en video med navnet `background.<ext>` i `config`-mappen. Som standard bruger den et billede fra Dota.
 
-!!: Den fil, der er alfabetisk højere, vil blive brugt! F.eks. hvis du har filerne `example.png` og `another.jpg`, vil `another.jpg` blive valgt.
+Formaterne nedenfor konverteres automatisk, hvis værktøjet findes:
 
-Formaterne nedenfor vil automatisk blive konverteret, hvis værktøjet findes.
-
-- `magick`: `.jpg`, `.jpeg`, `.webp`
-- `ffmpeg`: `.mp4`
+- `magick`: `.jpg`, `.jpeg`, `.webp` (konverteret til `.png`)
+- `ffmpeg`: `.mp4` (konverteret til `.webm`)
 
 <!-- LANG:DE -->
 Ersetzt die meisten Hintergründe.
 
-Du kannst ein Bild (`.png`) oder ein Video (`.webm`) in den Ordner dieser Mod ziehen. Es wird dann als Hintergrund verwendet. Standardmäßig wird ein Bild aus Dota verwendet.
+Legen Sie ein Bild oder Video mit dem Namen `background.<ext>` in den Ordner `config`. Standardmäßig wird ein Bild aus Dota verwendet.
 
-!!: Die alphabetisch höher stehende Datei wird verwendet! Wenn du beispielsweise die Dateien `example.png` und `another.jpg` hast, wird `another.jpg` ausgewählt.
+Folgende Formate werden automatisch konvertiert, sofern das Tool vorhanden ist:
 
-Die folgenden Formate werden automatisch konvertiert, sofern das entsprechende Tool vorhanden ist:
+- `magick`: `.jpg`, `.jpeg`, `.webp` (konvertiert in `.png`)
 
-- `magick`: `.jpg`, `.jpeg`, `.webp`
-- `ffmpeg`: `.mp4`
+- `ffmpeg`: `.mp4` (konvertiert in `.webm`)
 
 <!-- LANG:EL -->
 Αντικαθιστά τα περισσότερα φόντα.
 
-Μπορείτε να αποθέσετε μια εικόνα (`.png`) ή ένα βίντεο (`.webm`) στον φάκελο αυτού του mod και θα το χρησιμοποιήσει ως φόντο. Από προεπιλογή, θα χρησιμοποιήσει μια εικόνα από το Dota.
+Αποθέστε μια εικόνα ή βίντεο με το όνομα `background.<ext>` στον φάκελο `config`. Από προεπιλογή, χρησιμοποιεί μια εικόνα από το Dota.
 
-!!: Θα χρησιμοποιηθεί το αρχείο που είναι αλφαβητικά υψηλότερο! π.χ. αν έχετε τα αρχεία `example.png` και `another.jpg`, θα επιλέξετε `another.jpg`.
+Οι παρακάτω μορφές θα μετατραπούν αυτόματα εάν το εργαλείο υπάρχει:
 
-Οι παρακάτω μορφές θα μετατραπούν αυτόματα εάν το εργαλείο υπάρχει.
-
-- `magick`: `.jpg`, `.jpeg`, `.webp`
-- `ffmpeg`: `.mp4`
+- `magick`: `.jpg`, `.jpeg`, `.webp` (μετατρέπεται σε `.png`)
+- `ffmpeg`: `.mp4` (μετατρέπεται σε `.webm`)
 
 <!-- LANG:ES -->
 Reemplaza la mayoría de los fondos.
 
-Puedes arrastrar una imagen (`.png`) o un vídeo (`.webm`) a la carpeta de este mod y lo usará como fondo. Por defecto, usará una imagen de Dota.
+Coloca una imagen o video llamado `background.<ext>` en la carpeta `config`. Por defecto, usa una imagen de Dota.
 
-!!: ¡Se usará el archivo con orden alfabético más alto! Por ejemplo, si tienes los archivos `example.png` y `another.jpg`, se seleccionará `another.jpg`.
+Los siguientes formatos se convertirán automáticamente si la herramienta está instalada:
 
-Los siguientes formatos se convertirán automáticamente si la herramienta existe.
-
-- `magick`: `.jpg`, `.jpeg`, `.webp`
-- `ffmpeg`: `.mp4`
+- `magick`: `.jpg`, `.jpeg`, `.webp` (convertido a `.png`)
+- `ffmpeg`: `.mp4` (convertido a `.webm`)
 
 <!-- LANG:FI -->
 Korvaa useimmat taustat.
 
-Voit pudottaa kuvan (`.png`) tai videon (`.webm`) tämän modin kansioon, ja se käyttää sitä taustakuvana. Oletusarvoisesti se käyttää kuvaa Dotasta.
+Pudota kuva tai video nimeltä `background.<ext>` `config`-kansioon. Oletusarvoisesti se käyttää Dotan kuvaa.
 
-!!: Käytetään aakkosjärjestyksessä korkeampaa tiedostoa! Esim. tiedostot `example.png` ja `another.jpg` valitsevat tiedoston `another.jpg`.
+Alla olevat muodot muunnetaan automaattisesti, jos työkalu on olemassa:
 
-Alla olevat muodot muunnetaan automaattisesti, jos työkalu on olemassa.
-
-- `magick`: `.jpg`, `.jpeg`, `.webp`
-- `ffmpeg`: `.mp4`
+- `magick`: `.jpg`, `.jpeg`, `.webp` (muunnetaan `.png`-muotoon)
+- `ffmpeg`: `.mp4` (muunnetaan `.webm`-muotoon)
 
 <!-- LANG:FR -->
 Remplace la plupart des arrière-plans.
 
-Vous pouvez glisser-déposer une image `(.png)` ou une vidéo `(.webm)` dans le dossier de ce mod pour qu'elle serve d'arrière-plan. Par défaut, une image de Dota est utilisée.
+Déposez une image ou une vidéo nommée `background.<ext>` dans le dossier `config`. Par défaut, une image de Dota est utilisée.
 
-!!: Le fichier le plus ancien dans l'ordre alphabétique sera utilisé ! Par exemple, si vous avez les fichiers `example.png` et `another.jpg`, c'est `another.jpg` qui sera sélectionné.
+Les formats suivants seront automatiquement convertis si l'outil est installé :
 
-Les formats ci-dessous seront convertis automatiquement si l'outil est disponible.
+- `magick` : `.jpg`, `.jpeg`, `.webp` (converti en `.png`)
 
-- `magick` : `.jpg`, `.jpeg`, `.webp`
-- `ffmpeg` : `.mp4`
+- `ffmpeg` : `.mp4` (converti en `.webm`)
 
 <!-- LANG:HU -->
 A legtöbb hátteret lecseréli.
 
-Bedobhatsz egy képet (`.png`) vagy egy videót (`.webm`) a mod mappájába, és az azt fogja használni háttérként. Alapértelmezés szerint egy Dotából származó képet fog használni.
+Húzzon egy `background.<ext>` nevű képet vagy videót a `config` mappába. Alapértelmezés szerint egy Dotából származó képet használ.
 
-!!: Az ábécésorrendben magasabban lévő fájl lesz használva! Pl. ha az `example.png` és az `another.jpg` fájlok vannak, akkor az `another.jpg` lesz kiválasztva.
+Az alábbi formátumok automatikusan konvertálódnak, ha létezik az eszköz:
 
-Az alábbi formátumok automatikusan konvertálódnak, ha létezik az eszköz.
-
-- `magick`: `.jpg`, `.jpeg`, `.webp`
-- `ffmpeg`: `.mp4`
+- `magick`: `.jpg`, `.jpeg`, `.webp` (`.png`-re konvertálva)
+- `ffmpeg`: `.mp4` (`.webm`-re konvertálva)
 
 <!-- LANG:IT -->
 Sostituisce la maggior parte degli sfondi.
 
-Puoi trascinare un'immagine (`.png`) o un video (`.webm`) nella cartella di questa mod e verrà utilizzato come sfondo. Per impostazione predefinita, verrà utilizzata un'immagine di Dota.
+Trascina un'immagine o un video denominato `background.<ext>` nella cartella `config`. Per impostazione predefinita, viene utilizzata un'immagine di Dota.
 
-!!: Verrà utilizzato il file alfabeticamente più in alto! Ad esempio, se hai i file `example.png` e `another.jpg`, verrà selezionato `another.jpg`.
+I formati seguenti verranno convertiti automaticamente se lo strumento è presente:
 
-I formati seguenti verranno convertiti automaticamente se lo strumento esiste.
-
-- `magick`: `.jpg`, `.jpeg`, `.webp`
-- `ffmpeg`: `.mp4`
+- `magick`: `.jpg`, `.jpeg`, `.webp` (convertito in `.png`)
+- `ffmpeg`: `.mp4` (convertito in `.webm`)
 
 <!-- LANG:NL -->
 Vervangt de meeste achtergronden.
 
-Je kunt een afbeelding (`.png`) of een video (`.webm`) naar de map van deze mod slepen en deze zal als achtergrond worden gebruikt. Standaard wordt een afbeelding uit Dota gebruikt.
+Sleep een afbeelding of video met de naam `background.<ext>` naar de map `config`. Standaard wordt een afbeelding uit Dota gebruikt.
 
-!!: Het bestand met de hoogste alfabetische volgorde wordt gebruikt! Bijvoorbeeld: als je de bestanden `example.png` en `another.jpg` hebt, wordt `another.jpg` geselecteerd.
+De onderstaande formaten worden automatisch geconverteerd als de tool aanwezig is:
 
-De onderstaande formaten worden automatisch geconverteerd als de tool aanwezig is.
-
-- `magick`: `.jpg`, `.jpeg`, `.webp`
-- `ffmpeg`: `.mp4`
+- `magick`: `.jpg`, `.jpeg`, `.webp` (geconverteerd naar `.png`)
+- `ffmpeg`: `.mp4` (geconverteerd naar `.webm`)
 
 <!-- LANG:NO -->
 Erstatter de fleste bakgrunner.
 
-Du kan slippe et bilde (`.png`) eller en video (`.webm`) i mappen til denne modden, og den vil bruke det som bakgrunn. Som standard vil den bruke et bilde fra Dota.
+Slipp et bilde eller en video med navnet `background.<ext>` i `config`-mappen. Som standard bruker den et bilde fra Dota.
 
-!!: Filen som er alfabetisk høyere vil bli brukt! F.eks. hvis du har filene `example.png` og `another.jpg`, vil `another.jpg` bli valgt.
+Formatene nedenfor vil bli automatisk konvertert hvis verktøyet finnes:
 
-Formatene nedenfor vil automatisk bli konvertert hvis verktøyet finnes.
-
-- `magick`: `.jpg`, `.jpeg`, `.webp`
-- `ffmpeg`: `.mp4`
+- `magick`: `.jpg`, `.jpeg`, `.webp` (konvertert til `.png`)
+- `ffmpeg`: `.mp4` (konvertert til `.webm`)
 
 <!-- LANG:PL -->
 Zastępuje większość teł.
 
-Możesz upuścić obraz (`.png`) lub film (`.webm`) do folderu tego moda, a zostanie on użyty jako tło. Domyślnie używany jest obraz z Dota.
+Upuść obraz lub film o nazwie `background.<ext>` do folderu `config`. Domyślnie używany jest obraz z Dota.
 
-!!: Zostanie użyty plik znajdujący się wyżej w kolejności alfabetycznej! Np. połączenie plików `example.png` i `another.jpg` spowoduje wybranie pliku `another.jpg`.
+Poniższe formaty zostaną automatycznie przekonwertowane, jeśli narzędzie istnieje:
 
-Poniższe formaty zostaną automatycznie przekonwertowane, jeśli narzędzie istnieje.
-
-- `magick`: `.jpg`, `.jpeg`, `.webp`
-- `ffmpeg`: `.mp4`
+- `magick`: `.jpg`, `.jpeg`, `.webp` (konwertowane do `.png`)
+- `ffmpeg`: `.mp4` (konwertowane do `.webm`)
 
 <!-- LANG:PT -->
 Substitui a maioria dos planos de fundo.
 
-Você pode arrastar e soltar uma imagem (`.png`) ou um vídeo (`.webm`) na pasta deste mod e ele usará o arquivo como plano de fundo. Por padrão, será usada uma imagem do Dota.
+Arraste e solte uma imagem ou vídeo com o nome `background.<ext>` na pasta `config`. Por padrão, utiliza uma imagem do Dota.
 
-!!: O arquivo que estiver em ordem alfabética mais alta será usado! Por exemplo, se você tiver os arquivos `example.png` e `another.jpg`, `another.jpg` será selecionado.
+Os formatos abaixo serão convertidos automaticamente se a ferramenta existir:
 
-Os formatos abaixo serão convertidos automaticamente se a ferramenta existir.
-
-- `magick`: `.jpg`, `.jpeg`, `.webp`
-- `ffmpeg`: `.mp4`
+- `magick`: `.jpg`, `.jpeg`, `.webp` (convertido para `.png`)
+- `ffmpeg`: `.mp4` (convertido para `.webm`)
 
 <!-- LANG:RO -->
 Înlocuiește majoritatea fundalurilor.
 
-Puteți plasa o imagine (`.png`) sau un videoclip (`.webm`) în folderul acestui mod și acesta îl va folosi ca fundal. În mod implicit, va folosi o imagine din Dota.
+Plasați o imagine sau un videoclip numit `background.<ext>` în folderul `config`. În mod implicit, folosește o imagine din Dota.
 
-!!: Fișierul care este mai sus în ordine alfabetică va fi utilizat! de exemplu, dacă aveți fișierele `example.png` și `another.jpg`, `another.jpg` va fi selectat.
+Formatele de mai jos vor fi convertite automat dacă instrumentul există:
 
-Formatele de mai jos vor fi convertite automat dacă instrumentul există.
-
-- `magick`: `.jpg`, `.jpeg`, `.webp`
-- `ffmpeg`: `.mp4`
+- `magick`: `.jpg`, `.jpeg`, `.webp` (convertit în `.png`)
+- `ffmpeg`: `.mp4` (convertit în `.webm`)
 
 <!-- LANG:RU -->
 Заменяет большинство фоновых изображений.
 
-Вы можете перетащить изображение (`.png`) или видео (`.webm`) в папку этого мода, и он будет использовать его в качестве фона. По умолчанию будет использоваться изображение из Dota.
+Перетащите изображение или видео с именем `background.<ext>` в папку `config`. По умолчанию используется изображение из Dota.
 
-!!: Будет использован файл, расположенный в алфавитном порядке выше! Например, если файлы `example.png` и `another.jpg` находятся в папке, будет выбран файл `another.jpg`.
+Форматы, указанные ниже, будут автоматически преобразованы, если инструмент существует:
 
-Форматы, указанные ниже, будут автоматически преобразованы, если существует соответствующая программа.
-
-- `magick`: `.jpg`, `.jpeg`, `.webp`
-- `ffmpeg`: `.mp4`
+- `magick`: `.jpg`, `.jpeg`, `.webp` (преобразуется в `.png`)
+- `ffmpeg`: `.mp4` (преобразуется в `.webm`)
 
 <!-- LANG:SV -->
 Ersätter de flesta bakgrunder.
 
-Du kan släppa en bild (`.png`) eller en video (`.webm`) till den här moddens mapp och den kommer att användas som bakgrund. Som standard använder den en bild från Dota.
+Släpp en bild eller video med namnet `background.<ext>` i mappen `config`. Som standard använder den en bild från Dota.
 
-!!: Filen som är alfabetiskt högre upp kommer att användas! t.ex. om du har filerna `example.png` och `another.jpg` kommer `another.jpg` att välja.
+Formaten nedan konverteras automatiskt om verktyget finns:
 
-Formaten nedan kommer att konverteras automatiskt om verktyget finns.
-
-- `magick`: `.jpg`, `.jpeg`, `.webp`
-- `ffmpeg`: `.mp4`
+- `magick`: `.jpg`, `.jpeg`, `.webp` (konverterat till `.png`)
+- `ffmpeg`: `.mp4` (konverterat till `.webm`)
 
 <!-- LANG:TR -->
 Çoğu arka planı değiştirir.
 
-Bu modun klasörüne bir resim `(.png)` veya video `(.webm)` bırakabilirsiniz ve bu, arka plan olarak kullanılacaktır. Varsayılan olarak Dota'dan bir resim kullanacaktır.
+`config` klasörüne `background.<ext>` adında bir resim veya video bırakın. Varsayılan olarak, Dota'dan bir resim kullanır.
 
-!!: Alfabetik olarak daha üst sırada olan dosya kullanılacaktır! Örneğin, `example.png` ve `another.jpg` dosyalarına sahipseniz, `another.jpg` seçilecektir.
+Aşağıdaki formatlar, araç mevcutsa otomatik olarak dönüştürülecektir:
 
-Aşağıdaki formatlar, araç mevcutsa otomatik olarak dönüştürülecektir.
-
-- `magick`: `.jpg`, `.jpeg`, `.webp`
-- `ffmpeg`: `.mp4`
+- `magick`: `.jpg`, `.jpeg`, `.webp` (`.png`'ye dönüştürülür)
+- `ffmpeg`: `.mp4` (`.webm`'ye dönüştürülür)
 
 <!-- LANG:UK -->
 Замінює більшість фонів.
 
-Ви можете перетягнути зображення (`.png`) або відео (`.webm`) до папки цього мода, і він використовуватиме їх як фон. За замовчуванням використовуватиметься зображення з Dota.
+Перетягніть зображення або відео з назвою `background.<ext>` у папку `config`. За замовчуванням використовується зображення з Dota.
 
-!!: Буде використано файл, який знаходиться вище в алфавітному порядку! Наприклад, якщо файли `example.png` та `another.jpg`, буде вибрано `another.jpg`.
+Наведені нижче формати будуть автоматично конвертовані, якщо інструмент існує:
 
-Наведені нижче формати будуть автоматично конвертовані, якщо інструмент існує.
-
-- `magick`: `.jpg`, `.jpeg`, `.webp`
-- `ffmpeg`: `.mp4`
+- `magick`: `.jpg`, `.jpeg`, `.webp` (конвертовано в `.png`)
+- `ffmpeg`: `.mp4` (конвертовано в `.webm`)

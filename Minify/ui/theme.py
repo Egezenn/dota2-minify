@@ -5,9 +5,11 @@ from core import base, utils
 
 BACKGROUND = (32, 32, 32)
 # TODO: generalize
+settings_theme = 0
 
 
 def apply():
+    global settings_theme
     with dpg.theme() as global_theme:
         with dpg.theme_component(dpg.mvAll):
             dpg.add_theme_style(dpg.mvStyleVar_WindowPadding, x=0, y=0)
@@ -42,6 +44,7 @@ def apply():
 
     with dpg.theme() as mod_menu_theme:
         with dpg.theme_component():
+            dpg.add_theme_style(dpg.mvStyleVar_WindowPadding, x=8, y=8)
             dpg.add_theme_color(dpg.mvThemeCol_FrameBg, (24, 24, 24, 255))
             dpg.add_theme_color(dpg.mvThemeCol_CheckMark, (0, 230, 230, 255))
             dpg.add_theme_color(dpg.mvThemeCol_FrameBgHovered, (20, 20, 20, 255))
@@ -101,12 +104,19 @@ def apply():
             dpg.add_theme_style(dpg.mvStyleVar_WindowBorderSize, 1)
             dpg.add_theme_style(dpg.mvStyleVar_WindowPadding, x=20, y=20)
             dpg.add_theme_style(dpg.mvStyleVar_ItemSpacing, x=10, y=10)
+            dpg.add_theme_color(dpg.mvThemeCol_Border, (0, 230, 230, 150))
+
+    with dpg.theme() as settings_theme:
+        with dpg.theme_component():
+            dpg.add_theme_style(dpg.mvStyleVar_WindowPadding, x=8, y=8)
+            dpg.add_theme_style(dpg.mvStyleVar_ItemSpacing, x=8, y=8)
 
     dpg.bind_item_theme("button_patch", main_buttons_theme)
     dpg.bind_item_theme("button_select_mods", main_buttons_theme)
     dpg.bind_item_theme("button_uninstall", main_buttons_theme)
     dpg.bind_item_theme("mod_menu", mod_menu_theme)
     dpg.bind_item_theme("footer", footer_theme)
+    dpg.bind_item_theme("settings_menu", settings_theme)
     dpg.bind_item_theme("modal_popup", popup_theme)
     dpg.bind_item_theme("terminal_window", terminal_theme)
 

@@ -7,7 +7,7 @@ import dearpygui.dearpygui as dpg
 import jsonc
 from core import base, config, constants, mods_shared
 
-from ui import details, localization, settings, shared, terminal
+from ui import details, localization, settings, shared, terminal, theme
 
 checkboxes = []
 checkboxes_state = {}
@@ -39,6 +39,7 @@ def setup_state():
     #     else:
     #         ui.configure_item("button_patch", enabled=False)
     save()
+    settings.refresh()
 
 
 def show_details(sender, app_data, user_data):
@@ -152,6 +153,7 @@ def create():
                     width=base.main_window_width,
                     height=base.main_window_height,
                 )
+                dpg.bind_item_theme(tag_data, theme.settings_theme)
 
                 content_group = f"{mod}_details_content_group"
                 with dpg.group(parent=tag_data, tag=content_group):

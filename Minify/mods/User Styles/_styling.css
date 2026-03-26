@@ -18,17 +18,23 @@
     z-index: 1;
 }
 
+/* ----------------------------------------------------- */
+
 /* g:panorama/styles/hud/dota_hud_shop_search_results */
 /* remove stat filters from search */
 #SearchResultsStatToggles {
     visibility: collapse;
 }
 
+/* ----------------------------------------------------- */
+
 /* g:panorama/styles/dashboard_page_profile_hero_stats */
 /* remove dota+ ad banner from last matches */
 #DotaPlusStatsBanner {
     visibility: collapse;
 }
+
+/* ----------------------------------------------------- */
 
 /* g:panorama/styles/play */
 /* remove play button backgrounds */
@@ -51,6 +57,8 @@ DOTADashboard.PopupBackgroundBlur #FriendMenu {
     wash-color: none;
     saturation: 1;
 }
+
+/* ----------------------------------------------------- */
 
 /* g:panorama/styles/ability_details */
 /* remove useless item info */
@@ -77,6 +85,8 @@ DOTAAbilityDetails {
     visibility: collapse;
 }
 
+/* ----------------------------------------------------- */
+
 /* g:panorama/styles/hud/hud_reborn */
 /* remove madstone animations */
 #inventory_neutral_level_up .NeutralLevelUpAvailableGlow,
@@ -85,11 +95,15 @@ DOTAAbilityDetails {
     animation-name: none;
 }
 
+/* ----------------------------------------------------- */
+
 /* c:panorama/styles/tooltips/tooltip_base */
 /* remove tooltip transitions */
 .TooltipContainer {
     transition-duration: 0s;
 }
+
+/* ----------------------------------------------------- */
 
 /* c:panorama/styles/popups/popup_manager */
 /* remove dims & blurs */
@@ -97,6 +111,8 @@ DOTAAbilityDetails {
 #DimBackground {
     visibility: collapse;
 }
+
+/* ----------------------------------------------------- */
 
 /* g:panorama/styles/hud/dota_hud_pregame */
 /* expand pregame after selection ui */
@@ -141,6 +157,8 @@ DOTAHudPreGame .RightColumn {
     width: 100%;
 }
 
+/* ----------------------------------------------------- */
+
 /* g:panorama/styles/friend_menu */
 /* unlist some friends sections */
 #GuildMembersOnline.Collapsed,
@@ -154,6 +172,8 @@ DOTAHudPreGame .RightColumn {
 /* #FriendsOnline.Collapsed */
 /* #FriendsOffline.Collapsed */
 /* #FriendsPending.Collapsed */
+
+/* ----------------------------------------------------- */
 
 /* g:panorama/styles/hud/context_menu_inventory_item */
 /* change the color of item action menu backgrounds */
@@ -200,6 +220,8 @@ DOTAHudPreGame .RightColumn {
 /* #DropImmediate */
 /* #ConsumeItem */
 
+/* ----------------------------------------------------- */
+
 /* g:panorama/styles/hud/dota_hud_shop */
 /* make shop ui smaller, remove it's animation (may cause defects in grid listing) */
 DOTAHUDShop {
@@ -207,14 +229,34 @@ DOTAHUDShop {
     ui-scale: 90%;
 }
 
+/* ----------------------------------------------------- */
+
 /* g:panorama/styles/hero_grid_new */
 /* new weird gray mh overlay? */
 .Season_MonsterHunter #MonsterHunterHeroAtlasProgressionOverlay {
     visibility: collapse;
 }
 
+/* ----------------------------------------------------- */
+
 /* g:panorama/styles/hud/hud_reborn */
 /* removes sesonal ability bar(snowballs, penguins, etc.) */
 #SecondaryAbilityContainer {
+    visibility: collapse;
+}
+
+/* ----------------------------------------------------- */
+
+/* removes the last match details */
+.OnHomePage #MissingDataContainer,.OnHomePage #DetailsContainer
+{
+    visibility: collapse;
+}
+
+/* ----------------------------------------------------- */
+
+/* g:panorama/styles/dashboard_page_home */
+/* removes the event containers */
+#FrontpageContents {
     visibility: collapse;
 }

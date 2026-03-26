@@ -145,7 +145,7 @@ def render_menu():
         mod_cfg_path = os.path.join(mod_path, "modcfg.json")
         mod_config = config.read_json_file(mod_cfg_path)
 
-        if "settings" in mod_config:
+        if "settings" in mod_config and dpg.get_value(mod):
             if not mod_settings_found:
                 dpg.add_separator(parent="settings_content_group")
                 dpg.add_text("Mod Settings", parent="settings_content_group")

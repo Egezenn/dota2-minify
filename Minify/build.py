@@ -165,6 +165,22 @@ def patcher(mod=None, pakname=None):
                         with open(styling_css, encoding="utf-8") as file:
                             content = file.read()
 
+                        # placeholder replacement
+                        mod_settings = config.get_mod(folder)
+
+                        # Fallback to modcfg.json defaults
+                        defaults = {
+                            s["key"]: s["default"]
+                            for s in mod_cfg.get("settings", [])
+                            if isinstance(s, dict) and "key" in s and "default" in s
+                        }
+
+                        content = re.sub(
+                            r"<&(.*?)>",
+                            lambda m: str(mod_settings.get(m.group(1), defaults.get(m.group(1), m.group(0)))),
+                            content
+                        )
+
                         matches = list(re.finditer(r"/\*\s*([cg]):(.*?)\s*\*/", content))
                         for i, match in enumerate(matches):
                             indicator = match.group(1)
@@ -221,8 +237,17 @@ def patcher(mod=None, pakname=None):
             # ------------------- Decompile all files in "build" folder ------------------ #
             # ---------------------------------------------------------------------------- #
             terminal.add_text("&decompiling_terminal")
+
+            # prevent gameinfo confusion
+            dummy_gameinfo = os.path.join(base.build_dir, "gameinfo.gi")
+            dota_gameinfo_path = os.path.join(
+                steam.LIBRARY, "steamapps", "common", "dota 2 beta", "game", "dota", "gameinfo.gi"
+            )
+            if os.path.exists(dota_gameinfo_path):
+                shutil.copy(dota_gameinfo_path, dummy_gameinfo)
+
             with open(base.log_s2v, "w") as file:
-                subprocess.run(
+                res = subprocess.run(
                     [
                         os.path.join(".", constants.s2v_executable),
                         "--input",
@@ -233,8 +258,15 @@ def patcher(mod=None, pakname=None):
                         base.build_dir,
                     ],
                     stdout=file,
+                    stderr=subprocess.STDOUT,
                     creationflags=subprocess.CREATE_NO_WINDOW if base.OS == base.WIN else 0,
                 )
+                if res.returncode != 0:
+                    log.write_warning(
+                        f"Source2Viewer exited with code {res.returncode}. See {base.log_s2v} for details."
+                    )
+
+            fs.remove_path(dummy_gameinfo)
 
             with ThreadPoolExecutor() as executor:
                 xml_mod_args = [(os.path.join(base.build_dir, path), mods) for path, mods in xml_modifications.items()]
