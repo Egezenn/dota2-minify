@@ -7,7 +7,7 @@ import dearpygui.dearpygui as dpg
 import jsonc
 from core import base, config, constants, mods_shared
 
-from ui import details, localization, shared, terminal
+from ui import details, localization, settings, shared, terminal
 
 checkboxes = []
 checkboxes_state = {}
@@ -51,6 +51,7 @@ def show_details(sender, app_data, user_data):
 def refresh(sender=None, app_data=None, user_data=None):
     mods_shared.scan_mods()
     create()
+    settings.refresh()
     terminal.add_text("&refreshed_mod_list")
 
 

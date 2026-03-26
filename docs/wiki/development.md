@@ -63,7 +63,28 @@ mods
   "always": false, // false by default, apply them without checking mods.json or checkbox
   "dependencies": ["<mod>"], // None by default, add a mod dependency's name here 
   "order": 1, // default is 1, ordered from negative to positive to resolve any conflicts
-  "visual": true // true by default, show it in the UI as a checkbox
+  "visual": true, // true by default, show it in the UI as a checkbox
+  "settings": [ // dynamically injects settings into the global Settings Menu
+    {
+      "key": "example_inputbox",
+      "text": "Display Name",
+      "default": "example_value",
+      "type": "inputbox"
+    },
+    {
+      "key": "example_checkbox",
+      "text": "Enable Feature",
+      "default": false,
+      "type": "checkbox"
+    },
+    {
+      "key": "example_combo",
+      "text": "Select Option",
+      "default": "Value 1",
+      "type": "combo",
+      "items": ["Value 1", "Value 2"]
+    }
+  ]
 }
 ```
 

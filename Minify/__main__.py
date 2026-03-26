@@ -207,7 +207,7 @@ def create_ui():
     settings.render_menu()
 
     dpg.add_spacer(parent="settings_menu", height=10)
-    with dpg.group(horizontal=True, parent="settings_menu"):
+    with dpg.group(horizontal=True, parent="settings_menu", tag="settings_buttons_group"):
         dpg.add_button(label="Save", callback=settings.save, width=100)
         dpg.add_button(label="Refresh", callback=settings.refresh, width=100)
 

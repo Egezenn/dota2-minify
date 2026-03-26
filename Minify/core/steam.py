@@ -38,13 +38,13 @@ def remove_lang_args(arg_string):
 def fix_launch_options():
     """
     Fixes user(s) launch options with the language argument that has the current output path.
-    Does it for all accounts available if "change_options_for_all" key is set.
+    Does it for all accounts available if "apply_for_all" key is set.
     """
     from ui import terminal
 
     steam_ids = []
     successful_ids = []
-    if config.get("change_options_for_all", True):
+    if config.get("apply_for_all", True):
         for account in get_steam_accounts():
             steam_ids.append(account["id"])
     else:

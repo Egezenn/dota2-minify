@@ -1,0 +1,10 @@
+{
+  "settings": [
+    {
+      "key": "font_string",
+      "text": "Font String",
+      "default": "Calibri, sans-serif",
+      "type": "inputbox"
+    }
+  ]
+}
