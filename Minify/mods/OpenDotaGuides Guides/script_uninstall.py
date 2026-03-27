@@ -17,6 +17,10 @@ dota_itembuilds_path = os.path.join(steam.LIBRARY, "steamapps", "common", "dota 
 
 
 def main():
+    bkup_path = os.path.join(dota_itembuilds_path, "bkup")
+    if not os.path.exists(bkup_path):
+        return
+
     try:
         with open(os.path.join(dota_itembuilds_path, "default_antimage.txt")) as file:
             lines = file.readlines()
@@ -25,12 +29,12 @@ def main():
                 for name in os.listdir(dota_itembuilds_path):
                     if name != "bkup":
                         fs.remove_path(os.path.join(dota_itembuilds_path, name))
-                for name in os.listdir(os.path.join(dota_itembuilds_path, "bkup")):
+                for name in os.listdir(bkup_path):
                     fs.move_path(
-                        os.path.join(dota_itembuilds_path, "bkup", name),
+                        os.path.join(bkup_path, name),
                         os.path.join(dota_itembuilds_path, name),
                     )
-                fs.remove_path(os.path.join(dota_itembuilds_path, "bkup"))
+                fs.remove_path(bkup_path)
     except FileNotFoundError:
         log.write_warning(
             "Unable to recover backed up default guides or the itembuilds directory is empty, verify files to get the default guides back"

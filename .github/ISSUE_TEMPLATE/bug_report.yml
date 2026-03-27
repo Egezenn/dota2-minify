@@ -14,7 +14,7 @@ body:
       options:
         - label: I have searched the existing issues.
           required: true
-        - label: It's not a virus report. See the readme for information regarding the topic.
+        - label: It's not a virus report. See the README for information regarding the topic.
           required: true
         - label: I've downloaded a release from https://github.com/Egezenn/dota2-minify/releases or cloned the source.
           required: true
@@ -68,14 +68,10 @@ body:
       required: true
 
   - type: textarea
-    id: mods
+    id: debug-zip
     attributes:
-      label: Mods
-      description: Is this related to a mod? If so, what mods were you using? Paste your `config/mods.json` file
-      render: json
-
-  - type: textarea
-    id: logs
-    attributes:
-      label: Logs
-      description: Have you recieved a crashlog? If so, paste your `logs/crashlog.txt` here
+      label: Debug Zip
+      description: |
+        **IMPORTANT**: Please provide a **debug zip**. If one is already cretaed, attach it to this issue. You can create one manually by clicking the **Hammer Icon** and clicking **Create debug zip** in Minify.
+    validations:
+      required: true

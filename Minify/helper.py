@@ -163,3 +163,22 @@ def bulk_exec_script(order_name, terminal_output=True):
                 exec_script(
                     os.path.join(root, bulk_name), os.path.basename(root), order_name, _terminal_output=terminal_output
                 )
+
+
+def exec_script_function(script_path, mod_name, function_name="main"):
+    """
+    Executes a specific function from a Python script file
+    """
+    if os.path.exists(script_path):
+        module_name = mod_name.replace(" ", "").lower() + "_utility"
+        spec = importlib.util.spec_from_file_location(module_name, script_path)
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
+
+        func = getattr(module, function_name, None)
+        if callable(func):
+            func()
+        else:
+            log.write_warning(f"Function '{function_name}' not found in {script_path}")
+    else:
+        log.write_warning(f"Script file not found: {script_path}")

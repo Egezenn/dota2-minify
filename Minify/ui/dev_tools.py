@@ -188,8 +188,6 @@ def toggle():
                     output_path=os.path.join(base.config_dir, "compiled"),
                 ),
             )
-            dpg.add_spacer(width=0, height=5)
-            dpg.add_button(label="Create a blank mod", callback=build.create_blank_mod)
             # ui.add_spacer(width=0, height=5)
             # ui.add_button(label="Patch with seperate paks", callback=build.patch_seperate) # broken
             dpg.add_spacer(width=0, height=5)

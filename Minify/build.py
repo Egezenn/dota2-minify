@@ -22,7 +22,7 @@ import vpk
 import conditions
 import helper
 from core import base, config, constants, fs, log, steam, utils
-from ui import checkboxes, localization, terminal
+from ui import checkboxes, terminal
 
 game_contents_file_init = False
 
@@ -178,7 +178,7 @@ def patcher(mod=None, pakname=None):
                         content = re.sub(
                             r"<&(.*?)>",
                             lambda m: str(mod_settings.get(m.group(1), defaults.get(m.group(1), m.group(0)))),
-                            content
+                            content,
                         )
 
                         matches = list(re.finditer(r"/\*\s*([cg]):(.*?)\s*\*/", content))
@@ -464,7 +464,7 @@ def patch_seperate():
             print(f"Created pak{i} with the mod {mod}")
 
 
-def uninstaller(sender=None, app_data=None, user_data=None):
+def uninstall(sender=None, app_data=None, user_data=None):
     from ui import gui
 
     terminal.clean()
@@ -825,148 +825,8 @@ def process_blacklist_dir(index, line, folder):
 
 def wipe_lang_dirs():
     terminal.clean()
-    uninstaller()
+    uninstall()
     for path in constants.minify_dota_possible_language_output_paths:
         if os.path.isdir(path):
             fs.remove_path(path)
             terminal.add_text("&clean_lang_dirs", path)
-
-
-def create_blank_mod():
-    mod_name = "!Your-Mod-Name"
-    path_to_mod = os.path.join(base.mods_dir, mod_name)
-
-    blacklist_template = r"""# This file is a list of path to files used to override those with blanks.
-# Supported file types are can be found in `bin/blank-files`.
-
-# A list of all the files (from the game pak) can be found in `bin/gamepakcontents.txt`.
-
-# Syntax for this file starting from the line beginning is as follows:
-# `#`: Comments
-# `>>`: Directories
-# `**`: RegExp patterns
-# `*-`: RegExp patterns for exclusion
-# `--`: Exclusions (for when you want to exclude specific files from bulk additions)
-
-# After that with no blank spaces you put the path to the file you want to override.
-# path/to/file
-
-# particles/base_attacks/ranged_goodguy_launch.vpcf_c
-# >>particles/sprays
-# **taunt.*\.vsnd_c
-"""
-    styling_template = r"""/* This file is a list of VCSS filepaths and styling that will be appended to them.  
-By the nature of this method modifications done here may break the original XML or CSS that gets updated resulting in a bad layout.  
-In such cases, a repatch or a slight modification is required.
-
-If you encounter errors while patching, it's most likely that your CSS is invalid or the path is wrong. Check [`logs/resourcecompiler.txt`](Minify/logs/resourcecompiler.txt) for more information.
-
-For Source 2 flavored CSS properties, refer to: [Valve Developer Community Wiki](https://developer.valvesoftware.com/wiki/Dota_2_Workshop_Tools/Panorama/CSS_Properties).  
-To live inspect the layout, open the workshop tools and press <kbd>F6</kbd> and select the element you'd like to select from the XML.
-
-Syntax for this file starting from the line beginning is as follows:  
-`/<star> c:path <star>/`: By default, the file is pulled from `dota 2 beta/game/dota/pak01_dir.vpk`.  
-However to change this behavior and pull files from `dota 2 beta/game/core/pak01_dir.vpk`, you can use this.  
-
-/<star> g|c:path/to/vcss_file_without_extension <star>/
-example_selector { property: value; }*/
-"""
-    script_template = r"""# This script template can be run both manually and from minify.
-# You are able to use packages and modules from minify (you need an activated environment from the minify root or running with the tool `uv` can automatically handle this.)
-import os
-import sys
-
-current_dir = os.path.dirname(os.path.abspath(__file__))
-minify_root = os.path.abspath(os.path.join(current_dir, os.pardir, os.pardir))
-if os.getcwd() != minify_root:
-    os.chdir(minify_root)
-
-if minify_root not in sys.path:
-    sys.path.insert(0, minify_root)
-
-# isort: split
-
-# Any package or module native to minify can be imported here
-# import requests
-#
-# import fs
-# ...
-
-
-def main():
-    pass
-    # Code specific to your mod goes here, minify will try to execute this block.
-    # If any exceptions occur, it'll be written to `logs` directory
-
-
-if __name__ == "__main__":
-    main()
-"""
-    mod_config_template = r"""{ // defaults doesn't need to be indicated
-  "always": false, // false by default, apply them without checking mods.json or checkbox
-  "dependencies": ["<mod>"], // None by default, add a mod dependency's name here 
-  "order": 1, // default is 1, ordered from negative to positive to resolve any conflicts
-  "visual": true // true by default, show it in the UI as a checkbox
-}"""
-
-    xml_mod_template = r"""{}
-/*
-This file allows you to modify Valve's XML (Panorama) files. It uses a key-value structure where the key is the path to the XML file in the VPK (e.g., `panorama/layout/popups/popup_accept_match.xml`) and the value is a list of modification actions.
-
-Supported actions:
-
-- `add_script`: Adds a script include to the `<scripts>` section.
-  - `src`: Path to the script (e.g., `s2r://panorama/scripts/popups/popup_auto_accept_match.vjs_c`)
-- `add_style_include`: Adds a style include to the `<styles>` section.
-  - `src`: Path to the style (e.g., `s2r://panorama/styles/popups/popup_accept_match.vcss_c`)
-- `set_attribute`: Sets an attribute on an element.
-  - `tag`: The tag name or ID of the element.
-  - `attribute`: Name of the attribute to set.
-  - `value`: Value of the attribute.
-- `add_child`: Appends a child element to a parent.
-  - `parent_id`: ID of the parent element.
-  - `xml`: The XML string of the child element.
-- `move_into`: Moves an element into a new parent.
-  - `target_id`: ID of the element to move.
-  - `new_parent_id`: ID of the new parent element.
-- `insert_after`: Inserts an element after a target element.
-  - `target_id`: ID of the reference element.
-  - `xml`: The XML string to insert.
-- `insert_before`: Inserts an element before a target element.
-  - `target_id`: ID of the reference element.
-  - `xml`: The XML string to insert.
-
-Example:
-
-{
-  "panorama/layout/popups/popup_accept_match.xml": [
-    {
-      "action": "add_script",
-      "src": "s2r://panorama/scripts/popups/popup_auto_accept_match.vjs_c"
-    },
-    {
-      "action": "set_attribute",
-      "tag": "PopupAcceptMatch",
-      "attribute": "onload",
-      "value": "AcceptMatchPopup()"
-    }
-  ]
-}
-*/
-"""
-
-    fs.remove_path(path_to_mod)
-    fs.create_dirs(path_to_mod, os.path.join(path_to_mod, "files"))
-    open(os.path.join(path_to_mod, "files", ".gitkeep"), "w").close()
-    with open(os.path.join(path_to_mod, "notes.md"), "w") as file:
-        file.write("\n\n".join([f"<!-- LANG:{locale} -->" for locale in localization.localization_dict]))
-    with open(os.path.join(path_to_mod, "blacklist.txt"), "w") as file:
-        file.write(blacklist_template)
-    with open(os.path.join(path_to_mod, "styling.css"), "w") as file:
-        file.write(styling_template)
-    with open(os.path.join(path_to_mod, "script.py"), "w") as file:
-        file.write(script_template)
-    with open(os.path.join(path_to_mod, "modcfg.json"), "w") as file:
-        file.write(mod_config_template)
-    with open(os.path.join(path_to_mod, "xml_mod.json"), "w") as file:
-        file.write(xml_mod_template)

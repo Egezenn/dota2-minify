@@ -93,7 +93,7 @@ def create():
 
         return mod_name, image_data, has_notes
 
-    mods_to_scan = [m for m in constants.visually_available_mods if m.endswith(".vpk") == False]
+    mods_to_scan = [m for m in constants.visually_available_mods if not m.endswith(".vpk")]
 
     with concurrent.futures.ThreadPoolExecutor() as executor:
         results = executor.map(scan_mod_details, mods_to_scan)

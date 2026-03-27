@@ -51,6 +51,8 @@ DOTAHeroStatue.Visible {
     visibility: collapse;
 }
 
+/* ----------------------------------------------------- */
+
 /* g:panorama/styles/dota_hud_tormentor_timer */
 DOTATormentorTimer {
     background-image: none;
@@ -124,6 +126,8 @@ DOTAItemImage.Reborn #ButtonWell {
     background-image: none;
 }
 
+/* ----------------------------------------------------- */
+
 /* g:panorama/styles/dota_hud_netgraph */
 DOTANetGraph {
     background-color: none;
@@ -178,6 +182,8 @@ DOTAScoreboardPlayer {
 #stats_container_bg {
     background-color: none;
 }
+
+/* ----------------------------------------------------- */
 
 /* g:panorama/styles/dota_hud_radar_button */
 #ChargeCount {

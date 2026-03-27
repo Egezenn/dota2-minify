@@ -2,7 +2,7 @@
 name = "dota2-minify"
 version = "3.2"
 description = "Dota2 Mod Patcher & Toolkit for everyone to use mods easily"
-readme = "readme.md"
+readme = "README.md"
 requires-python = ">=3.13"
 license = "GPL-3.0-or-later"
 dependencies = [
@@ -22,7 +22,44 @@ dependencies = [
 line-length = 120
 
 [tool.ruff]
+line-length = 120
+lint.select = ["E", "F", "I"]  # Default + Import sorting
 lint.ignore = ["E402", "E722"]
+
+[tool.pylint.messages_control]
+disable = [
+    "invalid-name",
+    "missing-module-docstring",
+    "missing-class-docstring",
+    "missing-function-docstring",
+    "line-too-long",
+    "trailing-whitespace",
+    "wrong-import-position",
+    "import-outside-toplevel",
+    "import-error",
+    "possibly-used-before-assignment",
+    "too-many-function-args",
+    "too-many-branches",
+    "too-many-arguments",
+    "too-many-locals",
+    "too-many-statements",
+    "too-many-boolean-expressions",
+    "too-many-positional-arguments",
+    "too-many-nested-blocks",
+    "inconsistent-return-statements",
+    "consider-using-with",
+    "unnecessary-lambda",
+    "fixme",
+    "global-variable-not-assigned",
+    "global-statement",
+    "unused-argument",
+    "undefined-loop-variable",
+    "broad-exception-caught",
+    "broad-exception-raised",
+    "subprocess-run-check",
+    "unspecified-encoding",
+    "similarities",
+]
 
 [dependency-groups]
 dev = ["pyinstaller>=6.17.0"]

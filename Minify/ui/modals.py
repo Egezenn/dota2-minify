@@ -54,7 +54,7 @@ class Uninstall:
             title="Uninstall",
             messages=["Remove all mods?"],
             buttons=[
-                {"label": "Confirm", "callback": lambda s, a, u: build.uninstaller(s, a, u), "width": 100},
+                {"label": "Confirm", "callback": lambda s, a, u: build.uninstall(s, a, u), "width": 100},
                 {"label": "Cancel", "callback": lambda s, a, u: Uninstall.hide(s, a, u), "width": 100},
             ],
         )

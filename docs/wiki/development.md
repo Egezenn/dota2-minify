@@ -52,6 +52,7 @@ mods
 │   ├── script_after_recompile.py
 │   ├── script_after_patch.py
 │   ├── script_uninstall.py
+│   ├── script_utility.py
 │   ├── styling.css
 │   └── xml_mod.json
 ```
@@ -63,8 +64,15 @@ mods
   "always": false, // false by default, apply them without checking mods.json or checkbox
   "dependencies": ["<mod>"], // None by default, add a mod dependency's name here 
   "order": 1, // default is 1, ordered from negative to positive to resolve any conflicts
+  "utility": false, // false by default, always show settings regardless of mod state
   "visual": true, // true by default, show it in the UI as a checkbox
-  "settings": [ // dynamically injects settings into the global Settings Menu
+  
+  // dynamically injects settings into the global Settings Menu
+  "settings": [
+    // key*: the internal name
+    // type*: inputbox, checkbox, combo, number, slider, color
+    // text: string that gets displayed on the left of the input. falls back to key if not given
+    // default: the default value to reset back to and start with. falls back to falsy values
     {
       "key": "example_inputbox",
       "text": "Display Name",
@@ -83,6 +91,41 @@ mods
       "default": "Value 1",
       "type": "combo",
       "items": ["Value 1", "Value 2"]
+    },
+    {
+      "key": "example_number",
+      "text": "Number",
+      "default": 10,
+      "type": "number",
+      "var_type": "int", // or "float"
+      "step": 1 // default is 1 for ints, 0.1 for floats
+    },
+    {
+      "key": "example_slider",
+      "text": "Slider",
+      "default": 50,
+      "type": "slider",
+      "min": 0,
+      "max": 100,
+      "var_type": "int", // or "float"
+      "step": 5 // default is 1 for ints, 0.1 for floats
+    },
+    {
+      "key": "example_color",
+      "text": "Color",
+      "default": "#ff0000ff",
+      "type": "color"
+    },
+    {
+      "key": "example_list",
+      "text": "List",
+      "default": ["Item 1", "Item 2"],
+      "type": "list"
+    },
+    {
+      "key": "example_function", // binds the function named "example_function" from script_utility.py
+      "text": "Function",
+      "type": "button"
     }
   ]
 }

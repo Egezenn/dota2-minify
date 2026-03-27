@@ -21,7 +21,7 @@ import build
 import conditions
 import dearpygui.dearpygui as dpg
 import helper
-from core import base, config, constants, fs, log
+from core import base, config, constants, log
 from ui import (
     checkboxes,
     dev_tools,
@@ -210,6 +210,7 @@ def create_ui():
     with dpg.group(horizontal=True, parent="settings_menu", tag="settings_buttons_group"):
         dpg.add_button(label="Save", callback=settings.save, width=100)
         dpg.add_button(label="Refresh", callback=settings.refresh, width=100)
+        dpg.add_button(label="Reset", callback=settings.reset, width=100)
 
 
 def create_base_ui():

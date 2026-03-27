@@ -74,7 +74,7 @@ jobs:
           Set-Location scripts
           Copy-Item -Path "..\Minify\bin" -Destination "dist\Minify\bin" -Recurse
           Copy-Item -Path "..\Minify\mods" -Destination "dist\Minify\mods" -Recurse
-          Copy-Item -Path "..\readme.md" -Destination "dist\Minify\readme.md"
+          Copy-Item -Path "..\README.md" -Destination "dist\Minify\README.md"
           Copy-Item -Path "..\LICENSE" -Destination "dist\Minify\LICENSE"
 
       - name: Archiving (Windows)
