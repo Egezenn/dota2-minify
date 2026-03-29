@@ -39,6 +39,10 @@ Type: filesandordirs; Name: "{app}\mods_old_*"
 Type: filesandordirs; Name: "{app}\vpk_build"
 Type: filesandordirs; Name: "{app}\vpk_replace"
 Type: filesandordirs; Name: "{app}\vpk_merge"
+; Clean up runtime-downloaded binaries and libraries
+Type: files; Name: "{app}\Source2Viewer-CLI.exe"
+Type: files; Name: "{app}\rg.exe"
+Type: files; Name: "{app}\*.dll"
 
 [Code]
 procedure CurStepChanged(CurStep: TSetupStep);
