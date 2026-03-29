@@ -17,6 +17,8 @@ Minify/*spirv-cross*
 Minify/*TinyEXR*
 Minify/rg*
 
+scripts/version_info.iss
+
 ## Dota2
 Minify/steam_appid.txt
 

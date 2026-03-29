@@ -23,8 +23,8 @@ line-length = 120
 
 [tool.ruff]
 line-length = 120
-lint.select = ["E", "F", "I"]  # Default + Import sorting
-lint.ignore = ["E402", "E722"]
+lint.select = ["E", "F", "I"]
+lint.ignore = ["E402", "E501", "E722"]
 
 [tool.pylint.messages_control]
 disable = [

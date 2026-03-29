@@ -8,6 +8,7 @@ import dearpygui.dearpygui as dpg
 
 modal_queue = []
 
+# TODO: sizes should be definable
 MODAL_WIDTH = 500
 MODAL_HEIGHT = 300
 TEXT_WRAPPER_WIDTH = MODAL_WIDTH - 16
@@ -26,6 +27,31 @@ def show(title, messages, buttons):
         show_next_from_queue()
 
 
+def show_progress(messages):
+    """Shows the modal with a progress bar and status text."""
+    if dpg.does_item_exist("modal_text_wrapper"):
+        dpg.delete_item("modal_text_wrapper", children_only=True)
+
+    with dpg.child_window(
+        parent="modal_text_wrapper", width=TEXT_WRAPPER_WIDTH, height=TEXT_WRAPPER_HEIGHT / 2, border=False
+    ):
+        for msg in messages:
+            dpg.add_text(msg, wrap=TEXT_WRAP)
+
+    dpg.configure_item("modal_progress_wrapper", show=True)
+    dpg.configure_item("modal_button_wrapper", show=False)
+    dpg.configure_item("modal_popup", show=True)
+    configure()
+
+
+def set_progress(value, status_text=None):
+    """Updates the progress bar value (0.0 to 1.0) and status text."""
+    if dpg.does_item_exist("modal_progress"):
+        dpg.set_value("modal_progress", value)
+    if status_text is not None and dpg.does_item_exist("modal_progress_status"):
+        dpg.set_value("modal_progress_status", status_text)
+
+
 def show_next_from_queue():
     if not modal_queue:
         return
@@ -34,10 +60,15 @@ def show_next_from_queue():
     messages = modal_data["messages"]
     buttons = modal_data["buttons"]
 
+    if dpg.does_item_exist("modal_progress_wrapper"):
+        dpg.configure_item("modal_progress_wrapper", show=False)
+
     if dpg.does_item_exist("modal_text_wrapper"):
         dpg.delete_item("modal_text_wrapper", children_only=True)
     if dpg.does_item_exist("modal_button_wrapper"):
         dpg.delete_item("modal_button_wrapper", children_only=True)
+
+    dpg.configure_item("modal_button_wrapper", show=True)
 
     with dpg.child_window(
         parent="modal_text_wrapper", width=TEXT_WRAPPER_WIDTH, height=TEXT_WRAPPER_HEIGHT, border=False

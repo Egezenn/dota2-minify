@@ -74,25 +74,26 @@ This project wouldn't be available without the work of the community. Thanks to 
 
 ### Binaries
 
-| Name                                                                          | Usage                                 | License                                                                                                                                                 |
-| ----------------------------------------------------------------------------- | ------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [Python](https://www.python.org)                                              | Core language                         | [PSFL license](https://github.com/python/cpython/blob/main/LICENSE)                                                                                     |
-| [ripgrep](https://github.com/BurntSushi/ripgrep)                              | RegExp patterns                       | [Unlicense](https://github.com/BurntSushi/ripgrep/blob/master/UNLICENSE) & [MIT license](https://github.com/BurntSushi/ripgrep/blob/master/LICENSE-MIT) |
-| [Source 2 Viewer](https://github.com/ValveResourceFormat/ValveResourceFormat) | VPK interaction & asset decompilation | [MIT license](https://github.com/ValveResourceFormat/ValveResourceFormat/blob/master/LICENSE)                                                           |
+| Name                                                                          | Usage                        | License                                                                                                                                                 |
+| ----------------------------------------------------------------------------- | ---------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [Inno Setup](https://jrsoftware.org/isinfo.php)                               | Windows Installer generation | [Inno Setup License](https://jrsoftware.org/islicense.php)                                                                                              |
+| [PyInstaller](https://pyinstaller.org)                                        | Compilation                  | [GPLv2 or later + additional properties](https://github.com/pyinstaller/pyinstaller/blob/develop/COPYING.txt)                                           |
+| [Python](https://www.python.org)                                              | Core language                | [PSFL license](https://github.com/python/cpython/blob/main/LICENSE)                                                                                     |
+| [ripgrep](https://github.com/BurntSushi/ripgrep)                              | RegExp patterns              | [Unlicense](https://github.com/BurntSushi/ripgrep/blob/master/UNLICENSE) & [MIT license](https://github.com/BurntSushi/ripgrep/blob/master/LICENSE-MIT) |
+| [Source 2 Viewer](https://github.com/ValveResourceFormat/ValveResourceFormat) | Asset decompilation          | [MIT license](https://github.com/ValveResourceFormat/ValveResourceFormat/blob/master/LICENSE)                                                           |
 
 ### Python packages
 
-| Name                                                                   | Usage                                     | License                                                                                                       |
-| ---------------------------------------------------------------------- | ----------------------------------------- | ------------------------------------------------------------------------------------------------------------- |
-| [dearpygui](https://github.com/hoffstadt/DearPyGui)                    | GUI                                       | [MIT license](https://github.com/hoffstadt/DearPyGui/blob/master/LICENSE)                                     |
-| [json-with-comments](https://github.com/n-takumasa/json-with-comments) | JSON parsing with comments                | [MIT license](https://github.com/n-takumasa/json-with-comments/blob/main/LICENSE)                             |
-| [playsound3](https://github.com/szmikler/playsound3)                   | Playing sounds                            | [MIT license](https://github.com/szmikler/playsound3/blob/main/LICENSE)                                       |
-| [psutil](https://github.com/giampaolo/psutil)                          | Checking Dota2 processes existence        | [BSD-3-Clause license](https://github.com/giampaolo/psutil/blob/master/LICENSE)                               |
-| [PyInstaller](https://pyinstaller.org)                                 | Compilation                               | [GPLv2 or later + additional properties](https://github.com/pyinstaller/pyinstaller/blob/develop/COPYING.txt) |
-| [requests](https://github.com/psf/requests)                            | Downloading/querying project dependencies | [Apache-2.0 license](https://github.com/psf/requests/blob/main/LICENSE)                                       |
-| [screeninfo](https://github.com/rr-/screeninfo)                        | Position calculation                      | [MIT license](https://github.com/rr-/screeninfo/blob/master/LICENSE.md)                                       |
-| [vdf](https://github.com/ValvePython/vdf)                              | Serializing VDFs                          | [MIT license](https://github.com/ValvePython/vdf/blob/master/LICENSE)                                         |
-| [vpk](https://github.com/ValvePython/vpk)                              | VPK interaction                           | [MIT license](https://github.com/ValvePython/vpk/blob/master/LICENSE)                                         |
+| Name                                                                   | Usage                                     | License                                                                           |
+| ---------------------------------------------------------------------- | ----------------------------------------- | --------------------------------------------------------------------------------- |
+| [dearpygui](https://github.com/hoffstadt/DearPyGui)                    | GUI                                       | [MIT license](https://github.com/hoffstadt/DearPyGui/blob/master/LICENSE)         |
+| [json-with-comments](https://github.com/n-takumasa/json-with-comments) | JSON parsing with comments                | [MIT license](https://github.com/n-takumasa/json-with-comments/blob/main/LICENSE) |
+| [playsound3](https://github.com/szmikler/playsound3)                   | Playing sounds                            | [MIT license](https://github.com/szmikler/playsound3/blob/main/LICENSE)           |
+| [psutil](https://github.com/giampaolo/psutil)                          | Checking processes existences             | [BSD-3-Clause license](https://github.com/giampaolo/psutil/blob/master/LICENSE)   |
+| [requests](https://github.com/psf/requests)                            | Downloading/querying project dependencies | [Apache-2.0 license](https://github.com/psf/requests/blob/main/LICENSE)           |
+| [screeninfo](https://github.com/rr-/screeninfo)                        | Position calculation                      | [MIT license](https://github.com/rr-/screeninfo/blob/master/LICENSE.md)           |
+| [vdf](https://github.com/ValvePython/vdf)                              | Serializing VDFs                          | [MIT license](https://github.com/ValvePython/vdf/blob/master/LICENSE)             |
+| [vpk](https://github.com/ValvePython/vpk)                              | VPK interaction                           | [MIT license](https://github.com/ValvePython/vpk/blob/master/LICENSE)             |
 
 ## License
 

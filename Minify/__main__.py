@@ -164,6 +164,9 @@ def create_ui():
         no_scrollbar=True,
     )
     dpg.add_group(tag="modal_text_wrapper", parent="modal_popup")
+    dpg.add_group(tag="modal_progress_wrapper", parent="modal_popup", show=False)
+    dpg.add_progress_bar(tag="modal_progress", parent="modal_progress_wrapper", width=-1)
+    dpg.add_text("", tag="modal_progress_status", parent="modal_progress_wrapper")
     dpg.add_group(
         parent="modal_popup",
         tag="modal_button_wrapper",

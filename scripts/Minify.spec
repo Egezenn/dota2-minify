@@ -1,88 +1,20 @@
 # -*- mode: python ; coding: utf-8 -*-
 import os
 import platform
-import re
 import sys
 
 
-def ffi_generator(v_str, version, type, flags=0x0):
-    return f"""# UTF-8
-# http://msdn.microsoft.com/en-us/library/ms646997.aspx
-VSVersionInfo(
-  ffi=FixedFileInfo(
-    filevers=({v_str}),
-    prodvers=({v_str}),
-    mask=0x3f,
-    flags={hex(flags)},
-    OS=0x40004,
-    fileType=0x1,
-    subtype=0x0,
-    date=(0, 0)
-    ),
-  kids=[
-    StringFileInfo(
-      [
-      StringTable(
-        u'040904B0',
-        [StringStruct(u'CompanyName', u'Egezenn'),
-        StringStruct(u'FileDescription', u'{"Dota2-Minify" if type == "main" else "Dota2-Minify Updater"}'),
-        StringStruct(u'FileVersion', u'{version}'),
-        StringStruct(u'InternalName', u'{"Minify" if type == "main" else "Minify-updater"}'),
-        StringStruct(u'LegalCopyright', u'Copyright (c) Egezenn'),
-        StringStruct(u'OriginalFilename', u'{"Minify.exe" if type == "main" else "updater.exe"}'),
-        StringStruct(u'ProductName', u'{"Minify" if type == "main" else "Minify-updater"}'),
-        StringStruct(u'ProductVersion', u'{version}')])
-      ]), 
-    VarFileInfo([VarStruct(u'Translation', [1033, 1200])])
-  ]
-)
-"""
+# Import version utility to generate metadata files
+sys.path.append(os.path.abspath(SPECPATH))
+try:
+    import version_util
 
-
-def generate_version_info(version):
-    try:
-        match = re.match(r"(\d+)\.(\d+)(?:\.(\d+))?(?:rc(\d+))?", version)
-        if not match:
-            parts = version.split(".")
-            clean_parts = []
-            for p in parts:
-                m = re.match(r"^(\d+)", p)
-                clean_parts.append(int(m.group(1)) if m else 0)
-
-            while len(clean_parts) < 4:
-                clean_parts.append(0)
-            v_tuple = tuple(clean_parts[:4])
-        else:
-            major, minor, patch, rc = match.groups()
-            v_tuple = (int(major), int(minor), int(patch) if patch else 0, int(rc) if rc else 0)
-        v_str = ", ".join(str(p) for p in v_tuple)
-
-        flags = 0x0
-        if version == "0":
-            flags = 0x1
-        elif "rc" in version:
-            flags = 0x2
-
-        content_main = ffi_generator(v_str, version, "main", flags)
-        content_updater = ffi_generator(v_str, version, "updater", flags)
-
-        with open("ffi_main.txt", "w", encoding="utf-8") as f:
-            f.write(content_main)
-        with open("ffi_updater.txt", "w", encoding="utf-8") as f:
-            f.write(content_updater)
-
-    except Exception as e:
-        print(f"Error generating version info: {e}")
-        sys.exit(1)
-
-
-if platform.system() == "Windows":
-    try:
-        with open(os.path.join(os.pardir, "version")) as f:
-            version = f.read().strip()
-    except FileNotFoundError:
-        version = "0"
-    generate_version_info(version)
+    if platform.system() == "Windows":
+        version_util.generate_metadata()
+except ImportError:
+    print("Warning: version_util not found, skipping metadata generation")
+except Exception as e:
+    print(f"Error generating metadata: {e}")
 
 a = Analysis(
     ["../Minify/__main__.py"],
@@ -111,6 +43,5 @@ coll = COLLECT(
 
 try:
     os.remove("ffi_main.txt")
-    os.remove("ffi_updater.txt")
 except:
     pass

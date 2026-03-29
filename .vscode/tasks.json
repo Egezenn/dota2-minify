@@ -9,28 +9,82 @@
       "group": { "kind": "build", "isDefault": true }
     },
     {
-      "label": "Build via PyInstaller & Run",
-      "detail": "Build via PyInstaller under powershell and run",
-      "icon": { "id": "run", "color": "terminal.ansiBlue" },
-      "type": "shell",
-      "command": "Set-Location scripts; Remove-Item -Recurse -ErrorAction SilentlyContinue 'dist'; uv run pyinstaller Minify.spec; Copy-Item '..\\Minify\\bin' 'dist\\Minify\\bin' -Recurse; Copy-Item '..\\Minify\\mods' 'dist\\Minify\\mods' -Recurse; Copy-Item '..\\README.md' 'dist\\Minify\\README.md'; Copy-Item '..\\LICENSE' 'dist\\Minify\\LICENSE'; Copy-Item '..\\Minify\\Source2Viewer-CLI.exe' 'dist\\Minify'; dist\\Minify\\Minify.exe",
-      "group": { "kind": "test" }
-    },
-    {
       "label": "Build via PyInstaller",
       "detail": "Build via PyInstaller under powershell",
       "icon": { "id": "tools", "color": "terminal.ansiYellow" },
       "type": "shell",
-      "command": "Set-Location scripts; Remove-Item -Recurse -ErrorAction SilentlyContinue 'dist'; uv run pyinstaller Minify.spec; Copy-Item '..\\Minify\\bin' 'dist\\Minify\\bin' -Recurse; Copy-Item '..\\Minify\\mods' 'dist\\Minify\\mods' -Recurse; Copy-Item '..\\README.md' 'dist\\Minify\\README.md'; Copy-Item '..\\LICENSE' 'dist\\Minify\\LICENSE'; Copy-Item '..\\Minify\\Source2Viewer-CLI.exe' 'dist\\Minify'",
+      "command": "powershell -ExecutionPolicy Bypass -File scripts/build_installer.ps1 -NoInstaller ${input:runApp}",
       "group": { "kind": "test" }
+    },
+    {
+      "label": "Build Installer",
+      "detail": "Build via PyInstaller and then Inno Setup",
+      "icon": { "id": "package", "color": "terminal.ansiMagenta" },
+      "type": "shell",
+      "command": "powershell -ExecutionPolicy Bypass -File scripts/build_installer.ps1 ${input:runSetup}",
+      "group": { "kind": "build" }
+    },
+    {
+      "label": "Build Installer (Inno Setup Only)",
+      "detail": "Build the Inno Setup installer without re-running PyInstaller",
+      "icon": { "id": "package", "color": "terminal.ansiMagenta" },
+      "type": "shell",
+      "command": "powershell -ExecutionPolicy Bypass -File scripts/build_installer.ps1 -OnlyInstaller ${input:runSetup}",
+      "group": { "kind": "build" }
     },
     {
       "label": "Clean",
       "detail": "Clean build directories and logs under powershell",
       "icon": { "id": "trash", "color": "terminal.ansiWhite" },
       "type": "shell",
-      "command": "$ErrorActionPreference = 'SilentlyContinue'; Set-Location scripts; Remove-Item -Recurse 'build'; Remove-Item -Recurse 'dist'",
+      "command": "$ErrorActionPreference = 'SilentlyContinue'; Set-Location scripts; Remove-Item -Recurse 'build'; Remove-Item -Recurse 'dist'; Remove-Item 'Minify-Setup-*.exe';  Remove-Item 'ffi_main.txt'; Remove-Item 'version_info.iss'",
       "group": { "kind": "test" }
+    },
+    {
+      "label": "Launch Setup",
+      "detail": "Run the latest generated installer",
+      "icon": { "id": "play", "color": "terminal.ansiCyan" },
+      "type": "shell",
+      "command": "powershell -Command \"$setup = Get-ChildItem 'scripts\\Minify-Setup-*.exe' | Sort-Object LastWriteTime -Descending | Select-Object -First 1; if ($setup) { Invoke-Item $setup.FullName } else { Write-Error 'No setup file found in scripts directory.' }\"",
+      "group": { "kind": "test" }
+    },
+    {
+      "label": "Launch Installed App",
+      "detail": "Run the installed Minify.exe from local appdata",
+      "icon": { "id": "symbol-event", "color": "terminal.ansiGreen" },
+      "type": "shell",
+      "command": "powershell -Command \"Invoke-Item '$env:LOCALAPPDATA\\Dota2-Minify\\Minify.exe'\"",
+      "group": { "kind": "test" }
+    },
+    {
+      "label": "Open Local Config",
+      "detail": "Open the production config file with its default application",
+      "icon": { "id": "file", "color": "terminal.ansiWhite" },
+      "type": "shell",
+      "command": "powershell -Command \"Invoke-Item '$env:LOCALAPPDATA\\Dota2-Minify\\config\\minify_config.json'\"",
+      "group": { "kind": "test" }
+    }
+  ],
+  "inputs": [
+    {
+      "id": "runSetup",
+      "type": "pickString",
+      "description": "Run the installer after building?",
+      "options": [
+        { "label": "No", "value": "" },
+        { "label": "Yes", "value": "-RunSetup" }
+      ],
+      "default": "No"
+    },
+    {
+      "id": "runApp",
+      "type": "pickString",
+      "description": "Run the application after building?",
+      "options": [
+        { "label": "No", "value": "" },
+        { "label": "Yes", "value": "-Run" }
+      ],
+      "default": "No"
     }
   ]
 }

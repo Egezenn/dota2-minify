@@ -6,7 +6,6 @@ import dearpygui.dearpygui as dpg
 import helper
 from core import base, config, constants, steam, utils
 
-
 SETTINGS = [
     {
         "key": "steam_root",
