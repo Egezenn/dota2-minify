@@ -76,7 +76,6 @@ jobs:
           Copy-Item -Path "..\Minify\mods" -Destination "dist\Minify\mods" -Recurse
           Copy-Item -Path "..\README.md" -Destination "dist\Minify\README.md"
           Copy-Item -Path "..\LICENSE" -Destination "dist\Minify\LICENSE"
-          Copy-Item -Path "..\Minify\Source2Viewer-CLI.exe" -Destination "dist\Minify"
 
       - name: Build Installer (Inno Setup)
         if: matrix.os == 'windows-latest'
@@ -109,7 +108,7 @@ jobs:
           tag_name: ${{ github.event.inputs.release_name }}
           files: |
             ${{ github.event.inputs.release_name }}-windows.zip
-            scripts/dist/*.exe
+            scripts/*.exe
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Create Portable Release (Linux)
