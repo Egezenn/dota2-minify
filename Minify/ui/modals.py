@@ -80,6 +80,7 @@ class Update:
             ],
         )
 
+    # TODO: shouldn't show download for windows portable, need to detect if its a portable
     @staticmethod
     def perform_update():
         if base.OS != base.WIN or not shared.update_url:

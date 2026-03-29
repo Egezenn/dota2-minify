@@ -78,8 +78,6 @@ if (downloadModal) {
     const releaseType = button.getAttribute("data-release-type");
 
     const modalTitle = downloadModal.querySelector(".modal-title");
-    const windowsLink = downloadModal.querySelector("#download-windows");
-    const linuxLink = downloadModal.querySelector("#download-linux");
 
     let release;
     if (releaseType === "stable") {
@@ -93,35 +91,52 @@ if (downloadModal) {
       const typeText = releaseType === "stable" ? "latest stable" : "latest release candidate";
       modalTitle.innerHTML = `Download ${typeText}, ${version}<br><small class="text-muted">Dated ${new Date(release.published_at).toLocaleString()}</small>`;
 
-      const downloadUrlBase = `https://github.com/Egezenn/dota2-minify/releases/download/${release.tag_name}/${release.tag_name}`;
-      windowsLink.href = `${downloadUrlBase}-windows.zip`;
-      linuxLink.href = `${downloadUrlBase}-linux.zip`;
-
-      if (releaseType === "prerelease") {
-        windowsLink.classList.remove("btn-primary");
-        windowsLink.classList.add("btn-danger");
-        linuxLink.classList.remove("btn-primary");
-        linuxLink.classList.add("btn-danger");
-      } else {
-        windowsLink.classList.remove("btn-danger");
-        windowsLink.classList.add("btn-primary");
-        linuxLink.classList.remove("btn-danger");
-        linuxLink.classList.add("btn-primary");
-      }
-
-      const windowsAsset = release.assets.find((asset) => asset.name.endsWith("-windows.zip"));
+      const windowsSetupAsset = release.assets.find((asset) => asset.name.endsWith(".exe"));
+      const windowsPortableAsset = release.assets.find((asset) => asset.name.endsWith("-windows.zip"));
       const linuxAsset = release.assets.find((asset) => asset.name.endsWith("-linux.zip"));
 
-      const windowsDownloadCount = downloadModal.querySelector("#windows-download-count");
-      const linuxDownloadCount = downloadModal.querySelector("#linux-download-count");
+      const windowsSetupLink = downloadModal.querySelector("#download-windows-setup");
+      const windowsPortableLink = downloadModal.querySelector("#download-windows-portable");
+      const linuxLink = downloadModal.querySelector("#download-linux");
 
-      if (windowsAsset) {
-        windowsDownloadCount.textContent = windowsAsset.download_count;
+      const windowsSetupCount = downloadModal.querySelector("#windows-setup-download-count");
+      const windowsPortableCount = downloadModal.querySelector("#windows-portable-download-count");
+      const linuxCount = downloadModal.querySelector("#linux-download-count");
+
+      if (windowsSetupAsset) {
+        windowsSetupLink.href = windowsSetupAsset.browser_download_url;
+        windowsSetupCount.textContent = windowsSetupAsset.download_count;
+        windowsSetupLink.style.display = "flex";
+      } else {
+        windowsSetupLink.style.display = "none";
+      }
+
+      if (windowsPortableAsset) {
+        windowsPortableLink.href = windowsPortableAsset.browser_download_url;
+        windowsPortableCount.textContent = windowsPortableAsset.download_count;
+        windowsPortableLink.style.display = "flex";
+      } else {
+        windowsPortableLink.style.display = "none";
       }
 
       if (linuxAsset) {
-        linuxDownloadCount.textContent = linuxAsset.download_count;
+        linuxLink.href = linuxAsset.browser_download_url;
+        linuxCount.textContent = linuxAsset.download_count;
+        linuxLink.style.display = "flex";
+      } else {
+        linuxLink.style.display = "none";
       }
+
+      const links = [windowsSetupLink, windowsPortableLink, linuxLink];
+      links.forEach((link) => {
+        if (releaseType === "prerelease") {
+          link.classList.remove("btn-primary");
+          link.classList.add("btn-danger");
+        } else {
+          link.classList.remove("btn-danger");
+          link.classList.add("btn-primary");
+        }
+      });
 
       const releaseNotesContainer = downloadModal.querySelector("#release-notes");
       if (releaseType === "stable" && release.body) {

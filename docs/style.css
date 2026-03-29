@@ -3,6 +3,7 @@
   border: none;
   display: inline-flex;
   gap: 0.5rem;
+  justify-content: center;
   transition: filter 0.3s ease;
 }
 
@@ -100,6 +101,14 @@ h6 > a {
 
 .modal-title {
   display: block;
+}
+
+.modal-body.btn-container {
+  flex-direction: column;
+}
+
+.modal-body.btn-container .btn {
+  width: 100%;
 }
 
 #release-notes {
