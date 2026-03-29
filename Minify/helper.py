@@ -2,7 +2,10 @@ import importlib.util
 import os
 import shutil
 import subprocess
+import sys
+import tkinter as tk
 from pathlib import Path
+from tkinter import filedialog
 
 import dearpygui.dearpygui as dpg
 import vpk
@@ -35,10 +38,10 @@ def compile_assets(input_path=None, output_path=None, pak_path=None, sender=None
     """
     if compiler_filepicker_path:
         input_path = compiler_filepicker_path
-        output_path = os.path.join(input_path, os.pardir, "compiled")
+        output_path = os.path.join(input_path, os.pardir, "#Minify_compiled")
         terminal.clean()
     if not output_path:
-        output_path = os.path.join(input_path, os.pardir, "compiled")
+        output_path = os.path.join(input_path, os.pardir, "#Minify_compiled")
 
     img_list = [str(f.relative_to(input_path)) for f in Path(input_path).rglob("*.png") if f.is_file()]
 
@@ -113,9 +116,14 @@ def create_img_ref_xml(img_path_list):
 """
 
 
-def select_compile_dir(sender, app_data):
+def select_compile_dir(sender=None, app_data=None):
     global compiler_filepicker_path
-    compiler_filepicker_path = app_data["current_path"]
+    root = tk.Tk()
+    root.withdraw()
+    path = filedialog.askdirectory(initialdir=os.getcwd())
+    root.destroy()
+    if path:
+        compiler_filepicker_path = path
 
 
 def exec_script(script_path, mod_name, order_name, _terminal_output=True):
@@ -124,6 +132,10 @@ def exec_script(script_path, mod_name, order_name, _terminal_output=True):
     Only called for `script.py`
     """
     if os.path.exists(script_path):
+        script_dir = os.path.dirname(script_path)
+        if script_dir not in sys.path:
+            sys.path.insert(0, script_dir)
+
         module_name = mod_name.replace(" ", "").lower() + f"_{order_name}_script"
         spec = importlib.util.spec_from_file_location(module_name, script_path)
         module = importlib.util.module_from_spec(spec)
@@ -170,6 +182,10 @@ def exec_script_function(script_path, mod_name, function_name="main"):
     Executes a specific function from a Python script file
     """
     if os.path.exists(script_path):
+        script_dir = os.path.dirname(script_path)
+        if script_dir not in sys.path:
+            sys.path.insert(0, script_dir)
+
         module_name = mod_name.replace(" ", "").lower() + "_utility"
         spec = importlib.util.spec_from_file_location(module_name, script_path)
         module = importlib.util.module_from_spec(spec)

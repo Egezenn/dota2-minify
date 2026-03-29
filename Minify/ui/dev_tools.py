@@ -59,7 +59,7 @@ def tick_batch(state: bool):
         box_cfg = dpg.get_item_configuration(box)
         if box_cfg["enabled"]:
             dpg.set_value(box, state)
-    checkboxes.save()
+    checkboxes.setup_state()
 
 
 def toggle():
@@ -171,15 +171,7 @@ def toggle():
         ):
             dpg.add_button(
                 label="Select path to compile",
-                callback=lambda: dpg.show_item("compile_file_dialog"),
-            )
-            dpg.add_file_dialog(
-                show=False,
-                modal=False,
-                min_size=(480, 260),
                 callback=helper.select_compile_dir,
-                tag="compile_file_dialog",
-                directory_selector=True,
             )
             dpg.add_button(
                 label="Compile items from path",

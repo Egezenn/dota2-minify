@@ -25,7 +25,7 @@ Minify has a programmatical approach to most modifications to keep everything mi
 | [`xml_mod.json`](#xml_modjson)              | No                           | Yes                  |
 
 <sup>1</sup>: [Uncompiled files](#filesfiles_uncompiled-directory).  
-<sup>2</sup>: The keys `always` and `dependencies` will be pulled at patch time, others require reinitialization.  
+<sup>2</sup>: The build engine pulls `always` and `dependencies` dynamically each time a patch is started. However, keys that define the mod's presence or configuration in the UI (like `order`, `visual`, and `settings` structure) are only loaded during the initial scan; changing these requires clicking **Refresh** in the Settings menu or restarting the application to re-render the components.  
 <sup>3</sup>: Initial scripts(`script_initial.py`).
 
 ### Mod files and explanations
@@ -64,7 +64,7 @@ mods
   "always": false, // false by default, apply them without checking mods.json or checkbox
   "dependencies": ["<mod>"], // None by default, add a mod dependency's name here 
   "order": 1, // default is 1, ordered from negative to positive to resolve any conflicts
-  "utility": false, // false by default, always show settings regardless of mod state
+  "order": 1, // default is 1, ordered from negative to positive to resolve any conflicts
   "visual": true, // true by default, show it in the UI as a checkbox
   
   // dynamically injects settings into the global Settings Menu
@@ -76,18 +76,21 @@ mods
     {
       "key": "example_inputbox",
       "text": "Display Name",
+      "force": false, // false by default, always show setting regardless of mod state
       "default": "example_value",
-      "type": "inputbox"
+      "type": "inputbox",
     },
     {
       "key": "example_checkbox",
       "text": "Enable Feature",
+      "force": false,
       "default": false,
       "type": "checkbox"
     },
     {
       "key": "example_combo",
       "text": "Select Option",
+      "force": false,
       "default": "Value 1",
       "type": "combo",
       "items": ["Value 1", "Value 2"]
@@ -95,6 +98,7 @@ mods
     {
       "key": "example_number",
       "text": "Number",
+      "force": false,
       "default": 10,
       "type": "number",
       "var_type": "int", // or "float"
@@ -103,6 +107,7 @@ mods
     {
       "key": "example_slider",
       "text": "Slider",
+      "force": false,
       "default": 50,
       "type": "slider",
       "min": 0,
@@ -113,18 +118,21 @@ mods
     {
       "key": "example_color",
       "text": "Color",
+      "force": false,
       "default": "#ff0000ff",
       "type": "color"
     },
     {
       "key": "example_list",
       "text": "List",
+      "force": false,
       "default": ["Item 1", "Item 2"],
       "type": "list"
     },
     {
       "key": "example_function", // binds the function named "example_function" from script_utility.py
       "text": "Function",
+      "force": false,
       "type": "button"
     }
   ]

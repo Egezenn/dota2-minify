@@ -1,0 +1,9 @@
+{
+  "settings": [
+    {
+      "key": "fetch_guides",
+      "text": "Fetch Latest Guides",
+      "type": "button"
+    }
+  ]
+}

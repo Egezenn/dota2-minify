@@ -1,0 +1,9 @@
+{
+  "settings": [
+    {
+      "key": "fetch_grids",
+      "text": "Fetch Latest Remote Grids",
+      "type": "button"
+    }
+  ]
+}

@@ -15,7 +15,8 @@ import shutil
 
 import conditions
 import requests
-from core import fs, steam, utils
+
+from core import fs, log, steam, utils
 
 dota_itembuilds_path = os.path.join(steam.LIBRARY, "steamapps", "common", "dota 2 beta", "game", "dota", "itembuilds")
 odg_latest = "https://github.com/Egezenn/OpenDotaGuides/releases/latest/download/itembuilds.zip"
@@ -34,8 +35,9 @@ def main():
     fs.remove_path(zip_path)
 
     try:
-        response = requests.get(odg_latest)
-    except requests.exceptions.ConnectionError:
+        response = requests.get(odg_latest, timeout=15)
+    except Exception as e:
+        log.write_warning(f"Connection error while fetching guides: {e}")
         return
     if response.status_code == 200:
         with open(zip_path, "wb") as file:
@@ -48,8 +50,9 @@ def main():
                         os.path.join(dota_itembuilds_path, name),
                         os.path.join(dota_itembuilds_path, "bkup", name),
                     )
-        except FileExistsError:
-            pass  # backup was created and opendotaguides was replacing the guides already
+        except Exception as e:
+            log.write_warning(f"Failed to backup/move files: {e}")
+
         shutil.unpack_archive(zip_path, temp_dump_path, format="zip")
         for file in os.listdir(temp_dump_path):
             shutil.copy(
@@ -57,6 +60,8 @@ def main():
                 os.path.join(dota_itembuilds_path, file),
             )
         fs.remove_path(temp_dump_path, zip_path)
+    else:
+        log.write_warning(f"Failed to fetch guides. Status code: {response.status_code}")
 
 
 if __name__ == "__main__":

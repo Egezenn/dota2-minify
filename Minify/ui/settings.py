@@ -168,21 +168,26 @@ def render_menu():
         mod_config = config.read_json_file(mod_cfg_path)
 
         always = mod_config.get("always", False)
-        utility = mod_config.get("utility", False)
+        mod_enabled = dpg.does_item_exist(mod) and dpg.get_value(mod)
 
-        if "settings" in mod_config and (always or utility or (dpg.does_item_exist(mod) and dpg.get_value(mod))):
-            if not mod_settings_found:
-                dpg.add_separator(parent="settings_content_group")
-                dpg.add_text("Mod Settings", parent="settings_content_group")
-                mod_settings_found = True
+        if "settings" in mod_config:
+            settings_to_render = [
+                opt for opt in mod_config["settings"] if always or mod_enabled or opt.get("force", False)
+            ]
 
-            dpg.add_text(f"{mod}:", parent="settings_content_group")
+            if settings_to_render:
+                if not mod_settings_found:
+                    dpg.add_separator(parent="settings_content_group")
+                    dpg.add_text("Mod Settings", parent="settings_content_group")
+                    mod_settings_found = True
 
-            saved_mod_data = config.get_mod(mod)
-            for opt in mod_config["settings"]:
-                _tag = f"mod_opt_{mod}_{opt['key']}"
-                _text = opt.get("text") if opt["type"] == "checkbox" else f"{opt.get('text')}:"
-                _default_value = saved_mod_data.get(opt["key"], opt.get("default", ""))
+                dpg.add_text(f"{mod}:", parent="settings_content_group")
+
+                saved_mod_data = config.get_mod(mod)
+                for opt in settings_to_render:
+                    _tag = f"mod_opt_{mod}_{opt['key']}"
+                    _text = opt.get("text") if opt["type"] == "checkbox" else f"{opt.get('text')}:"
+                    _default_value = saved_mod_data.get(opt["key"], opt.get("default", ""))
 
                 with dpg.group(horizontal=True, parent="settings_content_group"):
                     if opt["type"] == "checkbox":
