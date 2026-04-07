@@ -141,6 +141,20 @@ h6 > a {
   height: 27px !important;
 }
 
+.btn-d2pfx {
+  background-color: #BA9DFF !important;
+  color: black !important;
+}
+
+.btn-d2pfx img {
+  height: 27px !important;
+}
+
+.btn-d2pfx-discord {
+  background-color: #B0CFEA !important;
+  color: black !important;
+}
+
 .btn-buymeacoffee,
 .btn-buymeacoffee:active,
 .btn-buymeacoffee:hover {
