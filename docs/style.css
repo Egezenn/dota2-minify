@@ -37,6 +37,10 @@ body.home .btn-container {
   justify-content: center;
 }
 
+body.home .btn-group-spacer {
+  margin-bottom: 2rem !important;
+}
+
 body.home img {
   border-radius: 12px;
   height: auto;
