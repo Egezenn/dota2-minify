@@ -12,6 +12,15 @@
 }
 
 /* index.html */
+.logo-anchor {
+  color: inherit;
+  text-decoration: none;
+}
+
+.logo-anchor:hover {
+  filter: brightness(0.9);
+}
+
 body.home {
   align-items: center;
   display: flex;
@@ -139,6 +148,19 @@ h6 > a {
 
 .btn-telegram img {
   height: 27px !important;
+}
+
+.btn-report {
+  background-color: #880808 !important;
+}
+
+.btn-sponsors {
+  background-color: #db2777 !important;
+  color: white !important;
+}
+
+.btn-sponsors .icon-pink {
+  color: #fbcfe8 !important;
 }
 
 .btn-d2pfx {

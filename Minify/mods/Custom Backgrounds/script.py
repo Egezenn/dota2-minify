@@ -34,6 +34,22 @@ def main():
     for ext in img_extensions + vid_extensions:
         p = os.path.join(base.config_dir, f"background{ext}")
         if os.path.exists(p):
+            actual_ext = fs.get_file_type(p)
+
+            # Re-map .jpeg to .jpg for consistency with our search list if needed
+            if actual_ext == ".jpeg":
+                actual_ext = ".jpg"
+
+            if not actual_ext:
+                terminal.add_text("-> Unsupported background format\n   {}", p, msg_type="error")
+                return
+
+            if actual_ext != ext:
+                new_p = os.path.join(base.config_dir, f"background{actual_ext}")
+                terminal.add_text("-> Background extension mismatch\n   {} -> {}", p, new_p, msg_type="warning")
+                fs.move_path(p, new_p)
+                return
+
             source_file = p
             if ext in img_extensions:
                 img_available = True
@@ -57,7 +73,9 @@ def main():
                         creationflags=subprocess.CREATE_NO_WINDOW if base.OS == base.WIN else 0,
                     )
                 else:
-                    terminal.add_text(f"imagemagick is not available on path, unable to convert {source_file}")
+                    terminal.add_text(
+                        "-> Conversion tools missing\n   {} ({})", "ImageMagick", f"{actual_ext} -> .png", msg_type="error"
+                    )
                     return
 
             if target_file.endswith(".png"):
@@ -108,7 +126,9 @@ def main():
                         creationflags=subprocess.CREATE_NO_WINDOW if base.OS == base.WIN else 0,
                     )
                 else:
-                    terminal.add_text(f"ffmpeg is not available on path, unable to convert {source_file}")
+                    terminal.add_text(
+                        "-> Conversion tools missing\n   {} ({})", "FFmpeg", f"{actual_ext} -> .webm", msg_type="error"
+                    )
                     return
 
             if target_file.endswith(".webm"):

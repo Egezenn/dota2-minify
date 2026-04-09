@@ -195,3 +195,44 @@ def extract_archive(archive_path, extract_dir=".", target_file=None):
     except Exception as e:
         terminal.add_text(f"Extraction failed: {e}", msg_type="error")
         return False
+
+
+def get_file_type(path):
+    """
+    Identifies the file type using magic bytes.
+    Returns extension string (e.g., '.png', '.jpg', '.webm') or None if unknown.
+    """
+    try:
+        if not os.path.exists(path):
+            return None
+
+        with open(path, "rb") as f:
+            header = f.read(16)
+
+            # PNG: 89 50 4E 47 0D 0A 1A 0A
+            if header.startswith(b"\x89PNG\r\n\x1a\n"):
+                return ".png"
+
+            # JPEG: FF D8 FF (Start of Image + specific marker)
+            if header.startswith(b"\xff\xd8\xff"):
+                return ".jpg"
+
+            # WEBP: RIFF....WEBP
+            if header.startswith(b"RIFF") and header[8:12] == b"WEBP":
+                return ".webp"
+
+            # WEBM/MKV: 1A 45 DF A3 (EBML)
+            if header.startswith(b"\x1a\x45\xdf\xa3"):
+                return ".webm"
+
+            # MP4: ....ftyp
+            if header[4:8] == b"ftyp":
+                return ".mp4"
+
+            # GIF
+            if header.startswith(b"GIF87a") or header.startswith(b"GIF89a"):
+                return ".gif"
+
+    except Exception:
+        pass
+    return None
