@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=Dota2 Minify
+Comment=Dota2 Mod Patcher & Toolkit
+Exec=dota2-minify
+Icon=dota2-minify
+Terminal=false
+Type=Application
+Categories=Game;Utility;
+Keywords=dota2;minify;mod;patcher;

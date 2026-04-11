@@ -40,7 +40,7 @@ def setup_system():
     fs.create_dirs(base.logs_dir)
     conditions.is_dota_running("&error_please_close_dota_terminal", "error")
     conditions.is_compiler_found()
-    conditions.download_dependencies()
+    conditions.resolve_dependencies()
 
 
 def lock_interaction():

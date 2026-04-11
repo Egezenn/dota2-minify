@@ -1,0 +1,54 @@
+# Maintainer: Egezenn <https://github.com/Egezenn>
+pkgname=dota2-minify
+pkgver=1.13.1
+pkgrel=1
+pkgdesc="Dota2 Mod Patcher & Toolkit for everyone to use mods easily"
+arch=('any')
+url="https://github.com/Egezenn/dota2-minify"
+license=('GPL3')
+depends=(
+    'python>=3.13'
+    'python-dearpygui'
+    'python-json-with-comments'
+    'python-playsound3'
+    'python-psutil'
+    'python-requests'
+    'python-screeninfo'
+    'python-vdf'
+    'python-vpk'
+    'ripgrep'
+)
+optdepends=(
+    'source2viewer-bin: for extensive modding capabilities'
+    'dota2: the game itself'
+)
+provides=("${pkgname}")
+conflicts=("${pkgname}")
+source=("${pkgname}::git+${url}.git#branch=aur"
+        "dota2-minify.desktop"
+        "dota2-minify.sh")
+sha256sums=('SKIP'
+            'SKIP'
+            'SKIP')
+
+pkgver() {
+    cd "${srcdir}/${pkgname}"
+    git describe --long --tags | sed 's/^Minify-[vV]*//;s/^v//;s/\([^-]*-\)g/r\1/;s/-/./g'
+}
+
+package() {
+    cd "${srcdir}/${pkgname}"
+
+    # Install main application source
+    install -dm755 "${pkgdir}/usr/share/${pkgname}"
+    cp -r Minify "${pkgdir}/usr/share/${pkgname}/"
+
+    # Install wrapper script
+    install -Dm755 "${srcdir}/${pkgname}.sh" "${pkgdir}/usr/bin/${pkgname}"
+
+    # Install desktop entry
+    install -Dm644 "${srcdir}/${pkgname}.desktop" "${pkgdir}/usr/share/applications/${pkgname}.desktop"
+
+    # Install icon
+    install -Dm644 Minify/bin/images/logo.png "${pkgdir}/usr/share/icons/hicolor/256x256/apps/${pkgname}.png"
+}

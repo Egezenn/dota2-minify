@@ -75,9 +75,9 @@ def fix_launch_options():
 
             terminal.add_text("&discrepancy_launch_options", user_name, locale)
 
-            data["UserLocalConfigStore"]["Software"]["Valve"]["Steam"]["apps"][base.STEAM_DOTA_ID][
-                "LaunchOptions"
-            ] = f"-language {locale} {remove_lang_args(launch_options)}"
+            data["UserLocalConfigStore"]["Software"]["Valve"]["Steam"]["apps"][base.STEAM_DOTA_ID]["LaunchOptions"] = (
+                f"-language {locale} {remove_lang_args(launch_options)}"
+            )
         with open(vdf_path, "w", encoding="utf-8") as file:
             vdf.dump(data, file, pretty=True)
         successful_ids.append(steam_id)

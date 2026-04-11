@@ -686,7 +686,6 @@ def apply_styles_to_file(item):
                 current_index += 1
 
             if brace_count == 0:
-
                 text = text[:start_index] + text[current_index:]
             else:
                 break

@@ -3,9 +3,11 @@
 import os
 import shutil
 import stat
+import webbrowser
 
 import dearpygui.dearpygui as dpg
 import psutil
+
 from core import base, constants, fs, log
 from ui import terminal
 
@@ -31,10 +33,19 @@ def is_compiler_found():
         workshop_installed = True
 
 
-def download_dependencies(retries=0):
-    "Tries to download dependencies ripgrep and Source2Viewer-CLI(workshop tools) for 3 times"
+def resolve_dependencies(retries=0):
+    """
+    Attempts to download dependencies ripgrep and Source2Viewer-CLI(if workshop tools are available)
+    for 3 times and opens up their download URLs if they don't exist.
+
+    Checks for existence on `PATH` first then checks existence on root.
+    """
     try:
         if workshop_installed:
+            s2v_on_path = shutil.which(constants.s2v_executable)
+            if s2v_on_path:
+                constants.s2v_executable = s2v_on_path
+
             if not os.path.exists(constants.s2v_executable):
                 tag = terminal.add_text("&downloading_cli_terminal")
                 zip_path = constants.s2v_latest.split("/")[-1]
@@ -52,7 +63,6 @@ def download_dependencies(retries=0):
         elif os.path.exists(constants.s2v_executable):
             fs.remove_path(constants.s2v_executable)
 
-        # Prefer system-installed ripgrep when available
         rg_on_path = shutil.which(constants.rg_executable)
         if rg_on_path:
             constants.rg_executable = rg_on_path
@@ -84,8 +94,11 @@ def download_dependencies(retries=0):
         log.write_crashlog()
         terminal.add_text("&failed_download_retrying_terminal", msg_type="error")
         if retries < 3:
-            return download_dependencies(retries + 1)
+            return resolve_dependencies(retries + 1)
         terminal.add_text("&failed_download", 3, msg_type="error")
+        webbrowser.open(constants.rg_latest)
+        if workshop_installed:
+            webbrowser.open(constants.s2v_latest)
         return
 
 

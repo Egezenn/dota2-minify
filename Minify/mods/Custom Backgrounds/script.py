@@ -74,7 +74,10 @@ def main():
                     )
                 else:
                     terminal.add_text(
-                        "-> Conversion tools missing\n   {} ({})", "ImageMagick", f"{actual_ext} -> .png", msg_type="error"
+                        "-> Conversion tools missing\n   {} ({})",
+                        "ImageMagick",
+                        f"{actual_ext} -> .png",
+                        msg_type="error",
                     )
                     return
 
