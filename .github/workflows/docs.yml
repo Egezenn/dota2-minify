@@ -1,0 +1,52 @@
+name: Update API Symbols
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "Minify/**"
+      - "docs/**"
+      - "scripts/symdump.py"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+jobs:
+  update-docs:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+
+      - name: Set up Python
+        run: uv python install 3.13
+
+      - name: Run symdump
+        run: uv run scripts/symdump.py
+
+      - name: Commit and push changes
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "docs: regenerate API symbols index"
+          file_pattern: "docs/wiki/development/symbols/* docs/wiki/_sidebar.md"
+
+      # Deployment steps for GitHub Pages
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: './docs/wiki'
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

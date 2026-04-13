@@ -1,32 +1,14 @@
-"The universe"
+# build
 
-import csv
-import os
-import re
-import shutil
-import subprocess
-import threading
-import time
-import webbrowser
-import xml.etree.ElementTree as ET
-from concurrent.futures import ThreadPoolExecutor
+The universe
 
-import dearpygui.dearpygui as dpg
-import jsonc
-import playsound3
-import psutil
-import vpk
+## `patcher(mod, pakname)`
 
-# isort: split
+*No documentation available.*
 
-import conditions
-import helper
-from core import base, config, constants, fs, log, steam, utils
-from ui import checkboxes, terminal
+<details open><summary>Source</summary>
 
-game_contents_file_init = False
-
-
+```python
 def patcher(mod=None, pakname=None):
     from ui import gui
 
@@ -450,7 +432,17 @@ def patcher(mod=None, pakname=None):
         terminal.add_text("&check_logs_terminal", msg_type="warning")
         playsound3.playsound(os.path.join(base.sounds_dir, "fail.wav"), block=False)
 
+```
 
+</details>
+
+## `patch_seperate()`
+
+*No documentation available.*
+
+<details open><summary>Source</summary>
+
+```python
 def patch_seperate():
     # TODO: fix, broken since who knows when
     # Mods that don't end up in config file will not be included (mods that are non-visual), fix?
@@ -464,7 +456,17 @@ def patch_seperate():
             patcher(mod, f"pak{i}")
             print(f"Created pak{i} with the mod {mod}")
 
+```
 
+</details>
+
+## `uninstall(sender, app_data, user_data)`
+
+*No documentation available.*
+
+<details open><summary>Source</summary>
+
+```python
 def uninstall(sender=None, app_data=None, user_data=None):
     from ui import gui
 
@@ -494,7 +496,17 @@ def uninstall(sender=None, app_data=None, user_data=None):
         helper.bulk_exec_script("uninstall")
         terminal.add_text("&mods_removed_terminal")
 
+```
 
+</details>
+
+## `dump_vpk(vpk_obj, output_dir, check_exists)`
+
+*No documentation available.*
+
+<details open><summary>Source</summary>
+
+```python
 def dump_vpk(vpk_obj, output_dir, check_exists=True):
     for filepath in vpk_obj:
         full_path = os.path.join(output_dir, filepath)
@@ -504,7 +516,17 @@ def dump_vpk(vpk_obj, output_dir, check_exists=True):
         fs.create_dirs(os.path.dirname(full_path))
         vpk_obj.get_file(filepath).save(full_path)
 
+```
 
+</details>
+
+## `vpk_extractor(vpk_to_extract_from, paths, path_to_extract_to)`
+
+*No documentation available.*
+
+<details open><summary>Source</summary>
+
+```python
 def vpk_extractor(vpk_to_extract_from, paths, path_to_extract_to=base.build_dir):
     if isinstance(paths, str):
         paths = [paths]
@@ -526,7 +548,17 @@ def vpk_extractor(vpk_to_extract_from, paths, path_to_extract_to=base.build_dir)
     with ThreadPoolExecutor() as executor:
         executor.map(extract_file, paths)
 
+```
 
+</details>
+
+## `apply_xml_modifications(xml_file, modifications)`
+
+*No documentation available.*
+
+<details open><summary>Source</summary>
+
+```python
 def apply_xml_modifications(xml_file, modifications):
     # TODO: implement selectors like
     # DOTAXThing#Thing.Thing[attrib="val"]
@@ -660,7 +692,17 @@ def apply_xml_modifications(xml_file, modifications):
         # Older Python may not accept encoding for ElementTree.write in text mode
         tree.write(xml_file)
 
+```
 
+</details>
+
+## `apply_styles_to_file(item)`
+
+*No documentation available.*
+
+<details open><summary>Source</summary>
+
+```python
 def apply_styles_to_file(item):
     file_path, styles_to_apply = item
 
@@ -722,7 +764,17 @@ def apply_styles_to_file(item):
         if unique_styles_to_add:
             file.write("\n" + "\n".join(unique_styles_to_add))
 
+```
 
+</details>
+
+## `process_blacklist(blacklist_txt, folder, blank_file_extensions)`
+
+*No documentation available.*
+
+<details open><summary>Source</summary>
+
+```python
 def process_blacklist(blacklist_txt, folder, blank_file_extensions):
     with utils.open_utf8(blacklist_txt) as file:
         lines = file.readlines()
@@ -784,14 +836,34 @@ def process_blacklist(blacklist_txt, folder, blank_file_extensions):
     with ThreadPoolExecutor() as executor:
         executor.map(copy_blank_file, blacklist_data)
 
+```
 
+</details>
+
+## `process_replacer(item)`
+
+*No documentation available.*
+
+<details open><summary>Source</summary>
+
+```python
 def process_replacer(item):
     source, target = item
     terminal.add_text("&replacing_terminal", source, target)
     fs.create_dirs(os.path.dirname(target_dir := os.path.join(constants.minify_dota_compile_output_path, target)))
     shutil.copy(os.path.join(base.replace_dir, source), target_dir)
 
+```
 
+</details>
+
+## `process_blacklist_dir(index, line, folder)`
+
+*No documentation available.*
+
+<details open><summary>Source</summary>
+
+```python
 def process_blacklist_dir(index, line, folder):
     data = []
 
@@ -821,7 +893,17 @@ def process_blacklist_dir(index, line, folder):
 
     return data
 
+```
 
+</details>
+
+## `wipe_lang_dirs()`
+
+*No documentation available.*
+
+<details open><summary>Source</summary>
+
+```python
 def wipe_lang_dirs():
     terminal.clean()
     uninstall()
@@ -829,3 +911,7 @@ def wipe_lang_dirs():
         if os.path.isdir(path):
             fs.remove_path(path)
             terminal.add_text("&clean_lang_dirs", path)
+
+```
+
+</details>

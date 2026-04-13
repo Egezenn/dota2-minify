@@ -1,30 +1,31 @@
-"Dangling random functions"
+# helper
 
-import importlib.util
-import os
-import shutil
-import subprocess
-import sys
-import tkinter as tk
-from pathlib import Path
-from tkinter import filedialog
+Dangling random functions
 
-import dearpygui.dearpygui as dpg
-import vpk
-from core import base, config, constants, fs, log, utils
-from ui import terminal
+## `get_blank_file_extensions()`
 
-compiler_filepicker_path = ""
-output_path = config.get("output_path", constants.minify_default_dota_pak_output_path)
+*No documentation available.*
 
+<details open><summary>Source</summary>
 
+```python
 def get_blank_file_extensions():
     extensions = []
     for file in os.listdir(base.blank_files_dir):
         extensions.append(os.path.splitext(file)[1])
     return extensions
 
+```
 
+</details>
+
+## `change_output_path()`
+
+*No documentation available.*
+
+<details open><summary>Source</summary>
+
+```python
 def change_output_path():
     global output_path
     selection = dpg.get_value("output_select")
@@ -32,7 +33,18 @@ def change_output_path():
     config.set("output_locale", selection)
     config.set("output_path", output_path)
 
+```
 
+</details>
+
+## `compile_assets(input_path, output_path, pak_path, sender, app_data, user_data)`
+
+resourcecompiler's friendly cousin
+Automagically handles image compilation
+
+<details open><summary>Source</summary>
+
+```python
 def compile_assets(input_path=None, output_path=None, pak_path=None, sender=None, app_data=None, user_data=None):
     """
     resourcecompiler's friendly cousin
@@ -103,7 +115,17 @@ def compile_assets(input_path=None, output_path=None, pak_path=None, sender=None
     else:
         terminal.add_text("&compile_no_path")
 
+```
 
+</details>
+
+## `create_img_ref_xml(img_path_list)`
+
+Helper function to create reference XMLs for images
+
+<details open><summary>Source</summary>
+
+```python
 def create_img_ref_xml(img_path_list):
     "Helper function to create reference XMLs for images"
     xml_list = []
@@ -117,7 +139,17 @@ def create_img_ref_xml(img_path_list):
 </root>
 """
 
+```
 
+</details>
+
+## `select_compile_dir(sender, app_data)`
+
+*No documentation available.*
+
+<details open><summary>Source</summary>
+
+```python
 def select_compile_dir(sender=None, app_data=None):
     global compiler_filepicker_path
     root = tk.Tk()
@@ -127,7 +159,18 @@ def select_compile_dir(sender=None, app_data=None):
     if path:
         compiler_filepicker_path = path
 
+```
 
+</details>
+
+## `exec_script(script_path, mod_name, order_name, _terminal_output)`
+
+Injects code
+Only called for `script.py`
+
+<details open><summary>Source</summary>
+
+```python
 def exec_script(script_path, mod_name, order_name, _terminal_output=True):
     """
     Injects code
@@ -153,7 +196,23 @@ def exec_script(script_path, mod_name, order_name, _terminal_output=True):
         else:
             log.write_warning("&script_no_main", mod_name, order_name)
 
+```
 
+</details>
+
+## `bulk_exec_script(order_name, terminal_output)`
+
+Injects required mod instructions in bulk
+
+`script_initial.py`
+`script_after_decompile.py`
+`script_after_recompile.py`
+`script_after_patch.py`
+`script_uninstall.py`
+
+<details open><summary>Source</summary>
+
+```python
 def bulk_exec_script(order_name, terminal_output=True):
     """
     Injects required mod instructions in bulk
@@ -178,7 +237,17 @@ def bulk_exec_script(order_name, terminal_output=True):
                     os.path.join(root, bulk_name), os.path.basename(root), order_name, _terminal_output=terminal_output
                 )
 
+```
 
+</details>
+
+## `exec_script_function(script_path, mod_name, function_name)`
+
+Executes a specific function from a Python script file
+
+<details open><summary>Source</summary>
+
+```python
 def exec_script_function(script_path, mod_name, function_name="main"):
     """
     Executes a specific function from a Python script file
@@ -200,3 +269,7 @@ def exec_script_function(script_path, mod_name, function_name="main"):
             log.write_warning(f"Function '{function_name}' not found in {script_path}")
     else:
         log.write_warning(f"Script file not found: {script_path}")
+
+```
+
+</details>

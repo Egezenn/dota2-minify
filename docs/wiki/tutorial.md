@@ -6,7 +6,7 @@ You can download the archives from the link below:
 
 https://egezenn.github.io/dota2-minify
 
-<sup>1</sup>: Only through [running from source](development.md?id=running-from-the-source).
+<sup>1</sup>: Only through [running from source](development.md).
 
 ## Running
 

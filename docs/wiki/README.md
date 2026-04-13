@@ -8,6 +8,6 @@ Follow the [tutorial](tutorial.md) for a quickstart!
 
 Something wrong? See [Troubleshooting & FAQ](troubleshooting_faq.md).
 
-Refer to the [development page](development.md) for improving the source code or creating mods.
+Refer to the [development guide](development.md) for improving the source code or creating mods.
 
 </div>

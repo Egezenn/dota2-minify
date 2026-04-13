@@ -1,20 +1,14 @@
-"Filesystem access"
+# core.fs
 
-import os
-import shlex
-import shutil
-import stat
-import subprocess
-import tarfile
-import time
-import zipfile
-from typing import Optional
+Filesystem access
 
-import dearpygui.dearpygui as dpg
+## `open_thing(path, args)`
 
-from core import base, log, utils
+Opens files or directories in their regsitered applications
 
+<details open><summary>Source</summary>
 
+```python
 def open_thing(path: str, args: str = "") -> None:
     "Opens files or directories in their regsitered applications"
     from ui import terminal
@@ -52,7 +46,17 @@ def open_thing(path: str, args: str = "") -> None:
     except FileNotFoundError:
         terminal.add_text("&open_thing_fail", path, msg_type="error")
 
+```
 
+</details>
+
+## `move_path(src, dst)`
+
+Superset of `shutil.move`, `os.rename` to handle permissions for moving and renaming.
+
+<details open><summary>Source</summary>
+
+```python
 def move_path(src: str, dst: str) -> Optional[None]:
     "Superset of `shutil.move`, `os.rename` to handle permissions for moving and renaming."
     try:
@@ -85,7 +89,17 @@ def move_path(src: str, dst: str) -> Optional[None]:
     except FileNotFoundError:
         print(f"Skipped move of: {src} (not found)")
 
+```
 
+</details>
+
+## `remove_path()`
+
+Superset of `shutil.rmtree` & `os.remove` to handle permissions. Takes in list of paths.
+
+<details open><summary>Source</summary>
+
+```python
 def remove_path(*paths: str) -> Optional[None]:
     "Superset of `shutil.rmtree` & `os.remove` to handle permissions. Takes in list of paths."
     try:
@@ -118,7 +132,18 @@ def remove_path(*paths: str) -> Optional[None]:
         except Exception:
             log.write_warning()
 
+```
 
+</details>
+
+## `create_dirs()`
+
+Recursively creates directories (like mkdir -p).
+Supports multiple arguments and avoids crashing on empty paths.
+
+<details open><summary>Source</summary>
+
+```python
 def create_dirs(*paths: str | Path) -> None:
     """
     Recursively creates directories (like mkdir -p).
@@ -128,7 +153,18 @@ def create_dirs(*paths: str | Path) -> None:
         if path:
             os.makedirs(path, exist_ok=True)
 
+```
 
+</details>
+
+## `download_file(url, target_path, progress_tag)`
+
+Downloads a file from url to target_path using requests.
+Updates the UI progress_tag with "Downloading: X.XX/Y.YY MB" if provided.
+
+<details open><summary>Source</summary>
+
+```python
 def download_file(url: str, target_path: str, progress_tag: Optional[str] = None) -> bool:
     """
     Downloads a file from url to target_path using requests.
@@ -170,7 +206,18 @@ def download_file(url: str, target_path: str, progress_tag: Optional[str] = None
         terminal.add_text(f"Failed to open {target_path}: {e}", msg_type="error")
         return False
 
+```
 
+</details>
+
+## `extract_archive(archive_path, extract_dir, target_file)`
+
+Extracts an archive (zip or tar.gz).
+If target_file is provided, extracts only that file (or directory structure leading to it).
+
+<details open><summary>Source</summary>
+
+```python
 def extract_archive(archive_path: str, extract_dir: str = ".", target_file: Optional[str] = None) -> bool:
     """
     Extracts an archive (zip or tar.gz).
@@ -200,7 +247,18 @@ def extract_archive(archive_path: str, extract_dir: str = ".", target_file: Opti
         terminal.add_text(f"Extraction failed: {e}", msg_type="error")
         return False
 
+```
 
+</details>
+
+## `get_file_type(path)`
+
+Identifies the file type. It first checks magic bytes (e.g., '.png', '.jpg', '.webm'),
+and falls back to extracting the extension from the first dot in the filename if no known magic bytes are found.
+
+<details open><summary>Source</summary>
+
+```python
 def get_file_type(path: str) -> Optional[str]:
     """
     Identifies the file type. It first checks magic bytes (e.g., '.png', '.jpg', '.webm'),
@@ -245,3 +303,7 @@ def get_file_type(path: str) -> Optional[str]:
         return basename[dot_index:]
 
     return basename
+
+```
+
+</details>

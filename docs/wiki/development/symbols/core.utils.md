@@ -1,19 +1,30 @@
-import builtins
-import contextlib
-from typing import IO, Any, Iterator, Optional
-from unittest.mock import patch
+# core.utils
 
-_real_open = builtins.open
+## `try_pass()`
 
+*No documentation available.*
 
-@contextlib.contextmanager
+<details open><summary>Source</summary>
+
+```python
 def try_pass():
     try:
         yield
     except Exception:
         pass
 
+```
 
+</details>
+
+## `is_version_at_least(current, target)`
+
+Compares two semantic version strings.
+Returns True if current >= target.
+
+<details open><summary>Source</summary>
+
+```python
 def is_version_at_least(current: str, target: str) -> bool:
     """
     Compares two semantic version strings.
@@ -26,8 +37,17 @@ def is_version_at_least(current: str, target: str) -> bool:
     except (ValueError, AttributeError, IndexError):
         return False
 
+```
 
-@contextlib.contextmanager
+</details>
+
+## `_patch_open_base(encoding_val, errors_val, file, mode)`
+
+*No documentation available.*
+
+<details open><summary>Source</summary>
+
+```python
 def _patch_open_base(
     encoding_val: Optional[str],
     errors_val: Optional[str],
@@ -57,19 +77,47 @@ def _patch_open_base(
         else:
             yield
 
+```
 
-@contextlib.contextmanager
+</details>
+
+## `open_utf8(file, mode)`
+
+*No documentation available.*
+
+<details open><summary>Source</summary>
+
+```python
 def open_utf8(file: Any = None, mode: str = "r", *args: Any, **kwargs: Any) -> Iterator[IO[Any]]:
     with _patch_open_base("utf-8", None, file, mode, *args, **kwargs) as f:
         yield f
 
+```
 
-@contextlib.contextmanager
+</details>
+
+## `open_utf8R(file, mode)`
+
+*No documentation available.*
+
+<details open><summary>Source</summary>
+
+```python
 def open_utf8R(file: Any = None, mode: str = "r", *args: Any, **kwargs: Any) -> Iterator[IO[Any]]:
     with _patch_open_base("utf-8", "replace", file, mode, *args, **kwargs) as f:
         yield f
 
+```
 
+</details>
+
+## `hex_to_rgba(hex_str)`
+
+*No documentation available.*
+
+<details open><summary>Source</summary>
+
+```python
 def hex_to_rgba(hex_str):
     try:
         hex_str = hex_str.lstrip("#")
@@ -79,7 +127,17 @@ def hex_to_rgba(hex_str):
     except (ValueError, IndexError):
         return [255, 255, 255, 255]
 
+```
 
+</details>
+
+## `rgba_to_hex(rgba)`
+
+*No documentation available.*
+
+<details open><summary>Source</summary>
+
+```python
 def rgba_to_hex(rgba):
     try:
         return "#{:02x}{:02x}{:02x}{:02x}".format(
@@ -91,8 +149,22 @@ def rgba_to_hex(rgba):
     except (TypeError, IndexError, ValueError):
         return "#ffffffff"
 
+```
 
+</details>
+
+## `parse_color(val)`
+
+*No documentation available.*
+
+<details open><summary>Source</summary>
+
+```python
 def parse_color(val):
     if isinstance(val, list):
         return val
     return hex_to_rgba(val if val and isinstance(val, str) else "#ffffffff")
+
+```
+
+</details>

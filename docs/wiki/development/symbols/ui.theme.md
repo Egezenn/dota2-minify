@@ -1,15 +1,14 @@
-"DPG theming and platform specific theme hacks"
+# ui.theme
 
-import ctypes
+DPG theming and platform specific theme hacks
 
-import dearpygui.dearpygui as dpg
-from core import base, utils
+## `apply()`
 
-BACKGROUND = (32, 32, 32)
-# TODO: generalize
-settings_theme = 0
+*No documentation available.*
 
+<details open><summary>Source</summary>
 
+```python
 def apply():
     global settings_theme
     with dpg.theme() as global_theme:
@@ -122,7 +121,17 @@ def apply():
     dpg.bind_item_theme("modal_popup", popup_theme)
     dpg.bind_item_theme("terminal_window", terminal_theme)
 
+```
 
+</details>
+
+## `enable_dark_titlebar()`
+
+*No documentation available.*
+
+<details open><summary>Source</summary>
+
+```python
 def enable_dark_titlebar():
     if base.OS == base.WIN:
         with utils.try_pass():
@@ -130,3 +139,7 @@ def enable_dark_titlebar():
             if hwnd != 0:
                 value = ctypes.c_int(1)
                 ctypes.windll.dwmapi.DwmSetWindowAttribute(hwnd, 20, ctypes.byref(value), ctypes.sizeof(value))
+
+```
+
+</details>

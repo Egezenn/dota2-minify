@@ -83,7 +83,7 @@ Mods dynamically patch Dota 2's UI layout (`xml_mod.json`) and styling (`styling
 
 ## General Advice for Agents
 
-- Always reference `docs/wiki/development.md` if you are modifying or debugging how mod folders are structured, what files they support, and how the `__main__.py` patching loop reads them.
+- Always reference `docs/wiki/development/mod-structure.md`, `docs/wiki/development/scripting.md`, and `docs/wiki/development/ui-modding.md` if you are modifying or debugging how mod folders are structured, what files they support, and how the `__main__.py` patching loop reads them.
 - DearPyGui (`dpg`) has strict state requirements. Do not delete items that are still referenced elsewhere in the DPG registry without proper cleanup.
 - Keep UI operations on the main thread and respect `gui.lock_interaction()` when heavy I/O operations (like extracting/packing VPKs) are running.
 - If the user is experiencing issues, the tracebacks and other info are located in `Minify/logs`.

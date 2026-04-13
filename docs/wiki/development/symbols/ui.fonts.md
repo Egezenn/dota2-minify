@@ -1,24 +1,14 @@
-"Font registrations with range hints"
+# ui.fonts
 
-import os
+Font registrations with range hints
 
-import dearpygui.dearpygui as dpg
+## `register()`
 
-# TODO: figure out how to use fonts with other locales, e.g Chinese, Korean etc. (Noto Sans maybe?)
-#       Bundling the font in would result in a bigger size, need to make a cross-platform font loader
-#       to use widely available fonts and load it from the system paths. Fallback to a download if
-#       absolutely necessary (when that locale is selected).
+*No documentation available.*
 
-# mvFontRangeHint_Default
-# mvFontRangeHint_Japanese
-# mvFontRangeHint_Korean
-# mvFontRangeHint_Chinese_Full
-# mvFontRangeHint_Chinese_Simplified_Common
-# mvFontRangeHint_Cyrillic
-# mvFontRangeHint_Thai
-# mvFontRangeHint_Vietnamese
+<details open><summary>Source</summary>
 
-
+```python
 def register():
     with dpg.font_registry():
         with dpg.font(os.path.join("bin", "FiraMono-Medium.ttf"), 16, tag="main_font") as main_font:
@@ -44,4 +34,8 @@ def register():
             dpg.add_font_range_hint(dpg.mvFontRangeHint_Default)
             dpg.add_font_range_hint(dpg.mvFontRangeHint_Cyrillic)
             dpg.add_font_range(0x0100, 0x017F)  # Turkish set
-            dpg.add_font_range(0x0370, 0x03FF)  # Greek set
+            dpg.add_font_range(0x0370, 0x03FF)
+
+```
+
+</details>
