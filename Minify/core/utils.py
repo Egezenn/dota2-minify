@@ -1,4 +1,6 @@
 import contextlib
+from functools import partial
+from unittest.mock import patch
 
 
 @contextlib.contextmanager
@@ -7,6 +9,13 @@ def try_pass():
         yield
     except Exception:
         pass
+
+
+@contextlib.contextmanager
+def with_utf8R():
+    utf8_open = partial(open, encoding="utf-8", errors="replace")
+    with patch("builtins.open", utf8_open):
+        yield
 
 
 def hex_to_rgba(hex_str):

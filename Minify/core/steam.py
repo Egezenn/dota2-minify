@@ -55,9 +55,10 @@ def fix_launch_options():
         if not os.path.exists(vdf_path):
             continue
 
-        with open(vdf_path, encoding="utf-8") as file:
-            terminal.add_text("&checking_launch_options")
-            data = vdf.load(file)
+        with utils.with_utf8R():
+            with open(vdf_path) as file:
+                terminal.add_text("&checking_launch_options")
+                data = vdf.load(file)
 
         locale = config.get("output_locale")
         try:
@@ -75,11 +76,12 @@ def fix_launch_options():
 
             terminal.add_text("&discrepancy_launch_options", user_name, locale)
 
-            data["UserLocalConfigStore"]["Software"]["Valve"]["Steam"]["apps"][base.STEAM_DOTA_ID]["LaunchOptions"] = (
-                f"-language {locale} {remove_lang_args(launch_options)}"
-            )
-        with open(vdf_path, "w", encoding="utf-8") as file:
-            vdf.dump(data, file, pretty=True)
+            data["UserLocalConfigStore"]["Software"]["Valve"]["Steam"]["apps"][base.STEAM_DOTA_ID][
+                "LaunchOptions"
+            ] = f"-language {locale} {remove_lang_args(launch_options)}"
+        with utils.with_utf8R():
+            with open(vdf_path, "w") as file:
+                vdf.dump(data, file, pretty=True)
         successful_ids.append(steam_id)
     return successful_ids
 
@@ -92,8 +94,9 @@ def find_library_from_vdf(steam_root):
             and steam_root != "."  # ?
             and os.path.exists(reg_path := os.path.join(steam_root, "config", "libraryfolders.vdf"))
         ):
-            with open(os.path.join(reg_path), encoding="utf-8") as dump:
-                vdf_data = vdf.load(dump)
+            with utils.with_utf8R():
+                with open(os.path.join(reg_path)) as dump:
+                    vdf_data = vdf.load(dump)
 
             paths = []
             for folder_key in vdf_data.get("libraryfolders", {}):
@@ -228,11 +231,12 @@ def get_steam_accounts():
             localconfig_path = os.path.join(ROOT, "userdata", user_id, "config", "localconfig.vdf")
             if os.path.exists(localconfig_path):
                 try:
-                    with open(localconfig_path, encoding="utf-8") as f:
-                        data = vdf.load(f)
-                        friends = data.get("UserLocalConfigStore", {}).get("friends", {})
-                        username = friends.get("PersonaName", "?")
-                        accounts.append({"id": user_id, "name": username})
+                    with utils.with_utf8R():
+                        with open(localconfig_path) as f:
+                            data = vdf.load(f)
+                            friends = data.get("UserLocalConfigStore", {}).get("friends", {})
+                            username = friends.get("PersonaName", "?")
+                            accounts.append({"id": user_id, "name": username})
                 except Exception:
                     accounts.append({"id": user_id, "name": "?"})
     except Exception:
