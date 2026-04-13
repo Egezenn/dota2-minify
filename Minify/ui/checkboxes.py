@@ -5,7 +5,7 @@ import os
 
 import dearpygui.dearpygui as dpg
 import jsonc
-from core import base, config, constants, mods_shared
+from core import base, config, constants, mods_shared, utils
 
 from ui import details, localization, settings, shared, terminal, theme
 
@@ -16,16 +16,17 @@ checkboxes_state = {}
 def load():
     global checkboxes_state
     try:
-        with open(base.mods_config_dir, encoding="utf-8") as file:
+        with utils.open_utf8(base.mods_config_dir) as file:
             checkboxes_state = jsonc.load(file)
     except FileNotFoundError:
-        open(base.mods_config_dir, "w").close()
+        with utils.open_utf8(base.mods_config_dir, "w") as file:
+            pass
 
 
 def save():
     for box in checkboxes:
         checkboxes_state[box] = dpg.get_value(box)
-    with open(base.mods_config_dir, "w", encoding="utf-8") as file:
+    with utils.open_utf8(base.mods_config_dir, "w") as file:
         jsonc.dump(checkboxes_state, file, indent=2)
 
 

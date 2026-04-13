@@ -7,7 +7,6 @@ import webbrowser
 
 import dearpygui.dearpygui as dpg
 import psutil
-
 from core import base, constants, fs, log
 from ui import terminal
 

@@ -10,12 +10,12 @@ import time
 import zipfile
 
 import dearpygui.dearpygui as dpg
-import requests
+from typing import Any, List, Optional, Union
 
 from core import base, log
 
 
-def open_thing(path, args=""):
+def open_thing(path: str, args: str = "") -> None:
     "Opens files or directories in their regsitered applications"
     from ui import terminal
 
@@ -53,7 +53,7 @@ def open_thing(path, args=""):
         terminal.add_text("&open_thing_fail", path, msg_type="error")
 
 
-def move_path(src, dst):
+def move_path(src: str, dst: str) -> Optional[None]:
     "Superset of `shutil.move`, `os.rename` to handle permissions for moving and renaming."
     try:
         shutil.move(src, dst)
@@ -86,7 +86,7 @@ def move_path(src, dst):
         print(f"Skipped move of: {src} (not found)")
 
 
-def remove_path(*paths):
+def remove_path(*paths: str) -> Optional[None]:
     "Superset of `shutil.rmtree` & `os.remove` to handle permissions. Takes in list of paths."
     try:
         for path in paths:
@@ -119,16 +119,16 @@ def remove_path(*paths):
             log.write_warning()
 
 
-def create_dirs(*paths):
+def create_dirs(*paths: str) -> None:
     "`os.makedirs(path, exist_ok=True)` that takes list of paths."
     for path in paths:
         os.makedirs(path, exist_ok=True)
 
 
-def download_file(url, target_path, progress_tag=None):
+def download_file(url: str, target_path: str, progress_tag: Optional[str] = None) -> bool:
     """
     Downloads a file from url to target_path using requests.
-    Updates the UI progress_tag with "Downloading: X.XX/Y.YY MB" if provided.
+    Updates the UI progress_tag with \"Downloading: X.XX/Y.YY MB\" if provided.
     """
     from ui import terminal
 
@@ -152,8 +152,8 @@ def download_file(url, target_path, progress_tag=None):
                             total_size_mb = total_size / (1024 * 1024)
                             if total_size > 0:
                                 # TODO: localize texts, use single string for downloads
-                                #       "Downloading {}".format(item)
-                                #       "Downloading {}".format(progress)
+                                #       \"Downloading {}\".format(item)
+                                #       \"Downloading {}\".format(progress)
                                 dpg.set_value(
                                     progress_tag,
                                     f"Downloading: {downloaded_mb:.2f}/{total_size_mb:.2f} MB",
@@ -167,7 +167,7 @@ def download_file(url, target_path, progress_tag=None):
         return False
 
 
-def extract_archive(archive_path, extract_dir=".", target_file=None):
+def extract_archive(archive_path: str, extract_dir: str = ".", target_file: Optional[str] = None) -> bool:
     """
     Extracts an archive (zip or tar.gz).
     If target_file is provided, extracts only that file (or directory structure leading to it).
@@ -197,7 +197,7 @@ def extract_archive(archive_path, extract_dir=".", target_file=None):
         return False
 
 
-def get_file_type(path):
+def get_file_type(path: str) -> Optional[str]:
     """
     Identifies the file type using magic bytes.
     Returns extension string (e.g., '.png', '.jpg', '.webm') or None if unknown.

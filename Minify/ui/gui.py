@@ -1,3 +1,4 @@
+import contextlib
 import threading
 import time
 
@@ -61,6 +62,15 @@ def unlock_interaction():
     dpg.configure_item("button_uninstall", enabled=True)
     dpg.configure_item("lang_select", enabled=True)
     dpg.configure_item("output_select", enabled=True)
+
+
+@contextlib.contextmanager
+def interactive_lock():
+    lock_interaction()
+    try:
+        yield
+    finally:
+        unlock_interaction()
 
 
 def start_text():

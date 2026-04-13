@@ -5,31 +5,32 @@ Interactions with main config and mod configs
 """
 
 import jsonc
+from typing import Any, Optional
 
-from core import base
+from core import base, utils
 
 
-def read_json_file(path):
+def read_json_file(path: str) -> dict:
     try:
-        with open(path, encoding="utf-8") as file:
+        with utils.open_utf8R(path) as file:
             return jsonc.load(file)
     except (FileNotFoundError, jsonc.JSONDecodeError):
         return {}
 
 
-def write_json_file(path, data):
-    with open(path, "w", encoding="utf-8") as file:
+def write_json_file(path: str, data: dict) -> None:
+    with utils.open_utf8R(path, "w") as file:
         jsonc.dump(data, file, indent=2)
 
 
-def update_json_file(path, key, value):
+def update_json_file(path: str, key: str, value: Any) -> Any:
     data = read_json_file(path)
     data[key] = value
     write_json_file(path, data)
     return value
 
 
-def get(key, default_value=None):
+def get(key: str, default_value: Any = None) -> Any:
     data = read_json_file(base.main_config_file_dir)
     if key in data:
         return data[key]
@@ -40,17 +41,17 @@ def get(key, default_value=None):
     return None
 
 
-def set(key, value):
+def set(key: str, value: Any) -> Any:
     return update_json_file(base.main_config_file_dir, key, value)
 
 
-def get_mod(mod_name, default=None):
+def get_mod(mod_name: str, default: Optional[dict] = None) -> dict:
     if default is None:
         default = {}
     return get("modconf", {}).get(mod_name, default)
 
 
-def set_mod(mod_name, config_data):
+def set_mod(mod_name: str, config_data: dict) -> None:
     modconf = get("modconf", {})
     modconf[mod_name] = config_data
     set("modconf", modconf)

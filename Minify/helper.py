@@ -9,7 +9,7 @@ from tkinter import filedialog
 
 import dearpygui.dearpygui as dpg
 import vpk
-from core import base, config, constants, fs, log
+from core import base, config, constants, fs, log, utils
 from ui import terminal
 
 compiler_filepicker_path = ""
@@ -50,7 +50,7 @@ def compile_assets(input_path=None, output_path=None, pak_path=None, sender=None
         fs.remove_path(constants.minify_dota_compile_input_path, output_path)
         fs.create_dirs(constants.minify_dota_compile_input_path)
 
-        with open(os.path.join(input_path, "ref.xml"), "w") as file:
+        with utils.open_utf8(os.path.join(input_path, "ref.xml"), "w") as file:
             file.write(create_img_ref_xml(img_list))
 
         items = os.listdir(input_path)
@@ -64,7 +64,7 @@ def compile_assets(input_path=None, output_path=None, pak_path=None, sender=None
             else:
                 shutil.copy(os.path.join(input_path, item), constants.minify_dota_compile_input_path)
 
-        with open(base.log_rescomp, "w") as file:
+        with utils.open_utf8(base.log_rescomp, "w") as file:
             command = [
                 constants.dota_resource_compiler_path,
                 "-i",

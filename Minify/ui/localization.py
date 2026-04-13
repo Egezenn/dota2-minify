@@ -18,7 +18,7 @@ mod_selection_window_var = ""
 def get_available():
     global localizations
     # get available variables for text
-    with open(base.localization_file_dir, encoding="utf-8") as file:
+    with utils.open_utf8(base.localization_file_dir) as file:
         localization_data = jsonc.load(file)
     sub_headers = set()
     for header in localization_data.values():
@@ -35,7 +35,7 @@ def get_available():
 def change(sender=None, app_data=None, user_data=None, init=False):
     global locale, details_label, mod_selection_window_var
 
-    with open(base.localization_file_dir, encoding="utf-8") as localization_file:
+    with utils.open_utf8(base.localization_file_dir) as localization_file:
         localization_data = jsonc.load(localization_file)
 
     if init == True:  # noqa: E712

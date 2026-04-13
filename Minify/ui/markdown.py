@@ -4,13 +4,14 @@ import os
 import re
 
 import dearpygui.dearpygui as dpg
+from core import utils
 
 
 def parse_notes(mod_path, locale):
     try:
         notes_md_path = os.path.join(mod_path, "notes.md")
         if os.path.exists(notes_md_path):
-            with open(notes_md_path, encoding="utf-8") as file:
+            with utils.open_utf8(notes_md_path) as file:
                 raw_notes = file.read()
 
             user_locale = locale.upper()

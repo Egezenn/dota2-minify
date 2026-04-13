@@ -12,7 +12,7 @@ def write_crashlog(exc_type=None, exc_value=None, exc_traceback=None, header=Non
     from ui import terminal
 
     path = base.log_crashlog if handled else base.log_unhandled
-    with open(path, "w") as file:
+    with utils.open_utf8R(path, "w") as file:
         if handled:
             if header:
                 file.write(message := f"{header}\n\n{traceback.format_exc()}")
@@ -35,9 +35,10 @@ def write_warning(header=None):
     from ui import terminal
 
     if not os.path.exists(base.log_warnings):
-        open(base.log_warnings, "w").close()
+        with utils.open_utf8R(base.log_warnings, "w") as file:
+            pass
 
-    with open(base.log_warnings, "a") as file:
+    with utils.open_utf8R(base.log_warnings, "a") as file:
         if "NoneType: None" not in traceback.format_exc():
             if header:
                 file.write(message := f"{header}\n\n{traceback.format_exc()}\n{'-' * 50}\n\n")

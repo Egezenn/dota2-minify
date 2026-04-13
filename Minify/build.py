@@ -30,12 +30,11 @@ game_contents_file_init = False
 def patcher(mod=None, pakname=None):
     from ui import gui
 
-    gui.lock_interaction()
-    terminal.clean()
+    with gui.interactive_lock():
+        terminal.clean()
 
-    if conditions.is_dota_running("&close_dota_terminal", "warning"):
-        gui.unlock_interaction()
-        return
+        if conditions.is_dota_running("&close_dota_terminal", "warning"):
+            return
 
     try:
         mod_list = constants.mods_with_order if mod is None else [mod]
@@ -140,7 +139,7 @@ def patcher(mod=None, pakname=None):
                         )
 
                     if conditions.workshop_installed and os.path.exists(xml_mod_file):
-                        with open(xml_mod_file, encoding="utf-8") as file:
+                        with utils.open_utf8(xml_mod_file) as file:
                             mod_xml = jsonc.load(file)
                         for path, mods in mod_xml.items():
                             xml_modifications.setdefault(path, []).extend(mods)
@@ -148,7 +147,7 @@ def patcher(mod=None, pakname=None):
                     global game_contents_file_init
                     if not game_contents_file_init:
                         # TODO: check pak01 hash, log it & run this only if it's different
-                        with open(
+                        with utils.open_utf8(
                             os.path.join(base.bin_dir, "gamepakcontents.txt"),
                             "w",
                         ) as file:
@@ -162,7 +161,7 @@ def patcher(mod=None, pakname=None):
 
                     # --------------------------------- styling.css --------------------------------- #
                     if conditions.workshop_installed and os.path.exists(styling_css):
-                        with open(styling_css, encoding="utf-8") as file:
+                        with utils.open_utf8(styling_css) as file:
                             content = file.read()
 
                         # placeholder replacement
@@ -210,7 +209,7 @@ def patcher(mod=None, pakname=None):
                                 )
                     # --------------------------------- replacer.csv --------------------------------- #
                     if os.path.exists(replacer_file):
-                        with open(replacer_file, newline="") as file:
+                        with utils.open_utf8(replacer_file, newline="") as file:
                             for row in csv.reader(file):
                                 if len(row) >= 2 and row[0] and row[1]:
                                     replacer_source_extracts.append(row[1])  # Source (content)
@@ -336,7 +335,7 @@ def patcher(mod=None, pakname=None):
         else:
             open(os.path.join(constants.minify_dota_compile_output_path, f"{mod}.txt"), "w").close()
 
-        with open(os.path.join(constants.minify_dota_compile_output_path, "minify_version.txt"), "w") as f:
+        with utils.open_utf8(os.path.join(constants.minify_dota_compile_output_path, "minify_version.txt"), "w") as f:
             f.write(base.VERSION)
 
         fs.create_dirs(helper.output_path)
@@ -370,10 +369,10 @@ def patcher(mod=None, pakname=None):
 
             # Insert metadata to pak65
             # Create a metadata file listing the VPK mods included
-            with open(os.path.join(base.merge_dir, "minify_vpk_mods.txt"), "w") as f:
+            with utils.open_utf8(os.path.join(base.merge_dir, "minify_vpk_mods.txt"), "w") as f:
                 f.write("\n".join(vpk_mods_to_merge))
 
-            with open(os.path.join(base.merge_dir, "minify_version.txt"), "w") as f:
+            with utils.open_utf8(os.path.join(base.merge_dir, "minify_version.txt"), "w") as f:
                 f.write(base.VERSION)
 
             terminal.add_text("&creating_merged_vpk")
@@ -447,14 +446,14 @@ def patcher(mod=None, pakname=None):
         terminal.add_seperator()
         terminal.add_text("&failure_terminal", msg_type="error")
         terminal.add_text("&check_logs_terminal", msg_type="warning")
-        gui.unlock_interaction()
         playsound3.playsound(os.path.join(base.sounds_dir, "fail.wav"), block=False)
 
 
 def patch_seperate():
+    # TODO: fix, broken since who knows when
     # Mods that don't end up in config file will not be included (mods that are non-visual), fix?
     # Mods that have nothing to do with the built pak, will also create a pak
-    with open(base.mods_config_dir) as file:
+    with utils.open_utf8(base.mods_config_dir) as file:
         mods = jsonc.load(file)
     i = 20
     for mod in mods:
@@ -467,32 +466,31 @@ def patch_seperate():
 def uninstall(sender=None, app_data=None, user_data=None):
     from ui import gui
 
-    terminal.clean()
-    time.sleep(0.05)
-    gui.lock_interaction()
+    with gui.interactive_lock():
+        terminal.clean()
+        time.sleep(0.05)
 
-    # smart uninstall
-    pak_pattern = r"^pak\d{2}_dir\.vpk$"
-    for path in constants.minify_dota_possible_language_output_paths:
-        if os.path.isdir(path):
-            for item in os.listdir(path):
-                if os.path.isfile(os.path.join(path, item)) and re.fullmatch(pak_pattern, item):
-                    pak_contents = vpk.open(os.path.join(path, item))
-                    mod_names_with_txt = [s + ".txt" for s in constants.visually_available_mods]
-                    for file in [
-                        "minify_mods.json",
-                        # TODO if this exists, pull & parse to enable uninstallers
-                        "minify_vpk_mods.txt",
-                        "minify_version.txt",
-                        *mod_names_with_txt,
-                    ]:
-                        if file in pak_contents:
-                            fs.remove_path(os.path.join(path, item))
-                            break
-    # TODO remove lang param if out locale is minify
-    helper.bulk_exec_script("uninstall")
-    terminal.add_text("&mods_removed_terminal")
-    gui.unlock_interaction()
+        # smart uninstall
+        pak_pattern = r"^pak\d{2}_dir\.vpk$"
+        for path in constants.minify_dota_possible_language_output_paths:
+            if os.path.isdir(path):
+                for item in os.listdir(path):
+                    if os.path.isfile(os.path.join(path, item)) and re.fullmatch(pak_pattern, item):
+                        pak_contents = vpk.open(os.path.join(path, item))
+                        mod_names_with_txt = [s + ".txt" for s in constants.visually_available_mods]
+                        for file in [
+                            "minify_mods.json",
+                            # TODO if this exists, pull & parse to enable uninstallers
+                            "minify_vpk_mods.txt",
+                            "minify_version.txt",
+                            *mod_names_with_txt,
+                        ]:
+                            if file in pak_contents:
+                                fs.remove_path(os.path.join(path, item))
+                                break
+        # TODO remove lang param if out locale is minify
+        helper.bulk_exec_script("uninstall")
+        terminal.add_text("&mods_removed_terminal")
 
 
 def dump_vpk(vpk_obj, output_dir, check_exists=True):
@@ -691,7 +689,7 @@ def apply_styles_to_file(item):
                 break
         return text
 
-    with open(file_path, encoding="utf-8") as file:
+    with utils.open_utf8(file_path) as file:
         content = file.read()
 
     new_defines = set()
@@ -717,14 +715,14 @@ def apply_styles_to_file(item):
         if style not in content and style not in unique_styles_to_add:
             unique_styles_to_add.append(style)
 
-    with open(file_path, "w", encoding="utf-8") as file:
+    with utils.open_utf8(file_path, "w") as file:
         file.write(content)
         if unique_styles_to_add:
             file.write("\n" + "\n".join(unique_styles_to_add))
 
 
 def process_blacklist(blacklist_txt, folder, blank_file_extensions):
-    with open(blacklist_txt) as file:
+    with utils.open_utf8(blacklist_txt) as file:
         lines = file.readlines()
         blacklist_data = []
         blacklist_data_exclusions = []

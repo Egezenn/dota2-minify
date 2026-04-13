@@ -15,7 +15,6 @@ import shutil
 
 import conditions
 import requests
-
 from core import fs, log, steam, utils
 
 dota_itembuilds_path = os.path.join(steam.LIBRARY, "steamapps", "common", "dota 2 beta", "game", "dota", "itembuilds")

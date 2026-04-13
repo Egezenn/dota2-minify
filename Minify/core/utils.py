@@ -1,6 +1,10 @@
+import builtins
 import contextlib
-from functools import partial
 from unittest.mock import patch
+
+from typing import Any, IO, Iterator, Optional
+
+_real_open = builtins.open
 
 
 @contextlib.contextmanager
@@ -12,10 +16,46 @@ def try_pass():
 
 
 @contextlib.contextmanager
-def with_utf8R():
-    utf8_open = partial(open, encoding="utf-8", errors="replace")
-    with patch("builtins.open", utf8_open):
-        yield
+def _patch_open_base(
+    encoding_val: Optional[str],
+    errors_val: Optional[str],
+    file: Any,
+    mode: str,
+    *args: Any,
+    **kwargs: Any,
+) -> Iterator[Any]:
+    if "b" not in mode:
+        if encoding_val:
+            kwargs.setdefault("encoding", encoding_val)
+        if errors_val:
+            kwargs.setdefault("errors", errors_val)
+
+    def _patch_open(f, m="r", *a, **kw):
+        if "b" not in m:
+            if encoding_val:
+                kw.setdefault("encoding", encoding_val)
+            if errors_val:
+                kw.setdefault("errors", errors_val)
+        return _real_open(f, m, *a, **kw)
+
+    with patch("builtins.open", _patch_open):
+        if file is not None:
+            with _real_open(file, mode, *args, **kwargs) as f:
+                yield f
+        else:
+            yield
+
+
+@contextlib.contextmanager
+def open_utf8(file: Any = None, mode: str = "r", *args: Any, **kwargs: Any) -> Iterator[IO[Any]]:
+    with _patch_open_base("utf-8", None, file, mode, *args, **kwargs) as f:
+        yield f
+
+
+@contextlib.contextmanager
+def open_utf8R(file: Any = None, mode: str = "r", *args: Any, **kwargs: Any) -> Iterator[IO[Any]]:
+    with _patch_open_base("utf-8", "replace", file, mode, *args, **kwargs) as f:
+        yield f
 
 
 def hex_to_rgba(hex_str):
