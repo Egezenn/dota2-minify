@@ -5,9 +5,7 @@ on:
     branches:
       - main
     paths:
-      - "Minify/**"
       - "docs/**"
-      - "scripts/symdump.py"
   workflow_dispatch:
 
 permissions:
@@ -45,7 +43,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: './docs/wiki'
+          path: "./docs/wiki"
 
       - name: Deploy to GitHub Pages
         id: deployment

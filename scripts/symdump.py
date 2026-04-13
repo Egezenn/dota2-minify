@@ -101,7 +101,7 @@ def main():
         if not os.path.isdir(d):
             continue
 
-        for f in os.listdir(d):
+        for f in sorted(os.listdir(d)):
             if f.endswith(".py") and not f.startswith("__"):
                 path = os.path.join(d, f)
                 rel_path = os.path.relpath(path, "Minify")

@@ -22,8 +22,8 @@
 - [ui.gui](/development/symbols/ui.gui)
 - [ui.localization](/development/symbols/ui.localization) - Dynamic localization handling
 - [ui.markdown](/development/symbols/ui.markdown) - Custom markdown parsing & rendering for details pages
-- [ui.modals](/development/symbols/ui.modals) - Modal types
 - [ui.modal_shared](/development/symbols/ui.modal_shared) - Unified modal internals
+- [ui.modals](/development/symbols/ui.modals) - Modal types
 - [ui.settings](/development/symbols/ui.settings) - Settings menu
 - [ui.terminal](/development/symbols/ui.terminal) - Text waterfall
 - [ui.theme](/development/symbols/ui.theme) - DPG theming and platform specific theme hacks
