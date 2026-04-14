@@ -93,10 +93,16 @@ class Update:
             ],
         )
 
-    # TODO: shouldn't show download for windows portable, need to detect if its a portable
+    @staticmethod
+    def is_portable():
+        import sys
+        if not base.FROZEN:
+            return True
+        return not os.path.exists(os.path.join(os.path.dirname(sys.executable), "unins000.exe"))
+
     @staticmethod
     def perform_update():
-        if base.OS != base.WIN or not shared.update_url:
+        if base.OS != base.WIN or not shared.update_url or Update.is_portable():
             webbrowser.open(base.github_io)
             fs.open_thing(".")
             return
