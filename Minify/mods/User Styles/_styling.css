@@ -239,6 +239,13 @@ DOTAHUDShop {
 
 /* ----------------------------------------------------- */
 
+/* g:panorama/styles/hero_badge  */
+DOTAHeroBadge.ModelStyle > DOTAScenePanel {
+    visibility: collapse;
+}
+
+/* ----------------------------------------------------- */
+
 /* g:panorama/styles/hud/hud_reborn */
 /* removes sesonal ability bar(snowballs, penguins, etc.) */
 #SecondaryAbilityContainer {

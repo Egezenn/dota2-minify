@@ -127,7 +127,8 @@ if (downloadModal) {
         linuxLink.style.display = "none";
       }
 
-      const links = [windowsSetupLink, windowsPortableLink, linuxLink];
+      const aurLink = downloadModal.querySelector("#download-aur");
+      const links = [windowsSetupLink, windowsPortableLink, linuxLink, aurLink];
       links.forEach((link) => {
         if (releaseType === "prerelease") {
           link.classList.remove("btn-primary");
