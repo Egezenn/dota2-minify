@@ -119,7 +119,7 @@ def remove_path(*paths: str) -> Optional[None]:
             log.write_warning()
 
 
-def create_dirs(*paths: str | Path) -> None:
+def create_dirs(*paths: str) -> None:
     """
     Recursively creates directories (like mkdir -p).
     Supports multiple arguments and avoids crashing on empty paths.
