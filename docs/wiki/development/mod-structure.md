@@ -34,7 +34,6 @@ mods
   "always": false, // false by default, apply them without checking mods.json or checkbox
   "dependencies": ["<mod>"], // None by default, add a mod dependency's name here 
   "order": 1, // default is 1, ordered from negative to positive to resolve any conflicts
-  "order": 1, // default is 1, ordered from negative to positive to resolve any conflicts
   "visual": true, // true by default, show it in the UI as a checkbox
   
   // dynamically injects settings into the global Settings Menu

@@ -11,6 +11,7 @@ import zipfile
 from typing import Optional
 
 import dearpygui.dearpygui as dpg
+import requests
 
 from core import base, log, utils
 
