@@ -144,7 +144,7 @@ Supports multiple arguments and avoids crashing on empty paths.
 <details open><summary>Source</summary>
 
 ```python
-def create_dirs(*paths: str | Path) -> None:
+def create_dirs(*paths: str) -> None:
     """
     Recursively creates directories (like mkdir -p).
     Supports multiple arguments and avoids crashing on empty paths.
