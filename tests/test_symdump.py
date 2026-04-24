@@ -1,5 +1,5 @@
-import sys
 import os
+import sys
 
 # Add scripts directory to path to import symdump
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "scripts")))
