@@ -1,5 +1,6 @@
 import builtins
 import contextlib
+import re
 from typing import IO, Any
 
 _real_open = builtins.open
@@ -13,16 +14,39 @@ def try_pass():
         pass
 
 
+def _parse_version(v: str) -> tuple:
+    parts = []
+    for part in str(v).split("."):
+        match = re.match(r"^(\d+)(.*)$", part)
+        if match:
+            num = int(match.group(1))
+            suffix = match.group(2)
+            if suffix:
+                if suffix.startswith("rc"):
+                    rc_num = suffix[2:]
+                    parts.append((num, -1, int(rc_num) if rc_num.isdigit() else 0))
+                else:
+                    parts.append((num, -2, 0))
+            else:
+                parts.append((num, 0, 0))
+        else:
+            raise ValueError(f"Invalid version string part: {part}")
+    # Pad to handle cases like "1.13" vs "1.13.0"
+    while len(parts) < 4:
+        parts.append((0, 0, 0))
+    return tuple(parts)
+
+
 def is_version_at_least(current: str, target: str) -> bool:
     """
     Compares two semantic version strings.
     Returns True if current >= target.
     """
     try:
-        c = tuple(map(int, current.split(".")))
-        t = tuple(map(int, target.split(".")))
-        return c >= t
-    except (ValueError, AttributeError, IndexError):
+        if current is None or target is None:
+            return False
+        return _parse_version(current) >= _parse_version(target)
+    except (ValueError, AttributeError, IndexError, TypeError):
         return False
 
 
