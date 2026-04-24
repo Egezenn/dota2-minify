@@ -24,11 +24,6 @@ def register():
         with dpg.font(os.path.join("bin", "FiraMono-Medium.ttf"), 16, tag="main_font") as main_font:
             dpg.bind_font(main_font)
 
-        with dpg.font(os.path.join("bin", "FiraMono-Medium.ttf"), 14, tag="small_font"):
-            pass
-
-        with dpg.font(os.path.join("bin", "FiraMono-Medium.ttf"), 20, tag="large_font"):
-            pass
-
-        with dpg.font(os.path.join("bin", "FiraMono-Medium.ttf"), 32, tag="very_large_font"):
-            pass
+        dpg.font(os.path.join("bin", "FiraMono-Medium.ttf"), 14, tag="small_font")
+        dpg.font(os.path.join("bin", "FiraMono-Medium.ttf"), 20, tag="large_font")
+        dpg.font(os.path.join("bin", "FiraMono-Medium.ttf"), 32, tag="very_large_font")
