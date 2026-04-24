@@ -1,7 +1,6 @@
 import builtins
 import contextlib
-from typing import IO, Any, Iterator, Optional
-from unittest.mock import patch
+from typing import IO, Any
 
 _real_open = builtins.open
 
@@ -27,47 +26,17 @@ def is_version_at_least(current: str, target: str) -> bool:
         return False
 
 
-@contextlib.contextmanager
-def _patch_open_base(
-    encoding_val: Optional[str],
-    errors_val: Optional[str],
-    file: Any,
-    mode: str,
-    *args: Any,
-    **kwargs: Any,
-) -> Iterator[Any]:
+def open_utf8(file: Any, mode: str = "r", *args: Any, **kwargs: Any) -> IO[Any]:
     if "b" not in mode:
-        if encoding_val:
-            kwargs.setdefault("encoding", encoding_val)
-        if errors_val:
-            kwargs.setdefault("errors", errors_val)
-
-    def _patch_open(f, m="r", *a, **kw):
-        if "b" not in m:
-            if encoding_val:
-                kw.setdefault("encoding", encoding_val)
-            if errors_val:
-                kw.setdefault("errors", errors_val)
-        return _real_open(f, m, *a, **kw)
-
-    with patch("builtins.open", _patch_open):
-        if file is not None:
-            with _real_open(file, mode, *args, **kwargs) as f:
-                yield f
-        else:
-            yield
+        kwargs.setdefault("encoding", "utf-8")
+    return _real_open(file, mode, *args, **kwargs)
 
 
-@contextlib.contextmanager
-def open_utf8(file: Any = None, mode: str = "r", *args: Any, **kwargs: Any) -> Iterator[IO[Any]]:
-    with _patch_open_base("utf-8", None, file, mode, *args, **kwargs) as f:
-        yield f
-
-
-@contextlib.contextmanager
-def open_utf8R(file: Any = None, mode: str = "r", *args: Any, **kwargs: Any) -> Iterator[IO[Any]]:
-    with _patch_open_base("utf-8", "replace", file, mode, *args, **kwargs) as f:
-        yield f
+def open_utf8R(file: Any, mode: str = "r", *args: Any, **kwargs: Any) -> IO[Any]:
+    if "b" not in mode:
+        kwargs.setdefault("encoding", "utf-8")
+        kwargs.setdefault("errors", "replace")
+    return _real_open(file, mode, *args, **kwargs)
 
 
 def hex_to_rgba(hex_str):
