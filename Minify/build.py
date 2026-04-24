@@ -468,7 +468,10 @@ def uninstall(sender=None, app_data=None, user_data=None):
                             if file in pak_contents:
                                 fs.remove_path(os.path.join(path, item))
                                 break
-        # TODO remove lang param if out locale is minify
+        from core import steam
+
+        steam.unfix_launch_options()
+
         helper.bulk_exec_script("uninstall")
         terminal.add_text("&mods_removed_terminal")
 
