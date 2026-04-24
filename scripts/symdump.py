@@ -165,9 +165,7 @@ def main():
 
             # Sub-summary and source code in a details block with proper spacing (MD031)
             source_block = (
-                f"\n<details open><summary>Source</summary>\n\n"
-                f"```python\n{s['source'].strip()}\n\n```\n\n"
-                f"</details>\n"
+                f"\n<details open><summary>Source</summary>\n\n```python\n{s['source'].strip()}\n\n```\n\n</details>\n"
             )
             mod_details.append(source_block)
 
@@ -232,7 +230,7 @@ def main():
         with open(sidebar_path, "w", encoding="utf-8") as f:
             f.writelines(new_sidebar)
 
-    print(f"Successfully generated multi-file symbol dump and updated sidebar.")
+    print("Successfully generated multi-file symbol dump and updated sidebar.")
 
 
 if __name__ == "__main__":

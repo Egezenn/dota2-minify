@@ -44,8 +44,9 @@ def fix_launch_options():
 
     steam_ids = []
     successful_ids = []
+    accounts = get_steam_accounts()
     if config.get("apply_for_all", True):
-        for account in get_steam_accounts():
+        for account in accounts:
             steam_ids.append(account["id"])
     else:
         steam_ids.append(config.get("steam_id"))
@@ -68,7 +69,7 @@ def fix_launch_options():
             continue
         if f"-language {locale}" not in launch_options or launch_options.count("-language") >= 2:
             user_name = "?"
-            for user in get_steam_accounts():
+            for user in accounts:
                 if user["id"] == steam_id:
                     user_name = user["name"]
                     break

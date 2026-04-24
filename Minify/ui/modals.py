@@ -83,6 +83,7 @@ class Update:
     @staticmethod
     def is_portable():
         import sys
+
         if not base.FROZEN:
             return True
         return not os.path.exists(os.path.join(os.path.dirname(sys.executable), "unins000.exe"))
