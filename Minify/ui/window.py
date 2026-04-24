@@ -12,6 +12,9 @@ is_moving_viewport = False
 
 
 def drag(sender, app_data, user_data):
+    from core import config
+    from ui import dev_tools
+
     global is_moving_viewport
 
     if is_moving_viewport:
@@ -21,22 +24,35 @@ def drag(sender, app_data, user_data):
         new_y_position = viewport_current_pos[1] + drag_deltas[2]
         new_y_position = max(new_y_position, 0)  # prevent the viewport to go off the top of the screen
         dpg.set_viewport_pos([new_x_position, new_y_position])
-    # TODO: add dev windows conditionally
-    elif dpg.get_item_alias(dpg.get_active_window()) is not None and (
-        dpg.is_item_hovered("primary_window")
-        or dpg.is_item_hovered("terminal_window")
-        or dpg.is_item_hovered("footer")
-        or dpg.is_item_hovered("mod_menu")
-        or dpg.is_item_hovered("settings_menu")
-        or dpg.get_item_alias(dpg.get_active_window()).endswith("details_window_tag")
-    ):
-        is_moving_viewport = True
-        drag_deltas = app_data
-        viewport_current_pos = dpg.get_viewport_pos()
-        new_x_position = viewport_current_pos[0] + drag_deltas[1]
-        new_y_position = viewport_current_pos[1] + drag_deltas[2]
-        new_y_position = max(new_y_position, 0)  # prevent the viewport to go off the top of the screen
-        dpg.set_viewport_pos([new_x_position, new_y_position])
+    elif dpg.get_item_alias(dpg.get_active_window()) is not None:
+        is_hovered = (
+            dpg.is_item_hovered("primary_window")
+            or dpg.is_item_hovered("terminal_window")
+            or dpg.is_item_hovered("footer")
+            or dpg.is_item_hovered("mod_menu")
+            or dpg.is_item_hovered("settings_menu")
+            or dpg.get_item_alias(dpg.get_active_window()).endswith("details_window_tag")
+        )
+
+        if not is_hovered and dev_tools.dev_mode_state == 1:
+            is_hovered = (
+                dpg.is_item_hovered("opener")
+                or dpg.is_item_hovered("mod_tools")
+                or dpg.is_item_hovered("maintenance_tools")
+            )
+
+            debug_env = config.get("debug_env", False) if not base.FROZEN else False
+            if not is_hovered and debug_env:
+                is_hovered = dpg.is_item_hovered("debug_tools")
+
+        if is_hovered:
+            is_moving_viewport = True
+            drag_deltas = app_data
+            viewport_current_pos = dpg.get_viewport_pos()
+            new_x_position = viewport_current_pos[0] + drag_deltas[1]
+            new_y_position = viewport_current_pos[1] + drag_deltas[2]
+            new_y_position = max(new_y_position, 0)  # prevent the viewport to go off the top of the screen
+            dpg.set_viewport_pos([new_x_position, new_y_position])
 
 
 def stop_drag():
