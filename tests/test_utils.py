@@ -21,8 +21,9 @@ def test_hex_to_rgba():
     assert hex_to_rgba("#ffxx00") == [255, 255, 255, 255]
 
     # Invalid lengths (IndexError fallback)
-    assert hex_to_rgba("#ff000") == [255, 255, 255, 255] # 5 chars
-    assert hex_to_rgba("#ff00000") == [255, 255, 255, 255] # 7 chars
+    assert hex_to_rgba("#ff000") == [255, 255, 255, 255]  # 5 chars
+    assert hex_to_rgba("#ff00000") == [255, 255, 255, 255]  # 7 chars
+
 
 def test_rgba_to_hex():
     # Standard RGBA list
@@ -33,9 +34,10 @@ def test_rgba_to_hex():
     assert rgba_to_hex([300, -10, 0, 500]) == "#ff0000ff"
 
     # Invalid types / lengths (fallback to #ffffffff)
-    assert rgba_to_hex([255, 0, 0]) == "#ffffffff" # Short list
-    assert rgba_to_hex(None) == "#ffffffff" # None
-    assert rgba_to_hex("not a list") == "#ffffffff" # Invalid type
+    assert rgba_to_hex([255, 0, 0]) == "#ffffffff"  # Short list
+    assert rgba_to_hex(None) == "#ffffffff"  # None
+    assert rgba_to_hex("not a list") == "#ffffffff"  # Invalid type
+
 
 def test_parse_color():
     # List passed directly
