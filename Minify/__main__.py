@@ -239,7 +239,7 @@ def create_base_ui():
     window.on_resize()
 
 
-fonts.register()
+fonts.register(config.get("locale", "EN"))
 
 
 def increase_scale():  # prototype

@@ -1274,5 +1274,18 @@
     "SV": "Uppdaterade moddistan!",
     "TR": "Mod listesini güncellendi!",
     "UK": "Оновлено список модів!"
+  },
+  "language_change_restart_warning": {
+    "EN": "You might need to restart the application for the font to change completely.",
+    "CS": "Pravděpodobně budete muset aplikaci restartovat, aby se písmo úplně změnilo.",
+    "DE": "Möglicherweise müssen Sie die Anwendung neu starten, damit sich die Schriftart vollständig ändert.",
+    "ES": "Es posible que debas reiniciar la aplicación para que la fuente cambie por completo.",
+    "FR": "Vous devrez peut-être redémarrer l'application pour que la police change complètement.",
+    "IT": "Potrebbe essere necessario riavviare l'applicazione affinché il carattere cambi completamente.",
+    "PL": "Może być konieczne ponowne uruchomienie aplikacji, aby czcionka zmieniła się całkowicie.",
+    "PT": "Poderá ter de reiniciar a aplicação para que o tipo de letra mude completamente.",
+    "RU": "Возможно, вам потребуется перезапустить приложение, чтобы шрифт полностью изменился.",
+    "TR": "Yazı tipinin tamamen değişmesi için uygulamayı yeniden başlatmanız gerekebilir.",
+    "UK": "Можливо, вам доведеться перезапустити програму, щоб шрифт повністю змінився."
   }
 }

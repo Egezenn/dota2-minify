@@ -60,6 +60,7 @@ merge_dir = "vpk_merge"
 logs_dir = "logs"
 mods_dir = "mods"
 config_dir = "config"
+cache_dir = "cache"
 
 # bin
 blank_files_dir = os.path.join(bin_dir, "blank-files")
