@@ -230,7 +230,7 @@ def main():
         with open(sidebar_path, "w", encoding="utf-8") as f:
             f.writelines(new_sidebar)
 
-    print(f"Successfully generated multi-file symbol dump and updated sidebar.")
+    print("Successfully generated multi-file symbol dump and updated sidebar.")
 
 
 if __name__ == "__main__":

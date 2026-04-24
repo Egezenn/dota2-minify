@@ -24,8 +24,8 @@ jobs:
       - name: Run Ruff Format Check
         run: uv run ruff format --check
 
-      - name: Run Ruff Check (including Import Sorting)
-        run: uv run ruff check . --select E,F,I
+      - name: Run Ruff Check
+        run: uv run ruff check .
 
       - name: Run Pytest
         run: uv run pytest
