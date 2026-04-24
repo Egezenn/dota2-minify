@@ -295,29 +295,7 @@ def patcher(mod=None, pakname=None):
                 ignore=shutil.ignore_patterns("*.vcss_c", "*.vxml_c"),
             )
 
-            # TODO: use helper.compile instead
-            with open(base.log_rescomp, "wb") as file:
-                command = [
-                    constants.dota_resource_compiler_path,
-                    "-i",
-                    constants.minify_dota_compile_input_path + "/*",
-                    "-r",
-                ]
-                if base.OS != base.WIN:
-                    command.insert(0, "wine")
-
-                rescomp = subprocess.run(
-                    command,
-                    stdout=subprocess.PIPE,
-                    stderr=subprocess.PIPE,  # compiler complains if minify_dota_compile_input_path is empty
-                    creationflags=subprocess.CREATE_NO_WINDOW if base.OS == base.WIN else 0,
-                )
-                if rescomp.stdout != b"":
-                    file.write(rescomp.stdout)
-
-                # if sp_compiler.stderr != b"":
-                #     decoded_err = sp_compiler.stderr.decode("utf-8")
-                #     raise Exception(decoded_err)
+            helper.compile()
         helper.bulk_exec_script("after_recompile")
 
         if replacer_source_extracts:
