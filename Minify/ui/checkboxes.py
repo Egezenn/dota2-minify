@@ -32,13 +32,6 @@ def save():
 
 def setup_state():
     # base mod is always enabled and is shown in the ui since it received details page
-
-    # for box in checkboxes_state:
-    #     if box in checkboxes and ui.get_value(box):
-    #         ui.configure_item("button_patch", enabled=True)
-    #         break
-    #     else:
-    #         ui.configure_item("button_patch", enabled=False)
     save()
     settings.refresh()
 
