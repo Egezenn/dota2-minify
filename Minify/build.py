@@ -521,7 +521,7 @@ def apply_xml_modifications(xml_file, modifications):
     def find_with_parent_by_id(node, node_id):
         # Returns (element, parent) or (None, None)
         for parent in node.iter():
-            for child in list(parent):
+            for child in parent:
                 if child.get("id") == node_id:
                     return child, parent
         # root itself
@@ -657,11 +657,18 @@ def apply_styles_to_file(item):
             brace_count = 1
             current_index = open_brace_index + 1
             while brace_count > 0 and current_index < len(text):
-                if text[current_index] == "{":
+                next_open = text.find("{", current_index)
+                next_close = text.find("}", current_index)
+
+                if next_close == -1:
+                    break
+
+                if next_open != -1 and next_open < next_close:
                     brace_count += 1
-                elif text[current_index] == "}":
+                    current_index = next_open + 1
+                else:
                     brace_count -= 1
-                current_index += 1
+                    current_index = next_close + 1
 
             if brace_count == 0:
                 text = text[:start_index] + text[current_index:]
@@ -705,40 +712,40 @@ def process_blacklist(blacklist_txt, folder, blank_file_extensions):
     with utils.open_utf8(blacklist_txt) as file:
         lines = file.readlines()
         blacklist_data = []
-        blacklist_data_exclusions = []
+        blacklist_data_exclusions = set()
+        blank_exts = tuple(blank_file_extensions)
 
         for index, line in enumerate(lines):
             line = line.strip()
 
-            if line.startswith("#") or line == "":
+            if not line or line.startswith("#"):
                 continue
 
-            elif line.startswith(">>") or line.startswith("**"):
-                for path in process_blacklist_dir(index, line, folder):
-                    blacklist_data.append(path)
+            elif line.startswith((">>", "**")):
+                blacklist_data.extend(process_blacklist_dir(index, line, folder))
 
             elif line.startswith("*-"):
-                for path in process_blacklist_dir(index, line, folder):
-                    blacklist_data_exclusions.append(path)
+                blacklist_data_exclusions.update(process_blacklist_dir(index, line, folder))
 
             elif line.startswith("--"):
-                blacklist_data_exclusions.append(line[2:])
+                blacklist_data_exclusions.add(line[2:])
 
             else:
-                if line.endswith(tuple(blank_file_extensions)):
+                if line.endswith(blank_exts):
                     blacklist_data.append(line)
                 else:
                     log.write_warning(
                         f"[Invalid Extension] '{line}' in 'mods/{folder}/blacklist.txt' [line: {index + 1}] does not end in one of the valid extensions -> {blank_file_extensions}"
                     )
 
+    blacklist_data_set = set(blacklist_data)
     for exclusion in blacklist_data_exclusions:
-        if exclusion in blacklist_data:
-            blacklist_data.remove(exclusion)
-        else:
+        if exclusion not in blacklist_data_set:
             print(
                 f"[Unnecessary Exclusion] '{exclusion}' in '{folder}' is not necessary, the mod doesn't include this file."
             )
+
+    blacklist_data = [item for item in blacklist_data if item not in blacklist_data_exclusions]
 
     def copy_blank_file(line):
         line = line.strip()
