@@ -1,6 +1,7 @@
 import os
 import sys
-import xml.etree.ElementTree as ET
+
+import defusedxml.ElementTree as ET
 
 current_dir = os.path.dirname(os.path.abspath(__file__))
 minify_root = os.path.abspath(os.path.join(current_dir, os.pardir, os.pardir))

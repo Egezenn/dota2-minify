@@ -8,10 +8,10 @@ import subprocess
 import threading
 import time
 import webbrowser
-import xml.etree.ElementTree as ET
 from concurrent.futures import ThreadPoolExecutor
 
 import dearpygui.dearpygui as dpg
+import defusedxml.ElementTree as ET
 import jsonc
 import playsound3
 import psutil
