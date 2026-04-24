@@ -14,7 +14,13 @@ mod_conflicts_list = []
 
 
 def scan_mods():
-    global mods_alphabetical, mods_with_order, visually_unavailable_mods, visually_available_mods, mod_dependencies_list, mod_conflicts_list
+    global \
+        mods_alphabetical, \
+        mods_with_order, \
+        visually_unavailable_mods, \
+        visually_available_mods, \
+        mod_dependencies_list, \
+        mod_conflicts_list
 
     if not os.path.exists(base.mods_dir):
         sys.exit()
