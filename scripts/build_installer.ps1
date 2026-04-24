@@ -28,8 +28,8 @@ if (-not $OnlyInstaller) {
     Copy-Item -Path "..\Minify\mods" -Destination "dist\Minify\mods" -Recurse
     Copy-Item -Path "..\README.md" -Destination "dist\Minify\README.md"
     Copy-Item -Path "..\LICENSE" -Destination "dist\Minify\LICENSE"
-    Copy-Item -Path "..\Minify\Source2Viewer-CLI.exe" -Destination "dist\Minify"
-    Copy-Item -Path "..\Minify\rg.exe" -Destination "dist\Minify"
+    Copy-Item -Path "..\Minify\Source2Viewer-CLI.exe" -Destination "dist\Minify" -ErrorAction SilentlyContinue
+    Copy-Item -Path "..\Minify\rg.exe" -Destination "dist\Minify" -ErrorAction SilentlyContinue
 } else {
     Write-Host "Skipping PyInstaller build (-OnlyInstaller set)" -ForegroundColor Gray
     if (-not (Test-Path "dist\Minify")) {

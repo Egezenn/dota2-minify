@@ -31,7 +31,6 @@ def save():
 
 
 def setup_state():
-    # base mod is always enabled and is shown in the ui since it received details page
     save()
     settings.refresh()
 

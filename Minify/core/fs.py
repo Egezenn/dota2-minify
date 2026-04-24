@@ -166,6 +166,15 @@ def download_file(url: str, target_path: str, progress_tag: Optional[str] = None
                             else:
                                 dpg.set_value(progress_tag, f"Downloading: {downloaded_mb:.2f} MB")
                             last_report_time = current_time
+
+        if progress_tag:
+            downloaded_mb = downloaded / (1024 * 1024)
+            total_size_mb = total_size / (1024 * 1024)
+            if total_size > 0:
+                dpg.set_value(progress_tag, f"Downloading: {downloaded_mb:.2f}/{total_size_mb:.2f} MB")
+            else:
+                dpg.set_value(progress_tag, f"Downloading: {downloaded_mb:.2f} MB")
+
         return True
     except Exception as e:
         terminal.add_text(f"Failed to open {target_path}: {e}", msg_type="error")
