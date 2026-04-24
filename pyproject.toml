@@ -24,7 +24,14 @@ line-length = 120
 [tool.ruff]
 line-length = 120
 lint.select = ["E", "F", "I"]
-lint.ignore = ["E402", "E501", "E722"]
+lint.ignore = [
+    "E402", # Module level import not at top of file
+    "E501", # Line too long
+    "E722", # Do not use bare `except`
+    "F401", # Unused import
+    "F541", # f-string without placeholder
+    "I001", # Unsorted imports
+]
 
 [tool.pylint.messages_control]
 disable = [
@@ -62,4 +69,8 @@ disable = [
 ]
 
 [dependency-groups]
-dev = ["pyinstaller>=6.17.0"]
+dev = [
+    "pyinstaller>=6.17.0",
+    "pytest>=8.0.0",
+    "ruff>=0.3.0",
+]
