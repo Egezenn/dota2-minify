@@ -24,17 +24,33 @@ def write_json_file(path: str, data: dict) -> None:
         jsonc.dump(data, file, indent=2)
 
 
+_main_config_cache: dict | None = None
+
+
 def update_json_file(path: str, key: str, value: Any) -> Any:
+    global _main_config_cache
+
     data = read_json_file(path)
     data[key] = value
     write_json_file(path, data)
+
+    if path == base.main_config_file_dir:
+        if _main_config_cache is not None:
+            _main_config_cache[key] = value
+        else:
+            _main_config_cache = data
+
     return value
 
 
 def get(key: str, default_value: Any = None) -> Any:
-    data = read_json_file(base.main_config_file_dir)
-    if key in data:
-        return data[key]
+    global _main_config_cache
+
+    if _main_config_cache is None:
+        _main_config_cache = read_json_file(base.main_config_file_dir)
+
+    if key in _main_config_cache:
+        return _main_config_cache[key]
 
     if default_value is not None:
         return update_json_file(base.main_config_file_dir, key, default_value)
