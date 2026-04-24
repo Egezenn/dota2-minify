@@ -682,11 +682,14 @@ def apply_styles_to_file(item):
     new_defines = set()
     new_keyframes = set()
 
+    define_pattern = re.compile(r"@define\s+([\w-]+)\s*:")
+    keyframe_pattern = re.compile(r"@keyframes\s+(?:'|\")?([\w\s-]+)(?:'|\")?")
+
     for style in styles_to_apply:
-        defines = re.findall(r"@define\s+([\w-]+)\s*:", style)
+        defines = define_pattern.findall(style)
         new_defines.update(defines)
 
-        keyframes = re.findall(r"@keyframes\s+(?:'|\")?([\w\s-]+)(?:'|\")?", style)
+        keyframes = keyframe_pattern.findall(style)
         new_keyframes.update(keyframes)
 
     for define_name in new_defines:
