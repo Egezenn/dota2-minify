@@ -33,6 +33,31 @@ def change_output_path():
     config.set("output_path", output_path)
 
 
+def compile():
+    """
+    A wrapper for the Dota 2 Resource Compiler.
+    """
+    with open(base.log_rescomp, "wb") as file:
+        command = [
+            constants.dota_resource_compiler_path,
+            "-i",
+            constants.minify_dota_compile_input_path + "/*",
+            "-r",
+        ]
+
+        if base.OS != base.WIN:
+            command.insert(0, "wine")
+
+        rescomp = subprocess.run(
+            command,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,  # compiler complains if minify_dota_compile_input_path is empty
+            creationflags=subprocess.CREATE_NO_WINDOW if base.OS == base.WIN else 0,
+        )
+        if rescomp.stdout != b"":
+            file.write(rescomp.stdout)
+
+
 def compile_assets(input_path=None, output_path=None, pak_path=None, sender=None, app_data=None, user_data=None):
     """
     resourcecompiler's friendly cousin
@@ -66,22 +91,7 @@ def compile_assets(input_path=None, output_path=None, pak_path=None, sender=None
             else:
                 shutil.copy(os.path.join(input_path, item), constants.minify_dota_compile_input_path)
 
-        with utils.open_utf8(base.log_rescomp, "w") as file:
-            command = [
-                constants.dota_resource_compiler_path,
-                "-i",
-                constants.minify_dota_compile_input_path + "/*",
-                "-r",
-            ]
-
-            if base.OS != base.WIN:
-                command.insert(0, "wine")
-
-            subprocess.run(
-                command,
-                stdout=file,
-                creationflags=subprocess.CREATE_NO_WINDOW if base.OS == base.WIN else 0,
-            )
+        compile()
 
         fs.create_dirs(constants.minify_dota_compile_output_path)
         shutil.copytree(os.path.join(constants.minify_dota_compile_output_path), output_path)
