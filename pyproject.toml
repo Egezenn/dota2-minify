@@ -14,6 +14,7 @@ dependencies = [
     "screeninfo>=0.8.1",
     "vdf>=3.4",
     "vpk>=1.4.0",
+    "defusedxml>=0.7.1",
 ]
 
 [tool]
