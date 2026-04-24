@@ -44,8 +44,10 @@ def hex_to_rgba(hex_str):
         hex_str = hex_str.lstrip("#")
         if len(hex_str) == 6:
             hex_str += "FF"
+        elif len(hex_str) != 8:
+            return [255, 255, 255, 255]
         return [int(hex_str[i : i + 2], 16) for i in (0, 2, 4, 6)]
-    except (ValueError, IndexError):
+    except (ValueError, IndexError, AttributeError):
         return [255, 255, 255, 255]
 
 
