@@ -44,8 +44,9 @@ def fix_launch_options():
 
     steam_ids = []
     successful_ids = []
+    accounts = get_steam_accounts()
     if config.get("apply_for_all", True):
-        for account in get_steam_accounts():
+        for account in accounts:
             steam_ids.append(account["id"])
     else:
         steam_ids.append(config.get("steam_id"))
@@ -68,16 +69,16 @@ def fix_launch_options():
             continue
         if f"-language {locale}" not in launch_options or launch_options.count("-language") >= 2:
             user_name = "?"
-            for user in get_steam_accounts():
+            for user in accounts:
                 if user["id"] == steam_id:
                     user_name = user["name"]
                     break
 
             terminal.add_text("&discrepancy_launch_options", user_name, locale)
 
-            data["UserLocalConfigStore"]["Software"]["Valve"]["Steam"]["apps"][base.STEAM_DOTA_ID]["LaunchOptions"] = (
-                f"-language {locale} {remove_lang_args(launch_options)}"
-            )
+            data["UserLocalConfigStore"]["Software"]["Valve"]["Steam"]["apps"][base.STEAM_DOTA_ID][
+                "LaunchOptions"
+            ] = f"-language {locale} {remove_lang_args(launch_options)}"
         with utils.open_utf8R(vdf_path, "w") as file:
             vdf.dump(data, file, pretty=True)
         successful_ids.append(steam_id)
