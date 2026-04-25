@@ -60,6 +60,7 @@ merge_dir = "vpk_merge"
 logs_dir = "logs"
 mods_dir = "mods"
 config_dir = "config"
+cache_dir = "cache"
 
 # bin
 blank_files_dir = os.path.join(bin_dir, "blank-files")
@@ -74,6 +75,9 @@ log_warnings = os.path.join(logs_dir, "warnings.txt")
 log_unhandled = os.path.join(logs_dir, "unhandled.txt")
 log_s2v = os.path.join(logs_dir, "Source2Viewer-CLI.txt")
 log_rescomp = os.path.join(logs_dir, "resourcecompiler.txt")
+
+# cache
+dota_steam_inf_cache = os.path.join(cache_dir, "steam.inf")
 
 # config
 main_config_file_dir = os.path.join(config_dir, "minify_config.json")

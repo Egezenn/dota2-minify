@@ -51,6 +51,24 @@ def patcher(mod=None, pakname=None):
         )
 
         blank_file_extensions = helper.get_blank_file_extensions()  # list of extensions in bin/blank-files
+
+        current_dota_version = ""
+        if os.path.exists(constants.dota_steam_inf_path):
+            with utils.open_utf8(constants.dota_steam_inf_path) as f:
+                current_dota_version = f.read()
+
+        cached_dota_version = ""
+        if os.path.exists(base.dota_steam_inf_cache):
+            with utils.open_utf8(base.dota_steam_inf_cache) as f:
+                cached_dota_version = f.read()
+
+        dota_version_changed = current_dota_version != cached_dota_version
+
+        if dota_version_changed and current_dota_version:
+            fs.create_dirs(base.cache_dir)
+            with utils.open_utf8(base.dota_steam_inf_cache, "w") as f:
+                f.write(current_dota_version)
+
         dota_pak_contents = vpk.open(constants.dota_game_pak_path)
         core_pak_contents = vpk.open(constants.dota_core_pak_path)
         dota_extracts = []
@@ -148,13 +166,11 @@ def patcher(mod=None, pakname=None):
 
                     global game_contents_file_init
                     if not game_contents_file_init:
-                        # TODO: check pak01 hash, log it & run this only if it's different
-                        with utils.open_utf8(
-                            os.path.join(base.bin_dir, "gamepakcontents.txt"),
-                            "w",
-                        ) as file:
-                            for filepath in dota_pak_contents:
-                                file.write(filepath + "\n")
+                        gamepakcontents_path = os.path.join(base.bin_dir, "gamepakcontents.txt")
+                        if dota_version_changed or not os.path.exists(gamepakcontents_path):
+                            with utils.open_utf8(gamepakcontents_path, "w") as file:
+                                for filepath in dota_pak_contents:
+                                    file.write(filepath + "\n")
                         game_contents_file_init = True
 
                     # ------------------------------- blacklist.txt ------------------------------ #
@@ -318,6 +334,12 @@ def patcher(mod=None, pakname=None):
         with utils.open_utf8(os.path.join(constants.minify_dota_compile_output_path, "minify_version.txt"), "w") as f:
             f.write(base.VERSION)
 
+        if os.path.exists(constants.dota_steam_inf_path):
+            shutil.copy(
+                constants.dota_steam_inf_path,
+                os.path.join(constants.minify_dota_compile_output_path, "steam.inf"),
+            )
+
         fs.create_dirs(helper.output_path)
         native_mods = vpk.new(constants.minify_dota_compile_output_path)
         terminal.add_text("&compiling_terminal")
@@ -354,6 +376,12 @@ def patcher(mod=None, pakname=None):
 
             with utils.open_utf8(os.path.join(base.merge_dir, "minify_version.txt"), "w") as f:
                 f.write(base.VERSION)
+
+            if os.path.exists(constants.dota_steam_inf_path):
+                shutil.copy(
+                    constants.dota_steam_inf_path,
+                    os.path.join(base.merge_dir, "steam.inf"),
+                )
 
             terminal.add_text("&creating_merged_vpk")
             merged_mods = vpk.new(base.merge_dir)
