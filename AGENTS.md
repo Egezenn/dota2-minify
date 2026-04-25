@@ -62,7 +62,7 @@ Additionally, it interacts with Dota 2 Workshop Tools if the DLC is installed:
 
 Mods in Minify are robust and programmatically driven.
 
-## `modcfg.json`
+### `modcfg.json`
 
 Mods can optionally include a `modcfg.json` file. It dictates how the mod interacts with the Minify system and how it is exposed in the Settings UI.
 Key objects in the `modcfg.json` settings array include:
@@ -70,14 +70,14 @@ Key objects in the `modcfg.json` settings array include:
 - **Input Types**: `checkbox`, `combo`, `number` (`int`/`float`), `slider`, `color`, `list`, `button`.
 - Settings are rendered dynamically by `Minify/ui/settings.py` based on exactly what is defined in `modcfg.json`.
 
-## Mod Scripts
+### Mod Scripts
 
 Mods can execute custom Python behavior via standardized script hooks:
 
 - `script_initial.py`, `script_after_decompile.py`, `script_after_patch.py`, `script_uninstall.py`, etc.
 When writing custom logic for a mod, hook into these files.
 
-## XML & CSS Injection
+### XML & CSS Injection
 
 Mods dynamically patch Dota 2's UI layout (`xml_mod.json`) and styling (`styling.css`). The build engine compiles and merges these changes alongside base VPK content.
 
@@ -91,6 +91,7 @@ Mods dynamically patch Dota 2's UI layout (`xml_mod.json`) and styling (`styling
 - Any features or scripts that require internet connectivity **MUST** be able to fail silently without crashing the application.
 - **Filesystem Operations**: Prefer using the `os` module (and `os.path`) over `pathlib`. Some project dependencies are older and expect string-based paths; using `pathlib` can lead to subtle bugs or type errors in these contexts.
 - When running or creating standalone scripts in subdirectories (like `tests/` or `scripts/`), always ensure the `Minify/` directory is added to `sys.path` to allow proper imports of `core` and `ui` packages:
+- Always run `scripts/precommit.sh` to check for and resolve any linting or test errors before committing your changes.
 
   ```python
   import os
@@ -99,6 +100,7 @@ Mods dynamically patch Dota 2's UI layout (`xml_mod.json`) and styling (`styling
   ```
 
 - All structural or build-related changes must maintain compatibility with the automated release process defined in `.github/workflows/release.yml`.
+- **Dependencies**: If you add any new dependencies (production or dev), you MUST add them to the `README.md` dependencies section.
 
 ## Development Guidelines
 

@@ -30,20 +30,27 @@ Thank you for your interest in contributing to `dota2-minify`! Here are the guid
 
 We prioritize code quality and consistent styling:
 
-- **Line Length**: We use a line length of **120** characters.
-- **Formatter**: Use `black` logic (via `black` or `ruff format`).
-- **Linter**: Use `ruff check`.
-- **Imports**: To organize imports, run:
+To ensure your code meets our standards, simply run the pre-commit script before submitting any changes:
 
-  ```shell
-  ruff check . --select I --fix
-  ```
+```shell
+bash scripts/precommit.sh
+```
 
-- **Pylint**: Configuration is kept in `pyproject.toml`. Usage is **suggested but not required**; it can be helpful for checking major changes. You are not expected to fix existing warnings that weren't caused by your submission, as Pylint can be overcautious.
+This script will automatically sync dependencies, check formatting, run the linter, and execute all tests.
 
-### VSCode Extensions
+### VSCode Integrations
 
 If you are using VSCode, the following recommended extensions can be found in `.vscode/extensions.json`.
+
+Additionally, we have pre-configured tasks available to streamline development. You can quickly run the application using `Ctrl+Shift+B`.
+Other handy tasks available via `Tasks: Run Task` include:
+
+- **Build via PyInstaller**: Compiles the standalone executable.
+- **Build Installer**: Compiles the app and generates the Inno Setup installer.
+- **Clean**: Clears out build directories (`build/`, `dist/`).
+- **Launch Setup / Installed App**: Quickly test the generated installer or the installed application.
+
+Debugger configurations are also available in `.vscode/launch.json`. However, the overhead of a debugger is rarely worth it; you can typically achieve the same results much faster through rapid iteration—simply run the application and fix errors as they appear in the terminal or `Minify/logs`.
 
 ## Mod Development
 
@@ -56,7 +63,7 @@ If you are contributing new mods or features to existing ones:
 ## Pull Request Process
 
 1. Create a descriptive branch for your feature or bugfix.
-2. Ensure your code passes linting (`ruff check`).
+2. Ensure your code passes all checks by running `scripts/precommit.sh`.
 3. If your changes affect core architecture or build logic, maintain compatibility with the automated release workflow (`.github/workflows/release.yml`).
 4. Review standard project architecture in `AGENTS.md` (even if you aren't an AI, it provides a great technical overview).
 5. Submit your PR and wait for review!
