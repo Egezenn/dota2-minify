@@ -116,9 +116,9 @@ def fix_launch_options():
     return successful_ids
 
 
-def remove_minify_lang():
+def unfix_launch_options():
     """
-    Removes `-language minify` argument specifically from launch options only if the locale matches the config.
+    Removes the language argument from launch options only if the locale matches the config.
     """
     steam_ids = []
     successful_ids = []
