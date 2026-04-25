@@ -30,7 +30,6 @@ def write_crashlog(exc_type=None, exc_value=None, exc_traceback=None, header=Non
         create_debug_zip()
 
 
-# TODO: add texts without dashes
 def write_warning(header=None):
     from ui import terminal
 
@@ -38,16 +37,20 @@ def write_warning(header=None):
         with utils.open_utf8R(base.log_warnings, "w") as file:
             pass
 
+    console_message = ""
     with utils.open_utf8R(base.log_warnings, "a") as file:
         if "NoneType: None" not in traceback.format_exc():
             if header:
-                file.write(message := f"{header}\n\n{traceback.format_exc()}\n{'-' * 50}\n\n")
+                console_message = f"{header}\n\n{traceback.format_exc()}"
             else:
-                file.write(message := traceback.format_exc() + f"\n{'-' * 50}\n\n")
+                console_message = traceback.format_exc()
         else:
-            file.write(message := f"{header}\n{'-' * 50}\n\n")
-    if message:
-        terminal.add_text(message, msg_type="warning")
+            console_message = f"{header}"
+
+        file.write(f"{console_message}\n{'-' * 50}\n\n")
+
+    if console_message:
+        terminal.add_text(console_message, msg_type="warning")
 
 
 def unhandled_handler(handled=False):
