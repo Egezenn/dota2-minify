@@ -107,18 +107,18 @@ def fix_launch_options():
 
             terminal.add_text("&discrepancy_launch_options", user_name, locale)
 
-            data["UserLocalConfigStore"]["Software"]["Valve"]["Steam"]["apps"][base.STEAM_DOTA_ID]["LaunchOptions"] = (
-                f"-language {locale} {remove_lang_args(launch_options)}"
-            )
+            data["UserLocalConfigStore"]["Software"]["Valve"]["Steam"]["apps"][base.STEAM_DOTA_ID][
+                "LaunchOptions"
+            ] = f"-language {locale} {remove_lang_args(launch_options)}"
         with utils.open_utf8R(vdf_path, "w") as file:
             vdf.dump(data, file, pretty=True)
         successful_ids.append(steam_id)
     return successful_ids
 
 
-def unfix_launch_options():
+def remove_minify_lang():
     """
-    Removes the language argument from launch options only if the locale matches the config.
+    Removes `-language minify` argument specifically from launch options only if the locale matches the config.
     """
     steam_ids = []
     successful_ids = []
