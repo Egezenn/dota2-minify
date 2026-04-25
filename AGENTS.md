@@ -89,6 +89,7 @@ Mods dynamically patch Dota 2's UI layout (`xml_mod.json`) and styling (`styling
 - If the user is experiencing issues, the tracebacks and other info are located in `Minify/logs`.
 - If a mod requires something really specific or complex, it should be decoupled into its own script.
 - Any features or scripts that require internet connectivity **MUST** be able to fail silently without crashing the application.
+- **Filesystem Operations**: Prefer using the `os` module (and `os.path`) over `pathlib`. Some project dependencies are older and expect string-based paths; using `pathlib` can lead to subtle bugs or type errors in these contexts.
 - When running or creating standalone scripts in subdirectories (like `tests/` or `scripts/`), always ensure the `Minify/` directory is added to `sys.path` to allow proper imports of `core` and `ui` packages:
 
   ```python
