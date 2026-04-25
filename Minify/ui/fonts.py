@@ -225,7 +225,7 @@ def register(locale: str = "EN"):
     def apply_hints():
         import sys
         import io
-        
+
         # DPG forcefully prints this warning, bypassing warnings.filterwarnings.
         # We must temporarily redirect stderr to silence it completely.
         original_stderr = sys.stderr
