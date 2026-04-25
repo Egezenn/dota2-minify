@@ -15,20 +15,20 @@ from core import base, fs, log
 # Noto URLs (Variable fonts or specific weights if variable is not supported well, we use regular TTF/OTF)
 # Note: Locales refer to the ISO codes or internal codes matching localization.json
 NOTO_FONTS = {
-    "koreana": "https://github.com/googlefonts/noto-cjk/raw/main/Sans/OTF/Korean/NotoSansCJKkr-Regular.otf",
-    "schinese": "https://github.com/googlefonts/noto-cjk/raw/main/Sans/OTF/SimplifiedChinese/NotoSansCJKsc-Regular.otf",
-    "tchinese": "https://github.com/googlefonts/noto-cjk/raw/main/Sans/OTF/TraditionalChinese/NotoSansCJKtc-Regular.otf",
-    "japanese": "https://github.com/googlefonts/noto-cjk/raw/main/Sans/OTF/Japanese/NotoSansCJKjp-Regular.otf",
-    "russian": "https://github.com/googlefonts/noto-fonts/raw/main/hinted/ttf/NotoSans/NotoSans-Regular.ttf",
-    "ru": "https://github.com/googlefonts/noto-fonts/raw/main/hinted/ttf/NotoSans/NotoSans-Regular.ttf",
-    "ukrainian": "https://github.com/googlefonts/noto-fonts/raw/main/hinted/ttf/NotoSans/NotoSans-Regular.ttf",
-    "uk": "https://github.com/googlefonts/noto-fonts/raw/main/hinted/ttf/NotoSans/NotoSans-Regular.ttf",
-    "bulgarian": "https://github.com/googlefonts/noto-fonts/raw/main/hinted/ttf/NotoSans/NotoSans-Regular.ttf",
-    "bg": "https://github.com/googlefonts/noto-fonts/raw/main/hinted/ttf/NotoSans/NotoSans-Regular.ttf",
-    "thai": "https://github.com/googlefonts/noto-fonts/raw/main/hinted/ttf/NotoSansThai/NotoSansThai-Regular.ttf",
-    "th": "https://github.com/googlefonts/noto-fonts/raw/main/hinted/ttf/NotoSansThai/NotoSansThai-Regular.ttf",
-    "vietnamese": "https://github.com/googlefonts/noto-fonts/raw/main/hinted/ttf/NotoSans/NotoSans-Regular.ttf",
-    "vi": "https://github.com/googlefonts/noto-fonts/raw/main/hinted/ttf/NotoSans/NotoSans-Regular.ttf",
+    "koreana": "https://github.com/notofonts/noto-cjk/raw/main/Sans/OTF/Korean/NotoSansCJKkr-Regular.otf",
+    "schinese": "https://github.com/notofonts/noto-cjk/raw/main/Sans/OTF/SimplifiedChinese/NotoSansCJKsc-Regular.otf",
+    "tchinese": "https://github.com/notofonts/noto-cjk/raw/main/Sans/OTF/TraditionalChinese/NotoSansCJKtc-Regular.otf",
+    "japanese": "https://github.com/notofonts/noto-cjk/raw/main/Sans/OTF/Japanese/NotoSansCJKjp-Regular.otf",
+    "russian": "https://github.com/notofonts/notofonts.github.io/raw/main/fonts/NotoSans/hinted/ttf/NotoSans-Regular.ttf",
+    "ru": "https://github.com/notofonts/notofonts.github.io/raw/main/fonts/NotoSans/hinted/ttf/NotoSans-Regular.ttf",
+    "ukrainian": "https://github.com/notofonts/notofonts.github.io/raw/main/fonts/NotoSans/hinted/ttf/NotoSans-Regular.ttf",
+    "uk": "https://github.com/notofonts/notofonts.github.io/raw/main/fonts/NotoSans/hinted/ttf/NotoSans-Regular.ttf",
+    "bulgarian": "https://github.com/notofonts/notofonts.github.io/raw/main/fonts/NotoSans/hinted/ttf/NotoSans-Regular.ttf",
+    "bg": "https://github.com/notofonts/notofonts.github.io/raw/main/fonts/NotoSans/hinted/ttf/NotoSans-Regular.ttf",
+    "thai": "https://github.com/notofonts/notofonts.github.io/raw/main/fonts/NotoSansThai/hinted/ttf/NotoSansThai-Regular.ttf",
+    "th": "https://github.com/notofonts/notofonts.github.io/raw/main/fonts/NotoSansThai/hinted/ttf/NotoSansThai-Regular.ttf",
+    "vietnamese": "https://github.com/notofonts/notofonts.github.io/raw/main/fonts/NotoSans/hinted/ttf/NotoSans-Regular.ttf",
+    "vi": "https://github.com/notofonts/notofonts.github.io/raw/main/fonts/NotoSans/hinted/ttf/NotoSans-Regular.ttf",
 }
 
 SYSTEM_FONTS = {
@@ -191,35 +191,10 @@ def register(locale: str = "EN"):
     if not os.path.exists(target_font):
         target_font = os.path.join("bin", "FiraMono-Medium.ttf")
 
-    locale_lower = locale.lower()
-
-    # Map locale to DPG font range hint if applicable
-    hint = dpg.mvFontRangeHint_Default
-    if locale_lower in ["ja", "japanese"]:
-        hint = dpg.mvFontRangeHint_Japanese
-    elif locale_lower in ["ko", "koreana"]:
-        hint = dpg.mvFontRangeHint_Korean
-    elif locale_lower in ["zh", "schinese"]:
-        hint = dpg.mvFontRangeHint_Chinese_Simplified_Common
-    elif locale_lower in ["zht", "tchinese"]:
-        hint = dpg.mvFontRangeHint_Chinese_Full
-    elif locale_lower in ["ru", "bg", "uk", "russian", "bulgarian", "ukrainian"]:
-        hint = dpg.mvFontRangeHint_Cyrillic
-    elif locale_lower in ["th", "thai"]:
-        hint = dpg.mvFontRangeHint_Thai
-    elif locale_lower in ["vi", "vietnamese"]:
-        hint = dpg.mvFontRangeHint_Vietnamese
-
     with dpg.font_registry():
         with dpg.font(target_font, 16, tag="main_font") as main_font:
-            dpg.add_font_range_hint(hint)
             dpg.bind_font(main_font)
 
-        with dpg.font(target_font, 14, tag="small_font"):
-            dpg.add_font_range_hint(hint)
-
-        with dpg.font(target_font, 20, tag="large_font"):
-            dpg.add_font_range_hint(hint)
-
-        with dpg.font(target_font, 32, tag="very_large_font"):
-            dpg.add_font_range_hint(hint)
+        dpg.font(target_font, 14, tag="small_font")
+        dpg.font(target_font, 20, tag="large_font")
+        dpg.font(target_font, 32, tag="very_large_font")
