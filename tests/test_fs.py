@@ -1,8 +1,4 @@
-import os
-import sys
 from unittest.mock import call, patch
-
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "Minify")))
 
 from core import fs
 

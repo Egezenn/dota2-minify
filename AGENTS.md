@@ -115,6 +115,51 @@ Mods dynamically patch Dota 2's UI layout (`xml_mod.json`) and styling (`styling
 - **Pylint**: Seldomly used to scour for anything missed by Ruff. Ignore rules are in `pyproject.toml`.
 - **VSCode Extensions**: Recommended extensions can be found in `.vscode/extensions.json`.
 
+## Testing Guidelines
+
+Following these guidelines ensures that our tests are reliable, readable, and maintainable.
+
+### 1. Core Principles
+
+- **Isolation**: Each test should be independent. Side effects from one test must not affect another.
+- **Speed**: Tests should be fast. Use mocking for heavy I/O operations (network, disk, subprocesses).
+- **Correctness**: Tests should verify both happy paths and edge cases (errors, empty inputs, invalid types).
+- **Surgical Mocking**: Only mock what is necessary. Prefer mocking the `core` modules rather than standard library functions.
+
+### 2. Environment Setup
+
+- **sys.path**: Ensure the `Minify/` directory is in `sys.path`.
+- **Mocking core.config**: Most modules depend on `core.config`. Mock it early to avoid hitting the real config file:
+
+  ```python
+  from unittest.mock import MagicMock
+  import core.config
+  core.config.get = MagicMock(side_effect=lambda key, default=None: default)
+  core.config.set = MagicMock()
+  ```
+
+### 3. Recommended Tools
+
+- **Framework**: `pytest`
+- **Mocking**: `unittest.mock` (`patch`, `MagicMock`, `call`)
+- **Assertions**: Standard `assert` statements.
+
+### 4. Test Structure
+
+- **File Naming**: Located in `tests/`, following `test_<module_name>.py`.
+- **Function Naming**: Start with `test_`, use descriptive names: `test_<function_name>_<scenario>_<expected_result>`.
+- **Parametrization**: Use `@pytest.mark.parametrize` for multiple inputs.
+
+### 5. Handling the Filesystem
+
+- **tmp_path**: Always use the `tmp_path` fixture for real filesystem interaction.
+- **Mocking os.path.exists**: Use `@patch("os.path.exists", return_value=True)` when a real filesystem isn't needed.
+
+### 6. Common Patterns
+
+- **Mocking core.utils.open_utf8R**: Mock internal file utilities to control content.
+- **monkeypatch**: Use in fixtures for reusable mocked environments.
+
 ## Debugging & Developer Tools
 
 The application includes a specialized developer toolbox accessible via the **Hammer Icon** in the UI.

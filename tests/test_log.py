@@ -1,15 +1,6 @@
-import os
-import sys
-from unittest.mock import MagicMock, patch
+from unittest.mock import patch
 
 import pytest
-
-# isort: split
-
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "../Minify")))
-sys.modules["ui.terminal"] = MagicMock()
-sys.modules["core.fs"] = MagicMock()
-
 from core import log
 
 
@@ -33,10 +24,12 @@ def test_write_warning(mock_env):
     assert "Test" in open(log.base.log_warnings).read()
 
 
-def test_create_debug_zip(mock_env, tmp_path):
+def test_create_debug_zip(mock_env, tmp_path, monkeypatch):
     (mock_env / "test.log").write_text("data")
-    os.chdir(tmp_path)
-    log.create_debug_zip()
+    monkeypatch.chdir(tmp_path)
+    with patch("core.fs.open_thing") as mock_open:
+        log.create_debug_zip()
+        mock_open.assert_called_once_with(".")
     assert len(list(tmp_path.glob("*.zip"))) == 1
 
 

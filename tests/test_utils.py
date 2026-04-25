@@ -1,17 +1,4 @@
-import os
-import sys
-
-import pytest
-
-# Add the project root to sys.path so Minify can be imported
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
-
-from Minify.core.utils import (
-    hex_to_rgba,
-    is_version_at_least,
-    parse_color,
-    rgba_to_hex,
-)
+from core.utils import hex_to_rgba, is_version_at_least, parse_color, rgba_to_hex
 
 
 def test_is_version_at_least_standard():
