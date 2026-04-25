@@ -4,17 +4,14 @@ import ctypes
 import subprocess
 
 import dearpygui.dearpygui as dpg
-from core import base, utils
 
-from ui import details, shared, terminal
+from core import base, config, utils
+from ui import details, dev_tools, modal_shared, shared, terminal
 
 is_moving_viewport = False
 
 
 def drag(sender, app_data, user_data):
-    from core import config
-    from ui import dev_tools
-
     global is_moving_viewport
 
     if is_moving_viewport:
@@ -76,8 +73,6 @@ def focus():
 
 
 def on_resize():
-    from ui import dev_tools, modal_shared
-
     if dev_tools.dev_mode_state != 1:
         dev_tools.prev_width = dpg.get_viewport_width()
         dev_tools.prev_height = dpg.get_viewport_height()
