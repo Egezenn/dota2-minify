@@ -1,17 +1,11 @@
 import os
 import sys
-import builtins
-import pytest
 from unittest.mock import MagicMock
+
+import pytest
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "Minify")))
 
-# We can bypass the initialization logic in `steam.py` by mocking the `handle_non_default_path`
-# and `get_steam_root_path` before the module executes it. But Python executes module-level
-# code immediately upon import.
-
-# One trick is to patch `core.config.get` to return a valid path so it passes os.path.exists checks
-# and skips the tkinter block.
 import core.config
 
 
