@@ -106,6 +106,10 @@ Mods dynamically patch Dota 2's UI layout (`xml_mod.json`) and styling (`styling
 - **Linting & Imports**:
   - We use `ruff check` as our primary linter.
   - To organize and sort imports, use: `ruff check . --select I --fix`.
+- **PR Naming**:
+  - Use the format `<category>: concise title`.
+  - Categories: `feat`, `fix`, `refactor`, `docs`, `test`, `chore`.
+  - No flavor, no emojis, straight to the point.
 - **Pylint**: Seldomly used to scour for anything missed by Ruff. Ignore rules are in `pyproject.toml`.
 - **VSCode Extensions**: Recommended extensions can be found in `.vscode/extensions.json`.
 
