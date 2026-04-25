@@ -43,6 +43,7 @@ def patcher(mod=None, pakname=None):
             fs.remove_path(os.path.join(base.logs_dir, item))
 
         fs.create_dirs(
+            base.cache_dir,
             base.build_dir,
             base.replace_dir,
             base.merge_dir,
@@ -65,7 +66,6 @@ def patcher(mod=None, pakname=None):
         dota_version_changed = current_dota_version != cached_dota_version
 
         if dota_version_changed and current_dota_version:
-            fs.create_dirs(base.cache_dir)
             with utils.open_utf8(base.dota_steam_inf_cache, "w") as f:
                 f.write(current_dota_version)
 

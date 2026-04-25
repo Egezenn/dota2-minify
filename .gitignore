@@ -3,6 +3,7 @@ Minify/bin/gamepakcontents.txt
 Minify/vpk_build
 Minify/vpk_replace
 Minify/vpk_merge
+Minify/cache
 Minify/config
 Minify/logs
 Minify/mods/*
