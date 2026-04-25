@@ -53,6 +53,16 @@ Accetta automaticamente la finestra di dialogo di abbinamento dopo un ritardo di
 
 !!: Il valore predefinito è `10` se gli strumenti dell'officina non sono installati.
 
+<!-- LANG:JA -->
+0～40秒の遅延後、マッチングダイアログを自動的に承認します。遅延時間は設定パネルで調整可能です。
+
+!!: ワークショップツールがインストールされていない場合は、デフォルトで10秒になります。
+
+<!-- LANG:KO -->
+`0-40`초의 지연 후 자동으로 매치 대화 상자를 수락합니다. 지연 시간은 설정 패널에서 조정할 수 있습니다.
+
+!!: 워크샵 도구가 설치되어 있지 않으면 기본값은 `10`입니다.
+
 <!-- LANG:NL -->
 Het dialoogvenster voor de wedstrijd wordt automatisch geopend na een vertraging van `0 tot 40` seconden. De vertraging is instelbaar via het instellingenpaneel.
 
@@ -88,6 +98,11 @@ Accepterar automatiskt matchningsdialogrutan efter `0–40` sekunders fördröjn
 
 !!: Standardvärdet är `10` om verkstadsverktyg inte är installerade.
 
+<!-- LANG:TH -->
+ระบบจะยอมรับการจับคู่โดยอัตโนมัติหลังจากหน่วงเวลา 0-40 วินาที สามารถปรับเวลาหน่วงได้ผ่านแผงการตั้งค่า
+
+!!: ค่าเริ่มต้นคือ 10 หากไม่ได้ติดตั้งเครื่องมือสำหรับเวิร์คช็อป
+
 <!-- LANG:TR -->
 `0-40` saniyelik gecikmeden sonra eşleşme iletişim kutusunu otomatik olarak kabul eder. Gecikme süresi ayarlar panelinden ayarlanabilir.
 
@@ -97,3 +112,28 @@ Accepterar automatiskt matchningsdialogrutan efter `0–40` sekunders fördröjn
 Автоматично приймає діалогове вікно збігу після затримки `0-40` секунд. Затримку можна налаштувати через панель налаштувань.
 
 !!: За замовчуванням `10`, якщо інструменти майстерні не встановлені.
+
+<!-- LANG:VI -->
+Tự động chấp nhận hộp thoại ghép trận sau độ trễ từ 0 đến 40 giây. Độ trễ có thể điều chỉnh thông qua bảng cài đặt.
+
+!!: Mặc định là 10 nếu các công cụ hội thảo chưa được cài đặt.
+
+<!-- LANG:ZH-CN -->
+延迟 0-40 秒后自动接受匹配对话框。延迟时间可在设置面板中调整。
+
+!!：如果未安装创意工坊工具，则默认值为 10。
+
+<!-- LANG:ZH-TW -->
+延遲 0-40 秒後自動接受匹配對話框。延遲時間可在設定面板中調整。
+
+!!：如果未安裝創意工坊工具，則預設值為 10。
+
+<!-- LANG:ZH-CN -->
+延迟 0-40 秒后自动接受匹配对话框。延迟时间可在设置面板中调整。
+
+!!：如果未安装创意工坊工具，则默认值为 10。
+
+<!-- LANG:ZH-TW -->
+延遲 0-40 秒後自動接受匹配對話框。延遲時間可在設定面板中調整。
+
+!!：如果未安裝創意工坊工具，則預設值為 10。

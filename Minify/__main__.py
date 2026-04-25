@@ -55,6 +55,7 @@ def create_ui():
         with dpg.group(tag="center_group", horizontal=True):
             dpg.group(tag="text_group")
             dpg.add_text(
+                tag="banner_text",
                 default_value=r""" __    __    __    __   __    __    ______  __  __
 /\ "-./  \  /\ \  /\ "-.\ \  /\ \  /\  ___\/\ \_\ \  
 \ \ \-./\ \ \ \ \ \ \ \-.  \ \ \ \ \ \  __\\ \____ \ 
@@ -63,6 +64,7 @@ def create_ui():
                 parent="text_group",
                 pos=(4, -12),
             )
+            dpg.bind_item_font("banner_text", "banner_font")
             # Creating log terminal
             with dpg.group(parent="center_group", tag="button_group"):
                 dpg.add_spacer(height=6)
@@ -261,6 +263,14 @@ with dpg.handler_registry():
     dpg.add_mouse_drag_handler(tag="drag_handler", button=0, threshold=4, callback=window.drag)
     dpg.add_mouse_release_handler(button=0, callback=window.stop_drag)
     dpg.add_key_release_handler(dpg.mvKey_Escape, callback=gui.close_active_window)
+
+    def modal_accept():
+        from ui import modal_shared
+
+        if dpg.is_item_shown("modal_popup") and modal_shared.active_modal_callback:
+            modal_shared.active_modal_callback()
+
+    dpg.add_key_release_handler(dpg.mvKey_Return, callback=modal_accept)
     if config.get("debug_env", False):
         dpg.add_key_release_handler(dpg.mvKey_Spacebar, callback=increase_scale)
 

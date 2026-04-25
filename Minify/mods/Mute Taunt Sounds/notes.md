@@ -31,6 +31,12 @@ Némítja a gúnyolódás hangjait.
 <!-- LANG:IT -->
 I suoni muti provocano.
 
+<!-- LANG:JA -->
+挑発音をミュートします。
+
+<!-- LANG:KO -->
+조롱하는 소리를 음소거합니다.
+
 <!-- LANG:NL -->
 Dempt uitdagende geluiden.
 
@@ -52,8 +58,26 @@ Dezactivează sunetele provocatoare.
 <!-- LANG:SV -->
 Dämpar hånljud.
 
+<!-- LANG:TH -->
+ปิดเสียงเยาะเย้ย
+
 <!-- LANG:TR -->
 Sessizler alaycı sesler çıkarır.
 
 <!-- LANG:UK -->
 Вимкнути звуки глузування.
+
+<!-- LANG:VI -->
+Tắt tiếng chế nhạo.
+
+<!-- LANG:ZH-CN -->
+静音嘲讽声。
+
+<!-- LANG:ZH-TW -->
+靜音嘲諷聲。
+
+<!-- LANG:ZH-CN -->
+静音嘲讽声。
+
+<!-- LANG:ZH-TW -->
+靜音嘲諷聲。

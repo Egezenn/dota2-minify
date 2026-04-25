@@ -53,6 +53,16 @@ Rende trasparenti la maggior parte degli elementi dell'HUD di gioco, rimuovendo 
 
 !!: Sebbene sia in qualche modo compatibile con altri HUD, si consiglia di usare l'impostazione predefinita.
 
+<!-- LANG:JA -->
+ゲーム内のHUD要素のほとんどを透明にし、不要な機能をいくつか削除します。
+
+!!：他のHUDとの互換性は多少ありますが、デフォルト設定の使用をお勧めします。
+
+<!-- LANG:KO -->
+게임 내 HUD 요소 대부분을 투명하게 만들고, 불필요한 기능을 제거합니다.
+
+!!: 다른 HUD와 어느 정도 호환되지만, 기본 HUD를 사용하는 것을 권장합니다.
+
 <!-- LANG:NL -->
 Maakt de meeste HUD-elementen in het spel transparant en verwijdert enkele nutteloze functies.
 
@@ -88,6 +98,11 @@ Gör de flesta HUD-elementen i spelet transparenta, tar bort vissa onödiga funk
 
 !!: Även om det är någorlunda kompatibelt med andra HUD:er rekommenderas standardinställningen.
 
+<!-- LANG:TH -->
+ทำให้องค์ประกอบ HUD ส่วนใหญ่ในเกมโปร่งใส และลบคุณสมบัติที่ไม่จำเป็นบางอย่างออก
+
+!!: แม้ว่าจะใช้งานร่วมกับ HUD อื่นๆ ได้บ้าง แต่แนะนำให้ใช้ค่าเริ่มต้น
+
 <!-- LANG:TR -->
 Oyun içi HUD öğelerinin çoğunu şeffaf hale getirir, bazı gereksiz özellikleri kaldırır.
 
@@ -97,3 +112,28 @@ Oyun içi HUD öğelerinin çoğunu şeffaf hale getirir, bazı gereksiz özelli
 Робить більшість елементів ігрового HUD прозорими, видаляє деякі непотрібні функції.
 
 !!: Хоча певною мірою сумісний з іншими HUD, рекомендується використовувати значення за замовчуванням.
+
+<!-- LANG:VI -->
+Làm cho hầu hết các yếu tố HUD trong game trở nên trong suốt, loại bỏ một số tính năng không cần thiết.
+
+!!: Mặc dù có khả năng tương thích ở một mức độ nào đó với các HUD khác, nhưng nên sử dụng HUD mặc định.
+
+<!-- LANG:ZH-CN -->
+使游戏内大部分HUD元素透明，并移除一些无用功能。
+
+！！：虽然它与其他HUD有一定的兼容性，但建议使用默认设置。
+
+<!-- LANG:ZH-TW -->
+讓遊戲內大部分HUD元素透明，並移除一些無用功能。
+
+！ ！ ：雖然它與其他HUD有一定的兼容性，但建議使用預設設定。
+
+<!-- LANG:ZH-CN -->
+使游戏内大部分HUD元素透明，并移除一些无用功能。
+
+！！：虽然它与其他HUD有一定的兼容性，但建议使用默认设置。
+
+<!-- LANG:ZH-TW -->
+讓遊戲內大部分HUD元素透明，並移除一些無用功能。
+
+！ ！ ：雖然它與其他HUD有一定的兼容性，但建議使用預設設定。

@@ -31,6 +31,12 @@ Leegyszerűsíti a játék alapértelmezett varázslatait és tárgyait.
 <!-- LANG:IT -->
 Semplifica gli incantesimi e gli oggetti predefiniti nel gioco.
 
+<!-- LANG:JA -->
+ゲーム内のデフォルトの呪文とアイテムを簡略化します。
+
+<!-- LANG:KO -->
+게임 내 기본 주문과 아이템을 간소화합니다.
+
 <!-- LANG:NL -->
 Vereenvoudigt de standaardspreuken en -voorwerpen in het spel.
 
@@ -52,8 +58,26 @@ Simplifică vrăjile și obiectele implicite din joc.
 <!-- LANG:SV -->
 Förenklar standardformler och föremål i spelet.
 
+<!-- LANG:TH -->
+ลดความซับซ้อนของเวทมนตร์และไอเท็มเริ่มต้นในเกม
+
 <!-- LANG:TR -->
 Oyundaki varsayılan büyüleri ve eşyaları basitleştirir.
 
 <!-- LANG:UK -->
 Спрощує стандартні заклинання та предмети в грі.
+
+<!-- LANG:VI -->
+Đơn giản hóa các phép thuật và vật phẩm mặc định trong trò chơi.
+
+<!-- LANG:ZH-CN -->
+简化游戏中的默认法术和物品。
+
+<!-- LANG:ZH-TW -->
+簡化遊戲中的預設法術和物品。
+
+<!-- LANG:ZH-CN -->
+简化游戏中的默认法术和物品。
+
+<!-- LANG:ZH-TW -->
+簡化遊戲中的預設法術和物品。

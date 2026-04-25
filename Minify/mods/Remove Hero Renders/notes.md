@@ -53,6 +53,16 @@ Rimuove le anteprime e i rendering degli eroi dall'interfaccia utente.
 
 La variabile della console `map_enable_portrait_worlds 0` raggiunge lo stesso obiettivo, tuttavia rimarrai bloccato sulle schermate MVP.
 
+<!-- LANG:JA -->
+ヒーロープレビューを削除し、UIからレンダリングします。
+
+コンソール変数 `map_enable_portrait_worlds 0` でも同じ効果が得られますが、MVP画面でフリーズする可能性があります。
+
+<!-- LANG:KO -->
+UI에서 영웅 미리보기 및 렌더링을 제거합니다.
+
+콘솔 변수 `map_enable_portrait_worlds 0`을 사용하면 동일한 결과를 얻을 수 있지만, MVP 화면에서 멈추게 됩니다.
+
 <!-- LANG:NL -->
 Verwijdert hero-previews en renders uit de gebruikersinterface.
 
@@ -88,6 +98,11 @@ Tar bort förhandsvisningar och renderingar av hjältar från användargränssni
 
 Konsolvariabeln `map_enable_portrait_worlds 0` uppnår samma mål, men du kommer att fastna på MVP-skärmar.
 
+<!-- LANG:TH -->
+ลบภาพตัวอย่างฮีโร่และภาพที่แสดงผลออกจาก UI
+
+ตัวแปรในคอนโซล `map_enable_portrait_worlds 0` ทำหน้าที่เดียวกัน แต่คุณจะติดอยู่ที่หน้าจอ MVP
+
 <!-- LANG:TR -->
 Kahraman önizlemelerini ve kullanıcı arayüzünden görüntüleri kaldırır.
 
@@ -97,3 +112,28 @@ Konsol değişkeni `map_enable_portrait_worlds 0` da aynı amaca hizmet eder, an
 Видаляє попередній перегляд та рендеринг героїв з інтерфейсу користувача.
 
 Консольна змінна `map_enable_portrait_worlds 0` досягає тієї ж мети, проте ви застрягнете на екранах MVP.
+
+<!-- LANG:VI -->
+Xóa ảnh xem trước anh hùng, hiển thị từ giao diện người dùng.
+
+Biến console `map_enable_portrait_worlds 0` cũng đạt được mục đích tương tự, tuy nhiên bạn sẽ bị kẹt ở màn hình MVP.
+
+<!-- LANG:ZH-CN -->
+移除英雄预览和UI渲染。
+
+控制台变量`map_enable_portrait_worlds 0`也能达到同样的效果，但会导致MVP界面卡住。
+
+<!-- LANG:ZH-TW -->
+移除英雄預覽和UI渲染。
+
+控制台變數`map_enable_portrait_worlds 0`也能達到相同的效果，但會導致MVP介面卡住。
+
+<!-- LANG:ZH-CN -->
+移除英雄预览和UI渲染。
+
+控制台变量`map_enable_portrait_worlds 0`也能达到同样的效果，但会导致MVP界面卡住。
+
+<!-- LANG:ZH-TW -->
+移除英雄預覽和UI渲染。
+
+控制台變數`map_enable_portrait_worlds 0`也能達到相同的效果，但會導致MVP介面卡住。

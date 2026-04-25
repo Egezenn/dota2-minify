@@ -31,6 +31,12 @@ Eltávolítja az összes spray-t.
 <!-- LANG:IT -->
 Rimuove tutti gli spray.
 
+<!-- LANG:JA -->
+あらゆるスプレー剤を除去します。
+
+<!-- LANG:KO -->
+모든 스프레이를 제거합니다.
+
 <!-- LANG:NL -->
 Verwijdert alle sprays.
 
@@ -52,8 +58,26 @@ Remove todos os sprays.
 <!-- LANG:SV -->
 Tar bort alla sprayer.
 
+<!-- LANG:TH -->
+ขจัดคราบสเปรย์ทุกชนิด
+
 <!-- LANG:TR -->
 Tüm spreyleri kaldırır.
 
 <!-- LANG:UK -->
 Видаляє всі спреї.
+
+<!-- LANG:VI -->
+Loại bỏ mọi loại thuốc xịt.
+
+<!-- LANG:ZH-CN -->
+去除所有喷雾。
+
+<!-- LANG:ZH-TW -->
+去除所有噴霧。
+
+<!-- LANG:ZH-CN -->
+去除所有喷雾。
+
+<!-- LANG:ZH-TW -->
+去除所有噴霧。

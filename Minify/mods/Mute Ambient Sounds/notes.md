@@ -31,6 +31,12 @@ Elnémítja a térkép környezeti hangjait.
 <!-- LANG:IT -->
 Disattiva i suoni ambientali della mappa.
 
+<!-- LANG:JA -->
+マップの環境音をミュートします。
+
+<!-- LANG:KO -->
+맵의 주변 소리를 음소거합니다.
+
 <!-- LANG:NL -->
 Dempt de omgevingsgeluiden van de kaart.
 
@@ -52,8 +58,26 @@ Dezactivează sunetele ambientale ale hărții.
 <!-- LANG:SV -->
 Dämpar omgivande ljud på kartan.
 
+<!-- LANG:TH -->
+ปิดเสียงรอบข้างของแผนที่
+
 <!-- LANG:TR -->
 Haritanın ortam seslerini susturur.
 
 <!-- LANG:UK -->
 Вимикає навколишні звуки карти.
+
+<!-- LANG:VI -->
+Tắt tiếng các âm thanh xung quanh bản đồ.
+
+<!-- LANG:ZH-CN -->
+静音地图环境音。
+
+<!-- LANG:ZH-TW -->
+靜音地圖環境音。
+
+<!-- LANG:ZH-CN -->
+静音地图环境音。
+
+<!-- LANG:ZH-TW -->
+靜音地圖環境音。

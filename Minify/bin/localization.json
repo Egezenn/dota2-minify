@@ -19,7 +19,13 @@
     "RU": "Закрыть",
     "SV": "Nära",
     "TR": "Kapat",
-    "UK": "Закрити"
+    "UK": "Закрити",
+    "JA": "近い",
+    "KO": "닫다",
+    "ZH-CN": "关闭",
+    "ZH-TW": "關閉",
+    "TH": "ปิด",
+    "VI": "Đóng"
   },
   "button_patch": {
     "EN": "Patch",
@@ -41,7 +47,13 @@
     "RU": "Патч",
     "SV": "Lappa",
     "TR": "Yamala",
-    "UK": "Патч"
+    "UK": "Патч",
+    "JA": "パッチ",
+    "KO": "반점",
+    "TH": "แพทช์",
+    "VI": "Bản vá",
+    "ZH-CN": "修补",
+    "ZH-TW": "修補"
   },
   "button_select_mods": {
     "EN": "Select Mods",
@@ -63,7 +75,13 @@
     "RU": "Выбрать Моды",
     "SV": "Välj mods",
     "TR": "Modları seç",
-    "UK": "Виберіть моди"
+    "UK": "Виберіть моди",
+    "JA": "モッドを選択",
+    "KO": "모드 선택",
+    "TH": "เลือกม็อด",
+    "VI": "Chọn Mod",
+    "ZH-CN": "选择模组",
+    "ZH-TW": "選擇模組"
   },
   "button_uninstall": {
     "EN": "Uninstall",
@@ -85,7 +103,13 @@
     "RU": "Удалить Моды",
     "SV": "Avinstallera",
     "TR": "Kaldır",
-    "UK": "Видалити"
+    "UK": "Видалити",
+    "JA": "アンインストール",
+    "KO": "제거",
+    "TH": "ถอนการติดตั้ง",
+    "VI": "Gỡ cài đặt",
+    "ZH-CN": "卸载",
+    "ZH-TW": "解除安裝"
   },
   "check_logs_terminal": {
     "EN": "Check 'logs/crashlog.txt' for more info.",
@@ -107,7 +131,13 @@
     "RU": "Проверьте 'logs/crashlog.txt' для более детальной информации.",
     "SV": "Se 'logs/crashlog.txt' för mer information.",
     "TR": "Ayrıntılar için 'logs/crashlog.txt' dosyasını kontrol et.",
-    "UK": "Більше інформації дивіться у файлі «logs/crashlog.txt»."
+    "UK": "Більше інформації дивіться у файлі «logs/crashlog.txt».",
+    "JA": "詳細については「logs/crashlog.txt」を確認してください.",
+    "KO": "자세한 내용은 'logs/crashlog.txt' 파일을 확인하세요.",
+    "TH": "ตรวจสอบไฟล์ 'logs/crashlog.txt' เพื่อดูข้อมูลเพิ่มเติม",
+    "VI": "Kiểm tra tệp 'logs/crashlog.txt' để biết thêm thông tin.",
+    "ZH-CN": "请查看“logs/crashlog.txt”以获取更多信息.",
+    "ZH-TW": "請查看“logs/crashlog.txt”以獲取更多資訊."
   },
   "clean_lang_dirs": {
     "EN": "Deleted path {}",
@@ -129,7 +159,13 @@
     "RU": "Удаленный путь {}",
     "SV": "Borttagen sökväg {}",
     "TR": "{} silindi",
-    "UK": "Видалений шлях {}"
+    "UK": "Видалений шлях {}",
+    "JA": "削除されたパス {}",
+    "KO": "삭제된 경로 {}",
+    "TH": "เส้นทางที่ถูกลบ {}",
+    "VI": "Đã xóa đường dẫn {}",
+    "ZH-CN": "已删除路径 {}",
+    "ZH-TW": "已刪除路徑 {}"
   },
   "close_dota_terminal": {
     "EN": "Please close Dota 2 first and then patch.",
@@ -151,7 +187,13 @@
     "RU": "Пожалуйста, сначала закройте Dota 2, а затем приступайте к патчу.",
     "SV": "Stäng Dota 2 först och uppdatera sedan.",
     "TR": "Lütfen önce Dota 2'yi kapatın ve sonra yamalama işlemini gerçekleştirin.",
-    "UK": "Будь ласка, спочатку закрийте Dota 2, а потім встановіть патч."
+    "UK": "Будь ласка, спочатку закрийте Dota 2, а потім встановіть патч.",
+    "JA": "まずDota 2を終了してからパッチを適用してください.",
+    "KO": "먼저 Dota 2를 종료한 다음 패치를 적용해 주세요.",
+    "TH": "โปรดปิดเกม Dota 2 ก่อน แล้วค่อยทำการอัปเดตแพทช์",
+    "VI": "Vui lòng đóng Dota 2 trước rồi mới cập nhật.",
+    "ZH-CN": "请先关闭 Dota 2,然后再打补丁.",
+    "ZH-TW": "請先關閉 Dota 2,再打補丁."
   },
   "compile_no_path": {
     "EN": "Select a path first!",
@@ -173,7 +215,13 @@
     "RU": "Сначала выберите папку!",
     "SV": "Välj en väg först!",
     "TR": "Önce bir yol seçin!",
-    "UK": "Спочатку оберіть шлях!"
+    "UK": "Спочатку оберіть шлях!",
+    "JA": "まず、経路を選択してください!",
+    "KO": "먼저 경로를 선택하세요!",
+    "TH": "เลือกเส้นทางก่อน!",
+    "VI": "Trước tiên hãy chọn một con đường!",
+    "ZH-CN": "先选好路径!",
+    "ZH-TW": "先選好路徑!"
   },
   "compile_init": {
     "EN": "-> Compiling files at\n   {}",
@@ -195,7 +243,13 @@
     "RU": "-> Компиляция файлов в\n   {}",
     "SV": "-> Kompilerar filer på\n   {}",
     "TR": "-> Dosyalar şu konumda derleniyor:\n   {}",
-    "UK": "-> Компіляція файлів за адресою\n   {}"
+    "UK": "-> Компіляція файлів за адресою\n   {}",
+    "JA": "-> ファイルのコンパイル中\n   {}",
+    "KO": "-> 파일 컴파일 중\n   {}",
+    "TH": "-> กำลังคอมไพล์ไฟล์ที่\n   {}",
+    "VI": "-> Đang biên dịch các tập tin tại\n   {}",
+    "ZH-CN": "-> 正在编译文件\n   {}",
+    "ZH-TW": "-> 正在編譯文件\n   {}"
   },
   "compile_successful": {
     "EN": "-> Compiled files successfully at\n   {}",
@@ -217,7 +271,13 @@
     "RU": "-> Файлы успешно скомпилированы в\n   {}",
     "SV": "-> Kompilerade filer framgångsrikt på\n   {}",
     "TR": "-> Dosyalar başarıyla derlendi:\n   {}",
-    "UK": "-> Файли успішно скомпільовано о\n   {}"
+    "UK": "-> Файли успішно скомпільовано о\n   {}",
+    "JA": "-> ファイルのコンパイルが正常に完了しました\n   {}",
+    "KO": "-> 컴파일된 파일이 다음 위치에 성공적으로 저장되었습니다.\n   {}",
+    "TH": "-> คอมไพล์ไฟล์สำเร็จที่\n   {}",
+    "VI": "-> Đã biên dịch các tập tin thành công tại\n   {}",
+    "ZH-CN": "-> 文件编译成功\n   {}",
+    "ZH-TW": "-> 文件編譯成功\n   {}"
   },
   "compile_created_pak": {
     "EN": "-> Created vpk at\n   {}",
@@ -239,7 +299,13 @@
     "RU": "-> Создан vpk в\n   {}",
     "SV": "-> Skapade vpk på\n   {}",
     "TR": "-> vpk dosyası şu konumda oluşturuldu:\n   {}",
-    "UK": "-> Створено vpk о\n   {}"
+    "UK": "-> Створено vpk о\n   {}",
+    "JA": "-> vpk を作成しました\n   {}",
+    "KO": "-> vpk 생성 위치:\n   {}",
+    "TH": "-> สร้าง vpk ที่\n   {}",
+    "VI": "-> Đã tạo tệp vpk tại\n   {}",
+    "ZH-CN": "-> 创建 vpk 于\n   {}",
+    "ZH-TW": "-> 建立 vpk 於\n   {}"
   },
   "compiling_resource_terminal": {
     "EN": "-> Compiling extracted files via resourcecompiler",
@@ -261,7 +327,13 @@
     "RU": "-> Компиляция извлеченных файлов с помощью компилятора ресурсов",
     "SV": "-> Kompilera extraherade filer via resurskompiler",
     "TR": "-> Çıkarılan dosyaların kaynak derleyicisi aracılığıyla derlenmesi",
-    "UK": "-> Компіляція витягнутих файлів за допомогою resourcecompiler"
+    "UK": "-> Компіляція витягнутих файлів за допомогою resourcecompiler",
+    "JA": "-> リソースコンパイラを使用して抽出したファイルをコンパイルしています",
+    "KO": "-> 리소스컴파일러를 통해 추출된 파일 컴파일",
+    "TH": "-> รวบรวมไฟล์ที่แยกออกมาโดยใช้ resourcecompiler",
+    "VI": "-> Biên dịch các tập tin đã trích xuất thông qua trình biên dịch tài nguyên",
+    "ZH-CN": "-> 通过资源编译器编译提取的文件",
+    "ZH-TW": "-> 透過資源編譯器編譯提取的文件"
   },
   "compiling_terminal": {
     "EN": "-> Compiling VPK",
@@ -283,7 +355,13 @@
     "RU": "-> Компиляция VPK",
     "SV": "-> Kompilerar VPK",
     "TR": "-> VPK Derleniyor",
-    "UK": "-> Компіляція VPK"
+    "UK": "-> Компіляція VPK",
+    "JA": "-> VPKをコンパイル中",
+    "KO": "-> VPK 컴파일 중",
+    "TH": "-> กำลังคอมไพล์ VPK",
+    "VI": "-> Biên dịch VPK",
+    "ZH-CN": "-> 正在编译 VPK",
+    "ZH-TW": "-> 正在編譯 VPK"
   },
   "creating_merged_vpk": {
     "EN": "-> Creating merged vpk...",
@@ -305,7 +383,13 @@
     "RU": "-> Создание объединенного vpk...",
     "SV": "-> Skapar sammanslagna vpk...",
     "TR": "-> Birleştirilmiş vpk oluşturuluyor...",
-    "UK": "-> Створення об'єднаного vpk..."
+    "UK": "-> Створення об'єднаного vpk...",
+    "JA": "-> マージされたvpkを作成中...",
+    "KO": "-> 병합된 vpk 파일을 생성하는 중...",
+    "TH": "-> กำลังสร้างไฟล์ vpk ที่รวมกัน...",
+    "VI": "-> Đang tạo tệp vpk đã hợp nhất...",
+    "ZH-CN": "-> 正在创建合并的 vpk 文件...",
+    "ZH-TW": "-> 正在建立合併的 vpk 檔案..."
   },
   "decompiling_terminal": {
     "EN": "-> Decompiling extracted files via Source2Viewer",
@@ -327,7 +411,13 @@
     "RU": "-> Декомпиляция извлеченных файлов с помощью Source2Viewer",
     "SV": "-> Dekompilera extraherade filer via Source2Viewer",
     "TR": "-> Çıkarılan dosyaların Source2Viewer aracılığıyla derlenmesi",
-    "UK": "-> Декомпіляція витягнутих файлів через Source2Viewer"
+    "UK": "-> Декомпіляція витягнутих файлів через Source2Viewer",
+    "JA": "-> Source2Viewer を介して抽出したファイルを逆コンパイルする",
+    "KO": "-> Source2Viewer를 통해 추출된 파일 디컴파일",
+    "TH": "-> การถอดรหัสไฟล์ที่แยกออกมาผ่าน Source2Viewer",
+    "VI": "-> Giải mã các tập tin đã trích xuất thông qua Source2Viewer",
+    "ZH-CN": "-> 通过 Source2Viewer 反编译提取的文件",
+    "ZH-TW": "-> 透過 Source2Viewer 反編譯提取的文件"
   },
   "details_button_label_var": {
     "EN": "Details",
@@ -349,7 +439,13 @@
     "RU": "Подробнее",
     "SV": "Detaljer",
     "TR": "Ayrıntılar",
-    "UK": "Деталі"
+    "UK": "Деталі",
+    "JA": "詳細",
+    "KO": "세부",
+    "TH": "รายละเอียด",
+    "VI": "Chi tiết",
+    "ZH-CN": "细节",
+    "ZH-TW": "細節"
   },
   "downloaded_cli_terminal": {
     "EN": "-> Downloaded ",
@@ -358,7 +454,7 @@
     "DA": "-> Downloadet",
     "DE": "-> Heruntergeladen",
     "EL": "-> Λήψη",
-    "ES": "-> Descargado ",
+    "ES": "-> Descargado",
     "FI": "-> Ladattu",
     "FR": "-> Téléchargé",
     "HU": "-> Letöltve",
@@ -370,8 +466,14 @@
     "RO": "-> Descărcat",
     "RU": "-> Скачано",
     "SV": "-> Nedladdad",
-    "TR": "-> Yüklendi ",
-    "UK": "-> Завантажено"
+    "TR": "-> Yüklendi",
+    "UK": "-> Завантажено",
+    "JA": "-> ダウンロード済み",
+    "KO": "-> 다운로드됨",
+    "TH": "-> ดาวน์โหลดแล้ว",
+    "VI": "-> Đã tải xuống",
+    "ZH-CN": "-> 已下载",
+    "ZH-TW": "-> 已下載"
   },
   "downloading_cli_terminal": {
     "EN": "-> Downloading Source2Viewer-CLI...",
@@ -393,7 +495,13 @@
     "RU": "-> Скачивание Source2Viewer-CLI...",
     "SV": "-> Laddar ner Source2Viewer-CLI...",
     "TR": "-> Source2Viewer-CLI yükleniyor...",
-    "UK": "-> Завантаження Source2Viewer-CLI..."
+    "UK": "-> Завантаження Source2Viewer-CLI...",
+    "JA": "-> Source2Viewer-CLIをダウンロードしています...",
+    "KO": "-> Source2Viewer-CLI 다운로드 중...",
+    "TH": "-> กำลังดาวน์โหลด Source2Viewer-CLI...",
+    "VI": "-> Đang tải xuống Source2Viewer-CLI...",
+    "ZH-CN": "-> 正在下载 Source2Viewer-CLI...",
+    "ZH-TW": "-> 正在下載 Source2Viewer-CLI..."
   },
   "downloading_ripgrep_terminal": {
     "EN": "-> Downloading ripgrep...",
@@ -404,7 +512,7 @@
     "EL": "-> Λήψη του ripgrep...",
     "ES": "-> Descargando ripgrep...",
     "FI": "-> Ladataan ripgrepiä...",
-    "FR": "Téléchargement de ripgrep...",
+    "FR": "-> Téléchargement de ripgrep...",
     "HU": "-> Ripgrep letöltése...",
     "IT": "-> Scaricamento ripgrep...",
     "NL": "-> Ripgrep downloaden...",
@@ -415,7 +523,13 @@
     "RU": "-> Загрузка ripgrep...",
     "SV": "-> Laddar ner ripgrep...",
     "TR": "-> ripgrep indiriliyor...",
-    "UK": "-> Завантаження ripgrep..."
+    "UK": "-> Завантаження ripgrep...",
+    "JA": "-> ripgrepをダウンロード中...",
+    "KO": "-> ripgrep 다운로드 중...",
+    "TH": "-> กำลังดาวน์โหลด ripgrep...",
+    "VI": "-> Đang tải xuống ripgrep...",
+    "ZH-CN": "-> 正在下载 ripgrep...",
+    "ZH-TW": "-> 正在下載 ripgrep..."
   },
   "error_no_workshop_tools_found_terminal": {
     "EN": "Some mods have been disabled because have Workshop Tools aren't installed.",
@@ -437,7 +551,13 @@
     "RU": "Некоторые моды недоступны, так как не установлены Workshop Tools.",
     "SV": "Vissa moddar har inaktiverats eftersom verkstadsverktygen inte är installerade.",
     "TR": "Atölye araçları yüklü olmadığı için bazı modlar kullanılamıyor.",
-    "UK": "Деякі моди були вимкнені, оскільки для них не встановлені інструменти майстерні."
+    "UK": "Деякі моди були вимкнені, оскільки для них не встановлені інструменти майстерні.",
+    "JA": "Workshop Toolsがインストールされていないため、一部のMODが無効になっています.",
+    "KO": "일부 모드는 워크샵 도구가 설치되어 있지 않아 사용이 중지되었습니다.",
+    "TH": "ม็อดบางตัวถูกปิดใช้งานเนื่องจากไม่ได้ติดตั้ง Workshop Tools",
+    "VI": "Một số bản mod đã bị vô hiệu hóa vì chưa cài đặt Workshop Tools.",
+    "ZH-CN": "部分模组已被禁用,因为未安装 Workshop Tools.",
+    "ZH-TW": "部分模組已停用,因為未安裝 Workshop Tools."
   },
   "error_please_close_dota_terminal": {
     "EN": "Error: Please close Dota 2 and restart Minify.",
@@ -459,7 +579,13 @@
     "RU": "Ошибка: Пожалуйста, закройте Dota 2 и перезапустите Minify.",
     "SV": "Fel: Stäng Dota 2 och starta om Minify.",
     "TR": "Hata: Lütfen Dota 2'yi kapatın ve Minify'ı yeniden başlatın.",
-    "UK": "Помилка: Будь ласка, закрийте Dota 2 та перезапустіть Minify."
+    "UK": "Помилка: Будь ласка, закрийте Dota 2 та перезапустіть Minify.",
+    "JA": "エラー:Dota 2を終了してMinifyを再起動してください.",
+    "KO": "오류: Dota 2를 종료하고 Minify를 다시 시작하십시오.",
+    "TH": "ข้อผิดพลาด: กรุณาปิด Dota 2 แล้วเริ่ม Minify ใหม่",
+    "VI": "Lỗi: Vui lòng đóng Dota 2 và khởi động lại Minify.",
+    "ZH-CN": "错误:请关闭 Dota 2 并重新启动 Minify.",
+    "ZH-TW": "錯誤:請關閉 Dota 2 並重新啟動 Minify."
   },
   "extracted_cli_terminal": {
     "EN": "-> Extracted {}",
@@ -481,7 +607,13 @@
     "RU": "-> Распаковка завершена {}",
     "SV": "-> Extraherad {}",
     "TR": "-> Çıkartıldı {}",
-    "UK": "-> Витягнуто {}"
+    "UK": "-> Витягнуто {}",
+    "JA": "-> 抽出された {}",
+    "KO": "-> 추출됨 {}",
+    "TH": "-> แยกออกมาแล้ว {}",
+    "VI": "-> Đã trích xuất {}",
+    "ZH-CN": "-> 已提取 {}",
+    "ZH-TW": "-> 已擷取 {}"
   },
   "extracted": {
     "EN": "Workshop tools have been extracted!",
@@ -503,7 +635,13 @@
     "RU": "Workshop tools извлечены!",
     "SV": "Verkstadsverktygen har tagits fram!",
     "TR": "Atölye araçları çekildi!",
-    "UK": "Інструменти майстерні витягнуті!"
+    "UK": "Інструменти майстерні витягнуті!",
+    "JA": "作業場の工具が運び出されました!",
+    "KO": "작업 도구들이 추출되었습니다!",
+    "TH": "เครื่องมือช่างได้ถูกดึงออกมาแล้ว!",
+    "VI": "Các công cụ trong xưởng đã được trích xuất!",
+    "ZH-CN": "工作坊工具已取出!",
+    "ZH-TW": "工作坊工具已取出!"
   },
   "extracting_terminal": {
     "EN": "   Extracting: {}",
@@ -525,7 +663,13 @@
     "RU": "   Извлечение: {}",
     "SV": "   Extraherar: {}",
     "TR": "   Çıkartılıyor: {}",
-    "UK": "   Видобування: {}"
+    "UK": "   Видобування: {}",
+    "JA": "   抽出中: {}",
+    "KO": "   추출 중: {}",
+    "TH": "   กำลังดึงข้อมูล: {}",
+    "VI": "   Đang trích xuất: {}",
+    "ZH-CN": "   提取:{}",
+    "ZH-TW": "   提取:{}"
   },
   "extraction_of_failed": {
     "EN": "Unable to extract {}, path or file does not exist!",
@@ -547,7 +691,13 @@
     "RU": "Невозможно извлечь {}, пути или файла не существует!",
     "SV": "Det gick inte att extrahera {}, sökvägen eller filen finns inte!",
     "TR": "{} çekilemedi, dizin veya dosya bulunamadı!",
-    "UK": "Не вдалося видобути {}, шлях або файл не існує!"
+    "UK": "Не вдалося видобути {}, шлях або файл не існує!",
+    "JA": "{} を抽出できません.パスまたはファイルが存在しません.",
+    "KO": "{}를 추출할 수 없습니다. 경로 또는 파일이 존재하지 않습니다!",
+    "TH": "ไม่สามารถแยกไฟล์ {} ได้ เนื่องจากเส้นทางหรือไฟล์นั้นไม่มีอยู่จริง!",
+    "VI": "Không thể giải nén {}, đường dẫn hoặc tệp không tồn tại!",
+    "ZH-CN": "无法提取 {},路径或文件不存在!",
+    "ZH-TW": "無法提取 {},路徑或檔案不存在!"
   },
   "failed_download_retrying_terminal": {
     "EN": "Failed to download, retrying.",
@@ -569,29 +719,41 @@
     "RU": "Не удалось загрузить, повторная попытка.",
     "SV": "Misslyckades med nedladdningen, försöker igen.",
     "TR": "İndirme başarısız oldu, tekrar deneniyor.",
-    "UK": "Не вдалося завантажити, повторна спроба."
+    "UK": "Не вдалося завантажити, повторна спроба.",
+    "JA": "ダウンロードに失敗しました.再試行します.",
+    "KO": "다운로드에 실패했습니다. 다시 시도합니다.",
+    "TH": "ดาวน์โหลดไม่สำเร็จ กำลังลองใหม่อีกครั้ง",
+    "VI": "Quá trình tải xuống thất bại, đang thử lại.",
+    "ZH-CN": "下载失败,正在重试.",
+    "ZH-TW": "下載失敗,正在重試."
   },
   "failed_download": {
     "EN": "Failed to download dependencies after {} retries. Please download `rg` or `Source2Viewer-CLI` manually.\nhttps://github.com/BurntSushi/ripgrep/releases\nhttps://github.com/ValveResourceFormat/ValveResourceFormat/releases",
     "BG": "Неуспешно изтегляне на зависимости след {} опита. Моля, изтеглете `rg` или `Source2Viewer-CLI` ръчно.\nhttps://github.com/BurntSushi/ripgrep/releases\nhttps://github.com/ValveResourceFormat/ValveResourceFormat/releases",
     "CS": "Stažení závislostí se nezdařilo po {} pokusech. Stáhněte si prosím ručně `rg` nebo `Source2Viewer-CLI`.\nhttps://github.com/BurntSushi/ripgrep/releases\nhttps://github.com/ValveResourceFormat/ValveResourceFormat/releases",
     "DA": "Kunne ikke downloade afhængigheder efter {} forsøg. Download venligst `rg` eller `Source2Viewer-CLI` manuelt.\nhttps://github.com/BurntSushi/ripgrep/releases\nhttps://github.com/ValveResourceFormat/ValveResourceFormat/releases",
-    "DE": "Die Abhängigkeiten konnten nach {} Versuchen nicht heruntergeladen werden. Bitte laden Sie `rg` oder `Source2Viewer-CLI` manuell herunter.\n\nhttps://github.com/BurntSushi/ripgrep/releases\nhttps://github.com/ValveResourceFormat/ValveResourceFormat/releases",
+    "DE": "Die Abhängigkeiten konnten nach {} Versuchen nicht heruntergeladen werden. Bitte laden Sie `rg` oder `Source2Viewer-CLI` manuell herunter.\nhttps://github.com/BurntSushi/ripgrep/releases\nhttps://github.com/ValveResourceFormat/ValveResourceFormat/releases",
     "EL": "Αποτυχία λήψης εξαρτήσεων μετά από {} επαναλήψεις. Παρακαλώ κατεβάστε το `rg` ή το `Source2Viewer-CLI` χειροκίνητα.\nhttps://github.com/BurntSushi/ripgrep/releases\nhttps://github.com/ValveResourceFormat/ValveResourceFormat/releases",
     "ES": "No se pudieron descargar las dependencias después de {} intentos. Descargue `rg` o `Source2Viewer-CLI` manualmente.\nhttps://github.com/BurntSushi/ripgrep/releases\nhttps://github.com/ValveResourceFormat/ValveResourceFormat/releases",
     "FI": "Riippuvuuksien lataus epäonnistui {} uudelleenyrityksen jälkeen. Lataa `rg` tai `Source2Viewer-CLI` manuaalisesti.\nhttps://github.com/BurntSushi/ripgrep/releases\nhttps://github.com/ValveResourceFormat/ValveResourceFormat/releases",
-    "FR": "Échec du téléchargement des dépendances après {} tentatives. Veuillez télécharger `rg` ou `Source2Viewer-CLI` manuellement.\n\nhttps://github.com/BurntSushi/ripgrep/releases\nhttps://github.com/ValveResourceFormat/ValveResourceFormat/releases",
-    "HU": "{} újrapróbálkozás után nem sikerült letölteni a függőségeket. Kérjük, töltse le manuálisan az `rg` vagy a `Source2Viewer-CLI` fájlt.\n\nhttps://github.com/BurntSushi/ripgrep/releases\nhttps://github.com/ValveResourceFormat/ValveResourceFormat/releases",
+    "FR": "Échec du téléchargement des dépendances après {} tentatives. Veuillez télécharger `rg` ou `Source2Viewer-CLI` manuellement.\nhttps://github.com/BurntSushi/ripgrep/releases\nhttps://github.com/ValveResourceFormat/ValveResourceFormat/releases",
+    "HU": "{} újrapróbálkozás után nem sikerült letölteni a függőségeket. Kérjük, töltse le manuálisan az `rg` vagy a `Source2Viewer-CLI` fájlt.\nhttps://github.com/BurntSushi/ripgrep/releases\nhttps://github.com/ValveResourceFormat/ValveResourceFormat/releases",
     "IT": "Impossibile scaricare le dipendenze dopo {} tentativi. Scaricare `rg` o `Source2Viewer-CLI` manualmente.\nhttps://github.com/BurntSushi/ripgrep/releases\nhttps://github.com/ValveResourceFormat/ValveResourceFormat/releases",
-    "NL": "Het downloaden van de afhankelijkheden is na {} pogingen mislukt. Download `rg` of `Source2Viewer-CLI` handmatig.\n\nhttps://github.com/BurntSushi/ripgrep/releases\nhttps://github.com/ValveResourceFormat/ValveResourceFormat/releases",
+    "NL": "Het downloaden van de afhankelijkheden is na {} pogingen mislukt. Download `rg` of `Source2Viewer-CLI` handmatig.\nhttps://github.com/BurntSushi/ripgrep/releases\nhttps://github.com/ValveResourceFormat/ValveResourceFormat/releases",
     "NO": "Klarte ikke å laste ned avhengigheter etter {} nye forsøk. Last ned `rg` eller `Source2Viewer-CLI` manuelt.\nhttps://github.com/BurntSushi/ripgrep/releases\nhttps://github.com/ValveResourceFormat/ValveResourceFormat/releases",
-    "PT": "Falha ao baixar as dependências após {} tentativas. Faça o download de `rg` ou `Source2Viewer-CLI` manualmente.\n\nhttps://github.com/BurntSushi/ripgrep/releases\nhttps://github.com/ValveResourceFormat/ValveResourceFormat/releases",
+    "PT": "Falha ao baixar as dependências após {} tentativas. Faça o download de `rg` ou `Source2Viewer-CLI` manualmente.\nhttps://github.com/BurntSushi/ripgrep/releases\nhttps://github.com/ValveResourceFormat/ValveResourceFormat/releases",
     "RO": "Descărcarea dependențelor nu a reușit după {} reîncercări. Vă rugăm să descărcați manual `rg` sau `Source2Viewer-CLI`.\nhttps://github.com/BurntSushi/ripgrep/releases\nhttps://github.com/ValveResourceFormat/ValveResourceFormat/releases",
-    "RU": "Не удалось загрузить зависимости после {} повторных попыток. Пожалуйста, загрузите `rg` или `Source2Viewer-CLI` вручную.\n\nhttps://github.com/BurntSushi/ripgrep/releases\nhttps://github.com/ValveResourceFormat/ValveResourceFormat/releases",
+    "RU": "Не удалось загрузить зависимости после {} повторных попыток. Пожалуйста, загрузите `rg` или `Source2Viewer-CLI` вручную.\nhttps://github.com/BurntSushi/ripgrep/releases\nhttps://github.com/ValveResourceFormat/ValveResourceFormat/releases",
     "SV": "Misslyckades med att ladda ner beroenden efter {} försök. Ladda ner `rg` eller `Source2Viewer-CLI` manuellt.\nhttps://github.com/BurntSushi/ripgrep/releases\nhttps://github.com/ValveResourceFormat/ValveResourceFormat/releases",
-    "TR": "{} deneme sonrasında bağımlılıklar indirilemedi. Lütfen `rg` veya `Source2Viewer-CLI`'yi manuel olarak indirin.\n\nhttps://github.com/BurntSushi/ripgrep/releases\nhttps://github.com/ValveResourceFormat/ValveResourceFormat/releases",
+    "TR": "{} deneme sonrasında bağımlılıklar indirilemedi. Lütfen `rg` veya `Source2Viewer-CLI`'yi manuel olarak indirin.\nhttps://github.com/BurntSushi/ripgrep/releases\nhttps://github.com/ValveResourceFormat/ValveResourceFormat/releases",
     "UK": "Не вдалося завантажити залежності після {} спроб. Будь ласка, завантажте `rg` або `Source2Viewer-CLI` вручну.\nhttps://github.com/BurntSushi/ripgrep/releases\nhttps://github.com/ValveResourceFormat/ValveResourceFormat/releases",
-    "PL": "Nie udało się pobrać zależności po {} próbach. Pobierz ręcznie `rg` lub `Source2Viewer-CLI`.\nhttps://github.com/BurntSushi/ripgrep/releases\nhttps://github.com/ValveResourceFormat/ValveResourceFormat/releases"
+    "PL": "Nie udało się pobrać zależności po {} próbach. Pobierz ręcznie `rg` lub `Source2Viewer-CLI`.\nhttps://github.com/BurntSushi/ripgrep/releases\nhttps://github.com/ValveResourceFormat/ValveResourceFormat/releases",
+    "JA": "{}回の再試行後も依存関係のダウンロードに失敗しました.`rg`または`Source2Viewer-CLI`を手動でダウンロードしてください.\nhttps://github.com/BurntSushi/ripgrep/releases\nhttps://github.com/ValveResourceFormat/ValveResourceFormat/releases",
+    "KO": "{}번 재시도 후에도 종속성 다운로드에 실패했습니다. `rg` 또는 `Source2Viewer-CLI`를 수동으로 다운로드하십시오.\nhttps://github.com/BurntSushi/ripgrep/releases\nhttps://github.com/ValveResourceFormat/ValveResourceFormat/releases",
+    "TH": "ไม่สามารถดาวน์โหลดส่วนประกอบที่จำเป็นได้หลังจากลองใหม่ {} ครั้ง โปรดดาวน์โหลด `rg` หรือ `Source2Viewer-CLI` ด้วยตนเอง\nhttps://github.com/BurntSushi/ripgrep/releases\nhttps://github.com/ValveResourceFormat/ValveResourceFormat/releases",
+    "VI": "Không thể tải xuống các thư viện phụ thuộc sau {} lần thử lại. Vui lòng tải xuống `rg` hoặc `Source2Viewer-CLI` theo cách thủ công.\nhttps://github.com/BurntSushi/ripgrep/releases\nhttps://github.com/ValveResourceFormat/ValveResourceFormat/releases",
+    "ZH-CN": "尝试 {} 次后仍无法下载依赖项.请手动下载 `rg` 或 `Source2Viewer-CLI`.\nhttps://github.com/BurntSushi/ripgrep/releases\nhttps://github.com/ValveResourceFormat/ValveResourceFormat/releases",
+    "ZH-TW": "嘗試 {} 次後仍無法下載依賴項.請手動下載 `rg` 或 `Source2Viewer-CLI`.\nhttps://github.com/BurntSushi/ripgrep/releases\nhttps://github.com/ValveResourceFormat/ValveResourceFormat/releases"
   },
   "failed_merge": {
     "EN": "   Failed to merge {}",
@@ -613,7 +775,13 @@
     "RU": "   Не удалось объединить {}",
     "SV": "   Misslyckades med att sammanfoga {}",
     "TR": "   {} birleştirilemedi",
-    "UK": "   Не вдалося об'єднати {}"
+    "UK": "   Не вдалося об'єднати {}",
+    "JA": "   マージに失敗しました {}",
+    "KO": "   {} 병합에 실패했습니다.",
+    "TH": "   ไม่สามารถผสานได้ {}",
+    "VI": "   Không thể hợp nhất {}",
+    "ZH-CN": "   合并失败 {}",
+    "ZH-TW": "   合併失敗 {}"
   },
   "failure_terminal": {
     "EN": "Patching failed!",
@@ -635,7 +803,13 @@
     "RU": "Ошибка при установке патча!",
     "SV": "Patchningen misslyckades!",
     "TR": "Yama başarısız!",
-    "UK": "Не вдалося встановити патч!"
+    "UK": "Не вдалося встановити патч!",
+    "JA": "パッチ適用に失敗しました!",
+    "KO": "패치에 실패했습니다!",
+    "TH": "การแก้ไขล้มเหลว!",
+    "VI": "Quá trình vá lỗi thất bại!",
+    "ZH-CN": "补丁安装失败!",
+    "ZH-TW": "補丁安裝失敗!"
   },
   "installing_terminal": {
     "EN": "-> Installing {}",
@@ -657,7 +831,13 @@
     "RU": "-> Установка {}",
     "SV": "-> Installera {}",
     "TR": "-> Yükleniyor {}",
-    "UK": "-> Встановлення {}"
+    "UK": "-> Встановлення {}",
+    "JA": "-> {} をインストールしています",
+    "KO": "-> {} 설치 중",
+    "TH": "-> กำลังติดตั้ง {}",
+    "VI": "-> Đang cài đặt {}",
+    "ZH-CN": "-> 正在安装 {}",
+    "ZH-TW": "-> 正在安裝 {}"
   },
   "language_select": {
     "EN": "Language:",
@@ -679,7 +859,13 @@
     "RU": "Язык:",
     "SV": "Språk:",
     "TR": "Dil:",
-    "UK": "Мова:"
+    "UK": "Мова:",
+    "JA": "言語:",
+    "KO": "언어:",
+    "TH": "ภาษา:",
+    "VI": "Ngôn ngữ:",
+    "ZH-CN": "语言:",
+    "ZH-TW": "語言:"
   },
   "launch_option": {
     "EN": "Remember to add '-language {}' to Dota 2 launch options",
@@ -701,7 +887,13 @@
     "RU": "Не забудьте добавить '-language {}' в параметры запуска Dota 2",
     "SV": "Kom ihåg att lägga till '-language {}' i Dota 2:s startalternativ",
     "TR": "Dota2 komutlarına '-language {}' eklemeyi unutmayın",
-    "UK": "Не забудьте додати '-language {}' до параметрів запуску Dota 2"
+    "UK": "Не забудьте додати '-language {}' до параметрів запуску Dota 2",
+    "JA": "Dota 2の起動オプションに「-language {}」を追加することを忘れないでください.",
+    "KO": "Dota 2 실행 옵션에 '-language {}'를 추가하는 것을 잊지 마세요.",
+    "TH": "อย่าลืมเพิ่ม '-language {}' ในตัวเลือกการเปิดเกม Dota 2",
+    "VI": "Hãy nhớ thêm '-language {}' vào tùy chọn khởi chạy Dota 2.",
+    "ZH-CN": "请记住在 Dota 2 启动选项中添加“-language {}”参数.",
+    "ZH-TW": "請記得在 Dota 2 啟動選項中加入「-language {}」參數."
   },
   "merged_mod": {
     "EN": "   Merged {}",
@@ -723,7 +915,13 @@
     "RU": "   Объединено {}",
     "SV": "   Sammanfogad {}",
     "TR": "   Birleştirilmiş {}",
-    "UK": "   Об'єднано {}"
+    "UK": "   Об'єднано {}",
+    "JA": "   マージ済み {}",
+    "KO": "   병합됨 {}",
+    "TH": "   รวมแล้ว {}",
+    "VI": "   Đã hợp nhất {}",
+    "ZH-CN": "   合并 {}",
+    "ZH-TW": "   合併 {}"
   },
   "merging_vpks": {
     "EN": "-> Merging VPKs...",
@@ -745,7 +943,13 @@
     "RU": "-> Объединение VPK...",
     "SV": "-> Sammanfogar VPK:er...",
     "TR": "-> VPK'lar birleştiriliyor...",
-    "UK": "-> Об'єднання VPK..."
+    "UK": "-> Об'єднання VPK...",
+    "JA": "-> VPKをマージしています...",
+    "KO": "-> VPK 병합 중...",
+    "TH": "-> กำลังรวมไฟล์ VPK...",
+    "VI": "-> Hợp nhất các VPK...",
+    "ZH-CN": "-> 正在合并 VPK 文件...",
+    "ZH-TW": "-> 正在合併 VPK 檔..."
   },
   "minify_encountered_errors_terminal": {
     "EN": "Minify encountered errors. Check Minify/logs/warnings.txt for details.",
@@ -767,7 +971,13 @@
     "RU": "Minify столкнулся с ошибками. Проверьте Minify/logs/warnings.txt для более детальной информации.",
     "SV": "Fel uppstod i Minify. Se Minify/logs/warnings.txt för mer information.",
     "TR": "Minify hatalarla karşılaştı. Ayrıntılar için Minify/logs/warnings.txt dosyasını kontrol edin.",
-    "UK": "Виявлені помилки під час мінімізації. Перегляньте файл Minify/logs/warnings.txt для отримання детальної інформації."
+    "UK": "Виявлені помилки під час мінімізації. Перегляньте файл Minify/logs/warnings.txt для отримання детальної інформації.",
+    "JA": "ミニファイ処理中にエラーが発生しました.詳細は Minify/logs/warnings.txt をご確認ください.",
+    "KO": "Minify 과정에서 오류가 발생했습니다. 자세한 내용은 Minify/logs/warnings.txt 파일을 확인하세요.",
+    "TH": "Minify พบข้อผิดพลาด โปรดตรวจสอบไฟล์ Minify/logs/warnings.txt สำหรับรายละเอียดเพิ่มเติม",
+    "VI": "Quá trình nén gặp lỗi. Vui lòng kiểm tra tệp Minify/logs/warnings.txt để biết chi tiết.",
+    "ZH-CN": "压缩过程中遇到错误.请查看 Minify/logs/warnings.txt 文件了解详情.",
+    "ZH-TW": "壓縮過程中遇到錯誤.請查看 Minify/logs/warnings.txt 檔案以了解詳情."
   },
   "mod_selection_window_var": {
     "EN": "Mod Selection Menu",
@@ -789,7 +999,13 @@
     "RU": "Меню выбора модов",
     "SV": "Modvalsmeny",
     "TR": "Mod Seçme Menüsü",
-    "UK": "Меню вибору модів"
+    "UK": "Меню вибору модів",
+    "JA": "モッド選択メニュー",
+    "KO": "모드 선택 메뉴",
+    "TH": "เมนูเลือกม็อด",
+    "VI": "Menu lựa chọn Mod",
+    "ZH-CN": "模组选择菜单",
+    "ZH-TW": "模組選擇選單"
   },
   "mods_removed_terminal": {
     "EN": "All Minify mods have been removed.",
@@ -811,7 +1027,13 @@
     "RU": "Все Minify моды были удалены.",
     "SV": "Alla Minify-moddar har tagits bort.",
     "TR": "Tüm Minify modları kaldırıldı.",
-    "UK": "Всі моди Minify були видалені."
+    "UK": "Всі моди Minify були видалені.",
+    "JA": "Minifyの改造ファイルは全て削除されました.",
+    "KO": "Minify 관련 모드가 모두 제거되었습니다.",
+    "TH": "ม็อด Minify ทั้งหมดถูกลบออกแล้ว",
+    "VI": "Tất cả các bản mod Minify đã bị xóa.",
+    "ZH-CN": "所有压缩插件均已移除.",
+    "ZH-TW": "所有壓縮插件均已移除."
   },
   "open_thing_fail": {
     "EN": "{} doesn't exist!",
@@ -833,7 +1055,13 @@
     "RU": "{} не существует!",
     "SV": "{} finns inte!",
     "TR": "{} yok!",
-    "UK": "{} не існує!"
+    "UK": "{} не існує!",
+    "JA": "{} は存在しません!",
+    "KO": "{}는 존재하지 않습니다!",
+    "TH": "{} ไม่มีอยู่จริง!",
+    "VI": "{} không tồn tại!",
+    "ZH-CN": "{} 不存在!",
+    "ZH-TW": "{} 不存在!"
   },
   "remove_mods_text_tag": {
     "EN": "Remove all mods?",
@@ -855,7 +1083,13 @@
     "RU": "Удалить все моды?",
     "SV": "Ta bort alla moddar?",
     "TR": "Bütün modları kaldırmak istediğine emin misin?",
-    "UK": "Видалити всі моди?"
+    "UK": "Видалити всі моди?",
+    "JA": "すべてのMODを削除しますか？",
+    "KO": "모든 모드를 제거하시겠습니까?",
+    "TH": "ลบม็อดทั้งหมดแล้วใช่ไหม?",
+    "VI": "Gỡ bỏ tất cả các bản mod?",
+    "ZH-CN": "移除所有模组？",
+    "ZH-TW": "移除所有模組？"
   },
   "replacing_terminal": {
     "EN": "   Replacing {} -> {}",
@@ -877,7 +1111,13 @@
     "RU": "   Замена {} -> {}",
     "SV": "   Ersätter {} -> {}",
     "TR": "   {} -> {} yerine",
-    "UK": "   Заміна {} -> {}"
+    "UK": "   Заміна {} -> {}",
+    "JA": "   {} -> {} を置き換えます",
+    "KO": "   {}를 {}로 교체",
+    "TH": "   แทนที่ {} -> {}",
+    "VI": "   Thay thế {} -> {}",
+    "ZH-CN": "   替换 {} -> {}",
+    "ZH-TW": "   替換 {} -> {}"
   },
   "script_execution": {
     "EN": "   Executing {} script on step \"{}\".",
@@ -899,7 +1139,13 @@
     "RU": "   Выполнение скрипта {} на шаге \"{}\".",
     "SV": "   Kör {}-skript i steg \"{}\".",
     "TR": "   \"{}\" adımında {} betiği çalıştırılıyor.",
-    "UK": "   Виконання скрипта {} на кроці \"{}\"."
+    "UK": "   Виконання скрипта {} на кроці \"{}\".",
+    "JA": "   ステップ「{}」で{}スクリプトを実行しています.",
+    "KO": "   단계 \"{}\"에서 {} 스크립트를 실행합니다.",
+    "TH": "   กำลังดำเนินการสคริปต์ {} ในขั้นตอน \"{}\"",
+    "VI": "   Đang thực thi tập lệnh {} ở bước \"{}\".",
+    "ZH-CN": "   在步骤“{}”上执行{}脚本.",
+    "ZH-TW": "   在步驟「{}」上執行{}腳本."
   },
   "script_no_main": {
     "EN": "   {} \"{}\" script has no main function!",
@@ -908,7 +1154,7 @@
     "DA": "   {} \"{}\"-scriptet har ingen hovedfunktion!",
     "DE": "   Das Skript {} \"{}\" hat keine Hauptfunktion!",
     "EL": "   Το {} σενάριο \"{}\" δεν έχει κύρια συνάρτηση!",
-    "ES": "   ¡El script \"{}\" no tiene función principal!",
+    "ES": "   ¡El script \"{}\" no tiene función principal! {}",
     "FI": "   {} \"{}\"-skriptillä ei ole pääfunktiota!",
     "FR": "   Le script {} \"{}\" n'a pas de fonction principale !",
     "HU": "   A {} „{}” szkriptnek nincs fő függvénye!",
@@ -921,7 +1167,13 @@
     "RU": "   {} Скрипт \"{}\" не имеет основной функции!",
     "SV": "   {} \"{}\"-skriptet har ingen huvudfunktion!",
     "TR": "   {} \"{}\" betiğinin ana fonksiyonu yoktur!",
-    "UK": "   Скрипт {} \"{}\" не має основної функції!"
+    "UK": "   Скрипт {} \"{}\" не має основної функції!",
+    "JA": "   {} \"{}\" スクリプトにはメイン関数がありません!",
+    "KO": "   {} \"{}\" 스크립트에는 메인 함수가 없습니다!",
+    "TH": "   สคริปต์ {} \"{}\" ไม่มีฟังก์ชันหลัก!",
+    "VI": "   Tập lệnh {} \"{}\" không có hàm chính!",
+    "ZH-CN": "   {} \"{}\" 脚本没有主函数!",
+    "ZH-TW": "   {} \"{}\" 腳本沒有主函式!"
   },
   "script_success": {
     "EN": "   Successfully executed {} \"{}\" script.",
@@ -943,7 +1195,13 @@
     "RU": "   Успешно выполнен скрипт {} \"{}\".",
     "SV": "   Utförde skriptet {} \"{}\" framgångsrikt.",
     "TR": "   {} \"{}\" betiği başarıyla yürütüldü.",
-    "UK": "   Успішно виконано скрипт {} \"{}\"."
+    "UK": "   Успішно виконано скрипт {} \"{}\".",
+    "JA": "   {} \"{}\" スクリプトの実行に成功しました.",
+    "KO": "   {} \"{}\" 스크립트가 성공적으로 실행되었습니다.",
+    "TH": "   สคริปต์ {} \"{}\" ถูกเรียกใช้งานสำเร็จแล้ว",
+    "VI": "   Tập lệnh {} \"{}\" đã được thực thi thành công.",
+    "ZH-CN": "   脚本执行成功. {} {}",
+    "ZH-TW": "   腳本執行成功. {} {}"
   },
   "start_text_1_var": {
     "EN": "Want to contribute to the project's growth?",
@@ -965,7 +1223,13 @@
     "RU": "Хотите помочь проекту развиваться?",
     "SV": "Vill du bidra till projektets tillväxt?",
     "TR": "Projenin büyümesine katkıda bulunmak ister misiniz?",
-    "UK": "Хочете зробити свій внесок у розвиток проєкту?"
+    "UK": "Хочете зробити свій внесок у розвиток проєкту?",
+    "JA": "プロジェクトの成長に貢献したいですか？",
+    "KO": "프로젝트 성장에 기여하고 싶으신가요?",
+    "TH": "ต้องการสนับสนุนการเติบโตของโครงการหรือไม่?",
+    "VI": "Bạn muốn đóng góp vào sự phát triển của dự án?",
+    "ZH-CN": "想为项目的发展贡献一份力量吗？",
+    "ZH-TW": "想為專案的發展貢獻一份力量嗎？"
   },
   "start_text_2_var": {
     "EN": "-> Join our Discord or Telegram community!",
@@ -987,7 +1251,13 @@
     "SV": "-> Gå med i vår Discord- eller Telegram-community!",
     "TR": "-> Discord veya Telegram topluluğumuza katılın!",
     "UK": "-> Приєднуйтесь до нашої спільноти Discord або Telegram!",
-    "IT": "-> Unisciti alla nostra community su Discord o Telegram!"
+    "IT": "-> Unisciti alla nostra community su Discord o Telegram!",
+    "JA": "-> DiscordまたはTelegramコミュニティにご参加ください!",
+    "KO": "-> 저희 디스코드 또는 텔레그램 커뮤니티에 참여하세요!",
+    "TH": "-> เข้าร่วมชุมชน Discord หรือ Telegram ของเราได้เลย!",
+    "VI": "-> Tham gia cộng đồng Discord hoặc Telegram của chúng tôi!",
+    "ZH-CN": "-> 加入我们的Discord或Telegram社群!",
+    "ZH-TW": "-> 加入我們的Discord或Telegram社群!"
   },
   "start_text_3_var": {
     "EN": "-> Share Minify with your friends and online groups",
@@ -1009,7 +1279,13 @@
     "RU": "-> Делитесь Minify со своими друзьями и сообществами",
     "SV": "-> Dela Minify med dina vänner och onlinegrupper",
     "TR": "-> Minify'ı arkadaşlarınızla ve çevrimiçi gruplarınızla paylaşın",
-    "UK": "-> Поділіться Minify зі своїми друзями та онлайн-групами"
+    "UK": "-> Поділіться Minify зі своїми друзями та онлайн-групами",
+    "JA": "-> Minifyを友達やオンライングループと共有しましょう",
+    "KO": "-> Minify를 친구 및 온라인 그룹과 공유하세요.",
+    "TH": "-> แชร์ Minify กับเพื่อนๆ และกลุ่มออนไลน์ของคุณ",
+    "VI": "-> Chia sẻ Minify với bạn bè và các nhóm trực tuyến của bạn",
+    "ZH-CN": "-> 与您的朋友和在线群组分享 Minify",
+    "ZH-TW": "-> 與您的朋友和線上群組分享 Minify"
   },
   "start_text_4_var": {
     "EN": "-> Star the project on GitHub",
@@ -1031,7 +1307,13 @@
     "RU": "-> Ставьте звездочку проекту на GitHub",
     "SV": "-> Stjärnmärk projektet på GitHub",
     "TR": "-> Projeyi GitHub'da yıldızlayın",
-    "UK": "-> Позначити проєкт зірочкою на GitHub"
+    "UK": "-> Позначити проєкт зірочкою на GitHub",
+    "JA": "-> GitHubでプロジェクトにスターを付けてください",
+    "KO": "-> GitHub에서 프로젝트에 별표를 눌러주세요",
+    "TH": "-> กดติดดาวให้กับโปรเจ็กต์บน GitHub",
+    "VI": "-> Đánh dấu sao dự án trên GitHub",
+    "ZH-CN": "-> 在 GitHub 上给项目加星标",
+    "ZH-TW": "-> 在 GitHub 上為專案加星標"
   },
   "start_text_5_var": {
     "EN": "-> Create and maintain mods for this project",
@@ -1053,7 +1335,13 @@
     "RU": "-> Создавайте и поддерживайте моды для этого проекта",
     "SV": "-> Skapa och underhåll moddar för detta projekt",
     "TR": "-> Bu proje için modlar oluşturun ve bakımını üstlenin",
-    "UK": "-> Створити та підтримувати моди для цього проєкту"
+    "UK": "-> Створити та підтримувати моди для цього проєкту",
+    "JA": "-> このプロジェクトのMODを作成および維持する",
+    "KO": "-> 이 프로젝트를 위한 모드를 제작하고 유지 관리합니다.",
+    "TH": "-> สร้างและดูแลรักษา mod สำหรับโปรเจกต์นี้",
+    "VI": "-> Tạo và duy trì các bản mod cho dự án này",
+    "ZH-CN": "-> 为本项目创建和维护模组",
+    "ZH-TW": "-> 為本專案建立和維護模組"
   },
   "starting_extraction": {
     "EN": "-> Beginning to extract CSS files",
@@ -1075,7 +1363,13 @@
     "RU": "-> Начинается извлечение CSS-файлов",
     "SV": "-> Börjar extrahera CSS-filer",
     "TR": "-> CSS dosyalarını çıkarmaya başlıyoruz",
-    "UK": "-> Початок вилучення CSS-файлів"
+    "UK": "-> Початок вилучення CSS-файлів",
+    "JA": "-> CSSファイルの抽出を開始します",
+    "KO": "-> CSS 파일 추출 시작",
+    "TH": "-> เริ่มต้นการแยกไฟล์ CSS",
+    "VI": "-> Bắt đầu trích xuất các tệp CSS",
+    "ZH-CN": "-> 开始提取 CSS 文件",
+    "ZH-TW": "-> 開始提取 CSS 文件"
   },
   "success_merged_vpk": {
     "EN": "-> Created merged vpk",
@@ -1097,7 +1391,13 @@
     "RU": "-> Создан объединенный vpk",
     "SV": "-> Skapade sammanslagna vpk",
     "TR": "-> Birleştirilmiş vpk oluşturuldu",
-    "UK": "-> Створено об'єднаний vpk"
+    "UK": "-> Створено об'єднаний vpk",
+    "JA": "-> マージされたvpkを作成しました",
+    "KO": "-> 병합된 vpk 파일 생성됨",
+    "TH": "-> สร้างไฟล์ vpk ที่รวมกันแล้ว",
+    "VI": "-> Đã tạo tệp vpk hợp nhất",
+    "ZH-CN": "-> 创建合并的 vpk",
+    "ZH-TW": "-> 建立合併的 vpk"
   },
   "success_terminal": {
     "EN": "Patch was successful!",
@@ -1119,7 +1419,13 @@
     "RU": "Патч установлен успешно!",
     "SV": "Patchen lyckades!",
     "TR": "Yama başarılı!",
-    "UK": "Патч успішно встановлено!"
+    "UK": "Патч успішно встановлено!",
+    "JA": "パッチ適用に成功しました!",
+    "KO": "패치가 성공적이었습니다!",
+    "TH": "การแก้ไขสำเร็จแล้ว!",
+    "VI": "Quá trình vá lỗi đã thành công!",
+    "ZH-CN": "补丁成功了!",
+    "ZH-TW": "補丁成功了!"
   },
   "checking_launch_options": {
     "EN": "-> Checking language parameters",
@@ -1141,7 +1447,13 @@
     "RU": "-> Проверка языковых параметров",
     "SV": "-> Kontrollerar språkparametrar",
     "TR": "-> Dil parametrelerinin kontrol edilmesi",
-    "UK": "-> Перевірка мовних параметрів"
+    "UK": "-> Перевірка мовних параметрів",
+    "JA": "-> 言語パラメータの確認",
+    "KO": "-> 언어 매개변수 확인 중",
+    "TH": "-> ตรวจสอบพารามิเตอร์ภาษา",
+    "VI": "-> Kiểm tra các tham số ngôn ngữ",
+    "ZH-CN": "-> 检查语言参数",
+    "ZH-TW": "-> 檢查語言參數"
   },
   "discrepancy_launch_options": {
     "EN": "   Discrepancy detected for the current user, switching parameters...\n   {} -> {}",
@@ -1163,7 +1475,13 @@
     "RU": "   Обнаружено несоответствие для текущего пользователя, происходит переключение параметров...\n   {} -> {}",
     "SV": "   Avvikelse upptäckt för den aktuella användaren, parameterbyte...\n   {} -> {}",
     "TR": "   Mevcut kullanıcı için tutarsızlık tespit edildi, parametreler değiştiriliyor...\n   {} -> {}",
-    "UK": "   Виявлено розбіжність для поточного користувача, перемикання параметрів...\n   {} -> {}"
+    "UK": "   Виявлено розбіжність для поточного користувача, перемикання параметрів...\n   {} -> {}",
+    "JA": "   現在のユーザーに不一致が検出されました.パラメータを切り替えます...\n   {} -> {}",
+    "KO": "   현재 사용자에 대해 불일치가 감지되었습니다. 매개변수를 변경합니다...\n   {} -> {}",
+    "TH": "   ตรวจพบความผิดปกติสำหรับผู้ใช้ปัจจุบัน กำลังเปลี่ยนพารามิเตอร์...\n   {} -> {}",
+    "VI": "   Đã phát hiện sự không nhất quán đối với người dùng hiện tại, đang chuyển đổi tham số...\n   {} -> {}",
+    "ZH-CN": "   检测到当前用户存在差异,正在切换参数……\n   {} -> {}",
+    "ZH-TW": "   偵測到目前使用者有差異,正在切換參數…\n   {} -> {}"
   },
   "waiting_steam_to_close": {
     "EN": "   Waiting for steam to close...",
@@ -1185,29 +1503,41 @@
     "RU": "   Ожидание закрытия steam...",
     "SV": "   Väntar på att steam ska stängas...",
     "TR": "   steam'in kapanmasını bekliyorum...",
-    "UK": "   Очікування закриття steam..."
+    "UK": "   Очікування закриття steam...",
+    "JA": "   蒸気が閉じるのを待っています...",
+    "KO": "   스팀이 닫히기를 기다리는 중...",
+    "TH": "   กำลังรอให้ระบบไอน้ำปิด...",
+    "VI": "   Đang chờ hệ thống hơi nước đóng lại...",
+    "ZH-CN": "   等待蒸汽机关闭……",
+    "ZH-TW": "   等待蒸汽機關閉…"
   },
   "failed_steam_close": {
     "EN": "  Failed to wait for Steam to close after {} retries, please close it manually.",
-    "BG": "Неуспешно изчакване Steam да се затвори след {} опита. Моля, затворете го ръчно.",
-    "CS": "Po {} pokusech se nepodařilo čekat na zavření služby Steam, zavřete ji prosím ručně.",
-    "DE": "Steam konnte nach {} Wiederholungsversuchen nicht beendet werden. Bitte beenden Sie es manuell.",
-    "ES": "No se pudo esperar a que Steam se cerrara después de {} intentos, ciérrelo manualmente.",
-    "FR": "Impossible d'attendre la fermeture de Steam après {} tentatives, veuillez le fermer manuellement.",
-    "HU": "Nem sikerült megvárni a Steam bezárását {} újrapróbálkozás után, kérlek, zárd be manuálisan.",
-    "IT": "Impossibile attendere la chiusura di Steam dopo {} tentativi, chiuderlo manualmente.",
-    "NL": "Het is niet gelukt om Steam na {} pogingen te laten afsluiten. Sluit het programma handmatig af.",
-    "NO": "Kunne ikke vente på at Steam skulle lukkes etter {} nye forsøk. Lukk den manuelt.",
-    "PL": "Nie udało się poczekać na zamknięcie Steam po {} próbach. Zamknij go ręcznie.",
-    "PT": "Não foi possível aguardar o fechamento do Steam após {} tentativas. Por favor, feche-o manualmente.",
-    "RO": "Nu s-a putut aștepta închiderea Steam după {} reîncercări. Vă rugăm să îl închideți manual.",
-    "RU": "Не удалось дождаться закрытия Steam после {} повторных попыток, пожалуйста, закройте его вручную.",
-    "SV": "Kunde inte vänta på att Steam skulle stängas efter {} försök, vänligen stäng manuellt.",
-    "TR": "Steam'in kapanmasını beklemek {} denemeden sonra başarısız oldu, lütfen manuel olarak kapatın.",
-    "DA": "Kunne ikke vente på, at Steam lukkede efter {} forsøg. Luk venligst manuelt.",
-    "EL": "Αποτυχία αναμονής για κλείσιμο του Steam μετά από {} επαναλήψεις, κλείστε το χειροκίνητα.",
-    "FI": "Steamin sulkeutumisen odottaminen epäonnistui {} uudelleenyrityksen jälkeen. Sulje se manuaalisesti.",
-    "UK": "Не вдалося дочекатися закриття Steam після {} спроб. Закрийте його вручну."
+    "BG": "  Неуспешно изчакване Steam да се затвори след {} опита. Моля, затворете го ръчно.",
+    "CS": "  Po {} pokusech se nepodařilo čekat na zavření služby Steam, zavřete ji prosím ručně.",
+    "DE": "  Steam konnte nach {} Wiederholungsversuchen nicht beendet werden. Bitte beenden Sie es manuell.",
+    "ES": "  No se pudo esperar a que Steam se cerrara después de {} intentos, ciérrelo manualmente.",
+    "FR": "  Impossible d'attendre la fermeture de Steam après {} tentatives, veuillez le fermer manuellement.",
+    "HU": "  Nem sikerült megvárni a Steam bezárását {} újrapróbálkozás után, kérlek, zárd be manuálisan.",
+    "IT": "  Impossibile attendere la chiusura di Steam dopo {} tentativi, chiuderlo manualmente.",
+    "NL": "  Het is niet gelukt om Steam na {} pogingen te laten afsluiten. Sluit het programma handmatig af.",
+    "NO": "  Kunne ikke vente på at Steam skulle lukkes etter {} nye forsøk. Lukk den manuelt.",
+    "PL": "  Nie udało się poczekać na zamknięcie Steam po {} próbach. Zamknij go ręcznie.",
+    "PT": "  Não foi possível aguardar o fechamento do Steam após {} tentativas. Por favor, feche-o manualmente.",
+    "RO": "  Nu s-a putut aștepta închiderea Steam după {} reîncercări. Vă rugăm să îl închideți manual.",
+    "RU": "  Не удалось дождаться закрытия Steam после {} повторных попыток, пожалуйста, закройте его вручную.",
+    "SV": "  Kunde inte vänta på att Steam skulle stängas efter {} försök, vänligen stäng manuellt.",
+    "TR": "  Steam'in kapanmasını beklemek {} denemeden sonra başarısız oldu, lütfen manuel olarak kapatın.",
+    "DA": "  Kunne ikke vente på, at Steam lukkede efter {} forsøg. Luk venligst manuelt.",
+    "EL": "  Αποτυχία αναμονής για κλείσιμο του Steam μετά από {} επαναλήψεις, κλείστε το χειροκίνητα.",
+    "FI": "  Steamin sulkeutumisen odottaminen epäonnistui {} uudelleenyrityksen jälkeen. Sulje se manuaalisesti.",
+    "UK": "  Не вдалося дочекатися закриття Steam після {} спроб. Закрийте його вручну.",
+    "JA": "  {}回の再試行後もSteamの終了を待てませんでした.手動で終了してください.",
+    "KO": "  {}번의 재시도 후에도 Steam이 자동으로 종료되지 않았습니다. 수동으로 종료해 주세요.",
+    "TH": "  ไม่สามารถรอให้ Steam ปิดหลังจากลองใหม่ {} ครั้ง โปรดปิดด้วยตนเอง",
+    "VI": "  Không thể chờ Steam đóng sau {} lần thử lại, vui lòng đóng ứng dụng theo cách thủ công.",
+    "ZH-CN": "  尝试 {} 次后仍无法等待 Steam 关​​闭,请手动关闭.",
+    "ZH-TW": "  嘗試 {} 次後仍無法等待 Steam 關閉,請手動關閉."
   },
   "heeeeeeeeeeeeeelp": {
     "EN": "Debug zip created at\n{}\nPlease send it through the communication channels for us to fix the issue.",
@@ -1229,7 +1559,13 @@
     "RU": "Отладочный zip-архив создан в\n{}\nПожалуйста, отправьте его по каналам связи, чтобы мы могли исправить проблему.",
     "SV": "Felsökningszip-filen skapades på\n{}\nVänligen skicka den via kommunikationskanalerna så att vi kan åtgärda problemet.",
     "TR": "Hata ayıklama zip dosyası şu adreste oluşturuldu:\n{}\nLütfen sorunu çözebilmemiz için dosyayı iletişim kanalları aracılığıyla bize gönderin.",
-    "UK": "Налагоджdувальний zip-архів створено о\n{}\nБудь ласка, надішліть його через канали зв'язку, щоб ми могли виправити проблему."
+    "UK": "Налагоджdувальний zip-архів створено о\n{}\nБудь ласка, надішліть його через канали зв'язку, щоб ми могли виправити проблему.",
+    "JA": "デバッグ用zipファイルが作成されました.\n{}\n問題解決のため、このファイルを連絡チャネルを通じてお送りください.",
+    "KO": "디버그용 zip 파일이 다음 위치에 생성되었습니다.\n{}\n문제 해결을 위해 해당 파일을 연락 채널을 통해 보내주시기 바랍니다.",
+    "TH": "สร้างไฟล์ zip สำหรับแก้ไขข้อผิดพลาดแล้วที่\n{}\nโปรดส่งไฟล์ดังกล่าวผ่านช่องทางการติดต่อเพื่อให้เราแก้ไขปัญหา",
+    "VI": "Tệp zip gỡ lỗi được tạo tại\n{}\nVui lòng gửi tệp này qua các kênh liên lạc để chúng tôi khắc phục sự cố.",
+    "ZH-CN": "调试压缩包已创建于\n{}\n请通过沟通渠道发送给我们,以便我们修复问题.",
+    "ZH-TW": "調試壓縮包已建立於\n{}\n請透過溝通管道發送給我們,以便我們修復問題."
   },
   "refreshing_mod_list": {
     "EN": "Refreshing...",
@@ -1250,8 +1586,14 @@
     "RO": "Răcoritor...",
     "RU": "Освежающе...",
     "SV": "Uppfriskande...",
-    "TR": "Ferahlatıcı...",
-    "UK": "Освіжає..."
+    "TR": "Yenileniyor...",
+    "UK": "Освіжає...",
+    "JA": "爽快…",
+    "KO": "상쾌한...",
+    "TH": "สดชื่น...",
+    "VI": "Thật sảng khoái...",
+    "ZH-CN": "令人耳目一新……",
+    "ZH-TW": "令人耳目一新…"
   },
   "refreshed_mod_list": {
     "EN": "Refreshed the mod list!",
@@ -1273,19 +1615,12 @@
     "RU": "Список модов обновлен!",
     "SV": "Uppdaterade moddistan!",
     "TR": "Mod listesini güncellendi!",
-    "UK": "Оновлено список модів!"
-  },
-  "language_change_restart_warning": {
-    "EN": "You might need to restart the application for the font to change completely.",
-    "CS": "Pravděpodobně budete muset aplikaci restartovat, aby se písmo úplně změnilo.",
-    "DE": "Möglicherweise müssen Sie die Anwendung neu starten, damit sich die Schriftart vollständig ändert.",
-    "ES": "Es posible que debas reiniciar la aplicación para que la fuente cambie por completo.",
-    "FR": "Vous devrez peut-être redémarrer l'application pour que la police change complètement.",
-    "IT": "Potrebbe essere necessario riavviare l'applicazione affinché il carattere cambi completamente.",
-    "PL": "Może być konieczne ponowne uruchomienie aplikacji, aby czcionka zmieniła się całkowicie.",
-    "PT": "Poderá ter de reiniciar a aplicação para que o tipo de letra mude completamente.",
-    "RU": "Возможно, вам потребуется перезапустить приложение, чтобы шрифт полностью изменился.",
-    "TR": "Yazı tipinin tamamen değişmesi için uygulamayı yeniden başlatmanız gerekebilir.",
-    "UK": "Можливо, вам доведеться перезапустити програму, щоб шрифт повністю змінився."
+    "UK": "Оновлено список модів!",
+    "JA": "MODリストを更新しました!",
+    "KO": "모드 목록을 새로 고쳤습니다!",
+    "TH": "อัปเดตรายการม็อดแล้ว!",
+    "VI": "Đã cập nhật danh sách mod!",
+    "ZH-CN": "模组列表已刷新!",
+    "ZH-TW": "模組清單已刷新!"
   }
 }

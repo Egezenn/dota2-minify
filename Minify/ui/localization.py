@@ -102,10 +102,11 @@ def change(sender=None, app_data=None, user_data=None, init=False):
                 if dpg.get_item_alias(item).endswith("_button_show_details_tag"):
                     dpg.configure_item(item, label=details_label)
 
-    if init is False:
+    if not init:
         # User changed locale on the fly. Since DPG does not support hot-reloading main_font
         # nicely without a context rebuild, we will prompt the user to restart if they are switching
         # to/from a non-latin locale. (As the font won't render Chinese/Korean characters correctly).
-        from ui import terminal
+        from ui import modal_shared
 
-        terminal.add_text("&language_change_restart_warning", msg_type="warning")
+        warning_text = "You might need to restart the application for the font to change completely."
+        modal_shared.show("Warning", [warning_text], [{"label": "OK"}])

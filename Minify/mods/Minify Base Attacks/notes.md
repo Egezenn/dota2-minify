@@ -31,6 +31,12 @@ Csökkenti a távolsági hősök automatikus támadásai során keletkező rész
 <!-- LANG:IT -->
 Riduce le particelle sugli attacchi automatici degli eroi a distanza.
 
+<!-- LANG:JA -->
+遠距離攻撃を行うヒーローの通常攻撃時に発生するパーティクルを軽減します。
+
+<!-- LANG:KO -->
+원거리 영웅의 기본 공격 시 발생하는 입자 효과를 감소시킵니다.
+
 <!-- LANG:NL -->
 Vermindert deeltjes bij automatische aanvallen van afstandshelden.
 
@@ -52,8 +58,26 @@ Reduce particulele la atacurile automate ale eroilor la distanță.
 <!-- LANG:SV -->
 Minskar partiklar på autoattacker från distanshjältar.
 
+<!-- LANG:TH -->
+ลดจำนวนอนุภาคในการโจมตีปกติของฮีโร่ระยะไกล
+
 <!-- LANG:TR -->
 Menzilli kahramanların otomatik saldırılarındaki parçacıkları azaltır.
 
 <!-- LANG:UK -->
 Зменшує кількість частинок під час автоматичних атак героїв дальнього бою.
+
+<!-- LANG:VI -->
+Giảm sát thương dạng hạt trong các đòn tấn công thường của tướng đánh xa.
+
+<!-- LANG:ZH-CN -->
+减少远程英雄自动攻击时的粒子效果。
+
+<!-- LANG:ZH-TW -->
+減少遠程英雄自動攻擊時的粒子效果。
+
+<!-- LANG:ZH-CN -->
+减少远程英雄自动攻击时的粒子效果。
+
+<!-- LANG:ZH-TW -->
+減少遠程英雄自動攻擊時的粒子效果。

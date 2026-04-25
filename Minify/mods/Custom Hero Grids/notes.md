@@ -75,6 +75,20 @@ Disponibile per la visualizzazione all'indirizzo <https://egezenn.github.io/dota
 
 Puoi inserire il tuo file `hero_grid_config.json` nella cartella `config` della mod per utilizzarlo al posto della versione remota.
 
+<!-- LANG:JA -->
+リモートソースまたはローカル設定ファイルからカスタムヒーローグリッドを（既存の設定ファイルを壊すことなく）Dota 2のヒーローグリッド選択画面にインポートします。
+
+詳細は<https://egezenn.github.io/dota2-precompiled-grids>をご覧ください。
+
+リモートバージョンの代わりに独自の`hero_grid_config.json`ファイルをmodの`config`フォルダにドロップすることで、そちらを使用できます。
+
+<!-- LANG:KO -->
+원격 소스 또는 로컬 설정 파일에서 사용자 지정 영웅 그리드를 가져와 Dota 2 영웅 그리드 선택 화면에 추가할 수 있습니다(사용자 지정 그리드는 그대로 유지).
+
+<https://egezenn.github.io/dota2-precompiled-grids>에서 확인할 수 있습니다.
+
+원격 소스 버전 대신 사용자 지정 `hero_grid_config.json` 파일을 모드의 `config` 폴더에 넣으면 해당 파일을 사용할 수 있습니다.
+
 <!-- LANG:NL -->
 Importeert aangepaste heldenroosters (zonder je eigen rooster te beschadigen) vanuit een externe bron of een lokaal configuratiebestand naar je Dota 2-heldenrooster.
 
@@ -124,6 +138,13 @@ Tillgänglig för visning på <https://egezenn.github.io/dota2-precompiled-grids
 
 Du kan släppa din egen `hero_grid_config.json` i moddens `config`-mapp för att använda den istället för fjärrversionen.
 
+<!-- LANG:TH -->
+นำเข้าตารางฮีโร่แบบกำหนดเอง (โดยไม่ทำให้ตารางของคุณเสียหาย) จากแหล่งข้อมูลระยะไกลหรือไฟล์การกำหนดค่าในเครื่องลงในการเลือกตารางฮีโร่ Dota 2 ของคุณ
+
+สามารถดูได้ที่ <https://egezenn.github.io/dota2-precompiled-grids>
+
+คุณสามารถวางไฟล์ `hero_grid_config.json` ของคุณเองลงในโฟลเดอร์ `config` ของม็อดเพื่อใช้งานแทนเวอร์ชันจากแหล่งข้อมูลระยะไกลได้
+
 <!-- LANG:TR -->
 Özel kahraman ızgaralarını (kendi ızgaralarınızı bozmadan) uzak bir kaynaktan veya yerel bir yapılandırma dosyasından Dota 2 kahraman ızgarası seçiminize aktarır.
 
@@ -137,3 +158,38 @@ Uzak sürüm yerine kullanmak için kendi `hero_grid_config.json` dosyanızı mo
 Доступно для перегляду за адресою <https://egezenn.github.io/dota2-precompiled-grids>
 
 Ви можете перетягнути власний файл `hero_grid_config.json` у папку `config` мода, щоб використовувати його замість віддаленої версії.
+
+<!-- LANG:VI -->
+Công cụ này nhập các bảng chọn tướng tùy chỉnh (mà không làm hỏng bảng chọn của bạn) từ nguồn từ xa hoặc tệp cấu hình cục bộ vào bảng chọn tướng Dota 2 của bạn.
+
+Có thể xem tại <https://egezenn.github.io/dota2-precompiled-grids>
+
+Bạn có thể sao chép tệp `hero_grid_config.json` của riêng mình vào thư mục `config` của mod để sử dụng thay vì phiên bản từ xa.
+
+<!-- LANG:ZH-CN -->
+此插件可将自定义英雄网格（不会破坏您现有的网格）从远程源或本地配置文件导入到您的 Dota 2 英雄选择界面中。
+
+可在 <https://egezenn.github.io/dota2-precompiled-grids> 查看。
+
+您可以将自定义的 `hero_grid_config.json` 文件放入插件的 `config` 文件夹中，以替代远程版本。
+
+<!-- LANG:ZH-TW -->
+此外掛程式可將自訂英雄網格（不會破壞您現有的網格）從遠端來源或本機設定檔匯入到您的 Dota 2 英雄選擇介面中。
+
+可在 <https://egezenn.github.io/dota2-precompiled-grids> 檢視。
+
+您可以將自訂的 `hero_grid_config.json` 檔案放入外掛程式的 `config` 資料夾中，以取代遠端版本。
+
+<!-- LANG:ZH-CN -->
+此插件可将自定义英雄网格（不会破坏您现有的网格）从远程源或本地配置文件导入到您的 Dota 2 英雄选择界面中。
+
+可在 <https://egezenn.github.io/dota2-precompiled-grids> 查看。
+
+您可以将自定义的 `hero_grid_config.json` 文件放入插件的 `config` 文件夹中，以替代远程版本。
+
+<!-- LANG:ZH-TW -->
+此外掛程式可將自訂英雄網格（不會破壞您現有的網格）從遠端來源或本機設定檔匯入到您的 Dota 2 英雄選擇介面中。
+
+可在 <https://egezenn.github.io/dota2-precompiled-grids> 檢視。
+
+您可以將自訂的 `hero_grid_config.json` 檔案放入外掛程式的 `config` 資料夾中，以取代遠端版本。

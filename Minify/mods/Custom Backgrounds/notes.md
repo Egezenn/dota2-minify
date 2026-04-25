@@ -110,6 +110,26 @@ I formati seguenti verranno convertiti automaticamente se lo strumento è presen
 - `magick`: `.jpg`, `.jpeg`, `.webp` (convertito in `.png`)
 - `ffmpeg`: `.mp4` (convertito in `.webm`)
 
+<!-- LANG:JA -->
+ほとんどの背景画像を置き換えます。
+
+`config`フォルダに`background.<ext>`という名前の画像または動画ファイルをドロップしてください。デフォルトではDotaの画像が使用されます。
+
+以下の形式は、ツールが存在する場合、自動的に変換されます。
+
+- `magick`: `.jpg`、`.jpeg`、`.webp`（`.png`に変換されます）
+- `ffmpeg`: `.mp4`（`.webm`に変換されます）
+
+<!-- LANG:KO -->
+대부분의 배경 화면을 교체합니다.
+
+`background.<ext>`라는 이름의 이미지 또는 비디오 파일을 `config` 폴더에 넣으세요. 기본적으로 Dota의 배경 화면이 사용됩니다.
+
+아래 형식은 해당 도구가 설치되어 있는 경우 자동으로 변환됩니다.
+
+- `magick`: `.jpg`, `.jpeg`, `.webp` (`.png`로 변환)
+- `ffmpeg`: `.mp4` (`.webm`으로 변환)
+
 <!-- LANG:NL -->
 Vervangt de meeste achtergronden.
 
@@ -180,6 +200,16 @@ Formaten nedan konverteras automatiskt om verktyget finns:
 - `magick`: `.jpg`, `.jpeg`, `.webp` (konverterat till `.png`)
 - `ffmpeg`: `.mp4` (konverterat till `.webm`)
 
+<!-- LANG:TH -->
+แทนที่ภาพพื้นหลังส่วนใหญ่
+
+ลากและวางรูปภาพหรือวิดีโอชื่อ `background.<ext>` ลงในโฟลเดอร์ `config` โดยค่าเริ่มต้นจะใช้รูปภาพจาก Dota
+
+รูปแบบด้านล่างจะถูกแปลงโดยอัตโนมัติหากมีเครื่องมือดังกล่าวอยู่:
+
+- `magick`: `.jpg`, `.jpeg`, `.webp` (แปลงเป็น `.png`)
+- `ffmpeg`: `.mp4` (แปลงเป็น `.webm`)
+
 <!-- LANG:TR -->
 Çoğu arka planı değiştirir.
 
@@ -199,3 +229,57 @@ Aşağıdaki formatlar, araç mevcutsa otomatik olarak dönüştürülecektir:
 
 - `magick`: `.jpg`, `.jpeg`, `.webp` (конвертовано в `.png`)
 - `ffmpeg`: `.mp4` (конвертовано в `.webm`)
+
+<!-- LANG:VI -->
+Thay thế hầu hết các hình nền.
+
+Kéo thả một hình ảnh hoặc video có tên `background.<ext>` vào thư mục `config`. Theo mặc định, nó sử dụng hình ảnh từ Dota.
+
+Các định dạng bên dưới sẽ được tự động chuyển đổi nếu công cụ tồn tại:
+
+- `magick`: `.jpg`, `.jpeg`, `.webp` (được chuyển đổi thành `.png`)
+- `ffmpeg`: `.mp4` (được chuyển đổi thành `.webm`)
+
+<!-- LANG:ZH-CN -->
+替换大多数背景。
+
+将名为 `background.<ext>` 的图片或视频拖放到 `config` 文件夹中。默认情况下，它会使用 Dota 中的图片。
+
+如果存在相应的工具，以下格式将自动转换：
+
+- `magick`：`.jpg`、`.jpeg`、`.webp`（转换为 `.png`）
+
+- `ffmpeg`：`.mp4`（转换为 `.webm`）
+
+<!-- LANG:ZH-TW -->
+替換大多數背景。
+
+將名為 `background.<ext>` 的圖片或影片拖曳到 `config` 資料夾中。預設情況下，它會使用 Dota 中的圖片。
+
+如果存在相應的工具，以下格式將自動轉換：
+
+- `magick`：`.jpg`、`.jpeg`、`.webp`（轉換為 `.png`）
+
+- `ffmpeg`：`.mp4`（轉換為 `.webm`）
+
+<!-- LANG:ZH-CN -->
+替换大多数背景。
+
+将名为 `background.<ext>` 的图片或视频拖放到 `config` 文件夹中。默认情况下，它会使用 Dota 中的图片。
+
+如果存在相应的工具，以下格式将自动转换：
+
+- `magick`：`.jpg`、`.jpeg`、`.webp`（转换为 `.png`）
+
+- `ffmpeg`：`.mp4`（转换为 `.webm`）
+
+<!-- LANG:ZH-TW -->
+替換大多數背景。
+
+將名為 `background.<ext>` 的圖片或影片拖曳到 `config` 資料夾中。預設情況下，它會使用 Dota 中的圖片。
+
+如果存在相應的工具，以下格式將自動轉換：
+
+- `magick`：`.jpg`、`.jpeg`、`.webp`（轉換為 `.png`）
+
+- `ffmpeg`：`.mp4`（轉換為 `.webm`）

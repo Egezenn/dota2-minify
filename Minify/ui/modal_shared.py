@@ -7,6 +7,7 @@ import traceback
 import dearpygui.dearpygui as dpg
 
 modal_queue = []
+active_modal_callback = None
 
 # TODO: sizes should be definable
 MODAL_WIDTH = 500
@@ -76,11 +77,15 @@ def show_next_from_queue():
         for msg in messages:
             dpg.add_text(msg, wrap=TEXT_WRAP)
 
-    for btn in buttons:
+    global active_modal_callback
+    for i, btn in enumerate(buttons):
+        _inner_cb = btn.get("callback")
 
         def create_wrapped_callback(inner_cb):
-            def wrapped_callback(sender, app_data, user_data):
+            def wrapped_callback(sender=None, app_data=None, user_data=None):
+                global active_modal_callback
                 try:
+                    active_modal_callback = None
                     dpg.configure_item("modal_popup", show=False)
                     if inner_cb:
                         inner_cb(sender, app_data, user_data)
@@ -91,9 +96,13 @@ def show_next_from_queue():
 
             return wrapped_callback
 
+        _wrapped = create_wrapped_callback(_inner_cb)
+        if i == 0:
+            active_modal_callback = _wrapped
+
         dpg.add_button(
             label=btn["label"],
-            callback=create_wrapped_callback(btn.get("callback")),
+            callback=_wrapped,
             user_data=btn.get("user_data"),
             width=btn.get("width", 100),
             parent="modal_button_wrapper",

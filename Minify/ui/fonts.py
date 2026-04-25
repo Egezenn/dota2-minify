@@ -29,12 +29,16 @@ NOTO_FONTS = {
     "th": "https://github.com/notofonts/notofonts.github.io/raw/main/fonts/NotoSansThai/hinted/ttf/NotoSansThai-Regular.ttf",
     "vietnamese": "https://github.com/notofonts/notofonts.github.io/raw/main/fonts/NotoSans/hinted/ttf/NotoSans-Regular.ttf",
     "vi": "https://github.com/notofonts/notofonts.github.io/raw/main/fonts/NotoSans/hinted/ttf/NotoSans-Regular.ttf",
+    "ja": "https://github.com/notofonts/noto-cjk/raw/main/Sans/OTF/Japanese/NotoSansCJKjp-Regular.otf",
+    "ko": "https://github.com/notofonts/noto-cjk/raw/main/Sans/OTF/Korean/NotoSansCJKkr-Regular.otf",
+    "zh-cn": "https://github.com/notofonts/noto-cjk/raw/main/Sans/OTF/SimplifiedChinese/NotoSansCJKsc-Regular.otf",
+    "zh-tw": "https://github.com/notofonts/noto-cjk/raw/main/Sans/OTF/TraditionalChinese/NotoSansCJKtc-Regular.otf",
 }
 
 SYSTEM_FONTS = {
     "koreana": {
         "Windows": ["malgun.ttf", "batang.ttc"],
-        "Darwin": ["AppleGothic.ttf", "AppleMyungjo.ttf"],
+        "Darwin": ["Apple SD Gothic Neo.ttc", "AppleGothic.ttf", "AppleMyungjo.ttf"],
         "Linux": ["NotoSansCJK-Regular.ttc", "NotoSansCJKkr-Regular.otf", "UnDotum.ttf", "NanumGothic.ttf"],
     },
     "schinese": {
@@ -49,7 +53,7 @@ SYSTEM_FONTS = {
     },
     "japanese": {
         "Windows": ["meiryo.ttc", "msgothic.ttc"],
-        "Darwin": ["Hiragino Sans GB.ttc", "AppleGothic.ttf"],
+        "Darwin": ["Hiragino Sans W3.ttc", "Hiragino Sans W4.ttc", "Osaka.ttf"],
         "Linux": ["NotoSansCJK-Regular.ttc", "NotoSansCJKjp-Regular.otf", "TakaoPGothic.ttf"],
     },
     "russian": {
@@ -101,6 +105,26 @@ SYSTEM_FONTS = {
         "Windows": ["arial.ttf", "times.ttf"],
         "Darwin": ["Arial.ttf"],
         "Linux": ["DejaVuSans.ttf", "LiberationSans-Regular.ttf", "NotoSans-Regular.ttf"],
+    },
+    "ja": {
+        "Windows": ["meiryo.ttc", "msgothic.ttc"],
+        "Darwin": ["Hiragino Sans W3.ttc", "Hiragino Sans W4.ttc", "Osaka.ttf"],
+        "Linux": ["NotoSansCJK-Regular.ttc", "NotoSansCJKjp-Regular.otf", "TakaoPGothic.ttf"],
+    },
+    "ko": {
+        "Windows": ["malgun.ttf", "batang.ttc"],
+        "Darwin": ["Apple SD Gothic Neo.ttc", "AppleGothic.ttf", "AppleMyungjo.ttf"],
+        "Linux": ["NotoSansCJK-Regular.ttc", "NotoSansCJKkr-Regular.otf", "UnDotum.ttf", "NanumGothic.ttf"],
+    },
+    "zh-cn": {
+        "Windows": ["msyh.ttc", "simsun.ttc", "simhei.ttf"],
+        "Darwin": ["PingFang.ttc", "STHeiti Light.ttc"],
+        "Linux": ["NotoSansCJK-Regular.ttc", "NotoSansCJKsc-Regular.otf", "wqy-microhei.ttc"],
+    },
+    "zh-tw": {
+        "Windows": ["msjh.ttc", "mingliu.ttc"],
+        "Darwin": ["PingFang.ttc", "STHeiti Light.ttc"],
+        "Linux": ["NotoSansCJK-Regular.ttc", "NotoSansCJKtc-Regular.otf"],
     },
 }
 
@@ -187,14 +211,55 @@ def get_font_for_locale(locale: str) -> str:
 
 
 def register(locale: str = "EN"):
-    target_font = get_font_for_locale(locale.lower())
+    locale_lower = locale.lower()
+    target_font = get_font_for_locale(locale_lower)
     if not os.path.exists(target_font):
         target_font = os.path.join("bin", "FiraMono-Medium.ttf")
 
+    # works if you just use the language with that specific font at init
+    # not if you change it afterwards, it doesnt recalculate the hints
+    import warnings
+
+    warnings.filterwarnings("ignore", category=DeprecationWarning, message=".*add_font_range_hint.*")
+
+    def apply_hints():
+        import sys
+        import io
+        
+        # DPG forcefully prints this warning, bypassing warnings.filterwarnings.
+        # We must temporarily redirect stderr to silence it completely.
+        original_stderr = sys.stderr
+        sys.stderr = io.StringIO()
+        try:
+            if locale_lower in ["ja", "japanese"]:
+                dpg.add_font_range_hint(dpg.mvFontRangeHint_Japanese)
+            elif locale_lower in ["ko", "koreana"]:
+                dpg.add_font_range_hint(dpg.mvFontRangeHint_Korean)
+            elif locale_lower in ["zh-cn", "schinese"]:
+                dpg.add_font_range_hint(dpg.mvFontRangeHint_Chinese_Simplified_Common)
+            elif locale_lower in ["zh-tw", "tchinese"]:
+                dpg.add_font_range_hint(dpg.mvFontRangeHint_Chinese_Full)
+            elif locale_lower in ["th", "thai"]:
+                dpg.add_font_range_hint(dpg.mvFontRangeHint_Thai)
+            elif locale_lower in ["vi", "vietnamese"]:
+                dpg.add_font_range_hint(dpg.mvFontRangeHint_Vietnamese)
+            elif locale_lower in ["ru", "russian", "uk", "ukrainian", "bg", "bulgarian"]:
+                dpg.add_font_range_hint(dpg.mvFontRangeHint_Cyrillic)
+        finally:
+            sys.stderr = original_stderr
+
     with dpg.font_registry():
+        fira_font_path = os.path.join("bin", "FiraMono-Medium.ttf")
+        with dpg.font(fira_font_path, 14, tag="banner_font"):
+            pass
+
         with dpg.font(target_font, 16, tag="main_font") as main_font:
+            apply_hints()
             dpg.bind_font(main_font)
 
-        dpg.font(target_font, 14, tag="small_font")
-        dpg.font(target_font, 20, tag="large_font")
-        dpg.font(target_font, 32, tag="very_large_font")
+        with dpg.font(target_font, 14, tag="small_font"):
+            apply_hints()
+        with dpg.font(target_font, 20, tag="large_font"):
+            apply_hints()
+        with dpg.font(target_font, 32, tag="very_large_font"):
+            apply_hints()

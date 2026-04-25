@@ -53,6 +53,16 @@ Rimuove tutti i cespugli, i fiori, le rocce e qualsiasi altro elemento del terre
 
 !!: È richiesto il terreno predefinito.
 
+<!-- LANG:JA -->
+茂み、花、岩、その他の地面のオブジェクトをすべて削除し、タイルのみの状態にします。
+
+!!：デフォルトの地形が必要です。
+
+<!-- LANG:KO -->
+덤불, 꽃, 바위 및 기타 지면 소품을 모두 제거하고 타일만 남깁니다.
+
+!!: 기본 지형이 필요합니다.
+
 <!-- LANG:NL -->
 Verwijdert alle struiken, bloemen, rotsen en andere objecten op de grond, zodat er alleen tegels overblijven.
 
@@ -88,6 +98,11 @@ Tar bort alla buskar, blommor, stenar och andra markstöttor så att det bara fi
 
 !!: Standardterräng krävs.
 
+<!-- LANG:TH -->
+ลบพุ่มไม้ ดอกไม้ ก้อนหิน และสิ่งกีดขวางบนพื้นทั้งหมดออก เพื่อให้เหลือเพียงพื้นกระเบื้องเท่านั้น
+
+!!: ต้องมีภูมิประเทศเริ่มต้น (Default terrain)
+
 <!-- LANG:TR -->
 Tüm çalıları, çiçekleri, kayaları ve diğer yer objelerini kaldırarak yalnızca karolar bırakır.
 
@@ -97,3 +112,28 @@ Tüm çalıları, çiçekleri, kayaları ve diğer yer objelerini kaldırarak ya
 Видаляє всі кущі, квіти, каміння та будь-які інші наземні елементи, залишаючи лише плитки.
 
 !!: Потрібен ландшафт за замовчуванням.
+
+<!-- LANG:VI -->
+Loại bỏ tất cả bụi cây, hoa, đá và các vật thể trang trí khác trên mặt đất, chỉ còn lại các ô vuông.
+
+!!: Cần có địa hình mặc định.
+
+<!-- LANG:ZH-CN -->
+移除所有灌木、花朵、岩石和其他地面装饰物，只保留地砖。
+
+!!：需要默认地形。
+
+<!-- LANG:ZH-TW -->
+移除所有灌木、花朵、岩石和其他地面裝飾物，只保留地磚。
+
+!!：需要預設地形。
+
+<!-- LANG:ZH-CN -->
+移除所有灌木、花朵、岩石和其他地面装饰物，只保留地砖。
+
+!!：需要默认地形。
+
+<!-- LANG:ZH-TW -->
+移除所有灌木、花朵、岩石和其他地面裝飾物，只保留地磚。
+
+!!：需要預設地形。

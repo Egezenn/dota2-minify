@@ -75,6 +75,20 @@ Questi snippet potrebbero non essere graditi alla maggior parte delle persone. Q
 
 È necessario creare manualmente un file `styling.css` per evitare comportamenti imprevisti.
 
+<!-- LANG:JA -->
+ここに独自のスタイルスニペットを追加したり、既存のスタイルスニペットを修正・削除したりできます。
+
+これらのスニペットは、大多数のユーザーにとって望ましくない場合があります。そのため、スニペットの機能をよく理解した上で、慎重に有効化してください。
+
+予期せぬ動作を防ぐため、`styling.css` ファイルを手動で作成する必要があります。
+
+<!-- LANG:KO -->
+여기에 자신만의 스타일 스니펫을 추가하거나 기존 스니펫을 수정 및 삭제할 수 있습니다.
+
+이러한 스니펫은 대부분의 사용자에게 적합하지 않을 수 있습니다. 따라서 스니펫의 기능을 자세히 읽고 신중하게 활성화하십시오.
+
+예상치 못한 동작을 방지하려면 `styling.css` 파일을 직접 생성해야 합니다.
+
 <!-- LANG:NL -->
 Voeg hier je eigen stijlsnippets toe, wijzig ze of verwijder bestaande.
 
@@ -124,6 +138,13 @@ Dessa kodsnuttar kanske inte är önskvärda för majoriteten. Så läs igenom v
 
 Du måste skapa en `styling.css`-fil manuellt så att du inte stöter på något oväntat beteende.
 
+<!-- LANG:TH -->
+เพิ่ม/แก้ไขและลบโค้ดสไตล์ที่มีอยู่ได้ที่นี่
+
+โค้ดเหล่านี้อาจไม่เหมาะสมสำหรับคนส่วนใหญ่ ดังนั้นโปรดอ่านรายละเอียดการทำงานของโค้ดและเปิดใช้งานด้วยความระมัดระวัง
+
+คุณจำเป็นต้องสร้างไฟล์ `styling.css` ด้วยตนเองเพื่อป้องกันปัญหาที่ไม่คาดคิด
+
 <!-- LANG:TR -->
 Kendi stil kod parçacıklarınızı ekleyin / mevcut olanları değiştirin ve kaldırın.
 
@@ -137,3 +158,38 @@ Beklenmedik davranışlarla karşılaşmamak için `styling.css` dosyasını man
 Ці фрагменти можуть бути небажаними для більшості. Тому уважно прочитайте, що робить фрагмент, і вмикайте його з обережністю.
 
 Вам потрібно створити файл `styling.css` вручну, щоб уникнути неочікуваної поведінки.
+
+<!-- LANG:VI -->
+Thêm/sửa đổi và xóa các đoạn mã kiểu dáng hiện có tại đây.
+
+Những đoạn mã này có thể không phù hợp với đa số người dùng. Vì vậy, hãy đọc kỹ chức năng của từng đoạn mã và kích hoạt chúng một cách thận trọng.
+
+Bạn cần tạo thủ công tệp `styling.css` để tránh gặp phải bất kỳ lỗi nào không mong muốn.
+
+<!-- LANG:ZH-CN -->
+您可以在此处添加/修改或删除现有的样式代码片段。
+
+这些代码片段可能并不适合大多数用户。因此，请仔细阅读代码片段的功能说明，并谨慎启用。
+
+您需要手动创建 `styling.css` 文件，以避免出现任何意外情况。
+
+<!-- LANG:ZH-TW -->
+您可以在此處新增/修改或刪除現有的樣式程式碼片段。
+
+這些程式碼片段可能不適合大多數使用者。因此，請仔細閱讀程式碼片段的功能說明，並謹慎啟用。
+
+您需要手動建立 `styling.css` 文件，以避免任何意外情況。
+
+<!-- LANG:ZH-CN -->
+您可以在此处添加/修改或删除现有的样式代码片段。
+
+这些代码片段可能并不适合大多数用户。因此，请仔细阅读代码片段的功能说明，并谨慎启用。
+
+您需要手动创建 `styling.css` 文件，以避免出现任何意外情况。
+
+<!-- LANG:ZH-TW -->
+您可以在此處新增/修改或刪除現有的樣式程式碼片段。
+
+這些程式碼片段可能不適合大多數使用者。因此，請仔細閱讀程式碼片段的功能說明，並謹慎啟用。
+
+您需要手動建立 `styling.css` 文件，以避免任何意外情況。

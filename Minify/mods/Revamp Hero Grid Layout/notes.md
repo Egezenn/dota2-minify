@@ -41,6 +41,15 @@ Eltávolítja a kártyák fölé mutató egereken, jelvényeken és hasonló hő
 Ingrandisce le carte eroe.
 Rimuove i filmati degli eroi che appaiono quando si passa il mouse sulle carte, sui badge e sulle righe degli eroi simili.
 
+<!-- LANG:JA -->
+ヒーローカードのサイズを大きくします。
+
+カードにカーソルを合わせた際に表示されるヒーロームービー、バッジ、および類似のヒーロー列の表示を削除します。
+
+<!-- LANG:KO -->
+영웅 카드의 크기를 키웁니다.
+카드 마우스 오버, 배지 및 유사한 영웅 행에 나타나는 영웅 동영상을 제거합니다.
+
 <!-- LANG:NL -->
 Maakt heldenkaarten groter.
 Verwijdert heldenfilms die verschijnen bij kaartzwevingen, badges en vergelijkbare heldenrijen.
@@ -67,6 +76,10 @@ Elimină filmele cu eroi care apar pe suprafețele de afișare a cărților, pe 
 <!-- LANG:SV -->
 Gör hjältekort större. Tar bort hjältefilmer som visas på kort som svävar över, märken och liknande hjältarader.
 
+<!-- LANG:TH -->
+ขยายขนาดการ์ดฮีโร่ให้ใหญ่ขึ้น
+ลบภาพยนตร์ฮีโร่ที่ปรากฏเมื่อวางเมาส์เหนือการ์ด ตราสัญลักษณ์ และแถวฮีโร่ที่คล้ายกันออก
+
 <!-- LANG:TR -->
 Kahraman kartlarını büyütür.
 Kartların üzerine gelindiğinde görünen kahraman filmlerini, rozetleri ve benzer kahraman satırını kaldırır.
@@ -74,3 +87,28 @@ Kartların üzerine gelindiğinde görünen kahraman filmlerini, rozetleri ve be
 <!-- LANG:UK -->
 Збільшує картки героїв.
 Видаляє фільми про героїв, які відображаються під час наведення курсора на картки, на значках та в рядку подібних героїв.
+
+<!-- LANG:VI -->
+Phóng to thẻ anh hùng.
+
+Loại bỏ các đoạn phim giới thiệu anh hùng xuất hiện khi rê chuột vào thẻ, trên huy hiệu và hàng các anh hùng tương tự.
+
+<!-- LANG:ZH-CN -->
+增大英雄卡牌尺寸。
+
+移除卡牌悬停效果、徽章和类似英雄栏中显示的英雄动画。
+
+<!-- LANG:ZH-TW -->
+增大英雄卡牌尺寸。
+
+移除卡片懸停效果、徽章和類似英雄欄中顯示的英雄動畫。
+
+<!-- LANG:ZH-CN -->
+增大英雄卡牌尺寸。
+
+移除卡牌悬停效果、徽章和类似英雄栏中显示的英雄动画。
+
+<!-- LANG:ZH-TW -->
+增大英雄卡牌尺寸。
+
+移除卡片懸停效果、徽章和類似英雄欄中顯示的英雄動畫。

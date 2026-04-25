@@ -53,6 +53,16 @@ Rimuove tutto ciò che riguarda i fiumi.
 
 Inclusi dipingere il fiume con oggetti in fiala, effetti sonori di camminata, effetti di schizzi di particelle.
 
+<!-- LANG:JA -->
+川に関連するすべての要素を削除します。
+
+これには、小瓶アイテムで川を彩る効果音、歩行音、粒子飛沫効果などが含まれます。
+
+<!-- LANG:KO -->
+강과 관련된 모든 요소를 ​​제거합니다.
+
+(예: 물병으로 강을 칠하는 효과, 걷는 소리 효과, 물보라 효과 등)
+
 <!-- LANG:NL -->
 Verwijdert alles wat met rivieren te maken heeft.
 
@@ -88,6 +98,11 @@ Tar bort allt som har med floder att göra.
 
 Inklusive att måla floder med flaskföremål, ljudeffekter för vandrande och stänk av partiklar.
 
+<!-- LANG:TH -->
+ลบทุกอย่างที่เกี่ยวข้องกับแม่น้ำ
+
+รวมถึงการระบายสีแม่น้ำด้วยไอเทมในขวด เสียงเอฟเฟ็กต์การเดิน และเอฟเฟ็กต์การกระเด็นของอนุภาค
+
 <!-- LANG:TR -->
 Nehirlerle ilgili her şeyi kaldırır.
 
@@ -97,3 +112,28 @@ Bunlara, nehirleri şişe eşyalarıyla boyama, yürüme ses efektleri ve parça
 Видаляє все, що пов'язано з річками.
 
 Включаючи розфарбовування річки предметами у вигляді флаконів, звукові ефекти ходьби, ефекти розбризкування частинок.
+
+<!-- LANG:VI -->
+Loại bỏ tất cả mọi thứ liên quan đến sông.
+
+Bao gồm việc tô vẽ sông bằng các vật phẩm trong lọ, hiệu ứng âm thanh bước chân, hiệu ứng bắn tung tóe hạt.
+
+<!-- LANG:ZH-CN -->
+移除所有与河流相关的元素。
+
+包括用药瓶绘制的河流、行走音效、粒子飞溅效果。
+
+<!-- LANG:ZH-TW -->
+移除所有與河流相關的元素。
+
+包括用藥瓶繪製的河流、行走音效、粒子飛濺效果。
+
+<!-- LANG:ZH-CN -->
+移除所有与河流相关的元素。
+
+包括用药瓶绘制的河流、行走音效、粒子飞溅效果。
+
+<!-- LANG:ZH-TW -->
+移除所有與河流相關的元素。
+
+包括用藥瓶繪製的河流、行走音效、粒子飛濺效果。

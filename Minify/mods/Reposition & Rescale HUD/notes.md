@@ -31,6 +31,12 @@ Repositionne et modifie l'échelle de certains aspects de l'interface utilisateu
 <!-- LANG:IT -->
 Riposiziona e ridimensiona alcuni aspetti dell'HUD del gioco.
 
+<!-- LANG:JA -->
+ゲーム内HUDの一部要素の位置とサイズを変更します。
+
+<!-- LANG:KO -->
+게임 내 HUD의 일부 요소의 위치와 크기를 조정합니다.
+
 <!-- LANG:NL -->
 Herpositioneert en schaalt bepaalde aspecten van de in-game HUD.
 
@@ -52,8 +58,26 @@ Repoziționează și scalează unele aspecte ale HUD-ului din joc.
 <!-- LANG:SV -->
 Ompositionerar och skalar vissa aspekter av spelets HUD.
 
+<!-- LANG:TH -->
+ปรับตำแหน่งและขนาดบางส่วนของ HUD ในเกม
+
 <!-- LANG:TR -->
 Oyun içi HUD'nin bazı özelliklerini yeniden konumlandırır ve ölçeklendirir.
 
 <!-- LANG:UK -->
 Змінює положення та масштаб деяких аспектів ігрового HUD.
+
+<!-- LANG:VI -->
+Điều chỉnh vị trí và kích thước một số khía cạnh của giao diện người dùng trong game.
+
+<!-- LANG:ZH-CN -->
+重新定位和调整游戏内HUD的某些方面。
+
+<!-- LANG:ZH-TW -->
+重新定位並調整遊戲內HUD的某些方面。
+
+<!-- LANG:ZH-CN -->
+重新定位和调整游戏内HUD的某些方面。
+
+<!-- LANG:ZH-TW -->
+重新定位並調整遊戲內HUD的某些方面。

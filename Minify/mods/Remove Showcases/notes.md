@@ -31,6 +31,12 @@ Eltávolítja a profilbemutatókat és az animációkat.
 <!-- LANG:IT -->
 Rimuove le vetrine e le animazioni dei profili.
 
+<!-- LANG:JA -->
+プロフィール表示とアニメーションを削除します。
+
+<!-- LANG:KO -->
+프로필 소개 및 애니메이션을 제거합니다.
+
 <!-- LANG:NL -->
 Verwijdert profielpresentaties en animatie.
 
@@ -52,8 +58,26 @@ Elimină vitrinele și animațiile profilului.
 <!-- LANG:SV -->
 Tar bort profilvisningar och animationer.
 
+<!-- LANG:TH -->
+ลบส่วนแสดงโปรไฟล์และแอนิเมชันออก
+
 <!-- LANG:TR -->
 Profil vitrinlerini ve animasyonları kaldırır.
 
 <!-- LANG:UK -->
 Видаляє вітрини профілю та анімацію.
+
+<!-- LANG:VI -->
+Loại bỏ phần giới thiệu hồ sơ và hiệu ứng động.
+
+<!-- LANG:ZH-CN -->
+移除个人资料展示和动画。
+
+<!-- LANG:ZH-TW -->
+移除個人資料展示和動畫。
+
+<!-- LANG:ZH-CN -->
+移除个人资料展示和动画。
+
+<!-- LANG:ZH-TW -->
+移除個人資料展示和動畫。
