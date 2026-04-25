@@ -31,6 +31,12 @@ Némítja a hangvonal hangjait.
 <!-- LANG:IT -->
 Disattiva i suoni della linea vocale.
 
+<!-- LANG:JA -->
+音声ラインの音声をミュートします。
+
+<!-- LANG:KO -->
+음성 대사 소리를 음소거합니다.
+
 <!-- LANG:NL -->
 Dempt spraakgeluiden.
 
@@ -52,8 +58,26 @@ Dezactivează sunetele replicii vocale.
 <!-- LANG:SV -->
 Stänger av ljudet på röstlinjen.
 
+<!-- LANG:TH -->
+ปิดเสียงบทสนทนา
+
 <!-- LANG:TR -->
 Sesli hatların sesini kapatır.
 
 <!-- LANG:UK -->
 Вимкнення звуків голосової лінії.
+
+<!-- LANG:VI -->
+Tắt tiếng thoại.
+
+<!-- LANG:ZH-CN -->
+静音语音提示音。
+
+<!-- LANG:ZH-TW -->
+靜音語音提示音。
+
+<!-- LANG:ZH-CN -->
+静音语音提示音。
+
+<!-- LANG:ZH-TW -->
+靜音語音提示音。

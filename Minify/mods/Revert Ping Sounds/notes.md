@@ -101,6 +101,24 @@ I nuovi suoni sono sostituiti da:
 - `ping_enemy_ward` = `ping_warning`
 - `ping_need_ward` = `ping`
 
+<!-- LANG:JA -->
+ピンの音をパッチ7.39以前の音に戻します。
+
+新しい音は以下のように置き換えられます。
+
+- `ping_heart` = `ping`
+- `ping_enemy_ward` = `ping_warning`
+- `ping_need_ward` = `ping`
+
+<!-- LANG:KO -->
+핑 소리를 `7.39` 패치 이전의 소리로 되돌립니다.
+
+새로운 소리는 다음과 같이 대체됩니다.
+
+- `ping_heart` = `ping`
+- `ping_enemy_ward` = `ping_warning`
+- `ping_need_ward` = `ping`
+
 <!-- LANG:NL -->
 Pinggeluiden worden teruggezet naar de geluiden van vóór patch `7.39`.
 
@@ -164,6 +182,15 @@ Nya ljud ersätts med:
 - `ping_enemy_ward` = `ping_warning`
 - `ping_need_ward` = `ping`
 
+<!-- LANG:TH -->
+เปลี่ยนเสียง ping กลับไปเป็นเสียงเดิมก่อนแพทช์ `7.39`
+
+เสียงใหม่จะถูกแทนที่ด้วย:
+
+- `ping_heart` = `ping`
+- `ping_enemy_ward` = `ping_warning`
+- `ping_need_ward` = `ping`
+
 <!-- LANG:TR -->
 Ping seslerini `7.39` yaması öncesindeki seslere geri döndürür.
 
@@ -180,4 +207,57 @@ Yeni sesler şu şekilde değiştirilir:
 
 - `ping_heart` = `ping`
 - `ping_enemy_ward` = `ping_warning`
+- `ping_need_ward` = `ping`
+
+<!-- LANG:VI -->
+Khôi phục âm thanh ping về âm thanh trước bản vá `7.39`.
+
+Âm thanh mới được thay thế bằng:
+
+- `ping_heart` = `ping`
+- `ping_enemy_ward` = `ping_warning`
+- `ping_need_ward` = `ping`
+
+<!-- LANG:ZH-CN -->
+将 ping 音效恢复到 7.39 版本更新之前的状态。
+
+新的音效替换为：
+
+- `ping_heart` = `ping`
+
+- `ping_enemy_ward` = `ping_warning`
+
+- `ping_need_ward` = `ping`
+
+<!-- LANG:ZH-TW -->
+將 ping 音效恢復到 7.39 版本更新之前的狀態。
+
+新的音效替換為：
+
+- `ping_heart` = `ping`
+
+- `ping_enemy_ward` = `ping_warning`
+
+- `ping_need_ward` = `ping`
+
+<!-- LANG:ZH-CN -->
+将 ping 音效恢复到 7.39 版本更新之前的状态。
+
+新的音效替换为：
+
+- `ping_heart` = `ping`
+
+- `ping_enemy_ward` = `ping_warning`
+
+- `ping_need_ward` = `ping`
+
+<!-- LANG:ZH-TW -->
+將 ping 音效恢復到 7.39 版本更新之前的狀態。
+
+新的音效替換為：
+
+- `ping_heart` = `ping`
+
+- `ping_enemy_ward` = `ping_warning`
+
 - `ping_need_ward` = `ping`

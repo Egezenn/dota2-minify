@@ -31,6 +31,12 @@ Harmadik féltől származó webhelyek linkjeit (dotabuff, stratz, opendota) adj
 <!-- LANG:IT -->
 Aggiunge link a siti web di terze parti (dotabuff, stratz, opendota) ai profili di altri giocatori e alle partite.
 
+<!-- LANG:JA -->
+他のプレイヤーや試合のプロフィールに、サードパーティのウェブサイト（dotabuff、stratz、opendota）へのリンクを追加します。
+
+<!-- LANG:KO -->
+다른 플레이어 및 경기 프로필에 타사 웹사이트 링크(도타버프, 스트라츠, 오픈도타)를 추가합니다.
+
 <!-- LANG:NL -->
 Voegt links naar websites van derden (Dotabuff, Stratz, OpenDota) toe aan de profielen van andere spelers en wedstrijden.
 
@@ -52,8 +58,26 @@ Adaugă linkuri către site-uri web terțe (dotabuff, stratz, opendota) la profi
 <!-- LANG:SV -->
 Lägger till länkar till webbplatser från tredje part (dotabuff, stratz, opendota) i profiler för andra spelare och matcher.
 
+<!-- LANG:TH -->
+เพิ่มลิงก์เว็บไซต์ภายนอก (dotabuff, stratz, opendota) ลงในโปรไฟล์ของผู้เล่นคนอื่นและในแมตช์การแข่งขัน
+
 <!-- LANG:TR -->
 Diğer oyuncuların ve maçların profillerine üçüncü taraf web sitesi bağlantıları (dotabuff, stratz, opendota) ekler.
 
 <!-- LANG:UK -->
 Додає посилання на сторонні вебсайти (dotabuff, stratz, opendota) до профілів інших гравців та матчів.
+
+<!-- LANG:VI -->
+Thêm liên kết trang web bên thứ ba (dotabuff, stratz, opendota) vào hồ sơ của người chơi khác và các trận đấu.
+
+<!-- LANG:ZH-CN -->
+在其他玩家和比赛的个人资料中添加第三方网站链接（dotabuff、stratz、opendota）。
+
+<!-- LANG:ZH-TW -->
+在其他玩家和比賽的個人資料中加入第三方網站連結（dotabuff、stratz、opendota）。
+
+<!-- LANG:ZH-CN -->
+在其他玩家和比赛的个人资料中添加第三方网站链接（dotabuff、stratz、opendota）。
+
+<!-- LANG:ZH-TW -->
+在其他玩家和比賽的個人資料中加入第三方網站連結（dotabuff、stratz、opendota）。

@@ -148,6 +148,52 @@ Accetta automaticamente la finestra di dialogo della lingua all'apertura delle i
 `Freccia su e tasto centrale del mouse`: DOTAToggleCurrentDashboardPageFullscreen - Nasconde gli elementi in alto e in basso.
 `ALT+F4`: DOTAQuitConfirmed - Consente di utilizzare il tasto di scelta rapida generico per uscire.
 
+<!-- LANG:JA -->
+設定画面を開いた際に言語ダイアログを自動的に承認し、パノラマUIに様々なキーバインド（場合によっては動作しないことがあります）を追加します。
+
+`F1`: DOTAShowHomePage - ホームページに移動します。
+
+`F2`: DOTAShowHeroesPage - ヒーローページに移動します。
+
+`F3`: DOTAShowPostGamePage - 試合後ページに移動します。
+
+`F6`: DOTAScenarioPlayCoopBot - 協力ボットマッチをキューに追加します。
+
+`F8`: DOTAShowSeasonalRewardsPage - シーズン報酬ページに移動します。
+
+`F9`: DOTAShowInternational2025Page - The Internationalページに移動します。
+
+`F10`: DOTAShowSettingsPopup - 以前の設定ポップアップを表示します。
+
+`F12`: DOTAShowAddFriendByAccountID - フレンド追加ダイアログ（SteamID3）を表示します。
+
+`上矢印キー＆マウスの中央ボタン`: DOTAToggleCurrentDashboardPageFullscreen - 上部と下部の要素を非表示にします。
+
+`ALT+F4`: DOTAQuitConfirmed - 一般的な終了ホットキーを使用できるようになります。
+
+<!-- LANG:KO -->
+설정 창을 열 때 언어 선택 대화 상자를 자동으로 수락하고, 파노라마 UI에 다양한 키 바인딩(가끔 작동하지 않을 수 있음)을 추가합니다.
+
+`F1`: DOTAShowHomePage - 홈 페이지로 이동합니다.
+
+`F2`: DOTAShowHeroesPage - 영웅 페이지로 이동합니다.
+
+`F3`: DOTAShowPostGamePage - 게임 종료 페이지로 이동합니다.
+
+`F6`: DOTAScenarioPlayCoopBot - 협동 봇 매치를 대기열에 추가합니다.
+
+`F8`: DOTAShowSeasonalRewardsPage - 시즌 보상 페이지로 이동합니다.
+
+`F9`: DOTAShowInternational2025Page - The International 페이지로 이동합니다.
+
+`F10`: DOTAShowSettingsPopup - 이전 설정 팝업을 표시합니다.
+
+`F12`: DOTAShowAddFriendByAccountID - 친구 추가 대화 상자(Steam ID 3)를 표시합니다.
+
+위쪽 화살표 키와 마우스 가운데 버튼을 함께 누르면 현재 대시보드 페이지의 상단과 하단 요소를 숨길 수 있습니다.
+
+ALT+F4 키를 누르면 일반 종료 단축키를 사용할 수 있습니다.
+
 <!-- LANG:NL -->
 Accepteert automatisch het taaldialoogvenster wanneer de instellingen worden geopend en voegt diverse sneltoetsen (die soms niet werken) toe aan de Panorama-interface.
 
@@ -246,6 +292,28 @@ Accepterar automatiskt språkdialogrutan när inställningarna öppnas, lägger 
 `Uppåtpil och mittenmusen`: DOTAToggleCurrentDashboardPageFullscreen - Döljer elementen överst och underst.
 `ALT+F4`: DOTAQuitConfirmed - Låter dig använda den generiska snabbtangenten för att avsluta.
 
+<!-- LANG:TH -->
+เมื่อเปิดการตั้งค่า ระบบจะยอมรับการเลือกภาษาโดยอัตโนมัติ และเพิ่มปุ่มลัดต่างๆ (ซึ่งอาจใช้งานไม่ได้ในบางครั้ง) ลงใน UI พาโนรามา
+
+`F1`: DOTAShowHomePage - ไปยังหน้าแรก
+
+`F2`: DOTAShowHeroesPage - ไปยังหน้าฮีโร่
+
+`F3`: DOTAShowPostGamePage - ไปยังหน้าหลังจบเกม
+
+`F6`: DOTAScenarioPlayCoopBot - เข้าคิวเล่นแมตช์ร่วมมือกับบอท
+
+`F8`: DOTAShowSeasonalRewardsPage - ไปยังหน้ารางวัลประจำฤดูกาล
+
+`F9`: DOTAShowInternational2025Page - ไปยังหน้า The International
+
+`F10`: DOTAShowSettingsPopup - แสดงป๊อปอัพการตั้งค่าแบบเก่า
+
+`F12`: DOTAShowAddFriendByAccountID - แสดงหน้าต่างเพิ่มเพื่อน (SteamID3)
+
+`ลูกศรขึ้นและปุ่มกลางเมาส์`: DOTAToggleCurrentDashboardPageFullscreen - ซ่อนองค์ประกอบด้านบนและด้านล่าง
+`ALT+F4`: DOTAQuitConfirmed - อนุญาตให้คุณใช้ปุ่มลัดออกจากเกมทั่วไป
+
 <!-- LANG:TR -->
 Ayarlar açıldığında dil iletişim kutusunu otomatik olarak kabul eder, panorama arayüzüne çeşitli tuş atamaları ekler (bazen çalışmayabilir).
 
@@ -273,3 +341,116 @@ Ayarlar açıldığında dil iletişim kutusunu otomatik olarak kabul eder, pano
 `F12`: DOTAShowAddFriendByAccountID - Показує діалогове вікно додавання друга (SteamID3).
 `Стрілка вгору та середня кнопка миші`: DOTAToggleCurrentDashboardPageFullscreen - Приховує верхні та нижні елементи.
 `ALT+F4`: DOTAQuitConfirmed - Дозволяє використовувати загальну гарячу клавішу для виходу.
+
+<!-- LANG:VI -->
+Tự động chấp nhận hộp thoại ngôn ngữ khi mở cài đặt, thêm nhiều phím tắt (đôi khi có thể không hoạt động) vào giao diện Panorama.
+
+`F1`: DOTAShowHomePage - Điều hướng đến trang chủ.
+
+`F2`: DOTAShowHeroesPage - Điều hướng đến trang anh hùng.
+
+`F3`: DOTAShowPostGamePage - Điều hướng đến trang sau trận đấu.
+
+`F6`: DOTAScenarioPlayCoopBot - Xếp hàng trận đấu hợp tác với bot.
+
+`F8`: DOTAShowSeasonalRewardsPage - Điều hướng đến trang phần thưởng theo mùa.
+
+`F9`: DOTAShowInternational2025Page - Điều hướng đến trang The International.
+
+`F10`: DOTAShowSettingsPopup - Hiển thị cửa sổ bật lên cài đặt cũ.
+
+`F12`: DOTAShowAddFriendByAccountID - Hiển thị hộp thoại thêm bạn bè (SteamID3).
+`Mũi tên lên & Chuột giữa`: DOTAToggleCurrentDashboardPageFullscreen - Ẩn các phần tử trên cùng và dưới cùng.
+`ALT+F4`: DOTAQuitConfirmed - Cho phép bạn sử dụng phím tắt thoát chung.
+
+<!-- LANG:ZH-CN -->
+打开设置时自动接受语言对话框，并在全景界面添加各种快捷键（有时可能无效）。
+
+`F1`: DOTAShowHomePage - 导航至主页。
+
+`F2`: DOTAShowHeroesPage - 导航至英雄页面。
+
+`F3`: DOTAShowPostGamePage - 导航至赛后页面。
+
+`F6`: DOTAScenarioPlayCoopBot - 排队进行合作机器人比赛。
+
+`F8`: DOTAShowSeasonalRewardsPage - 导航至赛季奖励页面。
+
+`F9`: DOTAShowInternational2025Page - 导航至国际邀请赛页面。
+
+`F10`: DOTAShowSettingsPopup - 显示旧版设置弹出窗口。
+
+`F12`: DOTAShowAddFriendByAccountID - 显示添加好友对话框（SteamID3）。
+
+`上箭头 + 鼠标中键`：DOTAToggleCurrentDashboardPageFullscreen - 隐藏页面顶部和底部元素。
+
+`ALT+F4`：DOTAQuitConfirmed - 允许您使用通用的退出快捷键。
+
+<!-- LANG:ZH-TW -->
+開啟設定時自動接受語言對話框，並在全景介面中新增各種快速鍵（有時可能無效）。
+
+`F1`: DOTAShowHomePage - 導覽至首頁。
+
+`F2`: DOTAShowHeroesPage - 導覽至英雄頁面。
+
+`F3`: DOTAShowPostGamePage - 導覽至賽後頁面。
+
+`F6`: DOTAScenarioPlayCoopBot - 排隊進行合作機器人競賽。
+
+`F8`: DOTAShowSeasonalRewardsPage - 導航至賽季獎勵頁面。
+
+`F9`: DOTAShowInternational2025Page - 導覽至國際邀請賽頁面。
+
+`F10`: DOTAShowSettingsPopup - 顯示舊版設定彈出視窗。
+
+`F12`: DOTAShowAddFriendByAccountID - 顯示新增好友對話框（SteamID3）。
+
+`上箭頭 + 滑鼠中鍵`：DOTAToggleCurrentDashboardPageFullscreen - 隱藏頁面頂部和底部元素。
+
+`ALT+F4`：DOTAQuitConfirmed - 允許您使用通用的退出快速鍵。
+
+<!-- LANG:ZH-CN -->
+打开设置时自动接受语言对话框，并在全景界面添加各种快捷键（有时可能无效）。
+
+`F1`: DOTAShowHomePage - 导航至主页。
+
+`F2`: DOTAShowHeroesPage - 导航至英雄页面。
+
+`F3`: DOTAShowPostGamePage - 导航至赛后页面。
+
+`F6`: DOTAScenarioPlayCoopBot - 排队进行合作机器人比赛。
+
+`F8`: DOTAShowSeasonalRewardsPage - 导航至赛季奖励页面。
+
+`F9`: DOTAShowInternational2025Page - 导航至国际邀请赛页面。
+
+`F10`: DOTAShowSettingsPopup - 显示旧版设置弹出窗口。
+
+`F12`: DOTAShowAddFriendByAccountID - 显示添加好友对话框（SteamID3）。
+
+`上箭头 + 鼠标中键`：DOTAToggleCurrentDashboardPageFullscreen - 隐藏页面顶部和底部元素。
+
+`ALT+F4`：DOTAQuitConfirmed - 允许您使用通用的退出快捷键。
+
+<!-- LANG:ZH-TW -->
+開啟設定時自動接受語言對話框，並在全景介面中新增各種快速鍵（有時可能無效）。
+
+`F1`: DOTAShowHomePage - 導覽至首頁。
+
+`F2`: DOTAShowHeroesPage - 導覽至英雄頁面。
+
+`F3`: DOTAShowPostGamePage - 導覽至賽後頁面。
+
+`F6`: DOTAScenarioPlayCoopBot - 排隊進行合作機器人競賽。
+
+`F8`: DOTAShowSeasonalRewardsPage - 導航至賽季獎勵頁面。
+
+`F9`: DOTAShowInternational2025Page - 導覽至國際邀請賽頁面。
+
+`F10`: DOTAShowSettingsPopup - 顯示舊版設定彈出視窗。
+
+`F12`: DOTAShowAddFriendByAccountID - 顯示新增好友對話框（SteamID3）。
+
+`上箭頭 + 滑鼠中鍵`：DOTAToggleCurrentDashboardPageFullscreen - 隱藏頁面頂部和底部元素。
+
+`ALT+F4`：DOTAQuitConfirmed - 允許您使用通用的退出快速鍵。

@@ -53,6 +53,16 @@ Trasforma tutti gli alberi in piccoli cespugli circolari.
 
 !!: È richiesto il terreno predefinito.
 
+<!-- LANG:JA -->
+すべての木を小さな円形の茂みに変えます。
+
+!!：デフォルトの地形が必要です。
+
+<!-- LANG:KO -->
+모든 나무를 작은 원형 덤불로 바꿉니다.
+
+!!: 기본 지형이 필요합니다.
+
 <!-- LANG:NL -->
 Verandert alle bomen in kleine ronde struiken.
 
@@ -88,6 +98,11 @@ Förvandlar alla träd till små cirklar.
 
 !!: Standardterräng krävs.
 
+<!-- LANG:TH -->
+เปลี่ยนต้นไม้ทั้งหมดให้กลายเป็นพุ่มไม้ทรงกลมขนาดเล็ก
+
+!!: ต้องใช้ภูมิประเทศเริ่มต้น
+
 <!-- LANG:TR -->
 Tüm ağaçları küçük yuvarlak çalılara dönüştürür.
 
@@ -97,3 +112,28 @@ Tüm ağaçları küçük yuvarlak çalılara dönüştürür.
 Перетворює всі дерева на маленькі круглі кущі.
 
 !!: Потрібен ландшафт за замовчуванням.
+
+<!-- LANG:VI -->
+Biến tất cả cây thành những bụi cây nhỏ hình tròn.
+
+!!: Cần có địa hình mặc định.
+
+<!-- LANG:ZH-CN -->
+将所有树木变成小圆灌木。
+
+!!：需要默认地形。
+
+<!-- LANG:ZH-TW -->
+將所有樹木變成小圓形灌木。
+
+!!：需要預設地形。
+
+<!-- LANG:ZH-CN -->
+将所有树木变成小圆灌木。
+
+!!：需要默认地形。
+
+<!-- LANG:ZH-TW -->
+將所有樹木變成小圓形灌木。
+
+!!：需要預設地形。

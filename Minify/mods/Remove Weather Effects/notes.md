@@ -53,6 +53,16 @@ Rimuove tutti gli effetti meteorologici dagli elementi meteorologici e dal coman
 
 https://liquipedia.net/dota2/Weather_Effects
 
+<!-- LANG:JA -->
+天候アイテムおよびコンソールコマンド「cl_weather」から、すべての天候効果を削除します。
+
+https://liquipedia.net/dota2/Weather_Effects
+
+<!-- LANG:KO -->
+날씨 아이템과 콘솔 명령어 `cl_weather`에서 모든 날씨 효과를 제거합니다.
+
+https://liquipedia.net/dota2/Weather_Effects
+
 <!-- LANG:NL -->
 Verwijdert alle weereffecten van weeritems en van de consoleopdracht `cl_weather`.
 
@@ -88,6 +98,11 @@ Tar bort alla vädereffekter från väderobjekt och från konsolkommandot `cl_we
 
 https://liquipedia.net/dota2/Weather_Effects
 
+<!-- LANG:TH -->
+ลบเอฟเฟกต์สภาพอากาศทั้งหมดออกจากไอเทมสภาพอากาศและคำสั่งคอนโซล `cl_weather`
+
+https://liquipedia.net/dota2/Weather_Effects
+
 <!-- LANG:TR -->
 Hava durumu öğelerinden ve `cl_weather` konsol komutundan tüm hava durumu efektlerini kaldırır.
 
@@ -95,5 +110,30 @@ https://liquipedia.net/dota2/Weather_Effects
 
 <!-- LANG:UK -->
 Видаляє всі погодні ефекти з предметів погоди та з консольної команди `cl_weather`.
+
+https://liquipedia.net/dota2/Weather_Effects
+
+<!-- LANG:VI -->
+Loại bỏ tất cả hiệu ứng thời tiết khỏi các vật phẩm thời tiết và khỏi lệnh console `cl_weather`.
+
+https://liquipedia.net/dota2/Weather_Effects
+
+<!-- LANG:ZH-CN -->
+移除天气物品和 `cl_weather` 控制台命令中的所有天气效果。
+
+https://liquipedia.net/dota2/Weather_Effects
+
+<!-- LANG:ZH-TW -->
+移除天氣物品和 `cl_weather` 控制台指令中的所有天氣效果。
+
+https://liquipedia.net/dota2/Weather_Effects
+
+<!-- LANG:ZH-CN -->
+移除天气物品和 `cl_weather` 控制台命令中的所有天气效果。
+
+https://liquipedia.net/dota2/Weather_Effects
+
+<!-- LANG:ZH-TW -->
+移除天氣物品和 `cl_weather` 控制台指令中的所有天氣效果。
 
 https://liquipedia.net/dota2/Weather_Effects

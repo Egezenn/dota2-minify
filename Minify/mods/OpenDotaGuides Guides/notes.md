@@ -75,6 +75,20 @@ Sostituisce le guide predefinite con quelle di OpenDotaGuides.
 
 Fonte: https://github.com/Egezenn/OpenDotaGuides/releases/latest
 
+<!-- LANG:JA -->
+デフォルトのガイドをOpenDotaGuidesのガイドに置き換えます。
+
+!!: ゲーム内で表示するには、デフォルトのビルドを選択する必要があります。
+
+出典: https://github.com/Egezenn/OpenDotaGuides/releases/latest
+
+<!-- LANG:KO -->
+기본 가이드를 OpenDotaGuides의 가이드로 대체합니다.
+
+!!: 게임 내에서 기본 빌드를 보려면 기본 빌드가 선택되어 있어야 합니다.
+
+출처: https://github.com/Egezenn/OpenDotaGuides/releases/latest
+
 <!-- LANG:NL -->
 Vervangt de standaardgidsen door die van OpenDotaGuides.
 
@@ -124,6 +138,13 @@ Ersätter standardguider med de från OpenDotaGuides.
 
 Källa: https://github.com/Egezenn/OpenDotaGuides/releases/latest
 
+<!-- LANG:TH -->
+แทนที่ไกด์เริ่มต้นด้วยไกด์จาก OpenDotaGuides
+
+!!: ต้องเลือกบิลด์เริ่มต้นก่อนจึงจะเห็นไกด์ในเกม
+
+ที่มา: https://github.com/Egezenn/OpenDotaGuides/releases/latest
+
 <!-- LANG:TR -->
 Varsayılan kılavuzları OpenDotaGuides'tan alınanlarla değiştirir.
 
@@ -137,3 +158,38 @@ Kaynak: https://github.com/Egezenn/OpenDotaGuides/releases/latest
 !!: Щоб побачити їх у грі, потрібно вибрати стандартні збірки.
 
 Джерело: https://github.com/Egezenn/OpenDotaGuides/releases/latest
+
+<!-- LANG:VI -->
+Thay thế các hướng dẫn mặc định bằng các hướng dẫn từ OpenDotaGuides.
+
+!!: Yêu cầu phải chọn các bộ trang bị mặc định để thấy chúng trong game.
+
+Nguồn: https://github.com/Egezenn/OpenDotaGuides/releases/latest
+
+<!-- LANG:ZH-CN -->
+将默认攻略替换为 OpenDotaGuides 的攻略。
+
+!!：需要选择默认出装才能在游戏中查看。
+
+来源：https://github.com/Egezenn/OpenDotaGuides/releases/latest
+
+<!-- LANG:ZH-TW -->
+將預設攻略替換為 OpenDotaGuides 的攻略。
+
+!!：需要選擇預設出裝才能在遊戲中查看。
+
+資料來源：https://github.com/Egezenn/OpenDotaGuides/releases/latest
+
+<!-- LANG:ZH-CN -->
+将默认攻略替换为 OpenDotaGuides 的攻略。
+
+!!：需要选择默认出装才能在游戏中查看。
+
+来源：https://github.com/Egezenn/OpenDotaGuides/releases/latest
+
+<!-- LANG:ZH-TW -->
+將預設攻略替換為 OpenDotaGuides 的攻略。
+
+!!：需要選擇預設出裝才能在遊戲中查看。
+
+資料來源：https://github.com/Egezenn/OpenDotaGuides/releases/latest

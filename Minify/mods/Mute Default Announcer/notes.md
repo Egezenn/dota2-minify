@@ -31,6 +31,12 @@ Némítja az alapértelmezett bemondókat és a killstreak sorokat.
 <!-- LANG:IT -->
 Disattiva l'audio degli annunciatori predefiniti e delle linee di killstreak.
 
+<!-- LANG:JA -->
+デフォルトのアナウンサーとキルストリークのセリフをミュートします。
+
+<!-- LANG:KO -->
+기본 아나운서 및 킬스트릭 대사를 음소거합니다.
+
 <!-- LANG:NL -->
 Dempt standaard-omroepers en killstreak-regels.
 
@@ -52,8 +58,26 @@ Dezactivează crainii și replicile din seria de killstreak-uri implicite.
 <!-- LANG:SV -->
 Stänger av standardkommentatorer och killstreak-linjer.
 
+<!-- LANG:TH -->
+ปิดเสียงผู้ประกาศเริ่มต้นและเสียงแสดงความสำเร็จในการสังหาร
+
 <!-- LANG:TR -->
 Varsayılan spikerleri ve öldürme serisi repliklerini susturur.
 
 <!-- LANG:UK -->
 Вимикає звуки дикторів за замовчуванням та ліній убивств.
+
+<!-- LANG:VI -->
+Tắt tiếng các thông báo mặc định và các câu thoại khi đạt chuỗi hạ gục.
+
+<!-- LANG:ZH-CN -->
+静音默认播音员和连杀奖励语音。
+
+<!-- LANG:ZH-TW -->
+靜音預設播音員和連殺獎勵語音。
+
+<!-- LANG:ZH-CN -->
+静音默认播音员和连杀奖励语音。
+
+<!-- LANG:ZH-TW -->
+靜音預設播音員和連殺獎勵語音。

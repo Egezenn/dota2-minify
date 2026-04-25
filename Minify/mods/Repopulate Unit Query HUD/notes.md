@@ -53,6 +53,16 @@ Corregge e ripopola il pannello HUD delle query unità rilasciato nella patch `7
 
 Disponibile con la variabile console `dota_hud_new_query_panel 1`.
 
+<!-- LANG:JA -->
+パッチ7.00で実装されたユニットクエリHUDパネルを修正し、データを再構築します。
+
+コンソール変数`dota_hud_new_query_panel 1`で利用可能です。
+
+<!-- LANG:KO -->
+패치 `7.00`에서 삭제되었던 유닛 조회 HUD 패널을 수정하고 다시 표시합니다.
+
+콘솔 변수 `dota_hud_new_query_panel 1`을 사용하여 사용할 수 있습니다.
+
 <!-- LANG:NL -->
 Herstelt en vult het Unit Query HUD-paneel opnieuw, dat werd uitgebracht in patch `7.00`.
 
@@ -88,6 +98,11 @@ Disponibil cu variabila de consolă `dota_hud_new_query_panel 1`.
 
 Tillgänglig med konsolvariabeln `dota_hud_new_query_panel 1`.
 
+<!-- LANG:TH -->
+แก้ไขและเติมข้อมูลแผง HUD แสดงข้อมูลยูนิตที่ได้รับการแก้ไขในแพทช์ `7.00`
+
+สามารถใช้งานได้โดยใช้ตัวแปรคอนโซล `dota_hud_new_query_panel 1`
+
 <!-- LANG:TR -->
 `7.00` yamasında yayınlanan Birim Sorgulama HUD panelini düzeltir ve yeniden doldurur.
 
@@ -97,3 +112,28 @@ Konsol değişkeni `dota_hud_new_query_panel 1` ile kullanılabilir.
 Виправляє та повторно заповнює панель HUD запитів юнітів, яка була випущена у патчі `7.00`.
 
 Доступно зі змінною консолі `dota_hud_new_query_panel 1`.
+
+<!-- LANG:VI -->
+Sửa lỗi và cập nhật lại bảng HUD truy vấn đơn vị đã được phát hành trong bản vá `7.00`.
+
+Có thể sử dụng với biến dòng lệnh `dota_hud_new_query_panel 1`.
+
+<!-- LANG:ZH-CN -->
+修复并重新填充了在 7.00 版本补丁中发布的单位查询 HUD 面板。
+
+可通过控制台变量 `dota_hud_new_query_panel 1` 获取。
+
+<!-- LANG:ZH-TW -->
+修正並重新填充了在 7.00 版本補丁中發布的單位查詢 HUD 面板。
+
+可透過控制台變數 `dota_hud_new_query_panel 1` 取得。
+
+<!-- LANG:ZH-CN -->
+修复并重新填充了在 7.00 版本补丁中发布的单位查询 HUD 面板。
+
+可通过控制台变量 `dota_hud_new_query_panel 1` 获取。
+
+<!-- LANG:ZH-TW -->
+修正並重新填充了在 7.00 版本補丁中發布的單位查詢 HUD 面板。
+
+可透過控制台變數 `dota_hud_new_query_panel 1` 取得。

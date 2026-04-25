@@ -31,6 +31,12 @@ Eltávolítja a főmenü hátterét.
 <!-- LANG:IT -->
 Rimuove lo sfondo del menu principale.
 
+<!-- LANG:JA -->
+メインメニューの背景を削除します。
+
+<!-- LANG:KO -->
+메인 메뉴 배경을 제거합니다.
+
 <!-- LANG:NL -->
 Verwijdert de achtergrond van het hoofdmenu.
 
@@ -52,8 +58,26 @@ Elimină fundalul meniului principal.
 <!-- LANG:SV -->
 Tar bort huvudmenyns bakgrund.
 
+<!-- LANG:TH -->
+ลบพื้นหลังเมนูหลักออก
+
 <!-- LANG:TR -->
 Ana menü arka planını kaldırır.
 
 <!-- LANG:UK -->
 Видаляє фон головного меню.
+
+<!-- LANG:VI -->
+Xóa nền menu chính.
+
+<!-- LANG:ZH-CN -->
+移除主菜单背景。
+
+<!-- LANG:ZH-TW -->
+移除主選單背景。
+
+<!-- LANG:ZH-CN -->
+移除主菜单背景。
+
+<!-- LANG:ZH-TW -->
+移除主選單背景。
