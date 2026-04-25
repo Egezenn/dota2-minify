@@ -107,6 +107,7 @@ Mods dynamically patch Dota 2's UI layout (`xml_mod.json`) and styling (`styling
 - **Linting & Imports**:
   - We use `ruff check` as our primary linter.
   - To organize and sort imports, use: `ruff check . --select I --fix`.
+  - Avoid using function top imports (local imports) unless absolutely necessary. While cyclic imports are common in this project, analyze the dependency chain thoroughly before resorting to them.
 - **PR Naming**:
   - Use the format `<category>: concise title`.
   - Categories: `feat`, `fix`, `refactor`, `docs`, `test`, `chore`.

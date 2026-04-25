@@ -1,6 +1,6 @@
 import os
 import sys
-from unittest.mock import patch, call
+from unittest.mock import call, patch
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "Minify")))
 
@@ -203,8 +203,8 @@ def test_download_file_exception(mock_add_text, mock_get, tmp_path):
     assert "Network error" in mock_add_text.call_args[0][0]
 
 
-import zipfile
 import tarfile
+import zipfile
 
 
 def test_extract_archive_zip_all(tmp_path):
