@@ -1,4 +1,7 @@
 {
+  "conflicts_detected": {
+    "EN": "Conflicts detected:"
+  },
   "button_exit": {
     "EN": "Close",
     "BG": "Затвори",

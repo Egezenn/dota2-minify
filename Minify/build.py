@@ -107,9 +107,24 @@ def patcher(mod=None, pakname=None):
                 dependencies_resolved = True
             dependency_checkbox_states = new_states
 
-        # TODO: conflicts system, break patch and inform user
-
         if mod is None:
+            conflicts_found = {}
+            for conflict_dict in constants.mod_conflicts_list:
+                for conflict_mod, conflicts in conflict_dict.items():
+                    if conflict_mod in mod_list and dpg.get_value(conflict_mod):
+                        active_conflicts = []
+                        for conflicting_mod in conflicts:
+                            if conflicting_mod in mod_list and dpg.get_value(conflicting_mod):
+                                active_conflicts.append(conflicting_mod)
+                        if active_conflicts:
+                            conflicts_found[conflict_mod] = active_conflicts
+
+            if conflicts_found:
+                terminal.add_text("&conflicts_detected", msg_type="error")
+                for conflict_mod, active_conflicts in conflicts_found.items():
+                    terminal.add_text(f"{conflict_mod} -> {', '.join(active_conflicts)}", msg_type="error")
+                return
+
             checkboxes.save()
 
         for folder in mod_list:

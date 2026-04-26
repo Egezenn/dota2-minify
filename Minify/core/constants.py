@@ -172,3 +172,4 @@ mods_with_order = mods_shared.mods_with_order
 visually_unavailable_mods = mods_shared.visually_unavailable_mods
 visually_available_mods = mods_shared.visually_available_mods
 mod_dependencies_list = mods_shared.mod_dependencies_list
+mod_conflicts_list = mods_shared.mod_conflicts_list
