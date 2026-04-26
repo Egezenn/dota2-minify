@@ -69,6 +69,7 @@ Key objects in the `modcfg.json` settings array include:
 
 - **Input Types**: `checkbox`, `combo`, `number` (`int`/`float`), `slider`, `color`, `list`, `button`.
 - Settings are rendered dynamically by `Minify/ui/settings.py` based on exactly what is defined in `modcfg.json`.
+- **Presets**: The `presets` list allows developers to provide predefined combinations of setting values.
 
 ### Mod Scripts
 

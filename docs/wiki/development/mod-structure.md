@@ -36,6 +36,17 @@ mods
   "order": 1, // default is 1, ordered from negative to positive to resolve any conflicts
   "visual": true, // true by default, show it in the UI as a checkbox
   
+  // presets system for custom mod settings
+  "presets": [
+    {
+      "name": "Example Preset",
+      "values": {
+        "example_inputbox": "preset_value",
+        "example_checkbox": true
+      }
+    }
+  ],
+
   // dynamically injects settings into the global Settings Menu
   "settings": [
     // key*: the internal name
