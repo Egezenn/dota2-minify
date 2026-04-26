@@ -93,6 +93,27 @@ def save(sender=None, app_data=None, user_data=None):
         config.set_mod(mod_name, mod_data)
 
 
+def apply_preset(sender, app_data, user_data):
+    mod_name = user_data["mod_name"]
+    presets = user_data["presets"]
+    combo_tag = user_data["combo_tag"]
+
+    selected_preset_name = dpg.get_value(combo_tag)
+    if not selected_preset_name:
+        return
+
+    preset = next((p for p in presets if p["name"] == selected_preset_name), None)
+    if not preset:
+        return
+
+    mod_data = config.get_mod(mod_name)
+    for k, v in preset.get("values", {}).items():
+        mod_data[k] = v
+
+    config.set_mod(mod_name, mod_data)
+    refresh()
+
+
 def handle_button_click(sender, app_data, user_data):
     mod_name = user_data["mod_name"]
     function_name = user_data["key"]
@@ -184,6 +205,35 @@ def render_menu():
                 dpg.add_text(f"{mod}:", parent="settings_content_group")
 
                 saved_mod_data = config.get_mod(mod)
+
+                presets = mod_config.get("presets", [])
+                if presets:
+                    with dpg.group(horizontal=True, parent="settings_content_group"):
+                        dpg.add_text("Presets:")
+
+                        preset_names = [p["name"] for p in presets]
+
+                        # Determine current preset
+                        current_preset = ""
+                        for p in presets:
+                            match = True
+                            for k, v in p.get("values", {}).items():
+                                if saved_mod_data.get(k) != v:
+                                    match = False
+                                    break
+                            if match:
+                                current_preset = p["name"]
+                                break
+
+                        combo_tag = f"preset_combo_{mod}"
+                        dpg.add_combo(tag=combo_tag, items=preset_names, default_value=current_preset, width=150)
+
+                        dpg.add_button(
+                            label="Apply",
+                            callback=apply_preset,
+                            user_data={"mod_name": mod, "presets": presets, "combo_tag": combo_tag},
+                        )
+
                 for opt in settings_to_render:
                     _tag = f"mod_opt_{mod}_{opt['key']}"
                     _text = opt.get("text") if opt["type"] == "checkbox" else f"{opt.get('text')}:"
