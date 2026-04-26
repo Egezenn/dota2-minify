@@ -5,6 +5,11 @@
       "text": "Background Image Path",
       "default": "url(\"s2r://panorama/images/backgrounds/background_png.vtex\"), url(\"s2r://panorama/images/loadingscreens/international_2025_ls_3/loadingscreen.vtex\")",
       "type": "inputbox"
+    },
+    {
+      "key": "select_background",
+      "text": "Select Background",
+      "type": "button"
     }
   ]
 }
