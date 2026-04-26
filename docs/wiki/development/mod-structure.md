@@ -33,6 +33,7 @@ mods
 { // defaults doesn't need to be indicated
   "always": false, // false by default, apply them without checking mods.json or checkbox
   "dependencies": ["<mod>"], // None by default, add a mod dependency's name here 
+  "conflicts": ["<mod>"], // None by default, add names of mutually exclusive mods here
   "order": 1, // default is 1, ordered from negative to positive to resolve any conflicts
   "visual": true, // true by default, show it in the UI as a checkbox
   
