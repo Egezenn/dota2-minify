@@ -96,6 +96,7 @@ class Update:
     @staticmethod
     def is_portable():
         import sys
+
         if not base.FROZEN:
             return True
         return not os.path.exists(os.path.join(os.path.dirname(sys.executable), "unins000.exe"))
@@ -127,17 +128,21 @@ class Update:
                         modal_shared.set_progress(1.0, "Download complete!")
                     else:
                         total_length = int(total_length)
+                        last_report_time = 0
                         for chunk in response.iter_content(chunk_size=8192):
                             if chunk:
                                 downloaded += len(chunk)
                                 f.write(chunk)
-                                progress = downloaded / total_length
-                                mb_downloaded = downloaded / (1024 * 1024)
-                                mb_total = total_length / (1024 * 1024)
-                                modal_shared.set_progress(
-                                    progress, f"Progress: {mb_downloaded:.1f}MB / {mb_total:.1f}MB"
-                                )
-                                time.sleep(1)
+
+                                current_time = time.time()
+                                if current_time - last_report_time >= 0.1:
+                                    progress = downloaded / total_length
+                                    mb_downloaded = downloaded / (1024 * 1024)
+                                    mb_total = total_length / (1024 * 1024)
+                                    modal_shared.set_progress(
+                                        progress, f"Progress: {mb_downloaded:.1f}MB / {mb_total:.1f}MB"
+                                    )
+                                    last_report_time = current_time
 
                 # Launch installer and exit
                 modal_shared.set_progress(1.0, "Launching installer...")

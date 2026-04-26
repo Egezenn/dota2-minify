@@ -37,6 +37,47 @@ def remove_lang_args(arg_string):
 
 </details>
 
+## `remove_specific_lang_arg(arg_string, lang_to_remove)`
+
+Parse launch options, remove a specific language argument and return a clean string
+
+<details open><summary>Source</summary>
+
+```python
+def remove_specific_lang_arg(arg_string, lang_to_remove):
+    "Parse launch options, remove a specific language argument and return a clean string"
+
+    if not arg_string:
+        return ""
+    tokens = arg_string.split()
+    cleaned = []
+    skip_next = False
+
+    for i, token in enumerate(tokens):
+        if skip_next:
+            skip_next = False
+            continue
+
+        if token == "-language":
+            if i + 1 < len(tokens) and not tokens[i + 1].startswith(("-", "+")):
+                if tokens[i + 1] == lang_to_remove:
+                    skip_next = True
+                    continue
+                else:
+                    cleaned.append(token)
+                    continue
+            else:
+                cleaned.append(token)
+                continue
+
+        cleaned.append(token)
+
+    return " ".join(cleaned)
+
+```
+
+</details>
+
 ## `fix_launch_options()`
 
 Fixes user(s) launch options with the language argument that has the current output path.
@@ -54,8 +95,9 @@ def fix_launch_options():
 
     steam_ids = []
     successful_ids = []
+    accounts = get_steam_accounts()
     if config.get("apply_for_all", True):
-        for account in get_steam_accounts():
+        for account in accounts:
             steam_ids.append(account["id"])
     else:
         steam_ids.append(config.get("steam_id"))
@@ -78,7 +120,7 @@ def fix_launch_options():
             continue
         if f"-language {locale}" not in launch_options or launch_options.count("-language") >= 2:
             user_name = "?"
-            for user in get_steam_accounts():
+            for user in accounts:
                 if user["id"] == steam_id:
                     user_name = user["name"]
                     break
@@ -91,6 +133,59 @@ def fix_launch_options():
         with utils.open_utf8R(vdf_path, "w") as file:
             vdf.dump(data, file, pretty=True)
         successful_ids.append(steam_id)
+    return successful_ids
+
+```
+
+</details>
+
+## `remove_minify_lang()`
+
+Removes `-language minify` argument specifically from launch options only if the locale matches the config.
+
+<details open><summary>Source</summary>
+
+```python
+def remove_minify_lang():
+    """
+    Removes `-language minify` argument specifically from launch options only if the locale matches the config.
+    """
+    steam_ids = []
+    successful_ids = []
+    accounts = get_steam_accounts()
+    if config.get("apply_for_all", True):
+        for account in accounts:
+            steam_ids.append(account["id"])
+    else:
+        steam_ids.append(config.get("steam_id"))
+
+    for steam_id in steam_ids:
+        vdf_path = os.path.join(config.get("steam_root"), "userdata", steam_id, "config", "localconfig.vdf")
+        if not os.path.exists(vdf_path):
+            continue
+
+        with utils.open_utf8R(vdf_path) as file:
+            data = vdf.load(file)
+
+        locale = config.get("output_locale")
+        if locale != "minify":
+            continue
+
+        try:
+            launch_options = data["UserLocalConfigStore"]["Software"]["Valve"]["Steam"]["apps"][base.STEAM_DOTA_ID][
+                "LaunchOptions"
+            ]
+        except KeyError:
+            continue
+
+        if "-language" in launch_options:
+            data["UserLocalConfigStore"]["Software"]["Valve"]["Steam"]["apps"][base.STEAM_DOTA_ID]["LaunchOptions"] = (
+                remove_specific_lang_arg(launch_options, locale)
+            )
+            with utils.open_utf8(vdf_path, "w") as file:
+                vdf.dump(data, file, pretty=True)
+            successful_ids.append(steam_id)
+
     return successful_ids
 
 ```

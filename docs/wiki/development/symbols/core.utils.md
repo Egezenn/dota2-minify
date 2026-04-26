@@ -17,6 +17,39 @@ def try_pass():
 
 </details>
 
+## `_parse_version(v)`
+
+*No documentation available.*
+
+<details open><summary>Source</summary>
+
+```python
+def _parse_version(v: str) -> tuple:
+    parts = []
+    for part in str(v).split("."):
+        match = re.match(r"^(\d+)(.*)$", part)
+        if match:
+            num = int(match.group(1))
+            suffix = match.group(2)
+            if suffix:
+                if suffix.startswith("rc"):
+                    rc_num = suffix[2:]
+                    parts.append((num, -1, int(rc_num) if rc_num.isdigit() else 0))
+                else:
+                    parts.append((num, -2, 0))
+            else:
+                parts.append((num, 0, 0))
+        else:
+            raise ValueError(f"Invalid version string part: {part}")
+    # Pad to handle cases like "1.13" vs "1.13.0"
+    while len(parts) < 4:
+        parts.append((0, 0, 0))
+    return tuple(parts)
+
+```
+
+</details>
+
 ## `is_version_at_least(current, target)`
 
 Compares two semantic version strings.
@@ -31,51 +64,11 @@ def is_version_at_least(current: str, target: str) -> bool:
     Returns True if current >= target.
     """
     try:
-        c = tuple(map(int, current.split(".")))
-        t = tuple(map(int, target.split(".")))
-        return c >= t
-    except (ValueError, AttributeError, IndexError):
+        if current is None or target is None:
+            return False
+        return _parse_version(current) >= _parse_version(target)
+    except (ValueError, AttributeError, IndexError, TypeError):
         return False
-
-```
-
-</details>
-
-## `_patch_open_base(encoding_val, errors_val, file, mode)`
-
-*No documentation available.*
-
-<details open><summary>Source</summary>
-
-```python
-def _patch_open_base(
-    encoding_val: Optional[str],
-    errors_val: Optional[str],
-    file: Any,
-    mode: str,
-    *args: Any,
-    **kwargs: Any,
-) -> Iterator[Any]:
-    if "b" not in mode:
-        if encoding_val:
-            kwargs.setdefault("encoding", encoding_val)
-        if errors_val:
-            kwargs.setdefault("errors", errors_val)
-
-    def _patch_open(f, m="r", *a, **kw):
-        if "b" not in m:
-            if encoding_val:
-                kw.setdefault("encoding", encoding_val)
-            if errors_val:
-                kw.setdefault("errors", errors_val)
-        return _real_open(f, m, *a, **kw)
-
-    with patch("builtins.open", _patch_open):
-        if file is not None:
-            with _real_open(file, mode, *args, **kwargs) as f:
-                yield f
-        else:
-            yield
 
 ```
 
@@ -88,9 +81,10 @@ def _patch_open_base(
 <details open><summary>Source</summary>
 
 ```python
-def open_utf8(file: Any = None, mode: str = "r", *args: Any, **kwargs: Any) -> Iterator[IO[Any]]:
-    with _patch_open_base("utf-8", None, file, mode, *args, **kwargs) as f:
-        yield f
+def open_utf8(file: Any, mode: str = "r", *args: Any, **kwargs: Any) -> IO[Any]:
+    if "b" not in mode:
+        kwargs.setdefault("encoding", "utf-8")
+    return _real_open(file, mode, *args, **kwargs)
 
 ```
 
@@ -103,9 +97,11 @@ def open_utf8(file: Any = None, mode: str = "r", *args: Any, **kwargs: Any) -> I
 <details open><summary>Source</summary>
 
 ```python
-def open_utf8R(file: Any = None, mode: str = "r", *args: Any, **kwargs: Any) -> Iterator[IO[Any]]:
-    with _patch_open_base("utf-8", "replace", file, mode, *args, **kwargs) as f:
-        yield f
+def open_utf8R(file: Any, mode: str = "r", *args: Any, **kwargs: Any) -> IO[Any]:
+    if "b" not in mode:
+        kwargs.setdefault("encoding", "utf-8")
+        kwargs.setdefault("errors", "replace")
+    return _real_open(file, mode, *args, **kwargs)
 
 ```
 
@@ -123,8 +119,10 @@ def hex_to_rgba(hex_str):
         hex_str = hex_str.lstrip("#")
         if len(hex_str) == 6:
             hex_str += "FF"
+        elif len(hex_str) != 8:
+            return [255, 255, 255, 255]
         return [int(hex_str[i : i + 2], 16) for i in (0, 2, 4, 6)]
-    except (ValueError, IndexError):
+    except (ValueError, IndexError, AttributeError):
         return [255, 255, 255, 255]
 
 ```

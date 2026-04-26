@@ -246,6 +246,17 @@ config_dir = "config"
 
 </details>
 
+### `cache_dir`
+
+<details open><summary>Source</summary>
+
+```python
+cache_dir = "cache"
+
+```
+
+</details>
+
 ### `blank_files_dir`
 
 <details open><summary>Source</summary>
@@ -351,6 +362,17 @@ log_s2v = os.path.join(logs_dir, "Source2Viewer-CLI.txt")
 
 ```python
 log_rescomp = os.path.join(logs_dir, "resourcecompiler.txt")
+
+```
+
+</details>
+
+### `dota_steam_inf_cache`
+
+<details open><summary>Source</summary>
+
+```python
+dota_steam_inf_cache = os.path.join(cache_dir, "steam.inf")
 
 ```
 

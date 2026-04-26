@@ -10,7 +10,13 @@ Shared mod scanning logic
 
 ```python
 def scan_mods():
-    global mods_alphabetical, mods_with_order, visually_unavailable_mods, visually_available_mods, mod_dependencies_list
+    global \
+        mods_alphabetical, \
+        mods_with_order, \
+        visually_unavailable_mods, \
+        visually_available_mods, \
+        mod_dependencies_list, \
+        mod_conflicts_list
 
     if not os.path.exists(base.mods_dir):
         sys.exit()
@@ -20,6 +26,7 @@ def scan_mods():
     _unavailable = []
     _available = []
     _dependencies = []
+    _conflicts = []
 
     for mod in sorted(os.listdir(base.mods_dir)):
         mod_path = os.path.join(base.mods_dir, mod)
@@ -33,10 +40,13 @@ def scan_mods():
                 cfg = config.read_json_file(mod_cfg)
                 order = cfg.get("order", 1)
                 dependencies = cfg.get("dependencies", None)
+                conflicts = cfg.get("conflicts", None)
                 visual = cfg.get("visual", True)
                 _available.append(mod) if visual else _unavailable.append(mod)
                 if dependencies is not None:
                     _dependencies.append({mod: dependencies})
+                if conflicts is not None:
+                    _conflicts.append({mod: conflicts})
 
                 # Default order, blacklist mods should always be indexed last
                 if blacklist_exist and not cfg_exist:
@@ -58,6 +68,7 @@ def scan_mods():
     visually_unavailable_mods[:] = _unavailable
     visually_available_mods[:] = _available
     mod_dependencies_list[:] = _dependencies
+    mod_conflicts_list[:] = _conflicts
 
 ```
 

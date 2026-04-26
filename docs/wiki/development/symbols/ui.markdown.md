@@ -19,7 +19,7 @@ def parse_notes(mod_path, locale):
             user_locale = locale.upper()
             sections = {}
 
-            parts = re.split(r"<!-- LANG:(\w+) -->", raw_notes)
+            parts = re.split(r"<!-- LANG:([\w-]+) -->", raw_notes)
 
             if len(parts) > 1:
                 for i in range(1, len(parts), 2):

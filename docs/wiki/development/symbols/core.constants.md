@@ -191,6 +191,17 @@ dota_core_pak_path = os.path.join(steam.LIBRARY, "steamapps", "common", "dota 2 
 
 </details>
 
+### `dota_steam_inf_path`
+
+<details open><summary>Source</summary>
+
+```python
+dota_steam_inf_path = os.path.join(steam.LIBRARY, "steamapps", "common", "dota 2 beta", "game", "dota", "steam.inf")
+
+```
+
+</details>
+
 ### `dota_resource_compiler_path`
 
 <details open><summary>Source</summary>
@@ -310,6 +321,17 @@ visually_available_mods = mods_shared.visually_available_mods
 
 ```python
 mod_dependencies_list = mods_shared.mod_dependencies_list
+
+```
+
+</details>
+
+### `mod_conflicts_list`
+
+<details open><summary>Source</summary>
+
+```python
+mod_conflicts_list = mods_shared.mod_conflicts_list
 
 ```
 

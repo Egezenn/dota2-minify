@@ -25,6 +25,7 @@ def patcher(mod=None, pakname=None):
             fs.remove_path(os.path.join(base.logs_dir, item))
 
         fs.create_dirs(
+            base.cache_dir,
             base.build_dir,
             base.replace_dir,
             base.merge_dir,
@@ -33,6 +34,23 @@ def patcher(mod=None, pakname=None):
         )
 
         blank_file_extensions = helper.get_blank_file_extensions()  # list of extensions in bin/blank-files
+
+        current_dota_version = ""
+        if os.path.exists(constants.dota_steam_inf_path):
+            with utils.open_utf8(constants.dota_steam_inf_path) as f:
+                current_dota_version = f.read()
+
+        cached_dota_version = ""
+        if os.path.exists(base.dota_steam_inf_cache):
+            with utils.open_utf8(base.dota_steam_inf_cache) as f:
+                cached_dota_version = f.read()
+
+        dota_version_changed = current_dota_version != cached_dota_version
+
+        if dota_version_changed and current_dota_version:
+            with utils.open_utf8(base.dota_steam_inf_cache, "w") as f:
+                f.write(current_dota_version)
+
         dota_pak_contents = vpk.open(constants.dota_game_pak_path)
         core_pak_contents = vpk.open(constants.dota_core_pak_path)
         dota_extracts = []
@@ -71,9 +89,24 @@ def patcher(mod=None, pakname=None):
                 dependencies_resolved = True
             dependency_checkbox_states = new_states
 
-        # TODO: conflicts system, break patch and inform user
-
         if mod is None:
+            conflicts_found = {}
+            for conflict_dict in constants.mod_conflicts_list:
+                for conflict_mod, conflicts in conflict_dict.items():
+                    if conflict_mod in mod_list and dpg.get_value(conflict_mod):
+                        active_conflicts = []
+                        for conflicting_mod in conflicts:
+                            if conflicting_mod in mod_list and dpg.get_value(conflicting_mod):
+                                active_conflicts.append(conflicting_mod)
+                        if active_conflicts:
+                            conflicts_found[conflict_mod] = active_conflicts
+
+            if conflicts_found:
+                terminal.add_text("&conflicts_detected", msg_type="error")
+                for conflict_mod, active_conflicts in conflicts_found.items():
+                    terminal.add_text(f"{conflict_mod} -> {', '.join(active_conflicts)}", msg_type="error")
+                return
+
             checkboxes.save()
 
         for folder in mod_list:
@@ -130,13 +163,11 @@ def patcher(mod=None, pakname=None):
 
                     global game_contents_file_init
                     if not game_contents_file_init:
-                        # TODO: check pak01 hash, log it & run this only if it's different
-                        with utils.open_utf8(
-                            os.path.join(base.bin_dir, "gamepakcontents.txt"),
-                            "w",
-                        ) as file:
-                            for filepath in dota_pak_contents:
-                                file.write(filepath + "\n")
+                        gamepakcontents_path = os.path.join(base.bin_dir, "gamepakcontents.txt")
+                        if dota_version_changed or not os.path.exists(gamepakcontents_path):
+                            with utils.open_utf8(gamepakcontents_path, "w") as file:
+                                for filepath in dota_pak_contents:
+                                    file.write(filepath + "\n")
                         game_contents_file_init = True
 
                     # ------------------------------- blacklist.txt ------------------------------ #
@@ -277,29 +308,7 @@ def patcher(mod=None, pakname=None):
                 ignore=shutil.ignore_patterns("*.vcss_c", "*.vxml_c"),
             )
 
-            # TODO: use helper.compile instead
-            with open(base.log_rescomp, "wb") as file:
-                command = [
-                    constants.dota_resource_compiler_path,
-                    "-i",
-                    constants.minify_dota_compile_input_path + "/*",
-                    "-r",
-                ]
-                if base.OS != base.WIN:
-                    command.insert(0, "wine")
-
-                rescomp = subprocess.run(
-                    command,
-                    stdout=subprocess.PIPE,
-                    stderr=subprocess.PIPE,  # compiler complains if minify_dota_compile_input_path is empty
-                    creationflags=subprocess.CREATE_NO_WINDOW if base.OS == base.WIN else 0,
-                )
-                if rescomp.stdout != b"":
-                    file.write(rescomp.stdout)
-
-                # if sp_compiler.stderr != b"":
-                #     decoded_err = sp_compiler.stderr.decode("utf-8")
-                #     raise Exception(decoded_err)
+            helper.compile()
         helper.bulk_exec_script("after_recompile")
 
         if replacer_source_extracts:
@@ -321,6 +330,12 @@ def patcher(mod=None, pakname=None):
 
         with utils.open_utf8(os.path.join(constants.minify_dota_compile_output_path, "minify_version.txt"), "w") as f:
             f.write(base.VERSION)
+
+        if os.path.exists(constants.dota_steam_inf_path):
+            shutil.copy(
+                constants.dota_steam_inf_path,
+                os.path.join(constants.minify_dota_compile_output_path, "steam.inf"),
+            )
 
         fs.create_dirs(helper.output_path)
         native_mods = vpk.new(constants.minify_dota_compile_output_path)
@@ -358,6 +373,12 @@ def patcher(mod=None, pakname=None):
 
             with utils.open_utf8(os.path.join(base.merge_dir, "minify_version.txt"), "w") as f:
                 f.write(base.VERSION)
+
+            if os.path.exists(constants.dota_steam_inf_path):
+                shutil.copy(
+                    constants.dota_steam_inf_path,
+                    os.path.join(base.merge_dir, "steam.inf"),
+                )
 
             terminal.add_text("&creating_merged_vpk")
             merged_mods = vpk.new(base.merge_dir)
@@ -492,7 +513,9 @@ def uninstall(sender=None, app_data=None, user_data=None):
                             if file in pak_contents:
                                 fs.remove_path(os.path.join(path, item))
                                 break
-        # TODO remove lang param if out locale is minify
+
+        steam.remove_minify_lang()
+
         helper.bulk_exec_script("uninstall")
         terminal.add_text("&mods_removed_terminal")
 
@@ -575,7 +598,7 @@ def apply_xml_modifications(xml_file, modifications):
     def find_with_parent_by_id(node, node_id):
         # Returns (element, parent) or (None, None)
         for parent in node.iter():
-            for child in list(parent):
+            for child in parent:
                 if child.get("id") == node_id:
                     return child, parent
         # root itself
@@ -721,11 +744,18 @@ def apply_styles_to_file(item):
             brace_count = 1
             current_index = open_brace_index + 1
             while brace_count > 0 and current_index < len(text):
-                if text[current_index] == "{":
+                next_open = text.find("{", current_index)
+                next_close = text.find("}", current_index)
+
+                if next_close == -1:
+                    break
+
+                if next_open != -1 and next_open < next_close:
                     brace_count += 1
-                elif text[current_index] == "}":
+                    current_index = next_open + 1
+                else:
                     brace_count -= 1
-                current_index += 1
+                    current_index = next_close + 1
 
             if brace_count == 0:
                 text = text[:start_index] + text[current_index:]
@@ -739,11 +769,14 @@ def apply_styles_to_file(item):
     new_defines = set()
     new_keyframes = set()
 
+    define_pattern = re.compile(r"@define\s+([\w-]+)\s*:")
+    keyframe_pattern = re.compile(r"@keyframes\s+(?:'|\")?([\w\s-]+)(?:'|\")?")
+
     for style in styles_to_apply:
-        defines = re.findall(r"@define\s+([\w-]+)\s*:", style)
+        defines = define_pattern.findall(style)
         new_defines.update(defines)
 
-        keyframes = re.findall(r"@keyframes\s+(?:'|\")?([\w\s-]+)(?:'|\")?", style)
+        keyframes = keyframe_pattern.findall(style)
         new_keyframes.update(keyframes)
 
     for define_name in new_defines:
@@ -779,40 +812,40 @@ def process_blacklist(blacklist_txt, folder, blank_file_extensions):
     with utils.open_utf8(blacklist_txt) as file:
         lines = file.readlines()
         blacklist_data = []
-        blacklist_data_exclusions = []
+        blacklist_data_exclusions = set()
+        blank_exts = tuple(blank_file_extensions)
 
         for index, line in enumerate(lines):
             line = line.strip()
 
-            if line.startswith("#") or line == "":
+            if not line or line.startswith("#"):
                 continue
 
-            elif line.startswith(">>") or line.startswith("**"):
-                for path in process_blacklist_dir(index, line, folder):
-                    blacklist_data.append(path)
+            elif line.startswith((">>", "**")):
+                blacklist_data.extend(process_blacklist_dir(index, line, folder))
 
             elif line.startswith("*-"):
-                for path in process_blacklist_dir(index, line, folder):
-                    blacklist_data_exclusions.append(path)
+                blacklist_data_exclusions.update(process_blacklist_dir(index, line, folder))
 
             elif line.startswith("--"):
-                blacklist_data_exclusions.append(line[2:])
+                blacklist_data_exclusions.add(line[2:])
 
             else:
-                if line.endswith(tuple(blank_file_extensions)):
+                if line.endswith(blank_exts):
                     blacklist_data.append(line)
                 else:
                     log.write_warning(
                         f"[Invalid Extension] '{line}' in 'mods/{folder}/blacklist.txt' [line: {index + 1}] does not end in one of the valid extensions -> {blank_file_extensions}"
                     )
 
+    blacklist_data_set = set(blacklist_data)
     for exclusion in blacklist_data_exclusions:
-        if exclusion in blacklist_data:
-            blacklist_data.remove(exclusion)
-        else:
+        if exclusion not in blacklist_data_set:
             print(
                 f"[Unnecessary Exclusion] '{exclusion}' in '{folder}' is not necessary, the mod doesn't include this file."
             )
+
+    blacklist_data = [item for item in blacklist_data if item not in blacklist_data_exclusions]
 
     def copy_blank_file(line):
         line = line.strip()
