@@ -75,7 +75,3 @@ def select_background():
             )
 
     modal_shared.show(title="Background Selected", messages=messages, buttons=[{"label": "OK", "width": 100}])
-
-
-if __name__ == "__main__":
-    select_background()
