@@ -95,13 +95,25 @@ def create():
 
     for mod in constants.visually_available_mods:
         mod_path = os.path.join(base.mods_dir, mod)
+        unsupported_version = False
         if is_vpk := mod.endswith(".vpk"):
             always_val = False
         else:
             mod_cfg_path = os.path.join(mod_path, "modcfg.json")
-            always_val = config.read_json_file(mod_cfg_path).get("always", False)
+            cfg = config.read_json_file(mod_cfg_path)
+            always_val = cfg.get("always", False)
+            if version_req := cfg.get("version"):
+                if not utils.is_version_at_least(base.VERSION, version_req):
+                    unsupported_version = True
 
-        if always_val:
+        if unsupported_version:
+            enable_ticking = False
+            value = False
+            if checkboxes_state.get(mod, False):
+                checkboxes_state[mod] = False
+                save()
+            terminal.add_text(f"Disabled {mod} (Requires version {version_req})", msg_type="warning")
+        elif always_val:
             enable_ticking = False
             value = True
         else:
