@@ -50,23 +50,51 @@ def _parse_version(v: str) -> tuple:
 
 </details>
 
-## `is_version_at_least(current, target)`
+## `is_version_at_least(current, requirements)`
 
-Compares two semantic version strings.
-Returns True if current >= target.
+Compares current version against a requirement string (e.g., ">=1.13,<=1.14" or "1.13").
+If no operator is provided, defaults to ">=".
 
 <details open><summary>Source</summary>
 
 ```python
-def is_version_at_least(current: str, target: str) -> bool:
+def is_version_at_least(current: str, requirements: str) -> bool:
     """
-    Compares two semantic version strings.
-    Returns True if current >= target.
+    Compares current version against a requirement string (e.g., ">=1.13,<=1.14" or "1.13").
+    If no operator is provided, defaults to ">=".
     """
     try:
-        if current is None or target is None:
+        if current is None or requirements is None:
             return False
-        return _parse_version(current) >= _parse_version(target)
+
+        current_v = _parse_version(current)
+        reqs = [r.strip() for r in requirements.split(",") if r.strip()]
+
+        for req in reqs:
+            match = re.match(r"^(>=|<=|>|<|==|=)?\s*(.+)$", req)
+            if not match:
+                return False
+
+            op = match.group(1) or ">="
+            target_v = _parse_version(match.group(2))
+
+            if op == ">=":
+                if not (current_v >= target_v):
+                    return False
+            elif op == "<=":
+                if not (current_v <= target_v):
+                    return False
+            elif op == ">":
+                if not (current_v > target_v):
+                    return False
+            elif op == "<":
+                if not (current_v < target_v):
+                    return False
+            elif op in ("==", "="):
+                if not (current_v == target_v):
+                    return False
+
+        return True
     except (ValueError, AttributeError, IndexError, TypeError):
         return False
 

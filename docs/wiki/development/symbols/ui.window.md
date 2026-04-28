@@ -105,9 +105,9 @@ def on_resize():
         dev_tools.prev_width = dpg.get_viewport_width()
         dev_tools.prev_height = dpg.get_viewport_height()
     # terminal wrap size
-    window_width = dpg.get_item_width("primary_window")
-    window_height = dpg.get_item_height("primary_window")
-    terminal.wrap_size = base.main_window_width - 20 if dev_tools.dev_mode_state == 1 else window_width - 10
+    shared.window_width = dpg.get_item_width("primary_window")
+    shared.window_height = dpg.get_item_height("primary_window")
+    terminal.wrap_size = base.main_window_width - 20 if dev_tools.dev_mode_state == 1 else shared.window_width - 10
 
     for item in shared.terminal_history:
         idx = item["id"]
@@ -117,17 +117,17 @@ def on_resize():
     # details windows resize
     for window_tag in shared.tag_data_for_details_windows:
         if dpg.does_item_exist(window_tag):
-            dpg.configure_item(window_tag, width=window_width, height=window_height)
+            dpg.configure_item(window_tag, width=shared.window_width, height=shared.window_height)
             if dpg.is_item_shown(window_tag):
                 mod = window_tag.replace("_details_window_tag", "")
                 details.render_details_window(mod)
 
     # menus resize
     if dpg.does_item_exist("mod_menu"):
-        dpg.configure_item("mod_menu", width=window_width, height=window_height)
+        dpg.configure_item("mod_menu", width=shared.window_width, height=shared.window_height)
 
     if dpg.does_item_exist("settings_menu"):
-        dpg.configure_item("settings_menu", width=window_width, height=window_height)
+        dpg.configure_item("settings_menu", width=shared.window_width, height=shared.window_height)
 
     if dpg.is_item_shown("modal_popup"):
         modal_shared.configure()

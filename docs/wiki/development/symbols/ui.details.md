@@ -42,7 +42,7 @@ def render_details_window(mod):
     container = f"{mod}_markdown_container"
     with dpg.group(parent=content_group, tag=container):
         pass
-    markdown.render(container, text)
+    markdown.render(container, text, width=avail_width)
 
 ```
 
