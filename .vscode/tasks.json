@@ -63,6 +63,18 @@
       "type": "shell",
       "command": "powershell -Command \"Invoke-Item '$env:LOCALAPPDATA\\Dota2-Minify\\config\\minify_config.json'\"",
       "group": { "kind": "test" }
+    },
+    {
+      "label": "Run Tests",
+      "detail": "Run all pre-commit checks (sync, format, lint, tests)",
+      "icon": { "id": "beaker", "color": "terminal.ansiBlue" },
+      "type": "shell",
+      "command": "bash ./scripts/precommit.sh",
+      "group": { "kind": "test", "isDefault": true },
+      "presentation": {
+        "reveal": "always",
+        "panel": "new"
+      }
     }
   ],
   "inputs": [
