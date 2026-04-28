@@ -243,43 +243,43 @@ Các định dạng bên dưới sẽ được tự động chuyển đổi nế
 <!-- LANG:ZH-CN -->
 替换大多数背景。
 
-将名为 `background.<ext>` 的图片或视频拖放到 `config` 文件夹中。默认情况下，它会使用 Dota 中的图片。
+将名为 `background.<ext>` 的图片或视频拖放到 `config` 文件夹中.默认情况下, 它会使用 Dota 中的图片.
 
-如果存在相应的工具，以下格式将自动转换：
+如果存在相应的工具, 以下格式将自动转换:
 
-- `magick`：`.jpg`、`.jpeg`、`.webp`（转换为 `.png`）
+- `magick`: `.jpg`、`.jpeg`、`.webp`(转换为 `.png`)
 
-- `ffmpeg`：`.mp4`（转换为 `.webm`）
+- `ffmpeg`: `.mp4`(转换为 `.webm`)
 
 <!-- LANG:ZH-TW -->
 替換大多數背景。
 
-將名為 `background.<ext>` 的圖片或影片拖曳到 `config` 資料夾中。預設情況下，它會使用 Dota 中的圖片。
+將名為 `background.<ext>` 的圖片或影片拖曳到 `config` 資料夾中.預設情況下, 它會使用 Dota 中的圖片.
 
-如果存在相應的工具，以下格式將自動轉換：
+如果存在相應的工具, 以下格式將自動轉換:
 
-- `magick`：`.jpg`、`.jpeg`、`.webp`（轉換為 `.png`）
+- `magick`: `.jpg`、`.jpeg`、`.webp`(轉換為 `.png`)
 
-- `ffmpeg`：`.mp4`（轉換為 `.webm`）
+- `ffmpeg`: `.mp4`(轉換為 `.webm`)
 
 <!-- LANG:ZH-CN -->
 替换大多数背景。
 
-将名为 `background.<ext>` 的图片或视频拖放到 `config` 文件夹中。默认情况下，它会使用 Dota 中的图片。
+将名为 `background.<ext>` 的图片或视频拖放到 `config` 文件夹中.默认情况下, 它会使用 Dota 中的图片.
 
-如果存在相应的工具，以下格式将自动转换：
+如果存在相应的工具, 以下格式将自动转换:
 
-- `magick`：`.jpg`、`.jpeg`、`.webp`（转换为 `.png`）
+- `magick`: `.jpg`、`.jpeg`、`.webp`(转换为 `.png`)
 
-- `ffmpeg`：`.mp4`（转换为 `.webm`）
+- `ffmpeg`: `.mp4`(转换为 `.webm`)
 
 <!-- LANG:ZH-TW -->
 替換大多數背景。
 
-將名為 `background.<ext>` 的圖片或影片拖曳到 `config` 資料夾中。預設情況下，它會使用 Dota 中的圖片。
+將名為 `background.<ext>` 的圖片或影片拖曳到 `config` 資料夾中.預設情況下, 它會使用 Dota 中的圖片.
 
-如果存在相應的工具，以下格式將自動轉換：
+如果存在相應的工具, 以下格式將自動轉換:
 
-- `magick`：`.jpg`、`.jpeg`、`.webp`（轉換為 `.png`）
+- `magick`: `.jpg`、`.jpeg`、`.webp`(轉換為 `.png`)
 
-- `ffmpeg`：`.mp4`（轉換為 `.webm`）
+- `ffmpeg`: `.mp4`(轉換為 `.webm`)

@@ -5,6 +5,7 @@ import re
 
 import dearpygui.dearpygui as dpg
 from core import utils
+from ui import shared
 
 
 def parse_notes(mod_path, locale):
@@ -33,7 +34,22 @@ def parse_notes(mod_path, locale):
     return ""
 
 
-def render_rich_text(parent, text, font="main_font", base_color=(0, 230, 230), bullet=False):
+def is_cjk(char):
+    """
+    Checks if a character is a CJK character (Chinese, Japanese, Korean)
+    or full-width punctuation.
+    """
+    cp = ord(char)
+    return (
+        0x4E00 <= cp <= 0x9FFF  # CJK Unified Ideographs
+        or 0x3040 <= cp <= 0x309F  # Hiragana
+        or 0x30A0 <= cp <= 0x30FF  # Katakana
+        or 0xAC00 <= cp <= 0xD7AF  # Hangul
+        or 0xFF00 <= cp <= 0xFFEF  # Full-width punctuation
+    )
+
+
+def render_rich_text(parent, text, font="main_font", base_color=(0, 230, 230), bullet=False, width=None):
     """
     Renders text with inline code blocks (wrapped in backticks) in pink.
     Manually handles text wrapping.
@@ -42,7 +58,16 @@ def render_rich_text(parent, text, font="main_font", base_color=(0, 230, 230), b
     if not text:
         return
 
-    avail_width = dpg.get_item_width("primary_window") - 40
+    if width is None:
+        try:
+            # Try to get width from parent, fallback to primary window
+            width = dpg.get_item_width(parent)
+            if width <= 0:
+                width = shared.window_width or dpg.get_item_width("primary_window")
+        except Exception:
+            width = shared.window_width or 640
+
+    avail_width = max(100, width - 40)
 
     # Tokenize: Split by backticks
     parts = text.split("`")
@@ -62,7 +87,19 @@ def render_rich_text(parent, text, font="main_font", base_color=(0, 230, 230), b
                     if word.startswith("http://") or word.startswith("https://"):
                         tokens.append({"text": word, "type": "link"})
                     else:
-                        tokens.append({"text": word, "type": "normal"})
+                        # CJK-aware tokenization for normal text
+                        current_token = ""
+                        for char in word:
+                            if is_cjk(char):
+                                if current_token:
+                                    tokens.append({"text": current_token, "type": "normal"})
+                                    current_token = ""
+                                tokens.append({"text": char, "type": "normal"})
+                            else:
+                                current_token += char
+                        if current_token:
+                            tokens.append({"text": current_token, "type": "normal"})
+
                 if j < len(words) - 1:
                     tokens.append({"text": " ", "type": "normal"})
             if i < len(parts) - 1:
@@ -118,7 +155,7 @@ def render_rich_text(parent, text, font="main_font", base_color=(0, 230, 230), b
                 first_token_rendered = True
 
 
-def render(parent, text):
+def render(parent, text, width=None):
     for line in text.split("\n"):
         line = line.strip()
         if not line:
@@ -127,9 +164,9 @@ def render(parent, text):
 
         if line.startswith("!!:"):
             content = line[3:].strip()
-            render_rich_text(parent, content, font="large_font", base_color=(255, 0, 0))
+            render_rich_text(parent, content, font="large_font", base_color=(255, 0, 0), width=width)
         elif line.startswith("-"):
             content = line[1:].strip()
-            render_rich_text(parent, content, bullet=True)
+            render_rich_text(parent, content, bullet=True, width=width)
         else:
-            render_rich_text(parent, line)
+            render_rich_text(parent, line, width=width)

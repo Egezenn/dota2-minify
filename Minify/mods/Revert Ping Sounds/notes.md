@@ -221,7 +221,7 @@ Khôi phục âm thanh ping về âm thanh trước bản vá `7.39`.
 <!-- LANG:ZH-CN -->
 将 ping 音效恢复到 7.39 版本更新之前的状态。
 
-新的音效替换为：
+新的音效替换为:
 
 - `ping_heart` = `ping`
 
@@ -232,7 +232,7 @@ Khôi phục âm thanh ping về âm thanh trước bản vá `7.39`.
 <!-- LANG:ZH-TW -->
 將 ping 音效恢復到 7.39 版本更新之前的狀態。
 
-新的音效替換為：
+新的音效替換為:
 
 - `ping_heart` = `ping`
 
@@ -243,7 +243,7 @@ Khôi phục âm thanh ping về âm thanh trước bản vá `7.39`.
 <!-- LANG:ZH-CN -->
 将 ping 音效恢复到 7.39 版本更新之前的状态。
 
-新的音效替换为：
+新的音效替换为:
 
 - `ping_heart` = `ping`
 
@@ -254,7 +254,7 @@ Khôi phục âm thanh ping về âm thanh trước bản vá `7.39`.
 <!-- LANG:ZH-TW -->
 將 ping 音效恢復到 7.39 版本更新之前的狀態。
 
-新的音效替換為：
+新的音效替換為:
 
 - `ping_heart` = `ping`
 

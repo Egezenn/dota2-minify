@@ -85,7 +85,7 @@ def change(sender=None, app_data=None, user_data=None, init=False):
             mod_path = os.path.join(base.mods_dir, mod)
             text = markdown.parse_notes(mod_path, locale)
             dpg.delete_item(container, children_only=True)
-            markdown.render(container, text)
+            markdown.render(container, text, width=base.main_window_width)
 
     # Update dynamic detail buttons
     details_label = localization_data.get("details_button_label_var", {}).get(

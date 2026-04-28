@@ -78,7 +78,7 @@ Fonte: https://github.com/Egezenn/OpenDotaGuides/releases/latest
 <!-- LANG:JA -->
 デフォルトのガイドをOpenDotaGuidesのガイドに置き換えます。
 
-!!: ゲーム内で表示するには、デフォルトのビルドを選択する必要があります。
+!!: ゲーム内で表示するには、デフォルトのビルドを選択する必要があります.
 
 出典: https://github.com/Egezenn/OpenDotaGuides/releases/latest
 
@@ -169,27 +169,27 @@ Nguồn: https://github.com/Egezenn/OpenDotaGuides/releases/latest
 <!-- LANG:ZH-CN -->
 将默认攻略替换为 OpenDotaGuides 的攻略。
 
-!!：需要选择默认出装才能在游戏中查看。
+!!: 需要选择默认出装才能在游戏中查看.
 
-来源：https://github.com/Egezenn/OpenDotaGuides/releases/latest
+来源: https://github.com/Egezenn/OpenDotaGuides/releases/latest
 
 <!-- LANG:ZH-TW -->
 將預設攻略替換為 OpenDotaGuides 的攻略。
 
-!!：需要選擇預設出裝才能在遊戲中查看。
+!!: 需要選擇預設出裝才能在遊戲中查看.
 
-資料來源：https://github.com/Egezenn/OpenDotaGuides/releases/latest
+資料來源: https://github.com/Egezenn/OpenDotaGuides/releases/latest
 
 <!-- LANG:ZH-CN -->
 将默认攻略替换为 OpenDotaGuides 的攻略。
 
-!!：需要选择默认出装才能在游戏中查看。
+!!: 需要选择默认出装才能在游戏中查看.
 
-来源：https://github.com/Egezenn/OpenDotaGuides/releases/latest
+来源: https://github.com/Egezenn/OpenDotaGuides/releases/latest
 
 <!-- LANG:ZH-TW -->
 將預設攻略替換為 OpenDotaGuides 的攻略。
 
-!!：需要選擇預設出裝才能在遊戲中查看。
+!!: 需要選擇預設出裝才能在遊戲中查看.
 
-資料來源：https://github.com/Egezenn/OpenDotaGuides/releases/latest
+資料來源: https://github.com/Egezenn/OpenDotaGuides/releases/latest

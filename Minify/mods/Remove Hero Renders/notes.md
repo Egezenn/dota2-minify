@@ -121,19 +121,19 @@ Biến console `map_enable_portrait_worlds 0` cũng đạt được mục đích
 <!-- LANG:ZH-CN -->
 移除英雄预览和UI渲染。
 
-控制台变量`map_enable_portrait_worlds 0`也能达到同样的效果，但会导致MVP界面卡住。
+控制台变量`map_enable_portrait_worlds 0`也能达到同样的效果, 但会导致MVP界面卡住.
 
 <!-- LANG:ZH-TW -->
 移除英雄預覽和UI渲染。
 
-控制台變數`map_enable_portrait_worlds 0`也能達到相同的效果，但會導致MVP介面卡住。
+控制台變數`map_enable_portrait_worlds 0`也能達到相同的效果, 但會導致MVP介面卡住.
 
 <!-- LANG:ZH-CN -->
 移除英雄预览和UI渲染。
 
-控制台变量`map_enable_portrait_worlds 0`也能达到同样的效果，但会导致MVP界面卡住。
+控制台变量`map_enable_portrait_worlds 0`也能达到同样的效果, 但会导致MVP界面卡住.
 
 <!-- LANG:ZH-TW -->
 移除英雄預覽和UI渲染。
 
-控制台變數`map_enable_portrait_worlds 0`也能達到相同的效果，但會導致MVP介面卡住。
+控制台變數`map_enable_portrait_worlds 0`也能達到相同的效果, 但會導致MVP介面卡住.

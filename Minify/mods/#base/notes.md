@@ -364,7 +364,7 @@ Tự động chấp nhận hộp thoại ngôn ngữ khi mở cài đặt, thêm
 `ALT+F4`: DOTAQuitConfirmed - Cho phép bạn sử dụng phím tắt thoát chung.
 
 <!-- LANG:ZH-CN -->
-打开设置时自动接受语言对话框，并在全景界面添加各种快捷键（有时可能无效）。
+打开设置时自动接受语言对话框, 并在全景界面添加各种快捷键(有时可能无效).
 
 `F1`: DOTAShowHomePage - 导航至主页。
 
@@ -382,12 +382,12 @@ Tự động chấp nhận hộp thoại ngôn ngữ khi mở cài đặt, thêm
 
 `F12`: DOTAShowAddFriendByAccountID - 显示添加好友对话框（SteamID3）。
 
-`上箭头 + 鼠标中键`：DOTAToggleCurrentDashboardPageFullscreen - 隐藏页面顶部和底部元素。
+`上箭头 + 鼠标中键`: DOTAToggleCurrentDashboardPageFullscreen - 隐藏页面顶部和底部元素.
 
-`ALT+F4`：DOTAQuitConfirmed - 允许您使用通用的退出快捷键。
+`ALT+F4`: DOTAQuitConfirmed - 允许您使用通用的退出快捷键.
 
 <!-- LANG:ZH-TW -->
-開啟設定時自動接受語言對話框，並在全景介面中新增各種快速鍵（有時可能無效）。
+開啟設定時自動接受語言對話框, 並在全景介面中新增各種快速鍵(有時可能無效).
 
 `F1`: DOTAShowHomePage - 導覽至首頁。
 
@@ -405,12 +405,12 @@ Tự động chấp nhận hộp thoại ngôn ngữ khi mở cài đặt, thêm
 
 `F12`: DOTAShowAddFriendByAccountID - 顯示新增好友對話框（SteamID3）。
 
-`上箭頭 + 滑鼠中鍵`：DOTAToggleCurrentDashboardPageFullscreen - 隱藏頁面頂部和底部元素。
+`上箭頭 + 滑鼠中鍵`: DOTAToggleCurrentDashboardPageFullscreen - 隱藏頁面頂部和底部元素.
 
-`ALT+F4`：DOTAQuitConfirmed - 允許您使用通用的退出快速鍵。
+`ALT+F4`: DOTAQuitConfirmed - 允許您使用通用的退出快速鍵.
 
 <!-- LANG:ZH-CN -->
-打开设置时自动接受语言对话框，并在全景界面添加各种快捷键（有时可能无效）。
+打开设置时自动接受语言对话框, 并在全景界面添加各种快捷键(有时可能无效).
 
 `F1`: DOTAShowHomePage - 导航至主页。
 
@@ -428,12 +428,12 @@ Tự động chấp nhận hộp thoại ngôn ngữ khi mở cài đặt, thêm
 
 `F12`: DOTAShowAddFriendByAccountID - 显示添加好友对话框（SteamID3）。
 
-`上箭头 + 鼠标中键`：DOTAToggleCurrentDashboardPageFullscreen - 隐藏页面顶部和底部元素。
+`上箭头 + 鼠标中键`: DOTAToggleCurrentDashboardPageFullscreen - 隐藏页面顶部和底部元素.
 
-`ALT+F4`：DOTAQuitConfirmed - 允许您使用通用的退出快捷键。
+`ALT+F4`: DOTAQuitConfirmed - 允许您使用通用的退出快捷键.
 
 <!-- LANG:ZH-TW -->
-開啟設定時自動接受語言對話框，並在全景介面中新增各種快速鍵（有時可能無效）。
+開啟設定時自動接受語言對話框, 並在全景介面中新增各種快速鍵(有時可能無效).
 
 `F1`: DOTAShowHomePage - 導覽至首頁。
 
@@ -451,6 +451,6 @@ Tự động chấp nhận hộp thoại ngôn ngữ khi mở cài đặt, thêm
 
 `F12`: DOTAShowAddFriendByAccountID - 顯示新增好友對話框（SteamID3）。
 
-`上箭頭 + 滑鼠中鍵`：DOTAToggleCurrentDashboardPageFullscreen - 隱藏頁面頂部和底部元素。
+`上箭頭 + 滑鼠中鍵`: DOTAToggleCurrentDashboardPageFullscreen - 隱藏頁面頂部和底部元素.
 
-`ALT+F4`：DOTAQuitConfirmed - 允許您使用通用的退出快速鍵。
+`ALT+F4`: DOTAQuitConfirmed - 允許您使用通用的退出快速鍵.
