@@ -27,7 +27,69 @@ from ui import checkboxes, terminal
 game_contents_file_init = False
 
 
-def patcher(mod=None, pakname=None):
+def _checkbox_enabled(tag):
+    return dpg.does_item_exist(tag) and dpg.get_value(tag)
+
+
+def resolve_dependencies_for_current_selection(requested_mod=None):
+    dependency_checkbox_states = [dpg.get_value(cb) for cb in checkboxes.checkboxes]
+    dependencies_resolved = False
+
+    while not dependencies_resolved:
+        for dependency_dict in constants.mod_dependencies_list:
+            for dependant, dependencies in dependency_dict.items():
+                if not _checkbox_enabled(dependant):
+                    continue
+
+                for dependency in dependencies:
+                    try:
+                        if not dpg.does_item_exist(dependency):
+                            continue
+
+                        if not conditions.workshop_installed:
+                            workshop = False
+                            for method_path in conditions.workshop_required_methods:
+                                if os.path.exists(os.path.join(base.mods_dir, dependency, method_path)):
+                                    workshop = True
+                                    break
+                            dpg.set_value(dependency, False) if workshop else dpg.set_value(dependency, True)
+                        else:
+                            dpg.set_value(dependency, True)
+                    except Exception:
+                        context = f" for {requested_mod}" if requested_mod else ""
+                        log.write_warning(
+                            f"Mod dependency {dependency}{context} couldn't be resolved, "
+                            "might be that the mod doesn't exist."
+                        )
+
+        new_states = [dpg.get_value(cb) for cb in checkboxes.checkboxes]
+        if sum(dependency_checkbox_states) == sum(new_states):
+            dependencies_resolved = True
+        dependency_checkbox_states = new_states
+
+
+def get_active_mods(mod_order=None):
+    active_mods = []
+    mod_order = constants.mods_with_order if mod_order is None else mod_order
+
+    for folder in mod_order:
+        if folder.endswith(".vpk"):
+            if _checkbox_enabled(folder):
+                active_mods.append(folder)
+            continue
+
+        mod_path = os.path.join(base.mods_dir, folder)
+        cfg_path = os.path.join(mod_path, "modcfg.json")
+        mod_cfg = config.read_json_file(cfg_path)
+        visual = mod_cfg.get("visual", True)
+
+        if mod_cfg.get("always", False) or (visual and _checkbox_enabled(folder)):
+            active_mods.append(folder)
+
+    return active_mods
+
+
+def patcher(mod=None, pakname=None, mod_order=None):
     from ui import gui
 
     with gui.interactive_lock():
@@ -37,7 +99,10 @@ def patcher(mod=None, pakname=None):
             return
 
     try:
-        mod_list = constants.mods_with_order if mod is None else [mod]
+        if mod is None:
+            mod_list = list(mod_order) if mod_order is not None else constants.mods_with_order
+        else:
+            mod_list = [mod]
 
         for item in os.listdir(base.logs_dir):
             fs.remove_path(os.path.join(base.logs_dir, item))
@@ -80,32 +145,7 @@ def patcher(mod=None, pakname=None):
         replacer_source_extracts = []
         replacer_targets = []
 
-        dependency_checkbox_states = [dpg.get_value(cb) for cb in checkboxes.checkboxes]
-        dependencies_resolved = False
-
-        while not dependencies_resolved:
-            for dependency_dict in constants.mod_dependencies_list:
-                for dependant, dependencies in dependency_dict.items():
-                    if dpg.get_value(dependant):
-                        for dependency in dependencies:
-                            try:
-                                if not conditions.workshop_installed:
-                                    workshop = False
-                                    for method_path in conditions.workshop_required_methods:
-                                        if os.path.exists(os.path.join(base.mods_dir, dependency, method_path)):
-                                            workshop = True
-                                            break
-                                    dpg.set_value(dependency, False) if workshop else dpg.set_value(dependency, True)
-                                else:
-                                    dpg.set_value(dependency, True)
-                            except Exception:
-                                log.write_warning(
-                                    f"Mod dependency {dependency} for {mod} couldn't be resolved, might be that the mod doesn't exist."
-                                )
-            new_states = [dpg.get_value(cb) for cb in checkboxes.checkboxes]
-            if sum(dependency_checkbox_states) == sum(new_states):
-                dependencies_resolved = True
-            dependency_checkbox_states = new_states
+        resolve_dependencies_for_current_selection(mod)
 
         if mod is None:
             conflicts_found = {}

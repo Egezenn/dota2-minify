@@ -24,6 +24,7 @@ import helper
 from core import base, config, constants, log
 from ui import (
     checkboxes,
+    conflicts,
     dev_tools,
     fonts,
     gui,
@@ -69,7 +70,7 @@ def create_ui():
             with dpg.group(parent="center_group", tag="button_group"):
                 dpg.add_spacer(height=6)
                 dpg.add_button(
-                    tag="button_patch", label="Patch", callback=lambda: build.patcher(), enabled=False, width=-1
+                    tag="button_patch", label="Patch", callback=conflicts.analyze_and_patch, enabled=False, width=-1
                 )
                 dpg.add_button(
                     tag="button_select_mods",
