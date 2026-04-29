@@ -8,9 +8,6 @@ import dearpygui.dearpygui as dpg
 
 modal_queue = []
 
-active_width = 500
-active_height = 300
-
 
 def show(title, messages, buttons, width=500, height=300):
     """
@@ -25,10 +22,6 @@ def show(title, messages, buttons, width=500, height=300):
 
 def show_progress(messages, width=500, height=300):
     """Shows the modal with a progress bar and status text."""
-    global active_width, active_height
-    active_width = width
-    active_height = height
-
     if dpg.does_item_exist("modal_text_wrapper"):
         dpg.delete_item("modal_text_wrapper", children_only=True)
 
@@ -39,7 +32,7 @@ def show_progress(messages, width=500, height=300):
     dpg.configure_item("modal_progress_wrapper", show=True)
     dpg.configure_item("modal_button_wrapper", show=False)
     dpg.configure_item("modal_popup", show=True)
-    configure()
+    configure(width, height)
 
 
 def set_progress(value, status_text=None):
@@ -54,15 +47,11 @@ def show_next_from_queue():
     if not modal_queue:
         return
 
-    global active_width, active_height
     modal_data = modal_queue.pop(0)
     messages = modal_data["messages"]
     buttons = modal_data["buttons"]
     width = modal_data.get("width", 500)
     height = modal_data.get("height", 300)
-
-    active_width = width
-    active_height = height
 
     if dpg.does_item_exist("modal_progress_wrapper"):
         dpg.configure_item("modal_progress_wrapper", show=False)
@@ -103,7 +92,7 @@ def show_next_from_queue():
 
     dpg.configure_item("modal_popup", show=True)
     time.sleep(0.1)
-    configure()
+    configure(width, height)
     time.sleep(0.1)
 
     from ui import window
@@ -112,13 +101,13 @@ def show_next_from_queue():
 
 
 def configure(width=None, height=None):
-    if width is None:
-        width = active_width
-    if height is None:
-        height = active_height
-
     if not dpg.does_item_exist("modal_popup"):
         return
+
+    if width is None:
+        width = dpg.get_item_width("modal_popup") or 500
+    if height is None:
+        height = dpg.get_item_height("modal_popup") or 300
 
     dpg.configure_item(
         "modal_popup",
