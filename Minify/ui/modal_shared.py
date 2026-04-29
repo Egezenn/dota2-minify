@@ -6,10 +6,12 @@ import traceback
 
 import dearpygui.dearpygui as dpg
 
+from ui import shared
+
 modal_queue = []
 
 
-def show(title, messages, buttons, width=500, height=300):
+def show(title, messages, buttons, width=shared.MODAL_WIDTH, height=shared.MODAL_HEIGHT):
     """
     Shows a unified modal popup or queues it if one is already active.
     messages: list of strings
@@ -20,7 +22,7 @@ def show(title, messages, buttons, width=500, height=300):
         show_next_from_queue()
 
 
-def show_progress(messages, width=500, height=300):
+def show_progress(messages, width=shared.MODAL_WIDTH, height=shared.MODAL_HEIGHT):
     """Shows the modal with a progress bar and status text."""
     if dpg.does_item_exist("modal_text_wrapper"):
         dpg.delete_item("modal_text_wrapper", children_only=True)
@@ -50,8 +52,8 @@ def show_next_from_queue():
     modal_data = modal_queue.pop(0)
     messages = modal_data["messages"]
     buttons = modal_data["buttons"]
-    width = modal_data.get("width", 500)
-    height = modal_data.get("height", 300)
+    width = modal_data.get("width", shared.MODAL_WIDTH)
+    height = modal_data.get("height", shared.MODAL_HEIGHT)
 
     if dpg.does_item_exist("modal_progress_wrapper"):
         dpg.configure_item("modal_progress_wrapper", show=False)
@@ -105,9 +107,9 @@ def configure(width=None, height=None):
         return
 
     if width is None:
-        width = dpg.get_item_width("modal_popup") or 500
+        width = dpg.get_item_width("modal_popup") or shared.MODAL_WIDTH
     if height is None:
-        height = dpg.get_item_height("modal_popup") or 300
+        height = dpg.get_item_height("modal_popup") or shared.MODAL_HEIGHT
 
     dpg.configure_item(
         "modal_popup",
