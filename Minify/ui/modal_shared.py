@@ -9,40 +9,31 @@ import dearpygui.dearpygui as dpg
 modal_queue = []
 active_modal_callback = None
 
-# TODO: sizes should be definable
-MODAL_WIDTH = 500
-MODAL_HEIGHT = 300
-TEXT_WRAPPER_WIDTH = MODAL_WIDTH - 16
-TEXT_WRAPPER_HEIGHT = MODAL_HEIGHT - 80
-TEXT_WRAP = MODAL_WIDTH - 40
 
-
-def show(title, messages, buttons):
+def show(title, messages, buttons, width=500, height=300):
     """
     Shows a unified modal popup or queues it if one is already active.
     messages: list of strings
     buttons: list of dicts {"label": str, "callback": func, "user_data": any, "width": int}
     """
-    modal_queue.append({"messages": messages, "buttons": buttons})
+    modal_queue.append({"messages": messages, "buttons": buttons, "width": width, "height": height})
     if not dpg.is_item_shown("modal_popup"):
         show_next_from_queue()
 
 
-def show_progress(messages):
+def show_progress(messages, width=500, height=300):
     """Shows the modal with a progress bar and status text."""
     if dpg.does_item_exist("modal_text_wrapper"):
         dpg.delete_item("modal_text_wrapper", children_only=True)
 
-    with dpg.child_window(
-        parent="modal_text_wrapper", width=TEXT_WRAPPER_WIDTH, height=TEXT_WRAPPER_HEIGHT / 2, border=False
-    ):
+    with dpg.child_window(parent="modal_text_wrapper", width=width - 16, height=(height - 80) / 2, border=False):
         for msg in messages:
-            dpg.add_text(msg, wrap=TEXT_WRAP)
+            dpg.add_text(msg, wrap=width - 40)
 
     dpg.configure_item("modal_progress_wrapper", show=True)
     dpg.configure_item("modal_button_wrapper", show=False)
     dpg.configure_item("modal_popup", show=True)
-    configure()
+    configure(width, height)
 
 
 def set_progress(value, status_text=None):
@@ -60,6 +51,8 @@ def show_next_from_queue():
     modal_data = modal_queue.pop(0)
     messages = modal_data["messages"]
     buttons = modal_data["buttons"]
+    width = modal_data.get("width", 500)
+    height = modal_data.get("height", 300)
 
     if dpg.does_item_exist("modal_progress_wrapper"):
         dpg.configure_item("modal_progress_wrapper", show=False)
@@ -71,11 +64,9 @@ def show_next_from_queue():
 
     dpg.configure_item("modal_button_wrapper", show=True)
 
-    with dpg.child_window(
-        parent="modal_text_wrapper", width=TEXT_WRAPPER_WIDTH, height=TEXT_WRAPPER_HEIGHT, border=False
-    ):
+    with dpg.child_window(parent="modal_text_wrapper", width=width - 16, height=height - 80, border=False):
         for msg in messages:
-            dpg.add_text(msg, wrap=TEXT_WRAP)
+            dpg.add_text(msg, wrap=width - 40)
 
     global active_modal_callback
     for i, btn in enumerate(buttons):
@@ -110,7 +101,7 @@ def show_next_from_queue():
 
     dpg.configure_item("modal_popup", show=True)
     time.sleep(0.1)
-    configure()
+    configure(width, height)
     time.sleep(0.1)
 
     from ui import window
@@ -118,22 +109,27 @@ def show_next_from_queue():
     window.on_resize()
 
 
-def configure():
+def configure(width=None, height=None):
     if not dpg.does_item_exist("modal_popup"):
         return
 
+    if width is None:
+        width = dpg.get_item_width("modal_popup") or 500
+    if height is None:
+        height = dpg.get_item_height("modal_popup") or 300
+
     dpg.configure_item(
         "modal_popup",
-        width=MODAL_WIDTH,
-        height=MODAL_HEIGHT,
+        width=width,
+        height=height,
         autosize=False,
         pos=(
-            dpg.get_viewport_width() / 2 - MODAL_WIDTH / 2,
-            dpg.get_viewport_height() / 2 - MODAL_HEIGHT / 2,
+            dpg.get_viewport_width() / 2 - width / 2,
+            dpg.get_viewport_height() / 2 - height / 2,
         ),
     )
 
     dpg.configure_item("modal_text_wrapper", pos=[8, 8])
 
     btn_width, _ = dpg.get_item_rect_size("modal_button_wrapper")
-    dpg.configure_item("modal_button_wrapper", pos=(MODAL_WIDTH / 2 - btn_width / 2 - 8, MODAL_HEIGHT - 50))
+    dpg.configure_item("modal_button_wrapper", pos=(width / 2 - btn_width / 2 - 8, height - 50))
