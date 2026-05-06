@@ -22,6 +22,7 @@ import conditions
 import dearpygui.dearpygui as dpg
 import helper
 from core import base, config, constants, log
+import browsers
 from ui import (
     checkboxes,
     dev_tools,
@@ -33,8 +34,10 @@ from ui import (
     theme,
     window,
 )
+from browsers.d2pfx import ui as d2pfx_ui
 
 sys.excepthook = log.unhandled_handler()
+browsers.initialize()
 
 parser = argparse.ArgumentParser(description="Minify")
 parser.add_argument("-v", "--version", action="store_true", help="Print version and exit")
@@ -140,6 +143,14 @@ def create_ui():
             width=button_size_x,
             height=button_size_y,
             callback=checkboxes.refresh,
+        )
+        dpg.add_image_button(
+            "d2pfx_texture_tag",
+            tag="button_browser_d2pfx",
+            parent="footer_left_group",
+            width=button_size_x,
+            height=button_size_y,
+            callback=d2pfx_ui.toggle,
         )
         dpg.add_text(tag="language_select", parent="footer_left_group")
         dpg.add_combo(
@@ -252,6 +263,7 @@ def increase_scale():  # prototype
     dpg.configure_item("button_telegram", height=height, width=width)
     dpg.configure_item("button_git", height=height, width=width)
     dpg.configure_item("button_dev", height=height, width=width)
+    dpg.configure_item("button_browser_d2pfx", height=height, width=width)
     dpg.configure_item("button_settings", height=height, width=width)
     font = dpg.get_alias_id("very_large_font")
     dpg.bind_item_font("primary_window", font)
@@ -271,8 +283,8 @@ with dpg.handler_registry():
             modal_shared.active_modal_callback()
 
     dpg.add_key_release_handler(dpg.mvKey_Return, callback=modal_accept)
-    if config.get("debug_env", False):
-        dpg.add_key_release_handler(dpg.mvKey_Spacebar, callback=increase_scale)
+    # if config.get("debug_env", False):
+    #     dpg.add_key_release_handler(dpg.mvKey_Spacebar, callback=increase_scale)
 
 with dpg.texture_registry(show=False):
     w, h, _, d = dpg.load_image(os.path.join(base.img_dir, "Discord.png"))
@@ -292,6 +304,9 @@ with dpg.texture_registry(show=False):
 
     w, h, _, d = dpg.load_image(os.path.join(base.img_dir, "refresh.png"))
     dpg.add_static_texture(width=w, height=h, default_value=d, tag="refresh_texture_tag")
+
+    w, h, _, d = dpg.load_image(os.path.join(base.img_dir, "d2pfx.png"))
+    dpg.add_static_texture(width=w, height=h, default_value=d, tag="d2pfx_texture_tag")
 
 # Creating_main_viewport
 

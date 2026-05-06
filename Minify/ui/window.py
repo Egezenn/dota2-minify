@@ -5,6 +5,7 @@ import subprocess
 
 import dearpygui.dearpygui as dpg
 from core import base, config, utils
+from core.registry import get_browser_configs
 
 from ui import details, dev_tools, modal_shared, shared, terminal
 
@@ -101,6 +102,15 @@ def on_resize():
 
     if dpg.does_item_exist("settings_menu"):
         dpg.configure_item("settings_menu", width=shared.window_width, height=shared.window_height)
+
+    # Browser discovery resizing
+    for browser_config in get_browser_configs():
+        if hasattr(browser_config, "on_resize"):
+            browser_config.on_resize()
+
+        for window_tag in getattr(browser_config, "RESIZE_TAGS", []):
+            if dpg.does_item_exist(window_tag):
+                dpg.configure_item(window_tag, width=shared.window_width, height=shared.window_height)
 
     if dpg.is_item_shown("modal_popup"):
         modal_shared.configure()

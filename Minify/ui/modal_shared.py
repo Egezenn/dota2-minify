@@ -24,7 +24,7 @@ def show(title, messages, buttons):
     buttons: list of dicts {"label": str, "callback": func, "user_data": any, "width": int}
     """
     modal_queue.append({"messages": messages, "buttons": buttons})
-    if not dpg.is_item_shown("modal_popup"):
+    if not dpg.is_item_shown("modal_popup") or not dpg.is_item_shown("modal_button_wrapper"):
         show_next_from_queue()
 
 

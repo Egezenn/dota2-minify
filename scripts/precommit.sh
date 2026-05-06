@@ -11,9 +11,13 @@ uv sync --group dev
 
 echo "[2/4] Checking formatting (ruff)..."
 uv run ruff format --check
+uv run ruff format
 
 echo "[3/4] Linting (ruff)..."
 uv run ruff check .
 
 echo "[4/4] Running tests (pytest)..."
 uv run pytest
+
+echo "[5/5] Cleaning up logs..."
+rm -f Minify/logs/warnings.txt
