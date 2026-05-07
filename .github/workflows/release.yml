@@ -43,6 +43,9 @@ jobs:
         if: ${{ inputs.prerelease == 'false' && matrix.os == 'ubuntu-latest' }}
         with:
           commit_message: "Version change"
+          commit_author: "github-actions[bot] <github-actions[bot]@users.noreply.github.com>"
+          commit_user_name: "github-actions[bot]"
+          commit_user_email: "github-actions[bot]@users.noreply.github.com"
 
       - name: Make and activate virtual environment (Windows)
         if: matrix.os == 'windows-latest'
@@ -111,6 +114,18 @@ jobs:
             scripts/*.exe
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Create Release (Codeberg Windows)
+        if: matrix.os == 'windows-latest'
+        uses: akkuman/gitea-release-action@v1
+        with:
+          server_url: https://codeberg.org
+          token: ${{ secrets.CODEBERG_TOKEN }}
+          tag_name: ${{ github.event.inputs.release_name }}
+          files: |
+            ${{ github.event.inputs.release_name }}-windows.zip
+            scripts/*.exe
+          prerelease: ${{ inputs.prerelease }}
       - name: Create Portable Release (Linux)
         if: matrix.os == 'ubuntu-latest'
         uses: softprops/action-gh-release@v1
@@ -120,3 +135,13 @@ jobs:
           files: "${{ github.event.inputs.release_name }}-linux.zip"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Create Release (Codeberg Linux)
+        if: matrix.os == 'ubuntu-latest'
+        uses: akkuman/gitea-release-action@v1
+        with:
+          server_url: https://codeberg.org
+          token: ${{ secrets.CODEBERG_TOKEN }}
+          tag_name: ${{ github.event.inputs.release_name }}
+          files: "${{ github.event.inputs.release_name }}-linux.zip"
+          prerelease: ${{ inputs.prerelease }}
