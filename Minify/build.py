@@ -480,6 +480,10 @@ def uninstall(sender=None, app_data=None, user_data=None):
         pak_pattern = r"^pak\d{2}_dir\.vpk$"
         for path in constants.minify_dota_possible_language_output_paths:
             if os.path.isdir(path):
+                maps_vpk_path = os.path.join(path, "maps", "dota.vpk")
+                if os.path.exists(maps_vpk_path):
+                    fs.remove_path(os.path.join(path, "maps"))
+
                 for item in os.listdir(path):
                     if os.path.isfile(os.path.join(path, item)) and re.fullmatch(pak_pattern, item):
                         pak_contents = vpk.open(os.path.join(path, item))
