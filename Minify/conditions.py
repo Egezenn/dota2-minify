@@ -95,10 +95,25 @@ def resolve_dependencies(retries=0):
         if retries < 3:
             return resolve_dependencies(retries + 1)
         terminal.add_text("&failed_download", 3, msg_type="error")
+        terminal.add_text("&connection_error", msg_type="error")
         webbrowser.open(constants.rg_latest)
         if workshop_installed:
             webbrowser.open(constants.s2v_latest)
         return
+
+
+def check_binaries():
+    """
+    Checks if required binaries exist.
+    """
+    if workshop_installed:
+        if not os.path.exists(constants.s2v_executable) and not shutil.which(constants.s2v_executable):
+            return False
+
+    if not os.path.exists(constants.rg_executable) and not shutil.which(constants.rg_executable):
+        return False
+
+    return True
 
 
 def disable_workshop_mods():

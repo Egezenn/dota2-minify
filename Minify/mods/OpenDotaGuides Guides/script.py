@@ -16,6 +16,7 @@ import shutil
 import conditions
 import requests
 from core import fs, log, steam, utils
+from ui import terminal
 
 dota_itembuilds_path = os.path.join(steam.LIBRARY, "steamapps", "common", "dota 2 beta", "game", "dota", "itembuilds")
 odg_latest = "https://github.com/Egezenn/OpenDotaGuides/releases/latest/download/itembuilds.zip"
@@ -37,6 +38,7 @@ def main():
         response = requests.get(odg_latest, timeout=15)
     except Exception as e:
         log.write_warning(f"Connection error while fetching guides: {e}")
+        terminal.add_text("&connection_error", msg_type="error")
         return
     if response.status_code == 200:
         with open(zip_path, "wb") as file:
@@ -61,6 +63,7 @@ def main():
         fs.remove_path(temp_dump_path, zip_path)
     else:
         log.write_warning(f"Failed to fetch guides. Status code: {response.status_code}")
+        terminal.add_text("&connection_error", msg_type="error")
 
 
 if __name__ == "__main__":

@@ -34,6 +34,12 @@ def patcher(mod=None, pakname=None):
         if conditions.is_dota_running("&close_dota_terminal", "warning"):
             return
 
+        if not conditions.check_binaries():
+            conditions.resolve_dependencies()
+            if not conditions.check_binaries():
+                terminal.add_text("&failure_terminal", msg_type="error")
+                return
+
     try:
         mod_list = constants.mods_with_order if mod is None else [mod]
 
