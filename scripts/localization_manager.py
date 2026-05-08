@@ -81,9 +81,12 @@ def split_notes(minify_dir, locales_dir):
                 bundled_data["EN"][mod_name] = content.strip()
     
     # Write bundled JSON files
+    notes_dir = os.path.join(locales_dir, "mods")
+    os.makedirs(notes_dir, exist_ok=True)
+    
     for lang, data in bundled_data.items():
         if data:
-            output_path = os.path.join(locales_dir, f"notes_{lang}.json")
+            output_path = os.path.join(notes_dir, f"{lang}.json")
             with open(output_path, "w", encoding="utf-8") as f:
                 json.dump(data, f, indent=2, ensure_ascii=False)
             print(f"Bundled notes for {lang} into {output_path}")
@@ -127,11 +130,15 @@ def merge_localization():
 
 def merge_notes(minify_dir, locales_dir):
     """Merges bundled JSON files back into individual notes.md files in mods."""
-    # 1. Identify all languages present in the weblate folder
+    notes_dir = os.path.join(locales_dir, "mods")
+    if not os.path.exists(notes_dir):
+        return
+
+    # 1. Identify all languages present in the mods folder
     langs = []
-    for filename in os.listdir(locales_dir):
-        if filename.startswith("notes_") and filename.endswith(".json"):
-            langs.append(filename[6:-5].upper())
+    for filename in os.listdir(notes_dir):
+        if filename.endswith(".json"):
+            langs.append(filename[:-5].upper())
     
     if not langs:
         return
@@ -141,7 +148,7 @@ def merge_notes(minify_dir, locales_dir):
     mod_data = {}
 
     for lang in langs:
-        file_path = os.path.join(locales_dir, f"notes_{lang}.json")
+        file_path = os.path.join(notes_dir, f"{lang}.json")
         with open(file_path, "r", encoding="utf-8") as f:
             data = json.load(f)
         

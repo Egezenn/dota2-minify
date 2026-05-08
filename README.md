@@ -24,7 +24,8 @@
 [![platform-aur](https://img.shields.io/badge/AUR-1793D1?style=for-the-badge&logo=arch-linux&logoColor=white)](https://aur.archlinux.org/packages/dota2-minify-bin)
 [![platform-macos](https://img.shields.io/badge/macOS%20(Partial)-000000?style=for-the-badge&logo=apple&logoColor=white)](https://egezenn.github.io/dota2-minify/wiki/#/development?id=running-from-the-source)
 
-[![translation](https://hosted.weblate.org/widgets/dota2-minify/-/main-localization/horizontal-auto.svg)](https://hosted.weblate.org/engage/dota2-minify/)
+[![translation](https://hosted.weblate.org/widgets/dota2-minify/-/main-localization/horizontal-auto.svg)](https://hosted.weblate.org/engage/dota2-minify/)  
+[![translation](https://hosted.weblate.org/widgets/dota2-minify/-/mod-notes/horizontal-auto.svg)](https://hosted.weblate.org/engage/dota2-minify/)
 
 ![ss1](docs/assets/screenshot-1.jpg)
 ![ss2](docs/assets/screenshot-2.png)
