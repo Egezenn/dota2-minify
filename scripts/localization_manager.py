@@ -43,7 +43,7 @@ def split_localization():
 def split_notes(minify_dir, locales_dir):
     """Bundles notes.md files from all whitelisted mods into single JSON files per language."""
     mods_dir = os.path.join(minify_dir, "mods")
-    
+
     # Read .gitignore to find whitelisted mods
     gitignore_path = os.path.abspath(os.path.join(minify_dir, "../.gitignore"))
     whitelisted_mods = []
@@ -54,23 +54,23 @@ def split_notes(minify_dir, locales_dir):
                     mod_name = line.replace("!Minify/mods/", "").strip()
                     if mod_name:
                         whitelisted_mods.append(mod_name)
-    
+
     # Bundle data by language
     bundled_data = {lang: {} for lang in TRUSTED_LANGUAGES}
 
     for mod_name in os.listdir(mods_dir):
         if mod_name not in whitelisted_mods:
             continue
-            
+
         mod_path = os.path.join(mods_dir, mod_name)
         if not os.path.isdir(mod_path):
             continue
-        
+
         notes_path = os.path.join(mod_path, "notes.md")
         if os.path.exists(notes_path):
             with open(notes_path, "r", encoding="utf-8") as f:
                 content = f.read()
-            
+
             parts = re.split(r"<!-- LANG:([\w-]+) -->", content)
             if len(parts) > 1:
                 for i in range(1, len(parts), 2):
@@ -79,11 +79,11 @@ def split_notes(minify_dir, locales_dir):
                         bundled_data[lang][mod_name] = parts[i + 1].strip()
             else:
                 bundled_data["EN"][mod_name] = content.strip()
-    
+
     # Write bundled JSON files
     notes_dir = os.path.join(locales_dir, "mods")
     os.makedirs(notes_dir, exist_ok=True)
-    
+
     for lang, data in bundled_data.items():
         if data:
             output_path = os.path.join(notes_dir, f"{lang}.json")
@@ -139,7 +139,7 @@ def merge_notes(minify_dir, locales_dir):
     for filename in os.listdir(notes_dir):
         if filename.endswith(".json"):
             langs.append(filename[:-5].upper())
-    
+
     if not langs:
         return
 
@@ -151,7 +151,7 @@ def merge_notes(minify_dir, locales_dir):
         file_path = os.path.join(notes_dir, f"{lang}.json")
         with open(file_path, "r", encoding="utf-8") as f:
             data = json.load(f)
-        
+
         for mod_name, content in data.items():
             if mod_name not in mod_data:
                 mod_data[mod_name] = {}
@@ -162,9 +162,9 @@ def merge_notes(minify_dir, locales_dir):
         mod_path = os.path.join(minify_dir, "mods", mod_name)
         if not os.path.exists(mod_path):
             continue
-            
+
         notes_path = os.path.join(mod_path, "notes.md")
-        
+
         # Load existing sections (preserving machine translations)
         current_sections = {}
         if os.path.exists(notes_path):
@@ -176,10 +176,10 @@ def merge_notes(minify_dir, locales_dir):
                     current_sections[parts[i].upper()] = parts[i + 1].strip()
             else:
                 current_sections["EN"] = content.strip()
-        
+
         # Update with new sections
         current_sections.update(sections)
-        
+
         # Write back
         if current_sections:
             output = []
@@ -187,11 +187,11 @@ def merge_notes(minify_dir, locales_dir):
             if "EN" in available_langs:
                 available_langs.remove("EN")
                 available_langs.insert(0, "EN")
-            
+
             for lang in available_langs:
                 if current_sections[lang]:
                     output.append(f"<!-- LANG:{lang} -->\n\n{current_sections[lang]}")
-            
+
             with open(notes_path, "w", encoding="utf-8") as f:
                 f.write("\n\n".join(output))
             print(f"Merged notes for mod: {mod_name}")

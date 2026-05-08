@@ -24,14 +24,13 @@
 [![platform-aur](https://img.shields.io/badge/AUR-1793D1?style=for-the-badge&logo=arch-linux&logoColor=white)](https://aur.archlinux.org/packages/dota2-minify-bin)
 [![platform-macos](https://img.shields.io/badge/macOS%20(Partial)-000000?style=for-the-badge&logo=apple&logoColor=white)](https://egezenn.github.io/dota2-minify/wiki/#/development?id=running-from-the-source)
 
-[![translation](https://hosted.weblate.org/widgets/dota2-minify/-/main-localization/horizontal-auto.svg)](https://hosted.weblate.org/engage/dota2-minify/)  
-[![translation](https://hosted.weblate.org/widgets/dota2-minify/-/mod-notes/horizontal-auto.svg)](https://hosted.weblate.org/engage/dota2-minify/)
+[![translation](https://hosted.weblate.org/widgets/dota2-minify/-/main-localization/horizontal-auto.svg)](https://hosted.weblate.org/engage/dota2-minify/)
+[![translation](https://hosted.weblate.org/widgets/dota2-minify/-/mod-localization/horizontal-auto.svg)](https://hosted.weblate.org/engage/dota2-minify/)
 
 ![ss1](docs/assets/screenshot-1.jpg)
 ![ss2](docs/assets/screenshot-2.png)
 
 </div>
-
 
 <div align="center">
 
@@ -50,7 +49,6 @@ We have an ambitious **[Roadmap](https://github.com/Egezenn/dota2-minify/issues)
 
 ## [VIEW OPEN TASKS & ROADMAP](https://github.com/Egezenn/dota2-minify/issues)
 
-
 **Want to help in other ways?**
 Check out our [Contributing Guidelines](CONTRIBUTING.md) and [Architecture Overview](ARCHITECTURE.md).  
 Join the conversation on [Discord](https://discord.com/invite/9867CPv7cy), [Telegram](https://t.me/dota2minify), or [GitHub Discussions](https://github.com/Egezenn/dota2-minify/discussions).
@@ -58,7 +56,6 @@ Join the conversation on [Discord](https://discord.com/invite/9867CPv7cy), [Tele
 *Every contribution, no matter how small, is deeply appreciated.*
 
 </div>
-
 
 ## Thanks
 
