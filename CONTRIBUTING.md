@@ -1,10 +1,10 @@
 # Contributing to dota2-minify
 
-Thank you for your interest in contributing to `dota2-minify`! Here are the guidelines to ensure a smooth contribution process.
+Thank you for your interest in contributing! Whether you're fixing a bug, suggesting a feature, or improving documentation, your help is what makes `dota2-minify` grow.
 
 **Before you start**: To avoid redundant work or conflicting implementations, please **create an issue** or contact the developers before you begin any major work.
 
-**AI Usage**: The use of AI tools is permitted and even encouraged due to the project's complexity. However, the quality of submitted code must resemble logical thinking; hallucinations, overly assumptive, non-functional boilerplate are not acceptable.
+**AI Usage**: We embrace the future! The use of AI tools is permitted and encouraged. We believe that humans and AI working together can achieve incredible results. However, we ask that you review all AI-generated code carefully to ensure it's logical, functional, and free of "hallucinations" or unnecessary boilerplate.
 
 ## Getting Started
 
@@ -59,6 +59,16 @@ If you are contributing new mods or features to existing ones:
 - Refer to [`docs/wiki/development.md`](https://egezenn.github.io/dota2-minify/wiki/#/development) for a full breakdown of the mod structure (`modcfg.json`, `notes.md`, etc.).
 - Ensure that any feature requiring internet connectivity **fails silently** to avoid crashing the application for offline users.
 - Decouple highly specific or complex logic into its own script within the mod folder.
+
+## Translations
+
+We use **Weblate** for community translations. To make this work with our single `localization.json` structure, we use a helper script:
+
+1. **Translating**: Contribute via our Weblate instance (linked on the website).
+2. **Syncing**: If you are a maintainer merging new translations:
+    - Weblate will push individual JSON files to `scripts/weblate/`.
+    - Run `uv run scripts/localization_manager.py merge` to update the main `Minify/bin/localization.json`.
+    - Commit the updated `localization.json`.
 
 ## Pull Request Process
 

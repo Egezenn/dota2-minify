@@ -62,6 +62,8 @@ def resolve_dependencies(retries=0):
             s2v_on_path = shutil.which(constants.s2v_executable)
             if s2v_on_path:
                 constants.s2v_executable = s2v_on_path
+            else:
+                constants.s2v_executable = os.path.basename(constants.s2v_executable)
 
             if not os.path.exists(constants.s2v_executable):
                 tag = terminal.add_text("&downloading_cli_terminal")
@@ -71,6 +73,8 @@ def resolve_dependencies(retries=0):
                     if fs.extract_archive(zip_path, "."):
                         fs.remove_path(zip_path)
                         terminal.add_text("&extracted_cli_terminal", zip_path)
+                        constants.s2v_executable = os.path.basename(constants.s2v_executable)
+
                         if base.OS != base.WIN and not os.access(constants.s2v_executable, os.X_OK):
                             current_permissions = os.stat(constants.s2v_executable).st_mode
                             os.chmod(
@@ -83,7 +87,10 @@ def resolve_dependencies(retries=0):
         rg_on_path = shutil.which(constants.rg_executable)
         if rg_on_path:
             constants.rg_executable = rg_on_path
-        elif not os.path.exists(constants.rg_executable):
+        else:
+            constants.rg_executable = os.path.basename(constants.rg_executable)
+
+        if not os.path.exists(constants.rg_executable):
             tag = terminal.add_text("&downloading_ripgrep_terminal")
             archive_path = constants.rg_latest.split("/")[-1]
             archive_name = archive_path[:-4] if archive_path[-4:] == ".zip" else archive_path[:-7]
@@ -91,15 +98,19 @@ def resolve_dependencies(retries=0):
             if fs.download_file(constants.rg_latest, archive_path, tag):
                 terminal.add_text("&downloaded_cli_terminal", archive_path)
 
-                success = fs.extract_archive(archive_path, ".", f"{archive_name}/{constants.rg_executable}")
+                rg_binary_name = os.path.basename(constants.rg_executable)
+                success = fs.extract_archive(archive_path, ".", f"{archive_name}/{rg_binary_name}")
 
                 if success:
                     fs.move_path(
-                        os.path.join(archive_name, constants.rg_executable),
-                        constants.rg_executable,
+                        os.path.join(archive_name, rg_binary_name),
+                        rg_binary_name,
                     )
-                    fs.remove_path(archive_path)
+                    fs.remove_path(archive_path, archive_name)
                     terminal.add_text("&extracted_cli_terminal", archive_path)
+
+                    constants.rg_executable = rg_binary_name
+
                     if base.OS in (base.LINUX, base.MAC) and not os.access(constants.rg_executable, os.X_OK):
                         current_permissions = os.stat(constants.rg_executable).st_mode
                         os.chmod(
@@ -113,10 +124,35 @@ def resolve_dependencies(retries=0):
         if retries < 3:
             return resolve_dependencies(retries + 1)
         terminal.add_text("&failed_download", 3, msg_type="error")
+        terminal.add_text("&connection_error", msg_type="error")
         webbrowser.open(constants.rg_latest)
         if workshop_installed:
             webbrowser.open(constants.s2v_latest)
         return
+
+```
+
+</details>
+
+## `check_binaries()`
+
+Checks if required binaries exist.
+
+<details open><summary>Source</summary>
+
+```python
+def check_binaries():
+    """
+    Checks if required binaries exist.
+    """
+    if workshop_installed:
+        if not os.path.exists(constants.s2v_executable) and not shutil.which(constants.s2v_executable):
+            return False
+
+    if not os.path.exists(constants.rg_executable) and not shutil.which(constants.rg_executable):
+        return False
+
+    return True
 
 ```
 

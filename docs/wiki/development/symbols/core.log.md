@@ -41,27 +41,31 @@ def write_crashlog(exc_type=None, exc_value=None, exc_traceback=None, header=Non
 <details open><summary>Source</summary>
 
 ```python
-def write_warning(header=None):
+def write_warning(header=None, *args):
     from ui import terminal
 
     if not os.path.exists(base.log_warnings):
         with utils.open_utf8R(base.log_warnings, "w") as file:
             pass
 
+    exc = traceback.format_exc()
+    if "NoneType: None" in exc and header is None:
+        return
+
     console_message = ""
     with utils.open_utf8R(base.log_warnings, "a") as file:
-        if "NoneType: None" not in traceback.format_exc():
+        if "NoneType: None" not in exc:
             if header:
-                console_message = f"{header}\n\n{traceback.format_exc()}"
+                console_message = f"{header}\n\n{exc}"
             else:
-                console_message = traceback.format_exc()
+                console_message = exc
         else:
             console_message = f"{header}"
 
         file.write(f"{console_message}\n{'-' * 50}\n\n")
 
     if console_message:
-        terminal.add_text(console_message, msg_type="warning")
+        terminal.add_text(console_message, *args, msg_type="warning")
 
 ```
 

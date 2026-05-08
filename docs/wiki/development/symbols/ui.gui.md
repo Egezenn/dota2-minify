@@ -115,6 +115,21 @@ def start_text():
 
 </details>
 
+## `register_persistent_window(tag)`
+
+*No documentation available.*
+
+<details open><summary>Source</summary>
+
+```python
+def register_persistent_window(tag):
+    if tag not in persistent_windows:
+        persistent_windows.append(tag)
+
+```
+
+</details>
+
 ## `close_active_window()`
 
 *No documentation available.*
@@ -128,6 +143,7 @@ def close_active_window():
         return
 
     active_window = dpg.get_item_alias(active_window_id) or active_window_id
+
     is_modal_active = (
         active_window == "modal_popup"
         or active_window_id == dpg.get_alias_id("modal_popup")
@@ -137,14 +153,7 @@ def close_active_window():
     if is_modal_active:
         dpg.configure_item("modal_popup", show=False)
         threading.Timer(0.1, modal_shared.show_next_from_queue).start()
-    elif active_window not in [
-        "terminal_window",
-        "primary_window",
-        "footer",
-        "opener",
-        "mod_tools",
-        "maintenance_tools",
-    ]:
+    elif active_window not in persistent_windows:
         dpg.configure_item(active_window, show=False)
 
 ```

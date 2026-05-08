@@ -10,6 +10,9 @@
 [![website](https://custom-icon-badges.demolab.com/badge/Website-17bebe?style=for-the-badge&logo=globe&logoColor=white)](https://egezenn.github.io/dota2-minify)
 [![wiki](https://custom-icon-badges.demolab.com/badge/Wiki-1D1D1E?style=for-the-badge&logo=book&logoColor=white)](https://egezenn.github.io/dota2-minify/wiki)
 
+[![github](https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/egezenn/dota2-minify)
+[![codeberg](https://img.shields.io/badge/Codeberg-2185D0?style=for-the-badge&logo=codeberg&logoColor=white)](https://codeberg.org/egezenn/dota2-minify)
+
 [![latest-release](https://img.shields.io/github/v/release/Egezenn/dota2-minify?style=for-the-badge)](https://egezenn.github.io/dota2-minify)
 [![build-state](https://img.shields.io/github/actions/workflow/status/Egezenn/dota2-minify/release.yml?style=for-the-badge)](https://egezenn.github.io/dota2-minify)
 
@@ -21,14 +24,40 @@
 [![platform-aur](https://img.shields.io/badge/AUR-1793D1?style=for-the-badge&logo=arch-linux&logoColor=white)](https://aur.archlinux.org/packages/dota2-minify-bin)
 [![platform-macos](https://img.shields.io/badge/macOS%20(Partial)-000000?style=for-the-badge&logo=apple&logoColor=white)](https://egezenn.github.io/dota2-minify/wiki/#/development?id=running-from-the-source)
 
+[![translation](https://hosted.weblate.org/widgets/dota2-minify/-/main-localization/horizontal-auto.svg)](https://hosted.weblate.org/engage/dota2-minify/)
+
 ![ss1](docs/assets/screenshot-1.jpg)
 ![ss2](docs/assets/screenshot-2.png)
 
 </div>
 
-## Wiki
 
-The contents of the readme has been moved to [the new wiki](https://egezenn.github.io/dota2-minify/wiki) for better structure and readability.
+<div align="center">
+
+# ⚠️ JOIN THE EVOLUTION!
+
+**Help us build the future of Minify!**  
+We have an ambitious **[Roadmap](https://github.com/Egezenn/dota2-minify/issues)** with plenty of **[Good First Issues](https://github.com/Egezenn/dota2-minify/issues?q=is%3Aissue%20state%3Aopen%20label%3A%22good%20first%20issue%22)** waiting for you.
+
+| Area            | Focus                                                                                     |
+| :-------------- | :---------------------------------------------------------------------------------------- |
+| **UI/UX**       | Modal refinements, searchbars, and high-DPI scaling.                                      |
+| **Core Engine** | CLI interfaces, conflict management, and browser hooks.                                   |
+| **Modding**     | Asset updates, community mod integration, and new browsers.                               |
+| **DevOps**      | Mirrored downloads and automated deployments.                                             |
+| **Translation** | Help us translate the app via [Weblate](https://hosted.weblate.org/engage/dota2-minify/). |
+
+## [VIEW OPEN TASKS & ROADMAP](https://github.com/Egezenn/dota2-minify/issues)
+
+
+**Want to help in other ways?**
+Check out our [Contributing Guidelines](CONTRIBUTING.md) and [Architecture Overview](ARCHITECTURE.md).  
+Join the conversation on [Discord](https://discord.com/invite/9867CPv7cy), [Telegram](https://t.me/dota2minify), or [GitHub Discussions](https://github.com/Egezenn/dota2-minify/discussions).
+
+*Every contribution, no matter how small, is deeply appreciated.*
+
+</div>
+
 
 ## Thanks
 

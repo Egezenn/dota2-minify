@@ -105,6 +105,10 @@ def create():
             dpg.delete_item(window_tag)
     shared.tag_data_for_details_windows.clear()
 
+    for browser_config in registry.get_browser_configs():
+        if hasattr(browser_config, "on_scan_start"):
+            browser_config.on_scan_start()
+
     if dpg.does_item_exist("mod_images_registry"):
         dpg.delete_item("mod_images_registry", children_only=True)
     shared.mod_details_image_cache.clear()
@@ -116,6 +120,8 @@ def create():
     def scan_mod_details(mod_name):
         mod_p = os.path.join(base.mods_dir, mod_name)
         img_p = os.path.join(mod_p, "preview.png")
+        if not os.path.exists(img_p):
+            img_p = os.path.join(mod_p, "preview.jpg")
         notes_p = os.path.join(mod_p, "notes.md")
 
         image_data = None
@@ -148,6 +154,11 @@ def create():
             mod_cfg_path = os.path.join(mod_path, "modcfg.json")
             cfg = config.read_json_file(mod_cfg_path)
             always_val = cfg.get("always", False)
+
+            if browser_info := cfg.get("browser"):
+                for browser_config in registry.get_browser_configs():
+                    if hasattr(browser_config, "on_scan"):
+                        browser_config.on_scan(mod, browser_info)
             if version_req := cfg.get("version"):
                 if not utils.is_version_at_least(base.VERSION, version_req):
                     unsupported_version = True

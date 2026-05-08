@@ -1,3 +1,9 @@
+## Development Guide
+
+Welcome to the `dota2-minify` development guide! We're excited to see what you'll build. This page will help you get your environment set up and introduce you to the core concepts of modding with Minify.
+
+If you have any questions or just want to share your progress, join us on [Discord](https://discord.com/invite/9867CPv7cy), [Telegram](https://t.me/dota2minify), or [GitHub Discussions](https://github.com/Egezenn/dota2-minify/discussions)!
+
 ## Running from the source
 
 Prerequisites are `git`, `python` and `uv`. (also `tk` for tkinter and `wine` for workshop tools executables on Linux)

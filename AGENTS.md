@@ -2,6 +2,9 @@
 
 `dota2-minify` is a modding tool and manager for Dota 2, designed to streamline the modification of game files, UI configurations, styling, and application of specific game patches.
 
+> [!NOTE]
+> This file serves as a comprehensive technical guide for both **AI Agents** and **Human Contributors**. It outlines the project's soul, its structural DNA, and the rules that govern its evolution. Whether you are a machine processing these tokens or a human reading these lines, welcome to the team!
+
 ## Tech Stack
 
 - **Language**: Python 3.13
@@ -18,6 +21,9 @@
 
   - `bin/`: Contains static utility files such as `localization.json` and `gamepakcontents.txt` (a complete list of files inside the game pak, created once a patch is ran).
 
+  - `browsers/`: Package for third-party mod browsers (e.g., D2PFX).
+    - `d2pfx/`: Specific implementation for the D2PFX mod browser.
+
   - `core/`: Contains fundamental backend modules:
     - `base.py`: Unchanging static variables, paths, and OS-level info.
     - `config.py`: Utilities for reading and writing JSON config files (`minify_config.json`, `mods.json`).
@@ -25,8 +31,10 @@
     - `fs.py`: File system utilities, path manipulation, reading/writing/copying files.
     - `log.py`: Handles unhandled exceptions and writes warnings/crashes to log files.
     - `mods_shared.py`: Shared capabilities specific to handling mods logic.
+    - `registry.py`: Central registry for browsers and plugins.
     - `steam.py`: Functions to detect Steam directories, game paths, and modify launch options.
     - `utils.py`: Shared utilities
+    - `vpk_utils.py`: Utility functions for VPK operations and metadata generation.
 
   - `ui/`: Contains the DearPyGui interface logic:
     - `announcements.py`: Fetches and displays global announcements to users on app start.
@@ -64,7 +72,7 @@ Mods in Minify are robust and programmatically driven.
 
 ### `modcfg.json`
 
-Mods can optionally include a `modcfg.json` file. It dictates how the mod interacts with the Minify system and how it is exposed in the Settings UI.
+Mods can optionally include a `modcfg.json` file. It dictates how the mod interacts with the Minify system and how it is exposed in the Settings UI. For a deeper technical dive into the system design, see [architecture.md](ARCHITECTURE.md).
 Key objects in the `modcfg.json` settings array include:
 
 - **Input Types**: `checkbox`, `combo`, `number` (`int`/`float`), `slider`, `color`, `list`, `button`.
@@ -82,7 +90,13 @@ When writing custom logic for a mod, hook into these files.
 
 Mods dynamically patch Dota 2's UI layout (`xml_mod.json`) and styling (`styling.css`). The build engine compiles and merges these changes alongside base VPK content.
 
-## General Advice for Agents
+### Browser System
+
+The `Minify/browsers/` package allows for the integration of external mod sources. Browsers register themselves via `core.registry.py` and can provide custom UI components and build hooks (`build_hook.py`) to handle specialized mod types (e.g., VPK-based mods from D2PFX).
+
+## General Advice for Contributors
+
+Regardless of whether you are an AI agent or a human developer, following these guidelines will help ensure consistency and quality:
 
 - Always reference `docs/wiki/development/mod-structure.md`, `docs/wiki/development/scripting.md`, and `docs/wiki/development/ui-modding.md` if you are modifying or debugging how mod folders are structured, what files they support, and how the `__main__.py` patching loop reads them.
 - DearPyGui (`dpg`) has strict state requirements. Do not delete items that are still referenced elsewhere in the DPG registry without proper cleanup.

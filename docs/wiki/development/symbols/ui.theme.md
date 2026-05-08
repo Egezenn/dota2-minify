@@ -107,10 +107,16 @@ def apply():
             dpg.add_theme_style(dpg.mvStyleVar_ItemSpacing, x=10, y=10)
             dpg.add_theme_color(dpg.mvThemeCol_Border, (0, 230, 230, 150))
 
-    with dpg.theme() as settings_theme:
+    with dpg.theme(tag="settings_theme") as settings_theme:
         with dpg.theme_component():
             dpg.add_theme_style(dpg.mvStyleVar_WindowPadding, x=8, y=8)
             dpg.add_theme_style(dpg.mvStyleVar_ItemSpacing, x=8, y=8)
+
+    with dpg.theme(tag="danger_button_theme"):
+        with dpg.theme_component(dpg.mvButton):
+            dpg.add_theme_color(dpg.mvThemeCol_Button, (180, 50, 50, 150))
+            dpg.add_theme_color(dpg.mvThemeCol_ButtonHovered, (220, 70, 70, 200))
+            dpg.add_theme_color(dpg.mvThemeCol_ButtonActive, (255, 100, 100, 255))
 
     dpg.bind_item_theme("button_patch", main_buttons_theme)
     dpg.bind_item_theme("button_select_mods", main_buttons_theme)

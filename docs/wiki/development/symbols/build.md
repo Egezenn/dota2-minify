@@ -18,6 +18,12 @@ def patcher(mod=None, pakname=None):
         if conditions.is_dota_running("&close_dota_terminal", "warning"):
             return
 
+        if not conditions.check_binaries():
+            conditions.resolve_dependencies()
+            if not conditions.check_binaries():
+                terminal.add_text("&failure_terminal", msg_type="error")
+                return
+
     try:
         mod_list = constants.mods_with_order if mod is None else [mod]
 
@@ -109,6 +115,7 @@ def patcher(mod=None, pakname=None):
 
             checkboxes.save()
 
+        game_contents_file_init = False
         for folder in mod_list:
             mod_path = os.path.join(base.mods_dir, folder)
             cfg_path = os.path.join(mod_path, "modcfg.json")
@@ -161,7 +168,6 @@ def patcher(mod=None, pakname=None):
                         for path, mods in mod_xml.items():
                             xml_modifications.setdefault(path, []).extend(mods)
 
-                    global game_contents_file_init
                     if not game_contents_file_init:
                         gamepakcontents_path = os.path.join(base.bin_dir, "gamepakcontents.txt")
                         if dota_version_changed or not os.path.exists(gamepakcontents_path):
@@ -319,23 +325,7 @@ def patcher(mod=None, pakname=None):
         # ---------------------------------- STEP 4 ---------------------------------- #
         # -------- Create VPK from game folder and save into Minify directory -------- #
         # ---------------------------------------------------------------------------- #
-        # insert metadata to pak
-        if mod is None:
-            shutil.copy(
-                base.mods_config_dir,
-                os.path.join(constants.minify_dota_compile_output_path, "minify_mods.json"),
-            )
-        else:
-            open(os.path.join(constants.minify_dota_compile_output_path, f"{mod}.txt"), "w").close()
-
-        with utils.open_utf8(os.path.join(constants.minify_dota_compile_output_path, "minify_version.txt"), "w") as f:
-            f.write(base.VERSION)
-
-        if os.path.exists(constants.dota_steam_inf_path):
-            shutil.copy(
-                constants.dota_steam_inf_path,
-                os.path.join(constants.minify_dota_compile_output_path, "steam.inf"),
-            )
+        vpk_utils.dump_metadata(constants.minify_dota_compile_output_path, mod_name=mod)
 
         fs.create_dirs(helper.output_path)
         native_mods = vpk.new(constants.minify_dota_compile_output_path)
@@ -361,24 +351,12 @@ def patcher(mod=None, pakname=None):
                 mod_path = os.path.join(base.mods_dir, mod_name)
                 try:
                     mod_vpk = vpk.open(mod_path)
-                    dump_vpk(mod_vpk, base.merge_dir, check_exists=True)
+                    vpk_utils.dump_vpk(mod_vpk, base.merge_dir, check_exists=True)
                     terminal.add_text("&merged_mod", mod_name)
                 except Exception:
                     log.write_warning("&failed_merge_mod", mod_name)
 
-            # Insert metadata to pak65
-            # Create a metadata file listing the VPK mods included
-            with utils.open_utf8(os.path.join(base.merge_dir, "minify_vpk_mods.txt"), "w") as f:
-                f.write("\n".join(vpk_mods_to_merge))
-
-            with utils.open_utf8(os.path.join(base.merge_dir, "minify_version.txt"), "w") as f:
-                f.write(base.VERSION)
-
-            if os.path.exists(constants.dota_steam_inf_path):
-                shutil.copy(
-                    constants.dota_steam_inf_path,
-                    os.path.join(base.merge_dir, "steam.inf"),
-                )
+            vpk_utils.dump_metadata(base.merge_dir, vpk_mods=vpk_mods_to_merge)
 
             terminal.add_text("&creating_merged_vpk")
             merged_mods = vpk.new(base.merge_dir)
@@ -396,6 +374,13 @@ def patcher(mod=None, pakname=None):
                         fs.remove_path(pak65_path)
 
         # ---------------------------------- STEP 6 ---------------------------------- #
+        # --------------------------- Run Browser Hooks ------------------------------ #
+        # ---------------------------------------------------------------------------- #
+        for browser_config in registry.get_browser_configs():
+            if hasattr(browser_config, "on_build"):
+                browser_config.on_build(mod_list, mod)
+
+        # ---------------------------------- STEP 7 ---------------------------------- #
         # -------------------------- Clean paths and inform -------------------------- #
         # ---------------------------------------------------------------------------- #
 
@@ -499,6 +484,10 @@ def uninstall(sender=None, app_data=None, user_data=None):
         pak_pattern = r"^pak\d{2}_dir\.vpk$"
         for path in constants.minify_dota_possible_language_output_paths:
             if os.path.isdir(path):
+                maps_vpk_path = os.path.join(path, "maps", "dota.vpk")
+                if os.path.exists(maps_vpk_path):
+                    fs.remove_path(os.path.join(path, "maps"))
+
                 for item in os.listdir(path):
                     if os.path.isfile(os.path.join(path, item)) and re.fullmatch(pak_pattern, item):
                         pak_contents = vpk.open(os.path.join(path, item))
@@ -518,26 +507,6 @@ def uninstall(sender=None, app_data=None, user_data=None):
 
         helper.bulk_exec_script("uninstall")
         terminal.add_text("&mods_removed_terminal")
-
-```
-
-</details>
-
-## `dump_vpk(vpk_obj, output_dir, check_exists)`
-
-*No documentation available.*
-
-<details open><summary>Source</summary>
-
-```python
-def dump_vpk(vpk_obj, output_dir, check_exists=True):
-    for filepath in vpk_obj:
-        full_path = os.path.join(output_dir, filepath)
-        if check_exists and os.path.exists(full_path):
-            continue
-
-        fs.create_dirs(os.path.dirname(full_path))
-        vpk_obj.get_file(filepath).save(full_path)
 
 ```
 
