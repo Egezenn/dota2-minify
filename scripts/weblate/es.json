@@ -40,5 +40,9 @@
     "replacing_terminal": "   Reemplazando {} -> {}",
     "start_text_1_var": "¿Quieres contribuir al crecimiento de proyecto?",
     "start_text_2_var": "-> ¡Únete a nuestra comunidad de Discord o Telegram!",
-    "start_text_3_var": "-> Comparte Minify con tus amigos o grupos en línea"
+    "start_text_3_var": "-> Comparte Minify con tus amigos o grupos en línea",
+    "start_text_5_var": "-> Crea y mantén mods para este proyecto",
+    "starting_extraction": "-> Iniciando extracción de archivos CSS",
+    "success_terminal": "¡Parche aplicado con éxito!",
+    "waiting_steam_to_close": "   Esperando a que steam se cierre..."
 }
