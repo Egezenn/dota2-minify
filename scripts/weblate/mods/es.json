@@ -1,1 +1,14 @@
-{}
+{
+    "Auto Accept Match":"Acepta automáticamente la partida después de `0-40` segundos. El tiempo de espera es ajustable a través del panel de configuraciones.\n\n!!: Por defecto `10` si las herramientas de workshop no están instaladas.",
+    "Custom Backgrounds":"Reemplaza la mayoría de fondos de pantalla.\n\nColoca un imagen o video con nombre `background.<ext>` en la carpeta `config`. Por defecto usa una imagen de Dota.\n\nLos siguientes formatos se convertirán automáticamente si existe la herramienta:\n\n- `magick`: `.jpg`, `.jpeg`, `.webp` (convertido a `.png`)\n- `ffmpeg`: `.mp4` (convertido a `.webm`)",
+    "Custom Fonts":"Cambiar si no todas, la mayoría de las fuentas. Las fuentes pueden cambiarse manualmente en la configuración.\n\n!!: Algunas fuentes podrían no funcionar.",
+    "Minify Base Attacks":"Reduce las partículas en los autoataques de los heroes de rango.",
+    "Minify Spells & Items":"Simplica los poderes e items por defecto en el juego.",
+    "Mute Ambient Sounds":"Silencia los sonidos ambientales del mapa.",
+    "Mute Default Announcer":"Silencia los anunciadores & las líneas de racha por defecto.",
+    "Mute Taunt Sounds":"Silencia los sonidos de las burlas.",
+    "OpenDotaGuides Guides":"Reemplaza las guías por defecto con las de OpenDotaGuides.\n\n!!: Se requiere que las configuraciones por defecto estén seleccionadas para verlas en el juego.\n\nFuente: https://github.com/Egezenn/OpenDotaGuides/releases/latest",
+    "Remove Main Menu Background":"Elimina el fondo del menú principal.",
+    "Remove Sprays":"Elimina todos los sprays.",
+    "Stat Site Buttons":"Agrega enlaces de sitios web de terceros (dotabuff, stratz, opendota) a los perfiles de otros jugadores y partidas."
+}
