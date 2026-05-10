@@ -41,28 +41,28 @@ If you're seeing a mod that is grayed out, it requires this DLC.
 >
 > This copies the necessary files from the game onto Minify itself for convenience.
 
-![tools-instruction-3](https://github.com/Egezenn/dota2-minify/raw/main/docs/assets/tools-instruction-3.png)
+![tools-instruction-3](https://github.com/Egezenn/dota2-minify/raw/main/docs/assets/tools-instruction-3.jpg)
 
 ## Changing voiceline language
 
-![language-voicelines](https://github.com/Egezenn/dota2-minify/raw/main/docs/assets/language-voicelines.png)
+![language-voicelines](https://github.com/Egezenn/dota2-minify/raw/main/docs/assets/language-voicelines.jpg)
 
 ## Language parameter / nothing has changed
 
 While newer versions automatically handle the parameter for you by new settings, you may have to change it yourself if it doesn't work.
 
-![language-instruction-1](https://github.com/Egezenn/dota2-minify/raw/main/docs/assets/language-instruction-1.png)
+![language-instruction-1](https://github.com/Egezenn/dota2-minify/raw/main/docs/assets/language-instruction-1.jpg)
 
-![language-instruction-2](https://github.com/Egezenn/dota2-minify/raw/main/docs/assets/language-instruction-2.png)
+![language-instruction-2](https://github.com/Egezenn/dota2-minify/raw/main/docs/assets/language-instruction-2.jpg)
 
 - Right-click on Dota2 in Steam and click **Properties**.
 
-![tools-instruction-1](https://github.com/Egezenn/dota2-minify/raw/main/docs/assets/tools-instruction-1.png)
+![tools-instruction-1](https://github.com/Egezenn/dota2-minify/raw/main/docs/assets/tools-instruction-1.jpg)
 
 - **English:** Add `-language minify` to your launch options.
 - **Other Languages:** Select the language you want to patch with on the top bar and add `-language language_id`
 
-![language-instruction-3](https://github.com/Egezenn/dota2-minify/raw/main/docs/assets/language-instruction-3.png)
+![language-instruction-3](https://github.com/Egezenn/dota2-minify/raw/main/docs/assets/language-instruction-3.jpg)
 
 ## Antivirus software flagged it / I don't see an executable
 

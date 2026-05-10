@@ -122,22 +122,39 @@ function processData(items, meta) {
 if (cachedData && now - cachedData.timestamp < 60000) {
   processData(cachedData.items, cachedData.meta);
 } else {
-  Promise.all([
-    fetch("https://api.github.com/repos/egezenn/dota2-minify-community/contents/").then((r) => r.json()),
-    fetch("https://raw.githubusercontent.com/Egezenn/dota2-minify-community/main/meta.json")
-      .then((r) => r.json())
-      .catch(() => ({})),
-  ])
-    .then(([contentsData, metaData]) => {
-      const items = contentsData.filter((item) => item.type === "dir").map((item) => item.name);
-      localStorage.setItem(cacheKey, JSON.stringify({ timestamp: now, items: items, meta: metaData }));
-      processData(items, metaData);
-    })
-    .catch((error) => {
-      if (cachedData) {
-        processData(cachedData.items, cachedData.meta);
-      }
-      modsContainer.textContent = "Could not load data.";
-      console.error("Error fetching data:", error);
-    });
+  const fetchData = (retry = true) => {
+    Promise.all([
+      fetch("https://api.github.com/repos/egezenn/dota2-minify-community/contents/").then((r) => {
+        if (r.status !== 200) {
+          if (retry) throw { retry: true };
+          throw new Error(`HTTP status ${r.status}`);
+        }
+        return r.json();
+      }),
+      fetch("https://raw.githubusercontent.com/Egezenn/dota2-minify-community/main/meta.json")
+        .then((r) => (r.ok ? r.json() : {}))
+        .catch(() => ({})),
+    ])
+      .then(([contentsData, metaData]) => {
+        if (Array.isArray(contentsData) && contentsData.length > 0) {
+          const items = contentsData.filter((item) => item.type === "dir").map((item) => item.name);
+          localStorage.setItem(cacheKey, JSON.stringify({ timestamp: new Date().getTime(), items: items, meta: metaData }));
+          processData(items, metaData);
+        } else {
+          throw new Error("Invalid community data");
+        }
+      })
+      .catch((error) => {
+        if (error.retry) {
+          setTimeout(() => fetchData(false), 3000);
+          return;
+        }
+        if (cachedData) {
+          processData(cachedData.items, cachedData.meta);
+        }
+        modsContainer.textContent = "Could not load data.";
+        console.error("Error fetching data:", error);
+      });
+  };
+  fetchData();
 }

@@ -57,18 +57,35 @@ function processReleases(releases) {
 if (cachedData && now - cachedData.timestamp < 300000) {
   processReleases(cachedData.releases);
 } else {
-  fetch("https://api.github.com/repos/egezenn/dota2-minify/releases")
-    .then((response) => response.json())
-    .then((releases) => {
-      localStorage.setItem(cacheKey, JSON.stringify({ timestamp: now, releases: releases }));
-      processReleases(releases);
-    })
-    .catch((error) => {
-      if (cachedData) {
-        processReleases(cachedData.releases);
-      }
-      console.error("Error fetching releases:", error);
-    });
+  const fetchReleases = (retry = true) => {
+    fetch("https://api.github.com/repos/egezenn/dota2-minify/releases")
+      .then((response) => {
+        if (response.status !== 200) {
+          if (retry) {
+            setTimeout(() => fetchReleases(false), 3000);
+            return null;
+          }
+          throw new Error(`HTTP status ${response.status}`);
+        }
+        return response.json();
+      })
+      .then((releases) => {
+        if (!releases) return;
+        if (Array.isArray(releases) && releases.length > 0) {
+          localStorage.setItem(cacheKey, JSON.stringify({ timestamp: new Date().getTime(), releases: releases }));
+          processReleases(releases);
+        } else {
+          throw new Error("Invalid releases data");
+        }
+      })
+      .catch((error) => {
+        if (cachedData) {
+          processReleases(cachedData.releases);
+        }
+        console.error("Error fetching releases:", error);
+      });
+  };
+  fetchReleases();
 }
 
 const downloadModal = document.getElementById("downloadModal");

@@ -17,7 +17,7 @@ function processMods(mods) {
     card.setAttribute("role", "button");
 
     const img = document.createElement("img");
-    img.src = `https://raw.githubusercontent.com/Egezenn/dota2-minify/main/Minify/mods/${encodeURIComponent(mod)}/preview.png`;
+    img.src = `https://raw.githubusercontent.com/Egezenn/dota2-minify/main/Minify/mods/${encodeURIComponent(mod)}/preview.jpg`;
     img.className = "card-img-top";
     img.alt = `${mod} image`;
     img.style.objectFit = "cover";
@@ -41,7 +41,7 @@ function processMods(mods) {
       const notesCacheKey = `mod-notes-${mod}`;
       const cachedNotes = JSON.parse(sessionStorage.getItem(notesCacheKey));
       const now = new Date().getTime();
-      const imageUrl = `https://raw.githubusercontent.com/Egezenn/dota2-minify/main/Minify/mods/${encodeURIComponent(mod)}/preview.png`;
+      const imageUrl = `https://raw.githubusercontent.com/Egezenn/dota2-minify/main/Minify/mods/${encodeURIComponent(mod)}/preview.jpg`;
       const imageHtml = `<img src="${imageUrl}" class="mb-3" style="display: block; margin-left: auto; margin-right: auto;" onerror="this.style.display='none'" alt="${mod}">`;
 
       notesModalLabel.textContent = `${mod} Notes`;
@@ -83,20 +83,42 @@ function processMods(mods) {
 if (cachedData && now - cachedData.timestamp < 60000) {
   processMods(cachedData.mods);
 } else {
-  fetch("https://api.github.com/repos/egezenn/dota2-minify/contents/Minify/mods")
-    .then((response) => response.json())
-    .then((data) => {
-      const mods = data
-        .filter((item) => item.type === "dir" && item.name !== "#base" && item.name !== "User Styles")
-        .map((item) => item.name);
-      localStorage.setItem(cacheKey, JSON.stringify({ timestamp: now, mods: mods }));
-      processMods(mods);
-    })
-    .catch((error) => {
-      if (cachedData) {
-        processMods(cachedData.mods);
-      }
-      modButtonsContainer.textContent = "Could not load mods list.";
-      console.error("Error fetching mods list:", error);
-    });
+  const fetchMods = (retry = true) => {
+    fetch("https://api.github.com/repos/egezenn/dota2-minify/contents/Minify/mods")
+      .then((response) => {
+        if (response.status !== 200) {
+          if (retry) {
+            setTimeout(() => fetchMods(false), 3000);
+            return null;
+          }
+          throw new Error(`HTTP status ${response.status}`);
+        }
+        return response.json();
+      })
+      .then((data) => {
+        if (!data) return;
+        if (Array.isArray(data)) {
+          const mods = data
+            .filter((item) => item.type === "dir" && item.name !== "#base" && item.name !== "User Styles")
+            .map((item) => item.name);
+
+          if (mods.length > 0) {
+            localStorage.setItem(cacheKey, JSON.stringify({ timestamp: new Date().getTime(), mods: mods }));
+            processMods(mods);
+          } else {
+            throw new Error("No mods found");
+          }
+        } else {
+          throw new Error("Invalid mods data");
+        }
+      })
+      .catch((error) => {
+        if (cachedData) {
+          processMods(cachedData.mods);
+        }
+        modButtonsContainer.textContent = "Could not load mods list.";
+        console.error("Error fetching mods list:", error);
+      });
+  };
+  fetchMods();
 }

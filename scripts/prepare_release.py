@@ -104,7 +104,10 @@ class ModInfo:
 
         self.config = check_file("modcfg.json", None, "R", "Missing modcfg.json", True) or {}
         check_file("notes.md", "has_notes", "W", "Missing notes.md")
-        check_file("preview.png", "has_preview", "R", "Missing preview.png")
+        self.has_preview = (self.path / "preview.jpg").exists() or (self.path / "preview.png").exists()
+        if not self.has_preview:
+            self.recommendations.append("Missing preview image (preview.jpg or preview.png)")
+        self.preview_path = self.path / "preview.jpg" if (self.path / "preview.jpg").exists() else self.path / "preview.png"
         check_file("xml_mod.json", "has_xml", None, None, True)
         check_file("styling.css", "has_styling")
         check_file("blacklist.txt", "has_blacklist")
@@ -159,12 +162,12 @@ class ModInfo:
 
         if self.has_preview:
             try:
-                with Image.open(self.path / "preview.png") as img:
-                    self.active_rows.append(("preview.png", f"{img.width}x{img.height} px"))
+                with Image.open(self.preview_path) as img:
+                    self.active_rows.append((self.preview_path.name, f"{img.width}x{img.height} px"))
             except Exception:
-                self.active_rows.append(("preview.png", "Yes"))
+                self.active_rows.append((self.preview_path.name, "Yes"))
         else:
-            self.inactive_rows.append(("preview.png", "No"))
+            self.inactive_rows.append(("preview.jpg", "No"))
 
     @property
     def status_symbol(self) -> str:
@@ -412,7 +415,7 @@ class ModBrowser(App):
             self._handle_file_preview(prop_name)
         elif prop_name in ["Compiled Files", "Uncompiled Files"]:
             self._handle_directory_preview(prop_name)
-        elif prop_name == "preview.png":
+        elif prop_name in ["preview.png", "preview.jpg"]:
             self._handle_image_preview()
         elif prop_name == "Python Scripts" and self.current_mod.scripts:
             self._handle_scripts_preview()
@@ -493,7 +496,9 @@ class ModBrowser(App):
             self.query_one("#analysis-text", Static).update("")
 
     def _handle_image_preview(self) -> None:
-        file_path = self.current_mod.path / "preview.png"
+        file_path = self.current_mod.path / "preview.jpg"
+        if not file_path.exists():
+            file_path = self.current_mod.path / "preview.png"
         if not file_path.exists():
             self.query_one("#analysis-text", Static).update("")
             return

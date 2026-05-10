@@ -13,7 +13,7 @@ mods
 │   │   └── <...>
 │   ├── modcfg.json
 │   ├── notes.md
-│   ├── preview.png
+│   ├── preview.jpg | preview.png
 │   ├── blacklist.txt
 │   ├── replacer.csv
 │   ├── script.py
@@ -133,7 +133,7 @@ If not specifically protected by Dota2, these files will override any game conte
 
 Displays information about a mod on `Details` window.
 
-An image is rendered at the top if the file `preview.png` exists.
+An image is rendered at the top if the file `preview.jpg` (or `preview.png`) exists.
 
 ```markdown
 <!-- LANG:EN -->
@@ -148,7 +148,7 @@ Normal text supports `inline code` (pink) and https://example.com (orange).
 !!: And https://example.com links.
 ```
 
-![notes](https://github.com/Egezenn/dota2-minify/raw/main/docs/assets/example-notes.png)
+![notes](https://github.com/Egezenn/dota2-minify/raw/main/docs/assets/example-notes.jpg)
 
 ### `blacklist.txt`
 
@@ -190,4 +190,4 @@ panorama/images/spellicons/nevermore_shadowraze2_png.vtex_c,panorama/images/spel
 panorama/images/spellicons/nevermore_shadowraze3_png.vtex_c,panorama/images/spellicons/nevermore_shadowraze3_demon_png.vtex_c
 ```
 
-![example-replacer](https://github.com/Egezenn/dota2-minify/raw/main/docs/assets/example-replacer.png)
+![example-replacer](https://github.com/Egezenn/dota2-minify/raw/main/docs/assets/example-replacer.jpg)
