@@ -119,9 +119,9 @@ def create():
 
     def scan_mod_details(mod_name):
         mod_p = os.path.join(base.mods_dir, mod_name)
-        img_p = os.path.join(mod_p, "preview.png")
+        img_p = os.path.join(mod_p, "preview.jpg")
         if not os.path.exists(img_p):
-            img_p = os.path.join(mod_p, "preview.jpg")
+            img_p = os.path.join(mod_p, "preview.png")
         notes_p = os.path.join(mod_p, "notes.md")
 
         image_data = None
