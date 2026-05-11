@@ -107,7 +107,9 @@ class ModInfo:
         self.has_preview = (self.path / "preview.jpg").exists() or (self.path / "preview.png").exists()
         if not self.has_preview:
             self.recommendations.append("Missing preview image (preview.jpg or preview.png)")
-        self.preview_path = self.path / "preview.jpg" if (self.path / "preview.jpg").exists() else self.path / "preview.png"
+        self.preview_path = (
+            self.path / "preview.jpg" if (self.path / "preview.jpg").exists() else self.path / "preview.png"
+        )
         check_file("xml_mod.json", "has_xml", None, None, True)
         check_file("styling.css", "has_styling")
         check_file("blacklist.txt", "has_blacklist")

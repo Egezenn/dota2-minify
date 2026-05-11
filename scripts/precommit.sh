@@ -11,7 +11,6 @@ uv sync --group dev
 
 echo "[2/4] Checking formatting (ruff)..."
 uv run ruff format --check
-uv run ruff format
 
 echo "[3/4] Linting (ruff)..."
 uv run ruff check .
