@@ -67,6 +67,101 @@ class Uninstall:
         pass
 
 
+class WorkshopTools:
+    _watcher_thread = None
+
+    @staticmethod
+    def show():
+        modal_shared.show(
+            title="Workshop Tools Not Found",
+            messages=[
+                "Dota 2 Workshop Tools are not installed.",
+                "Some mods require them and have been disabled.",
+                "To install: Steam → Library → Dota 2 → right-click → Properties → DLC → Install Dota 2 Workshop Tools.",
+            ],
+            buttons=[
+                {
+                    "label": "Open Steam",
+                    "callback": lambda s, a, u: webbrowser.open("steam://open/games"),
+                    "width": 120,
+                },
+                {"label": "OK", "width": 80},
+            ],
+        )
+        WorkshopTools._start_watcher()
+
+    @staticmethod
+    def _start_watcher():
+        if WorkshopTools._watcher_thread and WorkshopTools._watcher_thread.is_alive():
+            return
+
+        def watch():
+            import conditions
+            import vdf
+            from core import steam
+
+            from ui import checkboxes, gui, terminal
+
+            acf_path = os.path.join(steam.LIBRARY, "steamapps", f"appmanifest_{base.STEAM_DOTA_ID}.acf")
+            dlc_id = base.STEAM_DOTA_WORKSHOP_TOOLS_ID
+
+            def read_acf():
+                try:
+                    with open(acf_path, encoding="utf-8") as f:
+                        return vdf.load(f).get("AppState", {})
+                except Exception:
+                    return {}
+
+            def is_fully_installed(app_state):
+                if app_state.get("StateFlags") != "4":
+                    return False
+                mounted = app_state.get("MountedConfig", {}).get("optionaldlc", "")
+                disabled = app_state.get("MountedConfig", {}).get("DisabledDLC", "")
+                return dlc_id in mounted and dlc_id not in disabled
+
+            while gui.gui_lock:
+                time.sleep(0.1)
+
+            ui_locked = False
+            was_downloading = False
+
+            while True:
+                app_state = read_acf()
+                if is_fully_installed(app_state):
+                    break
+
+                disabled = app_state.get("MountedConfig", {}).get("DisabledDLC", "")
+                downloading = dlc_id in disabled and (
+                    app_state.get("StateFlags") != "4" or dlc_id in app_state.get("DlcDownloads", {})
+                )
+
+                if downloading and not was_downloading:
+                    terminal.add_text("Downloading Dota 2 Workshop Tools...", msg_type="warning")
+                    gui.lock_interaction()
+                    ui_locked = True
+                    was_downloading = True
+                elif not downloading and was_downloading:
+                    gui.unlock_interaction()
+                    ui_locked = False
+                    was_downloading = False
+
+                time.sleep(1)
+
+            if ui_locked:
+                gui.unlock_interaction()
+
+            conditions.is_compiler_found()
+            checkboxes.refresh()
+            modal_shared.show(
+                title="Workshop Tools Ready",
+                messages=["Dota 2 Workshop Tools detected!", "Workshop mods have been enabled."],
+                buttons=[{"label": "OK", "width": 80}],
+            )
+
+        WorkshopTools._watcher_thread = threading.Thread(target=watch, daemon=True)
+        WorkshopTools._watcher_thread.start()
+
+
 class Update:
     @staticmethod
     def show(version):

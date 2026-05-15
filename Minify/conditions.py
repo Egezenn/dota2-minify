@@ -7,7 +7,8 @@ import webbrowser
 
 import dearpygui.dearpygui as dpg
 import psutil
-from core import base, constants, fs, log
+import vdf
+from core import base, constants, fs, log, steam
 from ui import terminal
 
 workshop_installed = False
@@ -24,12 +25,26 @@ def is_dota_running(text_tag, text_type):
 
 
 def is_compiler_found():
+    # ACF is the authoritative Steam source; file presence alone doesn't confirm the DLC is active
     global workshop_installed
-    if not os.path.exists(constants.dota_resource_compiler_path):
+    acf_path = os.path.join(steam.LIBRARY, "steamapps", f"appmanifest_{base.STEAM_DOTA_ID}.acf")
+    try:
+        with open(acf_path, encoding="utf-8") as f:
+            app_state = vdf.load(f).get("AppState", {})
+    except Exception as e:
+        log.write_warning("Failed to read ACF", e)
+        app_state = {}
+    mounted = app_state.get("MountedConfig", {}).get("optionaldlc", "")
+    disabled = app_state.get("MountedConfig", {}).get("DisabledDLC", "")
+    if (
+        app_state.get("StateFlags") == "4"
+        and base.STEAM_DOTA_WORKSHOP_TOOLS_ID in mounted
+        and base.STEAM_DOTA_WORKSHOP_TOOLS_ID not in disabled
+    ):
+        workshop_installed = True
+    else:
         workshop_installed = False
         terminal.add_text("&error_no_workshop_tools_found_terminal", msg_type="warning")
-    else:
-        workshop_installed = True
 
 
 def resolve_dependencies(retries=0):

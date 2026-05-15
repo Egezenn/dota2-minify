@@ -243,6 +243,8 @@ def create_base_ui():
         modals.Announcements.check()
         gui.initiate_conditionals()
         conditions.disable_workshop_mods()
+        if not conditions.workshop_installed:
+            modals.WorkshopTools.show()
         time.sleep(0.05)
         helper.bulk_exec_script("initial", False)
         checkboxes.setup_state()
