@@ -197,11 +197,28 @@ def extract_archive(archive_path: str, extract_dir: str = ".", target_file: Opti
                     zip_ref.extractall(extract_dir)
         elif archive_path.endswith((".tar.gz", ".tgz")):
             with tarfile.open(archive_path, "r:gz") as tar:
+                extract_dir_abs = os.path.abspath(extract_dir)
+                safe_members = []
+                for member in tar.getmembers():
+                    member_path = os.path.abspath(os.path.join(extract_dir_abs, member.name))
+                    if os.path.commonpath([extract_dir_abs, member_path]) == extract_dir_abs:
+                        safe_members.append(member)
+
                 if target_file:
-                    member = tar.getmember(target_file)
-                    tar.extract(member, path=extract_dir)
+                    try:
+                        member = tar.getmember(target_file)
+                        if member in safe_members:
+                            if hasattr(tarfile, "data_filter"):
+                                tar.extract(member, path=extract_dir, filter="data")
+                            else:
+                                tar.extract(member, path=extract_dir)
+                    except KeyError:
+                        pass
                 else:
-                    tar.extractall(extract_dir)
+                    if hasattr(tarfile, "data_filter"):
+                        tar.extractall(path=extract_dir, members=safe_members, filter="data")
+                    else:
+                        tar.extractall(path=extract_dir, members=safe_members)
         else:
             terminal.add_text(f"Unsupported archive format: {archive_path}", msg_type="error")
             return False

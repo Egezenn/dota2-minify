@@ -144,6 +144,12 @@ def exec_script(script_path, mod_name, order_name, _terminal_output=True):
     Only called for `script.py`
     """
     if os.path.exists(script_path):
+        mod_dir = os.path.dirname(script_path)
+        cfg = config.read_json_file(os.path.join(mod_dir, "modcfg.json"))
+        if cfg.get("browser"):
+            log.write_warning(f"Python script execution is disabled for browser mods: {mod_name}")
+            return
+
         script_dir = os.path.dirname(script_path)
         if script_dir not in sys.path:
             sys.path.insert(0, script_dir)
@@ -179,6 +185,10 @@ def bulk_exec_script(order_name, terminal_output=True):
         if bulk_name in files and not os.path.basename(root).startswith("_"):
             mod_cfg_path = os.path.join(root, "modcfg.json")
             cfg = config.read_json_file(mod_cfg_path)
+
+            if "browser" in cfg:
+                continue
+
             always = cfg.get("always", False)
             visual = cfg.get("visual", True)
 
@@ -194,6 +204,12 @@ def exec_script_function(script_path, mod_name, function_name="main"):
     Executes a specific function from a Python script file
     """
     if os.path.exists(script_path):
+        mod_dir = os.path.dirname(script_path)
+        cfg = config.read_json_file(os.path.join(mod_dir, "modcfg.json"))
+        if cfg.get("browser"):
+            log.write_warning(f"Python script execution is disabled for browser mods: {mod_name}")
+            return
+
         script_dir = os.path.dirname(script_path)
         if script_dir not in sys.path:
             sys.path.insert(0, script_dir)

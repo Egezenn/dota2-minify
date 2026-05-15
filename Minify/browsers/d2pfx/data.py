@@ -11,7 +11,17 @@ BASE_URL = "https://raw.githubusercontent.com/h6rd/Dota2PornFxWeb/data/"
 ASSETS_URL = "https://raw.githubusercontent.com/h6rd/Dota2PornFxWeb/main/assets/files/"
 CACHE_DIR = os.path.join(base.cache_dir, "browsers", "d2pfx")
 PREVIEWS_CACHE_DIR = os.path.join(CACHE_DIR, "previews")
-BLACKLIST = ["guides", "item-sounds", "news", "optimization", "tools", "sites", "packs"]
+BLACKLIST = [
+    "guides",
+    "item-sounds",
+    "news",
+    "optimization",
+    "tools",
+    "sites",
+    "packs",
+    "huds",  # https://github.com/Egezenn/dota2-minify/issues/143
+    "fonts",  # https://github.com/Egezenn/dota2-minify/issues/136
+]
 
 
 class DataManager:

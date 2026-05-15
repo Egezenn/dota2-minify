@@ -47,6 +47,7 @@ def setup_system():
 def lock_interaction():
     global gui_lock
     gui_lock = True
+    dpg.set_viewport_title(f"{base.TITLE} - LOCKED")
     dpg.configure_item("button_patch", enabled=False)
     dpg.configure_item("button_select_mods", enabled=False)
     dpg.configure_item("button_uninstall", enabled=False)
@@ -57,6 +58,7 @@ def lock_interaction():
 def unlock_interaction():
     global gui_lock
     gui_lock = False
+    dpg.set_viewport_title(base.TITLE)
     dpg.configure_item("button_patch", enabled=True)
     dpg.configure_item("button_select_mods", enabled=True)
     dpg.configure_item("button_uninstall", enabled=True)
