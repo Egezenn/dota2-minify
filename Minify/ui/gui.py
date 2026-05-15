@@ -2,10 +2,9 @@ import contextlib
 import threading
 import time
 
-import conditions
 import dearpygui.dearpygui as dpg
 import screeninfo
-from core import base, fs, utils
+from core import base, utils
 
 from ui import terminal
 
@@ -27,7 +26,7 @@ if not base.HEADLESS:
 def initiate_conditionals():
     from ui import checkboxes
 
-    setup_system_thread = threading.Thread(target=setup_system)
+    setup_system_thread = threading.Thread(target=utils.setup_system)
     load_state_checkboxes_thread = threading.Thread(target=checkboxes.load)
     setup_system_thread.start()
     load_state_checkboxes_thread.start()
@@ -38,13 +37,6 @@ def initiate_conditionals():
         pass
 
     checkboxes.create()
-
-
-def setup_system():
-    fs.create_dirs(base.logs_dir)
-    conditions.is_dota_running("&error_please_close_dota_terminal", "error")
-    conditions.is_compiler_found()
-    conditions.resolve_dependencies()
 
 
 @utils.ignore_if_headless

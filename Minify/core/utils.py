@@ -1,7 +1,6 @@
 import builtins
 import contextlib
 import functools
-import re
 from typing import IO, Any
 
 from core import base
@@ -68,3 +67,13 @@ def parse_color(val):
     if isinstance(val, list):
         return val
     return hex_to_rgba(val if val and isinstance(val, str) else "#ffffffff")
+
+
+def setup_system():
+    import conditions
+    from core import fs
+
+    fs.create_dirs(base.logs_dir)
+    conditions.is_dota_running("&error_please_close_dota_terminal", "error")
+    conditions.is_compiler_found()
+    conditions.resolve_dependencies()

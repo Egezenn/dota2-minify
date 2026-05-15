@@ -11,6 +11,7 @@ import patch
 from core import config, constants, mods_shared, utils
 from ui import localization
 
+utils.setup_system()
 browsers.initialize()
 localization.load_headless(config.get("locale", "EN") or "EN")
 
