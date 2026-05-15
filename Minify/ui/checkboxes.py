@@ -3,6 +3,7 @@
 import concurrent.futures
 import os
 
+import conditions
 import dearpygui.dearpygui as dpg
 import jsonc
 from core import base, config, constants, mods_shared, registry, utils
@@ -189,3 +190,5 @@ def create():
                 details.render_details_window(mod)
 
         checkboxes.append(mod)
+
+    conditions.disable_workshop_mods()

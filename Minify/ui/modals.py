@@ -72,22 +72,47 @@ class WorkshopTools:
 
     @staticmethod
     def show():
-        modal_shared.show(
-            title="Workshop Tools Not Found",
-            messages=[
-                "Dota 2 Workshop Tools are not installed.",
-                "Some mods require them and have been disabled.",
-                "To install: Steam → Library → Dota 2 → right-click → Properties → DLC → Install Dota 2 Workshop Tools.",
-            ],
-            buttons=[
-                {
-                    "label": "Open Steam",
-                    "callback": lambda s, a, u: webbrowser.open("steam://open/games"),
-                    "width": 120,
-                },
-                {"label": "OK", "width": 80},
-            ],
-        )
+        config.set("workshop_modal_shown", True)
+        if base.OS == base.WIN:
+            modal_shared.show(
+                title="Workshop Tools Not Found",
+                messages=[
+                    "Dota 2 Workshop Tools are not installed.",
+                    "Some mods require them and have been disabled.",
+                    "Would you like to install them now?",
+                ],
+                buttons=[
+                    {
+                        "label": "Yes",
+                        "callback": lambda s, a, u: WorkshopTools._handle_yes(),
+                        "width": 100,
+                    },
+                    {"label": "No", "width": 100},
+                ],
+            )
+        else:
+            modal_shared.show(
+                title="Workshop Tools Not Found",
+                messages=[
+                    "Dota 2 Workshop Tools are not installed.",
+                    "Some mods require them and have been disabled.",
+                    "Click OK to go to the related wiki section.",
+                ],
+                buttons=[
+                    {
+                        "label": "OK",
+                        "callback": lambda s, a, u: webbrowser.open(
+                            "https://egezenn.github.io/dota2-minify/wiki/#/troubleshooting_faq?id=workshop-tools-dlc"
+                        ),
+                        "width": 100,
+                    },
+                    {"label": "No", "width": 100},
+                ],
+            )
+
+    @staticmethod
+    def _handle_yes():
+        webbrowser.open(f"steam://install/{base.STEAM_DOTA_WORKSHOP_TOOLS_ID}")
         WorkshopTools._start_watcher()
 
     @staticmethod
@@ -103,7 +128,7 @@ class WorkshopTools:
             from ui import checkboxes, gui, terminal
 
             acf_path = os.path.join(steam.LIBRARY, "steamapps", f"appmanifest_{base.STEAM_DOTA_ID}.acf")
-            dlc_id = base.STEAM_DOTA_WORKSHOP_TOOLS_ID
+            base.STEAM_DOTA_WORKSHOP_TOOLS_ID
 
             def read_acf():
                 try:
@@ -112,17 +137,24 @@ class WorkshopTools:
                 except Exception:
                     return {}
 
+            def get_dlc_status(app_state):
+                mounted_str = app_state.get("MountedConfig", {}).get("optionaldlc", "")
+                disabled_str = app_state.get("MountedConfig", {}).get("DisabledDLC", "")
+
+                mounted_set = {t.strip() for t in mounted_str.replace(",", " ").split() if t.strip()}
+                disabled_set = {t.strip() for t in disabled_str.replace(",", " ").split() if t.strip()}
+
+                return (
+                    base.STEAM_DOTA_WORKSHOP_TOOLS_ID in mounted_set
+                    and base.STEAM_DOTA_WORKSHOP_TOOLS_ID not in disabled_set
+                )
+
             def is_fully_installed(app_state):
-                if app_state.get("StateFlags") != "4":
-                    return False
-                mounted = app_state.get("MountedConfig", {}).get("optionaldlc", "")
-                disabled = app_state.get("MountedConfig", {}).get("DisabledDLC", "")
-                return dlc_id in mounted and dlc_id not in disabled
+                return app_state.get("StateFlags") == "4" and get_dlc_status(app_state)
 
             while gui.gui_lock:
                 time.sleep(0.1)
 
-            ui_locked = False
             was_downloading = False
 
             while True:
@@ -130,24 +162,24 @@ class WorkshopTools:
                 if is_fully_installed(app_state):
                     break
 
-                disabled = app_state.get("MountedConfig", {}).get("DisabledDLC", "")
-                downloading = dlc_id in disabled and (
-                    app_state.get("StateFlags") != "4" or dlc_id in app_state.get("DlcDownloads", {})
+                is_enabled = get_dlc_status(app_state)
+
+                downloading = is_enabled and (
+                    app_state.get("StateFlags") != "4"
+                    or base.STEAM_DOTA_WORKSHOP_TOOLS_ID in app_state.get("DlcDownloads", {})
                 )
 
                 if downloading and not was_downloading:
                     terminal.add_text("Downloading Dota 2 Workshop Tools...", msg_type="warning")
                     gui.lock_interaction()
-                    ui_locked = True
                     was_downloading = True
                 elif not downloading and was_downloading:
                     gui.unlock_interaction()
-                    ui_locked = False
                     was_downloading = False
 
                 time.sleep(1)
 
-            if ui_locked:
+            if was_downloading:
                 gui.unlock_interaction()
 
             conditions.is_compiler_found()
