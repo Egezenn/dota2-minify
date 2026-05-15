@@ -5,9 +5,9 @@ import time
 import conditions
 import dearpygui.dearpygui as dpg
 import screeninfo
-from core import base, fs
+from core import base, fs, utils
 
-from ui import checkboxes, modal_shared, terminal
+from ui import terminal
 
 gui_lock = False
 
@@ -18,12 +18,15 @@ heights = []
 
 social_button_size = (18, 18)
 
-for monitor in screeninfo.get_monitors():
-    widths.append(monitor.width)
-    heights.append(monitor.height)
+if not base.HEADLESS:
+    for monitor in screeninfo.get_monitors():
+        widths.append(monitor.width)
+        heights.append(monitor.height)
 
 
 def initiate_conditionals():
+    from ui import checkboxes
+
     setup_system_thread = threading.Thread(target=setup_system)
     load_state_checkboxes_thread = threading.Thread(target=checkboxes.load)
     setup_system_thread.start()
@@ -44,6 +47,7 @@ def setup_system():
     conditions.resolve_dependencies()
 
 
+@utils.ignore_if_headless
 def lock_interaction():
     global gui_lock
     gui_lock = True
@@ -55,6 +59,7 @@ def lock_interaction():
     dpg.configure_item("output_select", enabled=False)
 
 
+@utils.ignore_if_headless
 def unlock_interaction():
     global gui_lock
     gui_lock = False
@@ -97,6 +102,8 @@ def register_persistent_window(tag):
 
 
 def close_active_window():
+    from ui import modal_shared
+
     active_window_id = dpg.get_active_window()
     if not active_window_id:
         return
@@ -116,6 +123,7 @@ def close_active_window():
         dpg.configure_item(active_window, show=False)
 
 
+@utils.ignore_if_headless
 def close():
     dpg.stop_dearpygui()
     time.sleep(0.1)  # Fixed proper saving

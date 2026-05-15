@@ -5,7 +5,8 @@ import os
 
 import dearpygui.dearpygui as dpg
 import jsonc
-from core import base, config, constants, mods_shared, registry, utils
+from core import base, constants, mods_shared, registry, utils
+from patch import manifest_utils
 
 from ui import details, localization, settings, shared, terminal, theme
 
@@ -105,8 +106,7 @@ def create():
         if is_vpk := mod.endswith(".vpk"):
             always_val = False
         else:
-            mod_cfg_path = os.path.join(mod_path, "modcfg.json")
-            cfg = config.read_json_file(mod_cfg_path)
+            cfg = manifest_utils.get_mod(mod_path)
             always_val = cfg.get("always", False)
 
             if browser_info := cfg.get("browser"):
@@ -114,7 +114,7 @@ def create():
                     if hasattr(browser_config, "on_scan"):
                         browser_config.on_scan(mod, browser_info)
             if version_req := cfg.get("version"):
-                if not utils.is_version_at_least(base.VERSION, version_req):
+                if not manifest_utils.is_version_at_least(base.VERSION, version_req):
                     unsupported_version = True
 
         if unsupported_version:
@@ -189,3 +189,14 @@ def create():
                 details.render_details_window(mod)
 
         checkboxes.append(mod)
+
+
+def get_value(mod):
+    return dpg.get_value(mod)
+
+
+def set_value(mod, value):
+    dpg.set_value(mod, value)
+
+
+mods_shared.register_state_callbacks(get_value, set_value)

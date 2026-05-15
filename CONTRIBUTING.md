@@ -50,13 +50,13 @@ Other handy tasks available via `Tasks: Run Task` include:
 - **Clean**: Clears out build directories (`build/`, `dist/`).
 - **Launch Setup / Installed App**: Quickly test the generated installer or the installed application.
 
-Debugger configurations are also available in `.vscode/launch.json`. However, the overhead of a debugger is rarely worth it; you can typically achieve the same results much faster through rapid iteration—simply run the application and fix errors as they appear in the terminal or `Minify/logs`.
+Debugger configurations are also available in `.vscode/launch.json`. However, the overhead of a debugger is rarely worth it; you can typically achieve the same results much faster through rapid iteration—simply run the application and fix errors as they appear in the terminal or `Minify/logs`. For testing logic without a GUI, you can use the CLI mode: `uv run minify --help`.
 
 ## Mod Development
 
 If you are contributing new mods or features to existing ones:
 
-- Refer to [`docs/wiki/development.md`](https://egezenn.github.io/dota2-minify/wiki/#/development) for a full breakdown of the mod structure (`modcfg.json`, `notes.md`, etc.).
+- Refer to [`docs/wiki/development.md`](https://egezenn.github.io/dota2-minify/wiki/#/development) for a full breakdown of the mod structure (`manifest.json`, `notes.md`, etc.).
 - Ensure that any feature requiring internet connectivity **fails silently** to avoid crashing the application for offline users.
 - Decouple highly specific or complex logic into its own script within the mod folder.
 

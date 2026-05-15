@@ -178,8 +178,7 @@ def render_menu():
         if mod.endswith(".vpk"):
             continue
 
-        mod_cfg_path = os.path.join(mod_path, "modcfg.json")
-        mod_config = config.read_json_file(mod_cfg_path)
+        mod_config = manifest_utils.get_mod(mod_path)
 
         always = mod_config.get("always", False)
         mod_enabled = dpg.does_item_exist(mod) and dpg.get_value(mod)

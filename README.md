@@ -28,7 +28,7 @@
 [![translation](https://hosted.weblate.org/widgets/dota2-minify/-/mod-localization/horizontal-auto.svg)](https://hosted.weblate.org/engage/dota2-minify/)
 
 ![ss1](docs/assets/screenshot-1.jpg)
-![ss2](docs/assets/screenshot-2.png)
+![ss2](docs/assets/screenshot-2.jpg)
 
 </div>
 

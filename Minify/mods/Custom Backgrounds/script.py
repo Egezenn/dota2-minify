@@ -16,8 +16,7 @@ if minify_root not in sys.path:
 
 import conditions
 import helper
-from core import base, config, constants, fs
-from ui import terminal
+from core import base, config, constants, fs, output
 
 mod_name = os.path.basename(current_dir)
 
@@ -41,12 +40,12 @@ def main():
                 actual_ext = ".jpg"
 
             if not actual_ext:
-                terminal.add_text("-> Unsupported background format\n   {}", p, msg_type="error")
+                output.add_text("-> Unsupported background format\n   {}", p, msg_type="error")
                 return
 
             if actual_ext != ext:
                 new_p = os.path.join(base.config_dir, f"background{actual_ext}")
-                terminal.add_text("-> Background extension mismatch\n   {} -> {}", p, new_p, msg_type="warning")
+                output.add_text("-> Background extension mismatch\n   {} -> {}", p, new_p, msg_type="warning")
                 fs.move_path(p, new_p)
                 return
 
@@ -73,7 +72,7 @@ def main():
                         creationflags=subprocess.CREATE_NO_WINDOW if base.OS == base.WIN else 0,
                     )
                 else:
-                    terminal.add_text(
+                    output.add_text(
                         "-> Conversion tools missing\n   {} ({})",
                         "ImageMagick",
                         f"{actual_ext} -> .png",
@@ -129,7 +128,7 @@ def main():
                         creationflags=subprocess.CREATE_NO_WINDOW if base.OS == base.WIN else 0,
                     )
                 else:
-                    terminal.add_text(
+                    output.add_text(
                         "-> Conversion tools missing\n   {} ({})", "FFmpeg", f"{actual_ext} -> .webm", msg_type="error"
                     )
                     return

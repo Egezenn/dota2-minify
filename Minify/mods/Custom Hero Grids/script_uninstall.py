@@ -11,7 +11,7 @@ if minify_root not in sys.path:
 
 # isort: split
 
-from core import base, config, log, steam
+from core import base, config, log, output, steam
 
 IMPORT_SUFFIX = " #Minify-Import"
 
@@ -48,7 +48,7 @@ def main():
             if removed_count > 0:
                 config.write_json_file(original_grid_path, current_config)
             else:
-                log.write_warning(f"No hero grids with '{IMPORT_SUFFIX}' found to remove.")
+                output.add_text(f"No hero grids with '{IMPORT_SUFFIX}' found to remove.")
         else:
             log.write_warning("Config file missing 'configs' key.")
 

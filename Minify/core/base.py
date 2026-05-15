@@ -17,6 +17,7 @@ LINUX = "Linux"
 MAC = "Darwin"
 
 FROZEN = getattr(sys, "frozen", False)
+HEADLESS = False
 
 OWNER = "Egezenn"
 REPO = "dota2-minify"

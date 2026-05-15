@@ -5,12 +5,12 @@ import urllib.parse
 from concurrent.futures import ThreadPoolExecutor
 
 import dearpygui.dearpygui as dpg
-
 from core import fs
-from ui import modal_shared, shared as shared, window
+from ui import modal_shared, window
+from ui import shared as shared
 
-from . import config as browser_config
-from .data import DataManager
+from browsers.d2pfx import config as browser_config
+from browsers.d2pfx.data import DataManager
 
 
 class BrowserUI:
@@ -494,6 +494,7 @@ class BrowserUI:
 
     def install_mod(self, mod):
         import json
+
         from core import base, config
 
         name = mod.get("name", "Unknown")
@@ -562,7 +563,7 @@ class BrowserUI:
                     preview_dest = os.path.join(target_dir, "preview.jpg")
                     self.data_manager.download_file(preview_url, preview_dest)
 
-                # 3. Create modcfg.json
+                # 3. Create manifest.json
                 modcfg = {
                     "browser": {
                         "browser": "d2pfx",
@@ -578,7 +579,7 @@ class BrowserUI:
                 if cat_id in browser_config.RENAME_CATEGORIES:
                     modcfg["order"] = 2
 
-                config.write_json_file(os.path.join(target_dir, "modcfg.json"), modcfg)
+                config.write_json_file(os.path.join(target_dir, "manifest.json"), modcfg)
 
                 # 4. Create notes.md
                 version = modcfg["browser"]["version"]

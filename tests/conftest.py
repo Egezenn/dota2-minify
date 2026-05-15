@@ -46,6 +46,7 @@ sys.modules["playsound3"] = MagicMock()
 
 # 4. Mock os.path.exists to avoid entering the steam discovery loops
 import os
+
 from core import base
 
 original_exists = os.path.exists

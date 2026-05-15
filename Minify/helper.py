@@ -11,8 +11,8 @@ from tkinter import filedialog
 
 import dearpygui.dearpygui as dpg
 import vpk
-from core import base, config, constants, fs, log, utils
-from ui import terminal
+from core import base, config, constants, fs, log, mods_shared, output, utils
+from patch import manifest_utils
 
 compiler_filepicker_path = ""
 output_path = config.get("output_path", constants.minify_default_dota_pak_output_path)
@@ -66,14 +66,14 @@ def compile_assets(input_path=None, output_path=None, pak_path=None, sender=None
     if compiler_filepicker_path:
         input_path = compiler_filepicker_path
         output_path = os.path.join(input_path, os.pardir, "#Minify_compiled")
-        terminal.clean()
+        output.clean()
     if not output_path:
         output_path = os.path.join(input_path, os.pardir, "#Minify_compiled")
 
     img_list = [str(f.relative_to(input_path)) for f in Path(input_path).rglob("*.png") if f.is_file()]
 
     if os.path.exists(input_path):
-        terminal.add_text("&compile_init", input_path)
+        output.add_text("&compile_init", input_path)
         fs.remove_path(constants.minify_dota_compile_input_path, output_path)
         fs.create_dirs(constants.minify_dota_compile_input_path)
 
@@ -104,14 +104,14 @@ def compile_assets(input_path=None, output_path=None, pak_path=None, sender=None
         )
         fs.create_dirs(constants.minify_dota_tools_required_path)
 
-        terminal.add_text("&compile_successful", output_path)
+        output.add_text("&compile_successful", output_path)
 
         if pak_path:
             vpk_file = vpk.new(output_path)
             vpk_file.save(pak_path)
-            terminal.add_text("&compile_created_pak", pak_path)
+            output.add_text("&compile_created_pak", pak_path)
     else:
-        terminal.add_text("&compile_no_path")
+        output.add_text("&compile_no_path")
 
 
 def create_img_ref_xml(img_path_list):
@@ -145,7 +145,7 @@ def exec_script(script_path, mod_name, order_name, _terminal_output=True):
     """
     if os.path.exists(script_path):
         mod_dir = os.path.dirname(script_path)
-        cfg = config.read_json_file(os.path.join(mod_dir, "modcfg.json"))
+        cfg = manifest_utils.get_mod(mod_dir)
         if cfg.get("browser"):
             log.write_warning(f"Python script execution is disabled for browser mods: {mod_name}")
             return
@@ -162,10 +162,10 @@ def exec_script(script_path, mod_name, order_name, _terminal_output=True):
         main_func = getattr(module, "main", None)
         if callable(main_func):
             if _terminal_output:
-                terminal.add_text("&script_execution", mod_name, order_name)
+                output.add_text("&script_execution", mod_name, order_name)
             main_func()
             if _terminal_output:
-                terminal.add_text("&script_success", mod_name, order_name, msg_type="success")
+                output.add_text("&script_success", mod_name, order_name, msg_type="success")
         else:
             log.write_warning("&script_no_main", mod_name, order_name)
 
@@ -183,8 +183,7 @@ def bulk_exec_script(order_name, terminal_output=True):
     bulk_name = f"script_{order_name}.py"
     for root, _, files in os.walk(base.mods_dir):
         if bulk_name in files and not os.path.basename(root).startswith("_"):
-            mod_cfg_path = os.path.join(root, "modcfg.json")
-            cfg = config.read_json_file(mod_cfg_path)
+            cfg = manifest_utils.get_mod(root)
 
             if "browser" in cfg:
                 continue
@@ -193,7 +192,11 @@ def bulk_exec_script(order_name, terminal_output=True):
             visual = cfg.get("visual", True)
 
             # TODO: pull the file from pak66 to check if it was enabled for uninstallers
-            if always or order_name in ["initial", "uninstall"] or (visual and dpg.get_value(os.path.basename(root))):
+            if (
+                always
+                or order_name in ["initial", "uninstall"]
+                or (visual and mods_shared.get_state(os.path.basename(root)))
+            ):
                 exec_script(
                     os.path.join(root, bulk_name), os.path.basename(root), order_name, _terminal_output=terminal_output
                 )
@@ -205,7 +208,7 @@ def exec_script_function(script_path, mod_name, function_name="main"):
     """
     if os.path.exists(script_path):
         mod_dir = os.path.dirname(script_path)
-        cfg = config.read_json_file(os.path.join(mod_dir, "modcfg.json"))
+        cfg = manifest_utils.get_mod(mod_dir)
         if cfg.get("browser"):
             log.write_warning(f"Python script execution is disabled for browser mods: {mod_name}")
             return

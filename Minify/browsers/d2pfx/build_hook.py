@@ -1,11 +1,12 @@
 import os
 import shutil
-import vpk
-import dearpygui.dearpygui as dpg
-from core import base, config, fs, log, vpk_utils
-from ui import terminal
+
 import helper
-from . import config as browser_config
+import vpk
+from core import base, fs, log, mods_shared, output
+from patch import manifest_utils, vpk_utils
+
+from browsers.d2pfx import config as browser_config
 
 
 def run(mod_list, current_mod=None):
@@ -19,7 +20,7 @@ def run(mod_list, current_mod=None):
 
     for mod_name in mod_list:
         # Check if mod is active
-        if not (current_mod is not None or dpg.get_value(mod_name)):
+        if not (current_mod is not None or mods_shared.get_state(mod_name)):
             continue
 
         mod_path = os.path.join(base.mods_dir, mod_name)
@@ -31,12 +32,11 @@ def run(mod_list, current_mod=None):
             all_active_vpk_mods.append(mod_name)
             continue
 
-        # 2. Identify D2PFX mods via modcfg.json
-        cfg_path = os.path.join(mod_path, "modcfg.json")
-        if not os.path.exists(cfg_path):
+        # 2. Identify D2PFX mods via manifest/modcfg
+        cfg = manifest_utils.get_mod(mod_path)
+        if not cfg:
             continue
 
-        cfg = config.read_json_file(cfg_path)
         browser_info = cfg.get("browser", {})
 
         is_d2pfx = browser_info.get("browser") == "d2pfx" or str(browser_info.get("name", "")).startswith("d2pfx")
@@ -67,7 +67,7 @@ def run(mod_list, current_mod=None):
 
     # 1. Maps (dota.vpk)
     if map_vpk_paths:
-        terminal.add_text("&merging_vpks")
+        output.add_text("&merging_vpks")
         maps_output_dir = os.path.join(helper.output_path, "maps")
         fs.create_dirs(maps_output_dir)
         # Just copy the last found map VPK
@@ -79,7 +79,7 @@ def run(mod_list, current_mod=None):
 
     # 2. Normal Priority (pak65)
     if pfx_normal:
-        terminal.add_text("&merging_vpks")
+        output.add_text("&merging_vpks")
         fs.remove_path(base.merge_dir)
         fs.create_dirs(base.merge_dir)
 
@@ -87,15 +87,15 @@ def run(mod_list, current_mod=None):
         # Extract existing pak65 (from build.py) to merge D2PFX on top
         if os.path.exists(pak65_path):
             try:
-                vpk_utils.dump_vpk(vpk.open(pak65_path), base.merge_dir)
+                vpk_utils.dump(vpk.open(pak65_path), base.merge_dir)
             except Exception:
                 pass
 
         for mod_name, vpk_paths in pfx_normal.items():
             for path in vpk_paths:
                 try:
-                    vpk_utils.dump_vpk(vpk.open(path), base.merge_dir, check_exists=True)
-                    terminal.add_text("&merged_mod", mod_name)
+                    vpk_utils.dump(vpk.open(path), base.merge_dir, check_exists=True)
+                    output.add_text("&merged_mod", mod_name)
                 except Exception:
                     log.write_warning("&failed_merge_mod", mod_name)
 
@@ -105,15 +105,15 @@ def run(mod_list, current_mod=None):
 
     # 3. High Priority (pak67)
     if pfx_high_priority:
-        terminal.add_text("&merging_vpks")
+        output.add_text("&merging_vpks")
         fs.remove_path(base.merge_dir)
         fs.create_dirs(base.merge_dir)
 
         for mod_name, vpk_paths in pfx_high_priority.items():
             for path in vpk_paths:
                 try:
-                    vpk_utils.dump_vpk(vpk.open(path), base.merge_dir, check_exists=True)
-                    terminal.add_text("&merged_mod", mod_name)
+                    vpk_utils.dump(vpk.open(path), base.merge_dir, check_exists=True)
+                    output.add_text("&merged_mod", mod_name)
                 except Exception:
                     log.write_warning("&failed_merge_mod", mod_name)
 

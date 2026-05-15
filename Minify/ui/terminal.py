@@ -3,13 +3,14 @@
 import time
 
 import dearpygui.dearpygui as dpg
-from core import base
+from core import base, output, utils
 
 from ui import shared
 
 wrap_size = base.main_window_width - 10
 
 
+@utils.ignore_if_headless
 def scroll_to_end():
     time.sleep(0.05)
     dpg.set_y_scroll("terminal_window", dpg.get_y_scroll_max("terminal_window"))
@@ -37,16 +38,30 @@ def add_text(text_or_id, *args, msg_type: str | None = None, **kwargs):
             color = (0, 230, 230)
         kwargs["color"] = color
 
-    item = dpg.add_text(default_value=text, parent="terminal_window", wrap=wrap_size, indent=10, **kwargs)
-    shared.terminal_history.append({"id": item, "key": text_or_id.replace("&", ""), "args": args})
-    scroll_to_end()
-    return item
+    if not base.HEADLESS and dpg.does_item_exist("terminal_window"):
+        item = dpg.add_text(default_value=text, parent="terminal_window", wrap=wrap_size, indent=10, **kwargs)
+        shared.terminal_history.append({"id": item, "key": text_or_id.replace("&", ""), "args": args})
+        scroll_to_end()
+        return item
+    else:
+        print(text)
+        return None
 
 
 def add_seperator():
-    dpg.add_separator(parent="terminal_window")
+    if not base.HEADLESS and dpg.does_item_exist("terminal_window"):
+        dpg.add_separator(parent="terminal_window")
+    else:
+        print("-" * 50)
 
 
 def clean():
-    dpg.delete_item("terminal_window", children_only=True)
+    if not base.HEADLESS and dpg.does_item_exist("terminal_window"):
+        dpg.delete_item("terminal_window", children_only=True)
     shared.terminal_history.clear()
+
+
+if not base.HEADLESS:
+    output.register_output_callback(add_text)
+    output.register_separator_callback(add_seperator)
+    output.register_clean_callback(clean)

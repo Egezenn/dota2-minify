@@ -15,6 +15,14 @@ details_label = ""
 mod_selection_window_var = ""
 
 
+def load_headless(lang="EN"):
+    global localization_dict
+    with utils.open_utf8(base.localization_file_dir) as f:
+        data = jsonc.load(f)
+    for key, values in data.items():
+        localization_dict[key] = values.get(lang, values.get("EN", key))
+
+
 def get_available():
     global localizations
     # get available variables for text

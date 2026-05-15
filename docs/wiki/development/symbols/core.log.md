@@ -10,7 +10,6 @@ Crashlogs, warnings and debug zip creation
 
 ```python
 def write_crashlog(exc_type=None, exc_value=None, exc_traceback=None, header=None, handled=True):
-    from ui import terminal
 
     path = base.log_crashlog if handled else base.log_unhandled
     with utils.open_utf8R(path, "w") as file:
@@ -22,11 +21,8 @@ def write_crashlog(exc_type=None, exc_value=None, exc_traceback=None, header=Non
         else:
             file.write(message := f"{''.join(traceback.format_exception(exc_type, exc_value, exc_traceback))}")
 
-    with utils.try_pass():
-        from ui import terminal
-
         if message and not handled:
-            terminal.add_text(message, msg_type="error")
+            output.add_text(message, msg_type="error")
     if base.FROZEN:
         create_debug_zip()
 
@@ -42,7 +38,6 @@ def write_crashlog(exc_type=None, exc_value=None, exc_traceback=None, header=Non
 
 ```python
 def write_warning(header=None, *args):
-    from ui import terminal
 
     if not os.path.exists(base.log_warnings):
         with utils.open_utf8R(base.log_warnings, "w") as file:
@@ -65,7 +60,7 @@ def write_warning(header=None, *args):
         file.write(f"{console_message}\n{'-' * 50}\n\n")
 
     if console_message:
-        terminal.add_text(console_message, *args, msg_type="warning")
+        output.add_text(console_message, *args, msg_type="warning")
 
 ```
 
@@ -117,9 +112,7 @@ def create_debug_zip():
                     zipf.write(file_path)
 
         with utils.try_pass():
-            from ui import terminal
-
-            terminal.add_text("&heeeeeeeeeeeeeelp", zip_filename)
+            output.add_text("&heeeeeeeeeeeeeelp", zip_filename)
         fs.open_thing(".")
 
 ```

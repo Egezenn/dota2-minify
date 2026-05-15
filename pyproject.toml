@@ -1,6 +1,13 @@
 [project]
 name = "dota2-minify"
-version = "3.2"
+# 1.0 = initial tkinter fixes
+# 2.0 = seperation of source files from project root
+# 3.0 = initial module based architecture
+# 3.1 = cleanup
+# 3.2 = core & ui modules fully established
+# 3.3 = browsers module
+# 3.4 = patch module
+version = "3.4"
 description = "Dota2 Mod Patcher & Toolkit for everyone to use mods easily"
 readme = "README.md"
 requires-python = ">=3.13"

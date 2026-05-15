@@ -15,8 +15,7 @@ import requests
 
 # isort: split
 
-from core import base, config, log, steam
-from ui import terminal
+from core import base, config, log, output, steam
 
 IMPORT_SUFFIX = " #Minify-Import"
 REMOTE_URL = "https://github.com/Egezenn/dota2-precompiled-grids/releases/latest/download/hero_grid_config.json"
@@ -53,10 +52,10 @@ def main():
                 new_grid_data = response.json()
             else:
                 log.write_warning(f"Couldn't fetch grids from {REMOTE_URL}. Status: {response.status_code}")
-                terminal.add_text("&connection_error", msg_type="error")
+                output.add_text("&connection_error", msg_type="error")
         except Exception as e:
             log.write_warning(f"Failed to fetch remote grids: {e}")
-            terminal.add_text("&connection_error", msg_type="error")
+            output.add_text("&connection_error", msg_type="error")
 
     if new_grid_data and "configs" in new_grid_data:
         original_grid_path = os.path.join(dest_path, "hero_grid_config.json")

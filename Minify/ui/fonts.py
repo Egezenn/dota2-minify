@@ -4,7 +4,6 @@ import os
 import subprocess
 
 import dearpygui.dearpygui as dpg
-
 from core import base, fs, log
 
 # Map of locales to preferred system fonts per OS
@@ -223,8 +222,8 @@ def register(locale: str = "EN"):
     warnings.filterwarnings("ignore", category=DeprecationWarning, message=".*add_font_range_hint.*")
 
     def apply_hints():
-        import sys
         import io
+        import sys
 
         # DPG forcefully prints this warning, bypassing warnings.filterwarnings.
         # We must temporarily redirect stderr to silence it completely.

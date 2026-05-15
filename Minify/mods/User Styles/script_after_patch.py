@@ -10,13 +10,12 @@ if minify_root not in sys.path:
 
 # isort: split
 
-from core import fs
-from ui import terminal
+from core import fs, output
 
 
 def main():
     if not os.path.exists(os.path.join(current_dir, "styling.css")):
-        terminal.add_text(
+        output.add_text(
             f'You have {os.path.basename(current_dir)} mod enabled but haven\'t created a "styling.css" file yet.\n'
             "To prevent breaking changes without your consent we insist you to take a glance at the file first and keep only the snippets you'd like then rename _styling.css back to styling.css.",
             msg_type="warning",

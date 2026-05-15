@@ -10,7 +10,7 @@ This document provides a detailed overview of the system architecture, component
 
 1. **Non-Destructive Patching**: Minify never modifies base game files (aside from some text and configuration files) directly. It creates side-loaded VPKs (`pak66_dir.vpk`, etc.) and instructs Steam to load them.
 2. **Programmatic Modding**: Mods can contain Python scripts that run at various stages of the build process.
-3. **UI-Driven Backend**: The DearPyGui interface directly triggers backend operations via a shared state and threading model.
+3. **UI-Agnostic Backend**: Backend operations are decoupled from the UI. They communicate through an agnostic output system (`core.output`), allowing the tool to run in both GUI and CLI (Headless) modes.
 
 ---
 
@@ -18,25 +18,30 @@ This document provides a detailed overview of the system architecture, component
 
 ### 1. GUI Layer (DearPyGui)
 
-The UI is managed primarily in `Minify/ui/`. It uses a functional approach for rendering and a shared state for managing interactions.
+The UI is managed primarily in `Minify/ui/`. It is a consumer of the backend logic and serves as one of the possible interfaces.
 
 - **`gui.py`**: Manages the interaction lock (`interactive_lock`) to prevent UI operations during heavy I/O.
-- **`terminal.py`**: A virtualized terminal that captures and displays build logs in real-time.
+- **`terminal.py`**: A virtualized terminal that registers itself as a consumer of `core.output` to display build logs in the GUI.
 - **`checkboxes.py`**: Handles the state of mod selection and persistence (`mods.json`).
-- **`settings.py`**: Dynamically generates UI components based on `modcfg.json` files found in mod directories.
+- **`settings.py`**: Dynamically generates UI components based on `manifest.json` files found in mod directories.
 
-### 2. Core Engine
+### 2. CLI Layer (Headless)
+
+Managed in `Minify/cli.py`. It provides a standard command-line interface for patching, uninstallation, and mod management without requiring a display or GUI libraries.
+
+### 3. Core Engine
 
 Fundamental utilities used by both the UI and the Build pipeline.
 
 - **`core/fs.py`**: Specialized file system operations (atomic moves, safe deletions, recursive creation).
 - **`core/steam.py`**: Handles Steam library detection, game path resolution, and launch option patching.
 - **`core/vpk_utils.py`**: High-level wrapper for `vpk` operations, including metadata generation (`minify_version.txt`).
+- **`core/output.py`**: The communication backbone. It provides an agnostic interface for logging and user feedback, supporting multiple callbacks (e.g., standard print for CLI, and the terminal window for GUI).
 - **`core/registry.py`**: A central registry for third-party browsers to hook into the system lifecycle.
 
 ### 3. Build Pipeline
 
-The `Minify/build.py` module contains the "Patch" engine. It follows a strictly ordered pipeline.
+The `Minify/patch/` package contains the "Patch" engine. It follows a strictly ordered pipeline.
 
 ---
 
@@ -49,18 +54,22 @@ The following diagram illustrates the lifecycle of a patch operation:
 ```mermaid
 
 sequenceDiagram
-participant UI as GUI (gui.py)
-participant BLD as Build Engine (build.py)
+participant USER as User (CLI/GUI)
+participant ENT as Entry (cli.py / __main__.py)
+participant BLD as Build Engine (patch/__init__.py)
+participant OUT_SYS as Output System (core.output)
 participant VPK as Game VPKs
 participant MOD as Mods Directory
-participant OUT as Output (Dota 2)
+participant DOTA as Dota 2 Output
 
-UI->>BLD: Trigger patcher()
-BLD->>BLD: lock_interaction()
-BLD->>BLD: Resolve Dependencies/Conflicts
+USER->>ENT: Run Patch Command
+ENT->>BLD: Trigger patcher()
+BLD->>BLD: lock_interaction() (if GUI)
+BLD->>OUT_SYS: add_text("Starting...")
+OUT_SYS-->>USER: [Standard Output / UI Terminal]
 
 loop For each selected Mod
-    BLD->>MOD: Read modcfg.json & script.py
+    BLD->>MOD: Read manifest.json & script.py
     BLD->>BLD: Collect asset injection (CSS/XML/Files)
 end
 
@@ -68,19 +77,16 @@ BLD->>VPK: Extract required base assets
 
 opt If Workshop Tools Installed
     BLD->>BLD: Decompile assets (Source2Viewer)
-    BLD->>BLD: Apply XML Modifications
+    BLD->>BLD: Apply XML Modifications (Selectors)
     BLD->>BLD: Apply CSS Injection
     BLD->>BLD: Recompile assets (ResourceCompiler)
 end
 
-BLD->>OUT: Generate pak66_dir.vpk (Native Mods)
-BLD->>OUT: Generate pak65_dir.vpk (Merged VPK Mods)
+BLD->>DOTA: Generate pak66_dir.vpk (Native Mods)
+BLD->>DOTA: Generate pak65_dir.vpk (Merged VPK Mods)
 
-BLD->>REG: Trigger on_build() hooks
-REG->>BRW: Run Browser Build Hooks (e.g., D2PFX)
-
-BLD->>BLD: unlock_interaction()
-BLD->>UI: Notify Success
+BLD->>OUT_SYS: add_text("Success")
+BLD->>BLD: unlock_interaction() (if GUI)
 
 ```
 
@@ -124,7 +130,7 @@ B -- Hooks --> MAP
 
 Mods are identified by the presence of a folder in `Minify/mods/`. The system scans these folders and interprets them based on their contents:
 
-- **`modcfg.json`**: Metadata and UI configuration.
+- **`manifest.json`**: Metadata and UI configuration.
 - **`notes.md`**: Localized descriptions shown in the details view.
 - **`files/`**: Static assets copied directly into the output VPK.
 - **`files_uncompiled/`**: Raw assets (XML/CSS) that require the `resourcecompiler`.

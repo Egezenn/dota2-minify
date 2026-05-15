@@ -160,6 +160,9 @@ try:
     else:
         raise Exception("Unsupported platform!")
 
+    rg_exec_path = rg_executable if os.path.isabs(rg_executable) else os.path.join(".", rg_executable)
+    s2v_exec_path = s2v_executable if os.path.isabs(s2v_executable) else os.path.join(".", s2v_executable)
+
 except Exception:
     from core import log
 

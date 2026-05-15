@@ -103,6 +103,17 @@ FROZEN = getattr(sys, "frozen", False)
 
 </details>
 
+### `HEADLESS`
+
+<details open><summary>Source</summary>
+
+```python
+HEADLESS = False
+
+```
+
+</details>
+
 ### `OWNER`
 
 <details open><summary>Source</summary>

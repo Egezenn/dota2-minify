@@ -6,7 +6,7 @@
     },
     {
       "action": "set_attribute",
-      "tag": "PopupAcceptMatch",
+      "selector": "PopupAcceptMatch",
       "attribute": "onload",
       "value": "AcceptMatchPopup()"
     }

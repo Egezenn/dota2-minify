@@ -10,21 +10,20 @@
 
 import os
 import sys
-import jstyleson
 from pathlib import Path
-from typing import Dict, List, Any, Optional
+from typing import Any, Dict, List, Optional
 
+import jstyleson
+import pathspec
+from PIL import Image
 from rich.syntax import Syntax
 from rich.text import Text
 from rich.tree import Tree
-from PIL import Image
-from textual.app import App, ComposeResult
-from textual.widgets import Header, Footer, ListView, ListItem, Label, Static, DataTable
-from textual.containers import Container, Vertical, VerticalScroll
 from textual import events
-import pathspec
+from textual.app import App, ComposeResult
+from textual.containers import Container, Vertical, VerticalScroll
+from textual.widgets import DataTable, Footer, Header, Label, ListItem, ListView, Static
 
-# Add Minify to sys.path to allow imports from core
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "../Minify")))
 
 
@@ -102,7 +101,10 @@ class ModInfo:
                     self.errors.append(f"Invalid {filename}: {e}")
             return True
 
-        self.config = check_file("modcfg.json", None, "R", "Missing modcfg.json", True) or {}
+        self.config = check_file("manifest.json", None, None, None, True)
+        if not self.config:
+            self.config = check_file("modcfg.json", None, "R", "Missing manifest.json", True) or {}
+
         check_file("notes.md", "has_notes", "W", "Missing notes.md")
         self.has_preview = (self.path / "preview.jpg").exists() or (self.path / "preview.png").exists()
         if not self.has_preview:
@@ -110,7 +112,11 @@ class ModInfo:
         self.preview_path = (
             self.path / "preview.jpg" if (self.path / "preview.jpg").exists() else self.path / "preview.png"
         )
-        check_file("xml_mod.json", "has_xml", None, None, True)
+
+        has_xml = check_file("xml.json", "has_xml", None, None, True)
+        if not has_xml:
+            check_file("xml_mod.json", "has_xml", None, None, True)
+
         check_file("styling.css", "has_styling")
         check_file("blacklist.txt", "has_blacklist")
 
