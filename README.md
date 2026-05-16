@@ -24,8 +24,10 @@
 [![platform-aur](https://img.shields.io/badge/AUR-1793D1?style=for-the-badge&logo=arch-linux&logoColor=white)](https://aur.archlinux.org/packages/dota2-minify-bin)
 [![platform-macos](https://img.shields.io/badge/macOS%20(Partial)-000000?style=for-the-badge&logo=apple&logoColor=white)](https://egezenn.github.io/dota2-minify/wiki/#/development?id=running-from-the-source)
 
-[![translation](https://hosted.weblate.org/widgets/dota2-minify/-/main-localization/horizontal-auto.svg)](https://hosted.weblate.org/engage/dota2-minify/)
-[![translation](https://hosted.weblate.org/widgets/dota2-minify/-/mod-localization/horizontal-auto.svg)](https://hosted.weblate.org/engage/dota2-minify/)
+[![Translations via Weblate](https://img.shields.io/badge/Translations%20via-Weblate-2eccaa?style=for-the-badge&logo=weblate&logoColor=white)](https://hosted.weblate.org)
+
+[![translation](https://hosted.weblate.org/widgets/dota2-minify/-/main-localization/horizontal-auto.svg)](https://hosted.weblate.org/engage/dota2-minify)
+[![translation](https://hosted.weblate.org/widgets/dota2-minify/-/mod-localization/horizontal-auto.svg)](https://hosted.weblate.org/engage/dota2-minify)
 
 ![ss1](docs/assets/screenshot-1.jpg)
 ![ss2](docs/assets/screenshot-2.jpg)
@@ -138,6 +140,29 @@ This project wouldn't be available without the work of the community. Thanks to 
 | [pytest](https://github.com/pytest-dev/pytest) | Testing framework    | [MIT license](https://github.com/pytest-dev/pytest/blob/main/LICENSE) |
 | [ruff](https://github.com/astral-sh/ruff)      | Linter and formatter | [MIT license](https://github.com/astral-sh/ruff/blob/main/LICENSE)    |
 
+<div align="center">
+  
+## Sponsors
+
+<table align="center">
+  <tbody>
+    <tr>
+      <td align="center">
+        <a href="https://weblate.org">
+          <img src="https://s.weblate.org/cdn/Logo-Darktext-borders.png" width="200" alt="Weblate">
+        </a>
+      </td>
+      <td>
+        Thanks to <a href="https://weblate.org">Weblate</a> for powering our translations and providing <strong>Libre Hosting</strong>!
+      </td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
 ## License
 
-Contents of this repository are licensed under [GPL-3.0](LICENSE), however some files in `Minify/mods/*/files` may contain assets that originate from Dota2 itself, with or without modifications to them.
+Contents of this repository are licensed under [GPL-3.0](LICENSE).
+
+> [!NOTE]
+> The project logo and some assets in `Minify/mods/*/files` originate from Dota 2 (Valve Corporation).

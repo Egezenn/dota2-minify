@@ -188,6 +188,13 @@ h6 > a {
   color: black !important;
 }
 
+.btn-weblate,
+.btn-weblate:active,
+.btn-weblate:hover {
+  background-color: #2eccaa !important;
+  color: white !important;
+}
+
 #mods-section,
 #tools-section,
 #skins-section {
