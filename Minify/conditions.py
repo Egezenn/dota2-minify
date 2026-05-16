@@ -24,29 +24,41 @@ def is_dota_running(text_tag, text_type):
     return running
 
 
-def check_workshop_tools():
+def get_dota_app_state():
     """
-    Checks if Workshop Tools are installed via ACF appmanifest.
+    Reads the Dota 2 appmanifest ACF file and returns the AppState dictionary.
     """
     acf_path = os.path.join(steam.LIBRARY, "steamapps", f"appmanifest_{base.STEAM_DOTA_ID}.acf")
     try:
         with open(acf_path, encoding="utf-8") as f:
-            app_state = vdf.load(f).get("AppState", {})
+            return vdf.load(f).get("AppState", {})
     except Exception as e:
         log.write_warning("Failed to read ACF", e)
-        return False
+        return {}
 
+
+def get_workshop_tools_status(app_state):
+    """
+    Checks if Workshop Tools are enabled (mounted and not disabled) in the app state.
+    """
     mounted_str = app_state.get("MountedConfig", {}).get("optionaldlc", "")
     disabled_str = app_state.get("MountedConfig", {}).get("DisabledDLC", "")
 
     mounted_set = {token.strip() for token in mounted_str.replace(",", " ").split() if token.strip()}
     disabled_set = {token.strip() for token in disabled_str.replace(",", " ").split() if token.strip()}
 
-    return (
-        app_state.get("StateFlags") == "4"
-        and base.STEAM_DOTA_WORKSHOP_TOOLS_ID in mounted_set
-        and base.STEAM_DOTA_WORKSHOP_TOOLS_ID not in disabled_set
-    )
+    return base.STEAM_DOTA_WORKSHOP_TOOLS_ID in mounted_set and base.STEAM_DOTA_WORKSHOP_TOOLS_ID not in disabled_set
+
+
+def check_workshop_tools():
+    """
+    Checks if Workshop Tools are fully installed and enabled via ACF appmanifest.
+    """
+    app_state = get_dota_app_state()
+    if not app_state:
+        return False
+
+    return app_state.get("StateFlags") == "4" and get_workshop_tools_status(app_state)
 
 
 def is_compiler_found():

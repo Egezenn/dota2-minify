@@ -122,35 +122,7 @@ class WorkshopTools:
 
         def watch():
             import conditions
-            import vdf
-            from core import steam
-
             from ui import checkboxes, gui, terminal
-
-            acf_path = os.path.join(steam.LIBRARY, "steamapps", f"appmanifest_{base.STEAM_DOTA_ID}.acf")
-            base.STEAM_DOTA_WORKSHOP_TOOLS_ID
-
-            def read_acf():
-                try:
-                    with open(acf_path, encoding="utf-8") as f:
-                        return vdf.load(f).get("AppState", {})
-                except Exception:
-                    return {}
-
-            def get_dlc_status(app_state):
-                mounted_str = app_state.get("MountedConfig", {}).get("optionaldlc", "")
-                disabled_str = app_state.get("MountedConfig", {}).get("DisabledDLC", "")
-
-                mounted_set = {t.strip() for t in mounted_str.replace(",", " ").split() if t.strip()}
-                disabled_set = {t.strip() for t in disabled_str.replace(",", " ").split() if t.strip()}
-
-                return (
-                    base.STEAM_DOTA_WORKSHOP_TOOLS_ID in mounted_set
-                    and base.STEAM_DOTA_WORKSHOP_TOOLS_ID not in disabled_set
-                )
-
-            def is_fully_installed(app_state):
-                return app_state.get("StateFlags") == "4" and get_dlc_status(app_state)
 
             while gui.gui_lock:
                 time.sleep(0.1)
@@ -158,11 +130,12 @@ class WorkshopTools:
             was_downloading = False
 
             while True:
-                app_state = read_acf()
-                if is_fully_installed(app_state):
-                    break
+                app_state = conditions.get_dota_app_state()
+                is_enabled = conditions.get_workshop_tools_status(app_state)
+                is_installed = app_state.get("StateFlags") == "4" and is_enabled
 
-                is_enabled = get_dlc_status(app_state)
+                if is_installed:
+                    break
 
                 downloading = is_enabled and (
                     app_state.get("StateFlags") != "4"
