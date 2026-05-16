@@ -1,6 +1,6 @@
-import argparse
 import os
 import sys
+import threading
 import time
 import webbrowser
 
@@ -15,14 +15,21 @@ else:
 os.makedirs("config", exist_ok=True)
 os.makedirs("logs", exist_ok=True)
 
+if len(sys.argv) > 1:
+    import cli
+
+    cli.run()
+    sys.exit(0)
+
 # isort: split
 
-import build
+import browsers
 import conditions
 import dearpygui.dearpygui as dpg
 import helper
+import patch
+from browsers.d2pfx import ui as d2pfx_ui
 from core import base, config, constants, log
-import browsers
 from ui import (
     checkboxes,
     dev_tools,
@@ -34,19 +41,9 @@ from ui import (
     theme,
     window,
 )
-from browsers.d2pfx import ui as d2pfx_ui
 
 sys.excepthook = log.unhandled_handler()
 browsers.initialize()
-
-parser = argparse.ArgumentParser(description="Minify")
-parser.add_argument("-v", "--version", action="store_true", help="Print version and exit")
-args = parser.parse_args()
-
-if args.version:
-    print(base.VERSION)
-    sys.exit(0)
-
 
 dpg.create_context()
 
@@ -72,7 +69,11 @@ def create_ui():
             with dpg.group(parent="center_group", tag="button_group"):
                 dpg.add_spacer(height=6)
                 dpg.add_button(
-                    tag="button_patch", label="Patch", callback=lambda: build.patcher(), enabled=False, width=-1
+                    tag="button_patch",
+                    label="Patch",
+                    callback=lambda: threading.Thread(target=patch.patcher, daemon=True).start(),
+                    enabled=False,
+                    width=-1,
                 )
                 dpg.add_button(
                     tag="button_select_mods",

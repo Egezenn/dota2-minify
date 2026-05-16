@@ -15,7 +15,15 @@
 
 - `Minify/`: The main application package.
   - `__main__.py`: The entry point for the DearPyGui application.
-  - `build.py`: Handles compiling, extracting, and patching Mod files into Dota 2 VPK format.
+  - `cli.py`: The entry point for the Headless CLI interface.
+  - `patch/`: Package handling the compilation, extraction, and patching of Mod files.
+    - `__init__.py`: Core patching orchestration logic.
+    - `blacklist.py`: Logic for processing mod blacklist rules.
+    - `styling.py`: Logic for applying mod CSS styles.
+    - `replacer.py`: Logic for file replacement rules via CSV.
+    - `vpk_utils.py`: Utility functions for VPK operations and extraction.
+    - `manifest_utils.py`: Utilities for loading mod manifests and versioning.
+    - `unins.py`: Logic for mod uninstallation and cleanup.
   - `conditions.py`: System conditionals (verifying paths, workshop tools status).
   - `helper.py`: Provides utility functions to compile images, execute mod scripts dynamically, etc.
 
@@ -35,6 +43,7 @@
     - `steam.py`: Functions to detect Steam directories, game paths, and modify launch options.
     - `utils.py`: Shared utilities
     - `vpk_utils.py`: Utility functions for VPK operations and metadata generation.
+    - `output.py`: Agnostic communication interface between backend and UI/CLI.
 
   - `ui/`: Contains the DearPyGui interface logic:
     - `announcements.py`: Fetches and displays global announcements to users on app start.
@@ -70,13 +79,13 @@ Additionally, it interacts with Dota 2 Workshop Tools if the DLC is installed:
 
 Mods in Minify are robust and programmatically driven.
 
-### `modcfg.json`
+### `manifest.json`
 
-Mods can optionally include a `modcfg.json` file. It dictates how the mod interacts with the Minify system and how it is exposed in the Settings UI. For a deeper technical dive into the system design, see [architecture.md](ARCHITECTURE.md).
-Key objects in the `modcfg.json` settings array include:
+Mods can optionally include a `manifest.json` file. It dictates how the mod interacts with the Minify system and how it is exposed in the Settings UI. For a deeper technical dive into the system design, see [architecture.md](ARCHITECTURE.md).
+Key objects in the `manifest.json` settings array include:
 
 - **Input Types**: `checkbox`, `combo`, `number` (`int`/`float`), `slider`, `color`, `list`, `button`.
-- Settings are rendered dynamically by `Minify/ui/settings.py` based on exactly what is defined in `modcfg.json`.
+- Settings are rendered dynamically by `Minify/ui/settings.py` based on exactly what is defined in `manifest.json`.
 - **Presets**: The `presets` list allows developers to provide predefined combinations of setting values.
 
 ### Mod Scripts
@@ -88,7 +97,7 @@ When writing custom logic for a mod, hook into these files.
 
 ### XML & CSS Injection
 
-Mods dynamically patch Dota 2's UI layout (`xml_mod.json`) and styling (`styling.css`). The build engine compiles and merges these changes alongside base VPK content.
+Mods dynamically patch Dota 2's UI layout (`xml.json`) and styling (`styling.css`). The build engine compiles and merges these changes alongside base VPK content. For XML patching, the system supports a CSS-like selector syntax for precise targeting of elements.
 
 ### Browser System
 
@@ -102,8 +111,8 @@ Regardless of whether you are an AI agent or a human developer, following these 
 - DearPyGui (`dpg`) has strict state requirements. Do not delete items that are still referenced elsewhere in the DPG registry without proper cleanup.
 - Keep UI operations on the main thread and respect `gui.lock_interaction()` when heavy I/O operations (like extracting/packing VPKs) are running.
 - If the user is experiencing issues, the tracebacks and other info are located in `Minify/logs`.
-- If a mod requires something really specific or complex, it should be decoupled into its own script.
 - Any features or scripts that require internet connectivity **MUST** be able to fail silently without crashing the application.
+- **Communication**: Always use the `core.output` module for user messaging. Use `output.add_text()` instead of `ui.terminal.add_text()` to ensure your logs are visible in both CLI and GUI modes.
 - **Filesystem Operations**: Prefer using the `os` module (and `os.path`) over `pathlib`. Some project dependencies are older and expect string-based paths; using `pathlib` can lead to subtle bugs or type errors in these contexts.
 - When running or creating standalone scripts in subdirectories (like `tests/` or `scripts/`), always ensure the `Minify/` directory is added to `sys.path` to allow proper imports of `core` and `ui` packages:
 - Always run `scripts/precommit.sh` to check for and resolve any linting or test errors before committing your changes.
@@ -125,6 +134,7 @@ Regardless of whether you are an AI agent or a human developer, following these 
   - We use `ruff check` as our primary linter.
   - To organize and sort imports, use: `ruff check . --select I --fix`.
   - Avoid using function top imports (local imports) unless absolutely necessary. While cyclic imports are common in this project, analyze the dependency chain thoroughly before resorting to them.
+  - Prefer absolute imports from the `Minify/` root (e.g., `from core import ...`) over relative imports (e.g., `from . import ...`).
 - **PR Naming**:
   - Use the format `<category>: concise title`.
   - Categories: `feat`, `fix`, `refactor`, `docs`, `test`, `chore`.

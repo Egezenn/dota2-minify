@@ -151,8 +151,7 @@ def create():
         if is_vpk := mod.endswith(".vpk"):
             always_val = False
         else:
-            mod_cfg_path = os.path.join(mod_path, "modcfg.json")
-            cfg = config.read_json_file(mod_cfg_path)
+            cfg = manifest_utils.get_mod(mod_path)
             always_val = cfg.get("always", False)
 
             if browser_info := cfg.get("browser"):
@@ -160,7 +159,7 @@ def create():
                     if hasattr(browser_config, "on_scan"):
                         browser_config.on_scan(mod, browser_info)
             if version_req := cfg.get("version"):
-                if not utils.is_version_at_least(base.VERSION, version_req):
+                if not manifest_utils.is_version_at_least(base.VERSION, version_req):
                     unsupported_version = True
 
         if unsupported_version:
@@ -235,6 +234,34 @@ def create():
                 details.render_details_window(mod)
 
         checkboxes.append(mod)
+
+```
+
+</details>
+
+## `get_value(mod)`
+
+*No documentation available.*
+
+<details open><summary>Source</summary>
+
+```python
+def get_value(mod):
+    return dpg.get_value(mod)
+
+```
+
+</details>
+
+## `set_value(mod, value)`
+
+*No documentation available.*
+
+<details open><summary>Source</summary>
+
+```python
+def set_value(mod, value):
+    dpg.set_value(mod, value)
 
 ```
 

@@ -1,12 +1,8 @@
 name: Update API Symbols
 
 on:
-  push:
-    branches:
-      - main
-    paths:
-      - "docs/**"
   workflow_dispatch:
+  workflow_call:
 
 permissions:
   contents: write

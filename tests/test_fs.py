@@ -185,7 +185,7 @@ def test_download_file_success(mock_set_value, mock_get, tmp_path):
 
 
 @patch("requests.get")
-@patch("ui.terminal.add_text")
+@patch("core.fs.output.add_text")
 def test_download_file_exception(mock_add_text, mock_get, tmp_path):
     target = tmp_path / "failed_download.txt"
     mock_get.side_effect = Exception("Network error")
@@ -269,7 +269,7 @@ def test_extract_archive_tar_target(tmp_path):
     assert (extract_dir / "file2.txt").read_text() == "content2"
 
 
-@patch("ui.terminal.add_text")
+@patch("core.fs.output.add_text")
 def test_extract_archive_unsupported(mock_add_text, tmp_path):
     unsupported_path = tmp_path / "test.rar"
     result = fs.extract_archive(str(unsupported_path))
@@ -279,7 +279,7 @@ def test_extract_archive_unsupported(mock_add_text, tmp_path):
     assert "Unsupported archive format" in mock_add_text.call_args[0][0]
 
 
-@patch("ui.terminal.add_text")
+@patch("core.fs.output.add_text")
 def test_extract_archive_exception(mock_add_text, tmp_path):
     # Pass a nonexistent zip file
     missing_zip = tmp_path / "missing.zip"
@@ -402,7 +402,7 @@ def test_open_thing_posix_with_args_non_executable(mock_run, mock_access, tmp_pa
 
 
 @patch("os.path.isdir")
-@patch("ui.terminal.add_text")
+@patch("core.fs.output.add_text")
 def test_open_thing_file_not_found(mock_add_text, mock_isdir):
     # Simulate FileNotFoundError when checking if it's a directory
     mock_isdir.side_effect = FileNotFoundError()

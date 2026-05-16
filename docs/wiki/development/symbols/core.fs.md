@@ -11,7 +11,6 @@ Opens files or directories in their regsitered applications
 ```python
 def open_thing(path: str, args: str = "") -> None:
     "Opens files or directories in their regsitered applications"
-    from ui import terminal
 
     try:
         # If args are provided and target is executable, prefer launching directly
@@ -44,7 +43,7 @@ def open_thing(path: str, args: str = "") -> None:
             else:
                 subprocess.run(["xdg-open", path])
     except FileNotFoundError:
-        terminal.add_text("&open_thing_fail", path, msg_type="error")
+        output.add_text("&open_thing_fail", path, msg_type="error")
 
 ```
 
@@ -170,7 +169,6 @@ def download_file(url: str, target_path: str, progress_tag: Optional[str] = None
     Downloads a file from url to target_path using requests.
     Updates the UI progress_tag with \"Downloading: X.XX/Y.YY MB\" if provided.
     """
-    from ui import terminal
 
     try:
         response = requests.get(url, stream=True)
@@ -212,7 +210,7 @@ def download_file(url: str, target_path: str, progress_tag: Optional[str] = None
 
         return True
     except Exception as e:
-        terminal.add_text(f"Failed to open {target_path}: {e}", msg_type="error")
+        output.add_text(f"Failed to open {target_path}: {e}", msg_type="error")
         return False
 
 ```
@@ -232,7 +230,6 @@ def extract_archive(archive_path: str, extract_dir: str = ".", target_file: Opti
     Extracts an archive (zip or tar.gz).
     If target_file is provided, extracts only that file (or directory structure leading to it).
     """
-    from ui import terminal
 
     try:
         if archive_path.endswith(".zip"):
@@ -243,17 +240,34 @@ def extract_archive(archive_path: str, extract_dir: str = ".", target_file: Opti
                     zip_ref.extractall(extract_dir)
         elif archive_path.endswith((".tar.gz", ".tgz")):
             with tarfile.open(archive_path, "r:gz") as tar:
+                extract_dir_abs = os.path.abspath(extract_dir)
+                safe_members = []
+                for member in tar.getmembers():
+                    member_path = os.path.abspath(os.path.join(extract_dir_abs, member.name))
+                    if os.path.commonpath([extract_dir_abs, member_path]) == extract_dir_abs:
+                        safe_members.append(member)
+
                 if target_file:
-                    member = tar.getmember(target_file)
-                    tar.extract(member, path=extract_dir)
+                    try:
+                        member = tar.getmember(target_file)
+                        if member in safe_members:
+                            if hasattr(tarfile, "data_filter"):
+                                tar.extract(member, path=extract_dir, filter="data")
+                            else:
+                                tar.extract(member, path=extract_dir)
+                    except KeyError:
+                        pass
                 else:
-                    tar.extractall(extract_dir)
+                    if hasattr(tarfile, "data_filter"):
+                        tar.extractall(path=extract_dir, members=safe_members, filter="data")
+                    else:
+                        tar.extractall(path=extract_dir, members=safe_members)
         else:
-            terminal.add_text(f"Unsupported archive format: {archive_path}", msg_type="error")
+            output.add_text(f"Unsupported archive format: {archive_path}", msg_type="error")
             return False
         return True
     except Exception as e:
-        terminal.add_text(f"Extraction failed: {e}", msg_type="error")
+        output.add_text(f"Extraction failed: {e}", msg_type="error")
         return False
 
 ```

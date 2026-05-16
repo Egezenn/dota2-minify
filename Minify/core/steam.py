@@ -8,7 +8,7 @@ import sys
 
 import vdf
 
-from core import base, config, log, utils
+from core import base, config, log, output, utils
 
 
 def remove_lang_args(arg_string):
@@ -71,7 +71,6 @@ def fix_launch_options():
     Fixes user(s) launch options with the language argument that has the current output path.
     Does it for all accounts available if "apply_for_all" key is set.
     """
-    from ui import terminal
 
     steam_ids = []
     successful_ids = []
@@ -88,7 +87,7 @@ def fix_launch_options():
             continue
 
         with utils.open_utf8R(vdf_path) as file:
-            terminal.add_text("&checking_launch_options")
+            output.add_text("&checking_launch_options")
             data = vdf.load(file)
 
         locale = config.get("output_locale")
@@ -105,7 +104,7 @@ def fix_launch_options():
                     user_name = user["name"]
                     break
 
-            terminal.add_text("&discrepancy_launch_options", user_name, locale)
+            output.add_text("&discrepancy_launch_options", user_name, locale)
 
             data["UserLocalConfigStore"]["Software"]["Valve"]["Steam"]["apps"][base.STEAM_DOTA_ID]["LaunchOptions"] = (
                 f"-language {locale} {remove_lang_args(launch_options)}"

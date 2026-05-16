@@ -1,4 +1,5 @@
-from core.utils import hex_to_rgba, is_version_at_least, parse_color, rgba_to_hex
+from core.utils import hex_to_rgba, parse_color, rgba_to_hex
+from patch.manifest_utils import is_version_at_least
 
 
 def test_is_version_at_least_standard():

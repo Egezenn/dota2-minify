@@ -6,8 +6,8 @@ import threading
 import time
 import webbrowser
 
-import build
 import dearpygui.dearpygui as dpg
+import patch
 import requests
 from core import base, config, fs, log, utils
 
@@ -57,7 +57,13 @@ class Uninstall:
             title="Uninstall",
             messages=["Remove all mods?"],
             buttons=[
-                {"label": "Confirm", "callback": lambda s, a, u: build.uninstall(s, a, u), "width": 100},
+                {
+                    "label": "Confirm",
+                    "callback": lambda s, a, u: threading.Thread(
+                        target=patch.unins.uninstall, args=(s, a, u), daemon=True
+                    ).start(),
+                    "width": 100,
+                },
                 {"label": "Cancel", "callback": lambda s, a, u: Uninstall.hide(s, a, u), "width": 100},
             ],
         )
@@ -122,7 +128,8 @@ class WorkshopTools:
 
         def watch():
             import conditions
-            from ui import checkboxes, gui, terminal
+            from core import output
+            from ui import checkboxes, gui
 
             while gui.gui_lock:
                 time.sleep(0.1)
@@ -143,7 +150,7 @@ class WorkshopTools:
                 )
 
                 if downloading and not was_downloading:
-                    terminal.add_text("Downloading Dota 2 Workshop Tools...", msg_type="warning")
+                    output.add_text("Downloading Dota 2 Workshop Tools...", msg_type="warning")
                     gui.lock_interaction()
                     was_downloading = True
                 elif not downloading and was_downloading:

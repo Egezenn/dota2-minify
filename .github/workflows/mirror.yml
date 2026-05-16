@@ -2,7 +2,7 @@ name: Mirror to Codeberg
 
 on:
   push:
-    branches: ["*"]
+    branches: ["main"]
   delete:
 
 jobs:

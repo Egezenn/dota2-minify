@@ -1,13 +1,34 @@
-# core.vpk_utils
+import os
+import shutil
+import threading
+from concurrent.futures import ThreadPoolExecutor
 
-## `dump_vpk(vpk_obj, output_dir, check_exists)`
+from core import base, constants, fs, log, output, utils
 
-*No documentation available.*
 
-<details open><summary>Source</summary>
+def extract(vpk_to_extract_from, paths, path_to_extract_to=base.build_dir):
+    if isinstance(paths, str):
+        paths = [paths]
 
-```python
-def dump_vpk(vpk_obj, output_dir, check_exists=True):
+    vpk_lock = threading.Lock()
+
+    def extract_file(path):
+        if not os.path.exists(full_path := os.path.join(path_to_extract_to, path)):  # extract files from VPK only once
+            output.add_text("&extracting_terminal", path)
+            with vpk_lock:
+                pakfile = vpk_to_extract_from.get_file(path)
+
+            if pakfile:
+                fs.create_dirs(os.path.dirname(full_path))
+                pakfile.save(full_path)
+            else:
+                log.write_warning(f"File not found in VPK: {path}")
+
+    with ThreadPoolExecutor() as executor:
+        executor.map(extract_file, paths)
+
+
+def dump(vpk_obj, output_dir, check_exists=True):
     for filepath in vpk_obj:
         # Sanitize filepath to prevent invalid characters or quotes
         clean_path = filepath.strip().strip('"').strip("'").replace("\\", "/").lstrip("/")
@@ -18,22 +39,7 @@ def dump_vpk(vpk_obj, output_dir, check_exists=True):
         fs.create_dirs(os.path.dirname(full_path))
         vpk_obj.get_file(filepath).save(full_path)
 
-```
 
-</details>
-
-## `dump_metadata(target_dir, mod_name, vpk_mods, extra_lists)`
-
-Standardizes metadata files for generated Paks.
-
-- target_dir: Where to dump.
-- mod_name: If provided, creates {mod_name}.txt (for single mod patches).
-- vpk_mods: List of VPK mod names for minify_vpk_mods.txt.
-- extra_lists: Dict of {filename: [lines]} for additional metadata files.
-
-<details open><summary>Source</summary>
-
-```python
 def dump_metadata(target_dir, mod_name=None, vpk_mods=None, extra_lists=None):
     """
     Standardizes metadata files for generated Paks.
@@ -65,7 +71,3 @@ def dump_metadata(target_dir, mod_name=None, vpk_mods=None, extra_lists=None):
     # 4. Dota Version (steam.inf)
     if os.path.exists(constants.dota_steam_inf_path):
         shutil.copy(constants.dota_steam_inf_path, os.path.join(target_dir, "steam.inf"))
-
-```
-
-</details>

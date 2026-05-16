@@ -2,13 +2,14 @@
 
 import os
 import shutil
+import threading
 import webbrowser
 
 import dearpygui.dearpygui as dpg
 import helper
-from core import base, config, constants, fs, log, steam
+from core import base, config, constants, fs, log, output, steam
 
-from ui import checkboxes, terminal
+from ui import checkboxes
 
 # Developer tools state
 dev_mode_state = -1
@@ -32,7 +33,7 @@ def recalc_rescomp_dirs():
 
 def extract_workshop_tools():
     "Extracts the bare minimum requirements for resourcecompiler.exe"
-    terminal.clean()
+    output.clean()
     fs.remove_path(base.rescomp_override_dir)
     fails = 0
 
@@ -43,15 +44,15 @@ def extract_workshop_tools():
             else:
                 shutil.copy(path, constants.dota_tools_extraction_paths[i])
         else:
-            terminal.add_text("&extraction_of_failed", path)
+            output.add_text("&extraction_of_failed", path)
             fails += 1
 
     if not fails:
         recalc_rescomp_dirs()
         if os.path.exists(constants.dota_resource_compiler_path):
-            terminal.add_text("&extracted")
+            output.add_text("&extracted")
         else:
-            terminal.add_text("&extraction_of_failed", path)
+            output.add_text("&extraction_of_failed", path)
 
 
 def tick_batch(state: bool):
@@ -63,7 +64,7 @@ def tick_batch(state: bool):
 
 
 def toggle():
-    import build
+    import patch
 
     global dev_mode_state
     width_increase = 450
@@ -181,7 +182,7 @@ def toggle():
                 ),
             )
             # ui.add_spacer(width=0, height=5)
-            # ui.add_button(label="Patch with seperate paks", callback=build.patch_seperate) # broken
+            # ui.add_button(label="Patch with seperate paks", callback=patch.patch_seperate) # broken
             dpg.add_spacer(width=0, height=5)
             dpg.add_button(label="Untick all mods", callback=lambda: tick_batch(False))
             dpg.add_button(label="Tick all mods", callback=lambda: tick_batch(True))
@@ -197,7 +198,10 @@ def toggle():
             no_close=True,
             no_collapse=True,
         ):
-            dpg.add_button(label="Wipe language paths", callback=build.wipe_lang_dirs)
+            dpg.add_button(
+                label="Wipe language paths",
+                callback=lambda: threading.Thread(target=patch.unins.wipe, daemon=True).start(),
+            )
             dpg.add_spacer(width=0, height=5)
             dpg.add_button(label="Extract workshop tools", callback=extract_workshop_tools)
             dpg.add_spacer(width=0, height=5)

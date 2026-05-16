@@ -8,6 +8,8 @@
 
 ```python
 def initiate_conditionals():
+    from ui import checkboxes
+
     setup_system_thread = threading.Thread(target=setup_system)
     load_state_checkboxes_thread = threading.Thread(target=checkboxes.load)
     setup_system_thread.start()
@@ -51,6 +53,7 @@ def setup_system():
 def lock_interaction():
     global gui_lock
     gui_lock = True
+    dpg.set_viewport_title(f"{base.TITLE} - LOCKED")
     dpg.configure_item("button_patch", enabled=False)
     dpg.configure_item("button_select_mods", enabled=False)
     dpg.configure_item("button_uninstall", enabled=False)
@@ -71,6 +74,7 @@ def lock_interaction():
 def unlock_interaction():
     global gui_lock
     gui_lock = False
+    dpg.set_viewport_title(base.TITLE)
     dpg.configure_item("button_patch", enabled=True)
     dpg.configure_item("button_select_mods", enabled=True)
     dpg.configure_item("button_uninstall", enabled=True)
@@ -138,6 +142,8 @@ def register_persistent_window(tag):
 
 ```python
 def close_active_window():
+    from ui import modal_shared
+
     active_window_id = dpg.get_active_window()
     if not active_window_id:
         return

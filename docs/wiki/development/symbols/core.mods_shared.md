@@ -2,6 +2,71 @@
 
 Shared mod scanning logic
 
+## `register_state_callbacks(get_cb, set_cb)`
+
+*No documentation available.*
+
+<details open><summary>Source</summary>
+
+```python
+def register_state_callbacks(get_cb, set_cb):
+    global _get_state_callback, _set_state_callback
+    _get_state_callback = get_cb
+    _set_state_callback = set_cb
+
+```
+
+</details>
+
+## `get_state(mod)`
+
+*No documentation available.*
+
+<details open><summary>Source</summary>
+
+```python
+def get_state(mod):
+    if _get_state_callback:
+        return _get_state_callback(mod)
+
+    try:
+        with utils.open_utf8(base.mods_config_dir) as file:
+            states = jsonc.load(file)
+            return states.get(mod, False)
+    except Exception:
+        return False
+
+```
+
+</details>
+
+## `set_state(mod, value)`
+
+*No documentation available.*
+
+<details open><summary>Source</summary>
+
+```python
+def set_state(mod, value):
+    if _set_state_callback:
+        return _set_state_callback(mod, value)
+
+    try:
+        states = {}
+        if os.path.exists(base.mods_config_dir):
+            with utils.open_utf8(base.mods_config_dir) as file:
+                states = jsonc.load(file)
+
+        states[mod] = value
+        with utils.open_utf8(base.mods_config_dir, "w") as file:
+            jsonc.dump(states, file, indent=2)
+    except Exception:
+        pass
+
+```
+
+</details>
+
 ## `scan_mods()`
 
 *No documentation available.*
@@ -10,6 +75,8 @@ Shared mod scanning logic
 
 ```python
 def scan_mods():
+    from patch import manifest_utils
+
     global \
         mods_alphabetical, \
         mods_with_order, \
@@ -34,10 +101,8 @@ def scan_mods():
             if os.path.isdir(mod_path):
                 _alphabetical.append(mod)
 
-                cfg_exist = os.path.exists(mod_cfg := os.path.join(mod_path, "modcfg.json"))
                 blacklist_exist = os.path.exists(os.path.join(mod_path, "blacklist.txt"))
-
-                cfg = config.read_json_file(mod_cfg)
+                cfg = manifest_utils.get_mod(mod_path)
                 order = cfg.get("order", 1)
                 dependencies = cfg.get("dependencies", None)
                 conflicts = cfg.get("conflicts", None)
@@ -49,7 +114,7 @@ def scan_mods():
                     _conflicts.append({mod: conflicts})
 
                 # Default order, blacklist mods should always be indexed last
-                if blacklist_exist and not cfg_exist:
+                if blacklist_exist and not cfg:
                     _with_order.append({mod: 2})
                 else:
                     _with_order.append({mod: order})

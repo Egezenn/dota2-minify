@@ -145,3 +145,9 @@ jobs:
           tag_name: ${{ github.event.inputs.release_name }}
           files: "${{ github.event.inputs.release_name }}-linux.zip"
           prerelease: ${{ inputs.prerelease }}
+
+  update-docs:
+    needs: build
+    if: ${{ github.event.inputs.prerelease == 'false' }}
+    uses: ./.github/workflows/docs.yml
+    secrets: inherit

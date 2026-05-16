@@ -13,12 +13,11 @@ from typing import Optional
 import dearpygui.dearpygui as dpg
 import requests
 
-from core import base, log, utils
+from core import base, log, output, utils
 
 
 def open_thing(path: str, args: str = "") -> None:
     "Opens files or directories in their regsitered applications"
-    from ui import terminal
 
     try:
         # If args are provided and target is executable, prefer launching directly
@@ -51,7 +50,7 @@ def open_thing(path: str, args: str = "") -> None:
             else:
                 subprocess.run(["xdg-open", path])
     except FileNotFoundError:
-        terminal.add_text("&open_thing_fail", path, msg_type="error")
+        output.add_text("&open_thing_fail", path, msg_type="error")
 
 
 def move_path(src: str, dst: str) -> Optional[None]:
@@ -135,7 +134,6 @@ def download_file(url: str, target_path: str, progress_tag: Optional[str] = None
     Downloads a file from url to target_path using requests.
     Updates the UI progress_tag with \"Downloading: X.XX/Y.YY MB\" if provided.
     """
-    from ui import terminal
 
     try:
         response = requests.get(url, stream=True)
@@ -177,7 +175,7 @@ def download_file(url: str, target_path: str, progress_tag: Optional[str] = None
 
         return True
     except Exception as e:
-        terminal.add_text(f"Failed to open {target_path}: {e}", msg_type="error")
+        output.add_text(f"Failed to open {target_path}: {e}", msg_type="error")
         return False
 
 
@@ -186,7 +184,6 @@ def extract_archive(archive_path: str, extract_dir: str = ".", target_file: Opti
     Extracts an archive (zip or tar.gz).
     If target_file is provided, extracts only that file (or directory structure leading to it).
     """
-    from ui import terminal
 
     try:
         if archive_path.endswith(".zip"):
@@ -220,11 +217,11 @@ def extract_archive(archive_path: str, extract_dir: str = ".", target_file: Opti
                     else:
                         tar.extractall(path=extract_dir, members=safe_members)
         else:
-            terminal.add_text(f"Unsupported archive format: {archive_path}", msg_type="error")
+            output.add_text(f"Unsupported archive format: {archive_path}", msg_type="error")
             return False
         return True
     except Exception as e:
-        terminal.add_text(f"Extraction failed: {e}", msg_type="error")
+        output.add_text(f"Extraction failed: {e}", msg_type="error")
         return False
 
 

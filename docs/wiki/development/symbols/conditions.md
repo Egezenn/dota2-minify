@@ -14,7 +14,7 @@ def is_dota_running(text_tag, text_type):
     running = any(p.info.get("name") == target for p in psutil.process_iter(attrs=["name"]))
 
     if running:
-        terminal.add_text(text_tag, msg_type=text_type)
+        output.add_text(text_tag, msg_type=text_type)
     return running
 
 ```
@@ -32,7 +32,7 @@ def is_compiler_found():
     global workshop_installed
     if not os.path.exists(constants.dota_resource_compiler_path):
         workshop_installed = False
-        terminal.add_text("&error_no_workshop_tools_found_terminal", msg_type="warning")
+        output.add_text("&error_no_workshop_tools_found_terminal", msg_type="warning")
     else:
         workshop_installed = True
 
@@ -66,13 +66,13 @@ def resolve_dependencies(retries=0):
                 constants.s2v_executable = os.path.basename(constants.s2v_executable)
 
             if not os.path.exists(constants.s2v_executable):
-                tag = terminal.add_text("&downloading_cli_terminal")
+                tag = output.add_text("&downloading_cli_terminal")
                 zip_path = constants.s2v_latest.split("/")[-1]
                 if fs.download_file(constants.s2v_latest, zip_path, tag):
-                    terminal.add_text("&downloaded_cli_terminal", zip_path)
+                    output.add_text("&downloaded_cli_terminal", zip_path)
                     if fs.extract_archive(zip_path, "."):
                         fs.remove_path(zip_path)
-                        terminal.add_text("&extracted_cli_terminal", zip_path)
+                        output.add_text("&extracted_cli_terminal", zip_path)
                         constants.s2v_executable = os.path.basename(constants.s2v_executable)
 
                         if base.OS != base.WIN and not os.access(constants.s2v_executable, os.X_OK):
@@ -91,12 +91,12 @@ def resolve_dependencies(retries=0):
             constants.rg_executable = os.path.basename(constants.rg_executable)
 
         if not os.path.exists(constants.rg_executable):
-            tag = terminal.add_text("&downloading_ripgrep_terminal")
+            tag = output.add_text("&downloading_ripgrep_terminal")
             archive_path = constants.rg_latest.split("/")[-1]
             archive_name = archive_path[:-4] if archive_path[-4:] == ".zip" else archive_path[:-7]
 
             if fs.download_file(constants.rg_latest, archive_path, tag):
-                terminal.add_text("&downloaded_cli_terminal", archive_path)
+                output.add_text("&downloaded_cli_terminal", archive_path)
 
                 rg_binary_name = os.path.basename(constants.rg_executable)
                 success = fs.extract_archive(archive_path, ".", f"{archive_name}/{rg_binary_name}")
@@ -107,7 +107,7 @@ def resolve_dependencies(retries=0):
                         rg_binary_name,
                     )
                     fs.remove_path(archive_path, archive_name)
-                    terminal.add_text("&extracted_cli_terminal", archive_path)
+                    output.add_text("&extracted_cli_terminal", archive_path)
 
                     constants.rg_executable = rg_binary_name
 
@@ -117,14 +117,24 @@ def resolve_dependencies(retries=0):
                             constants.rg_executable,
                             current_permissions | stat.S_IXUSR | stat.S_IXGRP | stat.S_IXOTH,
                         )
+        constants.s2v_exec_path = (
+            constants.s2v_executable
+            if os.path.isabs(constants.s2v_executable)
+            else os.path.join(".", constants.s2v_executable)
+        )
+        constants.rg_exec_path = (
+            constants.rg_executable
+            if os.path.isabs(constants.rg_executable)
+            else os.path.join(".", constants.rg_executable)
+        )
 
     except Exception:
         log.write_crashlog()
-        terminal.add_text("&failed_download_retrying_terminal", msg_type="error")
+        output.add_text("&failed_download_retrying_terminal", msg_type="error")
         if retries < 3:
             return resolve_dependencies(retries + 1)
-        terminal.add_text("&failed_download", 3, msg_type="error")
-        terminal.add_text("&connection_error", msg_type="error")
+        output.add_text("&failed_download", 3, msg_type="error")
+        output.add_text("&connection_error", msg_type="error")
         webbrowser.open(constants.rg_latest)
         if workshop_installed:
             webbrowser.open(constants.s2v_latest)
@@ -146,11 +156,19 @@ def check_binaries():
     Checks if required binaries exist.
     """
     if workshop_installed:
-        if not os.path.exists(constants.s2v_executable) and not shutil.which(constants.s2v_executable):
+        s2v_on_path = shutil.which(constants.s2v_executable)
+        if not os.path.exists(constants.s2v_executable) and not s2v_on_path:
             return False
+        if s2v_on_path and not os.path.isabs(constants.s2v_executable):
+            constants.s2v_executable = s2v_on_path
+            constants.s2v_exec_path = s2v_on_path
 
-    if not os.path.exists(constants.rg_executable) and not shutil.which(constants.rg_executable):
+    rg_on_path = shutil.which(constants.rg_executable)
+    if not os.path.exists(constants.rg_executable) and not rg_on_path:
         return False
+    if rg_on_path and not os.path.isabs(constants.rg_executable):
+        constants.rg_executable = rg_on_path
+        constants.rg_exec_path = rg_on_path
 
     return True
 
