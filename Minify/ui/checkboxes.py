@@ -3,12 +3,13 @@
 import concurrent.futures
 import os
 
+import conditions
 import dearpygui.dearpygui as dpg
 import jsonc
-from core import base, constants, mods_shared, registry, utils
+from core import base, constants, mods_shared, output, registry, utils
 from patch import manifest_utils
 
-from ui import details, localization, settings, shared, terminal, theme
+from ui import details, localization, settings, shared, theme
 
 checkboxes = []
 checkboxes_state = {}
@@ -47,7 +48,7 @@ def refresh(sender=None, app_data=None, user_data=None):
     mods_shared.scan_mods()
     create()
     settings.refresh()
-    terminal.add_text("&refreshed_mod_list")
+    output.add_text("&refreshed_mod_list")
 
 
 def create():
@@ -123,7 +124,7 @@ def create():
             if checkboxes_state.get(mod, False):
                 checkboxes_state[mod] = False
                 save()
-            terminal.add_text(f"Disabled {mod} (Requires version {version_req})", msg_type="warning")
+            output.add_text(f"Disabled {mod} (Requires version {version_req})", msg_type="warning")
         elif always_val:
             enable_ticking = False
             value = True
@@ -189,6 +190,8 @@ def create():
                 details.render_details_window(mod)
 
         checkboxes.append(mod)
+
+    conditions.disable_workshop_mods()
 
 
 def get_value(mod):

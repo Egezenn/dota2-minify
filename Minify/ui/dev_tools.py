@@ -7,9 +7,9 @@ import webbrowser
 
 import dearpygui.dearpygui as dpg
 import helper
-from core import base, config, constants, fs, log, steam
+from core import base, config, constants, fs, log, output, steam
 
-from ui import checkboxes, terminal
+from ui import checkboxes
 
 # Developer tools state
 dev_mode_state = -1
@@ -33,7 +33,7 @@ def recalc_rescomp_dirs():
 
 def extract_workshop_tools():
     "Extracts the bare minimum requirements for resourcecompiler.exe"
-    terminal.clean()
+    output.clean()
     fs.remove_path(base.rescomp_override_dir)
     fails = 0
 
@@ -44,15 +44,15 @@ def extract_workshop_tools():
             else:
                 shutil.copy(path, constants.dota_tools_extraction_paths[i])
         else:
-            terminal.add_text("&extraction_of_failed", path)
+            output.add_text("&extraction_of_failed", path)
             fails += 1
 
     if not fails:
         recalc_rescomp_dirs()
         if os.path.exists(constants.dota_resource_compiler_path):
-            terminal.add_text("&extracted")
+            output.add_text("&extracted")
         else:
-            terminal.add_text("&extraction_of_failed", path)
+            output.add_text("&extraction_of_failed", path)
 
 
 def tick_batch(state: bool):
