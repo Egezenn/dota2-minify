@@ -21,7 +21,6 @@ sounds/vo/abyssal_underlord/abys_laugh_02.vsnd_c
 sounds/vo/abyssal_underlord/abys_move_02.vsnd_c
 sounds/vo/abyssal_underlord/abys_move_12.vsnd_c
 sounds/vo/abyssal_underlord/abys_rival_01.vsnd_c
-sounds/vo/abyssal_underlord/abys_spawn_03.vsnd_c
 sounds/vo/abyssal_underlord/abys_thanks_03.vsnd_c
 sounds/vo/alchemist/alch_ability_failure_02.vsnd_c
 sounds/vo/alchemist/alch_ability_rage_14.vsnd_c
@@ -198,7 +197,6 @@ sounds/vo/dark_willow/sylph_drop_rare_02.vsnd_c
 sounds/vo/dark_willow/sylph_hero_intro_02.vsnd_c
 sounds/vo/dark_willow/sylph_kill_06.vsnd_c
 sounds/vo/dark_willow/sylph_respawn_01.vsnd_c
-sounds/vo/dark_willow/sylph_spawn_19.vsnd_c
 sounds/vo/dark_willow/sylph_wheel_all_02.vsnd_c
 sounds/vo/dark_willow/sylph_wheel_all_05.vsnd_c
 sounds/vo/dark_willow/sylph_wheel_all_10.vsnd_c
@@ -418,7 +416,6 @@ sounds/vo/kez/kez_battlebegins_72.vsnd_c
 sounds/vo/kez/kez_deny_12.vsnd_c
 sounds/vo/kez/kez_kill_03.vsnd_c
 sounds/vo/kez/kez_kill_09.vsnd_c
-sounds/vo/kez/kez_levelup_81_01.vsnd_c
 sounds/vo/kez/kez_wheel_laugh_05.vsnd_c
 sounds/vo/kez/kez_wheel_thanks_02.vsnd_c
 sounds/vo/kunkka/kunk_ability_tidebrng_02.vsnd_c
@@ -448,7 +445,6 @@ sounds/vo/legion_commander/legcom_itemcommon_02.vsnd_c
 sounds/vo/legion_commander/legcom_kill_14.vsnd_c
 sounds/vo/legion_commander/legcom_laugh_05.vsnd_c
 sounds/vo/legion_commander/legcom_move_15.vsnd_c
-sounds/vo/legion_commander/legcom_spawn_01.vsnd_c
 sounds/vo/leshrac/lesh_bottle_01.vsnd_c
 sounds/vo/leshrac/lesh_cast_01.vsnd_c
 sounds/vo/leshrac/lesh_deny_13.vsnd_c
@@ -546,7 +542,6 @@ sounds/vo/mars/mars_kill_10.vsnd_c
 sounds/vo/mars/mars_laugh_08.vsnd_c
 sounds/vo/mars/mars_lose_05.vsnd_c
 sounds/vo/mars/mars_song_02.vsnd_c
-sounds/vo/mars/mars_spawn_09.vsnd_c
 sounds/vo/mars/mars_thanks_03.vsnd_c
 sounds/vo/mars/mars_wheel_all_11.vsnd_c
 sounds/vo/medusa/medus_begin_03.vsnd_c
@@ -615,7 +610,6 @@ sounds/vo/naga_siren/naga_songofthesiren_10.vsnd_c
 sounds/vo/necrolyte/necr_breath_02.vsnd_c
 sounds/vo/necrolyte/necr_kill_03.vsnd_c
 sounds/vo/necrolyte/necr_laugh_07.vsnd_c
-sounds/vo/necrolyte/necr_level_05.vsnd_c
 sounds/vo/necrolyte/necr_lose_03.vsnd_c
 sounds/vo/necrolyte/necr_purch_02.vsnd_c
 sounds/vo/necrolyte/necr_purch_04.vsnd_c
@@ -630,7 +624,6 @@ sounds/vo/nevermore/nev_kill_11.vsnd_c
 sounds/vo/nevermore/nev_lasthit_02.vsnd_c
 sounds/vo/nevermore/nev_laugh_02.vsnd_c
 sounds/vo/nevermore/nev_rare_02.vsnd_c
-sounds/vo/nevermore/nev_spawn_04.vsnd_c
 sounds/vo/nevermore/nev_thanks_02.vsnd_c
 sounds/vo/night_stalker/nstalk_attack_11.vsnd_c
 sounds/vo/night_stalker/nstalk_battlebegins_01.vsnd_c
@@ -695,7 +688,6 @@ sounds/vo/pangolin/pangolin_kill_06.vsnd_c
 sounds/vo/pangolin/pangolin_kill_08.vsnd_c
 sounds/vo/pangolin/pangolin_laugh_14.vsnd_c
 sounds/vo/pangolin/pangolin_levelup_11.vsnd_c
-sounds/vo/pangolin/pangolin_spawn_04.vsnd_c
 sounds/vo/phantom_assassin/phass_ability_blur_02.vsnd_c
 sounds/vo/phantom_assassin/phass_deny_14.vsnd_c
 sounds/vo/phantom_assassin/phass_happy_09.vsnd_c
@@ -738,7 +730,6 @@ sounds/vo/puck/puck_battlebegins_01.vsnd_c
 sounds/vo/puck/puck_kill_09.vsnd_c
 sounds/vo/puck/puck_laugh_01.vsnd_c
 sounds/vo/puck/puck_lose_04.vsnd_c
-sounds/vo/puck/puck_spawn_02.vsnd_c
 sounds/vo/puck/puck_spawn_04.vsnd_c
 sounds/vo/puck/puck_spawn_05.vsnd_c
 sounds/vo/puck/puck_win_04.vsnd_c
@@ -801,12 +792,10 @@ sounds/vo/ringmaster/ringmaster_deny_04.vsnd_c
 sounds/vo/ringmaster/ringmaster_laugh_09.vsnd_c
 sounds/vo/ringmaster/ringmaster_move_18.vsnd_c
 sounds/vo/ringmaster/ringmaster_spawn_10.vsnd_c
-sounds/vo/ringmaster/ringmaster_spin_the_wheel_01.vsnd_c
 sounds/vo/ringmaster/ringmaster_thanks_04.vsnd_c
 sounds/vo/ringmaster/ringmaster_wheel_all_05.vsnd_c
 sounds/vo/ringmaster/ringmaster_wheel_deny_03.vsnd_c
 sounds/vo/ringmaster/ringmaster_win_04.vsnd_c
-sounds/vo/rubick/rub_arc_spawn_01.vsnd_c
 sounds/vo/rubick/rubick_failure_02.vsnd_c
 sounds/vo/rubick/rubick_itemcommon_02.vsnd_c
 sounds/vo/rubick/rubick_itemrare_01.vsnd_c
@@ -1040,7 +1029,6 @@ sounds/vo/undying/undying_levelup_10.vsnd_c
 sounds/vo/undying/undying_respawn_03.vsnd_c
 sounds/vo/undying/undying_respawn_05.vsnd_c
 sounds/vo/undying/undying_rival_02.vsnd_c
-sounds/vo/undying/undying_spawn_02.vsnd_c
 sounds/vo/undying/undying_thanks_04.vsnd_c
 sounds/vo/ursa/ursa_failure_02.vsnd_c
 sounds/vo/ursa/ursa_kill_07.vsnd_c
@@ -1093,7 +1081,6 @@ sounds/vo/void_spirit/voidspir_rival_113.vsnd_c
 sounds/vo/void_spirit/voidspir_rival_114.vsnd_c
 sounds/vo/void_spirit/voidspir_rival_71.vsnd_c
 sounds/vo/void_spirit/voidspir_rival_72.vsnd_c
-sounds/vo/void_spirit/voidspir_spawn_06.vsnd_c
 sounds/vo/void_spirit/voidspir_spawn_14.vsnd_c
 sounds/vo/void_spirit/voidspir_thanks_04.vsnd_c
 sounds/vo/void_spirit/voidspir_wheel_all_10_02.vsnd_c
