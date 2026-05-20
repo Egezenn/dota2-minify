@@ -21,7 +21,7 @@ Minify/rg*
 scripts/version_info.iss
 
 ## Dota2
-Minify/steam_appid.txt
+steam_appid.txt
 
 ## In-repo mods
 !Minify/mods/#base

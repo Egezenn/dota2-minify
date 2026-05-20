@@ -1,0 +1,1 @@
+**sounds/ui/ui_herocard_hover_\d+\.vsnd_c
