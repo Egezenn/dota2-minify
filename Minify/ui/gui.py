@@ -4,9 +4,7 @@ import time
 
 import dearpygui.dearpygui as dpg
 import screeninfo
-from core import base, utils
-
-from ui import terminal
+from core import base, output, utils
 
 gui_lock = False
 
@@ -74,8 +72,8 @@ def interactive_lock():
 
 def start_text():
     for i in range(1, 6):
-        terminal.add_text(f"&start_text_{i}_var")
-    terminal.add_seperator()
+        output.add_text(f"&start_text_{i}_var")
+    output.add_separator()
 
 
 persistent_windows = [
