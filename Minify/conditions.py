@@ -8,7 +8,7 @@ import webbrowser
 import dearpygui.dearpygui as dpg
 import psutil
 import vdf
-from core import base, constants, fs, log, steam, output
+from core import base, constants, fs, log, output, steam
 
 workshop_installed = False
 workshop_required_methods = ["styling.css", "xml.json", "xml_mod.json", "files_uncompiled"]

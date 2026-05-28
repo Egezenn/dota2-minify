@@ -18,7 +18,7 @@ import conditions
 import helper
 from core import base, config, constants, fs, log, mods_shared, output, registry, steam, utils
 
-from patch import blacklist, manifest_utils, replacer, styling, vpk_utils, xml_utils, unins
+from patch import blacklist, manifest_utils, replacer, styling, unins, vpk_utils, xml_utils
 
 
 def patcher(mod=None, pakname=None):

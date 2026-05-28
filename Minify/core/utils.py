@@ -71,6 +71,7 @@ def parse_color(val):
 
 def setup_system():
     import conditions
+
     from core import fs
 
     fs.create_dirs(base.logs_dir)

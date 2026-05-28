@@ -129,6 +129,7 @@ class WorkshopTools:
         def watch():
             import conditions
             from core import output
+
             from ui import checkboxes, gui
 
             while gui.gui_lock:
