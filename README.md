@@ -153,7 +153,17 @@ This project wouldn't be available without the work of the community. Thanks to 
         </a>
       </td>
       <td>
-        Thanks to <a href="https://weblate.org">Weblate</a> for powering our translations and providing <strong>Libre Hosting</strong>!
+        Thanks to <a href="https://weblate.org">Weblate</a> for powering our translations and providing Libre Hosting!
+      </td>
+    </tr>
+    <tr>
+      <td align="center">
+        <a href="https://signpath.io/?utm_source=foundation&utm_medium=github&utm_campaign=dota2-minify">
+          <img src="https://github.com/SignPath/fdn-website/raw/main/docs/assets/logo.svg" width="200" alt="SignPath">
+        </a>
+      </td>
+      <td>
+        Free code signing on Windows provided by <a href="https://signpath.io/?utm_source=foundation&utm_medium=github&utm_campaign=dota2-minify">SignPath.io</a>, certificate by <a href="https://signpath.org/?utm_source=foundation&utm_medium=github&utm_campaign=dota2-minify">SignPath Foundation</a>.
       </td>
     </tr>
   </tbody>

@@ -158,7 +158,7 @@ def patcher(mod=None, pakname=None):
                             xml_mod_file = xml_utils.get_xml_mod_file(mod_path)
                             files_uncompiled_dir = os.path.join(mod_path, "files_uncompiled")
                         script_file = os.path.join(mod_path, "script.py")
-                        replacer_file = os.path.join(mod_path, "replacer.csv")
+                        replacer_file = os.path.join(mod_path, "replacer.json")
                         files_dir = os.path.join(mod_path, "files")
 
                         helper.exec_script(script_file, folder, "loop")

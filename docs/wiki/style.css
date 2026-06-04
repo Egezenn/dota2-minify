@@ -127,3 +127,27 @@ nav > ul ul {
     border-right: #18181a !important;
     border-top: #18181a !important;
 }
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+    height: 8px;
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #1D1D1E;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #17bebe;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #01E6E6;
+}
+
+html {
+    scrollbar-color: #17bebe #1D1D1E;
+    scrollbar-width: thin;
+}

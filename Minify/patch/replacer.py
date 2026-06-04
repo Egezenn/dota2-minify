@@ -1,4 +1,4 @@
-import csv
+import json
 import os
 import shutil
 
@@ -16,10 +16,15 @@ def process(replacer_file, folder, replacer_source_extracts, replacer_targets):
     if not os.path.exists(replacer_file):
         return
 
-    with utils.open_utf8(replacer_file, newline="") as file:
-        for row in csv.reader(file):
-            if len(row) >= 2 and row[0] and row[1]:
-                replacer_source_extracts.append(row[1])  # Source (content)
-                replacer_targets.append((row[1], row[0]))  # (Source, Target)
+    try:
+        with utils.open_utf8(replacer_file) as file:
+            replacements = json.load(file)
+
+        for target, source in replacements.items():
+            if target and source:
+                replacer_source_extracts.append(source)  # Source (content)
+                replacer_targets.append((source, target))  # (Source, Target)
             else:
-                log.write_warning(f"Invalid row in replacer.csv for {folder}: {row}")
+                log.write_warning(f"Invalid entry in replacer.json for {folder}: {target} -> {source}")
+    except Exception as e:
+        log.write_warning(f"Failed to parse replacer.json for {folder}: {e}")

@@ -22,14 +22,14 @@ If you're seeing a mod that is grayed out, it requires this DLC.
 
 - Right-click on Dota2 in Steam and click **Properties**.
 
-![tools-instruction-1](https://github.com/Egezenn/dota2-minify/raw/main/docs/assets/tools-instruction-1.png)
+![tools-instruction-1](https://github.com/Egezenn/dota2-minify/raw/main/docs/assets/tools-instruction-1.jpg)
 
 - Select **Properties** > **DLC**.
 
 > [!WARNING]
-> On Linux, you need to force the use of `Proton Experimental` and have `wine` package installed. Relaunch steam if you still don't see the DLC.
+> On Linux, you need to force the use of `Proton Experimental` from `Compatibility` tab on properties panel and have `wine` package installed. Relaunch steam to see the DLC.
 
-![tools-instruction-2](https://github.com/Egezenn/dota2-minify/raw/main/docs/assets/tools-instruction-2.png)
+![tools-instruction-2](https://github.com/Egezenn/dota2-minify/raw/main/docs/assets/tools-instruction-2.jpg)
 
 - Install `Dota 2 Workshop Tools DLC`.
 - Restart Minify.
@@ -64,14 +64,6 @@ While newer versions automatically handle the parameter for you by new settings,
 
 ![language-instruction-3](https://github.com/Egezenn/dota2-minify/raw/main/docs/assets/language-instruction-3.jpg)
 
-## Antivirus software flagged it / I don't see an executable
-
-Exclude the folder from your antivirus software(s).
-
-### Why?
-
-These are false-positives caused by people generating similiar compilation/hashes for malwares via the same compilers we're using and we don't have a signing certificate to resolve this as the project is relatively small.
-
 ### How do I trust it?
 
 Binaries are released directly from GitHub's build system and there aren't any modifications done from us after releases. If you don't like the executables/archives we're providing, [you can run it with Python](development.md?id=running-from-the-source) or [build it completely yourself](development.md?id=compilation).
@@ -86,7 +78,7 @@ Try repatching or uninstalling the mods.
 
 If those don't work, try using the feature below (it'll delete all the contents of `dota 2 beta/game/dota_<language>`!)
 
-![clean-all-language-paths](https://github.com/Egezenn/dota2-minify/raw/main/docs/assets/wipe-language-paths.png)
+![clean-all-language-paths](https://github.com/Egezenn/dota2-minify/raw/main/docs/assets/wipe-language-paths.jpg)
 
 ## Not working / Crashes
 

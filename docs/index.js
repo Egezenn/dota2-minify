@@ -145,6 +145,21 @@ if (downloadModal) {
       }
 
       const aurLink = downloadModal.querySelector("#download-aur");
+      const copyButton = downloadModal.querySelector("#copy-aur-command");
+      const packageName = releaseType === "prerelease" ? "dota2-minify-rc-bin" : "dota2-minify-bin";
+
+      if (releaseType === "prerelease") {
+        aurLink.href = "https://aur.archlinux.org/packages/dota2-minify-rc-bin";
+        aurLink.innerHTML = '<ion-icon name="logo-tux"></ion-icon> AUR (Arch Linux, RC)';
+      } else {
+        aurLink.href = "https://aur.archlinux.org/packages/dota2-minify-bin";
+        aurLink.innerHTML = '<ion-icon name="logo-tux"></ion-icon> AUR (Arch Linux)';
+      }
+
+      if (copyButton) {
+        copyButton.setAttribute("data-clipboard-text", `yay -S ${packageName}`);
+      }
+
       const links = [windowsSetupLink, windowsPortableLink, linuxLink, aurLink];
       links.forEach((link) => {
         if (releaseType === "prerelease") {
@@ -165,5 +180,23 @@ if (downloadModal) {
         releaseNotesContainer.textContent = "";
       }
     }
+  });
+}
+
+const copyButton = document.getElementById("copy-aur-command");
+if (copyButton) {
+  copyButton.addEventListener("click", () => {
+    const textToCopy = copyButton.getAttribute("data-clipboard-text") || "yay -S dota2-minify-bin";
+    navigator.clipboard.writeText(textToCopy).then(() => {
+      const icon = copyButton.querySelector("ion-icon");
+      if (icon) {
+        icon.setAttribute("name", "checkmark-outline");
+        setTimeout(() => {
+          icon.setAttribute("name", "copy-outline");
+        }, 2000);
+      }
+    }).catch(err => {
+      console.error("Failed to copy text: ", err);
+    });
   });
 }
