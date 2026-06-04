@@ -195,6 +195,13 @@ h6 > a {
   color: white !important;
 }
 
+.btn-signpath,
+.btn-signpath:active,
+.btn-signpath:hover {
+  background-color: #00A3D5 !important;
+  color: white !important;
+}
+
 #mods-section,
 #tools-section,
 #skins-section {

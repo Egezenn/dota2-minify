@@ -82,6 +82,41 @@ jobs:
           Copy-Item -Path "..\README.md" -Destination "dist\Minify\README.md"
           Copy-Item -Path "..\LICENSE" -Destination "dist\Minify\LICENSE"
 
+      # --- SIGNING STEP 1: Sign Minify.exe ---
+      - name: Zip intermediate build for signing
+        if: matrix.os == 'windows-latest'
+        shell: pwsh
+        run: |
+          Set-Location scripts/dist/Minify
+          7z a -tzip "../../../unsigned-minify.zip" ./*
+
+      - name: Upload unsigned Minify binary for SignPath
+        if: matrix.os == 'windows-latest'
+        id: upload-unsigned-minify
+        uses: actions/upload-artifact@v4
+        with:
+          name: unsigned-minify
+          path: unsigned-minify.zip
+
+      - name: Sign Minify.exe via SignPath
+        if: matrix.os == 'windows-latest'
+        uses: signpath/github-action-submit-signing-request@v2
+        with:
+          api-token: "${{ secrets.SIGNPATH_API_TOKEN }}"
+          organization-id: "${{ secrets.SIGNPATH_ORGANIZATION_ID }}"
+          project-slug: "dota2-minify-binary"
+          signing-policy-slug: "test-signing"
+          github-artifact-id: "${{ steps.upload-unsigned-minify.outputs.artifact-id }}"
+          wait-for-completion: true
+          output-artifact-directory: "signed-minify"
+
+      - name: Extract signed Minify binary
+        if: matrix.os == 'windows-latest'
+        shell: pwsh
+        run: |
+          Expand-Archive -Path signed-minify/*.zip -DestinationPath scripts/dist/Minify -Force
+
+      # --- PORTABLE BUNDLES & INSTALLER COMPILE ---
       - name: Build Installer (Inno Setup)
         if: matrix.os == 'windows-latest'
         shell: pwsh
@@ -89,6 +124,40 @@ jobs:
           Set-Location scripts
           python version_util.py
           & "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" installer.iss
+
+      # --- SIGNING STEP 2: Sign Installer ---
+      - name: Zip installer for signing
+        if: matrix.os == 'windows-latest'
+        shell: pwsh
+        run: |
+          7z a -tzip "unsigned-installer.zip" scripts/*.exe
+
+      - name: Upload unsigned installer for SignPath
+        if: matrix.os == 'windows-latest'
+        id: upload-unsigned-installer
+        uses: actions/upload-artifact@v4
+        with:
+          name: unsigned-installer
+          path: unsigned-installer.zip
+
+      - name: Sign Installer via SignPath
+        if: matrix.os == 'windows-latest'
+        uses: signpath/github-action-submit-signing-request@v2
+        with:
+          api-token: "${{ secrets.SIGNPATH_API_TOKEN }}"
+          organization-id: "${{ secrets.SIGNPATH_ORGANIZATION_ID }}"
+          project-slug: "dota2-minify-installer"
+          signing-policy-slug: "test-signing"
+          github-artifact-id: "${{ steps.upload-unsigned-installer.outputs.artifact-id }}"
+          wait-for-completion: true
+          output-artifact-directory: "signed-installer"
+
+      - name: Extract signed installer
+        if: matrix.os == 'windows-latest'
+        shell: pwsh
+        run: |
+          Remove-Item scripts/*.exe
+          Expand-Archive -Path signed-installer/*.zip -DestinationPath scripts -Force
 
       - name: Bundle Portable Release (Windows)
         if: matrix.os == 'windows-latest'
