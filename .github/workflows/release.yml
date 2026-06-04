@@ -83,20 +83,13 @@ jobs:
           Copy-Item -Path "..\LICENSE" -Destination "dist\Minify\LICENSE"
 
       # --- SIGNING STEP 1: Sign Minify.exe ---
-      - name: Zip intermediate build for signing
-        if: matrix.os == 'windows-latest'
-        shell: pwsh
-        run: |
-          Set-Location scripts/dist/Minify
-          7z a -tzip "../../../unsigned-minify.zip" ./*
-
       - name: Upload unsigned Minify binary for SignPath
         if: matrix.os == 'windows-latest'
         id: upload-unsigned-minify
         uses: actions/upload-artifact@v4
         with:
           name: unsigned-minify
-          path: unsigned-minify.zip
+          path: scripts/dist/Minify/Minify.exe
 
       - name: Sign Minify.exe via SignPath
         if: matrix.os == 'windows-latest'
@@ -127,19 +120,13 @@ jobs:
           & "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" installer.iss
 
       # --- SIGNING STEP 2: Sign Installer ---
-      - name: Zip installer for signing
-        if: matrix.os == 'windows-latest'
-        shell: pwsh
-        run: |
-          7z a -tzip "unsigned-installer.zip" scripts/*.exe
-
       - name: Upload unsigned installer for SignPath
         if: matrix.os == 'windows-latest'
         id: upload-unsigned-installer
         uses: actions/upload-artifact@v4
         with:
           name: unsigned-installer
-          path: unsigned-installer.zip
+          path: scripts/Minify-Setup-*.exe
 
       - name: Sign Installer via SignPath
         if: matrix.os == 'windows-latest'
