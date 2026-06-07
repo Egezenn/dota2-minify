@@ -79,6 +79,7 @@ class BrowserUI:
                             width=-1,
                             callback=lambda s, a: self.render_categories(a),
                             indent=1,
+                            tag="d2pfx_search_categories",
                         )
                         with dpg.group(tag="d2pfx_category_list"):
                             pass
@@ -87,7 +88,7 @@ class BrowserUI:
                     with dpg.group():
                         with dpg.table(header_row=False, width=-1):
                             dpg.add_table_column()
-                            dpg.add_table_column(width_fixed=True, init_width_or_weight=210)
+                            dpg.add_table_column(width_fixed=True, init_width_or_weight=350)
                             with dpg.table_row():
                                 with dpg.group():
                                     dpg.add_text("Select a category", tag="d2pfx_cat_title", color=(0, 255, 255))
@@ -95,11 +96,29 @@ class BrowserUI:
                                     if dpg.does_item_exist("small_font"):
                                         dpg.bind_item_font(desc_text, "small_font")
 
-                                dpg.add_input_text(
-                                    hint="Search mods...",
-                                    width=200,
-                                    callback=lambda s, a: self.render_mods(self.selected_category, a),
-                                )
+                                with dpg.group(horizontal=True):
+                                    dpg.add_input_text(
+                                        hint="Search mods...",
+                                        width=150,
+                                        callback=lambda s, a: self.render_mods(self.selected_category, a),
+                                        tag="d2pfx_search_mods",
+                                    )
+                                    meta_btn = dpg.add_button(
+                                        label="Refresh Data",
+                                        callback=lambda s, a: self.prune_metadata_cache(),
+                                    )
+                                    with dpg.tooltip(meta_btn):
+                                        dpg.add_text(
+                                            "Prune D2PFX Metadata Cache\n(forces reload of the categories and mods list)"
+                                        )
+                                    imgs_btn = dpg.add_button(
+                                        label="Clear Imgs",
+                                        callback=lambda s, a: self.prune_image_cache(),
+                                    )
+                                    with dpg.tooltip(imgs_btn):
+                                        dpg.add_text(
+                                            "Prune D2PFX Previews/Image Cache\n(forces redownload of mod preview images)"
+                                        )
 
                         dpg.add_spacer(height=5)
 
@@ -123,6 +142,105 @@ class BrowserUI:
         # Close browser if no modal is active
         if dpg.does_item_exist("d2pfx_browser_window") and dpg.is_item_shown("d2pfx_browser_window"):
             dpg.configure_item("d2pfx_browser_window", show=False)
+
+    def prune_metadata_cache(self):
+        # Reset search filters
+        self.category_filter = ""
+        self.mod_filter = ""
+        if dpg.does_item_exist("d2pfx_search_categories"):
+            dpg.set_value("d2pfx_search_categories", "")
+        if dpg.does_item_exist("d2pfx_search_mods"):
+            dpg.set_value("d2pfx_search_mods", "")
+
+        # Reset selected category to reload fresh
+        self.selected_category = None
+
+        # Show loading progress
+        modal_shared.show_progress(["Pruning metadata cache...", "Fetching fresh D2PFX database..."])
+
+        # Delete local files
+        metadata_file = os.path.join(self.data_manager.cache_dir, "mods.json")
+        constants_file = os.path.join(self.data_manager.cache_dir, "constants.json")
+        fs.remove_path(metadata_file, constants_file)
+
+        # Reset internal states
+        self.data_manager.metadata = {}
+        self.data_manager.constants = {}
+
+        def _task():
+            try:
+                success = self.data_manager.load()
+                if success:
+                    self.render_categories()
+                    cats = self.data_manager.get_categories()
+                    if cats:
+                        self.select_category(cats[0])
+                    modal_shared.show(
+                        "Pruning Complete",
+                        ["D2PFX metadata cache has been cleared and refreshed successfully."],
+                        [{"label": "OK"}],
+                    )
+                else:
+                    modal_shared.show(
+                        "Error",
+                        ["Failed to reload D2PFX metadata.", "Please check your internet connection."],
+                        [{"label": "OK"}],
+                    )
+                    if dpg.does_item_exist("d2pfx_category_list"):
+                        dpg.delete_item("d2pfx_category_list", children_only=True)
+                        dpg.add_text("Failed to load data.", parent="d2pfx_category_list", color=(255, 0, 0))
+            except Exception as e:
+                modal_shared.show("Error", [f"An unexpected error occurred: {str(e)}"], [{"label": "OK"}])
+
+        threading.Thread(target=_task, daemon=True).start()
+
+    def prune_image_cache(self):
+        # Clear UI components first to release texture usage
+        if dpg.does_item_exist("d2pfx_mods_view"):
+            dpg.delete_item("d2pfx_mods_view", children_only=True)
+
+        # Show progress modal
+        modal_shared.show_progress(["Pruning image cache...", "Removing local preview images..."])
+
+        # Delete local previews files
+        fs.remove_path(self.data_manager.previews_dir)
+        fs.create_dirs(self.data_manager.previews_dir)
+
+        # Clear in-memory DPG textures
+        if dpg.does_item_exist(self.textures_registry):
+            dpg.delete_item(self.textures_registry)
+        self._setup_textures()
+
+        # Reset search filters
+        self.category_filter = ""
+        self.mod_filter = ""
+        if dpg.does_item_exist("d2pfx_search_categories"):
+            dpg.set_value("d2pfx_search_categories", "")
+        if dpg.does_item_exist("d2pfx_search_mods"):
+            dpg.set_value("d2pfx_search_mods", "")
+
+        # Reset selected category and reload
+        self.selected_category = None
+
+        def _task():
+            try:
+                success = self.data_manager.load()
+                if success:
+                    self.render_categories()
+                    cats = self.data_manager.get_categories()
+                    if cats:
+                        self.select_category(cats[0])
+                    modal_shared.show(
+                        "Pruning Complete",
+                        ["D2PFX preview images cache has been cleared successfully."],
+                        [{"label": "OK"}],
+                    )
+                else:
+                    modal_shared.show("Error", ["Failed to reload D2PFX data."], [{"label": "OK"}])
+            except Exception as e:
+                modal_shared.show("Error", [f"An unexpected error occurred: {str(e)}"], [{"label": "OK"}])
+
+        threading.Thread(target=_task, daemon=True).start()
 
     def update_layout(self):
         if not dpg.does_item_exist("d2pfx_browser_window") or not dpg.is_item_shown("d2pfx_browser_window"):
@@ -265,7 +383,16 @@ class BrowserUI:
                 if token.startswith("by:"):
                     val = token[3:]
                     if val:
-                        filtered = [m for m in filtered if val in m.get("author", "").lower()]
+
+                        def _has_author(m):
+                            a = m.get("author")
+                            if not a:
+                                return False
+                            if isinstance(a, list):
+                                return any(val in str(x).lower() for x in a)
+                            return val in str(a).lower()
+
+                        filtered = [m for m in filtered if _has_author(m)]
                 elif token.startswith("tag:"):
                     val = token[4:]
                     if val:
@@ -352,12 +479,28 @@ class BrowserUI:
                             display_name = f"{name} ({label})" if label else name
                             dpg.add_text(display_name, color=(255, 255, 255), wrap=150)
 
-                            # 3. Author
+                            # 3. Author / Sender
                             author = mod.get("author")
-                            if author and author != "Unknown":
-                                author_item = dpg.add_text(f"By: {author}", color=(150, 150, 150), wrap=150)
-                                if dpg.does_item_exist("small_font"):
-                                    dpg.bind_item_font(author_item, "small_font")
+                            sender = mod.get("sender")
+
+                            author_strs = []
+                            if author:
+                                if isinstance(author, list):
+                                    author_strs.append(f"By: {', '.join(str(x) for x in author)}")
+                                else:
+                                    author_strs.append(f"By: {author}")
+
+                            if sender:
+                                if isinstance(sender, list):
+                                    author_strs.append(f"Sender: {', '.join(str(x) for x in sender)}")
+                                else:
+                                    author_strs.append(f"Sender: {sender}")
+
+                            if author_strs:
+                                for author_str in author_strs:
+                                    author_item = dpg.add_text(author_str, color=(150, 150, 150), wrap=150)
+                                    if dpg.does_item_exist("small_font"):
+                                        dpg.bind_item_font(author_item, "small_font")
 
                             # 4. Tags
                             tags = mod.get("tags", [])
@@ -528,7 +671,8 @@ class BrowserUI:
         name = mod.get("name", "Unknown")
         label = mod.get("label")
         cat_id = self.selected_category
-        author = mod.get("author", "Unknown")
+        author = mod.get("author")
+        sender = mod.get("sender")
         tags = mod.get("tags", [])
         links = mod.get("links", [])
 
@@ -598,6 +742,8 @@ class BrowserUI:
                         "name": name,
                         "category": cat_id,
                         "author": author,
+                        "sender": sender,
+                        "links": links,
                         "tags": tags,
                         "version": browser_config.VERSION,
                         "label": label,
@@ -614,10 +760,34 @@ class BrowserUI:
                 notes_content = f"Installed via D2PFX Browser {version}\n\n"
                 if cat_id and cat_id.lower() != "unknown":
                     notes_content += f"Category: {cat_id}\n"
-                if author and author.lower() != "unknown":
-                    notes_content += f"Author: {author}\n"
-                if mod.get("tags"):
-                    notes_content += f"Tags: {', '.join(mod['tags'])}\n"
+
+                # Process the four link types in order
+                type_labels = {
+                    "author": "Author",
+                    "source": "Source",
+                    "modded": "Modded",
+                    "sender": "Sender"
+                }
+
+                for t_key in ["author", "source", "modded", "sender"]:
+                    t_links = [l for l in links if l.get("type") == t_key]
+                    t_vals = [l.get("name") or l.get("url") for l in t_links]
+                    t_vals = [x for x in t_vals if x]
+                    if t_vals:
+                        notes_content += f"{type_labels[t_key]}: {', '.join(t_vals)}\n"
+
+                # Tags
+                tags_val = modcfg["browser"].get("tags")
+                if tags_val:
+                    if isinstance(tags_val, dict):
+                        active_tags = [k for k, v in tags_val.items() if v]
+                    elif isinstance(tags_val, list):
+                        active_tags = tags_val
+                    else:
+                        active_tags = [str(tags_val)]
+
+                    if active_tags:
+                        notes_content += f"Tags: {', '.join(active_tags)}\n"
 
                 with open(os.path.join(target_dir, "notes.md"), "w", encoding="utf-8") as f:
                     f.write(notes_content)

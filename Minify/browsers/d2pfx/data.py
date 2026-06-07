@@ -102,11 +102,13 @@ class DataManager:
                 elif "mods" in item:
                     _flatten(item["mods"])
                 elif "name" in item:  # It's a mod
-                    # Extract author from links
-                    for link in item.get("links", []):
-                        if link.get("type") == "author":
-                            item["author"] = link.get("url")
-                            break
+                    # Extract authors and senders from links
+                    links = item.get("links", [])
+                    for key, types in [("author", ("author", "modded")), ("sender", ("sender",))]:
+                        vals = [l.get("name") or l.get("url") for l in links if l.get("type") in types]
+                        vals = [x for x in vals if x]
+                        item[key] = vals[0] if len(vals) == 1 else (vals or None)
+
                     flattened.append(item)
                 else:
                     # Check if it's a dict that might contain groups/mods

@@ -2,7 +2,7 @@ import sys
 
 from core import registry, utils
 
-VERSION = "0.3"
+VERSION = "0.4"
 RESIZE_TAGS = ["d2pfx_browser_window", "d2pfx_details_modal"]
 RENAME_CATEGORIES = ["trees", "river", "shaders", "herofx", "ranged-attack", "hero-items", "optimization"]
 
