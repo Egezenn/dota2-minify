@@ -102,8 +102,6 @@ class ModInfo:
             return True
 
         self.config = check_file("manifest.json", None, None, None, True)
-        if not self.config:
-            self.config = check_file("modcfg.json", None, "R", "Missing manifest.json", True) or {}
 
         check_file("notes.md", "has_notes", "W", "Missing notes.md")
         self.has_preview = (self.path / "preview.jpg").exists() or (self.path / "preview.png").exists()
@@ -156,7 +154,7 @@ class ModInfo:
 
         # files
         file_checks = [
-            ("modcfg.json", self.path / "modcfg.json", (self.path / "modcfg.json").exists()),
+            ("manifest.json", self.path / "manifest.json", (self.path / "manifest.json").exists()),
             ("notes.md", self.path / "notes.md", self.has_notes),
             ("xml_mod.json", self.path / "xml_mod.json", self.has_xml),
             ("styling.css", self.path / "styling.css", self.has_styling),
@@ -419,7 +417,7 @@ class ModBrowser(App):
             return
 
         # Mod-specific previews
-        if prop_name in ["notes.md", "xml_mod.json", "styling.css", "modcfg.json", "blacklist.txt"]:
+        if prop_name in ["notes.md", "xml_mod.json", "styling.css", "manifest.json", "blacklist.txt"]:
             self._handle_file_preview(prop_name)
         elif prop_name in ["Compiled Files", "Uncompiled Files"]:
             self._handle_directory_preview(prop_name)
@@ -613,7 +611,7 @@ class ModBrowser(App):
             "[bold cyan]Action Items:[/bold cyan]",
             " 1. Fix all [red](E)[/red] (Invalid JSON etc.)",
             " 2. Address [yellow](W)[/yellow] (Missing notes.md)",
-            " 3. Review [cyan](I)[/cyan] (Missing modcfg/previews)",
+            " 3. Review [cyan](I)[/cyan] (Missing manifest/previews)",
             " 4. Run precommit.sh before pushing",
         ]
         results.update("\n".join(output))

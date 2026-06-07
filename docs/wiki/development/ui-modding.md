@@ -27,10 +27,10 @@ example_selector { property: value; }
 
 ### Dynamic Styling (Placeholders)
 
-You can use settings defined in your `modcfg.json` directly within your `styling.css` using the `<&key>` syntax. These placeholders are replaced with the user-configured values during the patching process.
+You can use settings defined in your `manifest.json` directly within your `styling.css` using the `<&key>` syntax. These placeholders are replaced with the user-configured values during the patching process.
 
 **Example**:
-If you have a color picker in `modcfg.json`:
+If you have a color picker in `manifest.json`:
 
 ```json
 {
@@ -111,13 +111,13 @@ Supported actions:
 
 ## Mod Settings & Custom Buttons
 
-Mods can expose configurable settings to the user's **Settings Menu** via the `settings` array in `modcfg.json`.
+Mods can expose configurable settings to the user's **Settings Menu** via the `settings` array in `manifest.json`.
 
 ### Custom Function Buttons
 
 Besides standard inputs like checkboxes or color pickers, you can create a button that invokes a Python function from your mod's `script_utility.py`.
 
-1. **Define the button in `modcfg.json`**:
+1. **Define the button in `manifest.json`**:
    The `key` should match the name of the function you want to call.
 
    ```json

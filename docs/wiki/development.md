@@ -21,7 +21,7 @@ Minify has a programmatical approach to most modifications to keep everything mi
 | Modifications to file                                                   | Restart required for changes | Workshop requirement |
 | ----------------------------------------------------------------------- | ---------------------------- | -------------------- |
 | [`files`](development/mod-structure.md#filesfiles_uncompiled-directory) | No                           | No<sup>1</sup>       |
-| [`modcfg.json`](development/mod-structure.md#modcfgjson)                | Yes<sup>2</sup>              | -                    |
+| [`manifest.json`](development/mod-structure.md#modcfgjson)              | Yes<sup>2</sup>              | -                    |
 | [`notes.md`](development/mod-structure.md#notesmd)                      | Yes                          | -                    |
 | `preview.jpg` \| `preview.png`                                          | Yes                          | -                    |
 | [`blacklist.txt`](development/mod-structure.md#blacklisttxt)            | No                           | No                   |

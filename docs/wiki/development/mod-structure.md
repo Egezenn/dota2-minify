@@ -11,7 +11,7 @@ mods
 │   │   ├── <path_to_file_in_pak>
 │   │   ├── <...>
 │   │   └── <...>
-│   ├── modcfg.json
+│   ├── manifest.json
 │   ├── notes.md
 │   ├── preview.jpg | preview.png
 │   ├── blacklist.txt
@@ -27,7 +27,7 @@ mods
 │   └── xml_mod.json
 ```
 
-### `modcfg.json`
+### `manifest.json`
 
 ```json
 { // defaults doesn't need to be indicated
