@@ -140,13 +140,17 @@ class WorkshopTools:
             while True:
                 app_state = conditions.get_dota_app_state()
                 is_enabled = conditions.get_workshop_tools_status(app_state)
-                is_installed = app_state.get("StateFlags") == "4" and is_enabled
+                try:
+                    state_flags = int(app_state.get("StateFlags", 0))
+                except (ValueError, TypeError):
+                    state_flags = 0
+                is_installed = bool(state_flags & 4) and is_enabled
 
                 if is_installed:
                     break
 
                 downloading = is_enabled and (
-                    app_state.get("StateFlags") != "4"
+                    not (state_flags & 4)
                     or base.STEAM_DOTA_WORKSHOP_TOOLS_ID in app_state.get("DlcDownloads", {})
                 )
 

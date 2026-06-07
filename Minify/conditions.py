@@ -57,7 +57,12 @@ def check_workshop_tools():
     if not app_state:
         return False
 
-    return app_state.get("StateFlags") == "4" and get_workshop_tools_status(app_state)
+    try:
+        state_flags = int(app_state.get("StateFlags", 0))
+    except (ValueError, TypeError):
+        state_flags = 0
+
+    return bool(state_flags & 4) and get_workshop_tools_status(app_state)
 
 
 def is_compiler_found():
