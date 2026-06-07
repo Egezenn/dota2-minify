@@ -150,8 +150,7 @@ class WorkshopTools:
                     break
 
                 downloading = is_enabled and (
-                    not (state_flags & 4)
-                    or base.STEAM_DOTA_WORKSHOP_TOOLS_ID in app_state.get("DlcDownloads", {})
+                    not (state_flags & 4) or base.STEAM_DOTA_WORKSHOP_TOOLS_ID in app_state.get("DlcDownloads", {})
                 )
 
                 if downloading and not was_downloading:

@@ -63,6 +63,12 @@ SETTINGS = [
         "default": False,
         "type": "checkbox",
     },
+    {
+        "key": "opt_out_vpk_metadata",
+        "text": "Opt-out of VPK metadata",
+        "default": False,
+        "type": "checkbox",
+    },
 ]
 MOD_SETTINGS_WIDGETS = []
 

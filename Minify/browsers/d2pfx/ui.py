@@ -5,7 +5,7 @@ import urllib.parse
 from concurrent.futures import ThreadPoolExecutor
 
 import dearpygui.dearpygui as dpg
-from core import fs, config
+from core import config, fs
 from ui import modal_shared, window
 from ui import shared as shared
 
@@ -233,7 +233,7 @@ class BrowserUI:
         filtered_mods = []
         for m in mods:
             tags = m.get("tags", {})
-            
+
             if filter_nsfw:
                 is_adult = False
                 if isinstance(tags, dict):
@@ -254,7 +254,6 @@ class BrowserUI:
 
             filtered_mods.append(m)
         mods = filtered_mods
-
 
         sort_mode = None
         if filter_text:

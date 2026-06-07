@@ -3,7 +3,7 @@ import shutil
 import threading
 from concurrent.futures import ThreadPoolExecutor
 
-from core import base, constants, fs, log, output, utils
+from core import base, config, constants, fs, log, output, utils
 
 
 def extract(vpk_to_extract_from, paths, path_to_extract_to=base.build_dir):
@@ -48,6 +48,9 @@ def dump_metadata(target_dir, mod_name=None, vpk_mods=None, extra_lists=None):
     - vpk_mods: List of VPK mod names for minify_vpk_mods.txt.
     - extra_lists: Dict of {filename: [lines]} for additional metadata files.
     """
+    if config.get("opt_out_vpk_metadata", False):
+        return
+
     # 1. Base Info
     if mod_name is None:
         shutil.copy(base.mods_config_dir, os.path.join(target_dir, "minify_mods.json"))
