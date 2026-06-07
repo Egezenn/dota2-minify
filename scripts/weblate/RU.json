@@ -1,5 +1,4 @@
 {
-  "button_exit": "Закрыть",
   "button_patch": "Патч",
   "button_select_mods": "Выбрать Моды",
   "button_uninstall": "Удалить Моды",
@@ -44,8 +43,6 @@
   "mods_removed_terminal": "Все Minify моды были удалены.",
   "open_thing_fail": "{} не существует!",
   "refreshed_mod_list": "Список модов обновлен!",
-  "refreshing_mod_list": "Освежающе...",
-  "remove_mods_text_tag": "Удалить все моды?",
   "replacing_terminal": "   Замена {} -> {}",
   "script_execution": "   Выполнение скрипта {} на шаге \"{}\".",
   "script_no_main": "   {} Скрипт \"{}\" не имеет основной функции!",

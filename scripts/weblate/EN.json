@@ -1,5 +1,4 @@
 {
-  "button_exit": "Close",
   "button_patch": "Patch",
   "button_select_mods": "Select Mods",
   "button_uninstall": "Uninstall",
@@ -44,8 +43,6 @@
   "mods_removed_terminal": "All Minify mods have been removed.",
   "open_thing_fail": "{} doesn't exist!",
   "refreshed_mod_list": "Refreshed the mod list!",
-  "refreshing_mod_list": "Refreshing...",
-  "remove_mods_text_tag": "Remove all mods?",
   "replacing_terminal": "   Replacing {} -> {}",
   "script_execution": "   Executing {} script on step \"{}\".",
   "script_no_main": "   {} \"{}\" script has no main function!",
