@@ -1,4 +1,5 @@
 <!-- LANG:EN -->
+
 Removes miscellaneous effects
 
 - Removes particle effects on buildings such as the glowing blue effects on fountain, outpost, base buildings etc
@@ -8,6 +9,7 @@ Removes miscellaneous effects
 - Hero loadouts, event emblems, glyph..
 
 <!-- LANG:BG -->
+
 Премахва различни ефекти
 
 - Премахва ефектите на частиците върху сгради, като например светещите сини ефекти върху фонтан, аванпост, базови сгради и др.
@@ -17,6 +19,7 @@ Removes miscellaneous effects
 - Екипировка на герои, емблеми на събития, глифове..
 
 <!-- LANG:CS -->
+
 Odstraňuje různé efekty
 
 - Odstraňuje částicové efekty na budovách, jako jsou například modré efekty na fontáně, základně, základních budovách atd.
@@ -26,6 +29,7 @@ Odstraňuje různé efekty
 - Vybavení hrdinů, emblémy událostí, glyfy...
 
 <!-- LANG:DA -->
+
 Fjerner diverse effekter
 
 - Fjerner partikeleffekter på bygninger, såsom de glødende blå effekter på springvand, forpost, basebygninger osv.
@@ -36,6 +40,7 @@ Fjerner diverse effekter
 - Helteudstyr, begivenhedsemblemer, glyffer..
 
 <!-- LANG:DE -->
+
 Entfernt diverse Effekte
 
 - Entfernt Partikeleffekte an Gebäuden, wie z. B. das blaue Leuchten von Brunnen, Außenposten, Basisgebäuden usw.
@@ -45,6 +50,7 @@ Entfernt diverse Effekte
 - Heldenausrüstungen, Event-Embleme, Glyphen usw.
 
 <!-- LANG:EL -->
+
 Αφαιρεί διάφορα εφέ
 
 - Αφαιρεί εφέ σωματιδίων σε κτίρια, όπως τα λαμπερά μπλε εφέ σε σιντριβάνια, φυλάκια, κτίρια βάσεων κ.λπ.
@@ -54,15 +60,17 @@ Entfernt diverse Effekte
 - Φορτία ηρώων, εμβλήματα γεγονότων, σύμβολα..
 
 <!-- LANG:ES -->
-Elimina efectos varios
 
-- Elimina efectos de partículas en edificios, como el brillo azul en fuentes, puestos de avanzada, bases, etc.
-- Partículas de destrucción/proyectiles de ataque a torres
-- Partículas de efigie
+Elimina efectos misceláneos
+
+- Elimina efectos de partículas en las estructuras como el efecto brillante en la fuente, outpost, estructuras de la base, etc
+- Proyectil de ataque de la torre / partículas de destrucción
+- Partículas de las efigies
 - Ilusiones simplificadas
-- Equipamientos de héroes, emblemas de eventos, glifos...
+- Configuración del héroe, emblemas de evento, glifos...
 
 <!-- LANG:FI -->
+
 Poistaa sekalaisia ​​tehosteita
 
 - Poistaa hiukkastehosteet rakennuksista, kuten hehkuvan siniset tehosteet suihkulähteistä, etuvartioista, tukikohdista jne.
@@ -72,6 +80,7 @@ Poistaa sekalaisia ​​tehosteita
 - Sankarien varusteet, tapahtumatunnukset, symbolit...
 
 <!-- LANG:FR -->
+
 Suppression d'effets divers
 
 - Suppression des effets de particules sur les bâtiments, tels que les lueurs bleues sur les fontaines, les avant-postes, les bâtiments de base, etc.
@@ -81,6 +90,7 @@ Suppression d'effets divers
 - Suppression des équipements de héros, des emblèmes d'événement, des glyphes...
 
 <!-- LANG:HU -->
+
 Eltávolítja a különféle effektusokat
 
 - Eltávolítja az épületeken lévő részecskeeffektusokat, például a szökőkúton, előőrsön, bázisépületeken stb. látható izzó kék effektusokat
@@ -90,6 +100,7 @@ Eltávolítja a különféle effektusokat
 - Hősök felszerelése, esemény emblémák, szimbólumok...
 
 <!-- LANG:IT -->
+
 Rimuove effetti vari
 
 - Rimuove gli effetti particellari sugli edifici, come gli effetti blu luminosi su fontane, avamposti, edifici della base, ecc.
@@ -99,6 +110,7 @@ Rimuove effetti vari
 - Equipaggiamenti degli eroi, emblemi degli eventi, glifi...
 
 <!-- LANG:JA -->
+
 その他のエフェクトを削除
 
 - 噴水、前哨基地、基地建物などの建物に発生する青く光るエフェクトなどのパーティクルエフェクトを削除
@@ -108,6 +120,7 @@ Rimuove effetti vari
 - ヒーローの装備、イベントエンブレム、グリフなどを削除
 
 <!-- LANG:KO -->
+
 기타 효과 제거
 
 - 분수, 전초기지, 기지 건물 등의 빛나는 파란색 효과와 같은 건물 파티클 효과 제거
@@ -117,6 +130,7 @@ Rimuove effetti vari
 - 영웅 장비, 이벤트 엠블럼, 글리프 효과 제거
 
 <!-- LANG:NL -->
+
 Verwijdert diverse effecten
 
 - Verwijdert deeltjeseffecten op gebouwen, zoals de blauwe gloed op fonteinen, buitenposten, basisgebouwen, enz.
@@ -126,6 +140,7 @@ Verwijdert diverse effecten
 - Heldenuitrustingen, evenementemblemen, symbolen, enz.
 
 <!-- LANG:NO -->
+
 Fjerner diverse effekter
 
 - Fjerner partikkeleffekter på bygninger, som de glødende blå effektene på fontener, utposter, basebygninger osv.
@@ -135,6 +150,7 @@ Fjerner diverse effekter
 - Helteutstyr, hendelsesemblemer, tegn...
 
 <!-- LANG:PL -->
+
 Usuwa różne efekty
 
 - Usuwa efekty cząsteczkowe z budynków, takie jak świecące na niebiesko efekty fontann, posterunków, budynków baz itp.
@@ -144,6 +160,7 @@ Usuwa różne efekty
 - Wyposażenie bohaterów, emblematy wydarzeń, glify...
 
 <!-- LANG:PT -->
+
 Remove efeitos diversos
 
 - Remove efeitos de partículas em construções, como o brilho azul em fontes, postos avançados, edifícios da base etc.
@@ -153,6 +170,7 @@ Remove efeitos diversos
 - Equipamentos de heróis, emblemas de eventos, glifos...
 
 <!-- LANG:RO -->
+
 Elimină efecte diverse
 
 - Elimină efectele de particule de pe clădiri, cum ar fi efectele albastru strălucitor de pe fântână, avanpost, clădiri de bază etc.
@@ -162,6 +180,7 @@ Elimină efecte diverse
 - Echipamente pentru eroi, embleme de evenimente, glife...
 
 <!-- LANG:RU -->
+
 Удаляет различные эффекты
 
 - Удаляет эффекты частиц на зданиях, такие как светящиеся синие эффекты на фонтанах, аванпостах, базовых зданиях и т. д.
@@ -171,6 +190,7 @@ Elimină efecte diverse
 - Снаряжение героев, эмблемы событий, глифы...
 
 <!-- LANG:SV -->
+
 Tar bort diverse effekter
 
 - Tar bort partikeleffekter på byggnader, såsom de lysande blå effekterna på fontäner, utposter, basbyggnader etc.
@@ -180,6 +200,7 @@ Tar bort diverse effekter
 - Hjälteutrustning, händelseemblem, glyfer...
 
 <!-- LANG:TH -->
+
 ลบเอฟเฟกต์เบ็ดเตล็ด
 
 - ลบเอฟเฟกต์อนุภาคบนสิ่งก่อสร้าง เช่น เอฟเฟกต์สีฟ้าเรืองแสงบนน้ำพุ ป้อมปราการ สิ่งก่อสร้างฐานทัพ ฯลฯ
@@ -189,24 +210,27 @@ Tar bort diverse effekter
 - ชุดอุปกรณ์ของฮีโร่ ตราสัญลักษณ์กิจกรรม สัญลักษณ์พิเศษ...
 
 <!-- LANG:TR -->
+
 Çeşitli efektleri kaldırır
 
 - Çeşme, karakol, üs binaları vb. üzerindeki parlayan mavi efektler gibi binalardaki parçacık efektlerini kaldırır
-- Kule saldırısı mermi/yıkım parçacıklarını kaldırır
+- Kule saldırısı mermi / yıkım parçacıklarını kaldırır
 - Heykel parçacıklarını kaldırır
-- Basitleştirilmiş illüzyonları kaldırır
+- Basitleştirilmiş illüzyonlar
 - Kahraman teçhizatlarını, etkinlik amblemlerini, glifleri kaldırır...
 
 <!-- LANG:UK -->
+
 Видаляє різноманітні ефекти
 
-- Видаляє ефекти частинок на будівлях, такі як сяючі блакитні ефекти на фонтані, форпості, базових будівлях тощо
-- Частинки снарядів/руйнувань веж
-- Частинки опудала
+- Видаляє частинки ефектів на будівлях, таких як блакитне світіння на фонтані, аванпостах, будівлях бази тощо
+- Частинки снарядів атак веж / руйнування
+- Частинки ефектів ефігій
 - Спрощені ілюзії
-- Спорядження героїв, емблеми подій, гліфи..
+- Набори спорядження героїв, емблеми подій, гліфи..
 
 <!-- LANG:VI -->
+
 Loại bỏ các hiệu ứng không cần thiết
 
 - Loại bỏ hiệu ứng hạt trên các công trình như hiệu ứng ánh sáng xanh phát sáng trên đài phun nước, tiền đồn, các công trình trong căn cứ, v.v.
@@ -216,6 +240,7 @@ Loại bỏ các hiệu ứng không cần thiết
 - Trang bị anh hùng, biểu tượng sự kiện, phù hiệu…
 
 <!-- LANG:ZH-CN -->
+
 移除杂项特效
 
 - 移除建筑物上的粒子特效, 例如喷泉、哨站、基地建筑等的蓝色发光效果
@@ -229,32 +254,7 @@ Loại bỏ các hiệu ứng không cần thiết
 - 英雄装备、活动徽章、符文……
 
 <!-- LANG:ZH-TW -->
-移除雜項特效
 
-- 移除建築物上的粒子特效, 例如噴泉、哨站、基地建築等的藍色發光效果
-
-- 防禦塔攻擊彈/破壞粒子特效
-
-- 雕像粒子特效
-
-- 簡化幻象
-
-- 英雄裝備、活動徽章、符文…
-
-<!-- LANG:ZH-CN -->
-移除杂项特效
-
-- 移除建筑物上的粒子特效, 例如喷泉、哨站、基地建筑等的蓝色发光效果
-
-- 防御塔攻击弹/破坏粒子特效
-
-- 雕像粒子特效
-
-- 简化幻象
-
-- 英雄装备、活动徽章、符文……
-
-<!-- LANG:ZH-TW -->
 移除雜項特效
 
 - 移除建築物上的粒子特效, 例如噴泉、哨站、基地建築等的藍色發光效果
