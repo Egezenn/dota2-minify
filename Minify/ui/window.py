@@ -78,6 +78,8 @@ def on_resize():
     if dev_tools.dev_mode_state != 1:
         dev_tools.prev_width = dpg.get_viewport_width()
         dev_tools.prev_height = dpg.get_viewport_height()
+    shared.viewport_width = dpg.get_viewport_width()
+    shared.viewport_height = dpg.get_viewport_height()
     # terminal wrap size
     shared.window_width = dpg.get_item_width("primary_window")
     shared.window_height = dpg.get_item_height("primary_window")

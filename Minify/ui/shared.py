@@ -7,6 +7,8 @@ mod_details_image_cache = {}
 update_url = None
 window_width = 0
 window_height = 0
+viewport_width = 0
+viewport_height = 0
 extra_windows_to_resize = []
 
 MODAL_WIDTH = 500

@@ -38,6 +38,7 @@ from ui import (
     localization,
     modals,
     settings,
+    shared,
     theme,
     window,
 )
@@ -313,14 +314,20 @@ with dpg.texture_registry(show=False):
 
 # Creating_main_viewport
 
+viewport_width = max(base.main_window_width, config.get("window_width", base.main_window_width))
+viewport_height = max(base.main_window_height, config.get("window_height", base.main_window_height))
+
+shared.viewport_width = viewport_width
+shared.viewport_height = viewport_height
+
 dpg.create_viewport(
     title=base.TITLE,
-    width=base.main_window_width,
-    height=base.main_window_height,
+    width=viewport_width,
+    height=viewport_height,
     min_width=base.main_window_width,
     min_height=base.main_window_height,
-    x_pos=min(gui.widths) // 2 - base.main_window_width // 2,
-    y_pos=max(0, min(gui.heights) // 2 - base.main_window_height // 2 - 120),
+    x_pos=min(gui.widths) // 2 - viewport_width // 2,
+    y_pos=max(0, min(gui.heights) // 2 - viewport_height // 2 - 120),
     resizable=True,
     decorated=True,
     vsync=True,
@@ -337,4 +344,10 @@ try:
     dpg.start_dearpygui()
 except KeyboardInterrupt:
     pass
+
+if shared.viewport_width > 0:
+    config.set("window_width", shared.viewport_width)
+if shared.viewport_height > 0:
+    config.set("window_height", shared.viewport_height)
+
 dpg.destroy_context()
