@@ -6,6 +6,21 @@ VERSION = "0.3"
 RESIZE_TAGS = ["d2pfx_browser_window", "d2pfx_details_modal"]
 RENAME_CATEGORIES = ["trees", "river", "shaders", "herofx", "ranged-attack", "hero-items", "optimization"]
 
+SETTINGS = [
+    {
+        "key": "d2pfx_filter_nsfw",
+        "text": "Filter 18+ Mods (D2PFX)",
+        "default": True,
+        "type": "checkbox",
+    },
+    {
+        "key": "d2pfx_filter_anime",
+        "text": "Filter Anime Mods (D2PFX)",
+        "default": False,
+        "type": "checkbox",
+    },
+]
+
 # Self-registration
 registry.register_browser(sys.modules[__name__])
 

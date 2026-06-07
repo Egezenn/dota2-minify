@@ -5,7 +5,7 @@ import urllib.parse
 from concurrent.futures import ThreadPoolExecutor
 
 import dearpygui.dearpygui as dpg
-from core import fs
+from core import fs, config
 from ui import modal_shared, window
 from ui import shared as shared
 
@@ -226,6 +226,35 @@ class BrowserUI:
             else:
                 expanded_mods.append(m)
         mods = expanded_mods
+
+        filter_nsfw = config.get("d2pfx_filter_nsfw", True)
+        filter_anime = config.get("d2pfx_filter_anime", False)
+
+        filtered_mods = []
+        for m in mods:
+            tags = m.get("tags", {})
+            
+            if filter_nsfw:
+                is_adult = False
+                if isinstance(tags, dict):
+                    is_adult = any(k.lower() == "adult" and v for k, v in tags.items())
+                elif isinstance(tags, list):
+                    is_adult = any(t.lower() == "adult" for t in tags)
+                if is_adult:
+                    continue
+
+            if filter_anime:
+                is_anime = False
+                if isinstance(tags, dict):
+                    is_anime = any(k.lower() == "anime" and v for k, v in tags.items())
+                elif isinstance(tags, list):
+                    is_anime = any(t.lower() == "anime" for t in tags)
+                if is_anime:
+                    continue
+
+            filtered_mods.append(m)
+        mods = filtered_mods
+
 
         sort_mode = None
         if filter_text:
