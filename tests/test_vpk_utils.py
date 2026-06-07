@@ -1,7 +1,7 @@
 import os
 from unittest.mock import patch
-import pytest
 
+import pytest
 from core import base
 from patch import vpk_utils
 
@@ -18,7 +18,7 @@ def test_dump_metadata_default_behavior(tmp_path):
 
     with patch("core.config.get", side_effect=mock_get):
         # Mock shutil.copy and utils.open_utf8 to avoid hitting real steam.inf or mods.json
-        with patch("shutil.copy") as mock_copy, patch("patch.vpk_utils.utils.open_utf8") as mock_open:
+        with patch("shutil.copy") as _, patch("patch.vpk_utils.utils.open_utf8") as mock_open:
             vpk_utils.dump_metadata(target_dir, mod_name="test_mod")
 
             # Since mod_name is provided, it should create {mod_name}.txt

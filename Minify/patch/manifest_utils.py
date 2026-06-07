@@ -68,18 +68,10 @@ def is_version_at_least(current: str, requirements: str) -> bool:
         return False
 
 
-# TODO: DEPRECATION
 def get_mod(mod_path):
     manifest_json = os.path.join(mod_path, "manifest.json")
-    modcfg_json = os.path.join(mod_path, "modcfg.json")
 
     if os.path.exists(manifest_json):
         return config.read_json_file(manifest_json)
-
-    if os.path.exists(modcfg_json):
-        log.write_warning(
-            f"modcfg.json in {os.path.basename(mod_path)} is deprecated. Please use manifest.json instead."
-        )
-        return config.read_json_file(modcfg_json)
 
     return {}

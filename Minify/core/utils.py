@@ -72,7 +72,7 @@ def parse_color(val):
 def setup_system():
     import conditions
 
-    from core import fs
+    from core import fs, migrations
 
     fs.create_dirs(base.logs_dir)
     conditions.is_dota_running("&error_please_close_dota_terminal", "error")
