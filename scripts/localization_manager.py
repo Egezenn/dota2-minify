@@ -22,6 +22,16 @@ def split_localization():
     with open(loc_file, "r", encoding="utf-8") as f:
         data = json.load(f)
 
+    # Normalize all language keys to uppercase
+    for key in data:
+        if isinstance(data[key], dict):
+            for k in list(data[key].keys()):
+                if k != k.upper():
+                    val = data[key].pop(k)
+                    upper_k = k.upper().replace("_", "-")
+                    if upper_k not in data[key]:
+                        data[key][upper_k] = val
+
     # We ONLY split the trusted/source languages.
     # Weblate will handle propagating new keys from EN.json to other languages.
     for lang in TRUSTED_LANGUAGES:
@@ -92,6 +102,35 @@ def split_notes(minify_dir, locales_dir):
             print(f"Bundled notes for {lang} into {output_path}")
 
 
+def normalize_locale_filenames(directory):
+    """Normalizes filenames in a directory to uppercase and hyphens (e.g., de.json -> DE.json)."""
+    if not os.path.exists(directory):
+        return
+    for filename in os.listdir(directory):
+        if filename.endswith(".json"):
+            name_part = filename[:-5]
+            expected_name = name_part.upper().replace("_", "-")
+            if name_part != expected_name:
+                old_path = os.path.join(directory, filename)
+                new_path = os.path.join(directory, f"{expected_name}.json")
+                try:
+                    if old_path.lower() == new_path.lower():
+                        temp_path = old_path + ".tmp"
+                        if os.path.exists(temp_path):
+                            os.remove(temp_path)
+                        os.rename(old_path, temp_path)
+                        if os.path.exists(new_path):
+                            os.remove(new_path)
+                        os.rename(temp_path, new_path)
+                    else:
+                        if os.path.exists(new_path):
+                            os.remove(new_path)
+                        os.rename(old_path, new_path)
+                    print(f"Normalized filename: {filename} -> {expected_name}.json")
+                except Exception as e:
+                    print(f"Error normalizing filename {filename}: {e}")
+
+
 def merge_localization():
     """Merges individual language files back into the main localization.json."""
     # Resolve absolute paths
@@ -103,14 +142,28 @@ def merge_localization():
         print(f"Error: {locales_dir} does not exist.")
         return
 
+    # Normalize filenames to uppercase
+    normalize_locale_filenames(locales_dir)
+    normalize_locale_filenames(os.path.join(locales_dir, "mods"))
+
     # 1. Start with the original data (preserving machine translations)
     with open(loc_file, "r", encoding="utf-8") as f:
         final_data = json.load(f)
 
+    # Normalize all existing language keys to uppercase to eliminate lowercase duplicates
+    for key in final_data:
+        if isinstance(final_data[key], dict):
+            for k in list(final_data[key].keys()):
+                if k != k.upper():
+                    val = final_data[key].pop(k)
+                    upper_k = k.upper().replace("_", "-")
+                    if upper_k not in final_data[key]:
+                        final_data[key][upper_k] = val
+
     # 2. Update with anything found in the weblate folder (human translations)
     for filename in os.listdir(locales_dir):
         if filename.endswith(".json"):
-            lang = filename[:-5]
+            lang = filename[:-5].upper().replace("_", "-")
             with open(os.path.join(locales_dir, filename), "r", encoding="utf-8") as f:
                 lang_data = json.load(f)
 

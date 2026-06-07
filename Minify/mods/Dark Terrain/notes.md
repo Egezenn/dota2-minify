@@ -1,4 +1,5 @@
 <!-- LANG:EN -->
+
 Designed for visual clarity.
 
 !!: Default terrain is required.
@@ -10,6 +11,7 @@ Designed for visual clarity.
 - Custom team logos, shopkeepers
 
 <!-- LANG:BG -->
+
 Проектирано за визуална яснота.
 
 !!: Изисква се терен по подразбиране.
@@ -21,6 +23,7 @@ Designed for visual clarity.
 - Персонализирани лога на отбори, собственици на магазини
 
 <!-- LANG:CS -->
+
 Navrženo pro vizuální přehlednost.
 
 !!: Je vyžadován výchozí terén.
@@ -32,6 +35,7 @@ Navrženo pro vizuální přehlednost.
 - Vlastní loga týmů, majitelé obchodů
 
 <!-- LANG:DA -->
+
 Designet til visuel klarhed.
 
 !!: Standardterræn er påkrævet.
@@ -43,6 +47,7 @@ Designet til visuel klarhed.
 - Brugerdefinerede holdlogoer, butiksindehavere
 
 <!-- LANG:DE -->
+
 Für optimale visuelle Darstellung optimiert.
 
 Standard-Terrain erforderlich.
@@ -54,6 +59,7 @@ Standard-Terrain erforderlich.
 – Benutzerdefinierte Teamlogos und Ladenbesitzer
 
 <!-- LANG:EL -->
+
 Σχεδιασμένο για οπτική ευκρίνεια.
 
 !!: Απαιτείται το προεπιλεγμένο έδαφος.
@@ -65,17 +71,19 @@ Standard-Terrain erforderlich.
 - Προσαρμοσμένα λογότυπα ομάδων, καταστηματάρχες
 
 <!-- LANG:ES -->
-Diseñado para mayor claridad visual.
 
-!!: Se requiere el terreno predeterminado.
+Diseñado para claridad visual.
 
-- Cambia todos los mosaicos a gris/gris oscuro.
-- Líneas de niebla.
-- Se eliminó la niebla.
-- Agua oscura.
-- Logotipos de equipo y comerciantes personalizados.
+!!. El terreno por defecto es requerido.
+
+- Hace todos los bloques del mapa gris/oscuro gris
+- Líneas de niebla
+- Elimina la niebla
+- Agua oscura
+- Logos de equipos personalizados, comerciantes
 
 <!-- LANG:FI -->
+
 Suunniteltu visuaalista selkeyttä varten.
 
 !!: Oletusmaasto vaaditaan.
@@ -87,6 +95,7 @@ Suunniteltu visuaalista selkeyttä varten.
 - Mukautetut joukkuelogot, kauppiaat
 
 <!-- LANG:FR -->
+
 Conçu pour une clarté visuelle optimale.
 
 !!: Terrain par défaut requis.
@@ -102,6 +111,7 @@ Conçu pour une clarté visuelle optimale.
 - Logos d'équipe et commerçants personnalisés
 
 <!-- LANG:HU -->
+
 Vizuális áttekinthetőségre tervezve.
 
 !!: Alapértelmezett terep megadása kötelező.
@@ -113,6 +123,7 @@ Vizuális áttekinthetőségre tervezve.
 - Egyedi csapatlogók, boltosok
 
 <!-- LANG:IT -->
+
 Progettato per la massima chiarezza visiva.
 
 !!: È richiesto il terreno predefinito.
@@ -124,6 +135,7 @@ Progettato per la massima chiarezza visiva.
 - Loghi personalizzati per squadre e negozianti
 
 <!-- LANG:JA -->
+
 視覚的な明瞭さを追求したデザインです。
 
 !!: デフォルトの地形データが必要です.
@@ -135,6 +147,7 @@ Progettato per la massima chiarezza visiva.
 - カスタムチームロゴ、店主を追加
 
 <!-- LANG:KO -->
+
 시각적 명확성을 위해 디자인되었습니다.
 
 !!: 기본 지형이 필요합니다.
@@ -146,6 +159,7 @@ Progettato per la massima chiarezza visiva.
 - 사용자 지정 팀 로고 및 상점 표시
 
 <!-- LANG:NL -->
+
 Ontworpen voor visuele helderheid.
 
 !!: Standaard terrein is vereist.
@@ -157,6 +171,7 @@ Ontworpen voor visuele helderheid.
 - Aangepaste teamlogo's en winkelierslogo's
 
 <!-- LANG:NO -->
+
 Utviklet for visuell klarhet.
 
 !!: Standardterreng er påkrevd.
@@ -168,6 +183,7 @@ Utviklet for visuell klarhet.
 - Tilpassede laglogoer, butikkeiere
 
 <!-- LANG:PL -->
+
 Zaprojektowano z myślą o przejrzystości.
 
 !!: Wymagany jest domyślny teren.
@@ -179,6 +195,7 @@ Zaprojektowano z myślą o przejrzystości.
 - Niestandardowe loga drużyn, sklepikarze
 
 <!-- LANG:PT -->
+
 Projetado para clareza visual.
 
 !!: Terreno padrão necessário.
@@ -190,6 +207,7 @@ Projetado para clareza visual.
 - Logotipos de equipes e lojistas personalizados
 
 <!-- LANG:RO -->
+
 Conceput pentru claritate vizuală.
 
 !!: Este necesar terenul implicit.
@@ -201,6 +219,7 @@ Conceput pentru claritate vizuală.
 - Logo-uri personalizate ale echipelor, ale vânzătorilor
 
 <!-- LANG:RU -->
+
 Разработано для большей наглядности.
 
 !!: Требуется стандартный ландшафт.
@@ -212,6 +231,7 @@ Conceput pentru claritate vizuală.
 - Пользовательские логотипы команд, продавцов
 
 <!-- LANG:SV -->
+
 Utformad för visuell tydlighet.
 
 !!: Standardterräng krävs.
@@ -223,6 +243,7 @@ Utformad för visuell tydlighet.
 - Anpassade laglogotyper, butiksinnehavare
 
 <!-- LANG:TH -->
+
 ออกแบบมาเพื่อความชัดเจนทางสายตา
 
 !!: ต้องใช้ภูมิประเทศเริ่มต้น
@@ -234,6 +255,7 @@ Utformad för visuell tydlighet.
 - โลโก้ทีมและเจ้าของร้านแบบกำหนดเอง
 
 <!-- LANG:TR -->
+
 Görsel netlik için tasarlanmıştır.
 
 !!: Varsayılan arazi gereklidir.
@@ -245,17 +267,19 @@ Görsel netlik için tasarlanmıştır.
 - Özel takım logoları, dükkan sahipleri
 
 <!-- LANG:UK -->
-Розроблено для візуальної чіткості.
 
-!!: Потрібна стандартна місцевість.
+Створено для кращої візуальної читабельності.
 
-- Зробить усі плитки сірими/темно-сірими
+!!: Потрібен стандартний ландшафт.
+
+- Робить усі тайли сірими/темно-сірими
 - Лінії туману
-- Видалено туманну димку
+- Прибирає туман
 - Темна вода
-- Власні логотипи команд, власники магазинів
+- Кастомні логотипи команд і крамниці
 
 <!-- LANG:VI -->
+
 Được thiết kế để mang lại sự rõ nét về mặt hình ảnh.
 
 !!: Cần có địa hình mặc định.
@@ -267,6 +291,7 @@ Görsel netlik için tasarlanmıştır.
 - Logo đội, người bán hàng tùy chỉnh
 
 <!-- LANG:ZH-CN -->
+
 专为提升视觉清晰度而设计。
 
 !!: 需要默认地形.
@@ -282,36 +307,7 @@ Görsel netlik için tasarlanmıştır.
 - 自定义队伍标志和商店老板
 
 <!-- LANG:ZH-TW -->
-專為提升視覺清晰度而設計。
 
-!!: 需要預設地形.
-
-- 將所有圖塊變為灰色/深灰色
-
-- 增加霧線
-
-- 移除霧氣
-
-- 深色水面
-
-- 自訂隊伍標誌和商店老闆
-
-<!-- LANG:ZH-CN -->
-专为提升视觉清晰度而设计。
-
-!!: 需要默认地形.
-
-- 将所有图块变为灰色/深灰色
-
-- 添加雾线
-
-- 移除雾气
-
-- 深色水面
-
-- 自定义队伍标志和商店老板
-
-<!-- LANG:ZH-TW -->
 專為提升視覺清晰度而設計。
 
 !!: 需要預設地形.
