@@ -766,7 +766,7 @@ class BrowserUI:
                     "author": "Author",
                     "source": "Source",
                     "modded": "Modded",
-                    "sender": "Sender"
+                    "sender": "Sender",
                 }
 
                 for t_key in ["author", "source", "modded", "sender"]:
