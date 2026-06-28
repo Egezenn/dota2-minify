@@ -1,1 +1,1 @@
-**.*particles\/econ\/courier\/.*\.vpcf_c
+**^particles\/econ\/courier\/.*\.vpcf_c$
