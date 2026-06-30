@@ -11,10 +11,11 @@ if minify_root not in sys.path:
 
 # isort: split
 
+from core import base
 import conditions
 import dearpygui.dearpygui as dpg
 
 
 def main():
-    if not conditions.workshop_installed:
+    if not conditions.workshop_installed and not base.HEADLESS:
         dpg.set_value(os.path.basename(current_dir), True)

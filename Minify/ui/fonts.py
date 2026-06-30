@@ -260,5 +260,3 @@ def register(locale: str = "EN"):
             apply_hints()
         with dpg.font(target_font, 20, tag="large_font"):
             apply_hints()
-        with dpg.font(target_font, 32, tag="very_large_font"):
-            apply_hints()

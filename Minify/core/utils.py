@@ -1,7 +1,7 @@
 import builtins
 import contextlib
 import functools
-from typing import IO, Any
+from typing import Any, IO
 
 from core import base
 

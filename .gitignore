@@ -10,13 +10,14 @@ Minify/mods/*
 scripts/ffi_*.txt
 
 ## Dependencies
-Minify/bin/rescomproot*
-Minify/cli-*-*.*
-Minify/Source2Viewer-CLI*
-Minify/libSkiaSharp*
+Minify/*blake3_dotnet*
 Minify/*spirv-cross*
 Minify/*TinyEXR*
+Minify/bin/rescomproot*
+Minify/cli-*-*.*
+Minify/libSkiaSharp*
 Minify/rg*
+Minify/Source2Viewer-CLI*
 
 scripts/version_info.iss
 

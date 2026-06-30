@@ -15,6 +15,14 @@ on:
           - true
           - false
         default: "true"
+      signing_policy:
+        description: "Signing policy"
+        required: true
+        type: choice
+        options:
+          - release-signing
+          - test-signing
+        default: "release-signing"
 
 permissions:
   contents: write
@@ -98,7 +106,7 @@ jobs:
           api-token: "${{ secrets.SIGNPATH_API_TOKEN }}"
           organization-id: "${{ secrets.SIGNPATH_ORGANIZATION_ID }}"
           project-slug: "dota2-minify"
-          signing-policy-slug: "test-signing"
+          signing-policy-slug: "${{ github.event.inputs.signing_policy }}"
           artifact-configuration-slug: "dota2-minify-binary"
           github-artifact-id: "${{ steps.upload-unsigned-minify.outputs.artifact-id }}"
           wait-for-completion: true
@@ -135,7 +143,7 @@ jobs:
           api-token: "${{ secrets.SIGNPATH_API_TOKEN }}"
           organization-id: "${{ secrets.SIGNPATH_ORGANIZATION_ID }}"
           project-slug: "dota2-minify"
-          signing-policy-slug: "test-signing"
+          signing-policy-slug: "${{ github.event.inputs.signing_policy }}"
           artifact-configuration-slug: "dota2-minify-installer"
           github-artifact-id: "${{ steps.upload-unsigned-installer.outputs.artifact-id }}"
           wait-for-completion: true

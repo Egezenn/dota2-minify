@@ -232,7 +232,6 @@ def create_ui():
 
 
 def create_base_ui():
-    dev_tools.recalc_rescomp_dirs()
     localization.get_available()
     create_ui()
     with gui.interactive_lock():
@@ -259,22 +258,6 @@ def create_base_ui():
 fonts.register(config.get("locale", "EN"))
 
 
-def increase_scale():  # prototype
-    height, width = gui.social_button_size
-    height += 14
-    width += 14
-    dpg.configure_item("button_discord", height=height, width=width)
-    dpg.configure_item("button_telegram", height=height, width=width)
-    dpg.configure_item("button_git", height=height, width=width)
-    dpg.configure_item("button_dev", height=height, width=width)
-    dpg.configure_item("button_browser_d2pfx", height=height, width=width)
-    dpg.configure_item("button_settings", height=height, width=width)
-    font = dpg.get_alias_id("very_large_font")
-    dpg.bind_item_font("primary_window", font)
-    dpg.configure_viewport(base.TITLE, width=1040, height=700)
-
-
-# Adding mouse handler to dpg registry
 with dpg.handler_registry():
     dpg.add_mouse_drag_handler(tag="drag_handler", button=0, threshold=4, callback=window.drag)
     dpg.add_mouse_release_handler(button=0, callback=window.stop_drag)
@@ -287,8 +270,6 @@ with dpg.handler_registry():
             modal_shared.active_modal_callback()
 
     dpg.add_key_release_handler(dpg.mvKey_Return, callback=modal_accept)
-    # if config.get("debug_env", False):
-    #     dpg.add_key_release_handler(dpg.mvKey_Spacebar, callback=increase_scale)
 
 with dpg.texture_registry(show=False):
     w, h, _, d = dpg.load_image(os.path.join(base.img_dir, "Discord.png"))

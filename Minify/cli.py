@@ -1,19 +1,18 @@
 import argparse
 import os
 
-from core import base
+import browsers
+from core import base, config, constants, mods_shared, utils
+import helper
+import patch
+from ui import localization
 
 base.HEADLESS = True
-
-
-import browsers
-import patch
-from core import config, constants, mods_shared, utils
-from ui import localization
 
 utils.setup_system()
 browsers.initialize()
 localization.load_headless(config.get("locale", "EN") or "EN")
+helper.bulk_exec_script("initial", True)
 
 
 def run():

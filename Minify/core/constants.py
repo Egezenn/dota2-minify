@@ -12,6 +12,24 @@ minify_dota_compile_input_path = os.path.join(
 minify_dota_compile_output_path = os.path.join(
     steam.LIBRARY, "steamapps", "common", "dota 2 beta", "game", "dota_addons", "minify"
 )
+dota_resource_compiler_path = os.path.join(
+    steam.LIBRARY, "steamapps", "common", "dota 2 beta", "game", "bin", "win64", "resourcecompiler.exe"
+)
+
+
+def recalc_rescomp_dirs():
+    "Swaps the variables for resourcecompiler.exe when extracted"
+    global minify_dota_compile_input_path, minify_dota_compile_output_path, dota_resource_compiler_path
+    if rescomp_override:
+        minify_dota_compile_input_path = os.path.join(base.rescomp_override_dir, "content", "dota_addons", "minify")
+        minify_dota_compile_output_path = os.path.join(base.rescomp_override_dir, "game", "dota_addons", "minify")
+        dota_resource_compiler_path = os.path.join(
+            base.rescomp_override_dir, "game", "bin", "win64", "resourcecompiler.exe"
+        )
+
+
+recalc_rescomp_dirs()
+
 minify_dota_tools_required_path = os.path.join(
     steam.LIBRARY, "steamapps", "common", "dota 2 beta", "content", "dota_minify"
 )
@@ -85,9 +103,6 @@ dota2_tools_executable = os.path.join(steam.LIBRARY, base.DOTA_TOOLS_EXECUTABLE_
 dota_game_pak_path = os.path.join(steam.LIBRARY, "steamapps", "common", "dota 2 beta", "game", "dota", "pak01_dir.vpk")
 dota_core_pak_path = os.path.join(steam.LIBRARY, "steamapps", "common", "dota 2 beta", "game", "core", "pak01_dir.vpk")
 dota_steam_inf_path = os.path.join(steam.LIBRARY, "steamapps", "common", "dota 2 beta", "game", "dota", "steam.inf")
-dota_resource_compiler_path = os.path.join(
-    steam.LIBRARY, "steamapps", "common", "dota 2 beta", "game", "bin", "win64", "resourcecompiler.exe"
-)
 
 dota_tools_paths = [
     os.path.join(steam.LIBRARY, "steamapps", "common", "dota 2 beta", "game", "bin"),
