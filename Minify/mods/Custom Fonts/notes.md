@@ -1,8 +1,11 @@
 <!-- LANG:EN -->
 
-Changes most if not all fonts, the fonts can be changed in the config manually.
+Changes every font being used with:
 
-!!: Some fonts may not work.
+- A font dropped to config as `font.<t|otf>`
+- The font string in the config, finds the equalivent font from your system
+
+!!: Some fonts may cause problems.
 
 <!-- LANG:BG -->
 

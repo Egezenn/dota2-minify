@@ -129,6 +129,26 @@ def create_dirs(*paths: str) -> None:
             os.makedirs(path, exist_ok=True)
 
 
+def backup_directory(source: str, backup: str) -> None:
+    """Copy entire contents of source into backup. No-op if backup already exists."""
+    if os.path.exists(backup):
+        return
+    create_dirs(backup)
+    for name in os.listdir(source):
+        move_path(os.path.join(source, name), os.path.join(backup, name))
+
+
+def restore_directory(source: str, backup: str) -> None:
+    """Restore contents from backup into source, then remove backup."""
+    if not os.path.exists(backup):
+        return
+    for name in os.listdir(source):
+        remove_path(os.path.join(source, name))
+    for name in os.listdir(backup):
+        move_path(os.path.join(backup, name), os.path.join(source, name))
+    remove_path(backup)
+
+
 def download_file(url: str, target_path: str, progress_tag: Optional[str] = None) -> bool:
     """
     Downloads a file from url to target_path using requests.

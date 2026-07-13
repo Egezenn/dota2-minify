@@ -150,30 +150,48 @@ def _find_font_linux(font_name: str) -> str | None:
     return None
 
 
-def get_system_font(locale: str) -> str | None:
-    fonts = SYSTEM_FONTS.get(locale, {}).get(base.OS, [])
-    if not fonts:
-        return None
+def find_system_font(font_name: str) -> str | None:
+    normalized = font_name.lower().replace(" ", "").replace("-", "").replace("_", "")
 
     if base.OS == base.WIN:
         windir = os.environ.get("windir", "C:\\Windows")
-        for font in fonts:
-            path = os.path.join(windir, "Fonts", font)
-            if os.path.exists(path):
-                return path
+        font_dirs = [os.path.join(windir, "Fonts")]
+    elif base.OS == base.LINUX:
+        result = _find_font_linux(font_name)
+        if result:
+            return result
+        font_dirs = [
+            "/usr/share/fonts",
+            "/usr/local/share/fonts",
+            os.path.expanduser("~/.fonts"),
+            os.path.expanduser("~/.local/share/fonts"),
+        ]
     elif base.OS == base.MAC:
         font_dirs = ["/System/Library/Fonts", "/Library/Fonts", os.path.expanduser("~/Library/Fonts")]
-        for font in fonts:
-            for d in font_dirs:
-                path = os.path.join(d, font)
-                if os.path.exists(path):
-                    return path
-    elif base.OS == base.LINUX:
-        for font in fonts:
-            path = _find_font_linux(font)
-            if path:
-                return path
+    else:
+        return None
 
+    for d in font_dirs:
+        if not os.path.exists(d):
+            continue
+        for root, _, files in os.walk(d):
+            for f in files:
+                if f.lower().endswith((".ttf", ".otf")) and normalized in _normalize_filename(f):
+                    return os.path.join(root, f)
+    return None
+
+
+def _normalize_filename(filename: str) -> str:
+    stem = os.path.splitext(filename)[0]
+    return stem.lower().replace(" ", "").replace("-", "").replace("_", "")
+
+
+def get_system_font(locale: str) -> str | None:
+    fonts = SYSTEM_FONTS.get(locale, {}).get(base.OS, [])
+    for font in fonts:
+        path = find_system_font(font)
+        if path:
+            return path
     return None
 
 

@@ -18,6 +18,7 @@ import requests
 from core import fs, log, output, steam, utils
 
 dota_itembuilds_path = os.path.join(steam.LIBRARY, "steamapps", "common", "dota 2 beta", "game", "dota", "itembuilds")
+odg_bkup_path = os.path.join(minify_root, "backup", "OpenDotaGuides Guides")
 odg_latest = "https://github.com/Egezenn/OpenDotaGuides/releases/latest/download/itembuilds.zip"
 zip_path = os.path.join(current_dir, "files", "OpenDotaGuides.zip")
 temp_dump_path = os.path.join(current_dir, "files", "temp")
@@ -42,16 +43,7 @@ def main():
     if response.status_code == 200:
         with open(zip_path, "wb") as file:
             file.write(response.content)
-        fs.create_dirs(os.path.join(dota_itembuilds_path, "bkup"))
-        try:
-            for name in os.listdir(dota_itembuilds_path):
-                if name != "bkup":
-                    fs.move_path(
-                        os.path.join(dota_itembuilds_path, name),
-                        os.path.join(dota_itembuilds_path, "bkup", name),
-                    )
-        except Exception as e:
-            log.write_warning(f"Failed to backup/move files: {e}")
+        fs.backup_directory(dota_itembuilds_path, odg_bkup_path)
 
         shutil.unpack_archive(zip_path, temp_dump_path, format="zip")
         for file in os.listdir(temp_dump_path):

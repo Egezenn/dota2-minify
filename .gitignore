@@ -6,6 +6,7 @@ Minify/vpk_merge
 Minify/cache
 Minify/config
 Minify/logs
+Minify/backup
 Minify/mods/*
 scripts/ffi_*.txt
 
