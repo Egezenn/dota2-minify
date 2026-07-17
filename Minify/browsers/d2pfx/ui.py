@@ -664,8 +664,6 @@ class BrowserUI:
         self.download_executor.submit(_load)
 
     def install_mod(self, mod):
-        import json
-
         from core import base, config
 
         name = mod.get("name", "Unknown")

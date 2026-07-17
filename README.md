@@ -34,31 +34,6 @@
 
 </div>
 
-<div align="center">
-
-# ⚠️ JOIN THE EVOLUTION!
-
-**Help us build the future of Minify!**  
-We have an ambitious **[Roadmap](https://github.com/Egezenn/dota2-minify/issues)** with plenty of **[Good First Issues](https://github.com/Egezenn/dota2-minify/issues?q=is%3Aissue%20state%3Aopen%20label%3A%22good%20first%20issue%22)** waiting for you.
-
-| Area            | Focus                                                                                     |
-| :-------------- | :---------------------------------------------------------------------------------------- |
-| **UI/UX**       | Modal refinements, searchbars, and high-DPI scaling.                                      |
-| **Core Engine** | CLI interfaces, conflict management, and browser hooks.                                   |
-| **Modding**     | Asset updates, community mod integration, and new browsers.                               |
-| **DevOps**      | Mirrored downloads and automated deployments.                                             |
-| **Translation** | Help us translate the app via [Weblate](https://hosted.weblate.org/engage/dota2-minify/). |
-
-## [VIEW OPEN TASKS & ROADMAP](https://github.com/Egezenn/dota2-minify/issues)
-
-**Want to help in other ways?**
-Check out our [Contributing Guidelines](CONTRIBUTING.md) and [Architecture Overview](ARCHITECTURE.md).  
-Join the conversation on [Discord](https://discord.com/invite/9867CPv7cy), [Telegram](https://t.me/dota2minify), or [GitHub Discussions](https://github.com/Egezenn/dota2-minify/discussions).
-
-*Every contribution, no matter how small, is deeply appreciated.*
-
-</div>
-
 ## Thanks
 
 This project wouldn't be available without the work of the community. Thanks to everyone that has contributed to the project over at GitHub and Discord!

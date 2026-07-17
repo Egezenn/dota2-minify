@@ -2,23 +2,29 @@ import argparse
 import os
 
 import browsers
-from core import base, config, constants, mods_shared, utils
+from core import base, constants, mods_shared, utils
 import helper
 import patch
 from ui import localization
 
 base.HEADLESS = True
 
+
+localization.load_headless()
 utils.setup_system()
 browsers.initialize()
-localization.load_headless(config.get("locale", "EN") or "EN")
-helper.bulk_exec_script("initial", True)
+helper.bulk_exec_script("initial", False)
 
 
 def run():
     parser = argparse.ArgumentParser(description="Dota2-Minify CLI", epilog="Run without args for the GUI")
     parser.add_argument("-p", "--patch", action="store_true", help="Run a patch")
-    parser.add_argument("-c", "--conditional-patch", action="store_true", help="Run a conditional patch")
+    parser.add_argument(
+        "-c",
+        "--conditional-patch",
+        action="store_true",
+        help="Run a conditional patch (if updated since last patch time)",
+    )
     parser.add_argument("-l", "--list", action="store_true", help="List all available mods and their state")
     parser.add_argument("-u", "--uninstall", action="store_true", help="Uninstall all mods")
     parser.add_argument("-v", "--version", action="store_true", help="Print version and exit")

@@ -20,7 +20,7 @@ BLACKLIST = [
     "sites",
     "packs",
     "huds",  # https://github.com/Egezenn/dota2-minify/issues/143
-    "fonts",  # https://github.com/Egezenn/dota2-minify/issues/136
+    "fonts",
 ]
 
 

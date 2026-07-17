@@ -7,13 +7,5 @@
       "https://egezenn.github.io/dota2-minify/wiki/#/troubleshooting_faq?id=things-are-broken"
     ],
     "versions": ["1.13"]
-  },
-  {
-    "time": "1778238000+",
-    "text": "HELP US TRANSLATE & EVOLVE!\n\nWeblate integration is live for community translations!\nMost languages are currently machine-translated, now you have the power to fix them.\n\nThere's also a good chunk of roadmap issues left for new contributors to help with our roadmap. Check out our Good First Issues on GitHub!",
-    "urls": [
-      "https://hosted.weblate.org/engage/dota2-minify/",
-      "https://github.com/Egezenn/dota2-minify/issues?q=is%3Aissue+state%3Aopen+label%3A%22good+first+issue%22"
-    ]
   }
 ]

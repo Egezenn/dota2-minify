@@ -68,7 +68,7 @@ def check_workshop_tools():
 def is_compiler_found():
     global workshop_installed
     workshop_installed = check_workshop_tools()
-    if not workshop_installed:
+    if not workshop_installed and not base.HEADLESS:
         output.add_text("&error_no_workshop_tools_found_terminal", msg_type="warning")
 
 
