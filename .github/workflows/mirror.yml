@@ -13,9 +13,11 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
+          
       - name: Mirror to Codeberg
         env:
           CODEBERG_TOKEN: ${{ secrets.CODEBERG_TOKEN }}
         run: |
           git remote add codeberg https://egezenn:${CODEBERG_TOKEN}@codeberg.org/egezenn/${{ github.event.repository.name }}.git
-          git push --force --mirror codeberg
+          git push --force codeberg main:main
+          git push --force codeberg --tags

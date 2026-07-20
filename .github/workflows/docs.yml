@@ -44,3 +44,16 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+        
+      - name: Deploy to Codeberg Pages
+        env:
+          CODEBERG_TOKEN: ${{ secrets.CODEBERG_TOKEN }}
+        run: |
+          cd docs
+          git init
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git checkout -b pages
+          git add .
+          git commit -m "Deploy to Codeberg Pages"
+          git push --force https://egezenn:${CODEBERG_TOKEN}@codeberg.org/egezenn/${{ github.event.repository.name }}.git pages
