@@ -16,6 +16,7 @@
   * [core.constants](/development/symbols/core.constants)
   * [core.fs](/development/symbols/core.fs)
   * [core.log](/development/symbols/core.log)
+  * [core.migrations](/development/symbols/core.migrations)
   * [core.mods_shared](/development/symbols/core.mods_shared)
   * [core.output](/development/symbols/core.output)
   * [core.registry](/development/symbols/core.registry)

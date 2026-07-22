@@ -129,3 +129,24 @@ def parse_color(val):
 ```
 
 </details>
+
+## `setup_system()`
+
+*No documentation available.*
+
+<details open><summary>Source</summary>
+
+```python
+def setup_system():
+    import conditions
+
+    from core import fs, migrations
+
+    fs.create_dirs(base.logs_dir)
+    conditions.is_dota_running("&error_please_close_dota_terminal", "error")
+    conditions.is_compiler_found()
+    conditions.resolve_dependencies()
+
+```
+
+</details>

@@ -2,6 +2,27 @@
 
 Variables that depend on 3rd parties
 
+## `recalc_rescomp_dirs()`
+
+Swaps the variables for resourcecompiler.exe when extracted
+
+<details open><summary>Source</summary>
+
+```python
+def recalc_rescomp_dirs():
+    "Swaps the variables for resourcecompiler.exe when extracted"
+    global minify_dota_compile_input_path, minify_dota_compile_output_path, dota_resource_compiler_path
+    if rescomp_override:
+        minify_dota_compile_input_path = os.path.join(base.rescomp_override_dir, "content", "dota_addons", "minify")
+        minify_dota_compile_output_path = os.path.join(base.rescomp_override_dir, "game", "dota_addons", "minify")
+        dota_resource_compiler_path = os.path.join(
+            base.rescomp_override_dir, "game", "bin", "win64", "resourcecompiler.exe"
+        )
+
+```
+
+</details>
+
 ## Variables
 
 ### `rescomp_override`
@@ -35,6 +56,19 @@ minify_dota_compile_input_path = os.path.join(
 ```python
 minify_dota_compile_output_path = os.path.join(
     steam.LIBRARY, "steamapps", "common", "dota 2 beta", "game", "dota_addons", "minify"
+)
+
+```
+
+</details>
+
+### `dota_resource_compiler_path`
+
+<details open><summary>Source</summary>
+
+```python
+dota_resource_compiler_path = os.path.join(
+    steam.LIBRARY, "steamapps", "common", "dota 2 beta", "game", "bin", "win64", "resourcecompiler.exe"
 )
 
 ```
@@ -197,19 +231,6 @@ dota_core_pak_path = os.path.join(steam.LIBRARY, "steamapps", "common", "dota 2 
 
 ```python
 dota_steam_inf_path = os.path.join(steam.LIBRARY, "steamapps", "common", "dota 2 beta", "game", "dota", "steam.inf")
-
-```
-
-</details>
-
-### `dota_resource_compiler_path`
-
-<details open><summary>Source</summary>
-
-```python
-dota_resource_compiler_path = os.path.join(
-    steam.LIBRARY, "steamapps", "common", "dota 2 beta", "game", "bin", "win64", "resourcecompiler.exe"
-)
 
 ```
 

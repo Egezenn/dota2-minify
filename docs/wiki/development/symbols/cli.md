@@ -10,7 +10,12 @@
 def run():
     parser = argparse.ArgumentParser(description="Dota2-Minify CLI", epilog="Run without args for the GUI")
     parser.add_argument("-p", "--patch", action="store_true", help="Run a patch")
-    parser.add_argument("-c", "--conditional-patch", action="store_true", help="Run a conditional patch")
+    parser.add_argument(
+        "-c",
+        "--conditional-patch",
+        action="store_true",
+        help="Run a conditional patch (if updated since last patch time)",
+    )
     parser.add_argument("-l", "--list", action="store_true", help="List all available mods and their state")
     parser.add_argument("-u", "--uninstall", action="store_true", help="Uninstall all mods")
     parser.add_argument("-v", "--version", action="store_true", help="Print version and exit")

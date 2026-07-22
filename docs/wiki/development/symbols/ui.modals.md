@@ -79,6 +79,121 @@ class Uninstall:
 
 </details>
 
+## `WorkshopTools()`
+
+*No documentation available.*
+
+<details open><summary>Source</summary>
+
+```python
+class WorkshopTools:
+    _watcher_thread = None
+
+    @staticmethod
+    def show():
+        config.set("workshop_modal_shown", True)
+        if base.OS == base.WIN:
+            modal_shared.show(
+                title="Workshop Tools Not Found",
+                messages=[
+                    "Dota 2 Workshop Tools are not installed.",
+                    "Some mods require them and have been disabled.",
+                    "Would you like to install them now?",
+                ],
+                buttons=[
+                    {
+                        "label": "Yes",
+                        "callback": lambda s, a, u: WorkshopTools._handle_yes(),
+                        "width": 100,
+                    },
+                    {"label": "No", "width": 100},
+                ],
+            )
+        else:
+            modal_shared.show(
+                title="Workshop Tools Not Found",
+                messages=[
+                    "Dota 2 Workshop Tools are not installed.",
+                    "Some mods require them and have been disabled.",
+                    "Click OK to go to the related wiki section.",
+                ],
+                buttons=[
+                    {
+                        "label": "OK",
+                        "callback": lambda s, a, u: webbrowser.open(
+                            "https://egezenn.github.io/dota2-minify/wiki/#/troubleshooting_faq?id=workshop-tools-dlc"
+                        ),
+                        "width": 100,
+                    },
+                    {"label": "No", "width": 100},
+                ],
+            )
+
+    @staticmethod
+    def _handle_yes():
+        webbrowser.open(f"steam://install/{base.STEAM_DOTA_WORKSHOP_TOOLS_ID}")
+        WorkshopTools._start_watcher()
+
+    @staticmethod
+    def _start_watcher():
+        if WorkshopTools._watcher_thread and WorkshopTools._watcher_thread.is_alive():
+            return
+
+        def watch():
+            import conditions
+            from core import output
+
+            from ui import checkboxes, gui
+
+            while gui.gui_lock:
+                time.sleep(0.1)
+
+            was_downloading = False
+
+            while True:
+                app_state = conditions.get_dota_app_state()
+                is_enabled = conditions.get_workshop_tools_status(app_state)
+                try:
+                    state_flags = int(app_state.get("StateFlags", 0))
+                except (ValueError, TypeError):
+                    state_flags = 0
+                is_installed = bool(state_flags & 4) and is_enabled
+
+                if is_installed:
+                    break
+
+                downloading = is_enabled and (
+                    not (state_flags & 4) or base.STEAM_DOTA_WORKSHOP_TOOLS_ID in app_state.get("DlcDownloads", {})
+                )
+
+                if downloading and not was_downloading:
+                    output.add_text("Downloading Dota 2 Workshop Tools...", msg_type="warning")
+                    gui.lock_interaction()
+                    was_downloading = True
+                elif not downloading and was_downloading:
+                    gui.unlock_interaction()
+                    was_downloading = False
+
+                time.sleep(1)
+
+            if was_downloading:
+                gui.unlock_interaction()
+
+            conditions.is_compiler_found()
+            checkboxes.refresh()
+            modal_shared.show(
+                title="Workshop Tools Ready",
+                messages=["Dota 2 Workshop Tools detected!", "Workshop mods have been enabled."],
+                buttons=[{"label": "OK", "width": 80}],
+            )
+
+        WorkshopTools._watcher_thread = threading.Thread(target=watch, daemon=True)
+        WorkshopTools._watcher_thread.start()
+
+```
+
+</details>
+
 ## `Update()`
 
 *No documentation available.*

@@ -21,6 +21,78 @@ def is_dota_running(text_tag, text_type):
 
 </details>
 
+## `get_dota_app_state()`
+
+Reads the Dota 2 appmanifest ACF file and returns the AppState dictionary.
+
+<details open><summary>Source</summary>
+
+```python
+def get_dota_app_state():
+    """
+    Reads the Dota 2 appmanifest ACF file and returns the AppState dictionary.
+    """
+    acf_path = os.path.join(steam.LIBRARY, "steamapps", f"appmanifest_{base.STEAM_DOTA_ID}.acf")
+    try:
+        with open(acf_path, encoding="utf-8") as f:
+            return vdf.load(f).get("AppState", {})
+    except Exception as e:
+        log.write_warning("Failed to read ACF", e)
+        return {}
+
+```
+
+</details>
+
+## `get_workshop_tools_status(app_state)`
+
+Checks if Workshop Tools are enabled (mounted and not disabled) in the app state.
+
+<details open><summary>Source</summary>
+
+```python
+def get_workshop_tools_status(app_state):
+    """
+    Checks if Workshop Tools are enabled (mounted and not disabled) in the app state.
+    """
+    mounted_str = app_state.get("MountedConfig", {}).get("optionaldlc", "")
+    disabled_str = app_state.get("MountedConfig", {}).get("DisabledDLC", "")
+
+    mounted_set = {token.strip() for token in mounted_str.replace(",", " ").split() if token.strip()}
+    disabled_set = {token.strip() for token in disabled_str.replace(",", " ").split() if token.strip()}
+
+    return base.STEAM_DOTA_WORKSHOP_TOOLS_ID in mounted_set and base.STEAM_DOTA_WORKSHOP_TOOLS_ID not in disabled_set
+
+```
+
+</details>
+
+## `check_workshop_tools()`
+
+Checks if Workshop Tools are fully installed and enabled via ACF appmanifest.
+
+<details open><summary>Source</summary>
+
+```python
+def check_workshop_tools():
+    """
+    Checks if Workshop Tools are fully installed and enabled via ACF appmanifest.
+    """
+    app_state = get_dota_app_state()
+    if not app_state:
+        return False
+
+    try:
+        state_flags = int(app_state.get("StateFlags", 0))
+    except (ValueError, TypeError):
+        state_flags = 0
+
+    return bool(state_flags & 4) and get_workshop_tools_status(app_state)
+
+```
+
+</details>
+
 ## `is_compiler_found()`
 
 *No documentation available.*
@@ -30,11 +102,9 @@ def is_dota_running(text_tag, text_type):
 ```python
 def is_compiler_found():
     global workshop_installed
-    if not os.path.exists(constants.dota_resource_compiler_path):
-        workshop_installed = False
+    workshop_installed = check_workshop_tools()
+    if not workshop_installed and not base.HEADLESS:
         output.add_text("&error_no_workshop_tools_found_terminal", msg_type="warning")
-    else:
-        workshop_installed = True
 
 ```
 

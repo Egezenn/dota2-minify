@@ -2,30 +2,6 @@
 
 Dev tools pane that contains things for easy navigation, workarounds and debugging
 
-## `recalc_rescomp_dirs()`
-
-Swaps the variables for resourcecompiler.exe when extracted
-
-<details open><summary>Source</summary>
-
-```python
-def recalc_rescomp_dirs():
-    "Swaps the variables for resourcecompiler.exe when extracted"
-    if constants.rescomp_override:
-        constants.minify_dota_compile_input_path = os.path.join(
-            base.rescomp_override_dir, "content", "dota_addons", "minify"
-        )
-        constants.minify_dota_compile_output_path = os.path.join(
-            base.rescomp_override_dir, "game", "dota_addons", "minify"
-        )
-        constants.dota_resource_compiler_path = os.path.join(
-            base.rescomp_override_dir, "game", "bin", "win64", "resourcecompiler.exe"
-        )
-
-```
-
-</details>
-
 ## `extract_workshop_tools()`
 
 Extracts the bare minimum requirements for resourcecompiler.exe
@@ -35,7 +11,7 @@ Extracts the bare minimum requirements for resourcecompiler.exe
 ```python
 def extract_workshop_tools():
     "Extracts the bare minimum requirements for resourcecompiler.exe"
-    terminal.clean()
+    output.clean()
     fs.remove_path(base.rescomp_override_dir)
     fails = 0
 
@@ -46,15 +22,15 @@ def extract_workshop_tools():
             else:
                 shutil.copy(path, constants.dota_tools_extraction_paths[i])
         else:
-            terminal.add_text("&extraction_of_failed", path)
+            output.add_text("&extraction_of_failed", path)
             fails += 1
 
     if not fails:
-        recalc_rescomp_dirs()
+        constants.recalc_rescomp_dirs()
         if os.path.exists(constants.dota_resource_compiler_path):
-            terminal.add_text("&extracted")
+            output.add_text("&extracted")
         else:
-            terminal.add_text("&extraction_of_failed", path)
+            output.add_text("&extraction_of_failed", path)
 
 ```
 

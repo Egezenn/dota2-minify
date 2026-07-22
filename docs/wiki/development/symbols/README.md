@@ -11,6 +11,7 @@
 - [core.constants](/development/symbols/core.constants) - Variables that depend on 3rd parties
 - [core.fs](/development/symbols/core.fs) - Filesystem access
 - [core.log](/development/symbols/core.log) - Crashlogs, warnings and debug zip creation
+- [core.migrations](/development/symbols/core.migrations)
 - [core.mods_shared](/development/symbols/core.mods_shared) - Shared mod scanning logic
 - [core.output](/development/symbols/core.output) - Agnostic output interface
 - [core.registry](/development/symbols/core.registry) - Central registry for browsers and plugins

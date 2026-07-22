@@ -82,7 +82,7 @@ def refresh(sender=None, app_data=None, user_data=None):
     mods_shared.scan_mods()
     create()
     settings.refresh()
-    terminal.add_text("&refreshed_mod_list")
+    output.add_text("&refreshed_mod_list")
 
 ```
 
@@ -168,7 +168,7 @@ def create():
             if checkboxes_state.get(mod, False):
                 checkboxes_state[mod] = False
                 save()
-            terminal.add_text(f"Disabled {mod} (Requires version {version_req})", msg_type="warning")
+            output.add_text(f"Disabled {mod} (Requires version {version_req})", msg_type="warning")
         elif always_val:
             enable_ticking = False
             value = True
@@ -234,6 +234,8 @@ def create():
                 details.render_details_window(mod)
 
         checkboxes.append(mod)
+
+    conditions.disable_workshop_mods()
 
 ```
 

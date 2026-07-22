@@ -16,6 +16,12 @@ def save(sender=None, app_data=None, user_data=None):
             val = val.split(" - ")[0]
         config.set(opt["key"], val)
 
+    for b_conf in registry.get_browser_configs():
+        for opt in getattr(b_conf, "SETTINGS", []):
+            tag = f"opt_{opt['key']}"
+            if dpg.does_item_exist(tag):
+                config.set(opt["key"], dpg.get_value(tag))
+
     for widget in MOD_SETTINGS_WIDGETS:
         if widget.get("type") == "button":
             continue
@@ -171,6 +177,42 @@ def render_menu():
                     default_value=_default_value,
                     width=-1,
                 )
+
+    browser_settings_found = False
+    for b_conf in registry.get_browser_configs():
+        for opt in getattr(b_conf, "SETTINGS", []):
+            if not browser_settings_found:
+                dpg.add_separator(parent="settings_content_group")
+                dpg.add_text("Browser Settings", parent="settings_content_group")
+                browser_settings_found = True
+
+            with dpg.group(horizontal=True, parent="settings_content_group"):
+                _tag = f"opt_{opt['key']}"
+                _text = opt.get("text") if opt["type"] == "checkbox" else f"{opt.get('text')}:"
+                _default_value = config.get(opt["key"], opt["default"])
+
+                if opt["type"] == "checkbox":
+                    dpg.add_checkbox(
+                        tag=_tag,
+                        label=_text,
+                        default_value=_default_value,
+                    )
+                elif opt["type"] == "combo":
+                    dpg.add_text(_text)
+                    items = opt.get("items", [])
+                    dpg.add_combo(
+                        tag=_tag,
+                        items=items,
+                        default_value=_default_value,
+                        width=-1,
+                    )
+                else:
+                    dpg.add_text(_text)
+                    dpg.add_input_text(
+                        tag=_tag,
+                        default_value=_default_value,
+                        width=-1,
+                    )
 
     mod_settings_found = False
     for mod in constants.mods_alphabetical:
