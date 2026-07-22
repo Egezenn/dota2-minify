@@ -217,5 +217,5 @@ jobs:
   update-docs:
     needs: build
     if: ${{ github.event.inputs.prerelease == 'false' }}
-    uses: ./.github/workflows/docs.yml
+    uses: ./.github/workflows/deploy.yml
     secrets: inherit

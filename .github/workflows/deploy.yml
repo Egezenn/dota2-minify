@@ -3,6 +3,7 @@ name: Deploy website
 on:
   push:
     branches: [main]
+    paths: ['docs/**']
   workflow_dispatch:
   workflow_call:
 
@@ -17,6 +18,27 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
+      - name: Install uv
+        if: github.event_name == 'workflow_dispatch'
+        uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+
+      - name: Set up Python
+        if: github.event_name == 'workflow_dispatch'
+        run: uv python install 3.13
+
+      - name: Run symdump
+        if: github.event_name == 'workflow_dispatch'
+        run: uv run scripts/symdump.py
+
+      - name: Commit and push changes
+        if: github.event_name == 'workflow_dispatch'
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "docs: regenerate API symbols index"
+          file_pattern: "docs/wiki/development/symbols/* docs/wiki/_sidebar.md"
 
       - name: Setup Pages
         uses: actions/configure-pages@v4
