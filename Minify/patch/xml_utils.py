@@ -11,21 +11,6 @@ SELECTOR_PATTERN = (
 ATTRIBUTE_PATTERN = r"\[([a-zA-Z0-9_-]+)=['\"]?([^'\"\]]+)['\"]?\]"
 
 
-# TODO: DEPRECATION
-def get_xml_mod_file(mod_path):
-    xml_json = os.path.join(mod_path, "xml.json")
-    xml_mod_json = os.path.join(mod_path, "xml_mod.json")
-
-    if os.path.exists(xml_json):
-        return xml_json
-
-    if os.path.exists(xml_mod_json):
-        log.write_warning(f"xml_mod.json in {os.path.basename(mod_path)} is deprecated. Please use xml.json instead.")
-        return xml_mod_json
-
-    return None
-
-
 SELECTOR_RE = re.compile(SELECTOR_PATTERN)
 ATTRIBUTE_RE = re.compile(ATTRIBUTE_PATTERN)
 

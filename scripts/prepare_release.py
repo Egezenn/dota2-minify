@@ -112,8 +112,6 @@ class ModInfo:
         )
 
         has_xml = check_file("xml.json", "has_xml", None, None, True)
-        if not has_xml:
-            check_file("xml_mod.json", "has_xml", None, None, True)
 
         check_file("styling.css", "has_styling")
         check_file("blacklist.txt", "has_blacklist")
@@ -156,7 +154,7 @@ class ModInfo:
         file_checks = [
             ("manifest.json", self.path / "manifest.json", (self.path / "manifest.json").exists()),
             ("notes.md", self.path / "notes.md", self.has_notes),
-            ("xml_mod.json", self.path / "xml_mod.json", self.has_xml),
+            ("xml.json", self.path / "xml.json", self.has_xml),
             ("styling.css", self.path / "styling.css", self.has_styling),
             ("blacklist.txt", self.path / "blacklist.txt", self.has_blacklist),
         ]
@@ -417,7 +415,7 @@ class ModBrowser(App):
             return
 
         # Mod-specific previews
-        if prop_name in ["notes.md", "xml_mod.json", "styling.css", "manifest.json", "blacklist.txt"]:
+        if prop_name in ["notes.md", "xml.json", "styling.css", "manifest.json", "blacklist.txt"]:
             self._handle_file_preview(prop_name)
         elif prop_name in ["Compiled Files", "Uncompiled Files"]:
             self._handle_directory_preview(prop_name)

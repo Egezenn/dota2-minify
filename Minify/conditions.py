@@ -11,7 +11,7 @@ import vdf
 from core import base, constants, fs, log, output, steam
 
 workshop_installed = False
-workshop_required_methods = ["styling.css", "xml.json", "xml_mod.json", "files_uncompiled"]
+workshop_required_methods = ["styling.css", "xml.json", "files_uncompiled"]
 
 
 def is_dota_running(text_tag, text_type):
@@ -49,25 +49,9 @@ def get_workshop_tools_status(app_state):
     return base.STEAM_DOTA_WORKSHOP_TOOLS_ID in mounted_set and base.STEAM_DOTA_WORKSHOP_TOOLS_ID not in disabled_set
 
 
-def check_workshop_tools():
-    """
-    Checks if Workshop Tools are fully installed and enabled via ACF appmanifest.
-    """
-    app_state = get_dota_app_state()
-    if not app_state:
-        return False
-
-    try:
-        state_flags = int(app_state.get("StateFlags", 0))
-    except (ValueError, TypeError):
-        state_flags = 0
-
-    return bool(state_flags & 4) and get_workshop_tools_status(app_state)
-
-
 def is_compiler_found():
     global workshop_installed
-    workshop_installed = check_workshop_tools()
+    workshop_installed = os.path.exists(constants.dota_resource_compiler_path)
     if not workshop_installed and not base.HEADLESS:
         output.add_text("&error_no_workshop_tools_found_terminal", msg_type="warning")
 

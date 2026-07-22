@@ -155,7 +155,7 @@ def patcher(mod=None, pakname=None):
                         blacklist_txt = os.path.join(mod_path, "blacklist.txt")
                         if conditions.workshop_installed:
                             styling_css = os.path.join(mod_path, "styling.css")
-                            xml_mod_file = xml_utils.get_xml_mod_file(mod_path)
+                            xml_file = os.path.join(mod_path, "xml.json")
                             files_uncompiled_dir = os.path.join(mod_path, "files_uncompiled")
                         script_file = os.path.join(mod_path, "script.py")
                         replacer_file = os.path.join(mod_path, "replacer.json")
@@ -179,8 +179,8 @@ def patcher(mod=None, pakname=None):
                                 ignore=shutil.ignore_patterns("*.gitkeep"),
                             )
 
-                        if conditions.workshop_installed and xml_mod_file and os.path.exists(xml_mod_file):
-                            with utils.open_utf8(xml_mod_file) as file:
+                        if conditions.workshop_installed and xml_file and os.path.exists(xml_file):
+                            with utils.open_utf8(xml_file) as file:
                                 mod_xml = jsonc.load(file)
                             for path, mods in mod_xml.items():
                                 xml_modifications.setdefault(path, []).extend(mods)

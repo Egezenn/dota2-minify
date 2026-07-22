@@ -1,16 +1,14 @@
 import os
 
-from core import base, log
+from core import base, fs, log
 
 
 class Migrations:
     def __init__(self):
-        self.rename_modcfg_to_manifest()
+        self._rename_file_in_mods("modcfg.json", "manifest.json")
+        self._rename_file_in_mods("xml_mod.json", "xml.json")
 
-    def rename_modcfg_to_manifest(self):
-        """
-        Scans all mods directories and renames modcfg.json to manifest.json if present.
-        """
+    def _rename_file_in_mods(self, src_name, dest_name):
         if not os.path.exists(base.mods_dir):
             return
 
@@ -19,22 +17,22 @@ class Migrations:
             if not os.path.isdir(mod_path) or mod.startswith("_"):
                 continue
 
-            modcfg_json = os.path.join(mod_path, "modcfg.json")
-            manifest_json = os.path.join(mod_path, "manifest.json")
+            src = os.path.join(mod_path, src_name)
+            dest = os.path.join(mod_path, dest_name)
 
-            if os.path.exists(modcfg_json):
-                if not os.path.exists(manifest_json):
+            if os.path.exists(src):
+                if not os.path.exists(dest):
                     try:
-                        os.rename(modcfg_json, manifest_json)
-                        log.write_warning(f"Migrated modcfg.json to manifest.json in {mod}")
+                        fs.move_path(src, dest)
+                        log.write_warning(f"Migrated {src_name} to {dest_name} in {mod}")
                     except Exception as e:
-                        log.write_warning(f"Failed to migrate modcfg.json to manifest.json in {mod}: {e}")
+                        log.write_warning(f"Failed to migrate {src_name} to {dest_name} in {mod}: {e}")
                 else:
                     try:
-                        os.remove(modcfg_json)
-                        log.write_warning(f"Removed redundant modcfg.json in {mod} since manifest.json exists")
+                        fs.remove_path(src)
+                        log.write_warning(f"Removed redundant {src_name} in {mod} since {dest_name} exists")
                     except Exception as e:
-                        log.write_warning(f"Failed to remove redundant modcfg.json in {mod}: {e}")
+                        log.write_warning(f"Failed to remove redundant {src_name} in {mod}: {e}")
 
 
 # Run migrations upon initialization (import)
