@@ -1,3 +1,4 @@
+**particles/econ/courier/.*\.vpcf_c
 >>particles/econ/events/diretide_2020/emblem
 >>particles/econ/items/effigies/status_fx_effigies
 particles/addons_gameplay/fountain_tintable_ambient.vpcf_c
