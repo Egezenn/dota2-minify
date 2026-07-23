@@ -138,20 +138,17 @@ def patcher(mod=None, pakname=None):
             for folder in mod_list:
                 mod_path = os.path.join(base.mods_dir, folder)
                 mod_cfg = manifest_utils.get_mod(mod_path)
-                visual = mod_cfg.get("visual", True)
 
                 if mod is None:
-                    apply_without_user_confirmation = mod_cfg.get("always", False)
-                else:  # will not be in mods.json
-                    apply_without_user_confirmation = False
+                    always = mod_cfg.get("always", False)
+                else:
+                    always = False
 
                 # ---------------------------------- STEP 1 ---------------------------------- #
                 # ---------------- Colect mod data and extract necessary files --------------- #
                 # ---------------------------------------------------------------------------- #
                 try:
-                    if (
-                        mod is not None or apply_without_user_confirmation or (visual and mods_shared.get_state(folder))
-                    ):  # step into folders that have ticked checkboxes only
+                    if mod is not None or always or mods_shared.get_state(folder):
                         blacklist_txt = os.path.join(mod_path, "blacklist.txt")
                         if conditions.workshop_installed:
                             styling_css = os.path.join(mod_path, "styling.css")

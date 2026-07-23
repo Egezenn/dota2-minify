@@ -189,14 +189,10 @@ def bulk_exec_script(order_name, terminal_output=True):
                 continue
 
             always = cfg.get("always", False)
-            visual = cfg.get("visual", True)
 
-            # TODO: pull the file from pak66 to check if it was enabled for uninstallers
-            if (
-                always
-                or order_name in ["initial", "uninstall"]
-                or (visual and mods_shared.get_state(os.path.basename(root)))
-            ):
+            # Uninstaller scripts should determine whether or not the mod is installed and safely quit
+            # if not installed. Determining whether or not a mod is installed is mostly undeterministic
+            if always or order_name in ["initial", "uninstall"] or mods_shared.get_state(os.path.basename(root)):
                 exec_script(
                     os.path.join(root, bulk_name), os.path.basename(root), order_name, _terminal_output=terminal_output
                 )

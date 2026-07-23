@@ -2,11 +2,18 @@
   "version": "2.0.0",
   "tasks": [
     {
+      "label": "Run patch",
+      "icon": { "id": "beaker", "color": "terminal.ansiGreen" },
+      "type": "shell",
+      "command": "uv run Minify -p",
+      "group": { "kind": "build", "isDefault": true }
+    },
+    {
       "label": "Run with uv",
       "icon": { "id": "beaker", "color": "terminal.ansiGreen" },
       "type": "shell",
       "command": "uv run Minify",
-      "group": { "kind": "build", "isDefault": true }
+      "group": { "kind": "build" }
     },
     {
       "label": "Build via PyInstaller",

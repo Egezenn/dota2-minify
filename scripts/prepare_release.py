@@ -111,8 +111,7 @@ class ModInfo:
             self.path / "preview.jpg" if (self.path / "preview.jpg").exists() else self.path / "preview.png"
         )
 
-        has_xml = check_file("xml.json", "has_xml", None, None, True)
-
+        check_file("xml.json", "has_xml", None, None, True)
         check_file("styling.css", "has_styling")
         check_file("blacklist.txt", "has_blacklist")
 

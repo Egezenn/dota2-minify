@@ -74,7 +74,7 @@ def scan_mods():
     _dependencies = []
     _conflicts = []
 
-    for mod in sorted(os.listdir(base.mods_dir)):
+    for mod in sorted(os.listdir(base.mods_dir), key=str.casefold):
         mod_path = os.path.join(base.mods_dir, mod)
         if not mod.startswith("_"):
             if os.path.isdir(mod_path):

@@ -1,0 +1,23 @@
+{
+  "panorama/layout/dashboard.xml": [
+    {
+      "action": "add_script",
+      "src": "s2r://panorama/scripts/minify_devtools.vjs_c"
+    },
+    {
+      "action": "add_child",
+      "selector": "DOTADashboard",
+      "xml": "<Panel id='XmlInspectorButtonsContainer'><Button id='XmlInspectorBtn' class='XmlInspectorButton' onactivate='ToggleXmlInspectorPopup()' onmouseover='UIShowTextTooltip( &apos; XML Inspector (Filtered) &apos; )' onmouseout='UIHideTextTooltip()'><Label text='&lt;XML&gt;' /></Button><Button id='XmlInspectorAllBtn' class='XmlInspectorButton' onactivate='ToggleXmlInspectorAllPopup()' onmouseover='UIShowTextTooltip( &apos; XML Inspector (All) &apos; )' onmouseout='UIHideTextTooltip()'><Label text='&lt;ALL&gt;' /></Button><Button id='XmlInspectBtn' class='XmlInspectButton' onactivate='ToggleInspectMode()' onmouseover='UIShowTextTooltip( &apos; Inspect (RMB to Capture) &apos; )' onmouseout='UIHideTextTooltip()'><Label text='INS' /></Button><Button id='XmlBlacklistBtn' class='XmlBlacklistButton' onactivate='ToggleBlacklistPanel()' onmouseover='UIShowTextTooltip( &apos; Blacklist &apos; )' onmouseout='UIHideTextTooltip()'><Label text='BL' /></Button></Panel>"
+    },
+    {
+      "action": "add_child",
+      "selector": "DOTADashboard",
+      "xml": "<Panel id='XmlInspectorPopup' hittest='false' visible='false'><Panel id='XmlInspectorOverlay' hittest='true' onactivate='ToggleXmlInspectorPopup()' /><Panel id='XmlInspectorContainer'><Label id='XmlInspectorTitle' text='XML Inspector' /><Button id='XmlInspectorBlacklistBtnPopup' visible='false' class='BlacklistBtnPopup' onactivate='ToggleBlacklistEntry()' onmouseover='UIShowTextTooltip( &apos; Toggle Blacklist &apos; )' onmouseout='UIHideTextTooltip()'><Label text='+ BL' /></Button><Button id='XmlInspectorCloseBtn' class='XmlInspectorCloseBtn' onactivate='ToggleXmlInspectorPopup()' onmouseover='UIShowTextTooltip( &apos; Close &apos; )' onmouseout='UIHideTextTooltip()'><Label text='X' /></Button><TextEntry id='XmlInspectorEntry' multiline='1' readonly='1' text='' /></Panel></Panel>"
+    },
+    {
+      "action": "add_child",
+      "selector": "DOTADashboard",
+      "xml": "<Panel id='XmlInspectorBlacklistPopup' hittest='false' visible='false'><Panel id='BlacklistOverlay' hittest='true' onactivate='ToggleBlacklistPanel()' /><Panel id='BlacklistContainer'><Label id='BlacklistTitle' text='Blacklist' /><Button id='BlacklistCloseBtn' class='XmlInspectorCloseBtn' onactivate='ToggleBlacklistPanel()' onmouseover='UIShowTextTooltip( &apos; Close &apos; )' onmouseout='UIHideTextTooltip()'><Label text='X' /></Button><Panel id='BlacklistModePanel'><Button id='BlacklistModeText' class='BlacklistModeBtn Active' onactivate='SetBlacklistModeText()'><Label text='Text' /></Button><Button id='BlacklistModeXml' class='BlacklistModeBtn' onactivate='SetBlacklistModeXml()'><Label text='XML' /></Button></Panel><TextEntry id='BlacklistRawEntry' multiline='1' text='' visible='true' /><Panel id='BlacklistList' visible='false' /></Panel></Panel>"
+    }
+  ]
+}

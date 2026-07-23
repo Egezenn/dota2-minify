@@ -24,6 +24,9 @@ def load():
         with utils.open_utf8(base.mods_config_dir, "w") as file:
             pass
 
+    for mod in constants.visually_unavailable_mods:
+        checkboxes_state.setdefault(mod, False)
+
 
 def save():
     for box in checkboxes:

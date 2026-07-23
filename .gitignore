@@ -27,6 +27,7 @@ steam_appid.txt
 
 ## In-repo mods
 !Minify/mods/#base
+!Minify/mods/#DevTools
 !Minify/mods/Auto Accept Match
 !Minify/mods/Custom Backgrounds
 !Minify/mods/Custom Hero Grids
