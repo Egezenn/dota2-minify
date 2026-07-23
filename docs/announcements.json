@@ -7,5 +7,9 @@
       "https://egezenn.github.io/dota2-minify/wiki/#/troubleshooting_faq?id=things-are-broken"
     ],
     "versions": ["1.13"]
+  },
+  {
+    "time": "1784838351+",
+    "text": "New patch is out!\n\nDota2 now enforces a valid language so a parameter like -language minify, -language foo doesn't work anymore.\n\nInstead, use another valid language. We'll come up with a fix to use English soon.\n\nEnjoy the event!"
   }
 ]
