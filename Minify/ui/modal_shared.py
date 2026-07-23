@@ -12,13 +12,16 @@ modal_queue = []
 active_modal_callback = None
 
 
-def show(title, messages, buttons, width=shared.MODAL_WIDTH, height=shared.MODAL_HEIGHT):
+def show(title, messages, buttons, width=shared.MODAL_WIDTH, height=shared.MODAL_HEIGHT, dropdowns=None):
     """
     Shows a unified modal popup or queues it if one is already active.
     messages: list of strings
     buttons: list of dicts {"label": str, "callback": func, "user_data": any, "width": int}
+    dropdowns: list of dicts {"tag": str, "label": str, "items": list, "default_value": str}
     """
-    modal_queue.append({"messages": messages, "buttons": buttons, "width": width, "height": height})
+    modal_queue.append(
+        {"messages": messages, "buttons": buttons, "width": width, "height": height, "dropdowns": dropdowns}
+    )
     if not dpg.is_item_shown("modal_popup") or not dpg.is_item_shown("modal_button_wrapper"):
         show_next_from_queue()
 
@@ -60,6 +63,7 @@ def show_next_from_queue():
     buttons = modal_data["buttons"]
     width = modal_data.get("width", shared.MODAL_WIDTH)
     height = modal_data.get("height", shared.MODAL_HEIGHT)
+    dropdowns = modal_data.get("dropdowns")
 
     if dpg.does_item_exist("modal_progress_wrapper"):
         dpg.configure_item("modal_progress_wrapper", show=False)
@@ -79,6 +83,20 @@ def show_next_from_queue():
     ):
         for msg in messages:
             dpg.add_text(msg, wrap=width - shared.MODAL_TEXT_WRAP_PADDING)
+
+        if dropdowns:
+            dpg.add_spacer(height=8)
+            for dd in dropdowns:
+                with dpg.group(horizontal=True):
+                    dpg.add_text(dd["label"])
+                    dpg.add_spacer(width=10)
+                    dpg.add_combo(
+                        items=dd["items"],
+                        default_value=dd.get("default_value", ""),
+                        tag=dd["tag"],
+                        width=220,
+                    )
+                dpg.add_spacer(height=4)
 
     global active_modal_callback
     for i, btn in enumerate(buttons):

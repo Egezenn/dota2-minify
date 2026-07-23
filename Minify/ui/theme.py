@@ -98,15 +98,14 @@ def apply():
             dpg.add_theme_color(dpg.mvThemeCol_Button, BACKGROUND)
             dpg.add_theme_color(dpg.mvThemeCol_ButtonHovered, (17, 17, 18, 255))
             dpg.add_theme_color(dpg.mvThemeCol_ButtonActive, BACKGROUND)
-            dpg.add_theme_color(dpg.mvThemeCol_FrameBg, BACKGROUND)
-            dpg.add_theme_color(dpg.mvThemeCol_FrameBgHovered, BACKGROUND)
-            dpg.add_theme_color(dpg.mvThemeCol_FrameBgActive, BACKGROUND)
+            dpg.add_theme_color(dpg.mvThemeCol_FrameBg, (24, 24, 24, 255))
+            dpg.add_theme_color(dpg.mvThemeCol_FrameBgHovered, (20, 20, 20, 255))
+            dpg.add_theme_color(dpg.mvThemeCol_FrameBgActive, (20, 20, 20, 255))
             dpg.add_theme_color(dpg.mvThemeCol_Border, (0, 230, 230, 150))
             dpg.add_theme_color(dpg.mvThemeCol_ModalWindowDimBg, (0, 0, 0, 200))
             dpg.add_theme_style(dpg.mvStyleVar_WindowBorderSize, 1)
             dpg.add_theme_style(dpg.mvStyleVar_WindowPadding, x=20, y=20)
             dpg.add_theme_style(dpg.mvStyleVar_ItemSpacing, x=10, y=10)
-            dpg.add_theme_color(dpg.mvThemeCol_Border, (0, 230, 230, 150))
 
     with dpg.theme(tag="settings_theme") as settings_theme:
         with dpg.theme_component():

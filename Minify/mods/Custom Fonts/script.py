@@ -130,7 +130,7 @@ def main():
             found_font = path
 
     if not found_font:
-        font_string = mod_data.get("font_string", "")
+        font_string = mod_data.get("font_string", "Calibri")
         if font_string.strip():
             for name in font_string.split(","):
                 found_font = find_system_font(name.strip().strip("'\""))

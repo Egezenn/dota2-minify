@@ -3,7 +3,7 @@
     {
       "key": "font_string",
       "text": "Font String",
-      "default": "Calibri, sans-serif",
+      "default": "Calibri",
       "type": "inputbox"
     }
   ]

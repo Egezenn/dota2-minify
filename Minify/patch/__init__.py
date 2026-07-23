@@ -367,7 +367,7 @@ def patcher(mod=None, pakname=None):
 
             # handle language option automatically
             if config.get("fix_options", True):
-                if steam.fix_launch_options():
+                if steam.fix_launch_options() and base.OS == base.WIN:
                     fs.open_thing(steam.steam_executable_path, "-exitsteam")
                     steam_close_retries = 0
                     while any(

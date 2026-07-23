@@ -246,6 +246,8 @@ def create_base_ui():
         conditions.disable_workshop_mods()
         if not conditions.workshop_installed and not config.get("workshop_modal_shown", False):
             modals.WorkshopTools.show()
+        if not config.get("language_modal_shown", False):
+            modals.LanguageSetup.show()
         time.sleep(0.05)
         helper.bulk_exec_script("initial", False)
         checkboxes.setup_state()
