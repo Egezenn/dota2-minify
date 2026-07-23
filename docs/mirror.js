@@ -25,8 +25,8 @@
     },
     codeberg: {
       name: "Codeberg",
-      hostname: "codeberg.org",
-      siteBase: "https://codeberg.org/egezenn/dota2-minify",
+      hostname: "egezenn.codeberg.page",
+      siteBase: "https://egezenn.codeberg.page/dota2-minify",
       releases: "https://codeberg.org/egezenn/dota2-minify/releases",
       repo: "https://codeberg.org/egezenn/dota2-minify",
       wiki: "https://codeberg.org/egezenn/dota2-minify/wiki",
