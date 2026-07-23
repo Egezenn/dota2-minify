@@ -17,7 +17,7 @@ function processMods(mods) {
     card.setAttribute("role", "button");
 
     const img = document.createElement("img");
-    img.src = `https://raw.githubusercontent.com/Egezenn/dota2-minify/main/Minify/mods/${encodeURIComponent(mod)}/preview.jpg`;
+    img.src = Mirror.getRawUrl("Minify/mods/" + encodeURIComponent(mod) + "/preview.jpg");
     img.className = "card-img-top";
     img.alt = `${mod} image`;
     img.style.objectFit = "cover";
@@ -41,7 +41,7 @@ function processMods(mods) {
       const notesCacheKey = `mod-notes-${mod}`;
       const cachedNotes = JSON.parse(sessionStorage.getItem(notesCacheKey));
       const now = new Date().getTime();
-      const imageUrl = `https://raw.githubusercontent.com/Egezenn/dota2-minify/main/Minify/mods/${encodeURIComponent(mod)}/preview.jpg`;
+      const imageUrl = Mirror.getRawUrl("Minify/mods/" + encodeURIComponent(mod) + "/preview.jpg");
       const imageHtml = `<img src="${imageUrl}" class="mb-3" style="display: block; margin-left: auto; margin-right: auto;" onerror="this.style.display='none'" alt="${mod}">`;
 
       notesModalLabel.textContent = `${mod} Notes`;
@@ -51,7 +51,7 @@ function processMods(mods) {
         notesContent.innerHTML =
           imageHtml + marked.parse(cachedNotes.content).replace(/<p>\s*!!:\s*/g, '<p class="note-emphasized">');
       } else {
-        const notesUrl = `https://raw.githubusercontent.com/Egezenn/dota2-minify/main/Minify/mods/${encodeURIComponent(mod)}/notes.md`;
+        const notesUrl = Mirror.getRawUrl("Minify/mods/" + encodeURIComponent(mod) + "/notes.md");
         notesContent.innerHTML = "<p>Loading...</p>";
 
         fetch(notesUrl)
@@ -84,7 +84,7 @@ if (cachedData && now - cachedData.timestamp < 60000) {
   processMods(cachedData.mods);
 } else {
   const fetchMods = (retry = true) => {
-    fetch("https://api.github.com/repos/egezenn/dota2-minify/contents/Minify/mods")
+    fetch(Mirror.getContentsApiUrl("Minify/mods"))
       .then((response) => {
         if (response.status !== 200) {
           if (retry) {

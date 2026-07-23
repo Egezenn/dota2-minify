@@ -20,7 +20,7 @@ function createCard(item) {
   card.setAttribute("role", "button");
 
   const img = document.createElement("img");
-  img.src = `https://raw.githubusercontent.com/Egezenn/dota2-minify-community/main/${encodeURIComponent(item)}/image.png`;
+  img.src = Mirror.getCommunityRawUrl(encodeURIComponent(item) + "/image.png");
   img.className = "card-img-top";
   img.alt = `${item} image`;
   img.style.objectFit = "cover";
@@ -30,7 +30,8 @@ function createCard(item) {
   };
 
   const cardBody = document.createElement("div");
-  cardBody.className = "card-body d-flex align-items-center justify-content-center";
+  cardBody.className =
+    "card-body d-flex align-items-center justify-content-center";
 
   const title = document.createElement("h5");
   title.className = "card-title mb-0";
@@ -51,7 +52,9 @@ function createCard(item) {
     if (cachedNotes && now - cachedNotes.timestamp < 60000) {
       notesContent.innerHTML = cachedNotes.content;
     } else {
-      const notesUrl = `https://raw.githubusercontent.com/Egezenn/dota2-minify-community/main/${encodeURIComponent(item)}/notes.html`;
+      const notesUrl = Mirror.getCommunityRawUrl(
+        encodeURIComponent(item) + "/notes.html",
+      );
       notesContent.innerHTML = "<p>Loading...</p>";
 
       fetch(notesUrl)
@@ -69,7 +72,9 @@ function createCard(item) {
             const img = images[i];
             const src = img.getAttribute("src");
             if (src && !src.startsWith("http")) {
-              img.src = `https://raw.githubusercontent.com/Egezenn/dota2-minify-community/main/${encodeURIComponent(item)}/${src}`;
+              img.src = Mirror.getCommunityRawUrl(
+                encodeURIComponent(item) + "/" + src,
+              );
             }
           }
           notesContent.innerHTML = tempDiv.innerHTML;
@@ -82,7 +87,8 @@ function createCard(item) {
           );
         })
         .catch((error) => {
-          notesContent.innerHTML = "<p>Could not load notes. The file might not exist for this mod.</p>";
+          notesContent.innerHTML =
+            "<p>Could not load notes. The file might not exist for this mod.</p>";
           console.error("Error fetching notes:", error);
         });
     }
@@ -113,10 +119,14 @@ function processData(items, meta) {
     }
   });
 
-  document.getElementById("mods-section").style.display = modsContainer.hasChildNodes() ? "block" : "none";
-  document.getElementById("modpacks-section").style.display = modsContainer.hasChildNodes() ? "block" : "none";
-  document.getElementById("tools-section").style.display = toolsContainer.hasChildNodes() ? "block" : "none";
-  document.getElementById("skins-section").style.display = skinsContainer.hasChildNodes() ? "block" : "none";
+  document.getElementById("mods-section").style.display =
+    modsContainer.hasChildNodes() ? "block" : "none";
+  document.getElementById("modpacks-section").style.display =
+    modsContainer.hasChildNodes() ? "block" : "none";
+  document.getElementById("tools-section").style.display =
+    toolsContainer.hasChildNodes() ? "block" : "none";
+  document.getElementById("skins-section").style.display =
+    skinsContainer.hasChildNodes() ? "block" : "none";
 }
 
 if (cachedData && now - cachedData.timestamp < 60000) {
@@ -124,21 +134,30 @@ if (cachedData && now - cachedData.timestamp < 60000) {
 } else {
   const fetchData = (retry = true) => {
     Promise.all([
-      fetch("https://api.github.com/repos/egezenn/dota2-minify-community/contents/").then((r) => {
+      fetch(Mirror.getCommunityContentsApiUrl()).then((r) => {
         if (r.status !== 200) {
           if (retry) throw { retry: true };
           throw new Error(`HTTP status ${r.status}`);
         }
         return r.json();
       }),
-      fetch("https://raw.githubusercontent.com/Egezenn/dota2-minify-community/main/meta.json")
+      fetch(Mirror.getCommunityRawUrl("meta.json"))
         .then((r) => (r.ok ? r.json() : {}))
         .catch(() => ({})),
     ])
       .then(([contentsData, metaData]) => {
         if (Array.isArray(contentsData) && contentsData.length > 0) {
-          const items = contentsData.filter((item) => item.type === "dir").map((item) => item.name);
-          localStorage.setItem(cacheKey, JSON.stringify({ timestamp: new Date().getTime(), items: items, meta: metaData }));
+          const items = contentsData
+            .filter((item) => item.type === "dir")
+            .map((item) => item.name);
+          localStorage.setItem(
+            cacheKey,
+            JSON.stringify({
+              timestamp: new Date().getTime(),
+              items: items,
+              meta: metaData,
+            }),
+          );
           processData(items, metaData);
         } else {
           throw new Error("Invalid community data");

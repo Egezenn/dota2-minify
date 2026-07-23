@@ -58,7 +58,7 @@ if (cachedData && now - cachedData.timestamp < 300000) {
   processReleases(cachedData.releases);
 } else {
   const fetchReleases = (retry = true) => {
-    fetch("https://api.github.com/repos/egezenn/dota2-minify/releases")
+    fetch(Mirror.getReleaseApiUrl())
       .then((response) => {
         if (response.status !== 200) {
           if (retry) {

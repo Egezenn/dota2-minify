@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <title>Dota2 Minify - Community Mods</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="icon" type="image/x-icon" href="https://github.com/Egezenn/dota2-minify/raw/main/Minify/bin/images/favicon.ico" />
+    <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous" />
     <link rel="stylesheet" href="style.css" />
     <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
@@ -15,7 +15,7 @@
     <main class="container">
       <div class="d-flex justify-content-between align-items-center mb-3">
         <h1 class="h1 fw-bold">Community Mods</h1>
-        <a class="btn btn-primary" href="https://egezenn.github.io/dota2-minify" role="button"><ion-icon name="arrow-back-outline"></ion-icon> Back</a>
+        <a class="btn btn-primary" data-mirror="siteBase" href="https://egezenn.github.io/dota2-minify" role="button"><ion-icon name="arrow-back-outline"></ion-icon> Back</a>
       </div>
       <div id="mods-section" class="mb-4">
         <h2 class="h4 border-bottom pb-2 mb-3">Mods</h2>
@@ -51,7 +51,18 @@
         </div>
       </div>
     </main>
+    <div id="mirror-modal" class="mirror-modal">
+      <div class="mirror-modal-content">
+        <h3>Mirror Unreachable</h3>
+        <p id="mirror-modal-message"></p>
+        <div class="mirror-modal-buttons">
+          <a id="mirror-switch-btn" class="btn btn-primary" href="#">Switch Mirror</a>
+          <button id="mirror-dismiss-btn" class="btn btn-secondary">Stay Here</button>
+        </div>
+      </div>
+    </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+    <script src="mirror.js"></script>
     <script src="community.js"></script>
   </body>
 </html>
