@@ -22,7 +22,9 @@ function processReleases(releases) {
 
   if (
     latestPrerelease &&
-    (!latestStable || new Date(latestPrerelease.published_at) > new Date(latestStable.published_at))
+    (!latestStable ||
+      new Date(latestPrerelease.published_at) >
+        new Date(latestStable.published_at))
   ) {
     window.latestPrereleaseRelease = latestPrerelease;
     const downloadButtons = document.getElementById("download-buttons");
@@ -72,7 +74,13 @@ if (cachedData && now - cachedData.timestamp < 300000) {
       .then((releases) => {
         if (!releases) return;
         if (Array.isArray(releases) && releases.length > 0) {
-          localStorage.setItem(cacheKey, JSON.stringify({ timestamp: new Date().getTime(), releases: releases }));
+          localStorage.setItem(
+            cacheKey,
+            JSON.stringify({
+              timestamp: new Date().getTime(),
+              releases: releases,
+            }),
+          );
           processReleases(releases);
         } else {
           throw new Error("Invalid releases data");
@@ -105,19 +113,34 @@ if (downloadModal) {
 
     if (release) {
       const version = release.tag_name.replace("Minify-", ""); // DEPRECATE: bad tag name
-      const typeText = releaseType === "stable" ? "latest stable" : "latest release candidate";
+      const typeText =
+        releaseType === "stable" ? "latest stable" : "latest release candidate";
       modalTitle.innerHTML = `Download ${typeText}, ${version}<br><small class="text-muted">Dated ${new Date(release.published_at).toLocaleString()}</small>`;
 
-      const windowsSetupAsset = release.assets.find((asset) => asset.name.endsWith(".exe"));
-      const windowsPortableAsset = release.assets.find((asset) => asset.name.endsWith("-windows.zip"));
-      const linuxAsset = release.assets.find((asset) => asset.name.endsWith("-linux.zip"));
+      const windowsSetupAsset = release.assets.find((asset) =>
+        asset.name.endsWith(".exe"),
+      );
+      const windowsPortableAsset = release.assets.find((asset) =>
+        asset.name.endsWith("-windows.zip"),
+      );
+      const linuxAsset = release.assets.find((asset) =>
+        asset.name.endsWith("-linux.zip"),
+      );
 
-      const windowsSetupLink = downloadModal.querySelector("#download-windows-setup");
-      const windowsPortableLink = downloadModal.querySelector("#download-windows-portable");
+      const windowsSetupLink = downloadModal.querySelector(
+        "#download-windows-setup",
+      );
+      const windowsPortableLink = downloadModal.querySelector(
+        "#download-windows-portable",
+      );
       const linuxLink = downloadModal.querySelector("#download-linux");
 
-      const windowsSetupCount = downloadModal.querySelector("#windows-setup-download-count");
-      const windowsPortableCount = downloadModal.querySelector("#windows-portable-download-count");
+      const windowsSetupCount = downloadModal.querySelector(
+        "#windows-setup-download-count",
+      );
+      const windowsPortableCount = downloadModal.querySelector(
+        "#windows-portable-download-count",
+      );
       const linuxCount = downloadModal.querySelector("#linux-download-count");
 
       if (windowsSetupAsset) {
@@ -146,14 +169,19 @@ if (downloadModal) {
 
       const aurLink = downloadModal.querySelector("#download-aur");
       const copyButton = downloadModal.querySelector("#copy-aur-command");
-      const packageName = releaseType === "prerelease" ? "dota2-minify-rc-bin" : "dota2-minify-bin";
+      const packageName =
+        releaseType === "prerelease"
+          ? "dota2-minify-rc-bin"
+          : "dota2-minify-bin";
 
       if (releaseType === "prerelease") {
         aurLink.href = "https://aur.archlinux.org/packages/dota2-minify-rc-bin";
-        aurLink.innerHTML = '<ion-icon name="logo-tux"></ion-icon> AUR (Arch Linux, RC)';
+        aurLink.innerHTML =
+          '<ion-icon name="logo-tux"></ion-icon> AUR (Arch Linux, RC)';
       } else {
         aurLink.href = "https://aur.archlinux.org/packages/dota2-minify-bin";
-        aurLink.innerHTML = '<ion-icon name="logo-tux"></ion-icon> AUR (Arch Linux)';
+        aurLink.innerHTML =
+          '<ion-icon name="logo-tux"></ion-icon> AUR (Arch Linux)';
       }
 
       if (copyButton) {
@@ -171,7 +199,8 @@ if (downloadModal) {
         }
       });
 
-      const releaseNotesContainer = downloadModal.querySelector("#release-notes");
+      const releaseNotesContainer =
+        downloadModal.querySelector("#release-notes");
       if (releaseType === "stable" && release.body) {
         releaseNotesContainer.style.display = "block";
         releaseNotesContainer.innerHTML = marked.parse(release.body);
@@ -186,17 +215,22 @@ if (downloadModal) {
 const copyButton = document.getElementById("copy-aur-command");
 if (copyButton) {
   copyButton.addEventListener("click", () => {
-    const textToCopy = copyButton.getAttribute("data-clipboard-text") || "yay -S dota2-minify-bin";
-    navigator.clipboard.writeText(textToCopy).then(() => {
-      const icon = copyButton.querySelector("ion-icon");
-      if (icon) {
-        icon.setAttribute("name", "checkmark-outline");
-        setTimeout(() => {
-          icon.setAttribute("name", "copy-outline");
-        }, 2000);
-      }
-    }).catch(err => {
-      console.error("Failed to copy text: ", err);
-    });
+    const textToCopy =
+      copyButton.getAttribute("data-clipboard-text") ||
+      "yay -S dota2-minify-bin";
+    navigator.clipboard
+      .writeText(textToCopy)
+      .then(() => {
+        const icon = copyButton.querySelector("ion-icon");
+        if (icon) {
+          icon.setAttribute("name", "checkmark-outline");
+          setTimeout(() => {
+            icon.setAttribute("name", "copy-outline");
+          }, 2000);
+        }
+      })
+      .catch((err) => {
+        console.error("Failed to copy text: ", err);
+      });
   });
 }

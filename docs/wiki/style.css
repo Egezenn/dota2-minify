@@ -1,93 +1,91 @@
 @media (width > 800px) {
-#main {
+  #main {
     padding-left: 10vw;
     padding-right: 10vw;
-}
+  }
 
-#main img {
+  #main img {
     max-width: 40vw;
-}
+  }
 }
 
 :root {
-    --theme-color: #01E6E6; 
+  --theme-color: #01e6e6;
 }
 
 * {
-    font-family: Inter, Roboto, sans-serif;
+  font-family: Inter, Roboto, sans-serif;
 }
 
 body {
-    background-color: #1D1D1E;
-    color: white;
+  background-color: #1d1d1e;
+  color: white;
 }
 
 .sidebar,
 nav > ul ul {
-    background-color: rgb(24 24 26) !important;
-    color: white;
+  background-color: rgb(24 24 26) !important;
+  color: white;
 }
 
 .sidebar-toggle {
-    background-color: rgb(24 24 26 / 0%) !important;
+  background-color: rgb(24 24 26 / 0%) !important;
 }
 
 .sidebar nav {
-    margin-bottom: 3rem;
-    text-align: center;
+  margin-bottom: 3rem;
+  text-align: center;
 }
 
 .sidebar nav ul {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    justify-content: center;
-    padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+  padding: 0;
 }
 
 .sidebar nav li {
-    margin: 0;
+  margin: 0;
 }
 
 .sidebar nav a {
-    border: #134e4e 2px solid !important;
-    padding: 5px;
+  border: #134e4e 2px solid !important;
+  padding: 5px;
 }
 
 #main {
-    min-height: 100vh;
+  min-height: 100vh;
 }
 
 .markdown-section p,
-.markdown-section span
-.markdown-section em
-{
-    color: white
+.markdown-section span .markdown-section em {
+  color: white;
 }
 
 .markdown-section a {
-    color: #64FF63;
-    text-decoration: none;
+  color: #64ff63;
+  text-decoration: none;
 }
 
 .markdown-section code {
-    background-color: #2e2e2e;
-    font-family: monospace;
+  background-color: #2e2e2e;
+  font-family: monospace;
 }
 
 .markdown-section pre,
 .markdown-section pre > code {
-    background-color: #18181a !important;
-    color: white;
-    font-family: monospace;
+  background-color: #18181a !important;
+  color: white;
+  font-family: monospace;
 }
 
 .markdown-section .token {
-    font-family: monospace;
+  font-family: monospace;
 }
 
 .markdown-section strong {
-    color: #01E6E6;
+  color: #01e6e6;
 }
 
 .sidebar ul li a,
@@ -109,45 +107,45 @@ nav > ul ul {
 .markdown-section h6,
 .markdown-section h6 a,
 .markdown-section h6 span {
-    color: #17bebe;
+  color: #17bebe;
 }
 
 .markdown-section tr {
-    background-color: #1D1D1E !important;
+  background-color: #1d1d1e !important;
 }
 
 .markdown-section th,
 .markdown-section tr,
 .markdown-section td {
-    border: 2px solid #134e4e !important;
+  border: 2px solid #134e4e !important;
 }
 
 .callout {
-    border-bottom: #18181a !important;
-    border-right: #18181a !important;
-    border-top: #18181a !important;
+  border-bottom: #18181a !important;
+  border-right: #18181a !important;
+  border-top: #18181a !important;
 }
 
 /* Scrollbar styling */
 ::-webkit-scrollbar {
-    height: 8px;
-    width: 8px;
+  height: 8px;
+  width: 8px;
 }
 
 ::-webkit-scrollbar-track {
-    background: #1D1D1E;
+  background: #1d1d1e;
 }
 
 ::-webkit-scrollbar-thumb {
-    background: #17bebe;
-    border-radius: 4px;
+  background: #17bebe;
+  border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-    background: #01E6E6;
+  background: #01e6e6;
 }
 
 html {
-    scrollbar-color: #17bebe #1D1D1E;
-    scrollbar-width: thin;
+  scrollbar-color: #17bebe #1d1d1e;
+  scrollbar-width: thin;
 }

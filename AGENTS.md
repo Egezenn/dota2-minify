@@ -93,6 +93,7 @@ Key objects in the `manifest.json` settings array include:
 Mods can execute custom Python behavior via standardized script hooks:
 
 - `script_initial.py`, `script_after_decompile.py`, `script_after_patch.py`, `script_uninstall.py`, etc.
+
 When writing custom logic for a mod, hook into these files.
 
 ### XML & CSS Injection

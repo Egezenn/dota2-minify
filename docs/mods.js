@@ -17,7 +17,9 @@ function processMods(mods) {
     card.setAttribute("role", "button");
 
     const img = document.createElement("img");
-    img.src = Mirror.getRawUrl("Minify/mods/" + encodeURIComponent(mod) + "/preview.jpg");
+    img.src = Mirror.getRawUrl(
+      "Minify/mods/" + encodeURIComponent(mod) + "/preview.jpg",
+    );
     img.className = "card-img-top";
     img.alt = `${mod} image`;
     img.style.objectFit = "cover";
@@ -27,7 +29,8 @@ function processMods(mods) {
     };
 
     const cardBody = document.createElement("div");
-    cardBody.className = "card-body d-flex align-items-center justify-content-center";
+    cardBody.className =
+      "card-body d-flex align-items-center justify-content-center";
 
     const title = document.createElement("h5");
     title.className = "card-title mb-0";
@@ -41,7 +44,9 @@ function processMods(mods) {
       const notesCacheKey = `mod-notes-${mod}`;
       const cachedNotes = JSON.parse(sessionStorage.getItem(notesCacheKey));
       const now = new Date().getTime();
-      const imageUrl = Mirror.getRawUrl("Minify/mods/" + encodeURIComponent(mod) + "/preview.jpg");
+      const imageUrl = Mirror.getRawUrl(
+        "Minify/mods/" + encodeURIComponent(mod) + "/preview.jpg",
+      );
       const imageHtml = `<img src="${imageUrl}" class="mb-3" style="display: block; margin-left: auto; margin-right: auto;" onerror="this.style.display='none'" alt="${mod}">`;
 
       notesModalLabel.textContent = `${mod} Notes`;
@@ -49,9 +54,14 @@ function processMods(mods) {
 
       if (cachedNotes && now - cachedNotes.timestamp < 60000) {
         notesContent.innerHTML =
-          imageHtml + marked.parse(cachedNotes.content).replace(/<p>\s*!!:\s*/g, '<p class="note-emphasized">');
+          imageHtml +
+          marked
+            .parse(cachedNotes.content)
+            .replace(/<p>\s*!!:\s*/g, '<p class="note-emphasized">');
       } else {
-        const notesUrl = Mirror.getRawUrl("Minify/mods/" + encodeURIComponent(mod) + "/notes.md");
+        const notesUrl = Mirror.getRawUrl(
+          "Minify/mods/" + encodeURIComponent(mod) + "/notes.md",
+        );
         notesContent.innerHTML = "<p>Loading...</p>";
 
         fetch(notesUrl)
@@ -62,15 +72,24 @@ function processMods(mods) {
             return response.text();
           })
           .then((text) => {
-            const enMatch = text.match(/<!-- LANG:en -->([\s\S]*?)(?=<!-- LANG:\w+ -->|$)/i);
+            const enMatch = text.match(
+              /<!-- LANG:en -->([\s\S]*?)(?=<!-- LANG:\w+ -->|$)/i,
+            );
             const content = enMatch ? enMatch[1].trim() : text;
 
             notesContent.innerHTML =
-              imageHtml + marked.parse(content).replace(/<p>\s*!!:\s*/g, '<p class="note-emphasized">');
-            sessionStorage.setItem(notesCacheKey, JSON.stringify({ timestamp: now, content: content }));
+              imageHtml +
+              marked
+                .parse(content)
+                .replace(/<p>\s*!!:\s*/g, '<p class="note-emphasized">');
+            sessionStorage.setItem(
+              notesCacheKey,
+              JSON.stringify({ timestamp: now, content: content }),
+            );
           })
           .catch((error) => {
-            notesContent.innerHTML = "<p>Could not load notes. The file might not exist for this mod.</p>";
+            notesContent.innerHTML =
+              "<p>Could not load notes. The file might not exist for this mod.</p>";
             console.error("Error fetching notes:", error);
           });
       }
@@ -99,11 +118,19 @@ if (cachedData && now - cachedData.timestamp < 60000) {
         if (!data) return;
         if (Array.isArray(data)) {
           const mods = data
-            .filter((item) => item.type === "dir" && item.name !== "#base" && item.name !== "User Styles")
+            .filter(
+              (item) =>
+                item.type === "dir" &&
+                item.name !== "#base" &&
+                item.name !== "User Styles",
+            )
             .map((item) => item.name);
 
           if (mods.length > 0) {
-            localStorage.setItem(cacheKey, JSON.stringify({ timestamp: new Date().getTime(), mods: mods }));
+            localStorage.setItem(
+              cacheKey,
+              JSON.stringify({ timestamp: new Date().getTime(), mods: mods }),
+            );
             processMods(mods);
           } else {
             throw new Error("No mods found");

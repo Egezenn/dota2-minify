@@ -118,7 +118,7 @@ This project wouldn't be available without the work of the community. Thanks to 
 | [ruff](https://github.com/astral-sh/ruff)      | Linter and formatter | [MIT license](https://github.com/astral-sh/ruff/blob/main/LICENSE)    |
 
 <div align="center">
-  
+
 ## Sponsors
 
 <table align="center">

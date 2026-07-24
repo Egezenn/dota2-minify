@@ -3,44 +3,41 @@ DOTADashboard,
 #DashboardCore,
 #DashboardOverlay,
 #DashboardForeground {
-    background-image: <&bg_img_style>;
-    background-repeat: no-repeat;
-    background-size: 100% 100%;
+  background-image: <&bg_img_style>;
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
 }
 
 /* g:panorama/styles/showcase/showcase_background */
 #BackgroundImage {
-    visibility: collapse;
+  visibility: collapse;
 }
 
 /* g:panorama/styles/hud/dota_hud_pregame */
 .LowVisualQuality #PregameBGStatic {
-    background-image: <&bg_img_style>;
-    background-repeat: no-repeat;
-    background-size: 100% 100%;
+  background-image: <&bg_img_style>;
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
 }
 
 /* VIDEO */
 
 /* g:panorama/styles/dashboard_background_last_match */
-#BackgroundMovie
-{
-    /* width & height can be removed if the stretch effect isn't desired */
-    width: 100%; 
-    height: 100%;
-    vertical-align: center;
-    horizontal-align: center;
-    z-index: 1;
+#BackgroundMovie {
+  /* width & height can be removed if the stretch effect isn't desired */
+  width: 100%;
+  height: 100%;
+  vertical-align: center;
+  horizontal-align: center;
+  z-index: 1;
 }
 
 /* g:panorama/styles/dashboard_background_manager */
-.DashboardBackground
-{
-	visibility: visible;
+.DashboardBackground {
+  visibility: visible;
 }
 
 /* g:panorama/styles/hero_loadout_background_images */
-#HeroLoadoutBackgroundImageContainer
-{
-	visibility: collapse;
+#HeroLoadoutBackgroundImageContainer {
+  visibility: collapse;
 }

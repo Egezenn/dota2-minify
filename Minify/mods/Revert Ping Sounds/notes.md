@@ -229,6 +229,7 @@ Yeni sesler şu şekilde değiştirilir:
 Нові звуки замінюються на:
 
 -`ping_heart` = `ping`
+
 - `ping_enemy_ward` = `ping_warning`
 - `ping_need_ward` = `ping`
 

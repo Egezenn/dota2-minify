@@ -1,330 +1,331 @@
 /* g:panorama/styles/dashboard */
 
 #XmlInspectorButtonsContainer {
-	align: left top;
-	flow-children: right;
-	margin: 10px;
-	z-index: 99999;
+  align: left top;
+  flow-children: right;
+  margin: 10px;
+  z-index: 99999;
 }
 
 #XmlInspectorButtonsContainer Button {
-	margin-right: 4px;
+  margin-right: 4px;
 }
 
-
 .XmlInspectorButton {
-	background-color: #ffffff0d;
-	border: 0px;
-	height: 32px;
-	margin: 0px;
-	padding: 0px;
-	width: 48px;
+  background-color: #ffffff0d;
+  border: 0px;
+  height: 32px;
+  margin: 0px;
+  padding: 0px;
+  width: 48px;
 }
 
 .XmlInspectorButton:hover {
-	background-color: #ffffff1a;
+  background-color: #ffffff1a;
 }
 
 .XmlInspectorButton Label {
-	color: #ccc;
-	font-size: 11px;
-	horizontal-align: center;
-	letter-spacing: 1px;
-	text-transform: uppercase;
-	vertical-align: center;
+  color: #ccc;
+  font-size: 11px;
+  horizontal-align: center;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  vertical-align: center;
 }
 
 .XmlInspectorButton:hover Label {
-	color: #fff;
+  color: #fff;
 }
 
 #XmlInspectBtn {
-	background-color: #ffffff0d;
-	border: 0px;
-	height: 32px;
-	margin: 0px;
-	padding: 0px;
-	width: 32px;
+  background-color: #ffffff0d;
+  border: 0px;
+  height: 32px;
+  margin: 0px;
+  padding: 0px;
+  width: 32px;
 }
 
 #XmlInspectBtn:hover {
-	background-color: #ffffff1a;
+  background-color: #ffffff1a;
 }
 
 #XmlInspectBtn.Active {
-	background-color: #9b59b6 !important;
+  background-color: #9b59b6 !important;
 }
 
 #XmlInspectBtn Label {
-	color: #ccc;
-	font-size: 10px;
-	horizontal-align: center;
-	letter-spacing: 1px;
-	text-transform: uppercase;
-	vertical-align: center;
+  color: #ccc;
+  font-size: 10px;
+  horizontal-align: center;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  vertical-align: center;
 }
 
-#XmlInspectBtn:hover Label, #XmlInspectBtn.Active Label {
-	color: #fff;
+#XmlInspectBtn:hover Label,
+#XmlInspectBtn.Active Label {
+  color: #fff;
 }
 
 #XmlInspectorOverlay {
-	background-color: #000000CC;
-	height: 100%;
-	width: 100%;
+  background-color: #000000cc;
+  height: 100%;
+  width: 100%;
 }
 
 #XmlInspectorPopup {
-	height: 100%;
-	width: 100%;
-	z-index: 99999;
+  height: 100%;
+  width: 100%;
+  z-index: 99999;
 }
 
 #XmlInspectorContainer {
-	background-color: #1e1e1e;
-	border: 2px solid #444;
-	flow-children: down;
-	height: 75%;
-	horizontal-align: center;
-	padding: 0px;
-	vertical-align: center;
-	width: 75%;
+  background-color: #1e1e1e;
+  border: 2px solid #444;
+  flow-children: down;
+  height: 75%;
+  horizontal-align: center;
+  padding: 0px;
+  vertical-align: center;
+  width: 75%;
 }
 
 #XmlInspectorTitle {
-	color: #ddd;
-	font-size: 16px;
-	horizontal-align: left;
-	letter-spacing: 2px;
-	margin: 8px 12px;
-	text-transform: uppercase;
+  color: #ddd;
+  font-size: 16px;
+  horizontal-align: left;
+  letter-spacing: 2px;
+  margin: 8px 12px;
+  text-transform: uppercase;
 }
 
 .XmlInspectorCloseBtn {
-	background-color: #4a2;
-	horizontal-align: right;
-	margin: 8px 12px;
-	padding: 2px 10px;
+  background-color: #4a2;
+  horizontal-align: right;
+  margin: 8px 12px;
+  padding: 2px 10px;
 }
 
 .XmlInspectorCloseBtn:hover {
-	background-color: #6c3;
+  background-color: #6c3;
 }
 
 .XmlInspectorCloseBtn Label {
-	color: #000;
-	font-size: 12px;
-	horizontal-align: center;
-	vertical-align: center;
+  color: #000;
+  font-size: 12px;
+  horizontal-align: center;
+  vertical-align: center;
 }
 
 .XmlInspectorCloseBtn:hover Label {
-	color: #fff;
+  color: #fff;
 }
 
 #XmlInspectorEntry {
-	background-color: #0a0a0a;
-	border-left: 0px;
-	border-right: 0px;
-	border: 1px solid #333;
-	color: #8f8;
-	font-size: 13px;
-	height: fill-parent-flow(1.0);
-	margin: 0px 0px 8px 0px;
-	padding: 8px 12px;
-	width: 100%;
+  background-color: #0a0a0a;
+  border-left: 0px;
+  border-right: 0px;
+  border: 1px solid #333;
+  color: #8f8;
+  font-size: 13px;
+  height: fill-parent-flow(1);
+  margin: 0px 0px 8px 0px;
+  padding: 8px 12px;
+  width: 100%;
 }
 
 .BlacklistBtnPopup {
-	background-color: #555;
-	horizontal-align: right;
-	margin: 0px 4px 0px 0px;
-	padding: 2px 8px;
+  background-color: #555;
+  horizontal-align: right;
+  margin: 0px 4px 0px 0px;
+  padding: 2px 8px;
 }
 
 .BlacklistBtnPopup:hover {
-	background-color: #777;
+  background-color: #777;
 }
 
 .BlacklistBtnPopup Label {
-	color: #ddd;
-	font-size: 11px;
-	horizontal-align: center;
-	vertical-align: center;
+  color: #ddd;
+  font-size: 11px;
+  horizontal-align: center;
+  vertical-align: center;
 }
 
 .BlacklistBtnPopup:hover Label {
-	color: #fff;
+  color: #fff;
 }
 
 #XmlBlacklistBtn {
-	background-color: #ffffff0d;
-	border: 0px;
-	height: 32px;
-	margin: 0px;
-	padding: 0px;
-	width: 32px;
+  background-color: #ffffff0d;
+  border: 0px;
+  height: 32px;
+  margin: 0px;
+  padding: 0px;
+  width: 32px;
 }
 
 #XmlBlacklistBtn:hover {
-	background-color: #ffffff1a;
+  background-color: #ffffff1a;
 }
 
 #XmlBlacklistBtn Label {
-	color: #ccc;
-	font-size: 10px;
-	horizontal-align: center;
-	letter-spacing: 1px;
-	text-transform: uppercase;
-	vertical-align: center;
+  color: #ccc;
+  font-size: 10px;
+  horizontal-align: center;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  vertical-align: center;
 }
 
 #XmlBlacklistBtn:hover Label {
-	color: #fff;
+  color: #fff;
 }
 
 #XmlInspectorBlacklistPopup {
-	height: 100%;
-	width: 100%;
-	z-index: 99999;
+  height: 100%;
+  width: 100%;
+  z-index: 99999;
 }
 
 #BlacklistOverlay {
-	background-color: #000000CC;
-	height: 100%;
-	width: 100%;
+  background-color: #000000cc;
+  height: 100%;
+  width: 100%;
 }
 
 #BlacklistContainer {
-	background-color: #1e1e1e;
-	border: 2px solid #444;
-	flow-children: down;
-	height: 60%;
-	horizontal-align: center;
-	padding: 0px;
-	vertical-align: center;
-	width: 50%;
+  background-color: #1e1e1e;
+  border: 2px solid #444;
+  flow-children: down;
+  height: 60%;
+  horizontal-align: center;
+  padding: 0px;
+  vertical-align: center;
+  width: 50%;
 }
 
 #BlacklistTitle {
-	color: #ddd;
-	font-size: 16px;
-	horizontal-align: left;
-	letter-spacing: 2px;
-	margin: 8px 12px;
-	text-transform: uppercase;
+  color: #ddd;
+  font-size: 16px;
+  horizontal-align: left;
+  letter-spacing: 2px;
+  margin: 8px 12px;
+  text-transform: uppercase;
 }
 #BlacklistModePanel {
-	flow-children: right;
-	margin: 0px 12px 8px 12px;
+  flow-children: right;
+  margin: 0px 12px 8px 12px;
 }
 
 .BlacklistModeBtn {
-	background-color: #333;
-	border: 1px solid #555;
-	margin-right: 4px;
-	padding: 4px 12px;
+  background-color: #333;
+  border: 1px solid #555;
+  margin-right: 4px;
+  padding: 4px 12px;
 }
 
 .BlacklistModeBtn:hover {
-	background-color: #555;
+  background-color: #555;
 }
 
 .BlacklistModeBtn.Active {
-	background-color: #9b59b6;
-	border-color: #9b59b6;
+  background-color: #9b59b6;
+  border-color: #9b59b6;
 }
 
 .BlacklistModeBtn Label {
-	color: #ccc;
-	font-size: 12px;
-	horizontal-align: center;
-	vertical-align: center;
+  color: #ccc;
+  font-size: 12px;
+  horizontal-align: center;
+  vertical-align: center;
 }
 
-.BlacklistModeBtn:hover Label, .BlacklistModeBtn.Active Label {
-	color: #fff;
+.BlacklistModeBtn:hover Label,
+.BlacklistModeBtn.Active Label {
+  color: #fff;
 }
 
 #BlacklistRawEntry {
-	background-color: #0a0a0a;
-	border: 1px solid #333;
-	color: #8f8;
-	font-size: 13px;
-	height: fill-parent-flow(1.0);
-	margin: 0px 12px 8px 12px;
-	padding: 8px 12px;
-	width: 100%;
+  background-color: #0a0a0a;
+  border: 1px solid #333;
+  color: #8f8;
+  font-size: 13px;
+  height: fill-parent-flow(1);
+  margin: 0px 12px 8px 12px;
+  padding: 8px 12px;
+  width: 100%;
 }
 
 #BlacklistList {
-	flow-children: down;
-	height: 100%;
-	padding: 0px 12px 8px 12px;
-	width: 100%;
+  flow-children: down;
+  height: 100%;
+  padding: 0px 12px 8px 12px;
+  width: 100%;
 }
 
 .BlacklistRow {
-	flow-children: right;
-	height: fit-children;
-	margin-bottom: 4px;
-	width: 100%;
+  flow-children: right;
+  height: fit-children;
+  margin-bottom: 4px;
+  width: 100%;
 }
 
 .BlacklistInput {
-	background-color: #0a0a0a;
-	border: 1px solid #333;
-	color: #8f8;
-	font-size: 12px;
-	height: 28px;
-	padding: 4px 8px;
-	width: fill-parent-flow(1.0);
+  background-color: #0a0a0a;
+  border: 1px solid #333;
+  color: #8f8;
+  font-size: 12px;
+  height: 28px;
+  padding: 4px 8px;
+  width: fill-parent-flow(1);
 }
 
 .BlacklistRemoveBtn {
-	background-color: #533;
-	border: 1px solid #a33;
-	height: 28px;
-	margin-left: 4px;
-	padding: 0px;
-	width: 28px;
+  background-color: #533;
+  border: 1px solid #a33;
+  height: 28px;
+  margin-left: 4px;
+  padding: 0px;
+  width: 28px;
 }
 
 .BlacklistRemoveBtn:hover {
-	background-color: #a33;
+  background-color: #a33;
 }
 
 .BlacklistRemoveBtn Label {
-	color: #faa;
-	font-size: 12px;
-	horizontal-align: center;
-	vertical-align: center;
+  color: #faa;
+  font-size: 12px;
+  horizontal-align: center;
+  vertical-align: center;
 }
 
 .BlacklistRemoveBtn:hover Label {
-	color: #fff;
+  color: #fff;
 }
 
 .BlacklistAddBtn {
-	background-color: #2a4a2a;
-	border: 1px solid #3a6a3a;
-	height: 28px;
-	margin-top: 4px;
-	padding: 4px;
-	width: 100%;
+  background-color: #2a4a2a;
+  border: 1px solid #3a6a3a;
+  height: 28px;
+  margin-top: 4px;
+  padding: 4px;
+  width: 100%;
 }
 
 .BlacklistAddBtn:hover {
-	background-color: #3a6a3a;
+  background-color: #3a6a3a;
 }
 
 .BlacklistAddBtn Label {
-	color: #8f8;
-	font-size: 12px;
-	horizontal-align: center;
-	vertical-align: center;
+  color: #8f8;
+  font-size: 12px;
+  horizontal-align: center;
+  vertical-align: center;
 }
 
 .BlacklistAddBtn:hover Label {
-	color: #fff;
+  color: #fff;
 }

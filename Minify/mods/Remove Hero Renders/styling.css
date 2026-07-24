@@ -9,34 +9,34 @@ DOTACollectionPageShards,
 DOTACollectionPageBrowse,
 DOTACollectionPageBundles,
 DOTACollectionPageFeatured {
-    background-image: none;
+  background-image: none;
 }
 
 /* g:panorama/styles/hero_loadout_background_images */
 #HeroLoadoutBackgroundImageContainer {
-    visibility: collapse;
+  visibility: collapse;
 }
 
 /* g:panorama/styles/hero_slot_item_picker_loadout */
 .IsFullSetPicker #FullSetSlotThumbnail {
-    visibility: collapse;
+  visibility: collapse;
 }
 
 DOTAHeroSlotItemPickerLoadout.IsActive {
-    width: 100%;
+  width: 100%;
 }
 
 /* g:panorama/styles/hud/dota_hud_pregame */
 .SelectedHeroFacets .Shadow {
-    visibility: collapse;
+  visibility: collapse;
 }
 
 /* g:panorama/styles/hud/dota_hud_versus_screen2 */
 DOTAHudVersusScreen2 {
-    visibility: collapse;
+  visibility: collapse;
 }
 
 /* g:panorama/styles/ui_econ_set_preview */
 DOTAUIEconSetPreview.Use3DPreview #Preview3DItems {
-    visibility: collapse;
+  visibility: collapse;
 }

@@ -143,11 +143,11 @@ h6 > a {
 }
 
 .btn-discord {
-  background-color: #7289DA !important; 
+  background-color: #7289da !important;
 }
 
 .btn-telegram {
-  background-color: #2CA5E0 !important;
+  background-color: #2ca5e0 !important;
 }
 
 .btn-telegram img {
@@ -155,7 +155,7 @@ h6 > a {
 }
 
 .btn-codeberg {
-  background-color: #2185D0 !important;
+  background-color: #2185d0 !important;
 }
 
 .btn-codeberg img {
@@ -176,7 +176,7 @@ h6 > a {
 }
 
 .btn-d2pfx {
-  background-color: #BA9DFF !important;
+  background-color: #ba9dff !important;
   color: black !important;
 }
 
@@ -185,7 +185,7 @@ h6 > a {
 }
 
 .btn-d2pfx-discord {
-  background-color: #B0CFEA !important;
+  background-color: #b0cfea !important;
   color: black !important;
 }
 
@@ -206,7 +206,7 @@ h6 > a {
 .btn-signpath,
 .btn-signpath:active,
 .btn-signpath:hover {
-  background-color: #00A3D5 !important;
+  background-color: #00a3d5 !important;
   color: white !important;
 }
 

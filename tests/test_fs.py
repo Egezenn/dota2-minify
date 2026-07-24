@@ -290,8 +290,8 @@ def test_extract_archive_exception(mock_add_text, tmp_path):
     assert "Extraction failed" in mock_add_text.call_args[0][0]
 
 
-@patch("core.base.OS", "windows")
-@patch("core.base.WIN", "windows")
+@patch("core.base.is_win", True)
+@patch("core.base.is_mac", False)
 @patch("os.startfile", create=True)
 def test_open_thing_windows_dir(mock_startfile, tmp_path):
     dir_path = tmp_path / "test_dir"
@@ -301,8 +301,8 @@ def test_open_thing_windows_dir(mock_startfile, tmp_path):
     mock_startfile.assert_called_once_with(str(dir_path))
 
 
-@patch("core.base.OS", "windows")
-@patch("core.base.WIN", "windows")
+@patch("core.base.is_win", True)
+@patch("core.base.is_mac", False)
 @patch("os.startfile", create=True)
 def test_open_thing_windows_file(mock_startfile, tmp_path):
     file_path = tmp_path / "test.txt"
@@ -312,8 +312,8 @@ def test_open_thing_windows_file(mock_startfile, tmp_path):
     mock_startfile.assert_called_once_with(str(file_path))
 
 
-@patch("core.base.OS", "windows")
-@patch("core.base.WIN", "windows")
+@patch("core.base.is_win", True)
+@patch("core.base.is_mac", False)
 @patch("os.startfile", create=True)
 def test_open_thing_windows_with_args(mock_startfile, tmp_path):
     file_path = tmp_path / "test.exe"
@@ -323,8 +323,8 @@ def test_open_thing_windows_with_args(mock_startfile, tmp_path):
     mock_startfile.assert_called_once_with(str(file_path), arguments="-h")
 
 
-@patch("core.base.OS", "mac")
-@patch("core.base.MAC", "mac")
+@patch("core.base.is_win", False)
+@patch("core.base.is_mac", True)
 @patch("subprocess.run")
 def test_open_thing_mac_dir(mock_run, tmp_path):
     dir_path = tmp_path / "test_dir"
@@ -334,8 +334,8 @@ def test_open_thing_mac_dir(mock_run, tmp_path):
     mock_run.assert_called_once_with(["open", str(dir_path)])
 
 
-@patch("core.base.OS", "mac")
-@patch("core.base.MAC", "mac")
+@patch("core.base.is_win", False)
+@patch("core.base.is_mac", True)
 @patch("subprocess.run")
 def test_open_thing_mac_file(mock_run, tmp_path):
     file_path = tmp_path / "test.txt"
@@ -345,9 +345,8 @@ def test_open_thing_mac_file(mock_run, tmp_path):
     mock_run.assert_called_once_with(["open", "-R", str(file_path)])
 
 
-@patch("core.base.OS", "linux")
-@patch("core.base.WIN", "windows")
-@patch("core.base.MAC", "mac")
+@patch("core.base.is_win", False)
+@patch("core.base.is_mac", False)
 @patch("subprocess.run")
 def test_open_thing_linux_dir(mock_run, tmp_path):
     dir_path = tmp_path / "test_dir"
@@ -357,9 +356,8 @@ def test_open_thing_linux_dir(mock_run, tmp_path):
     mock_run.assert_called_once_with(["xdg-open", str(dir_path)])
 
 
-@patch("core.base.OS", "linux")
-@patch("core.base.WIN", "windows")
-@patch("core.base.MAC", "mac")
+@patch("core.base.is_win", False)
+@patch("core.base.is_mac", False)
 @patch("subprocess.run")
 def test_open_thing_linux_file(mock_run, tmp_path):
     file_path = tmp_path / "test.txt"
@@ -369,8 +367,8 @@ def test_open_thing_linux_file(mock_run, tmp_path):
     mock_run.assert_called_once_with(["xdg-open", str(file_path)])
 
 
-@patch("core.base.OS", "linux")
-@patch("core.base.WIN", "windows")
+@patch("core.base.is_win", False)
+@patch("core.base.is_mac", False)
 @patch("os.access")
 @patch("subprocess.Popen")
 def test_open_thing_posix_with_args_executable(mock_popen, mock_access, tmp_path):
@@ -385,8 +383,8 @@ def test_open_thing_posix_with_args_executable(mock_popen, mock_access, tmp_path
     assert mock_popen.call_args[0][0] == [str(file_path), "--help"]
 
 
-@patch("core.base.OS", "linux")
-@patch("core.base.WIN", "windows")
+@patch("core.base.is_win", False)
+@patch("core.base.is_mac", False)
 @patch("os.access")
 @patch("subprocess.run")
 def test_open_thing_posix_with_args_non_executable(mock_run, mock_access, tmp_path):

@@ -13,13 +13,13 @@ Syntax:
 
 ```css
 /* g|c:path/to/vcss_file_without_extension */
-example_selector { property: value; }
+example_selector {
+  property: value;
+}
 /* it can also override definitions */
 @define foo: bar;
-@keyframes 'anim-name'
-{
-  progress
-  {
+@keyframes 'anim-name' {
+  progress {
     property: value;
   }
 }
@@ -125,7 +125,7 @@ Besides standard inputs like checkboxes or color pickers, you can create a butto
      "key": "fetch_latest_data",
      "text": "Sync Hero Grids",
      "force": true,
-     "type": "button",
+     "type": "button"
    }
    ```
 

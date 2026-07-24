@@ -22,7 +22,7 @@ Thank you for your interest in contributing! Whether you're fixing a bug, sugges
    uv run Minify
    ```
 
-   *Note: This will automatically handle the environment and dependencies.*
+   _Note: This will automatically handle the environment and dependencies._
 
 ## Development Workflow
 
@@ -59,16 +59,6 @@ If you are contributing new mods or features to existing ones:
 - Refer to [`docs/wiki/development.md`](https://egezenn.github.io/dota2-minify/wiki/#/development) for a full breakdown of the mod structure (`manifest.json`, `notes.md`, etc.).
 - Ensure that any feature requiring internet connectivity **fails silently** to avoid crashing the application for offline users.
 - Decouple highly specific or complex logic into its own script within the mod folder.
-
-## Translations
-
-We use **Weblate** for community translations. To make this work with our single `localization.json` structure, we use a helper script:
-
-1. **Translating**: Contribute via our Weblate instance (linked on the website).
-2. **Syncing**: If you are a maintainer merging new translations:
-    - Weblate will push individual JSON files to `scripts/weblate/`.
-    - Run `uv run scripts/localization_manager.py merge` to update the main `Minify/bin/localization.json`.
-    - Commit the updated `localization.json`.
 
 ## Pull Request Process
 
