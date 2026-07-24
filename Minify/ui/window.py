@@ -60,7 +60,7 @@ def stop_drag():
 
 def focus():
     with utils.try_pass():
-        if base.OS == base.WIN:
+        if base.is_win:
             hwnd = ctypes.windll.user32.FindWindowW(None, "Minify")
             if hwnd != 0:
                 ctypes.windll.user32.ShowWindow(hwnd, 9)

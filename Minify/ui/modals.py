@@ -79,7 +79,7 @@ class WorkshopTools:
     @staticmethod
     def show():
         config.set("workshop_modal_shown", True)
-        if base.OS == base.WIN:
+        if base.is_win:
             modal_shared.show(
                 title="Workshop Tools Not Found",
                 messages=[
@@ -201,7 +201,7 @@ class Update:
 
     @staticmethod
     def perform_update():
-        if base.OS != base.WIN or not shared.update_url or Update.is_portable():
+        if base.base.is_win or not shared.update_url or Update.is_portable():
             webbrowser.open(base.github_io)
             fs.open_thing(".")
             return
@@ -276,7 +276,7 @@ class Update:
                 download_url = None
                 tag_name = None
 
-                suffix = ".exe" if base.OS == base.WIN else ".zip"
+                suffix = ".exe" if base.is_win else ".zip"
 
                 if suffix:
                     opt_in = config.get("opt_into_rcs", False)
@@ -331,7 +331,7 @@ class LanguageSetup:
                     "tag": "landing_dota_lang",
                     "label": "Dota2 Language",
                     "items": constants.minify_output_list,
-                    "default_value": config.get("output_locale", "brazilian"),
+                    "default_value": config.get("output_locale", "russian"),
                 },
             ],
         )
@@ -343,6 +343,10 @@ class LanguageSetup:
 
         config.set("locale", app_lang)
         config.set("output_locale", dota_lang)
+        config.set(
+            "output_path",
+            [lang for lang in constants.minify_dota_possible_language_output_paths if dota_lang in lang][0],
+        )
 
         dpg.configure_item("lang_select", default_value=app_lang)
         dpg.configure_item("output_select", default_value=dota_lang)

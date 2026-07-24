@@ -159,7 +159,7 @@ def create_ui():
             parent="footer_left_group",
             tag="output_select",
             items=(constants.minify_output_list),
-            default_value=config.get("output_locale", "minify"),
+            default_value=config.get("output_locale", "russian"),
             callback=helper.change_output_path,
             fit_width=True,
         )

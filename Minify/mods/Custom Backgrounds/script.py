@@ -69,7 +69,7 @@ def main():
                 if (magick_path := shutil.which("magick")) is not None:
                     subprocess.run(
                         [magick_path, source_file, target_file],
-                        creationflags=subprocess.CREATE_NO_WINDOW if base.OS == base.WIN else 0,
+                        creationflags=subprocess.CREATE_NO_WINDOW if base.is_win else 0,
                     )
                 else:
                     output.add_text(
@@ -125,7 +125,7 @@ def main():
                             "0",
                             target_file,
                         ],
-                        creationflags=subprocess.CREATE_NO_WINDOW if base.OS == base.WIN else 0,
+                        creationflags=subprocess.CREATE_NO_WINDOW if base.is_win else 0,
                     )
                 else:
                     output.add_text(

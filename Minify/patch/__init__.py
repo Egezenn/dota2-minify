@@ -18,10 +18,13 @@ import conditions
 import helper
 from core import base, config, constants, fs, log, mods_shared, output, registry, steam, utils
 
-from patch import blacklist, manifest_utils, replacer, styling, unins, vpk_utils, xml_utils
+from patch import blacklist, manifest_utils, replacer, styling, vpk_utils, xml_utils
+
+dota_version_changed = False
 
 
 def patcher(mod=None, pakname=None):
+    global dota_version_changed
     from ui import gui
 
     with gui.interactive_lock():
@@ -95,11 +98,10 @@ def patcher(mod=None, pakname=None):
                                             if os.path.exists(os.path.join(base.mods_dir, dependency, method_path)):
                                                 workshop = True
                                                 break
-                                        (
+                                        if workshop:
                                             mods_shared.set_state(dependency, False)
-                                            if workshop
-                                            else mods_shared.set_state(dependency, True)
-                                        )
+                                        else:
+                                            mods_shared.set_state(dependency, True)
                                     else:
                                         mods_shared.set_state(dependency, True)
                                 except Exception:
@@ -250,7 +252,7 @@ def patcher(mod=None, pakname=None):
                         ],
                         stdout=file,
                         stderr=subprocess.STDOUT,
-                        creationflags=subprocess.CREATE_NO_WINDOW if base.OS == base.WIN else 0,
+                        creationflags=subprocess.CREATE_NO_WINDOW if base.is_win else 0,
                     )
                     if res.returncode != 0:
                         log.write_warning(
@@ -367,7 +369,7 @@ def patcher(mod=None, pakname=None):
 
             # handle language option automatically
             if config.get("fix_options", True):
-                if steam.fix_launch_options() and base.OS == base.WIN:
+                if steam.fix_launch_options() and base.is_win:
                     fs.open_thing(steam.steam_executable_path, "-exitsteam")
                     steam_close_retries = 0
                     while any(

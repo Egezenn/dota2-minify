@@ -22,7 +22,7 @@ def open_thing(path: str, args: str = "") -> None:
     try:
         # If args are provided and target is executable, prefer launching directly
         if args:
-            if base.OS == base.WIN:
+            if base.is_win:
                 os.startfile(path, arguments=args)
                 return
             # POSIX: launch executable directly when possible
@@ -35,16 +35,16 @@ def open_thing(path: str, args: str = "") -> None:
 
         # No args path open
         if os.path.isdir(path):
-            if base.OS == base.WIN:
+            if base.is_win:
                 os.startfile(path)
-            elif base.OS == base.MAC:
+            elif base.is_mac:
                 subprocess.run(["open", path])
             else:
                 subprocess.run(["xdg-open", path])
         else:
-            if base.OS == base.WIN:
+            if base.is_win:
                 os.startfile(path)
-            elif base.OS == base.MAC:
+            elif base.is_mac:
                 # Reveal the file in Finder to avoid missing-app association errors
                 subprocess.run(["open", "-R", path])
             else:

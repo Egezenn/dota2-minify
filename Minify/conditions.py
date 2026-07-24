@@ -15,7 +15,7 @@ workshop_required_methods = ["styling.css", "xml.json", "files_uncompiled"]
 
 
 def is_dota_running(text_tag, text_type):
-    target = "dota2.exe" if base.OS == base.WIN else "dota2"
+    target = "dota2.exe" if base.is_win else "dota2"
     running = any(p.info.get("name") == target for p in psutil.process_iter(attrs=["name"]))
 
     if running:
@@ -81,7 +81,7 @@ def resolve_dependencies(retries=0):
                         output.add_text("&extracted_cli_terminal", zip_path)
                         constants.s2v_executable = os.path.basename(constants.s2v_executable)
 
-                        if base.OS != base.WIN and not os.access(constants.s2v_executable, os.X_OK):
+                        if base.is_win and not os.access(constants.s2v_executable, os.X_OK):
                             current_permissions = os.stat(constants.s2v_executable).st_mode
                             os.chmod(
                                 constants.s2v_executable,
@@ -117,7 +117,7 @@ def resolve_dependencies(retries=0):
 
                     constants.rg_executable = rg_binary_name
 
-                    if base.OS in (base.LINUX, base.MAC) and not os.access(constants.rg_executable, os.X_OK):
+                    if (base.is_linux or base.is_mac) and not os.access(constants.rg_executable, os.X_OK):
                         current_permissions = os.stat(constants.rg_executable).st_mode
                         os.chmod(
                             constants.rg_executable,

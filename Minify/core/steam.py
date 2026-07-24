@@ -204,7 +204,7 @@ def get_steam_root_path():
 
     found_path = ""
     # registry
-    if base.OS == base.WIN:
+    if base.is_win:
         with utils.try_pass():
             import winreg
 
@@ -327,9 +327,9 @@ if not current_steam_id and ROOT:
         break
 
 # paths
-if base.OS == base.WIN:
+if base.is_win:
     steam_executable_path = os.path.join(ROOT, "steam.exe")
-elif base.OS == base.LINUX:
+elif base.is_linux:
     steam_executable_path = os.path.join(ROOT, "steam")
-elif base.OS == base.MAC:
+elif base.is_mac:
     steam_executable_path = os.path.join(ROOT, "steam")  # ?

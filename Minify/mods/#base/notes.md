@@ -1,6 +1,6 @@
 <!-- LANG:EN -->
 
-Automatically accepts the language dialog when the settings are opened, adds various keybinds (that may not work sometimes) to the panorama UI.
+Adds various keybinds (that may not work sometimes) to the panorama UI.
 
 `F1`: DOTAShowHomePage - Navigates to the home page.
 `F2`: DOTAShowHeroesPage - Navigates to the heroes page.

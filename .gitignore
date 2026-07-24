@@ -28,6 +28,7 @@ steam_appid.txt
 ## In-repo mods
 !Minify/mods/#base
 !Minify/mods/#DevTools
+!Minify/mods/#English Fix
 !Minify/mods/Auto Accept Match
 !Minify/mods/Custom Backgrounds
 !Minify/mods/Custom Hero Grids
@@ -58,12 +59,13 @@ steam_appid.txt
 !Minify/mods/Transparent HUD
 !Minify/mods/Tree Mod
 !Minify/mods/User Styles
+!Minify/mods/Custom Backgrounds/preview.png
+Minify/mods/#English Fix/compile/
 Minify/mods/Custom Backgrounds/*.jpe?g
 Minify/mods/Custom Backgrounds/*.mp4
 Minify/mods/Custom Backgrounds/*.png
 Minify/mods/Custom Backgrounds/*.web[mp]
 Minify/mods/Custom Backgrounds/video_success
-!Minify/mods/Custom Backgrounds/preview.png
 Minify/mods/User Styles/styling.css
 
 # misc

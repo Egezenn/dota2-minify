@@ -153,10 +153,10 @@ def _find_font_linux(font_name: str) -> str | None:
 def find_system_font(font_name: str) -> str | None:
     normalized = font_name.lower().replace(" ", "").replace("-", "").replace("_", "")
 
-    if base.OS == base.WIN:
+    if base.is_win:
         windir = os.environ.get("windir", "C:\\Windows")
         font_dirs = [os.path.join(windir, "Fonts")]
-    elif base.OS == base.LINUX:
+    elif base.is_linux:
         result = _find_font_linux(font_name)
         if result:
             return result
@@ -166,7 +166,7 @@ def find_system_font(font_name: str) -> str | None:
             os.path.expanduser("~/.fonts"),
             os.path.expanduser("~/.local/share/fonts"),
         ]
-    elif base.OS == base.MAC:
+    elif base.is_mac:
         font_dirs = ["/System/Library/Fonts", "/Library/Fonts", os.path.expanduser("~/Library/Fonts")]
     else:
         return None

@@ -86,7 +86,7 @@ def process_dir(index, line, folder):
         ],
         capture_output=True,
         text=True,
-        creationflags=subprocess.CREATE_NO_WINDOW if base.OS == base.WIN else 0,
+        creationflags=subprocess.CREATE_NO_WINDOW if base.is_win else 0,
     )
     data = lines.stdout.splitlines()
 

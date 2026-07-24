@@ -30,14 +30,19 @@ def recalc_rescomp_dirs():
 
 recalc_rescomp_dirs()
 
+# common denominator
 minify_dota_tools_required_path = os.path.join(
-    steam.LIBRARY, "steamapps", "common", "dota 2 beta", "content", "dota_minify"
+    steam.LIBRARY,
+    "steamapps",
+    "common",
+    "dota 2 beta",
+    "content",
+    "dota_russian",  # ?
 )
 minify_default_dota_pak_output_path = os.path.join(
-    steam.LIBRARY, "steamapps", "common", "dota 2 beta", "game", "dota_minify"
+    steam.LIBRARY, "steamapps", "common", "dota 2 beta", "game", "dota_russian"
 )
 minify_dota_possible_language_output_paths = [
-    os.path.join(steam.LIBRARY, "steamapps", "common", "dota 2 beta", "game", "dota_minify"),
     os.path.join(steam.LIBRARY, "steamapps", "common", "dota 2 beta", "game", "dota_brazilian"),
     os.path.join(steam.LIBRARY, "steamapps", "common", "dota 2 beta", "game", "dota_bulgarian"),
     os.path.join(steam.LIBRARY, "steamapps", "common", "dota 2 beta", "game", "dota_czech"),
@@ -66,8 +71,8 @@ minify_dota_possible_language_output_paths = [
     os.path.join(steam.LIBRARY, "steamapps", "common", "dota 2 beta", "game", "dota_ukrainian"),
     os.path.join(steam.LIBRARY, "steamapps", "common", "dota 2 beta", "game", "dota_vietnamese"),
 ]
+# TODO: add English and enforce it to use #English Fix mod
 minify_output_list = [
-    "minify",
     "brazilian",
     "bulgarian",
     "czech",
@@ -123,7 +128,7 @@ s2v_cli_ver = "18.0"
 rg_ver = "15.1.0"
 
 try:
-    if base.OS == base.WIN:
+    if base.is_win:
         s2v_executable = "Source2Viewer-CLI.exe"
 
         if base.MACHINE in ["aarch64", "arm64"]:
@@ -137,7 +142,7 @@ try:
         else:
             rg_latest = f"https://github.com/BurntSushi/ripgrep/releases/download/{rg_ver}/ripgrep-{rg_ver}-i686-pc-windows-msvc.zip"
 
-    elif base.OS == base.LINUX:
+    elif base.is_linux:
         s2v_executable = "Source2Viewer-CLI"
         if base.MACHINE in ["aarch64", "arm64"]:
             s2v_latest = f"https://github.com/ValveResourceFormat/ValveResourceFormat/releases/download/{s2v_cli_ver}/cli-linux-arm64.zip"
@@ -160,7 +165,7 @@ try:
         elif base.ARCHITECTURE == "32bit":
             rg_latest = f"https://github.com/BurntSushi/ripgrep/releases/download/{rg_ver}/ripgrep-{rg_ver}-i686-unknown-linux-gnu.tar.gz"
 
-    elif base.OS == base.MAC:
+    elif base.is_mac:
         s2v_executable = "Source2Viewer-CLI"
         if base.MACHINE in ["aarch64", "arm64"]:
             s2v_latest = f"https://github.com/ValveResourceFormat/ValveResourceFormat/releases/download/{s2v_cli_ver}/cli-macos-arm64.zip"

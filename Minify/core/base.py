@@ -12,9 +12,9 @@ OS = platform.system()
 MACHINE = platform.machine().lower()
 ARCHITECTURE = platform.architecture()[0]
 
-WIN = "Windows"
-LINUX = "Linux"
-MAC = "Darwin"
+is_win = True if OS == "Windows" else False
+is_linux = True if OS == "Linux" else False
+is_mac = True if OS == "Darwin" else False
 
 FROZEN = getattr(sys, "frozen", False)
 HEADLESS = False
@@ -24,10 +24,10 @@ REPO = "dota2-minify"
 
 
 # assuming steam runtimes on linux / darwin
-if OS == LINUX:
+if is_linux:
     DOTA_EXECUTABLE_PATH = os.path.join("steamapps", "common", "dota 2 beta", "game", "bin", "linuxsteamrt64", "dota2")
     STEAM_DEFAULT_INSTALLATION_PATH = os.path.join("/", "home", getpass.getuser(), ".local", "share", "Steam")
-elif OS == MAC:
+elif is_mac:
     DOTA_EXECUTABLE_PATH = os.path.join(
         "steamapps",
         "common",

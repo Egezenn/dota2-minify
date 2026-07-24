@@ -35,5 +35,4 @@ class Migrations:
                         log.write_warning(f"Failed to remove redundant {src_name} in {mod}: {e}")
 
 
-# Run migrations upon initialization (import)
 Migrations()

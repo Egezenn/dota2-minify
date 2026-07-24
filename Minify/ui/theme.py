@@ -129,7 +129,7 @@ def apply():
 
 
 def enable_dark_titlebar():
-    if base.OS == base.WIN:
+    if base.is_win:
         with utils.try_pass():
             hwnd = ctypes.windll.user32.FindWindowW(None, base.TITLE)
             if hwnd != 0:

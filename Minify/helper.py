@@ -45,14 +45,14 @@ def compile():
             "-r",
         ]
 
-        if base.OS != base.WIN:
+        if base.is_win:
             command.insert(0, "wine")
 
         rescomp = subprocess.run(
             command,
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,  # compiler complains if minify_dota_compile_input_path is empty
-            creationflags=subprocess.CREATE_NO_WINDOW if base.OS == base.WIN else 0,
+            creationflags=subprocess.CREATE_NO_WINDOW if base.is_win else 0,
         )
         if rescomp.stdout != b"":
             file.write(rescomp.stdout)
