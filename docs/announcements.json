@@ -9,7 +9,12 @@
     "versions": ["1.13"]
   },
   {
-    "time": "1784838351+",
-    "text": "New patch is out!\n\nDota2 now enforces a valid language so a parameter like -language minify, -language foo doesn't work anymore.\n\nInstead, use another valid language. We'll come up with a fix to use English soon.\n\nEnjoy the event!"
+    "time": "1784838352+",
+    "text": "Fix for English is out!\n\nDo note that you need v1.14rc5\n\nHave fun!",
+    "urls": [
+      "https://github.com/Egezenn/dota2-minify-community/releases/download/_/English.Fix.zip",
+      "https://egezenn.github.io/dota2-minify/",
+      "https://www.youtube.com/watch?v=Q_CGKRFoDn8"
+    ]
   }
 ]

@@ -55,8 +55,8 @@ def main():
 
         for filepath in english_files:
             data = dota_pak[filepath].read()
-            russian_path = filepath.replace("_english.txt", f"_{locale}.txt").replace("_english.vtt", f"_{locale}.vtt")
-            dest = os.path.join(compile_dir, russian_path)
+            renamed_paths = filepath.replace("_english.txt", f"_{locale}.txt").replace("_english.vtt", f"_{locale}.vtt")
+            dest = os.path.join(compile_dir, renamed_paths)
             os.makedirs(os.path.dirname(dest), exist_ok=True)
             with open(dest, "wb") as f:
                 f.write(data)
