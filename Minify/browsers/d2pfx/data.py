@@ -2,9 +2,10 @@ import gzip
 import io
 import json
 import os
+import time
 
 import requests
-from core import base, fs
+from core import base, config, fs
 
 # D2PFX Browser Constants
 BASE_URL = "https://raw.githubusercontent.com/h6rd/Dota2PornFxWeb/data/"
@@ -62,9 +63,20 @@ class DataManager:
     def refresh(self):
         self.metadata = self.fetch_gz_json("mods.json.gz", force_refresh=True)
         self.constants = self.fetch_gz_json("constants.json.gz", force_refresh=True)
+        if self.metadata is not None:
+            config.set("d2pfx_last_refresh", int(time.time()))
         return self.metadata is not None
 
+    def _needs_refresh(self):
+        if not config.get("d2pfx_auto_refresh_catalogue", True):
+            return False
+        last_refresh = config.get("d2pfx_last_refresh", 0)
+        return (time.time() - last_refresh) > 86400
+
     def load(self):
+        if self._needs_refresh():
+            self.refresh()
+
         self.metadata = self.fetch_gz_json("mods.json.gz")
         self.constants = self.fetch_gz_json("constants.json.gz")
         return self.metadata is not None

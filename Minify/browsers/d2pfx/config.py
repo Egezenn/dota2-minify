@@ -19,6 +19,12 @@ SETTINGS = [
         "default": False,
         "type": "checkbox",
     },
+    {
+        "key": "d2pfx_auto_refresh_catalogue",
+        "text": "Auto-Refresh D2PFX Catalogue",
+        "default": True,
+        "type": "checkbox",
+    },
 ]
 
 # Self-registration
