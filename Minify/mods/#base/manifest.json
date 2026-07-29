@@ -1,4 +1,5 @@
 {
   "always": true,
-  "order": 0
+  "order": 0,
+  "skip_workshop_check": true
 }

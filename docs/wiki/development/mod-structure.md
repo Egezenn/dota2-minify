@@ -37,6 +37,7 @@ mods
   "conflicts": ["<mod>"], // None by default, add names of mutually exclusive mods here
   "order": 1, // default is 1, ordered from negative to positive to resolve any conflicts
   "visual": true, // true by default, show it in the UI as a checkbox
+  "skip_workshop_check": false, // false by default, if true the mod won't be disabled when workshop tools are missing (use it for mods that can still function without workshop capabilities)
   "version": ">=1.13,<=1.14", // optional, enforces a Minify version requirement (supports operators: >=, <=, >, <, ==)
 
   // presets system for custom mod settings

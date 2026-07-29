@@ -13,24 +13,25 @@ if minify_root not in sys.path:
 
 import conditions
 import requests
-from core import constants, fs
+from core import fs, log, output
 
-before_workshop_req = "https://github.com/Egezenn/dota2-minify/blob/Minify-v1.11.2/mods/Auto%20Accept%20Match/files/panorama/layout/popups/popup_accept_match.vxml_c"
+before_workshop_req = "https://raw.githubusercontent.com/Egezenn/dota2-minify/refs/tags/Minify-v1.11.2/mods/Auto%20Accept%20Match/files/panorama/layout/popups/popup_accept_match.vxml_c"
+
+fallback_dir = os.path.join(current_dir, "files", "panorama", "layout", "popups")
+fallback_path = os.path.join(fallback_dir, "popup_accept_match.vxml_c")
 
 
 def main():
-    if not conditions.workshop_installed:
+    if conditions.workshop_installed:
+        fs.remove_path(fallback_path)
+        return
+
+    if not (conditions.workshop_installed and os.path.exists(fallback_path)):
         response = requests.get(before_workshop_req)
         if response.status_code == 200:
-            fs.create_dirs(os.path.join(constants.minify_dota_compile_output_path, "panoroma", "layout", "popups"))
-            with open(
-                os.path.join(
-                    constants.minify_dota_compile_output_path,
-                    "panoroma",
-                    "layout",
-                    "popups",
-                    "popup_accept_match.vxml_c",
-                ),
-                "wb",
-            ) as file:
+            fs.create_dirs(fallback_dir)
+            with open(fallback_path, "wb") as file:
                 file.write(response.content)
+            output.add_text(f"Downloaded the static 10s file for {current_dir}")
+        else:
+            log.write_warning("Fallback download failed!")

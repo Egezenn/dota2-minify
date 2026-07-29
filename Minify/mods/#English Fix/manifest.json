@@ -1,0 +1,9 @@
+{
+  "settings": [
+    {
+      "key": "swap_localizations",
+      "text": "Swap Localizations",
+      "type": "button"
+    }
+  ]
+}

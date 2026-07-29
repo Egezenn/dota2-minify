@@ -9,7 +9,6 @@ from core import base, output, utils
 
 
 def write_crashlog(exc_type=None, exc_value=None, exc_traceback=None, header=None, handled=True):
-
     path = base.log_crashlog if handled else base.log_unhandled
     with utils.open_utf8R(path, "w") as file:
         if handled:
@@ -27,7 +26,6 @@ def write_crashlog(exc_type=None, exc_value=None, exc_traceback=None, header=Non
 
 
 def write_warning(header=None, *args):
-
     if not os.path.exists(base.log_warnings):
         with utils.open_utf8R(base.log_warnings, "w") as file:
             pass

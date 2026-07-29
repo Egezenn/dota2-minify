@@ -5,5 +5,6 @@
       "text": "Fetch Latest Guides",
       "type": "button"
     }
-  ]
+  ],
+  "skip_workshop_check": true
 }
