@@ -5,7 +5,7 @@ import sys
 
 import jsonc
 
-from core import base, utils
+from core import base, constants, utils
 
 mods_alphabetical = []
 mods_with_order = []
@@ -51,6 +51,14 @@ def set_state(mod, value):
             jsonc.dump(states, file, indent=2)
     except Exception:
         pass
+
+
+def enforce_locale_mod_states():
+    from core import config
+
+    locale = config.get("output_locale", "english")
+    for required_mod in constants.LOCALE_MOD_REQUIREMENTS.get(locale, []):
+        set_state(required_mod, True)
 
 
 def scan_mods():

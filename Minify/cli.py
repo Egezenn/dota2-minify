@@ -2,9 +2,9 @@ import argparse
 import os
 
 import browsers
-from core import base, constants, mods_shared, utils
 import helper
 import patch
+from core import base, constants, mods_shared, utils
 from ui import localization
 
 base.HEADLESS = True

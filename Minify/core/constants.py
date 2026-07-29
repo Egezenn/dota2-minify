@@ -32,15 +32,10 @@ recalc_rescomp_dirs()
 
 # common denominator
 minify_dota_tools_required_path = os.path.join(
-    steam.LIBRARY,
-    "steamapps",
-    "common",
-    "dota 2 beta",
-    "content",
-    "dota_russian",  # ?
+    steam.LIBRARY, "steamapps", "common", "dota 2 beta", "content", "dota_dutch"
 )
 minify_default_dota_pak_output_path = os.path.join(
-    steam.LIBRARY, "steamapps", "common", "dota 2 beta", "game", "dota_russian"
+    steam.LIBRARY, "steamapps", "common", "dota 2 beta", "game", "dota_dutch"
 )
 minify_dota_possible_language_output_paths = [
     os.path.join(steam.LIBRARY, "steamapps", "common", "dota 2 beta", "game", "dota_brazilian"),
@@ -71,8 +66,21 @@ minify_dota_possible_language_output_paths = [
     os.path.join(steam.LIBRARY, "steamapps", "common", "dota 2 beta", "game", "dota_ukrainian"),
     os.path.join(steam.LIBRARY, "steamapps", "common", "dota 2 beta", "game", "dota_vietnamese"),
 ]
-# TODO: add English and enforce it to use #English Fix mod
+LOCALE_ALIASES = {
+    "english": "dutch",
+}
+
+LOCALE_MOD_REQUIREMENTS = {
+    "english": ["#English Fix"],
+}
+
+
+def resolve_locale(locale):
+    return LOCALE_ALIASES.get(locale, locale)
+
+
 minify_output_list = [
+    "english",
     "brazilian",
     "bulgarian",
     "czech",

@@ -90,7 +90,7 @@ def fix_launch_options():
             output.add_text("&checking_launch_options")
             data = vdf.load(file)
 
-        locale = config.get("output_locale")
+        locale = config.get_locale()
         try:
             launch_options = data["UserLocalConfigStore"]["Software"]["Valve"]["Steam"]["apps"][base.STEAM_DOTA_ID][
                 "LaunchOptions"
@@ -137,7 +137,7 @@ def remove_minify_lang():
             data = vdf.load(file)
 
         locale = config.get("output_locale")
-        if locale != "minify":
+        if locale != "english":
             continue
 
         try:
@@ -149,7 +149,7 @@ def remove_minify_lang():
 
         if "-language" in launch_options:
             data["UserLocalConfigStore"]["Software"]["Valve"]["Steam"]["apps"][base.STEAM_DOTA_ID]["LaunchOptions"] = (
-                remove_specific_lang_arg(launch_options, locale)
+                remove_specific_lang_arg(launch_options, config.get_locale())
             )
             with utils.open_utf8(vdf_path, "w") as file:
                 vdf.dump(data, file, pretty=True)

@@ -26,7 +26,7 @@ def main():
         fs.remove_path(fallback_path)
         return
 
-    if not (conditions.workshop_installed and os.path.exists(fallback_path)):
+    if not conditions.workshop_installed and not os.path.exists(fallback_path):
         response = requests.get(before_workshop_req)
         if response.status_code == 200:
             fs.create_dirs(fallback_dir)

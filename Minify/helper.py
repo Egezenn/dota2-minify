@@ -28,7 +28,8 @@ def get_blank_file_extensions():
 def change_output_path():
     global output_path
     selection = dpg.get_value("output_select")
-    output_path = [lang for lang in constants.minify_dota_possible_language_output_paths if selection in lang][0]
+    resolved = constants.resolve_locale(selection)
+    output_path = [lang for lang in constants.minify_dota_possible_language_output_paths if resolved in lang][0]
     config.set("output_locale", selection)
     config.set("output_path", output_path)
 

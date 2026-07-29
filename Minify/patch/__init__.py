@@ -42,6 +42,8 @@ def patcher(mod=None, pakname=None):
         try:
             mod_list = constants.mods_with_order if mod is None else [mod]
 
+            mods_shared.enforce_locale_mod_states()
+
             for item in os.listdir(base.logs_dir):
                 fs.remove_path(os.path.join(base.logs_dir, item))
 
@@ -389,7 +391,7 @@ def patcher(mod=None, pakname=None):
 
             output.add_separator()
             output.add_text("&success_terminal", msg_type="success")
-            output.add_text("&launch_option", config.get("output_locale", "minify"), msg_type="warning")
+            output.add_text("&launch_option", config.get_locale(), msg_type="warning")
 
             if os.path.exists(base.log_warnings) and os.path.getsize(base.log_warnings) != 0:
                 output.add_text("&minify_encountered_errors_terminal", msg_type="warning")

@@ -202,7 +202,8 @@ def get_value(mod):
 
 
 def set_value(mod, value):
-    dpg.set_value(mod, value)
+    if dpg.does_item_exist(mod):
+        dpg.set_value(mod, value)
 
 
 mods_shared.register_state_callbacks(get_value, set_value)

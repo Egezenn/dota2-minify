@@ -1,12 +1,30 @@
 import os
 
-from core import base, fs, log
+from core import base, config, fs, log
 
 
 class Migrations:
     def __init__(self):
+        self._migrate_locale_config()
         self._rename_file_in_mods("modcfg.json", "manifest.json")
         self._rename_file_in_mods("xml_mod.json", "xml.json")
+
+    def _migrate_locale_config(self):
+        locale = config.get("output_locale")
+        path = config.get("output_path")
+
+        changed = False
+
+        if locale == "minify":
+            config.set("output_locale", "english")
+            changed = True
+
+        if path and "dota_minify" in path:
+            config.set("output_path", path.replace("dota_minify", "dota_dutch"))
+            changed = True
+
+        if changed:
+            log.write_warning("Migrated legacy 'minify' locale to 'english' (dutch fallback)")
 
     def _rename_file_in_mods(self, src_name, dest_name):
         if not os.path.exists(base.mods_dir):

@@ -343,9 +343,10 @@ class LanguageSetup:
 
         config.set("locale", app_lang)
         config.set("output_locale", dota_lang)
+        resolved = constants.resolve_locale(dota_lang)
         config.set(
             "output_path",
-            [lang for lang in constants.minify_dota_possible_language_output_paths if dota_lang in lang][0],
+            [lang for lang in constants.minify_dota_possible_language_output_paths if resolved in lang][0],
         )
 
         dpg.configure_item("lang_select", default_value=app_lang)

@@ -1,6 +1,7 @@
 from unittest.mock import MagicMock
 
 import pytest
+from core.constants import resolve_locale
 from core.steam import remove_lang_args, remove_minify_lang, remove_specific_lang_arg
 
 
@@ -44,15 +45,36 @@ def mock_steam_env(monkeypatch):
     return mock_accounts
 
 
+def test_resolve_locale():
+    assert resolve_locale("dutch") == "dutch"
+    assert resolve_locale("english") == "dutch"
+    assert resolve_locale("minify") == "minify"
+    assert resolve_locale("french") == "french"
+    assert resolve_locale("unknown") == "unknown"
+
+
 def test_remove_minify_lang_success(mock_steam_env, monkeypatch):
     import vdf
     from core import base
 
-    # Mock VDF data
+    # English locale should resolve to dutch and remove -language dutch
+    def config_get_side_effect(key, default=None):
+        if key == "apply_for_all":
+            return True
+        if key == "steam_root":
+            return "/fake/steam"
+        if key == "output_locale":
+            return "english"
+        if key == "steam_id":
+            return "123"
+        return default
+
+    monkeypatch.setattr("core.config.get", config_get_side_effect)
+
     vdf_data = {
         "UserLocalConfigStore": {
             "Software": {
-                "Valve": {"Steam": {"apps": {base.STEAM_DOTA_ID: {"LaunchOptions": "-language minify -novid"}}}}
+                "Valve": {"Steam": {"apps": {base.STEAM_DOTA_ID: {"LaunchOptions": "-language dutch -novid"}}}}
             }
         }
     }
@@ -84,7 +106,7 @@ def test_remove_minify_lang_wrong_locale(mock_steam_env, monkeypatch):
         if key == "steam_root":
             return "/fake/steam"
         if key == "output_locale":
-            return "english"  # Not minify
+            return "french"  # Not dutch/english
         return default
 
     monkeypatch.setattr("core.config.get", config_get_side_effect)
@@ -136,7 +158,7 @@ def test_remove_minify_lang_single_id(mock_steam_env, monkeypatch):
     import vdf
     from core import base
 
-    # Set apply_for_all to False
+    # English locale should resolve to dutch
     def config_get_side_effect(key, default=None):
         if key == "apply_for_all":
             return False
@@ -145,7 +167,7 @@ def test_remove_minify_lang_single_id(mock_steam_env, monkeypatch):
         if key == "steam_root":
             return "/fake/steam"
         if key == "output_locale":
-            return "minify"
+            return "english"
         return default
 
     monkeypatch.setattr("core.config.get", config_get_side_effect)
@@ -153,7 +175,7 @@ def test_remove_minify_lang_single_id(mock_steam_env, monkeypatch):
     vdf_data = {
         "UserLocalConfigStore": {
             "Software": {
-                "Valve": {"Steam": {"apps": {base.STEAM_DOTA_ID: {"LaunchOptions": "-language minify -novid"}}}}
+                "Valve": {"Steam": {"apps": {base.STEAM_DOTA_ID: {"LaunchOptions": "-language dutch -novid"}}}}
             }
         }
     }

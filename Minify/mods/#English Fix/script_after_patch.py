@@ -12,9 +12,9 @@ if minify_root not in sys.path:
 
 # isort: split
 
-from core import config, constants, fs, output
 import helper
 import patch
+from core import config, constants, fs, output
 
 
 def main():

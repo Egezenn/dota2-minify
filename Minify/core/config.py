@@ -62,3 +62,9 @@ def set_mod(mod_name: str, config_data: dict) -> None:
     modconf = get("modconf", {})
     modconf[mod_name] = config_data
     set("modconf", modconf)
+
+
+def get_locale(default="english"):
+    from core import constants
+
+    return constants.resolve_locale(get("output_locale", default))
