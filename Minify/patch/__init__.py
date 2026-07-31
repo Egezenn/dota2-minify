@@ -75,7 +75,6 @@ def patcher(mod=None, pakname=None):
                     f.write(current_dota_version)
 
             dota_pak_contents = vpk.open(constants.dota_game_pak_path)
-            core_pak_contents = vpk.open(constants.dota_core_pak_path)
             dota_extracts = []
             core_extracts = []
 
@@ -170,14 +169,12 @@ def patcher(mod=None, pakname=None):
                                     files_uncompiled_dir,
                                     constants.minify_dota_compile_input_path,
                                     dirs_exist_ok=True,
-                                    ignore=shutil.ignore_patterns("*.gitkeep"),
                                 )
                         if os.path.exists(files_dir):
                             shutil.copytree(
                                 files_dir,
                                 constants.minify_dota_compile_output_path,
                                 dirs_exist_ok=True,
-                                ignore=shutil.ignore_patterns("*.gitkeep"),
                             )
 
                         if conditions.workshop_installed and xml_file and os.path.exists(xml_file):
@@ -226,42 +223,37 @@ def patcher(mod=None, pakname=None):
                 output.add_text("&starting_extraction")
                 core_extracts = list(set(core_extracts))
                 dota_extracts = list(set(dota_extracts))
-                vpk_utils.extract(core_pak_contents, core_extracts)
-                vpk_utils.extract(dota_pak_contents, dota_extracts)
                 # ---------------------------------- STEP 2 ---------------------------------- #
-                # ------------------- Decompile all files in "build" folder ------------------ #
+                # ------------------- Decompile all files to "build" folder ------------------ #
                 # ---------------------------------------------------------------------------- #
                 output.add_text("&decompiling_terminal")
 
-                # prevent gameinfo confusion
-                dummy_gameinfo = os.path.join(base.build_dir, "gameinfo.gi")
-                dota_gameinfo_path = os.path.join(
-                    steam.LIBRARY, "steamapps", "common", "dota 2 beta", "game", "dota", "gameinfo.gi"
-                )
-                if os.path.exists(dota_gameinfo_path):
-                    shutil.copy(dota_gameinfo_path, dummy_gameinfo)
-
                 with open(base.log_s2v, "w") as file:
-                    res = subprocess.run(
-                        [
-                            constants.s2v_exec_path,
-                            "--input",
-                            base.build_dir,
-                            "--recursive",
-                            "--vpk_decompile",
-                            "--output",
-                            base.build_dir,
-                        ],
-                        stdout=file,
-                        stderr=subprocess.STDOUT,
-                        creationflags=subprocess.CREATE_NO_WINDOW if base.is_win else 0,
-                    )
-                    if res.returncode != 0:
-                        log.write_warning(
-                            f"Source2Viewer exited with code {res.returncode}. See {base.log_s2v} for details."
+                    for pak_path, extracts in (
+                        (constants.dota_core_pak_path, core_extracts),
+                        (constants.dota_game_pak_path, dota_extracts),
+                    ):
+                        if not extracts:
+                            continue
+                        res = subprocess.run(
+                            [
+                                constants.s2v_exec_path,
+                                "--input",
+                                pak_path,
+                                "--vpk_decompile",
+                                "--vpk_filepath",
+                                ",".join(extracts),
+                                "--output",
+                                base.build_dir,
+                            ],
+                            stdout=file,
+                            stderr=subprocess.STDOUT,
+                            creationflags=subprocess.CREATE_NO_WINDOW if base.is_win else 0,
                         )
-
-                fs.remove_path(dummy_gameinfo)
+                        if res.returncode != 0:
+                            log.write_warning(
+                                f"Source2Viewer exited with code {res.returncode}. See {base.log_s2v} for details."
+                            )
 
                 with ThreadPoolExecutor() as executor:
                     xml_mod_args = [
@@ -288,7 +280,6 @@ def patcher(mod=None, pakname=None):
                     base.build_dir,
                     constants.minify_dota_compile_input_path,
                     dirs_exist_ok=True,
-                    ignore=shutil.ignore_patterns("*.vcss_c", "*.vxml_c"),
                 )
 
                 helper.compile()

@@ -14,7 +14,7 @@ if minify_root not in sys.path:
 from core import fs, log, steam
 
 dota_itembuilds_path = os.path.join(steam.LIBRARY, "steamapps", "common", "dota 2 beta", "game", "dota", "itembuilds")
-odg_bkup_path = os.path.join(minify_root, "backup", "OpenDotaGuides Guides")
+odg_bkup_path = os.path.join(minify_root, "backup", os.path.basename(current_dir))
 
 
 def main():

@@ -18,10 +18,10 @@ import requests
 from core import fs, log, output, steam, utils
 
 dota_itembuilds_path = os.path.join(steam.LIBRARY, "steamapps", "common", "dota 2 beta", "game", "dota", "itembuilds")
-odg_bkup_path = os.path.join(minify_root, "backup", "OpenDotaGuides Guides")
+odg_bkup_path = os.path.join(minify_root, "backup", os.path.basename(current_dir))
 odg_latest = "https://github.com/Egezenn/OpenDotaGuides/releases/latest/download/itembuilds.zip"
-zip_path = os.path.join(current_dir, "files", "OpenDotaGuides.zip")
-temp_dump_path = os.path.join(current_dir, "files", "temp")
+zip_path = os.path.join(current_dir, "OpenDotaGuides.zip")
+temp_dump_path = os.path.join(current_dir, "temp")
 
 
 def main():

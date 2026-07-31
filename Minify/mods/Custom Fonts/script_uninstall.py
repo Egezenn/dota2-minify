@@ -14,7 +14,7 @@ if minify_root not in sys.path:
 from core import fs, steam
 
 dota_fonts_path = os.path.join(steam.LIBRARY, "steamapps", "common", "dota 2 beta", "game", "dota", "panorama", "fonts")
-bkup_path = os.path.join(minify_root, "backup", "Custom Fonts")
+bkup_path = os.path.join(minify_root, "backup", os.path.basename(current_dir))
 
 
 def main():
