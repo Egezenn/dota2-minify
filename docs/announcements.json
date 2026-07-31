@@ -9,12 +9,8 @@
     "versions": ["1.13"]
   },
   {
-    "time": "1784838352+",
-    "text": "Fix for English is out!\n\nDo note that you need v1.14rc5\n\nHave fun!",
-    "urls": [
-      "https://github.com/Egezenn/dota2-minify-community/releases/download/_/English.Fix.zip",
-      "https://egezenn.github.io/dota2-minify/",
-      "https://www.youtube.com/watch?v=Q_CGKRFoDn8"
-    ]
+    "time": "1785489797+",
+    "text": "English language is now automatically handled on v1.14rc6!\n\nYou can select english for the game language, it'll automatically enable the fix and use the dutch language to mount the VPKs properly.\n\nIf something doesn't work, verify your files then retry.",
+    "urls": "https://egezenn.github.io/dota2-minify/"
   }
 ]
