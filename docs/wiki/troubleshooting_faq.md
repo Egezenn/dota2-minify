@@ -59,7 +59,7 @@ While newer versions automatically handle the parameter for you by new settings,
 
 ![tools-instruction-1](../assets/tools-instruction-1.jpg)
 
-- **English:** Add `-language minify` to your launch options.
+- **English:** Add `-language <your-language>` to your launch options.
 - **Other Languages:** Select the language you want to patch with on the top bar and add `-language language_id`
 
 ![language-instruction-3](../assets/language-instruction-3.jpg)

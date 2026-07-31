@@ -3,8 +3,9 @@ import re
 import time
 
 import helper
-import vpk
 from core import constants, fs, output, steam
+
+from patch import vpk_utils
 
 
 def uninstall(sender=None, app_data=None, user_data=None):
@@ -23,19 +24,12 @@ def uninstall(sender=None, app_data=None, user_data=None):
                     fs.remove_path(os.path.join(path, "maps"))
 
                 for item in os.listdir(path):
-                    if os.path.isfile(os.path.join(path, item)) and re.fullmatch(pak_pattern, item):
-                        pak_contents = vpk.open(os.path.join(path, item))
-                        mod_names_with_txt = [s + ".txt" for s in constants.visually_available_mods]
-                        for file in [
-                            "minify_mods.json",
+                    pak_path = os.path.join(path, item)
+                    if os.path.isfile(pak_path) and re.fullmatch(pak_pattern, item):
+                        if vpk_utils.is_minify_pak(pak_path):
                             # TODO if this exists, pull & parse to enable uninstallers
-                            "minify_vpk_mods.txt",
-                            "minify_version.txt",
-                            *mod_names_with_txt,
-                        ]:
-                            if file in pak_contents:
-                                fs.remove_path(os.path.join(path, item))
-                                break
+                            # depends on opt-out not being true
+                            fs.remove_path(pak_path)
 
         steam.remove_minify_lang()
 

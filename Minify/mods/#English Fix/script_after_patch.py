@@ -14,16 +14,33 @@ if minify_root not in sys.path:
 
 import helper
 import patch
-from core import config, constants, fs, output
+from core import config, constants, fs, output, utils
+from patch import vpk_utils
 
 
 def main():
     output.add_text("Checking if localization swaps needs to be redone.")
-    # TODO: Need to dynamically check the ones on disk aswell, as file integrity checks will override them
-    if patch.dota_version_changed or "-f" in sys.argv:
+    if swap_needed() or patch.dota_version_changed or "-f" in sys.argv:
         swap_localizations()
     else:
         output.add_text("Build version hasn't changed, skipping.")
+
+
+def swap_needed():
+    vpk_dest = os.path.join(helper.output_path, "pak99_dir.vpk")
+    if not os.path.exists(vpk_dest) or not vpk_utils.is_minify_pak(vpk_dest):
+        return True
+
+    game_root = os.path.dirname(os.path.dirname(constants.dota_game_pak_path))
+    locale_file = os.path.join(game_root, "core", "panorama", "localization", f"core_tools_{config.get_locale()}.txt")
+    if not os.path.isfile(locale_file):
+        return True
+
+    with utils.open_utf8R(locale_file) as file:
+        lines = file.read().splitlines()
+    if len(lines) < 6:
+        return True
+    return not ('"WorkshopCfg_Title"' in lines[5] and '"Title"' in lines[5])
 
 
 def swap_localizations():
@@ -35,7 +52,7 @@ def swap_localizations():
             english_files.append(filepath)
 
     game_root = os.path.dirname(os.path.dirname(constants.dota_game_pak_path))
-    locale = config.get("output_locale")
+    locale = config.get_locale()
 
     disk_locale_files = []
     disk_walk_dirs = ["core", "dota_addons"]
@@ -88,6 +105,7 @@ def swap_localizations():
         msg_type="success",
     )
 
+    vpk_utils.dump_metadata(compile_dir, mod_name=os.path.basename(current_dir))
     pak = vpk.new(compile_dir)
     pak.save(vpk_dest)
     output.add_text(f"Saved pak to {vpk_dest}", msg_type="success")
