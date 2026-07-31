@@ -81,7 +81,7 @@ def resolve_dependencies(retries=0):
                         output.add_text("&extracted_cli_terminal", zip_path)
                         constants.s2v_executable = os.path.basename(constants.s2v_executable)
 
-                        if base.is_win and not os.access(constants.s2v_executable, os.X_OK):
+                        if (base.is_linux or base.is_mac) and not os.access(constants.s2v_executable, os.X_OK):
                             current_permissions = os.stat(constants.s2v_executable).st_mode
                             os.chmod(
                                 constants.s2v_executable,

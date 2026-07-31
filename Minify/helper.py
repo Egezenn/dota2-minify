@@ -46,7 +46,7 @@ def compile():
             "-r",
         ]
 
-        if base.is_win:
+        if not base.is_win:
             command.insert(0, "wine")
 
         rescomp = subprocess.run(
