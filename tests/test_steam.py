@@ -2,7 +2,7 @@ from unittest.mock import MagicMock
 
 import pytest
 from core.constants import resolve_locale
-from core.steam import remove_lang_args, remove_minify_lang, remove_specific_lang_arg
+from core.steam import remove_lang_args, remove_minify_lang, remove_specific_lang_arg, restore_boot_language
 
 
 def test_remove_specific_lang_arg():
@@ -209,6 +209,75 @@ def test_remove_minify_lang_no_launch_options(mock_steam_env, monkeypatch):
 
     result = remove_minify_lang()
     assert result == []
+
+
+def test_restore_boot_language_restores_to_english(monkeypatch):
+    import vdf
+
+    def config_get_side_effect(key, default=None):
+        if key == "output_locale":
+            return "english"
+        return default
+
+    monkeypatch.setattr("core.config.get", config_get_side_effect)
+
+    vdf_data = {"boot": {"UILanguage": "dutch", "AudioLanguage": "english"}}
+    monkeypatch.setattr("os.path.exists", lambda path: True)
+    monkeypatch.setattr("core.utils.open_utf8R", MagicMock())
+    monkeypatch.setattr("core.utils.open_utf8", MagicMock())
+    monkeypatch.setattr("vdf.load", lambda f: vdf_data)
+    mock_dump = MagicMock()
+    monkeypatch.setattr("vdf.dump", mock_dump)
+
+    assert restore_boot_language() is True
+    assert vdf_data["boot"]["UILanguage"] == "english"
+    assert vdf_data["boot"]["AudioLanguage"] == "english"
+    assert mock_dump.called
+
+
+def test_restore_boot_language_wrong_locale(monkeypatch):
+    import vdf
+
+    def config_get_side_effect(key, default=None):
+        if key == "output_locale":
+            return "french"
+        return default
+
+    monkeypatch.setattr("core.config.get", config_get_side_effect)
+    mock_dump = MagicMock()
+    monkeypatch.setattr("vdf.dump", mock_dump)
+
+    assert restore_boot_language() is False
+    assert not mock_dump.called
+
+
+def test_restore_boot_language_not_dutch(monkeypatch):
+    import vdf
+
+    monkeypatch.setattr("core.config.get", lambda key, default=None: "english" if key == "output_locale" else default)
+
+    vdf_data = {"boot": {"UILanguage": "english", "AudioLanguage": "english"}}
+    monkeypatch.setattr("os.path.exists", lambda path: True)
+    monkeypatch.setattr("core.utils.open_utf8R", MagicMock())
+    monkeypatch.setattr("core.utils.open_utf8", MagicMock())
+    monkeypatch.setattr("vdf.load", lambda f: vdf_data)
+    mock_dump = MagicMock()
+    monkeypatch.setattr("vdf.dump", mock_dump)
+
+    assert restore_boot_language() is False
+    assert not mock_dump.called
+
+
+def test_restore_boot_language_no_vcfg(monkeypatch):
+    import vdf
+
+    monkeypatch.setattr("core.config.get", lambda key, default=None: "english" if key == "output_locale" else default)
+    monkeypatch.setattr("os.path.exists", lambda path: False)
+    mock_dump = MagicMock()
+    monkeypatch.setattr("vdf.dump", mock_dump)
+
+    assert restore_boot_language() is False
+    assert not mock_dump.called
 
 
 @pytest.mark.parametrize(

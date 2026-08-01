@@ -32,6 +32,7 @@ def uninstall(sender=None, app_data=None, user_data=None):
                             fs.remove_path(pak_path)
 
         steam.remove_minify_lang()
+        steam.restore_boot_language()
 
         helper.bulk_exec_script("uninstall")
         output.add_text("&mods_removed_terminal")
