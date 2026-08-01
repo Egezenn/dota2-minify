@@ -5,7 +5,7 @@ import urllib.parse
 from concurrent.futures import ThreadPoolExecutor
 
 import dearpygui.dearpygui as dpg
-from core import config, fs
+from core import config, fs, utils
 from ui import modal_shared, window
 from ui import shared as shared
 
@@ -576,11 +576,11 @@ class BrowserUI:
             url = self.data_manager.get_preview_url(encoded_cat, encoded_file)
             clean_filename = filename
 
-        cat_preview_dir = os.path.join(self.data_manager.previews_dir, cat_id)
+        cat_preview_dir = os.path.join(self.data_manager.previews_dir, utils.sanitize_win_path(cat_id))
         if not os.path.exists(cat_preview_dir):
             os.makedirs(cat_preview_dir, exist_ok=True)
 
-        local_path = os.path.join(cat_preview_dir, clean_filename)
+        local_path = os.path.join(cat_preview_dir, utils.sanitize_win_path(clean_filename))
 
         # Sanitize texture tag (remove spaces)
         texture_tag = f"d2pfx_tex_{cat_id}_{clean_filename}".replace(" ", "_")
@@ -704,7 +704,7 @@ class BrowserUI:
         mod_dir_name = f"D2PFX {cat_id.upper()} - {name}"
         if label:
             mod_dir_name = f"{mod_dir_name} {label}"
-        target_dir = os.path.join(base.mods_dir, mod_dir_name)
+        target_dir = os.path.join(base.mods_dir, utils.sanitize_win_path(mod_dir_name))
 
         def _task():
             try:

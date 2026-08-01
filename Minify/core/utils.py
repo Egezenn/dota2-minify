@@ -1,6 +1,8 @@
 import builtins
 import contextlib
 import functools
+import re
+import uuid
 from typing import IO, Any
 
 from core import base
@@ -78,3 +80,7 @@ def setup_system():
     conditions.is_dota_running("&error_please_close_dota_terminal", "error")
     conditions.is_compiler_found()
     conditions.resolve_dependencies()
+
+
+def sanitize_win_path(name):
+    return re.sub(r'[<>:"/\\|?*\x00-\x1f]', "_", name).rstrip(" .") or uuid.uuid4().hex[:8]
