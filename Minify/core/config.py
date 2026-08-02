@@ -28,7 +28,7 @@ def update_json_file(path: str, key: str, value: Any) -> Any:
     data = read_json_file(path)
     data[key] = value
 
-    if path == base.main_config_file_dir:
+    if path in (base.main_config_file_dir, base.mods_config_dir):
         data = dict(sorted(data.items()))
 
     write_json_file(path, data)

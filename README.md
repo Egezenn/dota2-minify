@@ -107,6 +107,7 @@ This project wouldn't be available without the work of the community. Thanks to 
 | [psutil](https://github.com/giampaolo/psutil)                          | Checking processes existences             | [BSD-3-Clause license](https://github.com/giampaolo/psutil/blob/master/LICENSE)   |
 | [requests](https://github.com/psf/requests)                            | Downloading/querying project dependencies | [Apache-2.0 license](https://github.com/psf/requests/blob/main/LICENSE)           |
 | [screeninfo](https://github.com/rr-/screeninfo)                        | Position calculation                      | [MIT license](https://github.com/rr-/screeninfo/blob/master/LICENSE.md)           |
+| [typer](https://github.com/fastapi/typer)                              | CLI framework                             | [MIT license](https://github.com/fastapi/typer/blob/master/LICENSE)               |
 | [vdf](https://github.com/ValvePython/vdf)                              | Serializing VDFs                          | [MIT license](https://github.com/ValvePython/vdf/blob/master/LICENSE)             |
 | [vpk](https://github.com/ValvePython/vpk)                              | VPK interaction                           | [MIT license](https://github.com/ValvePython/vpk/blob/master/LICENSE)             |
 

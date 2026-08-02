@@ -220,7 +220,6 @@ def patcher(mod=None, pakname=None):
                         dota_extracts.append(compiled)
 
             if conditions.workshop_installed:
-                output.add_text("&starting_extraction")
                 core_extracts = list(set(core_extracts))
                 dota_extracts = list(set(dota_extracts))
                 # ---------------------------------- STEP 2 ---------------------------------- #

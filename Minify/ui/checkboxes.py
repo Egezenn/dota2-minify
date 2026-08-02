@@ -32,7 +32,7 @@ def save():
     for box in checkboxes:
         checkboxes_state[box] = dpg.get_value(box)
     with utils.open_utf8(base.mods_config_dir, "w") as file:
-        jsonc.dump(checkboxes_state, file, indent=2)
+        jsonc.dump(dict(sorted(checkboxes_state.items())), file, indent=2)
 
 
 def setup_state():

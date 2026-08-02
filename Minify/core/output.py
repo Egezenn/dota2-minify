@@ -41,11 +41,11 @@ def add_text(text_or_id, *args, msg_type: str | None = None, **kwargs):
 
     prefix = ""
     if msg_type == "error":
-        prefix = f"{RED}[ERROR]"
+        prefix = f"{RED}"
     elif msg_type == "warning":
-        prefix = f"{YELLOW}[WARNING] "
+        prefix = f"{YELLOW}"
     elif msg_type == "success":
-        prefix = f"{GREEN}[SUCCESS] "
+        prefix = f"{GREEN}"
 
     try:
         print(f"{prefix}{text}{RESET}")

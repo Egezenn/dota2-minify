@@ -3,10 +3,6 @@
 # since there is no vsndevts file which defines a heroes' chat wheel, we can't do anything other than suppress
 # the normal voicelines that'd occur during gameplay. worth it? yes.
 
-# side note about personas and arcanas: since there is no way to invoke those without having the sufficient levels,
-# it has to be manually mapped. subtitle_<hero>_english.txt VDF files reference them as "<sound_filename>": "<text_on_chatwheel>".
-# so the wheels have to be OCR'd to extract the "text_on_chatwheel" and then digged through those files. yes, hell.
-
 **sounds/misc/soundboard.*\.vsnd_c
 **sounds/teamfancontent.*\.vsnd_c
 **sounds/talentcontent.*\.vsnd_c
@@ -14,6 +10,7 @@
 
 # random
 sounds/misc/crowd_lv_01.vsnd_c
+sounds/misc/crowd_lv_02.vsnd_c
 sounds/vo/announcer_dlc_gaben_killing_spree/gaben_ann_kill_followup_13.vsnd_c
 sounds/vo/announcer_dlc_gaben_killing_spree/gaben_ann_kill_followup_32.vsnd_c
 sounds/vo/announcer_dlc_gaben_killing_spree/gaben_ann_kill_followup_38.vsnd_c
@@ -22,6 +19,13 @@ sounds/vo/announcer_dlc_gaben_killing_spree/gaben_ann_kill_followup_50.vsnd_c
 sounds/vo/announcer_dlc_gaben_killing_spree/gaben_ann_kill_followup_51.vsnd_c
 sounds/vo/announcer_dlc_gaben_killing_spree/gaben_ann_kill_holy_01.vsnd_c
 sounds/vo/announcer_dlc_gaben_killing_spree/gaben_ann_kill_wicked_03.vsnd_c
+sounds/vo/announcer_dlc_diretide2020_killing_spree/announcer_diretide_kill_streak_mode_01.vsnd_c
+sounds/vo/announcer_dlc_diretide2020_killing_spree/announcer_diretide_kill_streak_mode_02.vsnd_c
+sounds/vo/announcer_dlc_diretide2020_killing_spree/announcer_diretide_kill_streak_mode_04.vsnd_c
+sounds/vo/announcer_dlc_diretide2020_killing_spree/announcer_diretide_roshan_target_01.vsnd_c
+sounds/vo/announcer_dlc_diretide2020_killing_spree/announcer_diretide_start_02.vsnd_c
+sounds/vo/announcer_dlc_diretide2020_killing_spree/announcer_diretide_start_03.vsnd_c
+sounds/vo/announcer_dlc_diretide2020_killing_spree/announcer_diretide_win_01.vsnd_c
 sounds/vo/announcer_dlc_voice_of_the_international_chat_wheel/ti2025_vog_cw_01_well_played.vsnd_c
 sounds/vo/announcer_dlc_voice_of_the_international_chat_wheel/ti2025_vog_cw_04_never_give_up.vsnd_c
 sounds/vo/announcer_dlc_voice_of_the_international_chat_wheel/ti2025_vog_cw_07_that_was_regrettable.vsnd_c
@@ -31,28 +35,17 @@ sounds/vo/event_dark_carnival/dc01_main17_010.vsnd_c
 sounds/vo/event_dark_carnival/dc01_smelt06_130.vsnd_c
 sounds/vo/event_dark_carnival/dc01_strg05_060.vsnd_c
 sounds/vo/event_dark_carnival/dc01_work06_090.vsnd_c
-sounds/vo/vengefulspirit/imperia_attack_13.vsnd 
+sounds/vo/vengefulspirit/imperia_attack_13.vsnd_c
 sounds/vo/vengefulspirit/queen_imperia_cw_pathetic.vsnd_c
+sounds/weapons/hero/tusk/penguin01.vsnd_c
+sounds/weapons/hero/tusk/penguin02.vsnd_c
 sounds/weapons/hero/tusk/penguin03.vsnd_c
 
-# personas [-dragon knight, -mirana]
-sounds/vo/antimage/amp_wei_thanks_03.vsnd_c
-sounds/vo/axe/auto_axe_drop_medium_01.vsnd_c
-sounds/vo/axe/auto_axe_laugh_03.vsnd_c
-sounds/vo/bristleback/auto_bristle_laugh_02.vsnd_c
-sounds/vo/bristleback/auto_bristle_levelup_04.vsnd_c
+# personas
 sounds/vo/crystalmaiden/cm_wolf_laugh_04.vsnd_c
 sounds/vo/crystalmaiden/cm_wolf_wheel_thanks_02.vsnd_c
-sounds/vo/legion_commander/auto_legcom_itemcommon_02.vsnd_c
-sounds/vo/legion_commander/auto_legcom_laugh_05.vsnd_c
-sounds/vo/morphling/auto_mrph_ability_repfriend_02.vsnd_c
-sounds/vo/morphling/auto_mrph_laugh_08.vsnd_c
-sounds/vo/oracle/auto_orac_kill_09.vsnd_c
-sounds/vo/oracle/auto_orac_laugh_13.vsnd_c
 sounds/vo/phantom_assassin/pa_asan_wheel_all_10.vsnd_c
 sounds/vo/phantom_assassin/pa_asan_wheel_laugh_01.vsnd_c
-sounds/vo/pudge/toy_pug_laugh_09.vsnd_c
-sounds/vo/pudge/toy_pug_thanks_02.vsnd_c
 
 # arcanas
 sounds/vo/drowranger/drow_arc_laugh_04.vsnd_c
@@ -137,6 +130,15 @@ sounds/vo/ancient_apparition/appa_lasthit_04.vsnd_c
 sounds/vo/ancient_apparition/appa_laugh_01.vsnd_c
 sounds/vo/ancient_apparition/appa_purch_02.vsnd_c
 sounds/vo/ancient_apparition/appa_spawn_03.vsnd_c
+sounds/vo/antimage/amp_wei_arcane_02.vsnd_c
+sounds/vo/antimage/amp_wei_attack_10.vsnd_c
+sounds/vo/antimage/amp_wei_deny_07.vsnd_c
+sounds/vo/antimage/amp_wei_deny_11.vsnd_c
+sounds/vo/antimage/amp_wei_doubledam_03.vsnd_c
+sounds/vo/antimage/amp_wei_enter_meditation_03.vsnd_c
+sounds/vo/antimage/amp_wei_laugh_09.vsnd_c
+sounds/vo/antimage/amp_wei_taunt_03.vsnd_c
+sounds/vo/antimage/amp_wei_thanks_03.vsnd_c
 sounds/vo/antimage/anti_ability_failure_02.vsnd_c
 sounds/vo/antimage/anti_deny_12.vsnd_c
 sounds/vo/antimage/anti_kill_08.vsnd_c
@@ -164,6 +166,15 @@ sounds/vo/axe/axe_laugh_03.vsnd_c
 sounds/vo/axe/axe_rival_01.vsnd_c
 sounds/vo/axe/axe_rival_22.vsnd_c
 sounds/vo/axe/axe_rival_23.vsnd_c
+sounds/vo/axe/auto_axe_ability_failure_01.vsnd_c
+sounds/vo/axe/auto_axe_deny_08.vsnd_c
+sounds/vo/axe/auto_axe_deny_16.vsnd_c
+sounds/vo/axe/auto_axe_drop_medium_01.vsnd_c
+sounds/vo/axe/auto_axe_kill_06.vsnd_c
+sounds/vo/axe/auto_axe_laugh_03.vsnd_c
+sounds/vo/axe/auto_axe_rival_01.vsnd_c
+sounds/vo/axe/auto_axe_rival_22.vsnd_c
+sounds/vo/axe/auto_axe_rival_23.vsnd_c
 sounds/vo/bane/bane_ability_enfeeble_05.vsnd_c
 sounds/vo/bane/bane_battlebegins_01.vsnd_c
 sounds/vo/bane/bane_fastres_01.vsnd_c
@@ -227,6 +238,15 @@ sounds/vo/bristleback/bristle_laugh_02.vsnd_c
 sounds/vo/bristleback/bristle_levelup_04.vsnd_c
 sounds/vo/bristleback/bristle_rival_31.vsnd_c
 sounds/vo/bristleback/bristle_spawn_03.vsnd_c
+sounds/vo/bristleback/auto_bristle_ally_02.vsnd_c
+sounds/vo/bristleback/auto_bristle_attack_22.vsnd_c
+sounds/vo/bristleback/auto_bristle_deny_08.vsnd_c
+sounds/vo/bristleback/auto_bristle_happy_04.vsnd_c
+sounds/vo/bristleback/auto_bristle_kill_03.vsnd_c
+sounds/vo/bristleback/auto_bristle_laugh_02.vsnd_c
+sounds/vo/bristleback/auto_bristle_levelup_04.vsnd_c
+sounds/vo/bristleback/auto_bristle_rival_31.vsnd_c
+sounds/vo/bristleback/auto_bristle_spawn_03.vsnd_c
 sounds/vo/broodmother/broo_ability_spawn_05.vsnd_c
 sounds/vo/broodmother/broo_ability_spawn_06.vsnd_c
 sounds/vo/broodmother/broo_ability_spawn_10.vsnd_c
@@ -344,6 +364,15 @@ sounds/vo/doom_bringer/doom_level_05.vsnd_c
 sounds/vo/doom_bringer/doom_lose_04.vsnd_c
 sounds/vo/doom_bringer/doom_respawn_08.vsnd_c
 sounds/vo/doom_bringer/doom_respawn_12.vsnd_c
+sounds/vo/dragon_knight/dk_davion_ability_shieldbash_03.vsnd_c
+sounds/vo/dragon_knight/dk_davion_item_008.vsnd_c
+sounds/vo/dragon_knight/dk_davion_item_018.vsnd_c
+sounds/vo/dragon_knight/dk_davion_item_039.vsnd_c
+sounds/vo/dragon_knight/dk_davion_item_054.vsnd_c
+sounds/vo/dragon_knight/dk_davion_laugh_13.vsnd_c
+sounds/vo/dragon_knight/dk_davion_wheel_all_04.vsnd_c
+sounds/vo/dragon_knight/dk_davion_wheel_all_05.vsnd_c
+sounds/vo/dragon_knight/dk_davion_wheel_thanks_03.vsnd_c
 sounds/vo/dragon_knight/drag_ability_eldrag_06.vsnd_c
 sounds/vo/dragon_knight/drag_kill_01.vsnd_c
 sounds/vo/dragon_knight/drag_kill_11.vsnd_c
@@ -479,6 +508,15 @@ sounds/vo/invoker/invo_laugh_06.vsnd_c
 sounds/vo/invoker/invo_level_05.vsnd_c
 sounds/vo/invoker/invo_purch_01.vsnd_c
 sounds/vo/invoker/invo_rare_04.vsnd_c
+sounds/vo/invoker/kidvo_la_laugh_02.vsnd_c
+sounds/vo/invoker/kidvoker_deny_10.vsnd_c
+sounds/vo/invoker/kidvoker_kill_01.vsnd_c
+sounds/vo/invoker/kidvoker_kill_22.vsnd_c
+sounds/vo/invoker/kidvoker_laugh_16.vsnd_c
+sounds/vo/invoker/kidvoker_level_08.vsnd_c
+sounds/vo/invoker/kidvoker_thanks_03.vsnd_c
+sounds/vo/invoker/kidvoker_wheel_all_03.vsnd_c
+sounds/vo/invoker/kidvoker_wheel_all_11.vsnd_c
 sounds/vo/jakiro/jak_ability_failure_07.vsnd_c
 sounds/vo/jakiro/jak_bottle_01.vsnd_c
 sounds/vo/jakiro/jak_bottle_03.vsnd_c
@@ -542,6 +580,15 @@ sounds/vo/legion_commander/legcom_itemcommon_02.vsnd_c
 sounds/vo/legion_commander/legcom_kill_14.vsnd_c
 sounds/vo/legion_commander/legcom_laugh_05.vsnd_c
 sounds/vo/legion_commander/legcom_move_15.vsnd_c
+sounds/vo/legion_commander/auto_legcom_ally_11.vsnd_c
+sounds/vo/legion_commander/auto_legcom_deny_07.vsnd_c
+sounds/vo/legion_commander/auto_legcom_duel_08.vsnd_c
+sounds/vo/legion_commander/auto_legcom_duelfailure_06.vsnd_c
+sounds/vo/legion_commander/auto_legcom_grunt_02.vsnd_c
+sounds/vo/legion_commander/auto_legcom_itemcommon_02.vsnd_c
+sounds/vo/legion_commander/auto_legcom_kill_14.vsnd_c
+sounds/vo/legion_commander/auto_legcom_laugh_05.vsnd_c
+sounds/vo/legion_commander/auto_legcom_move_15.vsnd_c
 sounds/vo/leshrac/lesh_bottle_01.vsnd_c
 sounds/vo/leshrac/lesh_cast_01.vsnd_c
 sounds/vo/leshrac/lesh_deny_13.vsnd_c
@@ -668,6 +715,15 @@ sounds/vo/mirana/mir_kill_09.vsnd_c
 sounds/vo/mirana/mir_laugh_03.vsnd_c
 sounds/vo/mirana/mir_rare_01.vsnd_c
 sounds/vo/mirana/mir_rare_04.vsnd_c
+sounds/vo/mirana/mira_per_arrow_creep_05.vsnd_c
+sounds/vo/mirana/mira_per_battlebegins_01.vsnd_c
+sounds/vo/mirana/mira_per_cast_08.vsnd_c
+sounds/vo/mirana/mira_per_intro_03.vsnd_c
+sounds/vo/mirana/mira_per_laugh_08.vsnd_c
+sounds/vo/mirana/mira_per_respawn_06.vsnd_c
+sounds/vo/mirana/mira_per_thanks_05.vsnd_c
+sounds/vo/mirana/mira_per_wheel_all_02.vsnd_c
+sounds/vo/mirana/mira_per_wheel_all_11.vsnd_c
 sounds/vo/monkey_king/monkey_ability5_07.vsnd_c
 sounds/vo/monkey_king/monkey_death_01.vsnd_c
 sounds/vo/monkey_king/monkey_deny_brood_01.vsnd_c
@@ -686,6 +742,15 @@ sounds/vo/morphling/mrph_kill_09.vsnd_c
 sounds/vo/morphling/mrph_laugh_08.vsnd_c
 sounds/vo/morphling/mrph_regen_02.vsnd_c
 sounds/vo/morphling/mrph_respawn_02.vsnd_c
+sounds/vo/morphling/auto_mrph_ability_repfriend_02.vsnd_c
+sounds/vo/morphling/auto_mrph_attack_09.vsnd_c
+sounds/vo/morphling/auto_mrph_cast_01.vsnd_c
+sounds/vo/morphling/auto_mrph_doubdam_02.vsnd_c
+sounds/vo/morphling/auto_mrph_kill_06.vsnd_c
+sounds/vo/morphling/auto_mrph_kill_09.vsnd_c
+sounds/vo/morphling/auto_mrph_laugh_08.vsnd_c
+sounds/vo/morphling/auto_mrph_regen_02.vsnd_c
+sounds/vo/morphling/auto_mrph_respawn_02.vsnd_c
 sounds/vo/muerta/muerta_attack_01.vsnd_c
 sounds/vo/muerta/muerta_deny_05.vsnd_c
 sounds/vo/muerta/muerta_kill_10.vsnd_c
@@ -767,6 +832,15 @@ sounds/vo/oracle/orac_laugh_13.vsnd_c
 sounds/vo/oracle/orac_randomprophecies_02.vsnd_c
 sounds/vo/oracle/orac_respawn_06.vsnd_c
 sounds/vo/oracle/orac_win_03.vsnd_c
+sounds/vo/oracle/auto_orac_death_11.vsnd_c
+sounds/vo/oracle/auto_orac_itemare_02.vsnd_c
+sounds/vo/oracle/auto_orac_kill_09.vsnd_c
+sounds/vo/oracle/auto_orac_kill_22.vsnd_c
+sounds/vo/oracle/auto_orac_lasthit_04.vsnd_c
+sounds/vo/oracle/auto_orac_laugh_13.vsnd_c
+sounds/vo/oracle/auto_orac_randomprophecies_02.vsnd_c
+sounds/vo/oracle/auto_orac_respawn_06.vsnd_c
+sounds/vo/oracle/auto_orac_win_03.vsnd_c
 sounds/vo/outworld_destroyer/odest_attack_11.vsnd_c
 sounds/vo/outworld_destroyer/odest_begin_02.vsnd_c
 sounds/vo/outworld_destroyer/odest_death_10.vsnd_c
@@ -839,6 +913,15 @@ sounds/vo/pudge/pud_laugh_05.vsnd_c
 sounds/vo/pudge/pud_rare_05.vsnd_c
 sounds/vo/pudge/pud_rare_06.vsnd_c
 sounds/vo/pudge/pud_thanks_02.vsnd_c
+sounds/vo/pudge/toy_pug_deny_18.vsnd_c
+sounds/vo/pudge/toy_pug_kill_15.vsnd_c
+sounds/vo/pudge/toy_pug_laugh_09.vsnd_c
+sounds/vo/pudge/toy_pug_rot_deny_05.vsnd_c
+sounds/vo/pudge/toy_pug_thanks_02.vsnd_c
+sounds/vo/pudge/toy_pug_wheel_all_01.vsnd_c
+sounds/vo/pudge/toy_pug_wheel_all_03.vsnd_c
+sounds/vo/pudge/toy_pug_wheel_all_07.vsnd_c
+sounds/vo/pudge/toy_pug_wheel_deny_01_03.vsnd_c
 sounds/vo/pugna/pugna_ability_life_08.vsnd_c
 sounds/vo/pugna/pugna_ability_nblast_05.vsnd_c
 sounds/vo/pugna/pugna_ability_nward_07.vsnd_c
@@ -1244,3 +1327,6 @@ sounds/vo/zuus/zuus_level_03.vsnd_c
 sounds/vo/zuus/zuus_respawn_06.vsnd_c
 sounds/vo/zuus/zuus_rival_13.vsnd_c
 sounds/vo/zuus/zuus_win_05.vsnd_c
+sounds/weapons/hero/tusk/penguin01.vsnd_c
+sounds/weapons/hero/tusk/penguin02.vsnd_c
+sounds/weapons/hero/tusk/penguin03.vsnd_c

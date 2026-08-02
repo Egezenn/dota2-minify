@@ -48,7 +48,7 @@ def set_state(mod, value):
 
         states[mod] = value
         with utils.open_utf8(base.mods_config_dir, "w") as file:
-            jsonc.dump(states, file, indent=2)
+            jsonc.dump(dict(sorted(states.items())), file, indent=2)
     except Exception:
         pass
 

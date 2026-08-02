@@ -4,6 +4,10 @@ import threading
 import time
 import webbrowser
 
+from core import base
+
+base.original_cwd = os.getcwd()
+
 # Ensure root directories
 if getattr(sys, "frozen", False):
     os.chdir(os.path.dirname(os.path.realpath(sys.executable)))
