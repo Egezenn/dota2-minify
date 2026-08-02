@@ -1,5 +1,4 @@
 <!-- LANG:EN -->
-
 Changes every font being used with:
 
 - A font dropped to config as `font.<t|otf>`
@@ -8,151 +7,201 @@ Changes every font being used with:
 !!: Some fonts may cause problems.
 
 <!-- LANG:BG -->
+Променя всеки шрифт, използван с:
 
-Променя повечето, ако не и всички шрифтове, шрифтовете могат да се променят ръчно в конфигурацията.
+- Шрифт е изпуснат, за да се конфигурира като `font.<t|otf>`
+- Низът на шрифта в конфигурацията намира еквивалентния шрифт от вашата система
 
-!!: Някои шрифтове може да не работят.
+!!: Някои шрифтове могат да причинят проблеми.
 
 <!-- LANG:CS -->
+Změní každé písmo používané s:
 
-Změní většinu, ne-li všechna písma, písma lze ručně změnit v konfiguraci.
+- Písmo odstraněné do konfigurace jako `font.<t|otf>`
+- Řetězec fontu v konfiguraci najde font equalivent z vašeho systému
 
-!!: Některá písma nemusí fungovat.
+!!: Některá písma mohou způsobovat problémy.
 
 <!-- LANG:DA -->
+Ændrer hver skrifttype, der bruges med:
 
-Ændrer de fleste, hvis ikke alle, skrifttyper. Skrifttyperne kan ændres manuelt i konfigurationen.
+- En skrifttype droppet til konfiguration som `font.<t|otf>`
+- Skrifttypestrengen i konfigurationen finder equalivent-skrifttypen fra dit system
 
-!!: Nogle skrifttyper fungerer muligvis ikke.
+!!: Nogle skrifttyper kan forårsage problemer.
 
 <!-- LANG:DE -->
+Ändert jede verwendete Schriftart mit:
 
-Ändert die meisten, wenn nicht alle Schriftarten. Die Schriftarten können in den Einstellungen manuell geändert werden.
+– Eine Schriftart wurde in der Konfiguration als „font.<t|otf>“ abgelegt
+- Die Schriftartzeichenfolge in der Konfiguration findet die entsprechende Schriftart in Ihrem System
 
-!!: Einige Schriftarten funktionieren möglicherweise nicht.
+!!: Einige Schriftarten können Probleme verursachen.
 
 <!-- LANG:EL -->
+Αλλάζει κάθε γραμματοσειρά που χρησιμοποιείται με:
 
-Αλλάζει τις περισσότερες, αν όχι όλες, γραμματοσειρές. Οι γραμματοσειρές μπορούν να αλλάξουν χειροκίνητα στη διαμόρφωση.
+- Μια γραμματοσειρά έπεσε για να διαμορφωθεί ως "font.<t|otf>".
+- Η συμβολοσειρά γραμματοσειράς στη διαμόρφωση, βρίσκει την ισοδύναμη γραμματοσειρά από το σύστημά σας
 
-!!: Ορισμένες γραμματοσειρές ενδέχεται να μην λειτουργούν.
+!!: Ορισμένες γραμματοσειρές ενδέχεται να προκαλέσουν προβλήματα.
 
 <!-- LANG:ES -->
+Cambia cada fuente que se utiliza con:
 
-Cambiar si no todas, la mayoría de las fuentas. Las fuentes pueden cambiarse manualmente en la configuración.
+- Una fuente colocada en la configuración como `font.<t|otf>`
+- La cadena de fuente en la configuración encuentra la fuente igual de su sistema
 
-!!: Algunas fuentes podrían no funcionar.
+!!: Algunas fuentes pueden causar problemas.
 
 <!-- LANG:FI -->
+Muuttaa jokaisen kanssa käytettävän fontin:
 
-Muuttaa useimpia, ellei kaikkia, fontteja. Fontteja voi muuttaa manuaalisesti asetuksissa.
+- Fontti, joka on pudonnut konfiguraatioon "font.<t|otf>".
+- Konfiguraation kirjasinmerkkijono etsii vastaavan kirjasimen järjestelmästäsi
 
-!!: Jotkin fontit eivät välttämättä toimi.
+!!: Jotkut fontit voivat aiheuttaa ongelmia.
 
 <!-- LANG:FR -->
+Modifie chaque police utilisée avec :
 
-Modifie la plupart, voire la totalité, des polices. Il est possible de les modifier manuellement dans la configuration.
+- Une police déposée dans la configuration comme `font.<t|otf>`
+- La chaîne de police dans la configuration, trouve la police égale de votre système
 
-!!: Certaines polices peuvent ne pas fonctionner.
+!! : Certaines polices peuvent poser des problèmes.
 
 <!-- LANG:HU -->
+Módosítja az összes használt betűtípust:
 
-A legtöbb, ha nem az összes betűtípust megváltoztatja, a betűtípusok manuálisan módosíthatók a konfigurációban.
+- Egy betűtípus `font.<t|otf>`-ként került a konfigurációba
+- A konfigurációban lévő betűtípus megkeresi az egyenértékű betűtípust a rendszerből
 
-!!: Előfordulhat, hogy egyes betűtípusok nem működnek.
+!!: Egyes betűtípusok problémákat okozhatnak.
 
 <!-- LANG:IT -->
+Cambia ogni carattere utilizzato con:
 
-Modifica la maggior parte, se non tutti i font; i font possono essere modificati manualmente nella configurazione.
+- Un carattere rilasciato per essere configurato come `font.<t|otf>`
+- La stringa del carattere nella configurazione trova il carattere equivalente dal tuo sistema
 
-!!: Alcuni font potrebbero non funzionare.
+!!: Alcuni caratteri potrebbero causare problemi.
 
 <!-- LANG:JA -->
+以下で使用されているすべてのフォントを変更します。
 
-ほぼ全てのフォントを変更します。フォントは設定ファイルで手動で変更することも可能です。
+- フォントが `font.<t|otf>` として設定にドロップされました。
+- 設定内のフォント文字列。システムから同等のフォントを検索します。
 
-!!: 一部のフォントは正常に動作しない場合があります.
+!!: フォントによっては問題が発生する場合があります。
 
 <!-- LANG:KO -->
+다음과 함께 사용되는 모든 글꼴을 변경합니다.
 
-대부분의 글꼴을 변경합니다. 글꼴은 설정 파일에서 수동으로 변경할 수 있습니다.
+- 글꼴이 `font.<t|otf>`로 구성에 추가되었습니다.
+- 구성의 글꼴 문자열은 시스템에서 동일한 글꼴을 찾습니다.
 
-!!: 일부 글꼴은 작동하지 않을 수 있습니다.
+!!: 일부 글꼴은 문제를 일으킬 수 있습니다.
 
 <!-- LANG:NL -->
+Verandert elk lettertype dat wordt gebruikt met:
 
-Wijzigt de meeste, zo niet alle lettertypen. De lettertypen kunnen handmatig in de configuratie worden aangepast.
+- Een lettertype dat naar de configuratie is verplaatst als `font.<t|otf>`
+- De lettertypereeks in de configuratie vindt het gelijkwaardige lettertype van uw systeem
 
-!!: Sommige lettertypen werken mogelijk niet.
+!!: Sommige lettertypen kunnen problemen veroorzaken.
 
 <!-- LANG:NO -->
+Endrer hver font som brukes med:
 
-Endrer de fleste, om ikke alle, skrifttyper. Skrifttypene kan endres manuelt i konfigurasjonen.
+- En skrift ble droppet til konfigurasjon som `font.<t|otf>`
+- Skriftstrengen i konfigurasjonen finner equalivent-fonten fra systemet ditt
 
-!!: Noen skrifttyper fungerer kanskje ikke.
+!!: Noen skrifter kan forårsake problemer.
 
 <!-- LANG:PL -->
+Zmienia każdą czcionkę używaną w:
 
-Zmienia większość, jeśli nie wszystkie czcionki. Czcionki można zmienić ręcznie w konfiguracji.
+- Czcionka została dodana do konfiguracji jako `font.<t|otf>`
+- Ciąg czcionki w konfiguracji, znajduje czcionkę równości z twojego systemu
 
-!!: Niektóre czcionki mogą nie działać.
+!!: Niektóre czcionki mogą powodować problemy.
 
 <!-- LANG:PT -->
+Altera todas as fontes usadas com:
 
-Altera a maioria, senão todas, as fontes. As fontes podem ser alteradas manualmente na configuração.
+- Uma fonte descartada na configuração como `font.<t|otf>`
+- A string da fonte na configuração encontra a fonte equalivent do seu sistema
 
-!!: Algumas fontes podem não funcionar.
+!!: Algumas fontes podem causar problemas.
 
 <!-- LANG:RO -->
+Schimbă fiecare font utilizat cu:
 
-Modifică majoritatea fonturilor, dacă nu toate, fonturile pot fi modificate manual în configurație.
+- Un font a căzut în config ca `font.<t|otf>`
+- Șirul fontului din configurație găsește fontul equalivent din sistemul dumneavoastră
 
-!!: Este posibil ca unele fonturi să nu funcționeze.
+!!: Unele fonturi pot cauza probleme.
 
 <!-- LANG:RU -->
+Изменяет каждый используемый шрифт с помощью:
 
-Изменяет большинство, если не все, шрифты; шрифты можно изменить вручную в настройках.
+— Шрифт добавлен в конфигурацию как `font.<t|otf>`.
+- Строка шрифта в конфигурации находит эквивалентный шрифт из вашей системы.
 
-!!: Некоторые шрифты могут не работать.
+!!: Некоторые шрифты могут вызывать проблемы.
 
 <!-- LANG:SV -->
+Ändrar alla teckensnitt som används med:
 
-Ändrar de flesta, om inte alla, teckensnitt. Teckensnitten kan ändras manuellt i konfigurationen.
+- Ett teckensnitt har släppts till config som `font.<t|otf>`
+- Teckensnittssträngen i konfigurationen hittar equalivent-fonten från ditt system
 
-!!: Vissa teckensnitt kanske inte fungerar.
+!!: Vissa teckensnitt kan orsaka problem.
 
 <!-- LANG:TH -->
+เปลี่ยนทุกแบบอักษรที่ใช้กับ:
 
-โปรแกรมนี้จะเปลี่ยนแบบอักษรเกือบทั้งหมด (หรือทั้งหมด) สามารถเปลี่ยนแบบอักษรได้ด้วยตนเองในการตั้งค่า
+- แบบอักษรถูกทิ้งเพื่อกำหนดค่าเป็น `font.<t|otf>`
+- สตริงแบบอักษรในการกำหนดค่า ค้นหาแบบอักษรที่เท่ากันจากระบบของคุณ
 
-!!: แบบอักษรบางแบบอาจใช้งานไม่ได้
+!!: ฟอนต์บางตัวอาจทำให้เกิดปัญหาได้
 
 <!-- LANG:TR -->
+Kullanılan her yazı tipini değiştirir:
 
-Çoğu yazı tipini değiştirir, yazı tipleri yapılandırma dosyasında manuel olarak değiştirilebilir.
+- `font.<t|otf>` olarak yapılandırmaya bırakılan bir yazı tipi
+- Yapılandırmadaki yazı tipi dizesi, sisteminizden eşdeğer yazı tipini bulur
 
-!!: Bazı yazı tipleri çalışmayabilir.
+!!: Bazı yazı tipleri sorunlara neden olabilir.
 
 <!-- LANG:UK -->
+Змінює кожен шрифт, який використовується з:
 
-Змінює більшість або всі шрифти. Шрифти можна змінювати вручну в конфігурації.
+— Шрифт перенесено в конфігурацію як `font.<t|otf>`
+- Рядок шрифту в конфігурації знаходить еквівалентний шрифт у вашій системі
 
-!!: Деякі шрифти можуть не працювати.
+!!: деякі шрифти можуть викликати проблеми.
 
 <!-- LANG:VI -->
+Thay đổi mọi phông chữ đang được sử dụng với:
 
-Thay đổi hầu hết, nếu không phải tất cả, các phông chữ; bạn có thể thay đổi phông chữ thủ công trong tệp cấu hình.
+- Một phông chữ được thả xuống cấu hình là `font.<t|otf>`
+- Chuỗi phông chữ trong cấu hình, tìm phông chữ tương đương từ hệ thống của bạn
 
-!!: Một số phông chữ có thể không hoạt động.
+!!: Một số phông chữ có thể gây ra sự cố.
 
 <!-- LANG:ZH-CN -->
+更改正在使用的每种字体：
 
-更改大部分(如果不是全部)字体, 字体也可以在配置文件中手动更改.
+- 将字体作为“font.<t|otf>”放置到配置中
+- 配置中的字体字符串，从您的系统中查找同等的字体
 
-!!: 部分字体可能无法正常显示.
+!!：某些字体可能会导致问题。
 
 <!-- LANG:ZH-TW -->
+變更正在使用的每種字體：
 
-更改大部分(如果不是全部)字體, 字體也可以在設定檔中手動變更.
+- 將字體作為“font.<t|otf>”放置到配置中
+- 配置中的字體字串，從您的系統中尋找相同的字體
 
-!!: 部分字體可能無法正常顯示.
+!!：某些字體可能會導致問題。

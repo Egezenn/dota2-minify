@@ -2,8 +2,3 @@
 DOTADashboardBackgroundManager:not(.Hidden) {
   visibility: collapse;
 }
-
-/* g:panorama/styles/dashboard_page_home */
-#FrontpageContents {
-  visibility: collapse;
-}

@@ -101,7 +101,8 @@ class ModInfo:
                     self.errors.append(f"Invalid {filename}: {e}")
             return True
 
-        self.config = check_file("manifest.json", None, None, None, True)
+        config = check_file("manifest.json", None, None, None, True)
+        self.config = config if isinstance(config, dict) else {}
 
         check_file("notes.md", "has_notes", "W", "Missing notes.md")
         self.has_preview = (self.path / "preview.jpg").exists() or (self.path / "preview.png").exists()
