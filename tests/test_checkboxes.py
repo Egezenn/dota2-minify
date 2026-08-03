@@ -1,30 +1,43 @@
+import pytest
+
 from ui.checkboxes import mod_matches_filter, parse_mod_filter
 
 
-def test_parse_mod_filter_supports_quoted_values():
-    assert parse_mod_filter('dependencies:"Dark Terrain" order:2') == ["dependencies:Dark Terrain", "order:2"]
-
-
-def test_parse_mod_filter_supports_unquoted_multiword_values():
-    assert parse_mod_filter("dark dependencies:Remove Foilage order:2") == [
-        "dark",
-        "dependencies:Remove Foilage",
-        "order:2",
-    ]
-    assert parse_mod_filter("order: 2") == ["order: 2"]
-
-
-def test_parse_mod_filter_preserves_backslashes():
-    assert parse_mod_filter(r"default:C:\Mods\Terrain") == [r"default:C:\Mods\Terrain"]
-    assert parse_mod_filter("author:O'Connor") == ["author:O'Connor"]
-    assert parse_mod_filter('default:url("s2r://image"), url("s2r://fallback")') == [
-        'default:url("s2r://image"), url("s2r://fallback")'
-    ]
+@pytest.mark.parametrize(
+    ("query", "expected"),
+    [
+        ('dependencies:"Dark Terrain" order:2', ["dependencies:Dark Terrain", "order:2"]),
+        (
+            "dark dependencies:Remove Foilage order:2",
+            ["dark", "dependencies:Remove Foilage", "order:2"],
+        ),
+        ("order: 2", ["order: 2"]),
+        (r"default:C:\Mods\Terrain", [r"default:C:\Mods\Terrain"]),
+        ("author:O'Connor", ["author:O'Connor"]),
+        (
+            'default:url("s2r://image"), url("s2r://fallback")',
+            ['default:url("s2r://image"), url("s2r://fallback")'],
+        ),
+    ],
+)
+def test_parse_mod_filter_returns_expected_tokens(query, expected):
+    assert parse_mod_filter(query) == expected
 
 
 def test_mod_matches_filter_by_name_with_and_semantics():
     assert mod_matches_filter("Dark Terrain", {}, "dark terrain")
     assert not mod_matches_filter("Dark Terrain", {}, "dark weather")
+
+
+@pytest.mark.parametrize("query", ["", "   ", None])
+def test_mod_matches_filter_empty_query_matches_every_mod(query):
+    assert mod_matches_filter("Dark Terrain", {"order": 2}, query)
+
+
+@pytest.mark.parametrize("manifest", [None, [], "not-a-dict", 5])
+def test_mod_matches_filter_non_dict_manifest_falls_back_to_name_only(manifest):
+    assert mod_matches_filter("Dark Terrain", manifest, "dark")
+    assert not mod_matches_filter("Dark Terrain", manifest, "order:2")
 
 
 def test_mod_matches_filter_by_manifest_keys_and_nested_values():

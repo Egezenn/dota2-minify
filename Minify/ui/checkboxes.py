@@ -120,6 +120,8 @@ def _is_filter_start(token, has_open_filter):
     if not valid_key:
         return False
 
+    # Keep URL schemes and Windows drive paths attached to the open filter value
+    # instead of treating them as a new key:value pair.
     if has_open_filter and (value.startswith("//") or (len(key) == 1 and value.startswith(("\\", "/")))):
         return False
 
@@ -179,10 +181,10 @@ def filter_mods(sender=None, app_data=None, user_data=None):
     if app_data is not None:
         mod_filter_query = str(app_data)
 
-    for mod, manifest in mod_filter_metadata.items():
+    for mod, (display_name, manifest) in mod_filter_metadata.items():
         group_tag = mod_filter_item_tags.get(mod)
         if group_tag and dpg.does_item_exist(group_tag):
-            dpg.configure_item(group_tag, show=mod_matches_filter(mod, manifest, mod_filter_query))
+            dpg.configure_item(group_tag, show=mod_matches_filter(display_name, manifest, mod_filter_query))
 
 
 def load():
@@ -249,7 +251,7 @@ def create():
     dpg.add_input_text(
         parent="mod_menu",
         tag="mod_search_input",
-        hint="Search by mod name or manifest key:value...",
+        hint=localization.mod_search_hint_var,
         default_value=mod_filter_query,
         width=-1,
         callback=filter_mods,
@@ -319,12 +321,13 @@ def create():
             value = checkboxes_state.get(mod, False)
 
         group_tag = f"{mod}_group_tag"
-        mod_filter_metadata[mod] = cfg
+        display_name = mod[:-4] if is_vpk else mod
+        mod_filter_metadata[mod] = (display_name, cfg)
         mod_filter_item_tags[mod] = group_tag
         dpg.add_group(parent="mod_menu", tag=group_tag, horizontal=True, width=base.main_window_width)
         dpg.add_checkbox(
             parent=group_tag,
-            label=mod[:-4] if is_vpk else mod,
+            label=display_name,
             tag=mod,
             callback=setup_state,
             default_value=value,

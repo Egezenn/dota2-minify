@@ -1147,6 +1147,9 @@
     "ZH-CN": "压缩过程中遇到错误.请查看 Minify/logs/warnings.txt 文件了解详情.",
     "ZH-TW": "壓縮過程中遇到錯誤.請查看 Minify/logs/warnings.txt 檔案以了解詳情."
   },
+  "mod_search_hint_var": {
+    "EN": "Search by mod name or manifest key:value..."
+  },
   "mod_selection_window_var": {
     "EN": "Mod Selection Menu",
     "BG": "Меню за избор на мод",
