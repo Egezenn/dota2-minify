@@ -13,6 +13,176 @@ from ui import details, localization, settings, shared, theme
 
 checkboxes = []
 checkboxes_state = {}
+mod_filter_query = ""
+mod_filter_metadata = {}
+mod_filter_item_tags = {}
+
+
+def _stringify_filter_values(value):
+    if isinstance(value, dict):
+        for nested_key, nested_value in value.items():
+            yield str(nested_key)
+            yield from _stringify_filter_values(nested_value)
+    elif isinstance(value, (list, tuple, set)):
+        for nested_value in value:
+            yield from _stringify_filter_values(nested_value)
+    elif value is None:
+        yield "null"
+    elif isinstance(value, bool):
+        yield str(value).lower()
+    else:
+        yield str(value)
+
+
+def _iter_manifest_path_values(value, path):
+    if not path:
+        yield value
+        return
+
+    if isinstance(value, dict):
+        target_key = path[0]
+        for current_key, current_value in value.items():
+            if str(current_key).casefold() == target_key:
+                yield from _iter_manifest_path_values(current_value, path[1:])
+    elif isinstance(value, (list, tuple, set)):
+        for nested_value in value:
+            yield from _iter_manifest_path_values(nested_value, path)
+
+
+def _iter_manifest_values_for_key(value, key):
+    if "." in key:
+        path = [part.casefold() for part in key.split(".")]
+        if any(not part for part in path):
+            return
+        for matched_value in _iter_manifest_path_values(value, path):
+            yield from _stringify_filter_values(matched_value)
+        return
+
+    target_key = key.casefold()
+    if isinstance(value, dict):
+        direct_values = [
+            current_value for current_key, current_value in value.items() if str(current_key).casefold() == target_key
+        ]
+        if direct_values:
+            for direct_value in direct_values:
+                yield from _stringify_filter_values(direct_value)
+            return
+
+        for current_value in value.values():
+            yield from _iter_manifest_values_for_key(current_value, key)
+    elif isinstance(value, (list, tuple, set)):
+        for nested_value in value:
+            yield from _iter_manifest_values_for_key(nested_value, key)
+
+
+def _tokenize_mod_filter(query):
+    tokens = []
+    current = []
+    quote = None
+    had_quote = False
+    index = 0
+
+    while index < len(query):
+        char = query[index]
+        if quote:
+            if char == "\\" and index + 1 < len(query) and query[index + 1] == quote:
+                current.append(quote)
+                index += 1
+            elif char == quote:
+                quote = None
+                had_quote = True
+            else:
+                current.append(char)
+        elif char in ('"', "'") and (not current or current[-1] == ":"):
+            quote = char
+            had_quote = True
+        elif char.isspace():
+            if current or had_quote:
+                tokens.append(("".join(current), had_quote))
+                current = []
+                had_quote = False
+        else:
+            current.append(char)
+        index += 1
+
+    if current or had_quote:
+        tokens.append(("".join(current), had_quote))
+
+    return tokens
+
+
+def _is_filter_start(token, has_open_filter):
+    key, separator, value = token.partition(":")
+    key_parts = key.strip().split(".")
+    valid_key = separator and all(
+        part and all(char.isalnum() or char in ("_", "-") for char in part) for part in key_parts
+    )
+    if not valid_key:
+        return False
+
+    if has_open_filter and (value.startswith("//") or (len(key) == 1 and value.startswith(("\\", "/")))):
+        return False
+
+    return True
+
+
+def parse_mod_filter(query):
+    query = str(query or "").strip()
+    if not query:
+        return []
+
+    parsed_tokens = []
+    open_filter_index = None
+
+    for token, had_quote in _tokenize_mod_filter(query):
+        if not token:
+            continue
+
+        if _is_filter_start(token, open_filter_index is not None):
+            parsed_tokens.append(token)
+            open_filter_index = None if had_quote else len(parsed_tokens) - 1
+        elif open_filter_index is not None:
+            parsed_tokens[open_filter_index] += f" {token}"
+        else:
+            parsed_tokens.append(token)
+
+    return parsed_tokens
+
+
+def mod_matches_filter(mod_name, manifest, query):
+    mod_name = str(mod_name).casefold()
+    manifest = manifest if isinstance(manifest, dict) else {}
+
+    for token in parse_mod_filter(query):
+        key, separator, expected = token.partition(":")
+        if separator:
+            key = key.strip().casefold()
+            expected = expected.strip().casefold()
+            if not key or not expected:
+                return False
+
+            if key == "mod":
+                values = (mod_name,)
+            else:
+                values = _iter_manifest_values_for_key(manifest, key)
+
+            if not any(expected in value.casefold() for value in values):
+                return False
+        elif token.casefold() not in mod_name:
+            return False
+
+    return True
+
+
+def filter_mods(sender=None, app_data=None, user_data=None):
+    global mod_filter_query
+    if app_data is not None:
+        mod_filter_query = str(app_data)
+
+    for mod, manifest in mod_filter_metadata.items():
+        group_tag = mod_filter_item_tags.get(mod)
+        if group_tag and dpg.does_item_exist(group_tag):
+            dpg.configure_item(group_tag, show=mod_matches_filter(mod, manifest, mod_filter_query))
 
 
 def load():
@@ -73,6 +243,18 @@ def create():
     shared.mod_details_image_cache.clear()
 
     checkboxes.clear()
+    mod_filter_metadata.clear()
+    mod_filter_item_tags.clear()
+
+    dpg.add_input_text(
+        parent="mod_menu",
+        tag="mod_search_input",
+        hint="Search by mod name or manifest key:value...",
+        default_value=mod_filter_query,
+        width=-1,
+        callback=filter_mods,
+    )
+    dpg.add_separator(parent="mod_menu")
 
     mod_details_cache = {}
 
@@ -109,6 +291,7 @@ def create():
         unsupported_version = False
         if is_vpk := mod.endswith(".vpk"):
             always_val = False
+            cfg = {}
         else:
             cfg = manifest_utils.get_mod(mod_path)
             always_val = cfg.get("always", False)
@@ -135,9 +318,12 @@ def create():
             enable_ticking = True
             value = checkboxes_state.get(mod, False)
 
-        dpg.add_group(parent="mod_menu", tag=f"{mod}_group_tag", horizontal=True, width=base.main_window_width)
+        group_tag = f"{mod}_group_tag"
+        mod_filter_metadata[mod] = cfg
+        mod_filter_item_tags[mod] = group_tag
+        dpg.add_group(parent="mod_menu", tag=group_tag, horizontal=True, width=base.main_window_width)
         dpg.add_checkbox(
-            parent=f"{mod}_group_tag",
+            parent=group_tag,
             label=mod[:-4] if is_vpk else mod,
             tag=mod,
             callback=setup_state,
@@ -195,6 +381,7 @@ def create():
         checkboxes.append(mod)
 
     conditions.disable_workshop_mods()
+    filter_mods(app_data=mod_filter_query)
 
 
 def get_value(mod):
