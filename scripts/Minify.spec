@@ -1,7 +1,9 @@
 # -*- mode: python ; coding: utf-8 -*-
+import glob
 import os
 import platform
 import sys
+import sysconfig
 
 
 # Import version utility to generate metadata files
@@ -16,9 +18,17 @@ except ImportError:
 except Exception as e:
     print(f"Error generating metadata: {e}")
 
+binaries = []
+if platform.system() != "Windows":
+    lib_dir = sysconfig.get_config_var("LIBDIR")
+    if lib_dir and os.path.isdir(lib_dir):
+        for pattern in ("libtcl*.so*", "libtk*.so*"):
+            binaries.extend((path, ".") for path in glob.glob(os.path.join(lib_dir, pattern)))
+
 a = Analysis(
     ["../Minify/__main__.py"],
     pathex=["../Minify"],
+    binaries=binaries,
     hiddenimports=["tkinter"],
 )
 pyz = PYZ(a.pure)

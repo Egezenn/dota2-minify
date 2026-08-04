@@ -3,7 +3,7 @@
     {
       "key": "bg_img_style",
       "text": "Background Image Path",
-      "default": "url(\"s2r://panorama/images/backgrounds/background_png.vtex\"), url(\"s2r://panorama/images/loadingscreens/international_2025_ls_3/loadingscreen.vtex\")",
+      "default": "url(\"s2r://panorama/images/backgrounds/background_png.vtex\"), url(\"s2r://panorama/images/loadingscreens/international_2026_ls_5/loadingscreen.vtex\")",
       "type": "inputbox"
     },
     {

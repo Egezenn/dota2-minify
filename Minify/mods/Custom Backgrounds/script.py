@@ -98,7 +98,7 @@ def main():
                 config.set_mod(
                     mod_name,
                     {
-                        "bg_img_style": 'url("s2r://panorama/images/backgrounds/background_png.vtex"), url("s2r://panorama/images/loadingscreens/international_2025_ls_3/loadingscreen.vtex")'
+                        "bg_img_style": 'url("s2r://panorama/images/backgrounds/background_png.vtex"), url("s2r://panorama/images/loadingscreens/international_2026_ls_5/loadingscreen.vtex")'
                     },
                 )
 

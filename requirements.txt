@@ -3,8 +3,9 @@ json-with-comments
 playsound3
 psutil
 pyinstaller
-requests
+requests[socks]
 screeninfo
+typer
 vdf
 vpk
 defusedxml>=0.7.1
