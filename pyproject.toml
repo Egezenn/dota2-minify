@@ -43,6 +43,10 @@ lint.ignore = [
     "I001", # Unsorted imports
 ]
 
+[tool.pyrefly]
+preset = "off"
+search-path = ["Minify"]
+
 [tool.pylint.messages_control]
 disable = [
     "invalid-name",
