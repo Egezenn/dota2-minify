@@ -197,7 +197,6 @@ materials/models/props_structures/urn002b.vmat_c
 materials/models/props_structures/waterfall_stone_block_color.vmat_c
 materials/models/props_structures/wood_wall001.vmat_c
 materials/models/props_structures/wood_wall001b.vmat_c
-materials/models/props_tree/tree_oak_leaves_05.vmat_c
 materials/models/props_tree/tree_oak_leaves_08.vmat_c
 materials/models/props_tree/tree_oak_leaves_blank.vmat_c
 materials/models/props_wildlife/badside_hands001.vmat_c
@@ -582,7 +581,6 @@ models/props_tree/tree_oak_02_destruction.vmdl_c
 models/props_tree/tree_oak_autumn_01_destruction.vmdl_c
 models/props_tree/tree_oak_autumn_01b_destruction.vmdl_c
 models/props_tree/tree_oak_autumn_02_destruction.vmdl_c
-models/props_tree/tree_oak_leaves_05.vmdl_c
 models/props_tree/tree_oak_leaves_08.vmdl_c
 models/props_tree/tree_oak_snow_01_destruction.vmdl_c
 models/props_tree/tree_oak_snow_01b_destruction.vmdl_c

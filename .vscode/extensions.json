@@ -1,6 +1,6 @@
 {
   "recommendations": [
-    "detachhead.basedpyright",
+    "meta.pyrefly",
     "ms-python.black-formatter",
     "ms-python.debugpy",
     "ms-python.python"
