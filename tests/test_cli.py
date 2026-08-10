@@ -23,7 +23,7 @@ def test_patch_calls_patcher():
     mock_patcher.assert_called_once()
 
 
-def test_patch_accepts_config_and_mods_paths(tmp_path):
+def test_patch_with_config_and_mods_paths_updates_base_paths(tmp_path):
     cfg_file = str(tmp_path / "cfg.json")
     mods_file = str(tmp_path / "mods.json")
     with (

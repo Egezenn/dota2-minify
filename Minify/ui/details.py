@@ -3,7 +3,7 @@
 import os
 
 import dearpygui.dearpygui as dpg
-from core import base, utils
+from core import base, output, utils
 
 from ui import localization, markdown, shared
 
@@ -44,7 +44,7 @@ def render_details_window(mod):
                 else:
                     shared.mod_details_image_cache.pop(mod, None)
             except Exception as e:
-                print(f"Failed to load image for {mod}: {e}")
+                output.add_text(f"Failed to load image for {mod}: {e}", msg_type="warning")
                 shared.mod_details_image_cache.pop(mod, None)
 
     if mod in shared.mod_details_image_cache and not isinstance(shared.mod_details_image_cache[mod], str):

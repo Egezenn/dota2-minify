@@ -35,6 +35,7 @@ class BrowserUI:
         self.installed_mods = {}  # mod_name -> mod_dir
         self.category_filter = ""
         self.mod_filter = ""
+        self.render_generation = 0
 
         # Register windows for resize
         for tag in ["d2pfx_browser_window", "d2pfx_details_modal"]:
@@ -142,6 +143,7 @@ class BrowserUI:
         # Close browser if no modal is active
         if dpg.does_item_exist("d2pfx_browser_window") and dpg.is_item_shown("d2pfx_browser_window"):
             dpg.configure_item("d2pfx_browser_window", show=False)
+            self.render_generation += 1
             if dpg.does_item_exist(self.textures_registry):
                 dpg.delete_item(self.textures_registry, children_only=True)
 
@@ -330,6 +332,7 @@ class BrowserUI:
 
         filter_text = self.mod_filter
         self.current_rendering_cat = cat_id
+        self.render_generation += 1
         if dpg.does_item_exist("d2pfx_mods_view"):
             dpg.delete_item("d2pfx_mods_view", children_only=True)
 
@@ -604,7 +607,12 @@ class BrowserUI:
             _add_to_ui()
             return
 
+        current_gen = self.render_generation
+
         def _load():
+            if self.render_generation != current_gen:
+                return
+
             # If not locally present, download it (if not already downloading)
             if not os.path.exists(local_path):
                 with self.loading_lock:
@@ -632,12 +640,13 @@ class BrowserUI:
                     self.apply_fallback_icon(parent, width, height)
                     return
 
-            if not dpg.does_item_exist(parent):
+            if not dpg.does_item_exist(parent) or self.render_generation != current_gen:
                 return
 
             try:
                 # Downscaled image loading for fast, low-RAM thumbnails
                 if not os.path.exists(local_path) or os.path.getsize(local_path) == 0:
+                    self.apply_fallback_icon(parent, width, height)
                     return
 
                 res = utils.load_dpg_image_resized(local_path, max_width=width * 2, max_height=height * 2)

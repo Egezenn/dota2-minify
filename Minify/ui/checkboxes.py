@@ -173,8 +173,6 @@ def create():
                 if img_path:
                     shared.mod_details_image_cache[mod] = img_path
 
-                details.render_details_window(mod)
-
         checkboxes.append(mod)
 
     conditions.disable_workshop_mods()
