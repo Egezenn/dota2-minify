@@ -1,10 +1,10 @@
-from unittest.mock import MagicMock, patch as mock_patch
-
-from typer.testing import CliRunner
+from unittest.mock import MagicMock
+from unittest.mock import patch as mock_patch
 
 import patch as patch_mod
-from core import base, constants, mods_shared
 from cli import app
+from core import base, constants, mods_shared
+from typer.testing import CliRunner
 
 runner = CliRunner()
 

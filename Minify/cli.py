@@ -4,12 +4,12 @@ import shlex
 import subprocess
 from typing import Optional
 
-import typer
-
 import browsers
 import helper
 import patch
-from core import base, config as _config, constants, mods_shared, utils
+import typer
+from core import base, constants, mods_shared, utils
+from core import config as _config
 from ui import localization
 
 base.HEADLESS = True

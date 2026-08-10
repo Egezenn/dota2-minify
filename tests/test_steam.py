@@ -3,11 +3,11 @@ from unittest.mock import MagicMock
 import pytest
 from core.constants import resolve_locale
 from core.steam import (
+    fix_launch_options,
     remove_lang_args,
     remove_minify_lang,
     remove_specific_lang_arg,
     restore_boot_language,
-    fix_launch_options,
 )
 
 

@@ -114,9 +114,9 @@ def add_conditional_patch_to_launch_options():
         new_options = " ".join(new_tokens)
 
         if new_options != launch_options:
-            data["UserLocalConfigStore"]["Software"]["Valve"]["Steam"]["apps"][base.STEAM_DOTA_ID][
-                "LaunchOptions"
-            ] = new_options
+            data["UserLocalConfigStore"]["Software"]["Valve"]["Steam"]["apps"][base.STEAM_DOTA_ID]["LaunchOptions"] = (
+                new_options
+            )
             with utils.open_utf8R(vdf_path, "w") as file:
                 vdf.dump(data, file, pretty=True)
             changed = True

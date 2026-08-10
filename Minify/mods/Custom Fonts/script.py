@@ -174,11 +174,22 @@ def main():
 
     fs.backup_directory(dota_fonts_path, bkup_path)
 
+    with open(found_font, "rb") as f:
+        found_font_data = f.read()
+
     for name, (family, fullname, postscript) in REPLACE_MAP.items():
         dest = os.path.join(dota_fonts_path, name)
         if os.path.exists(dest) and _is_patched(dest, family, fullname, postscript):
-            output.add_text(f"Skipped (already patched): {name}")
-            continue
+            with open(dest, "rb") as f:
+                dest_data = f.read()
+            if dest_data == found_font_data:
+                output.add_text(f"Skipped (already patched): {name}")
+                continue
+            output.add_text(f"Font changed, re-patching: {name}")
+        fs.remove_path(dest)
+        shutil.copy2(found_font, dest)
+        _patch_font(dest, family, fullname, postscript)
+        output.add_text(f"Installed: {name}")
         fs.remove_path(dest)
         shutil.copy2(found_font, dest)
         _patch_font(dest, family, fullname, postscript)

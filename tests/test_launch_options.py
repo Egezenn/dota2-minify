@@ -1,7 +1,6 @@
 from unittest.mock import MagicMock
 
 import pytest
-
 from core import base
 from core.steam import add_conditional_patch_to_launch_options
 
