@@ -113,7 +113,8 @@ def render_rich_text(parent, text, font="main_font", base_color=(0, 230, 230), b
 
     for token in tokens:
         token_text = token["text"]
-        token_width = dpg.get_text_size(token_text)[0]
+        token_size = dpg.get_text_size(token_text)
+        token_width = token_size[0] if token_size else len(token_text) * 7
 
         if font == "large_font":
             token_width *= 1.25

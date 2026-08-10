@@ -23,6 +23,7 @@ dependencies = [
     "vdf>=3.4",
     "vpk>=1.4.0",
     "defusedxml>=0.7.1",
+    "pillow>=12.3.0",
 ]
 
 [tool]

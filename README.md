@@ -103,6 +103,7 @@ This project wouldn't be available without the work of the community. Thanks to 
 | [dearpygui](https://github.com/hoffstadt/DearPyGui)                    | GUI                                       | [MIT license](https://github.com/hoffstadt/DearPyGui/blob/master/LICENSE)         |
 | [defusedxml](https://github.com/tiran/defusedxml)                      | Secure XML parsing                        | [PSFL license](https://github.com/tiran/defusedxml/blob/main/LICENSE)             |
 | [json-with-comments](https://github.com/n-takumasa/json-with-comments) | JSON parsing with comments                | [MIT license](https://github.com/n-takumasa/json-with-comments/blob/main/LICENSE) |
+| [pillow](https://github.com/python-pillow/Pillow)                      | Image downscaling and thumbnailing        | [HPND license](https://github.com/python-pillow/Pillow/blob/main/LICENSE)         |
 | [playsound3](https://github.com/szmikler/playsound3)                   | Playing sounds                            | [MIT license](https://github.com/szmikler/playsound3/blob/main/LICENSE)           |
 | [psutil](https://github.com/giampaolo/psutil)                          | Checking processes existences             | [BSD-3-Clause license](https://github.com/giampaolo/psutil/blob/master/LICENSE)   |
 | [requests](https://github.com/psf/requests)                            | Downloading/querying project dependencies | [Apache-2.0 license](https://github.com/psf/requests/blob/main/LICENSE)           |

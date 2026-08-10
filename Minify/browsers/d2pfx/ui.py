@@ -142,6 +142,8 @@ class BrowserUI:
         # Close browser if no modal is active
         if dpg.does_item_exist("d2pfx_browser_window") and dpg.is_item_shown("d2pfx_browser_window"):
             dpg.configure_item("d2pfx_browser_window", show=False)
+            if dpg.does_item_exist(self.textures_registry):
+                dpg.delete_item(self.textures_registry, children_only=True)
 
     def prune_metadata_cache(self):
         # Reset search filters
@@ -330,6 +332,9 @@ class BrowserUI:
         self.current_rendering_cat = cat_id
         if dpg.does_item_exist("d2pfx_mods_view"):
             dpg.delete_item("d2pfx_mods_view", children_only=True)
+
+        if dpg.does_item_exist(self.textures_registry):
+            dpg.delete_item(self.textures_registry, children_only=True)
 
         mods = self.data_manager.get_mods(cat_id)
 
@@ -631,11 +636,11 @@ class BrowserUI:
                 return
 
             try:
-                # Native DPG image loading (JPG/PNG supported)
+                # Downscaled image loading for fast, low-RAM thumbnails
                 if not os.path.exists(local_path) or os.path.getsize(local_path) == 0:
                     return
 
-                res = dpg.load_image(local_path)
+                res = utils.load_dpg_image_resized(local_path, max_width=width * 2, max_height=height * 2)
                 if not res:
                     self.apply_fallback_icon(parent, width, height)
                     return

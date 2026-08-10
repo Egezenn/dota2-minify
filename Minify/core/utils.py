@@ -84,3 +84,20 @@ def setup_system():
 
 def sanitize_win_path(name):
     return re.sub(r'[<>:"/\\|?*\x00-\x1f]', "_", name).rstrip(" .") or uuid.uuid4().hex[:8]
+
+
+def load_dpg_image_resized(path: str, max_width: int = 600, max_height: int = 600):
+    try:
+        from PIL import Image
+
+        with Image.open(path) as img:
+            img = img.convert("RGBA")
+            img.thumbnail((max_width, max_height), Image.Resampling.LANCZOS)
+            w, h = img.size
+            raw_bytes = img.tobytes()
+            data = [b / 255.0 for b in raw_bytes]
+            return w, h, 4, data
+    except Exception:
+        import dearpygui.dearpygui as dpg
+
+        return dpg.load_image(path)

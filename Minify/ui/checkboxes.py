@@ -83,26 +83,17 @@ def create():
             img_p = os.path.join(mod_p, "preview.png")
         notes_p = os.path.join(mod_p, "notes.md")
 
-        image_data = None
-        has_notes = False
+        img_path = img_p if os.path.exists(img_p) else None
+        has_notes = os.path.exists(notes_p) and os.path.getsize(notes_p) > 0
 
-        if os.path.exists(img_p):
-            try:
-                image_data = dpg.load_image(img_p)
-            except Exception as err:
-                print(f"Failed to load image for {mod_name}: {err}")
-
-        if os.path.exists(notes_p) and os.path.getsize(notes_p) > 0:
-            has_notes = True
-
-        return mod_name, image_data, has_notes
+        return mod_name, img_path, has_notes
 
     mods_to_scan = [m for m in constants.visually_available_mods if not m.endswith(".vpk")]
 
     with concurrent.futures.ThreadPoolExecutor() as executor:
         results = executor.map(scan_mod_details, mods_to_scan)
-        for m_name, img_data, notes_exist in results:
-            mod_details_cache[m_name] = (img_data, notes_exist)
+        for m_name, img_path, notes_exist in results:
+            mod_details_cache[m_name] = (img_path, notes_exist)
 
     for mod in constants.visually_available_mods:
         mod_path = os.path.join(base.mods_dir, mod)
@@ -146,9 +137,9 @@ def create():
         )
 
         if not is_vpk:
-            img_data, has_notes = mod_details_cache.get(mod, (None, False))
+            img_path, has_notes = mod_details_cache.get(mod, (None, False))
 
-            if img_data or has_notes:
+            if img_path or has_notes:
                 tag_data = f"{mod}_details_window_tag"
                 dpg.add_button(
                     parent=f"{mod}_group_tag",
@@ -179,16 +170,8 @@ def create():
                 with dpg.group(parent=tag_data, tag=content_group):
                     pass
 
-                if img_data:
-                    try:
-                        w, h, _, d = img_data
-                        image_tag = f"{mod}_image_texture"
-                        dpg.add_static_texture(
-                            width=w, height=h, default_value=d, tag=image_tag, parent="mod_images_registry"
-                        )
-                        shared.mod_details_image_cache[mod] = (w, h, image_tag)
-                    except Exception as e:
-                        print(f"Failed to display image for {mod}: {e}")
+                if img_path:
+                    shared.mod_details_image_cache[mod] = img_path
 
                 details.render_details_window(mod)
 

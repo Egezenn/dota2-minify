@@ -1,10 +1,10 @@
-from unittest.mock import MagicMock, patch as mock_patch
-
-from typer.testing import CliRunner
+from unittest.mock import MagicMock
+from unittest.mock import patch as mock_patch
 
 import patch as patch_mod
-from core import base, constants, mods_shared
 from cli import app
+from core import base, constants, mods_shared
+from typer.testing import CliRunner
 
 runner = CliRunner()
 
@@ -23,17 +23,19 @@ def test_patch_calls_patcher():
     mock_patcher.assert_called_once()
 
 
-def test_patch_accepts_config_and_mods_paths():
+def test_patch_accepts_config_and_mods_paths(tmp_path):
+    cfg_file = str(tmp_path / "cfg.json")
+    mods_file = str(tmp_path / "mods.json")
     with (
         mock_patch.object(patch_mod, "patcher"),
         mock_patch.object(base, "main_config_file_dir", base.main_config_file_dir),
         mock_patch.object(base, "mods_config_dir", base.mods_config_dir),
     ):
-        result = runner.invoke(app, ["patch", "-c", "/tmp/cfg.json", "-m", "/tmp/mods.json"])
+        result = runner.invoke(app, ["patch", "-c", cfg_file, "-m", mods_file])
 
         assert result.exit_code == 0
-        assert base.main_config_file_dir == "/tmp/cfg.json"
-        assert base.mods_config_dir == "/tmp/mods.json"
+        assert base.main_config_file_dir == cfg_file
+        assert base.mods_config_dir == mods_file
 
 
 def test_patch_resolves_paths_against_original_cwd(tmp_path):
