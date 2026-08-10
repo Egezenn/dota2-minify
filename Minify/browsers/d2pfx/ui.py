@@ -211,6 +211,7 @@ class BrowserUI:
         fs.create_dirs(self.data_manager.previews_dir)
 
         # Clear in-memory DPG textures
+        self.render_generation += 1
         if dpg.does_item_exist(self.textures_registry):
             dpg.delete_item(self.textures_registry)
         self._setup_textures()
@@ -423,8 +424,14 @@ class BrowserUI:
             elif sort_mode == "old":
                 mods.sort(key=lambda m: m.get("meta", {}).get("date", 0))
 
+        task_gen = self.render_generation
+
         def _task():
-            if not dpg.does_item_exist("d2pfx_mods_view") or self.current_rendering_cat != cat_id:
+            if (
+                not dpg.does_item_exist("d2pfx_mods_view")
+                or self.current_rendering_cat != cat_id
+                or self.render_generation != task_gen
+            ):
                 return
 
             try:
@@ -450,7 +457,7 @@ class BrowserUI:
                 current_row = None
                 for i, mod in enumerate(mods):
                     # Check for disruption
-                    if self.current_rendering_cat != cat_id:
+                    if self.current_rendering_cat != cat_id or self.render_generation != task_gen:
                         return
 
                     if not isinstance(mod, dict):
@@ -650,12 +657,16 @@ class BrowserUI:
                     return
 
                 res = utils.load_dpg_image_resized(local_path, max_width=width * 2, max_height=height * 2)
-                if not res:
-                    self.apply_fallback_icon(parent, width, height)
+                if not res or self.render_generation != current_gen:
+                    if not res:
+                        self.apply_fallback_icon(parent, width, height)
                     return
                 w, h, channels, data = res
                 # Sanitize texture tag (remove spaces)
                 texture_tag = f"d2pfx_tex_{cat_id}_{clean_filename}".replace(" ", "_")
+
+                if self.render_generation != current_gen:
+                    return
 
                 if not dpg.does_item_exist(texture_tag):
                     dpg.add_static_texture(
