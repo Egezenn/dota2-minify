@@ -122,7 +122,7 @@ def run_conditional_patch(
         return
 
     print("Dota 2 version changed or first run. Starting patch...")
-    run_patch()
+    run_patch(config_path=config_path, mods_path=mods_path)
 
 
 @app.command()
