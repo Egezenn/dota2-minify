@@ -5,7 +5,7 @@
       "label": "Run patch",
       "icon": { "id": "beaker", "color": "terminal.ansiGreen" },
       "type": "shell",
-      "command": "uv run Minify -p",
+      "command": "uv run Minify patch",
       "group": { "kind": "build", "isDefault": true }
     },
     {

@@ -2,7 +2,13 @@ from unittest.mock import MagicMock
 
 import pytest
 from core.constants import resolve_locale
-from core.steam import remove_lang_args, remove_minify_lang, remove_specific_lang_arg, restore_boot_language
+from core.steam import (
+    remove_lang_args,
+    remove_minify_lang,
+    remove_specific_lang_arg,
+    restore_boot_language,
+    fix_launch_options,
+)
 
 
 def test_remove_specific_lang_arg():
@@ -209,6 +215,43 @@ def test_remove_minify_lang_no_launch_options(mock_steam_env, monkeypatch):
 
     result = remove_minify_lang()
     assert result == []
+
+
+def test_fix_launch_options_no_change_needed(monkeypatch):
+    import vdf
+    from core import base
+
+    def config_get_side_effect(key, default=None):
+        if key == "apply_for_all":
+            return True
+        if key == "steam_root":
+            return "/fake/steam"
+        if key == "output_locale":
+            return "dutch"
+        if key == "steam_id":
+            return "123"
+        return default
+
+    monkeypatch.setattr("core.config.get", config_get_side_effect)
+    monkeypatch.setattr("core.steam.get_steam_accounts", lambda: [{"id": "123", "name": "User"}])
+
+    vdf_data = {
+        "UserLocalConfigStore": {
+            "Software": {
+                "Valve": {"Steam": {"apps": {base.STEAM_DOTA_ID: {"LaunchOptions": "-language dutch -novid"}}}}
+            }
+        }
+    }
+
+    monkeypatch.setattr("os.path.exists", lambda path: True)
+    monkeypatch.setattr("core.utils.open_utf8R", MagicMock())
+    monkeypatch.setattr("vdf.load", lambda f: vdf_data)
+    mock_dump = MagicMock()
+    monkeypatch.setattr("vdf.dump", mock_dump)
+
+    result = fix_launch_options()
+    assert result == []
+    assert not mock_dump.called
 
 
 def test_restore_boot_language_restores_to_english(monkeypatch):

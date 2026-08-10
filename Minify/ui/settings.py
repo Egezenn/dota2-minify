@@ -46,6 +46,12 @@ SETTINGS = [
         "type": "checkbox",
     },
     {
+        "key": "patch_on_updates",
+        "text": "Add conditional-patch to launch options",
+        "default": True,
+        "type": "checkbox",
+    },
+    {
         "key": "apply_for_all",
         "text": "Apply everything for all users",
         "default": True,

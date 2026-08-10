@@ -66,6 +66,64 @@ def remove_specific_lang_arg(arg_string, lang_to_remove):
     return " ".join(cleaned)
 
 
+def add_conditional_patch_to_launch_options():
+    "If frozen and patch_on_updates is enabled, prepend conditional-patch command before %command% in launch options"
+
+    if not base.FROZEN:
+        return False
+
+    if not config.get("patch_on_updates", False):
+        return False
+
+    steam_ids = []
+    accounts = get_steam_accounts()
+    if config.get("apply_for_all", True):
+        for account in accounts:
+            steam_ids.append(account["id"])
+    else:
+        steam_ids.append(config.get("steam_id"))
+
+    changed = False
+    for steam_id in steam_ids:
+        vdf_path = os.path.join(config.get("steam_root"), "userdata", steam_id, "config", "localconfig.vdf")
+        if not os.path.exists(vdf_path):
+            continue
+
+        with utils.open_utf8R(vdf_path) as file:
+            data = vdf.load(file)
+
+        try:
+            launch_options = data["UserLocalConfigStore"]["Software"]["Valve"]["Steam"]["apps"][base.STEAM_DOTA_ID][
+                "LaunchOptions"
+            ]
+        except KeyError:
+            continue
+
+        tokens = launch_options.split()
+
+        if base.is_win:
+            prefix = f'cmd /c "{sys.executable}" conditional-patch &&'
+        else:
+            prefix = f'bash -c "{sys.executable} conditional-patch" &&'
+
+        if launch_options.startswith(prefix):
+            continue
+
+        other_tokens = [t for t in tokens if t != "%command%"]
+        new_tokens = [prefix, "%command%"] + other_tokens
+        new_options = " ".join(new_tokens)
+
+        if new_options != launch_options:
+            data["UserLocalConfigStore"]["Software"]["Valve"]["Steam"]["apps"][base.STEAM_DOTA_ID][
+                "LaunchOptions"
+            ] = new_options
+            with utils.open_utf8R(vdf_path, "w") as file:
+                vdf.dump(data, file, pretty=True)
+            changed = True
+
+    return changed
+
+
 def fix_launch_options():
     """
     Fixes user(s) launch options with the language argument that has the current output path.
