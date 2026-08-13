@@ -8,66 +8,145 @@
 
 ```python
 def run():
-    parser = argparse.ArgumentParser(description="Dota2-Minify CLI", epilog="Run without args for the GUI")
-    parser.add_argument("-p", "--patch", action="store_true", help="Run a patch")
-    parser.add_argument(
-        "-c",
-        "--conditional-patch",
-        action="store_true",
-        help="Run a conditional patch (if updated since last patch time)",
-    )
-    parser.add_argument("-l", "--list", action="store_true", help="List all available mods and their state")
-    parser.add_argument("-u", "--uninstall", action="store_true", help="Uninstall all mods")
-    parser.add_argument("-v", "--version", action="store_true", help="Print version and exit")
+    _run_init()
+    app()
 
-    args = parser.parse_args()
+```
 
-    if args.version:
-        print(base.VERSION)
+</details>
+
+## `run_patch(config_path, mods_path)`
+
+Run a patch.
+
+<details open><summary>Source</summary>
+
+```python
+def run_patch(
+    config_path: Optional[str] = typer.Option(None, "--config", "-c", help="Path to config file."),
+    mods_path: Optional[str] = typer.Option(None, "--mods", "-m", help="Path to mods file."),
+):
+    """Run a patch."""
+    _apply_paths(config_path, mods_path)
+    from core import log
+
+    print("Starting patch process...")
+    try:
+        patch.patcher()
+    except Exception:
+        log.write_crashlog()
+
+```
+
+</details>
+
+## `run_conditional_patch(config_path, mods_path)`
+
+Run a conditional patch (if updated since last patch time).
+
+<details open><summary>Source</summary>
+
+```python
+def run_conditional_patch(
+    config_path: Optional[str] = typer.Option(None, "--config", "-c", help="Path to config file."),
+    mods_path: Optional[str] = typer.Option(None, "--mods", "-m", help="Path to mods file."),
+):
+    """Run a conditional patch (if updated since last patch time)."""
+    _apply_paths(config_path, mods_path)
+    current_version = ""
+    if os.path.exists(constants.dota_steam_inf_path):
+        with utils.open_utf8R(constants.dota_steam_inf_path) as f:
+            current_version = f.read()
+
+    cached_version = ""
+    if os.path.exists(base.dota_steam_inf_cache):
+        with utils.open_utf8R(base.dota_steam_inf_cache) as f:
+            cached_version = f.read()
+
+    if current_version == cached_version and cached_version:
+        print("Dota 2 version has not changed. Skipping patch.")
         return
 
-    if args.list:
-        mods_shared.scan_mods()
-        print(f"{'Mod Name':<40} | {'Status':<10}")
-        print("-" * 55)
-        for mod in constants.mods_with_order:
-            status = "Enabled" if mods_shared.get_state(mod) else "Disabled"
-            print(f"{mod:<40} | {status:<10}")
-        return
+    print("Dota 2 version changed or first run. Starting patch...")
+    run_patch(config_path=config_path, mods_path=mods_path)
 
-    if args.uninstall:
-        print("Uninstalling mods...")
+```
+
+</details>
+
+## `config(config_path, editor, show, print_path)`
+
+Interact with the config file.
+
+<details open><summary>Source</summary>
+
+```python
+def config(
+    config_path: Optional[str] = typer.Option(None, "--config", "-c", help="Path to config file."),
+    editor: Optional[str] = typer.Option(None, "--editor", "-e", help="Editor binary to use (defaults to $EDITOR)."),
+    show: bool = typer.Option(False, "--json", "-j", help="Print contents."),
+    print_path: bool = typer.Option(False, "--path", "-p", help="Print path."),
+):
+    """Interact with the config file."""
+    _apply_paths(config_path, None)
+    if show:
+        print(json.dumps(_config.read_json_file(base.main_config_file_dir), indent=2))
+        return
+    if print_path:
+        print(base.main_config_file_dir)
+        return
+    _open_in_editor(base.main_config_file_dir, editor)
+
+```
+
+</details>
+
+## `mods(mods_path, editor, show, print_path)`
+
+Interact with the mods file.
+
+<details open><summary>Source</summary>
+
+```python
+def mods(
+    mods_path: Optional[str] = typer.Option(None, "--mods", "-m", help="Path to mods file."),
+    editor: Optional[str] = typer.Option(None, "--editor", "-e", help="Editor binary to use (defaults to $EDITOR)."),
+    show: bool = typer.Option(False, "--json", "-j", help="Print contents."),
+    print_path: bool = typer.Option(False, "--path", "-p", help="Print path."),
+):
+    """Interact with the mods file."""
+    _apply_paths(None, mods_path)
+    _ensure_mods_file()
+    if show:
+        print(json.dumps(_config.read_json_file(base.mods_config_dir), indent=2))
+        return
+    if print_path:
+        print(base.mods_config_dir)
+        return
+    _open_in_editor(base.mods_config_dir, editor)
+
+```
+
+</details>
+
+## `uninstall(config_path, mods_path, force)`
+
+Uninstall all mods.
+
+<details open><summary>Source</summary>
+
+```python
+def uninstall(
+    config_path: Optional[str] = typer.Option(None, "--config", "-c", help="Path to config file."),
+    mods_path: Optional[str] = typer.Option(None, "--mods", "-m", help="Path to mods file."),
+    force: bool = typer.Option(False, "--force", "-f", help="Wipe the contents of all language dirs."),
+):
+    """Uninstall all mods."""
+    _apply_paths(config_path, mods_path)
+    if force:
+        patch.unins.wipe()
+    else:
         patch.unins.uninstall()
-        return
-
-    if args.conditional_patch:
-        current_version = ""
-        if os.path.exists(constants.dota_steam_inf_path):
-            with utils.open_utf8R(constants.dota_steam_inf_path) as f:
-                current_version = f.read()
-
-        cached_version = ""
-        if os.path.exists(base.dota_steam_inf_cache):
-            with utils.open_utf8R(base.dota_steam_inf_cache) as f:
-                cached_version = f.read()
-
-        if current_version == cached_version and cached_version:
-            print("Dota 2 version has not changed. Skipping patch.")
-            return
-
-        print("Dota 2 version changed or first run. Starting patch...")
-
-    if args.patch or args.conditional_patch:
-        from core import log
-
-        print("Starting patch process...")
-        try:
-            patch.patcher()
-        except Exception:
-            log.write_crashlog()
-        return
-
-    parser.print_help()
 
 ```
 

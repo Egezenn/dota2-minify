@@ -45,17 +45,13 @@ def write_json_file(path: str, data: dict) -> None:
 
 ```python
 def update_json_file(path: str, key: str, value: Any) -> Any:
-    global _main_config_cache
-
     data = read_json_file(path)
     data[key] = value
-    write_json_file(path, data)
 
-    if path == base.main_config_file_dir:
-        if _main_config_cache is not None:
-            _main_config_cache[key] = value
-        else:
-            _main_config_cache = data
+    if path in (base.main_config_file_dir, base.mods_config_dir):
+        data = dict(sorted(data.items()))
+
+    write_json_file(path, data)
 
     return value
 
@@ -71,13 +67,10 @@ def update_json_file(path: str, key: str, value: Any) -> Any:
 
 ```python
 def get(key: str, default_value: Any = None) -> Any:
-    global _main_config_cache
+    data = read_json_file(base.main_config_file_dir)
 
-    if _main_config_cache is None:
-        _main_config_cache = read_json_file(base.main_config_file_dir)
-
-    if key in _main_config_cache:
-        return _main_config_cache[key]
+    if key in data:
+        return data[key]
 
     if default_value is not None:
         return update_json_file(base.main_config_file_dir, key, default_value)
@@ -129,6 +122,22 @@ def set_mod(mod_name: str, config_data: dict) -> None:
     modconf = get("modconf", {})
     modconf[mod_name] = config_data
     set("modconf", modconf)
+
+```
+
+</details>
+
+## `get_locale(default)`
+
+*No documentation available.*
+
+<details open><summary>Source</summary>
+
+```python
+def get_locale(default="english"):
+    from core import constants
+
+    return constants.resolve_locale(get("output_locale", default))
 
 ```
 

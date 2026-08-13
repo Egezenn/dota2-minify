@@ -70,16 +70,16 @@ def add_text(text_or_id, *args, msg_type: str | None = None, **kwargs):
 
     prefix = ""
     if msg_type == "error":
-        prefix = "[ERROR] "
+        prefix = f"{RED}"
     elif msg_type == "warning":
-        prefix = "[WARNING] "
+        prefix = f"{YELLOW}"
     elif msg_type == "success":
-        prefix = "[SUCCESS] "
+        prefix = f"{GREEN}"
 
     try:
-        print(f"{prefix}{text}")
+        print(f"{prefix}{text}{RESET}")
     except UnicodeEncodeError:
-        print(f"{prefix}{text.encode('ascii', 'replace').decode('ascii')}")
+        print(f"{prefix}{text.encode('ascii', 'replace').decode('ascii')}{RESET}")
     return None
 
 ```

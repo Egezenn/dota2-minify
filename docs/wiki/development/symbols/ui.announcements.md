@@ -56,6 +56,10 @@ def check_version(versions, current_version):
     if not versions:
         return True
 
+    excluded = [v[1:] for v in versions if v.startswith("-")]
+    if len(excluded) == len(versions):
+        return current_version not in excluded
+
     return current_version in versions
 
 ```

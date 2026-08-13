@@ -29,7 +29,8 @@ def get_blank_file_extensions():
 def change_output_path():
     global output_path
     selection = dpg.get_value("output_select")
-    output_path = [lang for lang in constants.minify_dota_possible_language_output_paths if selection in lang][0]
+    resolved = constants.resolve_locale(selection)
+    output_path = [lang for lang in constants.minify_dota_possible_language_output_paths if resolved in lang][0]
     config.set("output_locale", selection)
     config.set("output_path", output_path)
 
@@ -56,14 +57,14 @@ def compile():
             "-r",
         ]
 
-        if base.OS != base.WIN:
+        if not base.is_win:
             command.insert(0, "wine")
 
         rescomp = subprocess.run(
             command,
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,  # compiler complains if minify_dota_compile_input_path is empty
-            creationflags=subprocess.CREATE_NO_WINDOW if base.OS == base.WIN else 0,
+            creationflags=subprocess.CREATE_NO_WINDOW if base.is_win else 0,
         )
         if rescomp.stdout != b"":
             file.write(rescomp.stdout)
@@ -258,14 +259,10 @@ def bulk_exec_script(order_name, terminal_output=True):
                 continue
 
             always = cfg.get("always", False)
-            visual = cfg.get("visual", True)
 
-            # TODO: pull the file from pak66 to check if it was enabled for uninstallers
-            if (
-                always
-                or order_name in ["initial", "uninstall"]
-                or (visual and mods_shared.get_state(os.path.basename(root)))
-            ):
+            # Uninstaller scripts should determine whether or not the mod is installed and safely quit
+            # if not installed. Determining whether or not a mod is installed is mostly undeterministic
+            if always or order_name in ["initial", "uninstall"] or mods_shared.get_state(os.path.basename(root)):
                 exec_script(
                     os.path.join(root, bulk_name), os.path.basename(root), order_name, _terminal_output=terminal_output
                 )

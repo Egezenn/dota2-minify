@@ -20,7 +20,7 @@
     - `__init__.py`: Core patching orchestration logic.
     - `blacklist.py`: Logic for processing mod blacklist rules.
     - `styling.py`: Logic for applying mod CSS styles.
-    - `replacer.py`: Logic for file replacement rules via CSV.
+    - `replacer.py`: Logic for file replacement rules via JSON.
     - `vpk_utils.py`: Utility functions for VPK operations and extraction.
     - `manifest_utils.py`: Utilities for loading mod manifests and versioning.
     - `unins.py`: Logic for mod uninstallation and cleanup.
@@ -92,7 +92,7 @@ Key objects in the `manifest.json` settings array include:
 
 Mods can execute custom Python behavior via standardized script hooks:
 
-- `script_initial.py`, `script_after_decompile.py`, `script_after_patch.py`, `script_uninstall.py`, etc.
+- `script.py`, `script_initial.py`, `script_after_decompile.py`, `script_after_recompile.py`, `script_after_patch.py`, `script_uninstall.py`, etc.
 
 When writing custom logic for a mod, hook into these files.
 
@@ -121,6 +121,7 @@ Regardless of whether you are an AI agent or a human developer, following these 
   ```python
   import os
   import sys
+
   sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "../Minify")))
   ```
 
@@ -162,6 +163,7 @@ Following these guidelines ensures that our tests are reliable, readable, and ma
   ```python
   from unittest.mock import MagicMock
   import core.config
+
   core.config.get = MagicMock(side_effect=lambda key, default=None: default)
   core.config.set = MagicMock()
   ```

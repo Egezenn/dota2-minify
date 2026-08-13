@@ -74,12 +74,6 @@ def test_find_with_parent_by_selector_root(sample_xml):
     assert parent is None
 
 
-def test_find_by_id(sample_xml):
-    elem = xml_utils.find_by_id(sample_xml, "Submit")
-    assert elem is not None
-    assert elem.tag == "Button"
-
-
 def test_apply_modifications_set_attribute(tmp_path):
     xml_file = tmp_path / "test.xml"
     xml_file.write_text("<root><Panel id='Main'></Panel></root>", encoding="utf-8")

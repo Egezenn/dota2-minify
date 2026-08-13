@@ -59,34 +59,34 @@ ARCHITECTURE = platform.architecture()[0]
 
 </details>
 
-### `WIN`
+### `is_win`
 
 <details open><summary>Source</summary>
 
 ```python
-WIN = "Windows"
+is_win = True if OS == "Windows" else False
 
 ```
 
 </details>
 
-### `LINUX`
+### `is_linux`
 
 <details open><summary>Source</summary>
 
 ```python
-LINUX = "Linux"
+is_linux = True if OS == "Linux" else False
 
 ```
 
 </details>
 
-### `MAC`
+### `is_mac`
 
 <details open><summary>Source</summary>
 
 ```python
-MAC = "Darwin"
+is_mac = True if OS == "Darwin" else False
 
 ```
 

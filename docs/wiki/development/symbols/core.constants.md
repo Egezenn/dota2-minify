@@ -23,6 +23,20 @@ def recalc_rescomp_dirs():
 
 </details>
 
+## `resolve_locale(locale)`
+
+*No documentation available.*
+
+<details open><summary>Source</summary>
+
+```python
+def resolve_locale(locale):
+    return LOCALE_ALIASES.get(locale, locale)
+
+```
+
+</details>
+
 ## Variables
 
 ### `rescomp_override`
@@ -81,7 +95,7 @@ dota_resource_compiler_path = os.path.join(
 
 ```python
 minify_dota_tools_required_path = os.path.join(
-    steam.LIBRARY, "steamapps", "common", "dota 2 beta", "content", "dota_minify"
+    steam.LIBRARY, "steamapps", "common", "dota 2 beta", "content", "dota_dutch"
 )
 
 ```
@@ -94,7 +108,7 @@ minify_dota_tools_required_path = os.path.join(
 
 ```python
 minify_default_dota_pak_output_path = os.path.join(
-    steam.LIBRARY, "steamapps", "common", "dota 2 beta", "game", "dota_minify"
+    steam.LIBRARY, "steamapps", "common", "dota 2 beta", "game", "dota_dutch"
 )
 
 ```
@@ -107,7 +121,6 @@ minify_default_dota_pak_output_path = os.path.join(
 
 ```python
 minify_dota_possible_language_output_paths = [
-    os.path.join(steam.LIBRARY, "steamapps", "common", "dota 2 beta", "game", "dota_minify"),
     os.path.join(steam.LIBRARY, "steamapps", "common", "dota 2 beta", "game", "dota_brazilian"),
     os.path.join(steam.LIBRARY, "steamapps", "common", "dota 2 beta", "game", "dota_bulgarian"),
     os.path.join(steam.LIBRARY, "steamapps", "common", "dota 2 beta", "game", "dota_czech"),
@@ -141,13 +154,39 @@ minify_dota_possible_language_output_paths = [
 
 </details>
 
+### `LOCALE_ALIASES`
+
+<details open><summary>Source</summary>
+
+```python
+LOCALE_ALIASES = {
+    "english": "dutch",
+}
+
+```
+
+</details>
+
+### `LOCALE_MOD_REQUIREMENTS`
+
+<details open><summary>Source</summary>
+
+```python
+LOCALE_MOD_REQUIREMENTS = {
+    "english": ["#English Fix"],
+}
+
+```
+
+</details>
+
 ### `minify_output_list`
 
 <details open><summary>Source</summary>
 
 ```python
 minify_output_list = [
-    "minify",
+    "english",
     "brazilian",
     "bulgarian",
     "czech",

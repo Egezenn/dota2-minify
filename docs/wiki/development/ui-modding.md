@@ -50,7 +50,7 @@ You can use it in your `styling.css`:
 }
 ```
 
-## `xml_mod.json`
+## `xml.json`
 
 This file allows you to modify Valve's XML (Panorama) files dynamically. It uses a key-value structure where the key is the path to the XML file in the VPK (e.g., `panorama/layout/popups/popup_accept_match.xml`) and the value is a list of modification actions.
 
@@ -85,28 +85,28 @@ Supported actions:
 
 | `set_attribute` | Sets an attribute on an element.   |
 | :-------------- | :--------------------------------- |
-| `tag`           | The tag name or ID of the element. |
+| `selector`      | CSS-like selector for the element. |
 | `attribute`     | Name of the attribute to set.      |
 | `value`         | Value of the attribute.            |
 
 | `add_child` | Appends a child element to a parent. |
 | :---------- | :----------------------------------- |
-| `parent_id` | ID of the parent element.            |
+| `selector`  | CSS-like selector for the parent element. |
 | `xml`       | The XML string of the child element. |
 
 | `move_into`     | Moves an element into a new parent. |
 | :-------------- | :---------------------------------- |
-| `target_id`     | ID of the element to move.          |
-| `new_parent_id` | ID of the new parent element.       |
+| `selector`      | CSS-like selector for the element to move. |
+| `new_selector`  | CSS-like selector for the new parent element. |
 
 | `insert_after` | Inserts an element after a target element. |
 | :------------- | :----------------------------------------- |
-| `target_id`    | ID of the reference element.               |
+| `selector`     | CSS-like selector for the reference element. |
 | `xml`          | The XML string to insert.                  |
 
 | `insert_before` | Inserts an element before a target element. |
 | :-------------- | :------------------------------------------ |
-| `target_id`     | ID of the reference element.                |
+| `selector`      | CSS-like selector for the reference element. |
 | `xml`           | The XML string to insert.                   |
 
 ## Mod Settings & Custom Buttons

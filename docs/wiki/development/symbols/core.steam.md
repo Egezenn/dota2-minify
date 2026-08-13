@@ -78,7 +78,77 @@ def remove_specific_lang_arg(arg_string, lang_to_remove):
 
 </details>
 
-## `fix_launch_options()`
+## `add_conditional_patch_to_launch_options(check_only)`
+
+If frozen and patch_on_updates is enabled, prepend conditional-patch command before %command% in launch options
+
+<details open><summary>Source</summary>
+
+```python
+def add_conditional_patch_to_launch_options(check_only=False):
+    "If frozen and patch_on_updates is enabled, prepend conditional-patch command before %command% in launch options"
+
+    if not base.FROZEN:
+        return False
+
+    if not config.get("patch_on_updates", False):
+        return False
+
+    steam_ids = []
+    accounts = get_steam_accounts()
+    if config.get("apply_for_all", True):
+        for account in accounts:
+            steam_ids.append(account["id"])
+    else:
+        steam_ids.append(config.get("steam_id"))
+
+    changed = False
+    for steam_id in steam_ids:
+        vdf_path = os.path.join(config.get("steam_root"), "userdata", steam_id, "config", "localconfig.vdf")
+        if not os.path.exists(vdf_path):
+            continue
+
+        with utils.open_utf8R(vdf_path) as file:
+            data = vdf.load(file)
+
+        try:
+            launch_options = data["UserLocalConfigStore"]["Software"]["Valve"]["Steam"]["apps"][base.STEAM_DOTA_ID][
+                "LaunchOptions"
+            ]
+        except KeyError:
+            continue
+
+        tokens = launch_options.split()
+
+        if base.is_win:
+            prefix = f'cmd /c "{sys.executable}" conditional-patch &&'
+        else:
+            prefix = f'bash -c "{sys.executable} conditional-patch" &&'
+
+        if launch_options.startswith(prefix):
+            continue
+
+        other_tokens = [t for t in tokens if t != "%command%"]
+        new_tokens = [prefix, "%command%"] + other_tokens
+        new_options = " ".join(new_tokens)
+
+        if new_options != launch_options:
+            if check_only:
+                return True
+            data["UserLocalConfigStore"]["Software"]["Valve"]["Steam"]["apps"][base.STEAM_DOTA_ID]["LaunchOptions"] = (
+                new_options
+            )
+            with utils.open_utf8R(vdf_path, "w") as file:
+                vdf.dump(data, file, pretty=True)
+            changed = True
+
+    return changed
+
+```
+
+</details>
+
+## `fix_launch_options(check_only)`
 
 Fixes user(s) launch options with the language argument that has the current output path.
 Does it for all accounts available if "apply_for_all" key is set.
@@ -86,7 +156,7 @@ Does it for all accounts available if "apply_for_all" key is set.
 <details open><summary>Source</summary>
 
 ```python
-def fix_launch_options():
+def fix_launch_options(check_only=False):
     """
     Fixes user(s) launch options with the language argument that has the current output path.
     Does it for all accounts available if "apply_for_all" key is set.
@@ -107,10 +177,11 @@ def fix_launch_options():
             continue
 
         with utils.open_utf8R(vdf_path) as file:
-            output.add_text("&checking_launch_options")
+            if not check_only:
+                output.add_text("&checking_launch_options")
             data = vdf.load(file)
 
-        locale = config.get("output_locale")
+        locale = config.get_locale()
         try:
             launch_options = data["UserLocalConfigStore"]["Software"]["Valve"]["Steam"]["apps"][base.STEAM_DOTA_ID][
                 "LaunchOptions"
@@ -118,6 +189,8 @@ def fix_launch_options():
         except KeyError:
             continue
         if f"-language {locale}" not in launch_options or launch_options.count("-language") >= 2:
+            if check_only:
+                return True
             user_name = "?"
             for user in accounts:
                 if user["id"] == steam_id:
@@ -129,9 +202,9 @@ def fix_launch_options():
             data["UserLocalConfigStore"]["Software"]["Valve"]["Steam"]["apps"][base.STEAM_DOTA_ID]["LaunchOptions"] = (
                 f"-language {locale} {remove_lang_args(launch_options)}"
             )
-        with utils.open_utf8R(vdf_path, "w") as file:
-            vdf.dump(data, file, pretty=True)
-        successful_ids.append(steam_id)
+            with utils.open_utf8R(vdf_path, "w") as file:
+                vdf.dump(data, file, pretty=True)
+            successful_ids.append(steam_id)
     return successful_ids
 
 ```
@@ -167,7 +240,7 @@ def remove_minify_lang():
             data = vdf.load(file)
 
         locale = config.get("output_locale")
-        if locale != "minify":
+        if locale != "english":
             continue
 
         try:
@@ -179,13 +252,90 @@ def remove_minify_lang():
 
         if "-language" in launch_options:
             data["UserLocalConfigStore"]["Software"]["Valve"]["Steam"]["apps"][base.STEAM_DOTA_ID]["LaunchOptions"] = (
-                remove_specific_lang_arg(launch_options, locale)
+                remove_specific_lang_arg(launch_options, config.get_locale())
             )
             with utils.open_utf8(vdf_path, "w") as file:
                 vdf.dump(data, file, pretty=True)
             successful_ids.append(steam_id)
 
     return successful_ids
+
+```
+
+</details>
+
+## `restore_boot_language()`
+
+Restores the UILanguage in boot.vcfg to english if symbolic english (dutch) was used.
+
+<details open><summary>Source</summary>
+
+```python
+def restore_boot_language():
+    """
+    Restores the UILanguage in boot.vcfg to english if symbolic english (dutch) was used.
+    """
+    if config.get("output_locale") != "english":
+        return False
+
+    boot_vcfg_path = os.path.join(LIBRARY, "steamapps", "common", "dota 2 beta", "game", "dota", "cfg", "boot.vcfg")
+    if not os.path.exists(boot_vcfg_path):
+        return False
+
+    try:
+        with utils.open_utf8R(boot_vcfg_path) as file:
+            data = vdf.load(file)
+    except Exception:
+        log.write_warning("Error reading boot.vcfg")
+        return False
+
+    if data.get("boot", {}).get("UILanguage") != "dutch":
+        return False
+
+    data["boot"]["UILanguage"] = "english"
+    with utils.open_utf8(boot_vcfg_path, "w") as file:
+        vdf.dump(data, file, pretty=True)
+    return True
+
+```
+
+</details>
+
+## `fix_boot_language(check_only)`
+
+Ensures UILanguage in boot.vcfg matches the resolved locale (e.g. dutch for english).
+
+<details open><summary>Source</summary>
+
+```python
+def fix_boot_language(check_only=False):
+    """
+    Ensures UILanguage in boot.vcfg matches the resolved locale (e.g. dutch for english).
+    """
+
+    locale = config.get_locale()
+
+    boot_vcfg_path = os.path.join(LIBRARY, "steamapps", "common", "dota 2 beta", "game", "dota", "cfg", "boot.vcfg")
+    if not os.path.exists(boot_vcfg_path):
+        return False
+
+    try:
+        with utils.open_utf8R(boot_vcfg_path) as file:
+            data = vdf.load(file)
+    except Exception:
+        log.write_warning("Error reading boot.vcfg")
+        return False
+
+    if data.get("boot", {}).get("UILanguage") == locale:
+        return False
+
+    if check_only:
+        return True
+
+    data["boot"]["UILanguage"] = locale
+    with utils.open_utf8(boot_vcfg_path, "w") as file:
+        vdf.dump(data, file, pretty=True)
+    return True
 
 ```
 
@@ -257,7 +407,7 @@ def get_steam_root_path():
 
     found_path = ""
     # registry
-    if base.OS == base.WIN:
+    if base.is_win:
         with utils.try_pass():
             import winreg
 

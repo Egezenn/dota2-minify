@@ -59,9 +59,27 @@ def set_state(mod, value):
 
         states[mod] = value
         with utils.open_utf8(base.mods_config_dir, "w") as file:
-            jsonc.dump(states, file, indent=2)
+            jsonc.dump(dict(sorted(states.items())), file, indent=2)
     except Exception:
         pass
+
+```
+
+</details>
+
+## `enforce_locale_mod_states()`
+
+*No documentation available.*
+
+<details open><summary>Source</summary>
+
+```python
+def enforce_locale_mod_states():
+    from core import config
+
+    locale = config.get("output_locale", "english")
+    for required_mod in constants.LOCALE_MOD_REQUIREMENTS.get(locale, []):
+        set_state(required_mod, True)
 
 ```
 
@@ -95,7 +113,7 @@ def scan_mods():
     _dependencies = []
     _conflicts = []
 
-    for mod in sorted(os.listdir(base.mods_dir)):
+    for mod in sorted(os.listdir(base.mods_dir), key=str.casefold):
         mod_path = os.path.join(base.mods_dir, mod)
         if not mod.startswith("_"):
             if os.path.isdir(mod_path):

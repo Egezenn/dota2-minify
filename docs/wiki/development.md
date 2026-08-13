@@ -25,10 +25,10 @@ Minify has a programmatical approach to most modifications to keep everything mi
 | [`notes.md`](development/mod-structure.md#notesmd)                      | Yes                          | -                    |
 | `preview.jpg` \| `preview.png`                                          | Yes                          | -                    |
 | [`blacklist.txt`](development/mod-structure.md#blacklisttxt)            | No                           | No                   |
-| [`replacer.csv`](development/mod-structure.md#replacercsv)              | No                           | No                   |
+| [`replacer.json`](development/mod-structure.md#replacerjson)            | No                           | No                   |
 | [`script.py`](development/scripting.md#scriptpy)                        | No<sup>3</sup>               | No                   |
 | [`styling.css`](development/ui-modding.md#stylingcss)                   | No                           | Yes                  |
-| [`xml_mod.json`](development/ui-modding.md#xml_modjson)                 | No                           | Yes                  |
+| [`xml.json`](development/ui-modding.md#xmljson)                         | No                           | Yes                  |
 
 <sup>1</sup>: [Uncompiled files](development/mod-structure.md#filesfiles_uncompiled-directory).  
 <sup>2</sup>: The build engine pulls `always` and `dependencies` dynamically each time a patch is started. However, keys that define the mod's presence or configuration in the UI (like `order`, `visual`, and `settings` structure) are only loaded during the initial scan; changing these requires clicking **Refresh** in the Settings menu or restarting the application to re-render the components.  

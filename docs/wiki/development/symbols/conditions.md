@@ -10,7 +10,7 @@ Checks for various things
 
 ```python
 def is_dota_running(text_tag, text_type):
-    target = "dota2.exe" if base.OS == base.WIN else "dota2"
+    target = "dota2.exe" if base.is_win else "dota2"
     running = any(p.info.get("name") == target for p in psutil.process_iter(attrs=["name"]))
 
     if running:
@@ -67,32 +67,6 @@ def get_workshop_tools_status(app_state):
 
 </details>
 
-## `check_workshop_tools()`
-
-Checks if Workshop Tools are fully installed and enabled via ACF appmanifest.
-
-<details open><summary>Source</summary>
-
-```python
-def check_workshop_tools():
-    """
-    Checks if Workshop Tools are fully installed and enabled via ACF appmanifest.
-    """
-    app_state = get_dota_app_state()
-    if not app_state:
-        return False
-
-    try:
-        state_flags = int(app_state.get("StateFlags", 0))
-    except (ValueError, TypeError):
-        state_flags = 0
-
-    return bool(state_flags & 4) and get_workshop_tools_status(app_state)
-
-```
-
-</details>
-
 ## `is_compiler_found()`
 
 *No documentation available.*
@@ -102,7 +76,7 @@ def check_workshop_tools():
 ```python
 def is_compiler_found():
     global workshop_installed
-    workshop_installed = check_workshop_tools()
+    workshop_installed = os.path.exists(constants.dota_resource_compiler_path)
     if not workshop_installed and not base.HEADLESS:
         output.add_text("&error_no_workshop_tools_found_terminal", msg_type="warning")
 
@@ -145,7 +119,7 @@ def resolve_dependencies(retries=0):
                         output.add_text("&extracted_cli_terminal", zip_path)
                         constants.s2v_executable = os.path.basename(constants.s2v_executable)
 
-                        if base.OS != base.WIN and not os.access(constants.s2v_executable, os.X_OK):
+                        if (base.is_linux or base.is_mac) and not os.access(constants.s2v_executable, os.X_OK):
                             current_permissions = os.stat(constants.s2v_executable).st_mode
                             os.chmod(
                                 constants.s2v_executable,
@@ -181,7 +155,7 @@ def resolve_dependencies(retries=0):
 
                     constants.rg_executable = rg_binary_name
 
-                    if base.OS in (base.LINUX, base.MAC) and not os.access(constants.rg_executable, os.X_OK):
+                    if (base.is_linux or base.is_mac) and not os.access(constants.rg_executable, os.X_OK):
                         current_permissions = os.stat(constants.rg_executable).st_mode
                         os.chmod(
                             constants.rg_executable,
@@ -255,8 +229,14 @@ def check_binaries():
 ```python
 def disable_workshop_mods():
     if not workshop_installed:
+        from patch import manifest_utils
+
         for folder in constants.mods_with_order:
             mod_path = os.path.join(base.mods_dir, folder)
+            manifest = manifest_utils.get_mod(mod_path)
+
+            if manifest.get("skip_workshop_check"):
+                continue
 
             for method_path in workshop_required_methods:
                 if os.path.exists(os.path.join(mod_path, method_path)):

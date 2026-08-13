@@ -18,6 +18,9 @@ def load():
         with utils.open_utf8(base.mods_config_dir, "w") as file:
             pass
 
+    for mod in constants.visually_unavailable_mods:
+        checkboxes_state.setdefault(mod, False)
+
 ```
 
 </details>
@@ -33,7 +36,7 @@ def save():
     for box in checkboxes:
         checkboxes_state[box] = dpg.get_value(box)
     with utils.open_utf8(base.mods_config_dir, "w") as file:
-        jsonc.dump(checkboxes_state, file, indent=2)
+        jsonc.dump(dict(sorted(checkboxes_state.items())), file, indent=2)
 
 ```
 
@@ -263,7 +266,8 @@ def get_value(mod):
 
 ```python
 def set_value(mod, value):
-    dpg.set_value(mod, value)
+    if dpg.does_item_exist(mod):
+        dpg.set_value(mod, value)
 
 ```
 

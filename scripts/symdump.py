@@ -45,6 +45,8 @@ def get_symbols(file_path, include_vars=False):
 
     for node in tree.body:
         if isinstance(node, (ast.FunctionDef, ast.ClassDef, ast.AsyncFunctionDef)):
+            if node.name.startswith("_"):
+                continue
             doc = ast.get_docstring(node) or "No docstring"
             # Get function arguments
             args = ""
@@ -60,13 +62,21 @@ def get_symbols(file_path, include_vars=False):
             if isinstance(node, ast.Assign):
                 for target in node.targets:
                     if isinstance(target, ast.Name):
+                        if target.id.startswith("_"):
+                            continue
                         names.append(target.id)
                     elif isinstance(target, ast.Attribute):
+                        if target.attr.startswith("_"):
+                            continue
                         names.append(target.attr)
             elif isinstance(node, ast.AnnAssign):
                 if isinstance(node.target, ast.Name):
+                    if node.target.id.startswith("_"):
+                        continue
                     names.append(node.target.id)
                 elif isinstance(node.target, ast.Attribute):
+                    if node.target.attr.startswith("_"):
+                        continue
                     names.append(node.target.attr)
 
             if names:

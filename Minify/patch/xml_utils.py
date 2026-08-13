@@ -92,24 +92,6 @@ def find_with_parent_by_selector(root, selector):
     return None, None
 
 
-def find_by_id(root, node_id):
-    if root.get("id") == node_id:
-        return root
-    return root.find(f".//*[@id='{node_id}']")
-
-
-def find_with_parent_by_id(root, node_id):
-    # Returns (element, parent) or (None, None)
-    for parent in root.iter():
-        for child in parent:
-            if child.get("id") == node_id:
-                return child, parent
-    # root itself
-    if root.get("id") == node_id:
-        return root, None
-    return None, None
-
-
 def ensure_unique_include(root, container_tag, src_value):
     container = root.find(container_tag)
     if container is None:
@@ -148,16 +130,7 @@ def apply_modifications(xml_file, modifications):
 
         elif action == "set_attribute":
             selector = mod.get("selector")
-            if selector:
-                element = find_by_selector(root, selector)
-            else:
-                tag = mod.get("tag")
-                if root.tag == tag or root.get("id") == tag:
-                    element = root
-                else:
-                    element = root.find(f".//{tag}")
-                    if element is None:
-                        element = root.find(f".//*[@id='{tag}']")
+            element = find_by_selector(root, selector)
 
             if element is not None:
                 attr = mod.get("attribute")
@@ -167,8 +140,7 @@ def apply_modifications(xml_file, modifications):
 
         elif action == "add_child":
             selector = mod.get("selector")
-            parent_id = mod.get("parent_id")
-            parent_elem = find_by_selector(root, selector) if selector else find_by_id(root, parent_id)
+            parent_elem = find_by_selector(root, selector)
             xml_snippet = mod.get("xml", "")
             if parent_elem is not None and xml_snippet:
                 try:
@@ -177,22 +149,14 @@ def apply_modifications(xml_file, modifications):
                 except ET.ParseError:
                     log.write_warning("[XML ParseError] add_child")
             elif parent_elem is None:
-                log.write_warning(
-                    f"[add_child] target '{selector or parent_id}' not found in {os.path.basename(xml_file)}"
-                )
+                log.write_warning(f"[add_child] target '{selector}' not found in {os.path.basename(xml_file)}")
 
         elif action == "move_into":
             selector = mod.get("selector")
-            target_id = mod.get("target_id")
-            new_parent_selector = mod.get("new_parent_selector")
-            new_parent_id = mod.get("new_parent_id")
+            new_parent_selector = mod.get("new_selector")
 
-            elem, old_parent = (
-                find_with_parent_by_selector(root, selector) if selector else find_with_parent_by_id(root, target_id)
-            )
-            new_parent = (
-                find_by_selector(root, new_parent_selector) if new_parent_selector else find_by_id(root, new_parent_id)
-            )
+            elem, old_parent = find_with_parent_by_selector(root, selector)
+            new_parent = find_by_selector(root, new_parent_selector)
 
             if elem is not None and new_parent is not None:
                 if old_parent is not None:
@@ -200,22 +164,17 @@ def apply_modifications(xml_file, modifications):
                 new_parent.append(elem)
             else:
                 if elem is None:
-                    log.write_warning(
-                        f"[move_into] target '{selector or target_id}' not found in {os.path.basename(xml_file)}"
-                    )
+                    log.write_warning(f"[move_into] target '{selector}' not found in {os.path.basename(xml_file)}")
                 if new_parent is None:
                     log.write_warning(
-                        f"[move_into] new_parent '{new_parent_selector or new_parent_id}' not found in {os.path.basename(xml_file)}"
+                        f"[move_into] new_parent '{new_parent_selector}' not found in {os.path.basename(xml_file)}"
                     )
 
         elif action == "insert_after":
             selector = mod.get("selector")
-            target_id = mod.get("target_id")
             xml_snippet = mod.get("xml", "")
 
-            target, parent = (
-                find_with_parent_by_selector(root, selector) if selector else find_with_parent_by_id(root, target_id)
-            )
+            target, parent = find_with_parent_by_selector(root, selector)
 
             if target is not None and parent is not None and xml_snippet:
                 try:
@@ -225,22 +184,17 @@ def apply_modifications(xml_file, modifications):
                 except ET.ParseError:
                     log.write_warning("[XML ParseError] insert_after")
             elif target is None:
-                log.write_warning(
-                    f"[insert_after] target '{selector or target_id}' not found in {os.path.basename(xml_file)}"
-                )
+                log.write_warning(f"[insert_after] target '{selector}' not found in {os.path.basename(xml_file)}")
             elif parent is None:
                 log.write_warning(
-                    f"[insert_after] target '{selector or target_id}' has no parent (is root?) in {os.path.basename(xml_file)}"
+                    f"[insert_after] target '{selector}' has no parent (is root?) in {os.path.basename(xml_file)}"
                 )
 
         elif action == "insert_before":
             selector = mod.get("selector")
-            target_id = mod.get("target_id")
             xml_snippet = mod.get("xml", "")
 
-            target, parent = (
-                find_with_parent_by_selector(root, selector) if selector else find_with_parent_by_id(root, target_id)
-            )
+            target, parent = find_with_parent_by_selector(root, selector)
 
             if target is not None and parent is not None and xml_snippet:
                 try:
@@ -250,12 +204,10 @@ def apply_modifications(xml_file, modifications):
                 except ET.ParseError:
                     log.write_warning("[XML ParseError] insert_before")
             elif target is None:
-                log.write_warning(
-                    f"[insert_before] target '{selector or target_id}' not found in {os.path.basename(xml_file)}"
-                )
+                log.write_warning(f"[insert_before] target '{selector}' not found in {os.path.basename(xml_file)}")
             elif parent is None:
                 log.write_warning(
-                    f"[insert_before] target '{selector or target_id}' has no parent (is root?) in {os.path.basename(xml_file)}"
+                    f"[insert_before] target '{selector}' has no parent (is root?) in {os.path.basename(xml_file)}"
                 )
 
     if hasattr(ET, "indent"):

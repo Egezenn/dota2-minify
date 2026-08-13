@@ -2,8 +2,8 @@
 
 Extensive symbol dump that lists docstrings, source codes is available [here](/development/symbols/).
 
-> [!NOTE]
-> The API might change, however with 1.13.1's base, you'll have compatibility until the next major release.
+> [!WARNING]
+> The API might change, hopefully not too much.
 >
 > Not all variables are dumped in the symbol index; only [core.base](/development/symbols/core.base) and [core.constants](/development/symbols/core.constants) include them to keep the documentation focused.
 
@@ -53,10 +53,7 @@ When writing scripts, you often need to handle platform differences or check for
 
 - **[`VERSION`](/development/symbols/core.base#version)**: The current Minify version string. Use it for compatibility checks.
 - **[`OS`](/development/symbols/core.base#os)**: The current operating system name.
-- **[`WIN`](/development/symbols/core.base#win)**, **[`LINUX`](/development/symbols/core.base#linux)**, **[`MAC`](/development/symbols/core.base#mac)**: Constants for comparison.
-  - `base.WIN` is `"Windows"`
-  - `base.LINUX` is `"Linux"`
-  - `base.MAC` is `"Darwin"`
+- **[`is_win`](/development/symbols/core.base#is_win)**, **[`is_linux`](/development/symbols/core.base#is_linux)**, **[`is_mac`](/development/symbols/core.base#is_mac)**: Boolean flags for platform checks.
 - **[`MACHINE`](/development/symbols/core.base#machine)**: The hardware architecture (e.g., `x86_64`, `arm64`).
 - **[`ARCHITECTURE`](/development/symbols/core.base#architecture)**: Either `64bit` or `32bit`.
 
@@ -71,10 +68,10 @@ if not utils.is_version_at_least(base.VERSION, "1.13.1"):
     return
 
 # Platform-specific logic
-if base.OS == base.WIN:
+if base.is_win:
     # Windows specific code
     pass
-elif base.OS == base.LINUX:
+elif base.is_linux:
     # Linux specific code
     pass
 
@@ -219,25 +216,22 @@ The [Minify/helper.py](/development/symbols/helper) module includes tools for co
 
 Interact with the application's built-in terminal window from your scripts:
 
-- **[`add_text(text_or_id, *args, msg_type)`](/development/symbols/ui.terminal#add_texttext_or_id-args-msg_type-kwargs)**: (from `ui.terminal`) Adds a line of text to the terminal. If the string starts with `&`, it will be localized. `msg_type` can be `"error"`, `"warning"`, or `"success"`.
-- **[`add_seperator()`](/development/symbols/ui.terminal#add_seperator)**: Adds a horizontal separator line to the terminal.
+- **[`add_text(text_or_id, *args, msg_type)`](/development/symbols/ui.terminal#add_texttext_or_id-args-msg_type-kwargs)**: (from `ui.terminal`) Adds a line of text to the terminal. If the string starts with `&`, it will be localized. Pass `msg_type` as a keyword argument: `msg_type="error"`, `"warning"`, or `"success"`.
+- **[`add_separator()`](/development/symbols/ui.terminal#add_separator)**: Adds a horizontal separator line to the terminal.
 - **[`clean()`](/development/symbols/ui.terminal#clean)**: Clears all history and text from the terminal window.
 
 #### Example: Compiling and Logging
 
 ```python
 import helper
-from ui import terminal
+from core import output
 
 # Compile a folder of raw UI assets into a VPK
-helper.compile_assets(
-    input_path="my_raw_assets",
-    pak_path="my_mod.vpk"
-)
+helper.compile_assets(input_path="my_raw_assets", pak_path="my_mod.vpk")
 
 # Log the result to the UI
-terminal.add_text("Compilation finished!", msg_type="success")
-terminal.add_seperator()
+output.add_text("Compilation finished!", msg_type="success")
+output.add_separator()
 ```
 
 #### Example: File Operations

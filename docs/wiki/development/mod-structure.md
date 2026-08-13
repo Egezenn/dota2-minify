@@ -15,7 +15,7 @@ mods
 │   ├── notes.md
 │   ├── preview.jpg | preview.png
 │   ├── blacklist.txt
-│   ├── replacer.csv
+│   ├── replacer.json
 │   ├── script.py
 │   ├── script_initial.py
 │   ├── script_after_decompile.py
@@ -24,7 +24,7 @@ mods
 │   ├── script_uninstall.py
 │   ├── script_utility.py
 │   ├── styling.css
-│   └── xml_mod.json
+│   └── xml.json
 ```
 
 ### `manifest.json`
@@ -178,19 +178,21 @@ particles/base_attacks/ranged_goodguy_launch.vpcf_c
 **taunt.*\.vsnd_c
 ```
 
-### `replacer.csv`
+### `replacer.json`
 
 This file allows you to replace file(s) with other file(s) inside the game VPK (can be used for skin swappers etc.).
 
 Format:  
-`file_to_be_replaced,replacement_file`
+`{"target_path": "replacement_path"}`
 
 Example:
 
-```csv
-panorama/images/spellicons/nevermore_shadowraze1_png.vtex_c,panorama/images/spellicons/nevermore_shadowraze1_demon_png.vtex_c
-panorama/images/spellicons/nevermore_shadowraze2_png.vtex_c,panorama/images/spellicons/nevermore_shadowraze2_demon_png.vtex_c
-panorama/images/spellicons/nevermore_shadowraze3_png.vtex_c,panorama/images/spellicons/nevermore_shadowraze3_demon_png.vtex_c
+```json
+{
+  "panorama/images/spellicons/nevermore_shadowraze1_png.vtex_c": "panorama/images/spellicons/nevermore_shadowraze1_demon_png.vtex_c",
+  "panorama/images/spellicons/nevermore_shadowraze2_png.vtex_c": "panorama/images/spellicons/nevermore_shadowraze2_demon_png.vtex_c",
+  "panorama/images/spellicons/nevermore_shadowraze3_png.vtex_c": "panorama/images/spellicons/nevermore_shadowraze3_demon_png.vtex_c"
+}
 ```
 
 ![example-replacer](../../assets/example-replacer.jpg)
