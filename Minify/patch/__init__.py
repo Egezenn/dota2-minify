@@ -361,40 +361,44 @@ def patcher(mod=None, pakname=None):
 
             # handle language option automatically
             if config.get("fix_options", True):
-                if base.is_win:
-                    fs.open_thing(steam.steam_executable_path, "-exitsteam")
-                else:
-                    subprocess.Popen(
-                        ["bash", "-c", "steam -exitsteam"],
-                        stdout=subprocess.DEVNULL,
-                        stderr=subprocess.DEVNULL,
-                    )
+                launch_needs_fix = bool(steam.fix_launch_options(check_only=True))
+                conditional_needs_fix = bool(steam.add_conditional_patch_to_launch_options(check_only=True))
 
-                steam_close_retries = 0
-                while any(
-                    p.info.get("name") == os.path.basename(steam.steam_executable_path)
-                    for p in psutil.process_iter(attrs=["name"])
-                ):
-                    if steam_close_retries >= 3:
-                        output.add_text("&failed_steam_close", 3, msg_type="error")
-                        break
-                    output.add_text("&waiting_steam_to_close")
-                    time.sleep(2)
-                    steam_close_retries += 1
-                time.sleep(1)
-
-                launch_fixed = bool(steam.fix_launch_options())
-                conditional_added = steam.add_conditional_patch_to_launch_options()
-
-                if launch_fixed or conditional_added or steam_close_retries < 5:
+                if launch_needs_fix or conditional_needs_fix:
                     if base.is_win:
-                        fs.open_thing(steam.steam_executable_path)
+                        fs.open_thing(steam.steam_executable_path, "-exitsteam")
                     else:
                         subprocess.Popen(
-                            ["bash", "-c", "steam"],
+                            ["bash", "-c", "steam -exitsteam"],
                             stdout=subprocess.DEVNULL,
                             stderr=subprocess.DEVNULL,
                         )
+
+                    steam_close_retries = 0
+                    while any(
+                        p.info.get("name") == os.path.basename(steam.steam_executable_path)
+                        for p in psutil.process_iter(attrs=["name"])
+                    ):
+                        if steam_close_retries >= 3:
+                            output.add_text("&failed_steam_close", 3, msg_type="error")
+                            break
+                        output.add_text("&waiting_steam_to_close")
+                        time.sleep(2)
+                        steam_close_retries += 1
+                    time.sleep(1)
+
+                    launch_fixed = bool(steam.fix_launch_options())
+                    conditional_added = steam.add_conditional_patch_to_launch_options()
+
+                    if launch_fixed or conditional_added or steam_close_retries < 5:
+                        if base.is_win:
+                            fs.open_thing(steam.steam_executable_path)
+                        else:
+                            subprocess.Popen(
+                                ["bash", "-c", "steam"],
+                                stdout=subprocess.DEVNULL,
+                                stderr=subprocess.DEVNULL,
+                            )
 
             helper.bulk_exec_script("after_patch", False)
 

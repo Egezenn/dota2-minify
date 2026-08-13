@@ -178,7 +178,7 @@ def test_no_duplicate_insert(monkeypatch, mock_frozen_env):
     monkeypatch.setattr("vdf.dump", mock_dump)
 
     result = add_conditional_patch_to_launch_options()
-    assert result is True
+    assert result is False
     assert not mock_dump.called
     assert (
         vdf_data["UserLocalConfigStore"]["Software"]["Valve"]["Steam"]["apps"][base.STEAM_DOTA_ID]["LaunchOptions"]
@@ -340,7 +340,7 @@ def test_missing_launch_options(monkeypatch, mock_frozen_env):
     monkeypatch.setattr("vdf.dump", mock_dump)
 
     result = add_conditional_patch_to_launch_options()
-    assert result is True
+    assert result is False
     assert not mock_dump.called
 
 
@@ -348,7 +348,7 @@ def test_missing_vdf_file(monkeypatch, mock_frozen_env):
     monkeypatch.setattr("os.path.exists", lambda path: False)
 
     result = add_conditional_patch_to_launch_options()
-    assert result is True
+    assert result is False
 
 
 def test_empty_launch_options(monkeypatch, mock_frozen_env):

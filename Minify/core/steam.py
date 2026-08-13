@@ -66,7 +66,7 @@ def remove_specific_lang_arg(arg_string, lang_to_remove):
     return " ".join(cleaned)
 
 
-def add_conditional_patch_to_launch_options():
+def add_conditional_patch_to_launch_options(check_only=False):
     "If frozen and patch_on_updates is enabled, prepend conditional-patch command before %command% in launch options"
 
     if not base.FROZEN:
@@ -114,6 +114,8 @@ def add_conditional_patch_to_launch_options():
         new_options = " ".join(new_tokens)
 
         if new_options != launch_options:
+            if check_only:
+                return True
             data["UserLocalConfigStore"]["Software"]["Valve"]["Steam"]["apps"][base.STEAM_DOTA_ID]["LaunchOptions"] = (
                 new_options
             )
@@ -124,7 +126,7 @@ def add_conditional_patch_to_launch_options():
     return changed
 
 
-def fix_launch_options():
+def fix_launch_options(check_only=False):
     """
     Fixes user(s) launch options with the language argument that has the current output path.
     Does it for all accounts available if "apply_for_all" key is set.
@@ -145,7 +147,8 @@ def fix_launch_options():
             continue
 
         with utils.open_utf8R(vdf_path) as file:
-            output.add_text("&checking_launch_options")
+            if not check_only:
+                output.add_text("&checking_launch_options")
             data = vdf.load(file)
 
         locale = config.get_locale()
@@ -156,6 +159,8 @@ def fix_launch_options():
         except KeyError:
             continue
         if f"-language {locale}" not in launch_options or launch_options.count("-language") >= 2:
+            if check_only:
+                return True
             user_name = "?"
             for user in accounts:
                 if user["id"] == steam_id:
@@ -167,9 +172,9 @@ def fix_launch_options():
             data["UserLocalConfigStore"]["Software"]["Valve"]["Steam"]["apps"][base.STEAM_DOTA_ID]["LaunchOptions"] = (
                 f"-language {locale} {remove_lang_args(launch_options)}"
             )
-        with utils.open_utf8R(vdf_path, "w") as file:
-            vdf.dump(data, file, pretty=True)
-        successful_ids.append(steam_id)
+            with utils.open_utf8R(vdf_path, "w") as file:
+                vdf.dump(data, file, pretty=True)
+            successful_ids.append(steam_id)
     return successful_ids
 
 
