@@ -361,6 +361,7 @@ def patcher(mod=None, pakname=None):
 
             # handle language option automatically
             if config.get("fix_options", True):
+                steam.fix_boot_language()
                 launch_needs_fix = bool(steam.fix_launch_options(check_only=True))
                 conditional_needs_fix = bool(steam.add_conditional_patch_to_launch_options(check_only=True))
 
