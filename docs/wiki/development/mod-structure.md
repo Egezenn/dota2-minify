@@ -21,6 +21,7 @@ mods
 │   ├── script_after_decompile.py
 │   ├── script_after_recompile.py
 │   ├── script_after_patch.py
+│   ├── script_prelaunch.py
 │   ├── script_uninstall.py
 │   ├── script_utility.py
 │   ├── styling.css

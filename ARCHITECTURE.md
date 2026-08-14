@@ -142,7 +142,8 @@ Mods are identified by the presence of a folder in `Minify/mods/`. The system sc
 2. **`script.py`**: Runs during the collection phase of the patcher.
 3. **`script_after_decompile.py`**: Runs after `Source2Viewer` has extracted and decompiled assets.
 4. **`script_after_patch.py`**: Runs after the VPK has been saved and cleaned up.
-5. **`script_uninstall.py`**: Runs when the user triggers uninstallation.
+5. **`script_prelaunch.py`**: Runs before Dota 2 launches (via the `prelaunch` CLI hook).
+6. **`script_uninstall.py`**: Runs when the user triggers uninstallation.
 
 ---
 

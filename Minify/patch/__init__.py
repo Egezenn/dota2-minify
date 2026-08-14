@@ -363,9 +363,9 @@ def patcher(mod=None, pakname=None):
             if config.get("fix_options", True):
                 steam.fix_boot_language()
                 launch_needs_fix = bool(steam.fix_launch_options(check_only=True))
-                conditional_needs_fix = bool(steam.add_conditional_patch_to_launch_options(check_only=True))
+                prelaunch_needs_fix = bool(steam.add_prelaunch_to_launch_options(check_only=True))
 
-                if launch_needs_fix or conditional_needs_fix:
+                if launch_needs_fix or prelaunch_needs_fix:
                     if base.is_win:
                         fs.open_thing(steam.steam_executable_path, "-exitsteam")
                     else:
@@ -389,9 +389,9 @@ def patcher(mod=None, pakname=None):
                     time.sleep(1)
 
                     launch_fixed = bool(steam.fix_launch_options())
-                    conditional_added = steam.add_conditional_patch_to_launch_options()
+                    prelaunch_added = steam.add_prelaunch_to_launch_options()
 
-                    if launch_fixed or conditional_added or steam_close_retries < 5:
+                    if launch_fixed or prelaunch_added or steam_close_retries < 5:
                         if base.is_win:
                             fs.open_thing(steam.steam_executable_path)
                         else:

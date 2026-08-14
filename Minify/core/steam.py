@@ -66,13 +66,13 @@ def remove_specific_lang_arg(arg_string, lang_to_remove):
     return " ".join(cleaned)
 
 
-def add_conditional_patch_to_launch_options(check_only=False):
-    "If frozen and patch_on_updates is enabled, prepend conditional-patch command before %command% in launch options"
+def add_prelaunch_to_launch_options(check_only=False):
+    "If frozen and patch_on_launch is enabled, prepend prelaunch command before %command% in launch options"
 
     if not base.FROZEN:
         return False
 
-    if not config.get("patch_on_updates", False):
+    if not config.get("patch_on_launch", False):
         return False
 
     steam_ids = []
@@ -102,9 +102,9 @@ def add_conditional_patch_to_launch_options(check_only=False):
         tokens = launch_options.split()
 
         if base.is_win:
-            prefix = f'cmd /c "{sys.executable}" conditional-patch &&'
+            prefix = f'cmd /c "{sys.executable}" prelaunch &&'
         else:
-            prefix = f'bash -c "{sys.executable} conditional-patch" &&'
+            prefix = f'bash -c "{sys.executable} prelaunch" &&'
 
         if launch_options.startswith(prefix):
             continue

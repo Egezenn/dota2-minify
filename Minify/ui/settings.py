@@ -46,8 +46,8 @@ SETTINGS = [
         "type": "checkbox",
     },
     {
-        "key": "patch_on_updates",
-        "text": "Add conditional-patch to launch options",
+        "key": "patch_on_launch",
+        "text": "Run patches upon launch if required",
         "default": True,
         "type": "checkbox",
     },

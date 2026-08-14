@@ -2,7 +2,7 @@ from unittest.mock import MagicMock
 
 import pytest
 from core import base
-from core.steam import add_conditional_patch_to_launch_options
+from core.steam import add_prelaunch_to_launch_options
 
 
 @pytest.fixture
@@ -35,7 +35,7 @@ def test_not_frozen_returns_false(monkeypatch):
     monkeypatch.setattr("core.config.get", lambda key, default=None: default)
     monkeypatch.setattr("os.path.exists", lambda path: False)
 
-    result = add_conditional_patch_to_launch_options()
+    result = add_prelaunch_to_launch_options()
     assert result is False
 
 
@@ -58,7 +58,7 @@ def test_patch_on_updates_disabled_returns_false(monkeypatch):
     monkeypatch.setattr("core.steam.get_steam_accounts", lambda: [{"id": "123", "name": "User"}])
     monkeypatch.setattr("os.path.exists", lambda path: False)
 
-    result = add_conditional_patch_to_launch_options()
+    result = add_prelaunch_to_launch_options()
     assert result is False
 
 
@@ -81,12 +81,12 @@ def test_no_command_token_still_adds_prefix(monkeypatch, mock_frozen_env):
     mock_dump = MagicMock()
     monkeypatch.setattr("vdf.dump", mock_dump)
 
-    result = add_conditional_patch_to_launch_options()
+    result = add_prelaunch_to_launch_options()
     assert result is True
     assert mock_dump.called
     assert (
         vdf_data["UserLocalConfigStore"]["Software"]["Valve"]["Steam"]["apps"][base.STEAM_DOTA_ID]["LaunchOptions"]
-        == 'cmd /c "/path/to/minify" conditional-patch && %command% -novid -language english'
+        == 'cmd /c "/path/to/minify" prelaunch && %command% -novid -language english'
     )
 
 
@@ -111,12 +111,12 @@ def test_inserts_before_command_windows(monkeypatch, mock_frozen_env):
     mock_dump = MagicMock()
     monkeypatch.setattr("vdf.dump", mock_dump)
 
-    result = add_conditional_patch_to_launch_options()
+    result = add_prelaunch_to_launch_options()
     assert result is True
     assert mock_dump.called
     assert (
         vdf_data["UserLocalConfigStore"]["Software"]["Valve"]["Steam"]["apps"][base.STEAM_DOTA_ID]["LaunchOptions"]
-        == 'cmd /c "/path/to/minify" conditional-patch && %command% -novid -language english'
+        == 'cmd /c "/path/to/minify" prelaunch && %command% -novid -language english'
     )
 
 
@@ -141,12 +141,12 @@ def test_inserts_before_command_linux(monkeypatch, mock_frozen_env):
     mock_dump = MagicMock()
     monkeypatch.setattr("vdf.dump", mock_dump)
 
-    result = add_conditional_patch_to_launch_options()
+    result = add_prelaunch_to_launch_options()
     assert result is True
     assert mock_dump.called
     assert (
         vdf_data["UserLocalConfigStore"]["Software"]["Valve"]["Steam"]["apps"][base.STEAM_DOTA_ID]["LaunchOptions"]
-        == 'bash -c "/path/to/minify conditional-patch" && %command% -novid -language english'
+        == 'bash -c "/path/to/minify prelaunch" && %command% -novid -language english'
     )
 
 
@@ -164,7 +164,7 @@ def test_no_duplicate_insert(monkeypatch, mock_frozen_env):
                     "Steam": {
                         "apps": {
                             base.STEAM_DOTA_ID: {
-                                "LaunchOptions": 'cmd /c "/path/to/minify" conditional-patch && %command% -novid -language english'
+                                "LaunchOptions": 'cmd /c "/path/to/minify" prelaunch && %command% -novid -language english'
                             }
                         }
                     }
@@ -177,12 +177,12 @@ def test_no_duplicate_insert(monkeypatch, mock_frozen_env):
     mock_dump = MagicMock()
     monkeypatch.setattr("vdf.dump", mock_dump)
 
-    result = add_conditional_patch_to_launch_options()
+    result = add_prelaunch_to_launch_options()
     assert result is False
     assert not mock_dump.called
     assert (
         vdf_data["UserLocalConfigStore"]["Software"]["Valve"]["Steam"]["apps"][base.STEAM_DOTA_ID]["LaunchOptions"]
-        == 'cmd /c "/path/to/minify" conditional-patch && %command% -novid -language english'
+        == 'cmd /c "/path/to/minify" prelaunch && %command% -novid -language english'
     )
 
 
@@ -204,12 +204,12 @@ def test_path_with_spaces(monkeypatch, mock_frozen_env):
     mock_dump = MagicMock()
     monkeypatch.setattr("vdf.dump", mock_dump)
 
-    result = add_conditional_patch_to_launch_options()
+    result = add_prelaunch_to_launch_options()
     assert result is True
     assert mock_dump.called
     assert (
         vdf_data["UserLocalConfigStore"]["Software"]["Valve"]["Steam"]["apps"][base.STEAM_DOTA_ID]["LaunchOptions"]
-        == r'cmd /c "C:\Program Files\Dota2 Minify\minify.exe" conditional-patch && %command% -novid'
+        == r'cmd /c "C:\Program Files\Dota2 Minify\minify.exe" prelaunch && %command% -novid'
     )
 
 
@@ -238,12 +238,12 @@ def test_multiple_command_tokens(monkeypatch, mock_frozen_env):
     mock_dump = MagicMock()
     monkeypatch.setattr("vdf.dump", mock_dump)
 
-    result = add_conditional_patch_to_launch_options()
+    result = add_prelaunch_to_launch_options()
     assert result is True
     assert mock_dump.called
     assert (
         vdf_data["UserLocalConfigStore"]["Software"]["Valve"]["Steam"]["apps"][base.STEAM_DOTA_ID]["LaunchOptions"]
-        == 'cmd /c "/path/to/minify" conditional-patch && %command% -novid -language english -something_else'
+        == 'cmd /c "/path/to/minify" prelaunch && %command% -novid -language english -something_else'
     )
 
 
@@ -274,12 +274,12 @@ def test_env_vars_and_wrappers_moved_after_command(monkeypatch, mock_frozen_env)
     mock_dump = MagicMock()
     monkeypatch.setattr("vdf.dump", mock_dump)
 
-    result = add_conditional_patch_to_launch_options()
+    result = add_prelaunch_to_launch_options()
     assert result is True
     assert mock_dump.called
     assert (
         vdf_data["UserLocalConfigStore"]["Software"]["Valve"]["Steam"]["apps"][base.STEAM_DOTA_ID]["LaunchOptions"]
-        == 'cmd /c "/path/to/minify" conditional-patch && %command% WAYLAND=1 mangohud -novid -language english'
+        == 'cmd /c "/path/to/minify" prelaunch && %command% WAYLAND=1 mangohud -novid -language english'
     )
 
 
@@ -321,12 +321,12 @@ def test_apply_for_all_false(monkeypatch):
     mock_dump = MagicMock()
     monkeypatch.setattr("vdf.dump", mock_dump)
 
-    result = add_conditional_patch_to_launch_options()
+    result = add_prelaunch_to_launch_options()
     assert result is True
     assert mock_dump.called
     assert (
         vdf_data["UserLocalConfigStore"]["Software"]["Valve"]["Steam"]["apps"][base.STEAM_DOTA_ID]["LaunchOptions"]
-        == 'cmd /c "/path/to/minify" conditional-patch && %command% -novid'
+        == 'cmd /c "/path/to/minify" prelaunch && %command% -novid'
     )
 
 
@@ -339,7 +339,7 @@ def test_missing_launch_options(monkeypatch, mock_frozen_env):
     mock_dump = MagicMock()
     monkeypatch.setattr("vdf.dump", mock_dump)
 
-    result = add_conditional_patch_to_launch_options()
+    result = add_prelaunch_to_launch_options()
     assert result is False
     assert not mock_dump.called
 
@@ -347,7 +347,7 @@ def test_missing_launch_options(monkeypatch, mock_frozen_env):
 def test_missing_vdf_file(monkeypatch, mock_frozen_env):
     monkeypatch.setattr("os.path.exists", lambda path: False)
 
-    result = add_conditional_patch_to_launch_options()
+    result = add_prelaunch_to_launch_options()
     assert result is False
 
 
@@ -368,10 +368,10 @@ def test_empty_launch_options(monkeypatch, mock_frozen_env):
     mock_dump = MagicMock()
     monkeypatch.setattr("vdf.dump", mock_dump)
 
-    result = add_conditional_patch_to_launch_options()
+    result = add_prelaunch_to_launch_options()
     assert result is True
     assert mock_dump.called
     assert (
         vdf_data["UserLocalConfigStore"]["Software"]["Valve"]["Steam"]["apps"][base.STEAM_DOTA_ID]["LaunchOptions"]
-        == 'cmd /c "/path/to/minify" conditional-patch && %command%'
+        == 'cmd /c "/path/to/minify" prelaunch && %command%'
     )

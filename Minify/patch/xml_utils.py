@@ -153,7 +153,7 @@ def apply_modifications(xml_file, modifications):
 
         elif action == "move_into":
             selector = mod.get("selector")
-            new_parent_selector = mod.get("new_selector")
+            new_parent_selector = mod.get("new_parent_selector")
 
             elem, old_parent = find_with_parent_by_selector(root, selector)
             new_parent = find_by_selector(root, new_parent_selector)

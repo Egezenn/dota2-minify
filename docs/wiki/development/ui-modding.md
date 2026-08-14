@@ -97,7 +97,7 @@ Supported actions:
 | `move_into`     | Moves an element into a new parent. |
 | :-------------- | :---------------------------------- |
 | `selector`      | CSS-like selector for the element to move. |
-| `new_selector`  | CSS-like selector for the new parent element. |
+| `new_parent_selector`  | CSS-like selector for the new parent element. |
 
 | `insert_after` | Inserts an element after a target element. |
 | :------------- | :----------------------------------------- |

@@ -11,11 +11,13 @@ if minify_root not in sys.path:
 
 # isort: split
 
+import hashlib
+import json
 import shutil
 import struct
 import uuid
 
-from core import config, fs, output, steam
+from core import base, config, fs, output, steam
 from ui.fonts import find_system_font
 
 dota_fonts_path = os.path.join(steam.LIBRARY, "steamapps", "common", "dota 2 beta", "game", "dota", "panorama", "fonts")
@@ -177,23 +179,35 @@ def main():
     with open(found_font, "rb") as f:
         found_font_data = f.read()
 
+    try:
+        source_hash = hashlib.sha256(found_font_data).hexdigest()
+        hash_file = os.path.join(base.cache_dir, ".fonts_hash.json")
+        if os.path.exists(hash_file):
+            with open(hash_file, "r") as f:
+                stored = json.load(f)
+            stored_hash = stored.get("source_hash")
+        else:
+            stored_hash = None
+    except Exception:
+        source_hash = None
+        stored_hash = None
+
     for name, (family, fullname, postscript) in REPLACE_MAP.items():
         dest = os.path.join(dota_fonts_path, name)
-        if os.path.exists(dest) and _is_patched(dest, family, fullname, postscript):
-            with open(dest, "rb") as f:
-                dest_data = f.read()
-            if dest_data == found_font_data:
-                output.add_text(f"Skipped (already patched): {name}")
-                continue
+        is_patched = os.path.exists(dest) and _is_patched(dest, family, fullname, postscript)
+        if is_patched and source_hash is not None and source_hash == stored_hash:
+            output.add_text(f"Skipped (already patched): {name}")
+            continue
+        if is_patched:
             output.add_text(f"Font changed, re-patching: {name}")
         fs.remove_path(dest)
         shutil.copy2(found_font, dest)
         _patch_font(dest, family, fullname, postscript)
         output.add_text(f"Installed: {name}")
-        fs.remove_path(dest)
-        shutil.copy2(found_font, dest)
-        _patch_font(dest, family, fullname, postscript)
-        output.add_text(f"Installed: {name}")
+
+    if source_hash is not None:
+        with open(os.path.join(base.cache_dir, ".fonts_hash.json"), "w") as f:
+            json.dump({"source_hash": source_hash}, f)
 
     with open(os.path.join(dota_fonts_path, ".uuid"), "w") as f:
         f.write(str(uuid.uuid4()))

@@ -164,11 +164,14 @@ def exec_script(script_path, mod_name, order_name, _terminal_output=True):
         if callable(main_func):
             if _terminal_output:
                 output.add_text("&script_execution", mod_name, order_name)
-            main_func()
+            result = main_func()
             if _terminal_output:
                 output.add_text("&script_success", mod_name, order_name, msg_type="success")
+            return result
         else:
             log.write_warning("&script_no_main", mod_name, order_name)
+
+    return None
 
 
 def bulk_exec_script(order_name, terminal_output=True):
@@ -179,9 +182,11 @@ def bulk_exec_script(order_name, terminal_output=True):
     `script_after_decompile.py`
     `script_after_recompile.py`
     `script_after_patch.py`
+    `script_prelaunch.py`
     `script_uninstall.py`
     """
     bulk_name = f"script_{order_name}.py"
+    any_ran = False
     for root, _, files in os.walk(base.mods_dir):
         if bulk_name in files and not os.path.basename(root).startswith("_"):
             cfg = manifest_utils.get_mod(root)
@@ -194,9 +199,13 @@ def bulk_exec_script(order_name, terminal_output=True):
             # Uninstaller scripts should determine whether or not the mod is installed and safely quit
             # if not installed. Determining whether or not a mod is installed is mostly undeterministic
             if always or order_name in ["initial", "uninstall"] or mods_shared.get_state(os.path.basename(root)):
-                exec_script(
+                result = exec_script(
                     os.path.join(root, bulk_name), os.path.basename(root), order_name, _terminal_output=terminal_output
                 )
+                if result:
+                    any_ran = True
+
+    return any_ran
 
 
 def exec_script_function(script_path, mod_name, function_name="main"):

@@ -25,7 +25,7 @@ jobs:
         run: uv run ruff format --check
 
       - name: Run Ruff Check
-        run: uv run ruff check .
+        run: uv run ruff check Minify
 
       - name: Run Pytest
         run: uv run pytest

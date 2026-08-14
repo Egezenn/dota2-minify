@@ -40,18 +40,18 @@ def run_patch(
 
 </details>
 
-## `run_conditional_patch(config_path, mods_path)`
+## `run_prelaunch(config_path, mods_path)`
 
-Run a conditional patch (if updated since last patch time).
+Run a prelaunch check (patches if updated since last patch time).
 
 <details open><summary>Source</summary>
 
 ```python
-def run_conditional_patch(
+def run_prelaunch(
     config_path: Optional[str] = typer.Option(None, "--config", "-c", help="Path to config file."),
     mods_path: Optional[str] = typer.Option(None, "--mods", "-m", help="Path to mods file."),
 ):
-    """Run a conditional patch (if updated since last patch time)."""
+    """Run a prelaunch check (patches if updated since last patch time)."""
     _apply_paths(config_path, mods_path)
     current_version = ""
     if os.path.exists(constants.dota_steam_inf_path):
@@ -63,12 +63,19 @@ def run_conditional_patch(
         with utils.open_utf8R(base.dota_steam_inf_cache) as f:
             cached_version = f.read()
 
-    if current_version == cached_version and cached_version:
-        print("Dota 2 version has not changed. Skipping patch.")
-        return
+    patch_ran = current_version != cached_version or not cached_version
 
-    print("Dota 2 version changed or first run. Starting patch...")
-    run_patch(config_path=config_path, mods_path=mods_path)
+    if patch_ran:
+        print("Dota 2 version changed or first run. Starting patch...")
+        run_patch(config_path=config_path, mods_path=mods_path)
+        _config.set("last_patch_time", time.time())
+    else:
+        print("Dota 2 version has not changed. Skipping patch.")
+
+    if not patch_ran:
+        any_ran = helper.bulk_exec_script("prelaunch")
+        if any_ran:
+            _config.set("last_patch_time", time.time())
 
 ```
 
