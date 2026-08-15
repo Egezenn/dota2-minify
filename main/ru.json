@@ -16,6 +16,7 @@
   "conflicts_detected": "Обнаружены конфликты:",
   "connection_error": "Похоже, GitHub заблокирован или недоступен. Пожалуйста, используйте VPN для загрузки необходимых файлов и запуска скриптов.",
   "creating_merged_vpk": "-> Создание объединенного vpk...",
+  "decompiling_terminal": "-> Декомпиляция и извлечение файлов с помощью Source2Viewer",
   "details_button_label_var": "Подробнее",
   "discrepancy_launch_options": "   Обнаружено несоответствие для текущего пользователя, происходит переключение параметров...\n   {} -> {}",
   "downloaded_cli_terminal": "-> Скачано",
