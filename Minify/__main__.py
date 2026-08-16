@@ -16,6 +16,7 @@ else:
     if current_dir not in sys.path:
         sys.path.insert(0, current_dir)
 
+os.makedirs("cache", exist_ok=True)
 os.makedirs("config", exist_ok=True)
 os.makedirs("logs", exist_ok=True)
 

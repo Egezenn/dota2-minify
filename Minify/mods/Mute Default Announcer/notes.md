@@ -1,103 +1,77 @@
 <!-- LANG:EN -->
-
-Mutes default announcers & killstreak lines.
+Mutes the default announcer.
 
 <!-- LANG:BG -->
-
-Заглушава дикторите по подразбиране и репликите за убийства.
+Заглушава диктора по подразбиране.
 
 <!-- LANG:CS -->
-
-Ztlumí výchozí hlasatele a hlášky o sérii kills.
+Ztlumí výchozího hlasatele.
 
 <!-- LANG:DA -->
-
-Dæmper standardkommentatorer og killstreak-linjer.
+Slår standardmeddelelsen fra.
 
 <!-- LANG:DE -->
-
-Deaktiviert die Standardansager und die Killstreak-Anzeige.
+Schaltet den Standardansager stumm.
 
 <!-- LANG:EL -->
-
-Σίγαση των προεπιλεγμένων εκφωνητών και των γραμμών killstreak.
+Σίγαση του προεπιλεγμένου εκφωνητή.
 
 <!-- LANG:ES -->
-
-Silencia los anunciadores & las líneas de racha por defecto.
+Silencia el locutor predeterminado.
 
 <!-- LANG:FI -->
-
-Mykistää oletuskuuluttajat ja tapposarjarivit.
+Mykistää oletuskuuluttajan.
 
 <!-- LANG:FR -->
-
-Désactive les annonces vocales par défaut et les répliques de séries d'éliminations.
+Coupe le son de l'annonceur par défaut.
 
 <!-- LANG:HU -->
-
-Némítja az alapértelmezett bemondókat és a killstreak sorokat.
+Elnémítja az alapértelmezett bemondót.
 
 <!-- LANG:IT -->
-
-Disattiva l'audio degli annunciatori predefiniti e delle linee di killstreak.
+Disattiva l'annunciatore predefinito.
 
 <!-- LANG:JA -->
-
-デフォルトのアナウンサーとキルストリークのセリフをミュートします。
+デフォルトのアナウンサーをミュートします。
 
 <!-- LANG:KO -->
-
-기본 아나운서 및 킬스트릭 대사를 음소거합니다.
+기본 아나운서를 음소거합니다.
 
 <!-- LANG:NL -->
-
-Dempt standaard-omroepers en killstreak-regels.
+Dempt de standaardomroeper.
 
 <!-- LANG:NO -->
-
-Demper standard annonsører og killstreak-linjer.
+Demper standardmeldingen.
 
 <!-- LANG:PL -->
-
-Wycisza domyślnych komentatorów i linie killstreaków.
+Wycisza domyślnego spikera.
 
 <!-- LANG:PT -->
-
-Silencia os locutores padrão e as falas de sequência de eliminações.
+Silencia o locutor padrão.
 
 <!-- LANG:RO -->
-
-Dezactivează crainii și replicile din seria de killstreak-uri implicite.
+Dezactivează crainicul implicit.
 
 <!-- LANG:RU -->
-
-Отключает стандартные голосовые сообщения и сообщения о серии убийств.
+Отключает звук диктора по умолчанию.
 
 <!-- LANG:SV -->
-
-Stänger av standardkommentatorer och killstreak-linjer.
+Stänger av ljudet för standardmeddelanden.
 
 <!-- LANG:TH -->
-
-ปิดเสียงผู้ประกาศเริ่มต้นและเสียงแสดงความสำเร็จในการสังหาร
+ปิดเสียงผู้ประกาศเริ่มต้น
 
 <!-- LANG:TR -->
-
-Varsayılan spikerleri ve öldürme serisi repliklerini susturur.
+Varsayılan spikeri susturur.
 
 <!-- LANG:UK -->
-
-Вимикає стандартних анонсерів і репліки про серії вбивств.
+Вимкнення диктора за замовчуванням.
 
 <!-- LANG:VI -->
-
-Tắt tiếng các thông báo mặc định và các câu thoại khi đạt chuỗi hạ gục.
+Tắt tiếng người thông báo mặc định.
 
 <!-- LANG:ZH-CN -->
-
-静音默认播音员和连杀奖励语音。
+将默认播音员静音。
 
 <!-- LANG:ZH-TW -->
-
-靜音預設播音員和連殺獎勵語音。
+將預設播音員靜音。

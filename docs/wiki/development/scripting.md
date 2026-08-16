@@ -22,6 +22,7 @@ import os
 import sys
 
 current_dir = os.path.dirname(os.path.abspath(__file__))
+mod_name = os.path.basename(current_dir)
 minify_root = os.path.abspath(os.path.join(current_dir, os.pardir, os.pardir))
 os.chdir(minify_root)
 

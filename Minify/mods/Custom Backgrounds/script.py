@@ -18,8 +18,6 @@ import conditions
 import helper
 from core import base, config, constants, fs, output
 
-mod_name = os.path.basename(current_dir)
-
 
 def main():
     img_available, vid_available = False, False

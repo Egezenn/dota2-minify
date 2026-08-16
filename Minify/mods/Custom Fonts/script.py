@@ -2,6 +2,7 @@ import os
 import sys
 
 current_dir = os.path.dirname(os.path.abspath(__file__))
+mod_name = os.path.basename(current_dir)
 minify_root = os.path.abspath(os.path.join(current_dir, os.pardir, os.pardir))
 if os.getcwd() != minify_root:
     os.chdir(minify_root)
@@ -12,12 +13,11 @@ if minify_root not in sys.path:
 # isort: split
 
 import hashlib
-import json
 import shutil
 import struct
 import uuid
 
-from core import base, config, fs, output, steam
+from core import base, config, fs, output, steam, utils
 from ui.fonts import find_system_font
 
 dota_fonts_path = os.path.join(steam.LIBRARY, "steamapps", "common", "dota 2 beta", "game", "dota", "panorama", "fonts")
@@ -150,7 +150,7 @@ def _patch_font(font_path, family, fullname, postscript):
 
 
 def main():
-    mod_data = config.get_mod("Custom Fonts")
+    mod_data = config.get_mod(mod_name)
 
     found_font = None
 
@@ -181,13 +181,7 @@ def main():
 
     try:
         source_hash = hashlib.sha256(found_font_data).hexdigest()
-        hash_file = os.path.join(base.cache_dir, ".fonts_hash.json")
-        if os.path.exists(hash_file):
-            with open(hash_file, "r") as f:
-                stored = json.load(f)
-            stored_hash = stored.get("source_hash")
-        else:
-            stored_hash = None
+        stored_hash = utils.get_mod_state(mod_name, "source_hash")
     except Exception:
         source_hash = None
         stored_hash = None
@@ -206,8 +200,7 @@ def main():
         output.add_text(f"Installed: {name}")
 
     if source_hash is not None:
-        with open(os.path.join(base.cache_dir, ".fonts_hash.json"), "w") as f:
-            json.dump({"source_hash": source_hash}, f)
+        utils.set_mod_state(mod_name, "source_hash", source_hash)
 
     with open(os.path.join(dota_fonts_path, ".uuid"), "w") as f:
         f.write(str(uuid.uuid4()))

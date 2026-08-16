@@ -12,7 +12,7 @@ if minify_root not in sys.path:
 
 # isort: split
 
-from core import config
+from core import utils
 
 # isort: split
 
@@ -20,9 +20,10 @@ from script import main as fetch_grids
 
 
 def main():
-    last_time = config.get("last_patch_time", 0)
+    last_time = utils.get_mod_state(mod_name, "last_run_time", 0)
     if time.time() - last_time > 86400:
         fetch_grids()
+        utils.set_mod_state(mod_name, "last_run_time", int(time.time()))
         return True
 
 
