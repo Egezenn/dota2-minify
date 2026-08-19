@@ -7,7 +7,6 @@
   "Minify Spells & Items": "Simplica los poderes e items por defecto en el juego.",
   "Misc Optimization": "Elimina efectos misceláneos\n\n- Elimina efectos de partículas en las estructuras como el efecto brillante en la fuente, outpost, estructuras de la base, etc\n- Proyectil de ataque de la torre / partículas de destrucción\n- Partículas de las efigies\n- Ilusiones simplificadas\n- Configuración del héroe, emblemas de evento, glifos...",
   "Mute Ambient Sounds": "Silencia los sonidos ambientales del mapa.",
-  "Mute Default Announcer": "Silencia los anunciadores & las líneas de racha por defecto.",
   "Mute Taunt Sounds": "Silencia los sonidos de las burlas.",
   "Mute Voice Line Sounds": "Silencia los sonidos de línea de voz.",
   "OpenDotaGuides Guides": "Reemplaza las guías por defecto con las de OpenDotaGuides.\n\n!!: Se requiere que las configuraciones por defecto estén seleccionadas para verlas en el juego.\n\nFuente: https://github.com/Egezenn/OpenDotaGuides/releases/latest",
