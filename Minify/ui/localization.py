@@ -12,6 +12,7 @@ locale = ""
 localization_dict = {}
 localizations = []
 details_label = ""
+mod_search_hint_var = ""
 mod_selection_window_var = ""
 
 
@@ -42,7 +43,7 @@ def get_available():
 
 
 def change(sender=None, app_data=None, user_data=None, init=False):
-    global locale, details_label, mod_selection_window_var
+    global locale, details_label, mod_search_hint_var, mod_selection_window_var
 
     with utils.open_utf8(base.localization_file_dir) as localization_file:
         localization_data = jsonc.load(localization_file)
@@ -100,12 +101,17 @@ def change(sender=None, app_data=None, user_data=None, init=False):
     details_label = localization_data.get("details_button_label_var", {}).get(
         locale, localization_data["details_button_label_var"]["EN"]
     )
+    mod_search_hint_var = localization_data.get("mod_search_hint_var", {}).get(
+        locale, localization_data["mod_search_hint_var"]["EN"]
+    )
     mod_selection_window_var = localization_data.get("mod_selection_window_var", {}).get(
         locale, localization_data["mod_selection_window_var"]["EN"]
     )
 
     if dpg.does_item_exist("mod_menu"):
         dpg.configure_item("mod_menu", label=mod_selection_window_var)
+        if dpg.does_item_exist("mod_search_input"):
+            dpg.configure_item("mod_search_input", hint=mod_search_hint_var)
         for child_group in dpg.get_item_children("mod_menu", 1):
             for item in dpg.get_item_children(child_group, 1):
                 if dpg.get_item_alias(item).endswith("_button_show_details_tag"):
