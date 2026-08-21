@@ -6,6 +6,19 @@ GREEN = "\033[38;2;0;255;0m"
 RESET = "\033[0m"
 
 
+_listeners = []
+
+
+def register_listener(callback):
+    if callback not in _listeners:
+        _listeners.append(callback)
+
+
+def unregister_listener(callback):
+    if callback in _listeners:
+        _listeners.remove(callback)
+
+
 def add_text(text_or_id, *args, msg_type: str | None = None, **kwargs):
     from core import localization
 
@@ -28,8 +41,14 @@ def add_text(text_or_id, *args, msg_type: str | None = None, **kwargs):
         print(f"{prefix}{text}{RESET}")
     except UnicodeEncodeError:
         print(f"{prefix}{text.encode('ascii', 'replace').decode('ascii')}{RESET}")
+
+    for listener in list(_listeners):
+        listener(text, msg_type)
+
     return None
 
 
 def add_separator():
     print("-" * 50)
+    for listener in list(_listeners):
+        listener("", "separator")

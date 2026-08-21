@@ -89,3 +89,5 @@ env/
 ENV/
 venv.bak/
 venv/
+
+node_modules

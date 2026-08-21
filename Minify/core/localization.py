@@ -21,7 +21,7 @@ def load_headless():
             localization_dict[key] = values
 
 
-def get_available():
+def get_available() -> list[str]:
     global localizations
     with utils.open_utf8(base.localization_file_dir) as file:
         localization_data = jsonc.load(file)
@@ -35,3 +35,17 @@ def get_available():
     for key, value in localization_data.items():
         if key.endswith("var") and isinstance(value, dict):
             localization_dict[key] = value.get("EN", "")
+
+    return localizations
+
+
+def get_for_locale(lang: str = "EN") -> dict:
+    with utils.open_utf8(base.localization_file_dir) as f:
+        data = jsonc.load(f)
+    result = {}
+    for key, values in data.items():
+        if isinstance(values, dict):
+            result[key] = values.get(lang, values.get("EN", ""))
+        else:
+            result[key] = str(values)
+    return result

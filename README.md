@@ -99,16 +99,26 @@ This project wouldn't be available without the work of the community. Thanks to 
 
 ### Python packages
 
-| Name                                                                   | Usage                                     | License                                                                           |
-| ---------------------------------------------------------------------- | ----------------------------------------- | --------------------------------------------------------------------------------- |
-| [defusedxml](https://github.com/tiran/defusedxml)                      | Secure XML parsing                        | [PSFL license](https://github.com/tiran/defusedxml/blob/main/LICENSE)             |
-| [json-with-comments](https://github.com/n-takumasa/json-with-comments) | JSON parsing with comments                | [MIT license](https://github.com/n-takumasa/json-with-comments/blob/main/LICENSE) |
-| [playsound3](https://github.com/szmikler/playsound3)                   | Playing sounds                            | [MIT license](https://github.com/szmikler/playsound3/blob/main/LICENSE)           |
-| [psutil](https://github.com/giampaolo/psutil)                          | Checking processes existences             | [BSD-3-Clause license](https://github.com/giampaolo/psutil/blob/master/LICENSE)   |
-| [requests](https://github.com/psf/requests)                            | Downloading/querying project dependencies | [Apache-2.0 license](https://github.com/psf/requests/blob/main/LICENSE)           |
-| [typer](https://github.com/fastapi/typer)                              | CLI framework                             | [MIT license](https://github.com/fastapi/typer/blob/master/LICENSE)               |
-| [vdf](https://github.com/ValvePython/vdf)                              | Serializing VDFs                          | [MIT license](https://github.com/ValvePython/vdf/blob/master/LICENSE)             |
-| [vpk](https://github.com/ValvePython/vpk)                              | VPK interaction                           | [MIT license](https://github.com/ValvePython/vpk/blob/master/LICENSE)             |
+| Name                                                                   | Usage                                     | License                                                                              |
+| ---------------------------------------------------------------------- | ----------------------------------------- | ------------------------------------------------------------------------------------ |
+| [defusedxml](https://github.com/tiran/defusedxml)                      | Secure XML parsing                        | [PSFL license](https://github.com/tiran/defusedxml/blob/main/LICENSE)                |
+| [json-with-comments](https://github.com/n-takumasa/json-with-comments) | JSON parsing with comments                | [MIT license](https://github.com/n-takumasa/json-with-comments/blob/main/LICENSE)    |
+| [playsound3](https://github.com/szmikler/playsound3)                   | Playing sounds                            | [MIT license](https://github.com/szmikler/playsound3/blob/main/LICENSE)              |
+| [psutil](https://github.com/giampaolo/psutil)                          | Checking processes existences             | [BSD-3-Clause license](https://github.com/giampaolo/psutil/blob/master/LICENSE)      |
+| [pycairo](https://github.com/pygobject/pycairo)                        | Cairo graphics bindings for GTK           | [LGPL-2.1 / MPL-1.1 license](https://github.com/pygobject/pycairo/blob/main/COPYING) |
+| [pygobject](https://gitlab.gnome.org/GNOME/pygobject)                  | GObject GTK bindings                      | [LGPL-2.1 license](https://gitlab.gnome.org/GNOME/pygobject/-/blob/main/COPYING)     |
+| [pywebview](https://pywebview.flowrl.com)                              | Webview GUI window framework              | [BSD-3-Clause license](https://github.com/r00t2/pywebview/blob/master/LICENSE)       |
+| [requests](https://github.com/psf/requests)                            | Downloading/querying project dependencies | [Apache-2.0 license](https://github.com/psf/requests/blob/main/LICENSE)              |
+| [typer](https://github.com/fastapi/typer)                              | CLI framework                             | [MIT license](https://github.com/fastapi/typer/blob/master/LICENSE)                  |
+| [vdf](https://github.com/ValvePython/vdf)                              | Serializing VDFs                          | [MIT license](https://github.com/ValvePython/vdf/blob/master/LICENSE)                |
+| [vpk](https://github.com/ValvePython/vpk)                              | VPK interaction                           | [MIT license](https://github.com/ValvePython/vpk/blob/master/LICENSE)                |
+
+### Web Frontend dependencies
+
+| Name                                         | Usage                            | License                                                             |
+| -------------------------------------------- | -------------------------------- | ------------------------------------------------------------------- |
+| [Svelte](https://github.com/sveltejs/svelte) | Reactive UI framework            | [MIT license](https://github.com/sveltejs/svelte/blob/main/LICENSE) |
+| [Vite](https://github.com/vitejs/vite)       | Frontend build tool & dev server | [MIT license](https://github.com/vitejs/vite/blob/main/LICENSE)     |
 
 ### Development dependencies
 

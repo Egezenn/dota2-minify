@@ -7,7 +7,7 @@ import sys
 def get_git_tracked_py_files(root_dir):
     result = subprocess.run(["git", "ls-files", "Minify"], capture_output=True, text=True, check=True, cwd=root_dir)
     files = result.stdout.splitlines()
-    py_files = [os.path.join(root_dir, f) for f in files if f.endswith(".py")]
+    py_files = [os.path.join(root_dir, f) for f in files if f.endswith((".py", ".svelte", ".js", ".ts", ".json"))]
     return py_files
 
 
@@ -55,6 +55,16 @@ def test_unused_localization_keys():
             unused_keys.append(key)
 
     assert len(unused_keys) == 0, f"Unused localization keys found: {unused_keys}"
+
+
+def test_get_for_locale():
+    sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "../Minify")))
+    from core import localization
+
+    en_dict = localization.get_for_locale("EN")
+    assert isinstance(en_dict, dict)
+    assert len(en_dict) > 0
+    assert "close_dota_terminal" in en_dict
 
 
 if __name__ == "__main__":

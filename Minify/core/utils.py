@@ -109,13 +109,17 @@ def parse_color(val):
 
 def setup_system():
     import conditions
+    import helper
+    import browsers
 
-    from core import fs, migrations
+    from core import fs, migrations, utils, localization
 
-    fs.create_dirs(base.logs_dir)
+    localization.load_headless()
     conditions.is_dota_running("&error_please_close_dota_terminal", "error")
     conditions.is_compiler_found()
     conditions.resolve_dependencies()
+    browsers.initialize()
+    helper.bulk_exec_script("initial", False)
 
 
 def sanitize_win_path(name):

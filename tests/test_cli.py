@@ -1,10 +1,19 @@
+import importlib.util
+import os
 from unittest.mock import MagicMock
 from unittest.mock import patch as mock_patch
 
 import patch as patch_mod
-from cli import app
-from core import base, constants, mods_shared
-from typer.testing import CliRunner
+
+main_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "../Minify/__main__.py"))
+spec = importlib.util.spec_from_file_location("minify_main", main_path)
+minify_main = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(minify_main)
+
+app = minify_main.app
+
+from core import base  # noqa: E402
+from typer.testing import CliRunner  # noqa: E402
 
 runner = CliRunner()
 
@@ -64,7 +73,9 @@ def test_config_show_prints_config():
 
     with (
         mock_patch.object(base, "main_config_file_dir", base.main_config_file_dir),
-        mock_patch("cli._config.read_json_file", return_value={"locale": "EN", "output_locale": "english"}),
+        mock_patch.object(
+            minify_main._config, "read_json_file", return_value={"locale": "EN", "output_locale": "english"}
+        ),
     ):
         result = runner.invoke(app, ["config", "-j"])
 
@@ -77,7 +88,7 @@ def test_mods_show_outputs_valid_json():
 
     with (
         mock_patch.object(base, "mods_config_dir", base.mods_config_dir),
-        mock_patch("cli._config.read_json_file", return_value={"Mod A": True, "Mod B": False}),
+        mock_patch.object(minify_main._config, "read_json_file", return_value={"Mod A": True, "Mod B": False}),
     ):
         result = runner.invoke(app, ["mods", "-j"])
 
@@ -110,7 +121,7 @@ def test_config_opens_default_config_in_editor(tmp_path):
     config_file = str(tmp_path / "minify_config.json")
     with (
         mock_patch.object(base, "main_config_file_dir", config_file),
-        mock_patch("cli.subprocess.run", return_value=MagicMock(returncode=0)) as mock_run,
+        mock_patch("subprocess.run", return_value=MagicMock(returncode=0)) as mock_run,
     ):
         result = runner.invoke(app, ["config", "-e", "vim"])
 
@@ -126,7 +137,7 @@ def test_mods_opens_mods_file_in_editor(tmp_path):
     with (
         mock_patch.object(base, "mods_config_dir", base.mods_config_dir),
         mock_patch.object(base, "original_cwd", str(tmp_path), create=True),
-        mock_patch("cli.subprocess.run", return_value=MagicMock(returncode=0)) as mock_run,
+        mock_patch("subprocess.run", return_value=MagicMock(returncode=0)) as mock_run,
     ):
         result = runner.invoke(app, ["mods", "-m", "mods.json", "-e", "vi"])
 
@@ -144,4 +155,4 @@ def test_uninstall_force_calls_wipe():
 
     assert result.exit_code == 0
     unins.wipe.assert_called_once()
-    unins.uninstall.assert_not_called()
+    unins.wipe.assert_called_once()

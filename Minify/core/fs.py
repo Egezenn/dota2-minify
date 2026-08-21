@@ -8,9 +8,9 @@ import subprocess
 import tarfile
 import time
 import zipfile
+from typing import Optional
 
 import requests
-from typing import Optional
 
 from core import base, log, output, utils
 
