@@ -3,7 +3,7 @@ import shutil
 
 import helper
 import vpk
-from core import base, fs, log, mods_shared, output
+from core import base, constants, fs, log, mods_shared, output
 from patch import manifest_utils, vpk_utils
 
 from browsers.d2pfx import config as browser_config
@@ -14,6 +14,7 @@ def run(mod_list, current_mod=None):
     pfx_high_priority = {}  # mod_name: [vpk_paths]
     pfx_normal = {}  # mod_name: [vpk_paths]
     map_vpk_paths = []
+    cursor_mod_paths = []
 
     # List of all active VPK-based mods (for pak65 metadata)
     all_active_vpk_mods = []
@@ -44,7 +45,14 @@ def run(mod_list, current_mod=None):
         if not is_d2pfx:
             continue
 
-        # It's a D2PFX mod - find all VPKs once
+        cat = browser_info.get("category")
+
+        # Cursors are directories containing cursor image/resource files
+        if cat == "cursors":
+            cursor_mod_paths.append(mod_path)
+            continue
+
+        # Find VPKs for VPK-based D2PFX mods
         vpk_files = []
         for root, _, files in os.walk(mod_path):
             for f in files:
@@ -54,7 +62,6 @@ def run(mod_list, current_mod=None):
         if not vpk_files:
             continue
 
-        cat = browser_info.get("category")
         if cat == "terrains":
             map_vpk_paths.extend(vpk_files)
         elif cat in browser_config.RENAME_CATEGORIES:
@@ -77,7 +84,46 @@ def run(mod_list, current_mod=None):
         if os.path.exists(dota_vpk_path):
             fs.remove_path(dota_vpk_path)
 
-    # 2. Normal Priority (pak65)
+    # 2. Cursors
+    if cursor_mod_paths:
+        game_root = os.path.dirname(os.path.dirname(constants.dota_game_pak_path))
+        minify_root = os.path.dirname(os.path.abspath(base.mods_dir))
+        cursor_bkup_dir = os.path.join(minify_root, "backup", "d2pfx_cursors")
+        dota_cursor_dir = os.path.join(game_root, "dota", "resource", "cursor")
+
+        output.add_text("&installing_terminal", "D2PFX Cursors")
+
+        for mod_path in cursor_mod_paths:
+            cursor_source_dir = None
+            for root, dirs, _ in os.walk(mod_path):
+                for d in dirs:
+                    if d.lower() == "cursor":
+                        cursor_source_dir = os.path.join(root, d)
+                        break
+                if cursor_source_dir:
+                    break
+
+            if not cursor_source_dir:
+                cursor_source_dir = mod_path
+
+            for root, _, files in os.walk(cursor_source_dir):
+                for fname in files:
+                    ext = os.path.splitext(fname)[1].lower()
+                    if ext in (".ani", ".bmp", ".cur", ".res", ".png", ".jpg", ".jpeg"):
+                        src_file = os.path.join(root, fname)
+                        dest_file = os.path.join(dota_cursor_dir, fname)
+                        bkup_file = os.path.join(cursor_bkup_dir, "dota", "resource", "cursor", fname)
+
+                        if os.path.isfile(dest_file) and not os.path.exists(bkup_file):
+                            fs.create_dirs(os.path.dirname(bkup_file))
+                            shutil.copy2(dest_file, bkup_file)
+
+                        fs.create_dirs(os.path.dirname(dest_file))
+                        shutil.copy2(src_file, dest_file)
+    else:
+        restore_d2pfx_cursors()
+
+    # 3. Normal Priority (pak65)
     if pfx_normal:
         output.add_text("&merging_vpks")
         fs.remove_path(base.merge_dir)
@@ -103,7 +149,7 @@ def run(mod_list, current_mod=None):
         vpk.new(base.merge_dir).save(pak65_path)
         fs.remove_path(base.merge_dir)
 
-    # 3. High Priority (pak67)
+    # 4. High Priority (pak67)
     if pfx_high_priority:
         output.add_text("&merging_vpks")
         fs.remove_path(base.merge_dir)
@@ -124,3 +170,22 @@ def run(mod_list, current_mod=None):
         pak67_path = os.path.join(helper.output_path, "pak67_dir.vpk")
         if os.path.exists(pak67_path):
             fs.remove_path(pak67_path)
+
+
+def restore_d2pfx_cursors():
+    minify_root = os.path.dirname(os.path.abspath(base.mods_dir))
+    cursor_bkup_dir = os.path.join(minify_root, "backup", "d2pfx_cursors")
+    if os.path.isdir(cursor_bkup_dir):
+        game_root = os.path.dirname(os.path.dirname(constants.dota_game_pak_path))
+        restored = 0
+        for dirpath, _, filenames in os.walk(cursor_bkup_dir):
+            for fname in filenames:
+                bkup_file = os.path.join(dirpath, fname)
+                rel_path = os.path.relpath(bkup_file, cursor_bkup_dir).replace("\\", "/")
+                dest_file = os.path.join(game_root, rel_path)
+                fs.create_dirs(os.path.dirname(dest_file))
+                shutil.copy2(bkup_file, dest_file)
+                restored += 1
+        fs.remove_path(cursor_bkup_dir)
+        if restored > 0:
+            output.add_text(f"Restored {restored} original cursor files.", msg_type="success")

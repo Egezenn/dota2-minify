@@ -37,6 +37,12 @@ def on_build(mod_list, current_mod=None):
     run(mod_list, current_mod)
 
 
+def on_uninstall():
+    from browsers.d2pfx.build_hook import restore_d2pfx_cursors
+
+    restore_d2pfx_cursors()
+
+
 @utils.ignore_if_headless
 def on_resize():
     from browsers.d2pfx.ui import BrowserUI

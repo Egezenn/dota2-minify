@@ -3,7 +3,7 @@ import re
 import time
 
 import helper
-from core import constants, fs, output, steam
+from core import constants, fs, output, registry, steam
 
 from patch import vpk_utils
 
@@ -33,6 +33,10 @@ def uninstall(sender=None, app_data=None, user_data=None):
 
         steam.remove_minify_lang()
         steam.restore_boot_language()
+
+        for browser_config in registry.get_browser_configs():
+            if hasattr(browser_config, "on_uninstall"):
+                browser_config.on_uninstall()
 
         helper.bulk_exec_script("uninstall")
         output.add_text("&mods_removed_terminal")
