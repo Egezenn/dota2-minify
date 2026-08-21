@@ -1,1 +1,0 @@
-from script_after_patch import swap_localizations

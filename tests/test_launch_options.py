@@ -16,7 +16,7 @@ def mock_frozen_env(monkeypatch):
     def config_get_side_effect(key, default=None):
         if key == "apply_for_all":
             return True
-        if key == "patch_on_updates":
+        if key == "patch_on_launch":
             return True
         if key == "steam_root":
             return "/fake/steam"
@@ -39,12 +39,12 @@ def test_not_frozen_returns_false(monkeypatch):
     assert result is False
 
 
-def test_patch_on_updates_disabled_returns_false(monkeypatch):
+def test_patch_on_launch_disabled_returns_false(monkeypatch):
     monkeypatch.setattr(base, "FROZEN", True)
     monkeypatch.setattr("sys.executable", "/path/to/minify")
 
     def config_get_side_effect(key, default=None):
-        if key == "patch_on_updates":
+        if key == "patch_on_launch":
             return False
         if key == "apply_for_all":
             return True
@@ -296,7 +296,7 @@ def test_apply_for_all_false(monkeypatch):
     def config_get_side_effect(key, default=None):
         if key == "apply_for_all":
             return False
-        if key == "patch_on_updates":
+        if key == "patch_on_launch":
             return True
         if key == "steam_root":
             return "/fake/steam"

@@ -1,4 +1,5 @@
 import os
+import shutil
 import sys
 
 import vpk
@@ -12,38 +13,10 @@ if minify_root not in sys.path:
 
 # isort: split
 
-import helper
-import patch
-from core import config, constants, fs, output, utils
-from patch import vpk_utils
+from core import config, constants, fs, output
 
 
 def main():
-    output.add_text("Checking if localization swaps needs to be redone.")
-    if swap_needed() or patch.dota_version_changed or "-f" in sys.argv:
-        swap_localizations()
-    else:
-        output.add_text("Build version hasn't changed, skipping.")
-
-
-def swap_needed():
-    vpk_dest = os.path.join(helper.output_path, "pak99_dir.vpk")
-    if not os.path.exists(vpk_dest) or not vpk_utils.is_minify_pak(vpk_dest):
-        return True
-
-    game_root = os.path.dirname(os.path.dirname(constants.dota_game_pak_path))
-    locale_file = os.path.join(game_root, "core", "panorama", "localization", f"core_tools_{config.get_locale()}.txt")
-    if not os.path.isfile(locale_file):
-        return True
-
-    with utils.open_utf8R(locale_file) as file:
-        lines = file.read().splitlines()
-    if len(lines) < 6:
-        return True
-    return not ('"WorkshopCfg_Title"' in lines[5] and '"Title"' in lines[5])
-
-
-def swap_localizations():
     english_files = []
     dota_pak = vpk.open(constants.dota_game_pak_path)
 
@@ -67,13 +40,7 @@ def swap_localizations():
                     rel_path = os.path.relpath(abs_path, game_root).replace("\\", "/")
                     disk_locale_files.append(rel_path)
 
-    if not english_files and not disk_locale_files:
-        output.add_text("No *_english.txt files found in game VPK or game files.", msg_type="warning")
-        return
-
-    compile_dir = os.path.join(current_dir, "compile")
-    vpk_dest = os.path.join(helper.output_path, "pak99_dir.vpk")
-    fs.remove_path(compile_dir, vpk_dest)
+    compile_dir = constants.minify_dota_compile_output_path
     fs.create_dirs(compile_dir)
 
     for filepath in english_files:
@@ -94,23 +61,22 @@ def swap_localizations():
             continue
         bkup_dest = os.path.join(bkup_dir, rel_path)
         fs.create_dirs(os.path.dirname(bkup_dest))
+        with open(english_file, "rb") as src_f:
+            eng_data = src_f.read()
         with open(locale_file, "rb") as src_f, open(bkup_dest, "wb") as bk_f:
             bk_f.write(src_f.read())
-        with open(english_file, "rb") as src_f, open(locale_file, "wb") as dst_f:
-            dst_f.write(src_f.read())
+        with open(locale_file, "wb") as dst_f:
+            dst_f.write(eng_data)
+
+    files_dir = os.path.join(current_dir, "files")
+    if os.path.exists(files_dir):
+        shutil.copytree(files_dir, compile_dir, dirs_exist_ok=True)
 
     total = len(english_files) + len(disk_locale_files)
     output.add_text(
         f"Extracted and renamed {total} localization files ({len(disk_locale_files)} from game files).",
         msg_type="success",
     )
-
-    vpk_utils.dump_metadata(compile_dir, mod_name=os.path.basename(current_dir))
-    pak = vpk.new(compile_dir)
-    pak.save(vpk_dest)
-    output.add_text(f"Saved pak to {vpk_dest}", msg_type="success")
-
-    fs.remove_path(compile_dir)
 
 
 if __name__ == "__main__":
