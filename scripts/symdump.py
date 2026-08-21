@@ -175,7 +175,7 @@ def main():
 
             # Sub-summary and source code in a details block with proper spacing (MD031)
             source_block = (
-                f"\n<details open><summary>Source</summary>\n\n```python\n{s['source'].strip()}\n\n```\n\n</details>\n"
+                f"\n<details open><summary>Source</summary>\n\n```python\n{s['source'].strip()}\n```\n\n</details>\n"
             )
             mod_details.append(source_block)
 
@@ -187,7 +187,7 @@ def main():
                 mod_details.append(f"### `{var_names}`\n")
                 source_block = (
                     f"\n<details open><summary>Source</summary>\n\n"
-                    f"```python\n{v['source'].strip()}\n\n```\n\n"
+                    f"```python\n{v['source'].strip()}\n```\n\n"
                     f"</details>\n"
                 )
                 mod_details.append(source_block)
