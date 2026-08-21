@@ -8,15 +8,14 @@ import subprocess
 import tarfile
 import time
 import zipfile
-from typing import Optional
 
-import dearpygui.dearpygui as dpg
 import requests
+from typing import Optional
 
 from core import base, log, output, utils
 
 
-def open_thing(path: str, args: str = "") -> None:
+def open_thing(path: str, args: str = ""):
     "Opens files or directories in their regsitered applications"
 
     try:
@@ -53,7 +52,7 @@ def open_thing(path: str, args: str = "") -> None:
         output.add_text("&open_thing_fail", path, msg_type="error")
 
 
-def move_path(src: str, dst: str) -> Optional[None]:
+def move_path(src: str, dst: str):
     "Superset of `shutil.move`, `os.rename` to handle permissions for moving and renaming."
     try:
         shutil.move(src, dst)
@@ -86,7 +85,7 @@ def move_path(src: str, dst: str) -> Optional[None]:
         print(f"Skipped move of: {src} (not found)")
 
 
-def remove_path(*paths: str) -> Optional[None]:
+def remove_path(*paths: str):
     "Superset of `shutil.rmtree` & `os.remove` to handle permissions. Takes in list of paths."
     try:
         for path in paths:
@@ -119,7 +118,7 @@ def remove_path(*paths: str) -> Optional[None]:
             log.write_warning()
 
 
-def create_dirs(*paths: str) -> None:
+def create_dirs(*paths: str):
     """
     Recursively creates directories (like mkdir -p).
     Supports multiple arguments and avoids crashing on empty paths.
@@ -129,7 +128,7 @@ def create_dirs(*paths: str) -> None:
             os.makedirs(path, exist_ok=True)
 
 
-def backup_directory(source: str, backup: str) -> None:
+def backup_directory(source: str, backup: str):
     """Copy entire contents of source into backup. No-op if backup already exists."""
     if os.path.exists(backup):
         return
@@ -138,7 +137,7 @@ def backup_directory(source: str, backup: str) -> None:
         move_path(os.path.join(source, name), os.path.join(backup, name))
 
 
-def restore_directory(source: str, backup: str) -> None:
+def restore_directory(source: str, backup: str):
     """Restore contents from backup into source, then remove backup."""
     if not os.path.exists(backup):
         return
@@ -174,24 +173,18 @@ def download_file(url: str, target_path: str, progress_tag: Optional[str] = None
                             downloaded_mb = downloaded / (1024 * 1024)
                             total_size_mb = total_size / (1024 * 1024)
                             if total_size > 0:
-                                # TODO: localize texts, use single string for downloads
-                                #       \"Downloading {}\".format(item)
-                                #       \"Downloading {}\".format(progress)
-                                dpg.set_value(
-                                    progress_tag,
-                                    f"Downloading: {downloaded_mb:.2f}/{total_size_mb:.2f} MB",
-                                )
+                                output.add_text(f"Downloading: {downloaded_mb:.2f}/{total_size_mb:.2f} MB")
                             else:
-                                dpg.set_value(progress_tag, f"Downloading: {downloaded_mb:.2f} MB")
+                                output.add_text(f"Downloading: {downloaded_mb:.2f} MB")
                             last_report_time = current_time
 
         if progress_tag:
             downloaded_mb = downloaded / (1024 * 1024)
             total_size_mb = total_size / (1024 * 1024)
             if total_size > 0:
-                dpg.set_value(progress_tag, f"Downloading: {downloaded_mb:.2f}/{total_size_mb:.2f} MB")
+                output.add_text(f"Downloading: {downloaded_mb:.2f}/{total_size_mb:.2f} MB")
             else:
-                dpg.set_value(progress_tag, f"Downloading: {downloaded_mb:.2f} MB")
+                output.add_text(f"Downloading: {downloaded_mb:.2f} MB")
 
         return True
     except Exception as e:

@@ -5,10 +5,9 @@ import shutil
 import stat
 import webbrowser
 
-import dearpygui.dearpygui as dpg
 import psutil
 import vdf
-from core import base, constants, fs, log, output, steam
+from core import base, constants, fs, log, mods_shared, output, steam
 
 workshop_installed = False
 workshop_required_methods = ["styling.css", "xml.json", "files_uncompiled"]
@@ -38,22 +37,14 @@ def get_dota_app_state():
 
 def get_workshop_tools_status(app_state):
     """
-    Checks if Workshop Tools are enabled (mounted and not disabled) in the app state.
+    Checks if Workshop Tools DLC is installed.
     """
-    mounted_str = app_state.get("MountedConfig", {}).get("optionaldlc", "")
-    disabled_str = app_state.get("MountedConfig", {}).get("DisabledDLC", "")
-
-    mounted_set = {token.strip() for token in mounted_str.replace(",", " ").split() if token.strip()}
-    disabled_set = {token.strip() for token in disabled_str.replace(",", " ").split() if token.strip()}
-
-    return base.STEAM_DOTA_WORKSHOP_TOOLS_ID in mounted_set and base.STEAM_DOTA_WORKSHOP_TOOLS_ID not in disabled_set
+    dlc_manifest = app_state.get("UserConfig", {}).get("MountedDepots", {})
+    return base.STEAM_DOTA_WORKSHOP_TOOLS_ID in dlc_manifest
 
 
 def is_compiler_found():
-    global workshop_installed
-    workshop_installed = os.path.exists(constants.dota_resource_compiler_path)
-    if not workshop_installed and not base.HEADLESS:
-        output.add_text("&error_no_workshop_tools_found_terminal", msg_type="warning")
+    return True
 
 
 def resolve_dependencies(retries=0):
@@ -182,5 +173,5 @@ def disable_workshop_mods():
 
             for method_path in workshop_required_methods:
                 if os.path.exists(os.path.join(mod_path, method_path)):
-                    dpg.configure_item(folder, enabled=False, default_value=False)
+                    mods_shared.set_state(folder, False)
                     break

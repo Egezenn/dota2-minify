@@ -8,19 +8,17 @@ import zipfile
 from core import base, output, utils
 
 
-def write_crashlog(exc_type=None, exc_value=None, exc_traceback=None, header=None, handled=True):
+def write_crashlog(header=None, exc_type=None, exc_value=None, exc_traceback=None, handled=True):
     path = base.log_crashlog if handled else base.log_unhandled
     with utils.open_utf8R(path, "w") as file:
         if handled:
             if header:
-                file.write(message := f"{header}\n\n{traceback.format_exc()}")
+                file.write(f"{header}\n\n{traceback.format_exc()}")
             else:
-                file.write(message := traceback.format_exc())
+                file.write(traceback.format_exc())
         else:
-            file.write(message := f"{''.join(traceback.format_exception(exc_type, exc_value, exc_traceback))}")
+            file.write({"".join(traceback.format_exception(exc_type, exc_value, exc_traceback))})
 
-        if message and not handled:
-            output.add_text(message, msg_type="error")
     if base.FROZEN:
         create_debug_zip()
 

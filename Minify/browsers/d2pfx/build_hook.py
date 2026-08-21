@@ -9,7 +9,7 @@ from patch import manifest_utils, vpk_utils
 from browsers.d2pfx import config as browser_config
 
 
-def run(mod_list, current_mod=None):
+def run(mod_list):
     # Shared storage for identified mods
     pfx_high_priority = {}  # mod_name: [vpk_paths]
     pfx_normal = {}  # mod_name: [vpk_paths]
@@ -21,7 +21,7 @@ def run(mod_list, current_mod=None):
 
     for mod_name in mod_list:
         # Check if mod is active
-        if not (current_mod is not None or mods_shared.get_state(mod_name)):
+        if not mods_shared.get_state(mod_name):
             continue
 
         mod_path = os.path.join(base.mods_dir, mod_name)

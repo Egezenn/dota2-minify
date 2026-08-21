@@ -14,43 +14,22 @@ visually_available_mods = []
 mod_dependencies_list = []
 mod_conflicts_list = []
 
-_get_state_callback = None
-_set_state_callback = None
-
-
-def register_state_callbacks(get_cb, set_cb):
-    global _get_state_callback, _set_state_callback
-    _get_state_callback = get_cb
-    _set_state_callback = set_cb
-
 
 def get_state(mod):
-    if _get_state_callback:
-        return _get_state_callback(mod)
-
-    try:
-        with utils.open_utf8(base.mods_config_dir) as file:
-            states = jsonc.load(file)
-            return states.get(mod, False)
-    except Exception:
-        return False
+    with utils.open_utf8(base.mods_config_dir) as file:
+        states = jsonc.load(file)
+        return states.get(mod, False)
 
 
 def set_state(mod, value):
-    if _set_state_callback:
-        return _set_state_callback(mod, value)
+    states = {}
+    if os.path.exists(base.mods_config_dir):
+        with utils.open_utf8(base.mods_config_dir) as file:
+            states = jsonc.load(file)
 
-    try:
-        states = {}
-        if os.path.exists(base.mods_config_dir):
-            with utils.open_utf8(base.mods_config_dir) as file:
-                states = jsonc.load(file)
-
-        states[mod] = value
-        with utils.open_utf8(base.mods_config_dir, "w") as file:
-            jsonc.dump(dict(sorted(states.items())), file, indent=2)
-    except Exception:
-        pass
+    states[mod] = value
+    with utils.open_utf8(base.mods_config_dir, "w") as file:
+        jsonc.dump(dict(sorted(states.items())), file, indent=2)
 
 
 def enforce_locale_mod_states():

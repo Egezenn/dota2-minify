@@ -17,7 +17,7 @@ is_linux = True if OS == "Linux" else False
 is_mac = True if OS == "Darwin" else False
 
 FROZEN = getattr(sys, "frozen", False)
-HEADLESS = False
+HEADLESS = True
 
 OWNER = "Egezenn"
 REPO = "dota2-minify"
@@ -90,6 +90,3 @@ telegram = "https://t.me/dota2minify"
 github = f"https://github.com/{OWNER}/{REPO}"
 github_latest = github + "/releases/latest"
 github_io = f"https://{OWNER}.github.io/{REPO}"
-
-main_window_width = 550
-main_window_height = 440

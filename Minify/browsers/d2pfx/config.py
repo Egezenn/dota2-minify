@@ -1,6 +1,6 @@
 import sys
 
-from core import registry, utils
+from core import registry
 
 VERSION = "0.4"
 RESIZE_TAGS = ["d2pfx_browser_window", "d2pfx_details_modal"]
@@ -31,10 +31,10 @@ SETTINGS = [
 registry.register_browser(sys.modules[__name__])
 
 
-def on_build(mod_list, current_mod=None):
+def on_build(mod_list):
     from browsers.d2pfx.build_hook import run
 
-    run(mod_list, current_mod)
+    run(mod_list)
 
 
 def on_uninstall():
@@ -43,24 +43,13 @@ def on_uninstall():
     restore_d2pfx_cursors()
 
 
-@utils.ignore_if_headless
 def on_resize():
-    from browsers.d2pfx.ui import BrowserUI
-
-    BrowserUI.get_instance().update_layout()
+    pass
 
 
-@utils.ignore_if_headless
 def on_scan_start():
-    from browsers.d2pfx.ui import BrowserUI
-
-    BrowserUI.get_instance().clear_installed_mods()
+    pass
 
 
-@utils.ignore_if_headless
 def on_scan(mod_dir, browser_info):
-    is_d2pfx = browser_info.get("browser") == "d2pfx" or str(browser_info.get("name", "")).startswith("d2pfx")
-    if is_d2pfx:
-        from browsers.d2pfx.ui import BrowserUI
-
-        BrowserUI.get_instance().register_installed_mod(mod_dir, browser_info)
+    pass

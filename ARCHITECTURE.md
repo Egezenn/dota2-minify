@@ -10,33 +10,25 @@ This document provides a detailed overview of the system architecture, component
 
 1. **Non-Destructive Patching**: Minify never modifies base game files (aside from some text and configuration files) directly. It creates side-loaded VPKs (`pak66_dir.vpk`, etc.) and instructs Steam to load them.
 2. **Programmatic Modding**: Mods can contain Python scripts that run at various stages of the build process.
-3. **UI-Agnostic Backend**: Backend operations are decoupled from the UI. They communicate through an agnostic output system (`core.output`), allowing the tool to run in both GUI and CLI (Headless) modes.
+13. **UI-Agnostic Engine**: Backend operations log to an agnostic output system (`core.output`) that prints to stdout/stderr in Headless CLI mode.
 
 ---
 
 ## System Components
 
-### 1. GUI Layer (DearPyGui)
+### 1. CLI Layer (Headless)
 
-The UI is managed primarily in `Minify/ui/`. It is a consumer of the backend logic and serves as one of the possible interfaces.
+Managed in `Minify/cli.py` and `Minify/__main__.py`. It provides a scriptable command-line interface powered by `typer` for patching, uninstallation, configuration, and mod management without requiring a graphical display.
 
-- **`gui.py`**: Manages the interaction lock (`interactive_lock`) to prevent UI operations during heavy I/O.
-- **`terminal.py`**: A virtualized terminal that registers itself as a consumer of `core.output` to display build logs in the GUI.
-- **`checkboxes.py`**: Handles the state of mod selection and persistence (`mods.json`).
-- **`settings.py`**: Dynamically generates UI components based on `manifest.json` files found in mod directories.
+### 2. Core Engine
 
-### 2. CLI Layer (Headless)
-
-Managed in `Minify/cli.py`. It provides a standard command-line interface for patching, uninstallation, and mod management without requiring a display or GUI libraries.
-
-### 3. Core Engine
-
-Fundamental utilities used by both the UI and the Build pipeline.
+Fundamental utilities used by the Build pipeline and CLI commands.
 
 - **`core/fs.py`**: Specialized file system operations (atomic moves, safe deletions, recursive creation).
 - **`core/steam.py`**: Handles Steam library detection, game path resolution, and launch option patching.
 - **`core/vpk_utils.py`**: High-level wrapper for `vpk` operations, including metadata generation (`minify_version.txt`).
-- **`core/output.py`**: The communication backbone. It provides an agnostic interface for logging and user feedback, supporting multiple callbacks (e.g., standard print for CLI, and the terminal window for GUI).
+- **`core/localization.py`**: Multi-language translation dictionary and locale manager.
+- **`core/output.py`**: The communication backbone providing an agnostic interface for logging and user feedback.
 - **`core/registry.py`**: A central registry for third-party browsers to hook into the system lifecycle.
 
 ### 3. Build Pipeline

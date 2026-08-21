@@ -18,7 +18,7 @@ import struct
 import uuid
 
 from core import base, config, fs, output, steam, utils
-from ui.fonts import find_system_font
+from core.utils import find_system_font
 
 dota_fonts_path = os.path.join(steam.LIBRARY, "steamapps", "common", "dota 2 beta", "game", "dota", "panorama", "fonts")
 bkup_path = os.path.join(minify_root, "backup", os.path.basename(current_dir))

@@ -1,7 +1,7 @@
 import os
 import re
 
-from core import config, log
+from core import config
 
 
 def _parse_version(v: str) -> tuple:

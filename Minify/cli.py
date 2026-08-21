@@ -9,9 +9,8 @@ import browsers
 import helper
 import patch
 import typer
-from core import base, constants, mods_shared, utils
+from core import base, constants, localization, mods_shared, utils
 from core import config as _config
-from ui import localization
 
 base.HEADLESS = True
 
@@ -95,10 +94,7 @@ def run_patch(
     from core import log
 
     print("Starting patch process...")
-    try:
-        patch.patcher()
-    except Exception:
-        log.write_crashlog()
+    patch.patcher()
 
 
 @app.command(name="prelaunch")

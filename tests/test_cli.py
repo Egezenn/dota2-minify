@@ -49,17 +49,6 @@ def test_patch_resolves_paths_against_original_cwd(tmp_path):
         assert base.mods_config_dir == str(tmp_path / "based.json")
 
 
-def test_patch_writes_crashlog_on_error():
-    with (
-        mock_patch.object(patch_mod, "patcher", side_effect=RuntimeError("boom")),
-        mock_patch("core.log.write_crashlog") as mock_crashlog,
-    ):
-        result = runner.invoke(app, ["patch"])
-
-    assert result.exit_code == 0
-    mock_crashlog.assert_called_once()
-
-
 def test_uninstall_calls_uninstaller():
     unins = MagicMock()
     with mock_patch.object(patch_mod, "unins", unins):

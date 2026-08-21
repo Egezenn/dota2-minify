@@ -22,10 +22,10 @@ jobs:
         run: uv sync --group dev
 
       - name: Run Ruff Format Check
-        run: uv run ruff format --check Minify
+        run: uv run ruff format Minify tests --check
 
       - name: Run Ruff Check
-        run: uv run ruff check Minify
+        run: uv run ruff check Minify tests
 
       - name: Run Pytest
         run: uv run pytest

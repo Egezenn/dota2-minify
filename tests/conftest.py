@@ -37,12 +37,9 @@ def fake_config_get(key, default=None):
 core.config.get = MagicMock(side_effect=fake_config_get)
 core.config.set = MagicMock()
 
-# 3. Mock UI and other side-effect heavy modules
-sys.modules["ui.terminal"] = MagicMock()
-sys.modules["tkinter"] = MagicMock()
-sys.modules["tkinter.filedialog"] = MagicMock()
-sys.modules["tkinter.messagebox"] = MagicMock()
-sys.modules["playsound3"] = MagicMock()
+mock_playsound3 = MagicMock()
+mock_playsound3.PlaysoundException = Exception
+sys.modules["playsound3"] = mock_playsound3
 
 # 4. Mock os.path.exists to avoid entering the steam discovery loops
 import os

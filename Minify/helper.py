@@ -5,11 +5,8 @@ import os
 import shutil
 import subprocess
 import sys
-import tkinter as tk
 from pathlib import Path
-from tkinter import filedialog
 
-import dearpygui.dearpygui as dpg
 import vpk
 from core import base, config, constants, fs, log, mods_shared, output, utils
 from patch import manifest_utils
@@ -23,15 +20,6 @@ def get_blank_file_extensions():
     for file in os.listdir(base.blank_files_dir):
         extensions.append(os.path.splitext(file)[1])
     return extensions
-
-
-def change_output_path():
-    global output_path
-    selection = dpg.get_value("output_select")
-    resolved = constants.resolve_locale(selection)
-    output_path = [lang for lang in constants.minify_dota_possible_language_output_paths if resolved in lang][0]
-    config.set("output_locale", selection)
-    config.set("output_path", output_path)
 
 
 def compile():
@@ -59,7 +47,7 @@ def compile():
             file.write(rescomp.stdout)
 
 
-def compile_assets(input_path=None, output_path=None, pak_path=None, sender=None, app_data=None, user_data=None):
+def compile_assets(input_path=None, output_path=None, pak_path=None):
     """
     resourcecompiler's friendly cousin
     Automagically handles image compilation
@@ -127,16 +115,6 @@ def create_img_ref_xml(img_path_list):
     </Panel>
 </root>
 """
-
-
-def select_compile_dir(sender=None, app_data=None):
-    global compiler_filepicker_path
-    root = tk.Tk()
-    root.withdraw()
-    path = filedialog.askdirectory(initialdir=os.getcwd())
-    root.destroy()
-    if path:
-        compiler_filepicker_path = path
 
 
 def exec_script(script_path, mod_name, order_name, _terminal_output=True):

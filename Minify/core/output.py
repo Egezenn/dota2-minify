@@ -1,36 +1,13 @@
 "Agnostic output interface"
 
-_output_callback = None
-_separator_callback = None
-_clean_callback = None
-
 RED = "\033[38;2;255;0;0m"
 YELLOW = "\033[38;2;255;255;0m"
 GREEN = "\033[38;2;0;255;0m"
 RESET = "\033[0m"
 
 
-def register_output_callback(callback):
-    global _output_callback
-    _output_callback = callback
-
-
-def register_separator_callback(callback):
-    global _separator_callback
-    _separator_callback = callback
-
-
-def register_clean_callback(callback):
-    global _clean_callback
-    _clean_callback = callback
-
-
 def add_text(text_or_id, *args, msg_type: str | None = None, **kwargs):
-    if _output_callback:
-        return _output_callback(text_or_id, *args, msg_type=msg_type, **kwargs)
-
-    # Fallback to console if no callback registered
-    from ui import localization
+    from core import localization
 
     text = text_or_id
     if text_or_id.startswith("&"):
@@ -55,12 +32,4 @@ def add_text(text_or_id, *args, msg_type: str | None = None, **kwargs):
 
 
 def add_separator():
-    if _separator_callback:
-        _separator_callback()
-    else:
-        print("-" * 50)
-
-
-def clean():
-    if _clean_callback:
-        _clean_callback()
+    print("-" * 50)
