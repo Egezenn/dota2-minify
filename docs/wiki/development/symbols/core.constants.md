@@ -18,7 +18,6 @@ def recalc_rescomp_dirs():
         dota_resource_compiler_path = os.path.join(
             base.rescomp_override_dir, "game", "bin", "win64", "resourcecompiler.exe"
         )
-
 ```
 
 </details>
@@ -32,7 +31,6 @@ def recalc_rescomp_dirs():
 ```python
 def resolve_locale(locale):
     return LOCALE_ALIASES.get(locale, locale)
-
 ```
 
 </details>
@@ -45,7 +43,6 @@ def resolve_locale(locale):
 
 ```python
 rescomp_override = os.path.exists(base.rescomp_override_dir)
-
 ```
 
 </details>
@@ -58,7 +55,6 @@ rescomp_override = os.path.exists(base.rescomp_override_dir)
 minify_dota_compile_input_path = os.path.join(
     steam.LIBRARY, "steamapps", "common", "dota 2 beta", "content", "dota_addons", "minify"
 )
-
 ```
 
 </details>
@@ -71,7 +67,6 @@ minify_dota_compile_input_path = os.path.join(
 minify_dota_compile_output_path = os.path.join(
     steam.LIBRARY, "steamapps", "common", "dota 2 beta", "game", "dota_addons", "minify"
 )
-
 ```
 
 </details>
@@ -84,7 +79,6 @@ minify_dota_compile_output_path = os.path.join(
 dota_resource_compiler_path = os.path.join(
     steam.LIBRARY, "steamapps", "common", "dota 2 beta", "game", "bin", "win64", "resourcecompiler.exe"
 )
-
 ```
 
 </details>
@@ -97,7 +91,6 @@ dota_resource_compiler_path = os.path.join(
 minify_dota_tools_required_path = os.path.join(
     steam.LIBRARY, "steamapps", "common", "dota 2 beta", "content", "dota_dutch"
 )
-
 ```
 
 </details>
@@ -110,7 +103,6 @@ minify_dota_tools_required_path = os.path.join(
 minify_default_dota_pak_output_path = os.path.join(
     steam.LIBRARY, "steamapps", "common", "dota 2 beta", "game", "dota_dutch"
 )
-
 ```
 
 </details>
@@ -149,7 +141,6 @@ minify_dota_possible_language_output_paths = [
     os.path.join(steam.LIBRARY, "steamapps", "common", "dota 2 beta", "game", "dota_ukrainian"),
     os.path.join(steam.LIBRARY, "steamapps", "common", "dota 2 beta", "game", "dota_vietnamese"),
 ]
-
 ```
 
 </details>
@@ -162,7 +153,6 @@ minify_dota_possible_language_output_paths = [
 LOCALE_ALIASES = {
     "english": "dutch",
 }
-
 ```
 
 </details>
@@ -175,7 +165,6 @@ LOCALE_ALIASES = {
 LOCALE_MOD_REQUIREMENTS = {
     "english": ["#English Fix"],
 }
-
 ```
 
 </details>
@@ -215,7 +204,6 @@ minify_output_list = [
     "ukrainian",
     "vietnamese",
 ]
-
 ```
 
 </details>
@@ -226,7 +214,6 @@ minify_output_list = [
 
 ```python
 dota2_executable = os.path.join(steam.LIBRARY, base.DOTA_EXECUTABLE_PATH)
-
 ```
 
 </details>
@@ -237,7 +224,6 @@ dota2_executable = os.path.join(steam.LIBRARY, base.DOTA_EXECUTABLE_PATH)
 
 ```python
 dota2_tools_executable = os.path.join(steam.LIBRARY, base.DOTA_TOOLS_EXECUTABLE_PATH)
-
 ```
 
 </details>
@@ -248,7 +234,6 @@ dota2_tools_executable = os.path.join(steam.LIBRARY, base.DOTA_TOOLS_EXECUTABLE_
 
 ```python
 dota_game_pak_path = os.path.join(steam.LIBRARY, "steamapps", "common", "dota 2 beta", "game", "dota", "pak01_dir.vpk")
-
 ```
 
 </details>
@@ -259,7 +244,6 @@ dota_game_pak_path = os.path.join(steam.LIBRARY, "steamapps", "common", "dota 2 
 
 ```python
 dota_core_pak_path = os.path.join(steam.LIBRARY, "steamapps", "common", "dota 2 beta", "game", "core", "pak01_dir.vpk")
-
 ```
 
 </details>
@@ -270,7 +254,6 @@ dota_core_pak_path = os.path.join(steam.LIBRARY, "steamapps", "common", "dota 2 
 
 ```python
 dota_steam_inf_path = os.path.join(steam.LIBRARY, "steamapps", "common", "dota 2 beta", "game", "dota", "steam.inf")
-
 ```
 
 </details>
@@ -287,7 +270,6 @@ dota_tools_paths = [
     os.path.join(steam.LIBRARY, "steamapps", "common", "dota 2 beta", "game", "dota", "tools"),
     os.path.join(steam.LIBRARY, "steamapps", "common", "dota 2 beta", "game", "dota", "gameinfo.gi"),
 ]
-
 ```
 
 </details>
@@ -304,7 +286,6 @@ dota_tools_extraction_paths = [
     os.path.join(base.rescomp_override_dir, "game", "dota", "tools"),
     os.path.join(base.rescomp_override_dir, "game", "dota", "gameinfo.gi"),
 ]
-
 ```
 
 </details>
@@ -315,7 +296,6 @@ dota_tools_extraction_paths = [
 
 ```python
 s2v_cli_ver = "18.0"
-
 ```
 
 </details>
@@ -326,7 +306,6 @@ s2v_cli_ver = "18.0"
 
 ```python
 rg_ver = "15.1.0"
-
 ```
 
 </details>
@@ -337,7 +316,6 @@ rg_ver = "15.1.0"
 
 ```python
 mods_alphabetical = mods_shared.mods_alphabetical
-
 ```
 
 </details>
@@ -348,7 +326,6 @@ mods_alphabetical = mods_shared.mods_alphabetical
 
 ```python
 mods_with_order = mods_shared.mods_with_order
-
 ```
 
 </details>
@@ -359,7 +336,6 @@ mods_with_order = mods_shared.mods_with_order
 
 ```python
 visually_unavailable_mods = mods_shared.visually_unavailable_mods
-
 ```
 
 </details>
@@ -370,7 +346,6 @@ visually_unavailable_mods = mods_shared.visually_unavailable_mods
 
 ```python
 visually_available_mods = mods_shared.visually_available_mods
-
 ```
 
 </details>
@@ -381,7 +356,6 @@ visually_available_mods = mods_shared.visually_available_mods
 
 ```python
 mod_dependencies_list = mods_shared.mod_dependencies_list
-
 ```
 
 </details>
@@ -392,7 +366,6 @@ mod_dependencies_list = mods_shared.mod_dependencies_list
 
 ```python
 mod_conflicts_list = mods_shared.mod_conflicts_list
-
 ```
 
 </details>

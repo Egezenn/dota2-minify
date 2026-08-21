@@ -55,7 +55,6 @@ class Migrations:
                         log.write_warning(f"Removed redundant {src_name} in {mod} since {dest_name} exists")
                     except Exception as e:
                         log.write_warning(f"Failed to remove redundant {src_name} in {mod}: {e}")
-
 ```
 
 </details>

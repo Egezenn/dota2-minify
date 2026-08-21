@@ -1,5 +1,72 @@
 # core.utils
 
+## `read_mod_states()`
+
+*No documentation available.*
+
+<details open><summary>Source</summary>
+
+```python
+def read_mod_states() -> dict:
+    if os.path.exists(_MOD_STATES_FILE):
+        try:
+            with open_utf8R(_MOD_STATES_FILE) as f:
+                return json.load(f)
+        except (json.JSONDecodeError, OSError):
+            return {}
+    return {}
+```
+
+</details>
+
+## `write_mod_states(states)`
+
+*No documentation available.*
+
+<details open><summary>Source</summary>
+
+```python
+def write_mod_states(states: dict) -> None:
+    os.makedirs(base.cache_dir, exist_ok=True)
+    with open_utf8R(_MOD_STATES_FILE, "w") as f:
+        json.dump(states, f, indent=2)
+```
+
+</details>
+
+## `get_mod_state(mod_name, key, default)`
+
+*No documentation available.*
+
+<details open><summary>Source</summary>
+
+```python
+def get_mod_state(mod_name: str, key: str, default=None):
+    states = read_mod_states()
+    mod_data = states.get(mod_name, {})
+    if key not in mod_data and default is not None:
+        states.setdefault(mod_name, {})[key] = default
+        write_mod_states(states)
+    return mod_data.get(key, default)
+```
+
+</details>
+
+## `set_mod_state(mod_name, key, value)`
+
+*No documentation available.*
+
+<details open><summary>Source</summary>
+
+```python
+def set_mod_state(mod_name: str, key: str, value) -> None:
+    states = read_mod_states()
+    states.setdefault(mod_name, {})[key] = value
+    write_mod_states(states)
+```
+
+</details>
+
 ## `ignore_if_headless(func)`
 
 *No documentation available.*
@@ -15,7 +82,6 @@ def ignore_if_headless(func):
         return func(*args, **kwargs)
 
     return wrapper
-
 ```
 
 </details>
@@ -32,7 +98,6 @@ def try_pass():
         yield
     except Exception:
         pass
-
 ```
 
 </details>
@@ -48,7 +113,6 @@ def open_utf8(file: Any, mode: str = "r", *args: Any, **kwargs: Any) -> IO[Any]:
     if "b" not in mode:
         kwargs.setdefault("encoding", "utf-8")
     return _real_open(file, mode, *args, **kwargs)
-
 ```
 
 </details>
@@ -65,7 +129,6 @@ def open_utf8R(file: Any, mode: str = "r", *args: Any, **kwargs: Any) -> IO[Any]
         kwargs.setdefault("encoding", "utf-8")
         kwargs.setdefault("errors", "replace")
     return _real_open(file, mode, *args, **kwargs)
-
 ```
 
 </details>
@@ -87,7 +150,6 @@ def hex_to_rgba(hex_str):
         return [int(hex_str[i : i + 2], 16) for i in (0, 2, 4, 6)]
     except (ValueError, IndexError, AttributeError):
         return [255, 255, 255, 255]
-
 ```
 
 </details>
@@ -109,7 +171,6 @@ def rgba_to_hex(rgba):
         )
     except (TypeError, IndexError, ValueError):
         return "#ffffffff"
-
 ```
 
 </details>
@@ -125,7 +186,6 @@ def parse_color(val):
     if isinstance(val, list):
         return val
     return hex_to_rgba(val if val and isinstance(val, str) else "#ffffffff")
-
 ```
 
 </details>
@@ -146,7 +206,6 @@ def setup_system():
     conditions.is_dota_running("&error_please_close_dota_terminal", "error")
     conditions.is_compiler_found()
     conditions.resolve_dependencies()
-
 ```
 
 </details>
@@ -160,7 +219,46 @@ def setup_system():
 ```python
 def sanitize_win_path(name):
     return re.sub(r'[<>:"/\\|?*\x00-\x1f]', "_", name).rstrip(" .") or uuid.uuid4().hex[:8]
+```
 
+</details>
+
+## `find_system_font(font_name)`
+
+*No documentation available.*
+
+<details open><summary>Source</summary>
+
+```python
+def find_system_font(font_name: str) -> str | None:
+    normalized = font_name.lower().replace(" ", "").replace("-", "").replace("_", "")
+
+    if base.is_win:
+        windir = os.environ.get("windir", "C:\\Windows")
+        font_dirs = [os.path.join(windir, "Fonts")]
+    elif base.is_linux:
+        result = _find_font_linux(font_name)
+        if result:
+            return result
+        font_dirs = [
+            "/usr/share/fonts",
+            "/usr/local/share/fonts",
+            os.path.expanduser("~/.fonts"),
+            os.path.expanduser("~/.local/share/fonts"),
+        ]
+    elif base.is_mac:
+        font_dirs = ["/System/Library/Fonts", "/Library/Fonts", os.path.expanduser("~/Library/Fonts")]
+    else:
+        return None
+
+    for d in font_dirs:
+        if not os.path.exists(d):
+            continue
+        for root, _, files in os.walk(d):
+            for f in files:
+                if f.lower().endswith((".ttf", ".otf")) and normalized in _normalize_filename(f):
+                    return os.path.join(root, f)
+    return None
 ```
 
 </details>

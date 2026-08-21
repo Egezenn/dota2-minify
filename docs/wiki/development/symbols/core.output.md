@@ -2,47 +2,30 @@
 
 Agnostic output interface
 
-## `register_output_callback(callback)`
+## `register_listener(callback)`
 
 *No documentation available.*
 
 <details open><summary>Source</summary>
 
 ```python
-def register_output_callback(callback):
-    global _output_callback
-    _output_callback = callback
-
+def register_listener(callback):
+    if callback not in _listeners:
+        _listeners.append(callback)
 ```
 
 </details>
 
-## `register_separator_callback(callback)`
+## `unregister_listener(callback)`
 
 *No documentation available.*
 
 <details open><summary>Source</summary>
 
 ```python
-def register_separator_callback(callback):
-    global _separator_callback
-    _separator_callback = callback
-
-```
-
-</details>
-
-## `register_clean_callback(callback)`
-
-*No documentation available.*
-
-<details open><summary>Source</summary>
-
-```python
-def register_clean_callback(callback):
-    global _clean_callback
-    _clean_callback = callback
-
+def unregister_listener(callback):
+    if callback in _listeners:
+        _listeners.remove(callback)
 ```
 
 </details>
@@ -55,11 +38,7 @@ def register_clean_callback(callback):
 
 ```python
 def add_text(text_or_id, *args, msg_type: str | None = None, **kwargs):
-    if _output_callback:
-        return _output_callback(text_or_id, *args, msg_type=msg_type, **kwargs)
-
-    # Fallback to console if no callback registered
-    from ui import localization
+    from core import localization
 
     text = text_or_id
     if text_or_id.startswith("&"):
@@ -80,8 +59,14 @@ def add_text(text_or_id, *args, msg_type: str | None = None, **kwargs):
         print(f"{prefix}{text}{RESET}")
     except UnicodeEncodeError:
         print(f"{prefix}{text.encode('ascii', 'replace').decode('ascii')}{RESET}")
-    return None
 
+    for listener in list(_listeners):
+        try:
+            listener(text, msg_type)
+        except Exception:
+            pass
+
+    return None
 ```
 
 </details>
@@ -94,26 +79,12 @@ def add_text(text_or_id, *args, msg_type: str | None = None, **kwargs):
 
 ```python
 def add_separator():
-    if _separator_callback:
-        _separator_callback()
-    else:
-        print("-" * 50)
-
-```
-
-</details>
-
-## `clean()`
-
-*No documentation available.*
-
-<details open><summary>Source</summary>
-
-```python
-def clean():
-    if _clean_callback:
-        _clean_callback()
-
+    print("-" * 50)
+    for listener in list(_listeners):
+        try:
+            listener("-" * 50, "separator")
+        except Exception:
+            pass
 ```
 
 </details>

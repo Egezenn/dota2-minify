@@ -10,7 +10,6 @@ Variables that almost never change
 
 ```python
 VERSION = "1.13.1"
-
 ```
 
 </details>
@@ -21,7 +20,6 @@ VERSION = "1.13.1"
 
 ```python
 TITLE = f"Minify {VERSION}"
-
 ```
 
 </details>
@@ -32,7 +30,6 @@ TITLE = f"Minify {VERSION}"
 
 ```python
 OS = platform.system()
-
 ```
 
 </details>
@@ -43,7 +40,6 @@ OS = platform.system()
 
 ```python
 MACHINE = platform.machine().lower()
-
 ```
 
 </details>
@@ -54,7 +50,6 @@ MACHINE = platform.machine().lower()
 
 ```python
 ARCHITECTURE = platform.architecture()[0]
-
 ```
 
 </details>
@@ -65,7 +60,6 @@ ARCHITECTURE = platform.architecture()[0]
 
 ```python
 is_win = True if OS == "Windows" else False
-
 ```
 
 </details>
@@ -76,7 +70,6 @@ is_win = True if OS == "Windows" else False
 
 ```python
 is_linux = True if OS == "Linux" else False
-
 ```
 
 </details>
@@ -87,7 +80,6 @@ is_linux = True if OS == "Linux" else False
 
 ```python
 is_mac = True if OS == "Darwin" else False
-
 ```
 
 </details>
@@ -98,7 +90,6 @@ is_mac = True if OS == "Darwin" else False
 
 ```python
 FROZEN = getattr(sys, "frozen", False)
-
 ```
 
 </details>
@@ -108,8 +99,7 @@ FROZEN = getattr(sys, "frozen", False)
 <details open><summary>Source</summary>
 
 ```python
-HEADLESS = False
-
+HEADLESS = True
 ```
 
 </details>
@@ -120,7 +110,6 @@ HEADLESS = False
 
 ```python
 OWNER = "Egezenn"
-
 ```
 
 </details>
@@ -131,7 +120,6 @@ OWNER = "Egezenn"
 
 ```python
 REPO = "dota2-minify"
-
 ```
 
 </details>
@@ -142,7 +130,6 @@ REPO = "dota2-minify"
 
 ```python
 DOTA_TOOLS_EXECUTABLE_PATH = os.path.join("steamapps", "common", "dota 2 beta", "game", "bin", "win64", "dota2cfg.exe")
-
 ```
 
 </details>
@@ -153,7 +140,6 @@ DOTA_TOOLS_EXECUTABLE_PATH = os.path.join("steamapps", "common", "dota 2 beta", 
 
 ```python
 DOTA_EXECUTABLE_PATH_FALLBACK = os.path.join("steamapps", "common", "dota 2 beta", "game", "bin", "win64", "dota2.exe")
-
 ```
 
 </details>
@@ -164,7 +150,6 @@ DOTA_EXECUTABLE_PATH_FALLBACK = os.path.join("steamapps", "common", "dota 2 beta
 
 ```python
 STEAM_DOTA_ID = "570"
-
 ```
 
 </details>
@@ -175,7 +160,6 @@ STEAM_DOTA_ID = "570"
 
 ```python
 STEAM_DOTA_WORKSHOP_TOOLS_ID = "313250"
-
 ```
 
 </details>
@@ -186,7 +170,6 @@ STEAM_DOTA_WORKSHOP_TOOLS_ID = "313250"
 
 ```python
 bin_dir = "bin"
-
 ```
 
 </details>
@@ -197,7 +180,6 @@ bin_dir = "bin"
 
 ```python
 build_dir = "vpk_build"
-
 ```
 
 </details>
@@ -208,7 +190,6 @@ build_dir = "vpk_build"
 
 ```python
 replace_dir = "vpk_replace"
-
 ```
 
 </details>
@@ -219,7 +200,6 @@ replace_dir = "vpk_replace"
 
 ```python
 merge_dir = "vpk_merge"
-
 ```
 
 </details>
@@ -230,7 +210,6 @@ merge_dir = "vpk_merge"
 
 ```python
 logs_dir = "logs"
-
 ```
 
 </details>
@@ -241,7 +220,6 @@ logs_dir = "logs"
 
 ```python
 mods_dir = "mods"
-
 ```
 
 </details>
@@ -252,7 +230,6 @@ mods_dir = "mods"
 
 ```python
 config_dir = "config"
-
 ```
 
 </details>
@@ -263,7 +240,6 @@ config_dir = "config"
 
 ```python
 cache_dir = "cache"
-
 ```
 
 </details>
@@ -274,7 +250,6 @@ cache_dir = "cache"
 
 ```python
 blank_files_dir = os.path.join(bin_dir, "blank-files")
-
 ```
 
 </details>
@@ -285,7 +260,6 @@ blank_files_dir = os.path.join(bin_dir, "blank-files")
 
 ```python
 img_dir = os.path.join(bin_dir, "images")
-
 ```
 
 </details>
@@ -296,7 +270,6 @@ img_dir = os.path.join(bin_dir, "images")
 
 ```python
 localization_file_dir = os.path.join(bin_dir, "localization.json")
-
 ```
 
 </details>
@@ -307,7 +280,6 @@ localization_file_dir = os.path.join(bin_dir, "localization.json")
 
 ```python
 rescomp_override_dir = os.path.join(bin_dir, "rescomproot")
-
 ```
 
 </details>
@@ -318,7 +290,6 @@ rescomp_override_dir = os.path.join(bin_dir, "rescomproot")
 
 ```python
 sounds_dir = os.path.join(bin_dir, "sounds")
-
 ```
 
 </details>
@@ -329,7 +300,6 @@ sounds_dir = os.path.join(bin_dir, "sounds")
 
 ```python
 log_crashlog = os.path.join(logs_dir, "crashlog.txt")
-
 ```
 
 </details>
@@ -340,7 +310,6 @@ log_crashlog = os.path.join(logs_dir, "crashlog.txt")
 
 ```python
 log_warnings = os.path.join(logs_dir, "warnings.txt")
-
 ```
 
 </details>
@@ -351,7 +320,6 @@ log_warnings = os.path.join(logs_dir, "warnings.txt")
 
 ```python
 log_unhandled = os.path.join(logs_dir, "unhandled.txt")
-
 ```
 
 </details>
@@ -362,7 +330,6 @@ log_unhandled = os.path.join(logs_dir, "unhandled.txt")
 
 ```python
 log_s2v = os.path.join(logs_dir, "Source2Viewer-CLI.txt")
-
 ```
 
 </details>
@@ -373,7 +340,6 @@ log_s2v = os.path.join(logs_dir, "Source2Viewer-CLI.txt")
 
 ```python
 log_rescomp = os.path.join(logs_dir, "resourcecompiler.txt")
-
 ```
 
 </details>
@@ -384,7 +350,6 @@ log_rescomp = os.path.join(logs_dir, "resourcecompiler.txt")
 
 ```python
 dota_steam_inf_cache = os.path.join(cache_dir, "steam.inf")
-
 ```
 
 </details>
@@ -395,7 +360,6 @@ dota_steam_inf_cache = os.path.join(cache_dir, "steam.inf")
 
 ```python
 main_config_file_dir = os.path.join(config_dir, "minify_config.json")
-
 ```
 
 </details>
@@ -406,7 +370,6 @@ main_config_file_dir = os.path.join(config_dir, "minify_config.json")
 
 ```python
 mods_config_dir = os.path.join(config_dir, "mods.json")
-
 ```
 
 </details>
@@ -417,7 +380,6 @@ mods_config_dir = os.path.join(config_dir, "mods.json")
 
 ```python
 discord = "https://discord.com/invite/9867CPv7cy"
-
 ```
 
 </details>
@@ -428,7 +390,6 @@ discord = "https://discord.com/invite/9867CPv7cy"
 
 ```python
 telegram = "https://t.me/dota2minify"
-
 ```
 
 </details>
@@ -439,7 +400,6 @@ telegram = "https://t.me/dota2minify"
 
 ```python
 github = f"https://github.com/{OWNER}/{REPO}"
-
 ```
 
 </details>
@@ -450,7 +410,6 @@ github = f"https://github.com/{OWNER}/{REPO}"
 
 ```python
 github_latest = github + "/releases/latest"
-
 ```
 
 </details>
@@ -461,29 +420,6 @@ github_latest = github + "/releases/latest"
 
 ```python
 github_io = f"https://{OWNER}.github.io/{REPO}"
-
-```
-
-</details>
-
-### `main_window_width`
-
-<details open><summary>Source</summary>
-
-```python
-main_window_width = 550
-
-```
-
-</details>
-
-### `main_window_height`
-
-<details open><summary>Source</summary>
-
-```python
-main_window_height = 440
-
 ```
 
 </details>

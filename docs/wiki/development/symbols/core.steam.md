@@ -32,7 +32,6 @@ def remove_lang_args(arg_string):
         cleaned.append(token)
 
     return " ".join(cleaned)
-
 ```
 
 </details>
@@ -73,7 +72,6 @@ def remove_specific_lang_arg(arg_string, lang_to_remove):
         cleaned.append(token)
 
     return " ".join(cleaned)
-
 ```
 
 </details>
@@ -143,7 +141,6 @@ def add_prelaunch_to_launch_options(check_only=False):
             changed = True
 
     return changed
-
 ```
 
 </details>
@@ -206,7 +203,6 @@ def fix_launch_options(check_only=False):
                 vdf.dump(data, file, pretty=True)
             successful_ids.append(steam_id)
     return successful_ids
-
 ```
 
 </details>
@@ -259,7 +255,6 @@ def remove_minify_lang():
             successful_ids.append(steam_id)
 
     return successful_ids
-
 ```
 
 </details>
@@ -296,7 +291,6 @@ def restore_boot_language():
     with utils.open_utf8(boot_vcfg_path, "w") as file:
         vdf.dump(data, file, pretty=True)
     return True
-
 ```
 
 </details>
@@ -336,7 +330,6 @@ def fix_boot_language(check_only=False):
     with utils.open_utf8(boot_vcfg_path, "w") as file:
         vdf.dump(data, file, pretty=True)
     return True
-
 ```
 
 </details>
@@ -378,7 +371,6 @@ def find_library_from_vdf(steam_root):
         log.write_warning("Error reading libraryfolders.vdf")
         config.set("steam_library", "")
         return False
-
 ```
 
 </details>
@@ -426,7 +418,6 @@ def get_steam_root_path():
         return found_path
 
     return ""
-
 ```
 
 </details>
@@ -494,7 +485,6 @@ def handle_non_default_path(steam_root):
             root.focus_force()
             break
     return steam_root
-
 ```
 
 </details>
@@ -539,7 +529,6 @@ def get_steam_accounts():
         log.write_warning("Failed to fetch steam accounts")
 
     return accounts
-
 ```
 
 </details>

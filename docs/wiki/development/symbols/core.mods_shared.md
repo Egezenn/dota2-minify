@@ -2,22 +2,6 @@
 
 Shared mod scanning logic
 
-## `register_state_callbacks(get_cb, set_cb)`
-
-*No documentation available.*
-
-<details open><summary>Source</summary>
-
-```python
-def register_state_callbacks(get_cb, set_cb):
-    global _get_state_callback, _set_state_callback
-    _get_state_callback = get_cb
-    _set_state_callback = set_cb
-
-```
-
-</details>
-
 ## `get_state(mod)`
 
 *No documentation available.*
@@ -26,16 +10,9 @@ def register_state_callbacks(get_cb, set_cb):
 
 ```python
 def get_state(mod):
-    if _get_state_callback:
-        return _get_state_callback(mod)
-
-    try:
-        with utils.open_utf8(base.mods_config_dir) as file:
-            states = jsonc.load(file)
-            return states.get(mod, False)
-    except Exception:
-        return False
-
+    with utils.open_utf8(base.mods_config_dir) as file:
+        states = jsonc.load(file)
+        return states.get(mod, False)
 ```
 
 </details>
@@ -48,21 +25,14 @@ def get_state(mod):
 
 ```python
 def set_state(mod, value):
-    if _set_state_callback:
-        return _set_state_callback(mod, value)
+    states = {}
+    if os.path.exists(base.mods_config_dir):
+        with utils.open_utf8(base.mods_config_dir) as file:
+            states = jsonc.load(file)
 
-    try:
-        states = {}
-        if os.path.exists(base.mods_config_dir):
-            with utils.open_utf8(base.mods_config_dir) as file:
-                states = jsonc.load(file)
-
-        states[mod] = value
-        with utils.open_utf8(base.mods_config_dir, "w") as file:
-            jsonc.dump(dict(sorted(states.items())), file, indent=2)
-    except Exception:
-        pass
-
+    states[mod] = value
+    with utils.open_utf8(base.mods_config_dir, "w") as file:
+        jsonc.dump(dict(sorted(states.items())), file, indent=2)
 ```
 
 </details>
@@ -80,7 +50,6 @@ def enforce_locale_mod_states():
     locale = config.get("output_locale", "english")
     for required_mod in constants.LOCALE_MOD_REQUIREMENTS.get(locale, []):
         set_state(required_mod, True)
-
 ```
 
 </details>
@@ -152,7 +121,6 @@ def scan_mods():
     visually_available_mods[:] = _available
     mod_dependencies_list[:] = _dependencies
     mod_conflicts_list[:] = _conflicts
-
 ```
 
 </details>

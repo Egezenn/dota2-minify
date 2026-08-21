@@ -10,6 +10,7 @@
 - [core.config](/development/symbols/core.config) - JSON(C) config files
 - [core.constants](/development/symbols/core.constants) - Variables that depend on 3rd parties
 - [core.fs](/development/symbols/core.fs) - Filesystem access
+- [core.localization](/development/symbols/core.localization) - Dynamic localization handling
 - [core.log](/development/symbols/core.log) - Crashlogs, warnings and debug zip creation
 - [core.migrations](/development/symbols/core.migrations)
 - [core.mods_shared](/development/symbols/core.mods_shared) - Shared mod scanning logic
@@ -17,17 +18,4 @@
 - [core.registry](/development/symbols/core.registry) - Central registry for browsers and plugins
 - [core.steam](/development/symbols/core.steam) - Module to find steam root and library that Dota2 is in (always accounts the Windows' executable path to find if used through an emulation layer).
 - [core.utils](/development/symbols/core.utils)
-- [ui.announcements](/development/symbols/ui.announcements) - Unix timestamp based announcement system internals
-- [ui.checkboxes](/development/symbols/ui.checkboxes) - AKA mod menu stuff
-- [ui.details](/development/symbols/ui.details) - Mod details window logic
-- [ui.dev_tools](/development/symbols/ui.dev_tools) - Dev tools pane that contains things for easy navigation, workarounds and debugging
-- [ui.fonts](/development/symbols/ui.fonts) - Font registrations with range hints
-- [ui.gui](/development/symbols/ui.gui)
-- [ui.localization](/development/symbols/ui.localization) - Dynamic localization handling
-- [ui.markdown](/development/symbols/ui.markdown) - Custom markdown parsing & rendering for details pages
-- [ui.modal_shared](/development/symbols/ui.modal_shared) - Unified modal internals
-- [ui.modals](/development/symbols/ui.modals) - Modal types
-- [ui.settings](/development/symbols/ui.settings) - Settings menu
-- [ui.terminal](/development/symbols/ui.terminal) - Text waterfall
-- [ui.theme](/development/symbols/ui.theme) - DPG theming and platform specific theme hacks
-- [ui.window](/development/symbols/ui.window) - Main window dragging, resizing and focus
+- [ui.app](/development/symbols/ui.app)

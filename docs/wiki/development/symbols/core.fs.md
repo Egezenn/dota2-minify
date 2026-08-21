@@ -9,7 +9,7 @@ Opens files or directories in their regsitered applications
 <details open><summary>Source</summary>
 
 ```python
-def open_thing(path: str, args: str = "") -> None:
+def open_thing(path: str, args: str = ""):
     "Opens files or directories in their regsitered applications"
 
     try:
@@ -44,7 +44,6 @@ def open_thing(path: str, args: str = "") -> None:
                 subprocess.run(["xdg-open", path])
     except FileNotFoundError:
         output.add_text("&open_thing_fail", path, msg_type="error")
-
 ```
 
 </details>
@@ -56,7 +55,7 @@ Superset of `shutil.move`, `os.rename` to handle permissions for moving and rena
 <details open><summary>Source</summary>
 
 ```python
-def move_path(src: str, dst: str) -> Optional[None]:
+def move_path(src: str, dst: str):
     "Superset of `shutil.move`, `os.rename` to handle permissions for moving and renaming."
     try:
         shutil.move(src, dst)
@@ -87,7 +86,6 @@ def move_path(src: str, dst: str) -> Optional[None]:
             log.write_warning()
     except FileNotFoundError:
         print(f"Skipped move of: {src} (not found)")
-
 ```
 
 </details>
@@ -99,7 +97,7 @@ Superset of `shutil.rmtree` & `os.remove` to handle permissions. Takes in list o
 <details open><summary>Source</summary>
 
 ```python
-def remove_path(*paths: str) -> Optional[None]:
+def remove_path(*paths: str):
     "Superset of `shutil.rmtree` & `os.remove` to handle permissions. Takes in list of paths."
     try:
         for path in paths:
@@ -130,7 +128,6 @@ def remove_path(*paths: str) -> Optional[None]:
             return remove_path(*paths)
         except Exception:
             log.write_warning()
-
 ```
 
 </details>
@@ -143,7 +140,7 @@ Supports multiple arguments and avoids crashing on empty paths.
 <details open><summary>Source</summary>
 
 ```python
-def create_dirs(*paths: str) -> None:
+def create_dirs(*paths: str):
     """
     Recursively creates directories (like mkdir -p).
     Supports multiple arguments and avoids crashing on empty paths.
@@ -151,7 +148,6 @@ def create_dirs(*paths: str) -> None:
     for path in paths:
         if path:
             os.makedirs(path, exist_ok=True)
-
 ```
 
 </details>
@@ -163,14 +159,13 @@ Copy entire contents of source into backup. No-op if backup already exists.
 <details open><summary>Source</summary>
 
 ```python
-def backup_directory(source: str, backup: str) -> None:
+def backup_directory(source: str, backup: str):
     """Copy entire contents of source into backup. No-op if backup already exists."""
     if os.path.exists(backup):
         return
     create_dirs(backup)
     for name in os.listdir(source):
         move_path(os.path.join(source, name), os.path.join(backup, name))
-
 ```
 
 </details>
@@ -182,7 +177,7 @@ Restore contents from backup into source, then remove backup.
 <details open><summary>Source</summary>
 
 ```python
-def restore_directory(source: str, backup: str) -> None:
+def restore_directory(source: str, backup: str):
     """Restore contents from backup into source, then remove backup."""
     if not os.path.exists(backup):
         return
@@ -191,7 +186,6 @@ def restore_directory(source: str, backup: str) -> None:
     for name in os.listdir(backup):
         move_path(os.path.join(backup, name), os.path.join(source, name))
     remove_path(backup)
-
 ```
 
 </details>
@@ -229,30 +223,23 @@ def download_file(url: str, target_path: str, progress_tag: Optional[str] = None
                             downloaded_mb = downloaded / (1024 * 1024)
                             total_size_mb = total_size / (1024 * 1024)
                             if total_size > 0:
-                                # TODO: localize texts, use single string for downloads
-                                #       \"Downloading {}\".format(item)
-                                #       \"Downloading {}\".format(progress)
-                                dpg.set_value(
-                                    progress_tag,
-                                    f"Downloading: {downloaded_mb:.2f}/{total_size_mb:.2f} MB",
-                                )
+                                output.add_text(f"Downloading: {downloaded_mb:.2f}/{total_size_mb:.2f} MB")
                             else:
-                                dpg.set_value(progress_tag, f"Downloading: {downloaded_mb:.2f} MB")
+                                output.add_text(f"Downloading: {downloaded_mb:.2f} MB")
                             last_report_time = current_time
 
         if progress_tag:
             downloaded_mb = downloaded / (1024 * 1024)
             total_size_mb = total_size / (1024 * 1024)
             if total_size > 0:
-                dpg.set_value(progress_tag, f"Downloading: {downloaded_mb:.2f}/{total_size_mb:.2f} MB")
+                output.add_text(f"Downloading: {downloaded_mb:.2f}/{total_size_mb:.2f} MB")
             else:
-                dpg.set_value(progress_tag, f"Downloading: {downloaded_mb:.2f} MB")
+                output.add_text(f"Downloading: {downloaded_mb:.2f} MB")
 
         return True
     except Exception as e:
         output.add_text(f"Failed to open {target_path}: {e}", msg_type="error")
         return False
-
 ```
 
 </details>
@@ -309,7 +296,6 @@ def extract_archive(archive_path: str, extract_dir: str = ".", target_file: Opti
     except Exception as e:
         output.add_text(f"Extraction failed: {e}", msg_type="error")
         return False
-
 ```
 
 </details>
@@ -366,7 +352,6 @@ def get_file_type(path: str) -> Optional[str]:
         return basename[dot_index:]
 
     return basename
-
 ```
 
 </details>

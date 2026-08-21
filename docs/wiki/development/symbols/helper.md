@@ -14,26 +14,6 @@ def get_blank_file_extensions():
     for file in os.listdir(base.blank_files_dir):
         extensions.append(os.path.splitext(file)[1])
     return extensions
-
-```
-
-</details>
-
-## `change_output_path()`
-
-*No documentation available.*
-
-<details open><summary>Source</summary>
-
-```python
-def change_output_path():
-    global output_path
-    selection = dpg.get_value("output_select")
-    resolved = constants.resolve_locale(selection)
-    output_path = [lang for lang in constants.minify_dota_possible_language_output_paths if resolved in lang][0]
-    config.set("output_locale", selection)
-    config.set("output_path", output_path)
-
 ```
 
 </details>
@@ -68,12 +48,11 @@ def compile():
         )
         if rescomp.stdout != b"":
             file.write(rescomp.stdout)
-
 ```
 
 </details>
 
-## `compile_assets(input_path, output_path, pak_path, sender, app_data, user_data)`
+## `compile_assets(input_path, output_path, pak_path)`
 
 resourcecompiler's friendly cousin
 Automagically handles image compilation
@@ -81,7 +60,7 @@ Automagically handles image compilation
 <details open><summary>Source</summary>
 
 ```python
-def compile_assets(input_path=None, output_path=None, pak_path=None, sender=None, app_data=None, user_data=None):
+def compile_assets(input_path=None, output_path=None, pak_path=None):
     """
     resourcecompiler's friendly cousin
     Automagically handles image compilation
@@ -135,7 +114,6 @@ def compile_assets(input_path=None, output_path=None, pak_path=None, sender=None
             output.add_text("&compile_created_pak", pak_path)
     else:
         output.add_text("&compile_no_path")
-
 ```
 
 </details>
@@ -159,27 +137,6 @@ def create_img_ref_xml(img_path_list):
     </Panel>
 </root>
 """
-
-```
-
-</details>
-
-## `select_compile_dir(sender, app_data)`
-
-*No documentation available.*
-
-<details open><summary>Source</summary>
-
-```python
-def select_compile_dir(sender=None, app_data=None):
-    global compiler_filepicker_path
-    root = tk.Tk()
-    root.withdraw()
-    path = filedialog.askdirectory(initialdir=os.getcwd())
-    root.destroy()
-    if path:
-        compiler_filepicker_path = path
-
 ```
 
 </details>
@@ -225,7 +182,6 @@ def exec_script(script_path, mod_name, order_name, _terminal_output=True):
             log.write_warning("&script_no_main", mod_name, order_name)
 
     return None
-
 ```
 
 </details>
@@ -276,7 +232,6 @@ def bulk_exec_script(order_name, terminal_output=True):
                     any_ran = True
 
     return any_ran
-
 ```
 
 </details>
@@ -315,7 +270,6 @@ def exec_script_function(script_path, mod_name, function_name="main"):
             log.write_warning(f"Function '{function_name}' not found in {script_path}")
     else:
         log.write_warning(f"Script file not found: {script_path}")
-
 ```
 
 </details>

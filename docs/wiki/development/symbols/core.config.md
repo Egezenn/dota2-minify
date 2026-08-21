@@ -17,7 +17,6 @@ def read_json_file(path: str) -> dict:
             return jsonc.load(file)
     except (FileNotFoundError, jsonc.JSONDecodeError):
         return {}
-
 ```
 
 </details>
@@ -32,7 +31,6 @@ def read_json_file(path: str) -> dict:
 def write_json_file(path: str, data: dict) -> None:
     with utils.open_utf8R(path, "w") as file:
         jsonc.dump(data, file, indent=2)
-
 ```
 
 </details>
@@ -54,7 +52,6 @@ def update_json_file(path: str, key: str, value: Any) -> Any:
     write_json_file(path, data)
 
     return value
-
 ```
 
 </details>
@@ -76,7 +73,6 @@ def get(key: str, default_value: Any = None) -> Any:
         return update_json_file(base.main_config_file_dir, key, default_value)
 
     return None
-
 ```
 
 </details>
@@ -90,7 +86,6 @@ def get(key: str, default_value: Any = None) -> Any:
 ```python
 def set(key: str, value: Any) -> Any:
     return update_json_file(base.main_config_file_dir, key, value)
-
 ```
 
 </details>
@@ -106,7 +101,6 @@ def get_mod(mod_name: str, default: Optional[dict] = None) -> dict:
     if default is None:
         default = {}
     return get("modconf", {}).get(mod_name, default)
-
 ```
 
 </details>
@@ -122,7 +116,6 @@ def set_mod(mod_name: str, config_data: dict) -> None:
     modconf = get("modconf", {})
     modconf[mod_name] = config_data
     set("modconf", modconf)
-
 ```
 
 </details>
@@ -138,7 +131,6 @@ def get_locale(default="english"):
     from core import constants
 
     return constants.resolve_locale(get("output_locale", default))
-
 ```
 
 </details>

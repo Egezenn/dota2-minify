@@ -20,7 +20,6 @@ class BrowserRegistry:
     @classmethod
     def get_configs(cls):
         return cls._configs
-
 ```
 
 </details>
@@ -34,7 +33,6 @@ class BrowserRegistry:
 ```python
 def register_browser(config_module):
     BrowserRegistry.register(config_module)
-
 ```
 
 </details>
@@ -48,7 +46,6 @@ def register_browser(config_module):
 ```python
 def get_browser_configs():
     return BrowserRegistry.get_configs()
-
 ```
 
 </details>
