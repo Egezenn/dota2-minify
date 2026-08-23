@@ -132,15 +132,15 @@ dota_tools_extraction_paths = [
     os.path.join(base.rescomp_override_dir, "game", "dota", "gameinfo.gi"),
 ]
 
-s2v_cli_ver = "18.0"
-rg_ver = "15.1.0"
+s2v_cli_ver = "20.0"
+rg_ver = "15.2.0"
 
 try:
     if base.is_win:
         s2v_executable = "Source2Viewer-CLI.exe"
 
         if base.MACHINE in ["aarch64", "arm64"]:
-            s2v_latest = f"https://github.com/ValveResourceFormat/ValveResourceFormat/releases/download/{s2v_cli_ver}/cli-macos-x64.zip"
+            s2v_latest = f"https://github.com/ValveResourceFormat/ValveResourceFormat/releases/download/{s2v_cli_ver}/cli-windows-arm64.zip"
         else:
             s2v_latest = f"https://github.com/ValveResourceFormat/ValveResourceFormat/releases/download/{s2v_cli_ver}/cli-windows-x64.zip"
 
