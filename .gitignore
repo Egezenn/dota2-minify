@@ -90,4 +90,5 @@ ENV/
 venv.bak/
 venv/
 
+.vscode/tasks.json
 node_modules

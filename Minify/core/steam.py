@@ -72,12 +72,12 @@ def add_prelaunch_to_launch_options(check_only=False):
     if not base.FROZEN:
         return False
 
-    if not config.get("patch_on_launch", False):
+    if not config.get("patch_on_launch"):
         return False
 
     steam_ids = []
     accounts = get_steam_accounts()
-    if config.get("apply_for_all", True):
+    if config.get("apply_for_all"):
         for account in accounts:
             steam_ids.append(account["id"])
     else:
@@ -135,7 +135,7 @@ def fix_launch_options(check_only=False):
     steam_ids = []
     successful_ids = []
     accounts = get_steam_accounts()
-    if config.get("apply_for_all", True):
+    if config.get("apply_for_all"):
         for account in accounts:
             steam_ids.append(account["id"])
     else:
@@ -185,7 +185,7 @@ def remove_minify_lang():
     steam_ids = []
     successful_ids = []
     accounts = get_steam_accounts()
-    if config.get("apply_for_all", True):
+    if config.get("apply_for_all"):
         for account in accounts:
             steam_ids.append(account["id"])
     else:

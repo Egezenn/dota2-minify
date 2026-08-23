@@ -13,7 +13,7 @@ def load_headless():
     global localization_dict, locale
     with utils.open_utf8(base.localization_file_dir) as f:
         data = jsonc.load(f)
-    locale = config.get("locale", "EN")
+    locale = config.get("locale")
     for key, values in data.items():
         if isinstance(values, dict):
             localization_dict[key] = values.get(locale, values.get("EN", ""))

@@ -23,8 +23,11 @@ OWNER = "Egezenn"
 REPO = "dota2-minify"
 
 
-# assuming steam runtimes on linux / darwin
 if is_linux:
+    if os.environ.get("WAYLAND_DISPLAY") or os.environ.get("XDG_SESSION_TYPE") == "wayland":
+        os.environ.setdefault("GDK_BACKEND", "x11")
+        os.environ.setdefault("WEBKIT_DISABLE_DMABUF_RENDERER", "1")
+
     DOTA_EXECUTABLE_PATH = os.path.join("steamapps", "common", "dota 2 beta", "game", "bin", "linuxsteamrt64", "dota2")
     STEAM_DEFAULT_INSTALLATION_PATH = os.path.join("/", "home", getpass.getuser(), ".local", "share", "Steam")
 elif is_mac:

@@ -1,14 +1,13 @@
 import json
 import os
-import socket
 import threading
 import time
 from typing import Any, Dict, List
 
-import webview
-
 from core import base, constants, localization, mods_shared, output, utils
 from core import config as _config
+
+import webview
 
 import browsers
 import helper
@@ -108,14 +107,14 @@ class Api:
     def get_localization(self, lang: str = "EN") -> Dict[str, str]:
         try:
             if not lang:
-                lang = _config.get("locale", "EN") or "EN"
+                lang = _config.get("locale") or "EN"
             return localization.get_for_locale(lang) or {}
         except Exception:
             return {}
 
     def get_current_locale(self) -> str:
         try:
-            return _config.get("locale", "EN") or "EN"
+            return _config.get("locale") or "EN"
         except Exception:
             return "EN"
 
@@ -135,13 +134,68 @@ class Api:
 
     def get_current_game_language(self) -> str:
         try:
-            return _config.get("output_locale", "english") or "english"
+            return _config.get("output_locale") or "english"
         except Exception:
             return "english"
 
     def set_game_language(self, lang: str) -> bool:
         try:
             _config.set("output_locale", lang)
+            return True
+        except Exception:
+            return False
+
+    def get_settings(self) -> Dict[str, Any]:
+        settings_schema = [
+            {
+                "key": "opt_into_rcs",
+                "text": "Opt into RCs",
+                "default": _config.DEFAULT_SETTINGS["opt_into_rcs"],
+                "type": "checkbox",
+            },
+            {
+                "key": "fix_options",
+                "text": "Handle language option (current ID)",
+                "default": _config.DEFAULT_SETTINGS["fix_options"],
+                "type": "checkbox",
+            },
+            {
+                "key": "patch_on_launch",
+                "text": "Run patches upon launch if required",
+                "default": _config.DEFAULT_SETTINGS["patch_on_launch"],
+                "type": "checkbox",
+            },
+            {
+                "key": "apply_for_all",
+                "text": "Apply everything for all users",
+                "default": _config.DEFAULT_SETTINGS["apply_for_all"],
+                "type": "checkbox",
+            },
+            {
+                "key": "launch_dota_after_patch",
+                "text": "Launch Dota2 after patching",
+                "default": _config.DEFAULT_SETTINGS["launch_dota_after_patch"],
+                "type": "checkbox",
+            },
+            {
+                "key": "kill_self_after_patch",
+                "text": "Close Minify after patching",
+                "default": _config.DEFAULT_SETTINGS["kill_self_after_patch"],
+                "type": "checkbox",
+            },
+            {
+                "key": "opt_out_vpk_metadata",
+                "text": "Opt-out of VPK metadata",
+                "default": _config.DEFAULT_SETTINGS["opt_out_vpk_metadata"],
+                "type": "checkbox",
+            },
+        ]
+        values = {item["key"]: _config.get(item["key"]) for item in settings_schema}
+        return {"schema": settings_schema, "values": values}
+
+    def set_setting(self, key: str, value: Any) -> bool:
+        try:
+            _config.set(key, value)
             return True
         except Exception:
             return False
@@ -163,19 +217,7 @@ def launch() -> None:
     dist_index = os.path.join(ui_dir, "web", "dist", "index.html")
     url = dist_index
 
-    debug_mode = bool(_config.get("debug_env", False))
-
-    if debug_mode:
-        dev_port = 5173
-        try:
-            sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            sock.settimeout(0.3)
-            res = sock.connect_ex(("127.0.0.1", dev_port))
-            sock.close()
-            if res == 0:
-                url = f"http://localhost:{dev_port}"
-        except Exception:
-            pass
+    debug_mode = bool(_config.get("debug_env"))
 
     api = Api()
     window = webview.create_window(

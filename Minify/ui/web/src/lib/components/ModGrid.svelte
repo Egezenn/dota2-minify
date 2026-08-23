@@ -15,8 +15,6 @@
     mod.name.toLowerCase().includes(searchQuery.toLowerCase().trim()),
   );
 
-  $: enabledCount = mods.filter((m) => m.enabled).length;
-
   function toggleMod(modName: string, enabled: boolean) {
     const updated = mods.map((m) =>
       m.name === modName ? { ...m, enabled } : m,
@@ -34,25 +32,12 @@
     <div class="search-box">
       <input
         type="text"
-        placeholder={resolveText("&ui_search_placeholder", [], dict) ||
-          resolveText("&search", [], dict) ||
-          "Search mods..."}
+        placeholder="Search mods..."
         bind:value={searchQuery}
       />
       {#if searchQuery}
-        <button on:click={() => (searchQuery = "")}>
-          {resolveText("&ui_clear_search", [], dict) || "Clear Search"}
-        </button>
+        <button on:click={() => (searchQuery = "")}> Clear Search </button>
       {/if}
-    </div>
-
-    <div class="bulk-actions">
-      <span
-        >{enabledCount} / {mods.length}
-        {resolveText("&ui_active", [], dict) ||
-          resolveText("&active", [], dict) ||
-          "active"}</span
-      >
     </div>
   </div>
 
@@ -73,6 +58,8 @@
     flex-direction: column;
     height: 100%;
     gap: 8px;
+    min-height: 0;
+    overflow: hidden;
   }
 
   .grid-toolbar {
@@ -95,19 +82,15 @@
     font-size: 13px;
   }
 
-  .bulk-actions {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 13px;
-  }
-
   .mod-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    grid-auto-rows: minmax(40px, auto);
+    align-content: start;
     gap: 8px;
     padding: 8px;
     overflow-y: auto;
     flex: 1;
+    min-height: 0;
   }
 </style>

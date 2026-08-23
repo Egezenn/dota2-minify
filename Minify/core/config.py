@@ -36,11 +36,28 @@ def update_json_file(path: str, key: str, value: Any) -> Any:
     return value
 
 
+DEFAULT_SETTINGS: dict[str, Any] = {
+    "opt_into_rcs": False,
+    "fix_options": True,
+    "patch_on_launch": True,
+    "apply_for_all": True,
+    "launch_dota_after_patch": False,
+    "kill_self_after_patch": False,
+    "opt_out_vpk_metadata": False,
+    "locale": "EN",
+    "output_locale": "english",
+    "debug_env": False,
+}
+
+
 def get(key: str, default_value: Any = None) -> Any:
     data = read_json_file(base.main_config_file_dir)
 
     if key in data:
         return data[key]
+
+    if default_value is None and key in DEFAULT_SETTINGS:
+        default_value = DEFAULT_SETTINGS[key]
 
     if default_value is not None:
         return update_json_file(base.main_config_file_dir, key, default_value)

@@ -25,3 +25,14 @@ def test_api_endpoints():
             res = api.set_mods({test_mod: new_state})
             assert res is True
             mock_set.assert_called_with(test_mod, new_state)
+
+    # Test settings
+    settings_data = api.get_settings()
+    assert "schema" in settings_data
+    assert "values" in settings_data
+    assert len(settings_data["schema"]) == 7
+
+    with patch("core.config.set") as mock_config_set:
+        res = api.set_setting("patch_on_launch", True)
+        assert res is True
+        mock_config_set.assert_called_with("patch_on_launch", True)

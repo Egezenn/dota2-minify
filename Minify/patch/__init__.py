@@ -343,7 +343,7 @@ def patcher():
         )
 
         # handle language option automatically
-        if config.get("fix_options", True):
+        if config.get("fix_options"):
             steam.fix_boot_language()
             launch_needs_fix = bool(steam.fix_launch_options(check_only=True))
             prelaunch_needs_fix = bool(steam.add_prelaunch_to_launch_options(check_only=True))
@@ -394,7 +394,7 @@ def patcher():
             output.add_text("&minify_encountered_errors_terminal", msg_type="warning")
         playsound3.playsound(os.path.join(base.sounds_dir, "success.wav"), block=False)
 
-        if config.get("launch_dota_after_patch", False):
+        if config.get("launch_dota_after_patch"):
             webbrowser.open(f"steam://rungameid/{base.STEAM_DOTA_ID}")
 
     # chimes are from pixabay.com/sound-effects/chime-74910/

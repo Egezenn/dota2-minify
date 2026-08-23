@@ -65,7 +65,7 @@ def dump_metadata(target_dir, mod_name=None, vpk_mods=None, extra_lists=None):
     - vpk_mods: List of VPK mod names for minify_vpk_mods.txt.
     - extra_lists: Dict of {filename: [lines]} for additional metadata files.
     """
-    if config.get("opt_out_vpk_metadata", False):
+    if config.get("opt_out_vpk_metadata"):
         return
 
     # 1. Base Info

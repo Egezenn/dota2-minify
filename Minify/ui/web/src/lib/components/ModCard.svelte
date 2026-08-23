@@ -33,7 +33,8 @@
     border: 1px solid #ccc;
     cursor: pointer;
     background: #fff;
-    max-height: 80px;
+    min-height: 40px;
+    box-sizing: border-box;
     overflow: hidden;
   }
 
