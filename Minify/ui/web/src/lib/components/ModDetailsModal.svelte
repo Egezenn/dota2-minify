@@ -131,9 +131,8 @@
 
   .modal-card {
     background: #fff;
-    width: 90%;
-    max-width: 600px;
-    max-height: 85vh;
+    width: 80vw;
+    height: 80vh;
     border: 1px solid #000;
     display: flex;
     flex-direction: column;
@@ -161,33 +160,42 @@
   }
 
   .modal-body {
-    padding: 12px;
+    padding: 24px 32px;
     overflow-y: auto;
     flex: 1;
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    align-items: center;
+    gap: 16px;
   }
 
   .loading-state,
   .empty-state {
-    padding: 16px;
+    padding: 24px;
     text-align: center;
     font-size: 13px;
   }
 
+  .image-wrapper {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+  }
+
   .image-wrapper img {
     max-width: 100%;
-    max-height: 300px;
+    max-height: 58vh;
+    object-fit: contain;
     display: block;
-    margin: 0 auto;
+    border: 1px solid #000;
   }
 
   .notes-content {
+    width: 100%;
     border: 1px solid #000;
-    padding: 8px 12px;
+    padding: 16px 20px;
     font-size: 13px;
-    line-height: 1.4;
+    line-height: 1.5;
   }
 
   .notes-content :global(.markdown-alert) {

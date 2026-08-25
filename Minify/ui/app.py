@@ -82,6 +82,29 @@ class Api:
             self._logs.clear()
         return True
 
+    @staticmethod
+    def _get_mod_preview(mod_path: str) -> str | None:
+        if not os.path.isdir(mod_path):
+            return None
+        for filename in os.listdir(mod_path):
+            if filename.lower() in (
+                "preview.jpg",
+                "preview.jpeg",
+                "preview.png",
+                "preview.webp",
+                "preview.gif",
+            ):
+                p_path = os.path.join(mod_path, filename)
+                try:
+                    ext = filename.lower().rsplit(".", 1)[-1]
+                    mime_type = "image/jpeg" if ext in ("jpg", "jpeg") else f"image/{ext}"
+                    with open(p_path, "rb") as img_file:
+                        encoded = base64.b64encode(img_file.read()).decode("utf-8")
+                        return f"data:{mime_type};base64,{encoded}"
+                except Exception as e:
+                    output.add_text(f"Error loading preview image for {os.path.basename(mod_path)}: {e}", msg_type="warning")
+        return None
+
     def get_mods(self) -> List[Dict[str, Any]]:
         try:
             mods_shared.scan_mods()
@@ -95,10 +118,12 @@ class Api:
                 if os.path.isdir(mod_path):
                     cfg = manifest_utils.get_mod(mod_path)
                     always = bool(cfg.get("always", False))
+                preview = self._get_mod_preview(mod_path)
                 mods_data.append({
                     "name": mod,
                     "enabled": always or mods_shared.get_state(mod),
                     "always": always,
+                    "preview": preview,
                 })
             return mods_data
         except Exception as e:
@@ -129,26 +154,7 @@ class Api:
                 except Exception as e:
                     output.add_text(f"Error reading notes for {mod_name}: {e}", msg_type="warning")
 
-            preview_data_url = None
-            if os.path.exists(mod_path):
-                for filename in os.listdir(mod_path):
-                    if filename.lower() in (
-                        "preview.jpg",
-                        "preview.jpeg",
-                        "preview.png",
-                        "preview.webp",
-                        "preview.gif",
-                    ):
-                        p_path = os.path.join(mod_path, filename)
-                        try:
-                            ext = filename.lower().rsplit(".", 1)[-1]
-                            mime_type = "image/jpeg" if ext in ("jpg", "jpeg") else f"image/{ext}"
-                            with open(p_path, "rb") as img_file:
-                                encoded = base64.b64encode(img_file.read()).decode("utf-8")
-                                preview_data_url = f"data:{mime_type};base64,{encoded}"
-                            break
-                        except Exception as e:
-                            output.add_text(f"Error loading preview image for {mod_name}: {e}", msg_type="warning")
+            preview_data_url = self._get_mod_preview(mod_path)
 
             return {
                 "name": mod_name,
@@ -393,6 +399,7 @@ def launch() -> None:
     url = dist_index
 
     debug_mode = bool(_config.get("debug_env"))
+    webview.settings["OPEN_DEVTOOLS_IN_DEBUG"] = False
 
     api = Api()
     window = webview.create_window(

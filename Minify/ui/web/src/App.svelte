@@ -175,13 +175,15 @@
   />
 
   <section class="main-content">
-    {#if activeTab === "mods"}
+    <div class="tab-pane" class:hidden={activeTab !== "mods"}>
       <ModGrid onSaveMods={handleSaveMods} />
-    {:else if activeTab === "terminal"}
+    </div>
+    <div class="tab-pane" class:hidden={activeTab !== "terminal"}>
       <Terminal {logs} bind:autoScroll onClear={handleClear} />
-    {:else if activeTab === "settings"}
+    </div>
+    <div class="tab-pane" class:hidden={activeTab !== "settings"}>
       <Settings onSettingChange={handleSettingChange} />
-    {/if}
+    </div>
   </section>
 </main>
 
@@ -200,5 +202,14 @@
     border: 1px solid #ccc;
     overflow: hidden;
     background: #fff;
+  }
+
+  .tab-pane {
+    width: 100%;
+    height: 100%;
+  }
+
+  .tab-pane.hidden {
+    display: none !important;
   }
 </style>

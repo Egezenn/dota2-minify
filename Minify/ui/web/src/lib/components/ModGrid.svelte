@@ -57,6 +57,7 @@
         name={mod.name}
         enabled={mod.enabled}
         always={mod.always}
+        preview={mod.preview}
         ontoggle={(value) => toggleMod(mod.name, value)}
         onDetails={openDetails}
       />
