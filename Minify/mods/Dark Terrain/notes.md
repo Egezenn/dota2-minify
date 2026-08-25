@@ -2,7 +2,8 @@
 
 Designed for visual clarity.
 
-!!: Default terrain is required.
+> [!WARNING]
+> Default terrain is required.
 
 - Makes all tiles gray/dark gray
 - Fog lines
@@ -14,7 +15,8 @@ Designed for visual clarity.
 
 Проектирано за визуална яснота.
 
-!!: Изисква се терен по подразбиране.
+> [!WARNING]
+> Изисква се терен по подразбиране.
 
 - Прави всички плочки сиви/тъмносиви
 - Линии от мъгла
@@ -26,7 +28,8 @@ Designed for visual clarity.
 
 Navrženo pro vizuální přehlednost.
 
-!!: Je vyžadován výchozí terén.
+> [!WARNING]
+> Je vyžadován výchozí terén.
 
 - Všechny dlaždice jsou šedé/tmavě šedé
 - Mlžné linie
@@ -38,7 +41,8 @@ Navrženo pro vizuální přehlednost.
 
 Designet til visuel klarhed.
 
-!!: Standardterræn er påkrævet.
+> [!WARNING]
+> Standardterræn er påkrævet.
 
 - Gør alle felter grå/mørkegrå
 - Tågelinjer
@@ -62,7 +66,8 @@ Standard-Terrain erforderlich.
 
 Σχεδιασμένο για οπτική ευκρίνεια.
 
-!!: Απαιτείται το προεπιλεγμένο έδαφος.
+> [!WARNING]
+> Απαιτείται το προεπιλεγμένο έδαφος.
 
 - Κάνει όλα τα πλακίδια γκρι/σκούρο γκρι
 - Γραμμές ομίχλης
@@ -86,7 +91,8 @@ Diseñado para claridad visual.
 
 Suunniteltu visuaalista selkeyttä varten.
 
-!!: Oletusmaasto vaaditaan.
+> [!WARNING]
+> Oletusmaasto vaaditaan.
 
 - Tekee kaikista laatoista harmaita/tummanharmaita
 - Sumuviivat
@@ -98,7 +104,8 @@ Suunniteltu visuaalista selkeyttä varten.
 
 Conçu pour une clarté visuelle optimale.
 
-!!: Terrain par défaut requis.
+> [!WARNING]
+> Terrain par défaut requis.
 
 - Rend toutes les tuiles grises/gris foncé
 
@@ -114,7 +121,8 @@ Conçu pour une clarté visuelle optimale.
 
 Vizuális áttekinthetőségre tervezve.
 
-!!: Alapértelmezett terep megadása kötelező.
+> [!WARNING]
+> Alapértelmezett terep megadása kötelező.
 
 - Minden csempe szürke/sötétszürke
 - Ködvonalak
@@ -126,7 +134,8 @@ Vizuális áttekinthetőségre tervezve.
 
 Progettato per la massima chiarezza visiva.
 
-!!: È richiesto il terreno predefinito.
+> [!WARNING]
+> È richiesto il terreno predefinito.
 
 - Rende tutte le tessere grigie/grigio scuro
 - Linee di nebbia
@@ -138,7 +147,8 @@ Progettato per la massima chiarezza visiva.
 
 視覚的な明瞭さを追求したデザインです。
 
-!!: デフォルトの地形データが必要です.
+> [!WARNING]
+> デフォルトの地形データが必要です.
 
 - すべてのタイルが灰色/濃い灰色になります
 - 霧の境界線
@@ -150,7 +160,8 @@ Progettato per la massima chiarezza visiva.
 
 시각적 명확성을 위해 디자인되었습니다.
 
-!!: 기본 지형이 필요합니다.
+> [!WARNING]
+> 기본 지형이 필요합니다.
 
 - 모든 타일을 회색/진회색으로 변경
 - 안개선 추가
@@ -162,7 +173,8 @@ Progettato per la massima chiarezza visiva.
 
 Ontworpen voor visuele helderheid.
 
-!!: Standaard terrein is vereist.
+> [!WARNING]
+> Standaard terrein is vereist.
 
 - Maakt alle tegels grijs/donkergrijs
 - Mistlijnen
@@ -174,7 +186,8 @@ Ontworpen voor visuele helderheid.
 
 Utviklet for visuell klarhet.
 
-!!: Standardterreng er påkrevd.
+> [!WARNING]
+> Standardterreng er påkrevd.
 
 - Gjør alle ruter grå/mørkegrå
 - Tåkelinjer
@@ -186,7 +199,8 @@ Utviklet for visuell klarhet.
 
 Zaprojektowano z myślą o przejrzystości.
 
-!!: Wymagany jest domyślny teren.
+> [!WARNING]
+> Wymagany jest domyślny teren.
 
 - Zmienia kolor wszystkich kafelków na szary/ciemnoszary
 - Linie mgły
@@ -198,7 +212,8 @@ Zaprojektowano z myślą o przejrzystości.
 
 Projetado para clareza visual.
 
-!!: Terreno padrão necessário.
+> [!WARNING]
+> Terreno padrão necessário.
 
 - Deixa todos os blocos cinza/cinza escuro
 - Linhas de neblina
@@ -210,7 +225,8 @@ Projetado para clareza visual.
 
 Conceput pentru claritate vizuală.
 
-!!: Este necesar terenul implicit.
+> [!WARNING]
+> Este necesar terenul implicit.
 
 - Toate plăcuțele devin gri/gri închis
 - Linii de ceață
@@ -222,7 +238,8 @@ Conceput pentru claritate vizuală.
 
 Разработано для большей наглядности.
 
-!!: Требуется стандартный ландшафт.
+> [!WARNING]
+> Требуется стандартный ландшафт.
 
 - Делает все тайлы серыми/темно-серыми
 - Линии тумана
@@ -234,7 +251,8 @@ Conceput pentru claritate vizuală.
 
 Utformad för visuell tydlighet.
 
-!!: Standardterräng krävs.
+> [!WARNING]
+> Standardterräng krävs.
 
 - Gör alla rutor grå/mörkgrå
 - Dimlinjer
@@ -246,7 +264,8 @@ Utformad för visuell tydlighet.
 
 ออกแบบมาเพื่อความชัดเจนทางสายตา
 
-!!: ต้องใช้ภูมิประเทศเริ่มต้น
+> [!WARNING]
+> ต้องใช้ภูมิประเทศเริ่มต้น
 
 - ทำให้ทุกช่องเป็นสีเทา/เทาเข้ม
 - เส้นหมอก
@@ -258,7 +277,8 @@ Utformad för visuell tydlighet.
 
 Görsel netlik için tasarlanmıştır.
 
-!!: Varsayılan arazi gereklidir.
+> [!WARNING]
+> Varsayılan arazi gereklidir.
 
 - Tüm karoları gri/koyu gri yapar
 - Sis çizgileri
@@ -270,7 +290,8 @@ Görsel netlik için tasarlanmıştır.
 
 Створено для кращої візуальної читабельності.
 
-!!: Потрібен стандартний ландшафт.
+> [!WARNING]
+> Потрібен стандартний ландшафт.
 
 - Робить усі тайли сірими/темно-сірими
 - Лінії туману
@@ -282,7 +303,8 @@ Görsel netlik için tasarlanmıştır.
 
 Được thiết kế để mang lại sự rõ nét về mặt hình ảnh.
 
-!!: Cần có địa hình mặc định.
+> [!WARNING]
+> Cần có địa hình mặc định.
 
 - Làm cho tất cả các ô màu xám/xám đậm
 - Vệt sương mù
@@ -294,7 +316,8 @@ Görsel netlik için tasarlanmıştır.
 
 专为提升视觉清晰度而设计。
 
-!!: 需要默认地形.
+> [!WARNING]
+> 需要默认地形.
 
 - 将所有图块变为灰色/深灰色
 
@@ -310,7 +333,8 @@ Görsel netlik için tasarlanmıştır.
 
 專為提升視覺清晰度而設計。
 
-!!: 需要預設地形.
+> [!WARNING]
+> 需要預設地形.
 
 - 將所有圖塊變為灰色/深灰色
 

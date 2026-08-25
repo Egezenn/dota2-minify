@@ -2,154 +2,180 @@
 
 Automatically accepts the match dialog after `0-40` seconds of delay. Delay is adjustable through settings panel.
 
-!!: Defaults to `10` if workshop tools aren't installed.
+> [!WARNING]
+> Defaults to `10` if workshop tools aren't installed.
 
 <!-- LANG:BG -->
 
 Автоматично приема диалоговия прозорец за съвпадение след `0-40` секунди забавяне. Забавянето може да се регулира чрез панела с настройки.
 
-!!: По подразбиране е `10`, ако не са инсталирани инструменти за работилница.
+> [!WARNING]
+> По подразбиране е `10`, ако не са инсталирани инструменти за работилница.
 
 <!-- LANG:CS -->
 
 Automaticky přijme dialogové okno pro shodu po `0-40` sekundách prodlevy. Prodleva je nastavitelná v panelu nastavení.
 
-!!: Výchozí hodnota je `10`, pokud není nainstalováno dílenské nářadí.
+> [!WARNING]
+> Výchozí hodnota je `10`, pokud není nainstalováno dílenské nářadí.
 
 <!-- LANG:DA -->
 
 Accepterer automatisk matchdialogen efter `0-40` sekunders forsinkelse. Forsinkelsen kan justeres via indstillingspanelet.
 
-!!: Standardværdien er `10`, hvis der ikke er installeret værkstedsværktøjer.
+> [!WARNING]
+> Standardværdien er `10`, hvis der ikke er installeret værkstedsværktøjer.
 
 <!-- LANG:DE -->
 
 Akzeptiert den Match-Dialog automatisch nach einer Verzögerung von `0–40` Sekunden. Die Verzögerung kann über die Einstellungen angepasst werden.
 
-!!: Standardwert ist `10`, falls die Workshop-Tools nicht installiert sind.
+> [!WARNING]
+> Standardwert ist `10`, falls die Workshop-Tools nicht installiert sind.
 
 <!-- LANG:EL -->
 
 Αποδέχεται αυτόματα το παράθυρο διαλόγου αντιστοίχισης μετά από καθυστέρηση `0-40` δευτερολέπτων. Η καθυστέρηση ρυθμίζεται μέσω του πίνακα ρυθμίσεων.
 
-!!: Η προεπιλογή είναι `10` εάν δεν έχουν εγκατασταθεί εργαλεία εργαστηρίου.
+> [!WARNING]
+> Η προεπιλογή είναι `10` εάν δεν έχουν εγκατασταθεί εργαλεία εργαστηρίου.
 
 <!-- LANG:ES -->
 
 Acepta automáticamente la partida después de `0-40` segundos. El tiempo de espera es ajustable a través del panel de configuraciones.
 
-!!: Por defecto `10` si las herramientas de workshop no están instaladas.
+> [!WARNING]
+> Por defecto `10` si las herramientas de workshop no están instaladas.
 
 <!-- LANG:FI -->
 
 Hyväksyy automaattisesti otteludialogin `0-40` sekunnin viiveen jälkeen. Viivettä voi säätää asetuspaneelista.
 
-!!: Oletusarvo on `10`, jos työpajatyökaluja ei ole asennettu.
+> [!WARNING]
+> Oletusarvo on `10`, jos työpajatyökaluja ei ole asennettu.
 
 <!-- LANG:FR -->
 
 Accepte automatiquement la boîte de dialogue de correspondance après un délai de `0 à 40` secondes. Ce délai est réglable dans les paramètres.
 
-!!: Par défaut, la valeur est de `10` si les outils de l'atelier ne sont pas installés.
+> [!WARNING]
+> Par défaut, la valeur est de `10` si les outils de l'atelier ne sont pas installés.
 
 <!-- LANG:HU -->
 
 Automatikusan elfogadja a mérkőzés párbeszédpanelt `0-40` másodperces késleltetés után. A késleltetés a beállítások panelen állítható.
 
-!!: Alapértelmezés szerint `10`, ha nincsenek telepítve a műhelyeszközök.
+> [!WARNING]
+> Alapértelmezés szerint `10`, ha nincsenek telepítve a műhelyeszközök.
 
 <!-- LANG:IT -->
 
 Accetta automaticamente la finestra di dialogo di abbinamento dopo un ritardo di `0-40` secondi. Il ritardo è regolabile tramite il pannello delle impostazioni.
 
-!!: Il valore predefinito è `10` se gli strumenti dell'officina non sono installati.
+> [!WARNING]
+> Il valore predefinito è `10` se gli strumenti dell'officina non sono installati.
 
 <!-- LANG:JA -->
 
 0～40秒の遅延後、マッチングダイアログを自動的に承認します。遅延時間は設定パネルで調整可能です。
 
-!!: ワークショップツールがインストールされていない場合は、デフォルトで10秒になります.
+> [!WARNING]
+> ワークショップツールがインストールされていない場合は、デフォルトで10秒になります.
 
 <!-- LANG:KO -->
 
 `0-40`초의 지연 후 자동으로 매치 대화 상자를 수락합니다. 지연 시간은 설정 패널에서 조정할 수 있습니다.
 
-!!: 워크샵 도구가 설치되어 있지 않으면 기본값은 `10`입니다.
+> [!WARNING]
+> 워크샵 도구가 설치되어 있지 않으면 기본값은 `10`입니다.
 
 <!-- LANG:NL -->
 
 Het dialoogvenster voor de wedstrijd wordt automatisch geopend na een vertraging van `0 tot 40` seconden. De vertraging is instelbaar via het instellingenpaneel.
 
-!!: Standaardwaarde is `10` als de werkplaatstools niet zijn geïnstalleerd.
+> [!WARNING]
+> Standaardwaarde is `10` als de werkplaatstools niet zijn geïnstalleerd.
 
 <!-- LANG:NO -->
 
 Godtar automatisk samsvarsdialogen etter `0–40` sekunders forsinkelse. Forsinkelsen kan justeres via innstillingspanelet.
 
-!!: Standardverdien er `10` hvis verkstedverktøy ikke er installert.
+> [!WARNING]
+> Standardverdien er `10` hvis verkstedverktøy ikke er installert.
 
 <!-- LANG:PL -->
 
 Automatycznie akceptuje dialog dopasowania po `0-40` sekundach opóźnienia. Opóźnienie można regulować w panelu ustawień.
 
-!!: Domyślnie `10`, jeśli narzędzia warsztatowe nie są zainstalowane.
+> [!WARNING]
+> Domyślnie `10`, jeśli narzędzia warsztatowe nie są zainstalowane.
 
 <!-- LANG:PT -->
 
 Aceita automaticamente a caixa de diálogo de correspondência após um atraso de `0 a 40` segundos. O atraso pode ser ajustado no painel de configurações.
 
-!!: O valor padrão é `10` se as ferramentas de oficina não estiverem instaladas.
+> [!WARNING]
+> O valor padrão é `10` se as ferramentas de oficina não estiverem instaladas.
 
 <!-- LANG:RO -->
 
 Acceptă automat dialogul de potrivire după o întârziere de `0-40` secunde. Întârzierea este reglabilă prin panoul de setări.
 
-!!: Implicit setează la `10` dacă instrumentele atelierului nu sunt instalate.
+> [!WARNING]
+> Implicit setează la `10` dacă instrumentele atelierului nu sunt instalate.
 
 <!-- LANG:RU -->
 
 Автоматически принимает диалоговое окно матча через задержку от `0 до 40` секунд. Задержку можно настроить в панели настроек.
 
-!!: По умолчанию равно `10`, если инструменты из мастерской не установлены.
+> [!WARNING]
+> По умолчанию равно `10`, если инструменты из мастерской не установлены.
 
 <!-- LANG:SV -->
 
 Accepterar automatiskt matchningsdialogrutan efter `0–40` sekunders fördröjning. Fördröjningen kan justeras via inställningspanelen.
 
-!!: Standardvärdet är `10` om verkstadsverktyg inte är installerade.
+> [!WARNING]
+> Standardvärdet är `10` om verkstadsverktyg inte är installerade.
 
 <!-- LANG:TH -->
 
 ระบบจะยอมรับการจับคู่โดยอัตโนมัติหลังจากหน่วงเวลา 0-40 วินาที สามารถปรับเวลาหน่วงได้ผ่านแผงการตั้งค่า
 
-!!: ค่าเริ่มต้นคือ 10 หากไม่ได้ติดตั้งเครื่องมือสำหรับเวิร์คช็อป
+> [!WARNING]
+> ค่าเริ่มต้นคือ 10 หากไม่ได้ติดตั้งเครื่องมือสำหรับเวิร์คช็อป
 
 <!-- LANG:TR -->
 
 `0-40` saniyelik gecikmeden sonra eşleşme diyaloğunu otomatik olarak kabul eder. Gecikme süresi ayarlar panelinden ayarlanabilir.
 
-!!: Atölye araçları yüklü değilse varsayılan değer `10`'dur.
+> [!WARNING]
+> Atölye araçları yüklü değilse varsayılan değer `10`'dur.
 
 <!-- LANG:UK -->
 
 Автоматично приймає знайдений матч із затримкою `0-40` секунд. Затримку можна налаштувати в панелі параметрів.
 
-!!: Якщо Workshop Tools не встановлені, за замовчуванням використовується `10`.
+> [!WARNING]
+> Якщо Workshop Tools не встановлені, за замовчуванням використовується `10`.
 
 <!-- LANG:VI -->
 
 Tự động chấp nhận hộp thoại ghép trận sau độ trễ từ 0 đến 40 giây. Độ trễ có thể điều chỉnh thông qua bảng cài đặt.
 
-!!: Mặc định là 10 nếu các công cụ hội thảo chưa được cài đặt.
+> [!WARNING]
+> Mặc định là 10 nếu các công cụ hội thảo chưa được cài đặt.
 
 <!-- LANG:ZH-CN -->
 
 延迟 0-40 秒后自动接受匹配对话框。延迟时间可在设置面板中调整。
 
-!!: 如果未安装创意工坊工具, 则默认值为 10.
+> [!WARNING]
+> 如果未安装创意工坊工具, 则默认值为 10.
 
 <!-- LANG:ZH-TW -->
 
 延遲 0-40 秒後自動接受匹配對話框。延遲時間可在設定面板中調整。
 
-!!: 如果未安裝創意工坊工具, 則預設值為 10.
+> [!WARNING]
+> 如果未安裝創意工坊工具, 則預設值為 10.
