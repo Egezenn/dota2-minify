@@ -261,13 +261,14 @@ class Api:
 
     def get_current_game_language(self) -> str:
         try:
-            return _config.get("output_locale") or "english"
+            return _config.get("output_locale", "english")
         except Exception:
             return "english"
 
     def set_game_language(self, lang: str) -> bool:
         try:
             _config.set("output_locale", lang)
+            mods_shared.enforce_locale_mod_states()
             return True
         except Exception:
             return False

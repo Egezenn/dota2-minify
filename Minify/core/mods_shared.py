@@ -35,9 +35,16 @@ def set_state(mod, value):
 def enforce_locale_mod_states():
     from core import config
 
-    locale = config.get("output_locale")
-    for required_mod in constants.LOCALE_MOD_REQUIREMENTS.get(locale, []):
-        set_state(required_mod, True)
+    locale = config.get("output_locale", "english")
+
+    all_locale_mods = set()
+    for mods_list in constants.LOCALE_MOD_REQUIREMENTS.values():
+        all_locale_mods.update(mods_list)
+
+    required_for_current = set(constants.LOCALE_MOD_REQUIREMENTS.get(locale, []))
+
+    for mod in all_locale_mods:
+        set_state(mod, mod in required_for_current)
 
 
 def scan_mods():
