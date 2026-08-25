@@ -301,6 +301,58 @@ class Api:
             return False
 
 
+def _apply_tiling_wm_floating_hints() -> None:
+    if not base.is_linux:
+        return
+
+    # GTK platform
+    with utils.try_pass:
+        import gi
+
+        gi.require_version("Gtk", "3.0")
+        gi.require_version("Gdk", "3.0")
+        from gi.repository import Gdk, Gtk
+        import webview.platforms.gtk as gtk_platform
+
+        orig_gtk_init = gtk_platform.BrowserView.__init__
+
+        def patched_gtk_init(self: Any, window: Any) -> None:
+            orig_gtk_init(self, window)
+            if isinstance(self.window, Gtk.Window):
+                try:
+                    dummy_parent = Gtk.Window()
+                    dummy_parent.realize()
+                    self.window.set_transient_for(dummy_parent)
+                except Exception:
+                    pass
+                self.window.set_type_hint(Gdk.WindowTypeHint.DIALOG)
+                self.window.set_role("dialog")
+                self.window.set_modal(True)
+                try:
+                    self.window.set_wmclass("Minify", "Minify")
+                except Exception:
+                    pass
+
+        gtk_platform.BrowserView.__init__ = patched_gtk_init
+
+    # Qt platform
+    with utils.try_pass:
+        import webview.platforms.qt as qt_pBlatform
+
+        orig_qt_init = qt_platform.BrowserView.__init__
+
+        def patched_qt_init(self: Any, window: Any) -> None:
+            orig_qt_init(self, window)
+            try:
+                from PyQt5.QtCore import Qt
+
+                self.window.setWindowFlags(self.window.windowFlags() | Qt.Dialog | Qt.Tool)
+            except Exception:
+                pass
+
+        qt_platform.BrowserView.__init__ = patched_qt_init
+
+
 def launch() -> None:
     base.HEADLESS = False
 
@@ -312,6 +364,8 @@ def launch() -> None:
     utils.setup_system()
     browsers.initialize()
     helper.bulk_exec_script("initial", False)
+
+    _apply_tiling_wm_floating_hints()
 
     ui_dir = os.path.dirname(os.path.abspath(__file__))
     dist_index = os.path.join(ui_dir, "web", "dist", "index.html")
