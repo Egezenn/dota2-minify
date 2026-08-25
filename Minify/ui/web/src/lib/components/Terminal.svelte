@@ -22,9 +22,7 @@
 
 <div class="terminal-container">
   <div class="terminal-toolbar">
-    <div>
-      <span>Terminal</span>
-    </div>
+    <span>Terminal</span>
 
     <div class="toolbar-controls">
       <label>
@@ -57,15 +55,23 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 6px;
-    border-bottom: 1px solid #ccc;
+    padding: 6px 8px;
+    border-bottom: 1px solid #000;
     font-size: 13px;
   }
 
   .toolbar-controls {
     display: flex;
-    gap: 12px;
+    gap: 8px;
     align-items: center;
+  }
+
+  .toolbar-controls button {
+    padding: 2px 8px;
+    border: 1px solid #000;
+    background: #fff;
+    color: #000;
+    cursor: pointer;
   }
 
   .terminal-body {
@@ -77,18 +83,16 @@
     display: flex;
     flex-direction: column;
     gap: 2px;
-    user-select: text;
   }
 
   .log-row {
     white-space: pre-wrap;
     word-break: break-all;
-    user-select: text;
   }
 
   hr {
     border: none;
-    border-top: 1px solid #ccc;
+    border-top: 1px solid #000;
     margin: 4px 0;
   }
 </style>

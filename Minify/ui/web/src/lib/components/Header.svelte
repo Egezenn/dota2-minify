@@ -9,47 +9,43 @@
 </script>
 
 <header class="header">
-  <div class="brand-and-tabs">
-    <nav class="nav-tabs">
-      <button
-        class="tab-btn {activeTab === 'mods' ? 'active' : ''}"
-        on:click={() => onTabChange("mods")}
-      >
-        Mods
-      </button>
+  <nav class="nav-tabs">
+    <button
+      class="tab-btn {activeTab === 'mods' ? 'active' : ''}"
+      on:click={() => onTabChange("mods")}
+    >
+      Mods
+    </button>
 
-      <button
-        class="tab-btn {activeTab === 'terminal' ? 'active' : ''}"
-        on:click={() => onTabChange("terminal")}
-      >
-        Terminal
-      </button>
+    <button
+      class="tab-btn {activeTab === 'terminal' ? 'active' : ''}"
+      on:click={() => onTabChange("terminal")}
+    >
+      Terminal
+    </button>
 
-      <button
-        class="tab-btn {activeTab === 'settings' ? 'active' : ''}"
-        on:click={() => onTabChange("settings")}
-      >
-        Settings
-      </button>
-    </nav>
-  </div>
+    <button
+      class="tab-btn {activeTab === 'settings' ? 'active' : ''}"
+      on:click={() => onTabChange("settings")}
+    >
+      Settings
+    </button>
+  </nav>
 
   <div class="header-action">
-    <div class="select-group">
-      <label class="lang-label" for="game-lang-select"> Game: </label>
-      <select
-        id="game-lang-select"
-        value={currentGameLang}
-        on:change={onGameLangChange}
-      >
-        {#each availableGameLangs as gLang}
-          <option value={gLang}>{gLang}</option>
-        {/each}
-      </select>
-    </div>
+    <label for="game-lang-select">Game: </label>
+    <select
+      id="game-lang-select"
+      value={currentGameLang}
+      on:change={onGameLangChange}
+    >
+      {#each availableGameLangs as gLang}
+        <option value={gLang}>{gLang}</option>
+      {/each}
+    </select>
 
     <button class="patch-btn" on:click={onPatch} disabled={isPatching}>
-      {isPatching ? "PATCHING..." : "PATCH DOTA 2"}
+      {isPatching ? "PATCHING..." : "PATCH"}
     </button>
   </div>
 </header>
@@ -60,14 +56,8 @@
     align-items: center;
     justify-content: space-between;
     padding: 8px;
-    border: 1px solid #ccc;
+    border: 1px solid #000;
     background: #fff;
-  }
-
-  .brand-and-tabs {
-    display: flex;
-    align-items: center;
-    gap: 16px;
   }
 
   .nav-tabs {
@@ -77,36 +67,35 @@
 
   .tab-btn {
     padding: 4px 8px;
-    border: 1px solid #ccc;
-    background: #f0f0f0;
+    border: 1px solid #000;
+    background: #fff;
+    color: #000;
     cursor: pointer;
   }
 
   .tab-btn.active {
-    background: #fff;
-    font-weight: bold;
-    border-bottom-color: transparent;
+    background: #000;
+    color: #fff;
   }
 
   .header-action {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 8px;
+    font-size: 13px;
   }
 
-  .select-group {
-    display: flex;
-    align-items: center;
-    gap: 4px;
-  }
-
-  .lang-label {
-    font-size: 12px;
-    font-weight: 600;
+  select {
+    padding: 4px;
+    border: 1px solid #000;
+    background: #fff;
   }
 
   .patch-btn {
-    padding: 6px 12px;
+    padding: 4px 12px;
+    border: 1px solid #000;
+    background: #fff;
+    color: #000;
     font-weight: bold;
     cursor: pointer;
   }

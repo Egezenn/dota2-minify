@@ -36,3 +36,22 @@ def test_api_endpoints():
         res = api.set_setting("patch_on_launch", True)
         assert res is True
         mock_config_set.assert_called_with("patch_on_launch", True)
+
+    # Test get_mod_details
+    details = api.get_mod_details("Dark Terrain", "EN")
+    assert isinstance(details, dict)
+    assert details["name"] == "Dark Terrain"
+    assert "has_notes" in details
+    assert "has_preview" in details
+    if details["has_notes"]:
+        assert isinstance(details["notes"], str)
+    if details["has_preview"]:
+        assert details["preview"].startswith("data:image/")
+
+    # Test get_mod_details for non-existent mod
+    non_existent = api.get_mod_details("NonExistentMod123")
+    assert non_existent["has_notes"] is False
+    assert non_existent["has_preview"] is False
+
+    # Test is_debug_env
+    assert isinstance(api.is_debug_env(), bool)

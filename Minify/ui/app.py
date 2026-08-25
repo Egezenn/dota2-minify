@@ -1,3 +1,4 @@
+import base64
 import json
 import os
 import threading
@@ -90,6 +91,99 @@ class Api:
             output.add_text(f"get_mods error: {e}", msg_type="error")
             return []
 
+    def get_mod_details(self, mod_name: str, lang: str | None = None) -> Dict[str, Any]:
+        try:
+            if not lang:
+                lang = _config.get("locale") or "EN"
+            mod_path = os.path.join(base.mods_dir, mod_name)
+            if not os.path.isdir(mod_path):
+                return {
+                    "name": mod_name,
+                    "notes": None,
+                    "preview": None,
+                    "has_notes": False,
+                    "has_preview": False,
+                }
+
+            notes_path = os.path.join(mod_path, "notes.md")
+            notes_content = None
+            if os.path.exists(notes_path):
+                try:
+                    with utils.open_utf8(notes_path) as f:
+                        raw_notes = f.read()
+                    notes_content = self._parse_notes_for_locale(raw_notes, lang)
+                except Exception as e:
+                    output.add_text(f"Error reading notes for {mod_name}: {e}", msg_type="warning")
+
+            preview_data_url = None
+            if os.path.exists(mod_path):
+                for filename in os.listdir(mod_path):
+                    if filename.lower() in (
+                        "preview.jpg",
+                        "preview.jpeg",
+                        "preview.png",
+                        "preview.webp",
+                        "preview.gif",
+                    ):
+                        p_path = os.path.join(mod_path, filename)
+                        try:
+                            ext = filename.lower().rsplit(".", 1)[-1]
+                            mime_type = "image/jpeg" if ext in ("jpg", "jpeg") else f"image/{ext}"
+                            with open(p_path, "rb") as img_file:
+                                encoded = base64.b64encode(img_file.read()).decode("utf-8")
+                                preview_data_url = f"data:{mime_type};base64,{encoded}"
+                            break
+                        except Exception as e:
+                            output.add_text(f"Error loading preview image for {mod_name}: {e}", msg_type="warning")
+
+            return {
+                "name": mod_name,
+                "notes": notes_content,
+                "preview": preview_data_url,
+                "has_notes": bool(notes_content),
+                "has_preview": bool(preview_data_url),
+            }
+        except Exception as e:
+            output.add_text(f"get_mod_details error: {e}", msg_type="error")
+            return {
+                "name": mod_name,
+                "notes": None,
+                "preview": None,
+                "has_notes": False,
+                "has_preview": False,
+            }
+
+    @staticmethod
+    def _parse_notes_for_locale(notes_text: str, lang: str) -> str:
+        if not notes_text or "<!-- LANG:" not in notes_text:
+            return notes_text.strip()
+
+        sections: Dict[str, str] = {}
+        current_lang: str | None = None
+        lines: List[str] = []
+
+        for line in notes_text.splitlines():
+            trimmed = line.strip()
+            if trimmed.startswith("<!-- LANG:") and trimmed.endswith("-->"):
+                if current_lang:
+                    sections[current_lang] = "\n".join(lines).strip()
+                current_lang = trimmed[10:-3].strip().upper()
+                lines = []
+            else:
+                lines.append(line)
+        if current_lang:
+            sections[current_lang] = "\n".join(lines).strip()
+
+        target_lang = (lang or "EN").upper()
+        if target_lang in sections:
+            return sections[target_lang]
+        elif "EN" in sections:
+            return sections["EN"]
+        elif sections:
+            return next(iter(sections.values()))
+
+        return notes_text.strip()
+
     def set_mods(self, data: Dict[str, bool]) -> bool:
         try:
             for mod_name, enabled in data.items():
@@ -103,6 +197,12 @@ class Api:
             return localization.get_available() or ["EN"]
         except Exception:
             return ["EN"]
+
+    def is_debug_env(self) -> bool:
+        try:
+            return bool(_config.get("debug_env"))
+        except Exception:
+            return False
 
     def get_localization(self, lang: str = "EN") -> Dict[str, str]:
         try:

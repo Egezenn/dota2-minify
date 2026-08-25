@@ -20,6 +20,8 @@
   $: dict = $localeStore.dict;
   $: currentLang = $localeStore.lang;
 
+  let isDebugEnv = false;
+
   async function loadApiData() {
     if (initialized) return;
     const api = window.pywebview?.api;
@@ -27,6 +29,10 @@
 
     initialized = true;
     try {
+      if (api.is_debug_env) {
+        isDebugEnv = Boolean(await api.is_debug_env());
+      }
+
       const [savedUiLang, savedGameLang, uiLangs, gameLangs] =
         await Promise.all([
           api.get_current_locale(),
@@ -68,6 +74,14 @@
   }
 
   onMount(() => {
+    const handleContextMenu = (e: MouseEvent) => {
+      if (!isDebugEnv) {
+        e.preventDefault();
+      }
+    };
+
+    window.addEventListener("contextmenu", handleContextMenu);
+
     window.onLogReceived = (logEntry: {
       text: string;
       type: string;
@@ -81,6 +95,10 @@
     };
 
     initPyWebView();
+
+    return () => {
+      window.removeEventListener("contextmenu", handleContextMenu);
+    };
   });
 
   function getCurrentTime() {

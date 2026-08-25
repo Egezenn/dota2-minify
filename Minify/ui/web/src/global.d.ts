@@ -12,7 +12,18 @@ declare global {
           Array<{ text: string; type: string; timestamp?: string }>
         >;
         is_patching: () => Promise<boolean>;
+        is_debug_env: () => Promise<boolean>;
         get_mods: () => Promise<Array<{ name: string; enabled: boolean }>>;
+        get_mod_details: (
+          modName: string,
+          lang?: string,
+        ) => Promise<{
+          name: string;
+          notes: string | null;
+          preview: string | null;
+          has_notes: boolean;
+          has_preview: boolean;
+        }>;
         get_localization: (lang: string) => Promise<Record<string, string>>;
         set_locale: (lang: string) => Promise<boolean>;
         set_game_language: (lang: string) => Promise<boolean>;

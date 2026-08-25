@@ -113,47 +113,36 @@
     flex-direction: column;
     height: 100%;
     overflow-y: auto;
-    padding: 16px;
-    gap: 16px;
+    padding: 12px;
+    gap: 12px;
   }
 
   .settings-header h3 {
     margin: 0;
     font-size: 15px;
-    font-weight: 600;
-    border-bottom: 1px solid #ccc;
-    padding-bottom: 8px;
+    border-bottom: 1px solid #000;
+    padding-bottom: 6px;
   }
 
   .settings-list {
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 8px;
   }
 
   .setting-item {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 8px;
     font-size: 13px;
     cursor: pointer;
-    user-select: none;
-    padding: 6px 8px;
-    border-radius: 4px;
-    transition: background-color 0.15s ease;
-  }
-
-  .setting-item:hover {
-    background-color: #f5f5f5;
   }
 
   .setting-item input[type="checkbox"] {
-    width: 16px;
-    height: 16px;
     cursor: pointer;
   }
 
   .setting-text {
-    color: #333;
+    color: #000;
   }
 </style>
