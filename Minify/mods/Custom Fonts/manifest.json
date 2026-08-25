@@ -5,6 +5,11 @@
       "text": "Font String",
       "default": "Calibri",
       "type": "inputbox"
+    },
+    {
+      "key": "select_font",
+      "text": "Select Custom Font File",
+      "type": "button"
     }
   ]
 }

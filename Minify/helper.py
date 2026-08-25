@@ -140,8 +140,10 @@ def exec_script(script_path, mod_name, order_name, _terminal_output=True):
             return
 
         script_dir = os.path.dirname(script_path)
-        if script_dir not in sys.path:
-            sys.path.insert(0, script_dir)
+        if script_dir in sys.path:
+            sys.path.remove(script_dir)
+        sys.path.insert(0, script_dir)
+        sys.modules.pop("script", None)
 
         module_name = mod_name.replace(" ", "").lower() + f"_{order_name}_script"
         spec = importlib.util.spec_from_file_location(module_name, script_path)
@@ -208,8 +210,10 @@ def exec_script_function(script_path, mod_name, function_name="main"):
             return
 
         script_dir = os.path.dirname(script_path)
-        if script_dir not in sys.path:
-            sys.path.insert(0, script_dir)
+        if script_dir in sys.path:
+            sys.path.remove(script_dir)
+        sys.path.insert(0, script_dir)
+        sys.modules.pop("script", None)
 
         module_name = mod_name.replace(" ", "").lower() + "_utility"
         spec = importlib.util.spec_from_file_location(module_name, script_path)

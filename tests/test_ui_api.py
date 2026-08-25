@@ -227,7 +227,10 @@ def test_mod_settings_injection():
         mock_exec_func.assert_called_once()
 
     # Test reset_native_settings and reset_mod_settings
-    with patch("core.config.set") as mock_config_set, patch("core.config.get", return_value={"TestMod": {"example_inputbox": "val"}}):
+    with (
+        patch("core.config.set") as mock_config_set,
+        patch("core.config.get", return_value={"TestMod": {"example_inputbox": "val"}}),
+    ):
         assert api.reset_native_settings() is True
         assert api.reset_mod_settings("TestMod") is True
         mock_config_set.assert_called_with("modconf", {})
@@ -251,11 +254,37 @@ def test_set_game_language_updates_output_path():
         # Set to turkish
         assert api.set_game_language("turkish") is True
         assert config_store["output_locale"] == "turkish"
-        assert "dota_turkish" in config_store["output_path"]
-        assert "dota_turkish" in helper.output_path
+        out_p = config_store["output_path"]
+        if isinstance(out_p, list):
+            out_p = out_p[0]
+        assert "dota_turkish" in out_p
+        helper_p = helper.output_path
+        if isinstance(helper_p, list):
+            helper_p = helper_p[0]
+        assert "dota_turkish" in helper_p
 
         # Set back to english (which uses dutch fallback)
         assert api.set_game_language("english") is True
         assert config_store["output_locale"] == "english"
-        assert "dota_dutch" in config_store["output_path"]
-        assert "dota_dutch" in helper.output_path
+        out_p = config_store["output_path"]
+        if isinstance(out_p, list):
+            out_p = out_p[0]
+        assert "dota_dutch" in out_p
+        helper_p = helper.output_path
+        if isinstance(helper_p, list):
+            helper_p = helper_p[0]
+        assert "dota_dutch" in helper_p
+
+
+def test_ui_pickers():
+    from ui.pickers import get_file_via_picker, pick_file
+
+    with patch("webview.windows", [MagicMock()]):
+        webview_win = __import__("webview").windows[0]
+        webview_win.create_file_dialog.return_value = ["/path/to/test.png"]
+
+        res = pick_file("Test Title", ("*.png",))
+        assert res == "/path/to/test.png"
+
+        res_alias = get_file_via_picker("Test Title", ("*.png",))
+        assert res_alias == "/path/to/test.png"
