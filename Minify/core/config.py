@@ -4,6 +4,7 @@ JSON(C) config files
 Interactions with main config and mod configs
 """
 
+import os
 from typing import Any, Optional
 
 import jsonc
@@ -36,18 +37,14 @@ def update_json_file(path: str, key: str, value: Any) -> Any:
     return value
 
 
-DEFAULT_SETTINGS: dict[str, Any] = {
-    "opt_into_rcs": False,
-    "fix_options": True,
-    "patch_on_launch": True,
-    "apply_for_all": True,
-    "launch_dota_after_patch": False,
-    "kill_self_after_patch": False,
-    "opt_out_vpk_metadata": False,
-    "locale": "EN",
-    "output_locale": "english",
-    "debug_env": False,
-}
+def _get_default_setting(key: str) -> Any:
+    settings_path = os.path.join(base.bin_dir, "settings.json")
+    schema = read_json_file(settings_path)
+    if isinstance(schema, list):
+        for item in schema:
+            if isinstance(item, dict) and item.get("key") == key:
+                return item.get("default")
+    return None
 
 
 def get(key: str, default_value: Any = None) -> Any:
@@ -56,8 +53,8 @@ def get(key: str, default_value: Any = None) -> Any:
     if key in data:
         return data[key]
 
-    if default_value is None and key in DEFAULT_SETTINGS:
-        default_value = DEFAULT_SETTINGS[key]
+    if default_value is None:
+        default_value = _get_default_setting(key)
 
     if default_value is not None:
         return update_json_file(base.main_config_file_dir, key, default_value)
