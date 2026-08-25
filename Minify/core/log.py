@@ -56,8 +56,9 @@ def unhandled_handler(handled=False):
 
 
 def create_debug_zip():
-    from core import fs
     import ui
+
+    from core import fs
 
     with utils.try_pass():
         timestamp = time.strftime("%Y%m%d-%H%M%S")

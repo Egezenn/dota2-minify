@@ -58,9 +58,7 @@ def select_background():
         original_ext = ".jpg"
 
     if original_ext != actual_ext:
-        ui.alert(
-            f"Warning: Extension mismatch. Renamed from {original_ext} to {actual_ext}.", msg_type="warning"
-        )
+        ui.alert(f"Warning: Extension mismatch. Renamed from {original_ext} to {actual_ext}.", msg_type="warning")
 
     if actual_ext in [".jpg", ".webp"]:
         if shutil.which("magick") is None:

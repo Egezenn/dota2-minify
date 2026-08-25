@@ -59,6 +59,7 @@ def test_api_endpoints():
 
 def test_visual_and_always_manifest_options():
     import os
+
     from core import base
 
     real_isdir = os.path.isdir
@@ -105,6 +106,7 @@ def test_visual_and_always_manifest_options():
 
 def test_mod_settings_injection():
     import os
+
     from core import base
 
     real_isdir = os.path.isdir
@@ -254,26 +256,18 @@ def test_set_game_language_updates_output_path():
         # Set to turkish
         assert api.set_game_language("turkish") is True
         assert config_store["output_locale"] == "turkish"
-        out_p = config_store["output_path"]
-        if isinstance(out_p, list):
-            out_p = out_p[0]
-        assert "dota_turkish" in out_p
-        helper_p = helper.output_path
-        if isinstance(helper_p, list):
-            helper_p = helper_p[0]
-        assert "dota_turkish" in helper_p
+        assert isinstance(config_store["output_path"], str)
+        assert "dota_turkish" in config_store["output_path"]
+        assert isinstance(helper.output_path, str)
+        assert "dota_turkish" in helper.output_path
 
         # Set back to english (which uses dutch fallback)
         assert api.set_game_language("english") is True
         assert config_store["output_locale"] == "english"
-        out_p = config_store["output_path"]
-        if isinstance(out_p, list):
-            out_p = out_p[0]
-        assert "dota_dutch" in out_p
-        helper_p = helper.output_path
-        if isinstance(helper_p, list):
-            helper_p = helper_p[0]
-        assert "dota_dutch" in helper_p
+        assert isinstance(config_store["output_path"], str)
+        assert "dota_dutch" in config_store["output_path"]
+        assert isinstance(helper.output_path, str)
+        assert "dota_dutch" in helper.output_path
 
 
 def test_ui_pickers():

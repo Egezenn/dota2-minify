@@ -5,12 +5,10 @@ import threading
 import time
 from typing import Any, Dict, List
 
-from core import base, config, constants, localization, mods_shared, output, utils
-
-import webview
-
 import helper
 import patch
+import webview
+from core import base, config, constants, localization, mods_shared, output, utils
 
 
 class Api:
@@ -433,8 +431,8 @@ def _apply_tiling_wm_floating_hints() -> None:
 
         gi.require_version("Gtk", "3.0")
         gi.require_version("Gdk", "3.0")
-        from gi.repository import Gdk, Gtk
         import webview.platforms.gtk as gtk_platform
+        from gi.repository import Gdk, Gtk
 
         orig_gtk_init = gtk_platform.BrowserView.__init__
 

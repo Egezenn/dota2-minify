@@ -108,11 +108,11 @@ def parse_color(val):
 
 
 def setup_system():
+    import browsers
     import conditions
     import helper
-    import browsers
 
-    from core import fs, migrations, utils, localization
+    from core import fs, localization, migrations, utils
 
     localization.load_headless()
     conditions.is_dota_running("&error_please_close_dota_terminal", "error")
