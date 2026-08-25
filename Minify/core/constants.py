@@ -30,7 +30,6 @@ def recalc_rescomp_dirs():
 
 recalc_rescomp_dirs()
 
-# common denominator
 minify_dota_tools_required_path = os.path.join(
     steam.LIBRARY, "steamapps", "common", "dota 2 beta", "content", "dota_dutch"
 )

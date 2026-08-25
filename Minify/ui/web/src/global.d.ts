@@ -34,12 +34,22 @@ declare global {
           schema: Array<{
             key: string;
             text: string;
-            default: boolean;
             type: string;
+            default?: any;
+            mod?: string | null;
+            force?: boolean;
+            items?: string[];
+            var_type?: "int" | "float";
+            step?: number;
+            min?: number;
+            max?: number;
           }>;
-          values: Record<string, boolean>;
+          values: Record<string, any>;
         }>;
-        set_setting: (key: string, value: any) => Promise<boolean>;
+        set_setting: (key: string, value: any, mod_name?: string) => Promise<boolean>;
+        run_mod_function: (mod_name: string, function_name: string) => Promise<boolean>;
+        reset_native_settings: () => Promise<boolean>;
+        reset_mod_settings: (mod_name: string) => Promise<boolean>;
       };
     };
     onLogReceived?: (logEntry: {

@@ -1,0 +1,44 @@
+[
+  {
+    "key": "opt_into_rcs",
+    "text": "Opt into RCs",
+    "default": false,
+    "type": "checkbox"
+  },
+  {
+    "key": "fix_options",
+    "text": "Handle language option (current ID)",
+    "default": true,
+    "type": "checkbox"
+  },
+  {
+    "key": "patch_on_launch",
+    "text": "Run patches upon launch if required",
+    "default": true,
+    "type": "checkbox"
+  },
+  {
+    "key": "apply_for_all",
+    "text": "Apply everything for all users",
+    "default": true,
+    "type": "checkbox"
+  },
+  {
+    "key": "launch_dota_after_patch",
+    "text": "Launch Dota2 after patching",
+    "default": false,
+    "type": "checkbox"
+  },
+  {
+    "key": "kill_self_after_patch",
+    "text": "Close Minify after patching",
+    "default": false,
+    "type": "checkbox"
+  },
+  {
+    "key": "opt_out_vpk_metadata",
+    "text": "Opt-out of VPK metadata",
+    "default": false,
+    "type": "checkbox"
+  }
+]

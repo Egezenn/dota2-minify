@@ -22,7 +22,9 @@
 
 <div class="terminal-container">
   <div class="terminal-toolbar">
-    <span>Terminal</span>
+    <div class="toolbar-title">
+      <h3>Terminal</h3>
+    </div>
 
     <div class="toolbar-controls">
       <label>
@@ -60,6 +62,12 @@
     font-size: 13px;
   }
 
+  .toolbar-title h3 {
+    margin: 0;
+    font-size: 15px;
+    font-weight: bold;
+  }
+
   .toolbar-controls {
     display: flex;
     gap: 8px;
@@ -83,11 +91,15 @@
     display: flex;
     flex-direction: column;
     gap: 2px;
+    user-select: text;
+    cursor: text;
   }
 
   .log-row {
     white-space: pre-wrap;
     word-break: break-all;
+    user-select: text;
+    cursor: text;
   }
 
   hr {

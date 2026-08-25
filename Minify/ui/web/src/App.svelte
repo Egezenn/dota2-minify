@@ -182,7 +182,7 @@
       <Terminal {logs} bind:autoScroll onClear={handleClear} />
     </div>
     <div class="tab-pane" class:hidden={activeTab !== "settings"}>
-      <Settings onSettingChange={handleSettingChange} />
+      <Settings active={activeTab === "settings"} onSettingChange={handleSettingChange} />
     </div>
   </section>
 </main>

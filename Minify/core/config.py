@@ -81,7 +81,8 @@ def set_mod(mod_name: str, config_data: dict) -> None:
     set("modconf", modconf)
 
 
-def get_locale(default="english"):
+def get_locale():
+    "Returns the valid locale instead of unresolved."
     from core import constants
 
-    return constants.resolve_locale(get("output_locale", default))
+    return constants.resolve_locale(get("output_locale", "english"))

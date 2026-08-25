@@ -15,6 +15,16 @@ compiler_filepicker_path = ""
 output_path = config.get("output_path", constants.minify_default_dota_pak_output_path)
 
 
+def sync_output_path():
+    global output_path
+    locale = config.get_locale()
+    output_path = [lang for lang in constants.minify_dota_possible_language_output_paths if locale in lang]
+    config.set("output_path", output_path)
+
+
+sync_output_path()
+
+
 def get_blank_file_extensions():
     extensions = []
     for file in os.listdir(base.blank_files_dir):

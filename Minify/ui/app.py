@@ -5,12 +5,10 @@ import threading
 import time
 from typing import Any, Dict, List
 
-from core import base, constants, localization, mods_shared, output, utils
-from core import config as _config
+from core import base, config, constants, localization, mods_shared, output, utils
 
 import webview
 
-import browsers
 import helper
 import patch
 
@@ -102,7 +100,9 @@ class Api:
                         encoded = base64.b64encode(img_file.read()).decode("utf-8")
                         return f"data:{mime_type};base64,{encoded}"
                 except Exception as e:
-                    output.add_text(f"Error loading preview image for {os.path.basename(mod_path)}: {e}", msg_type="warning")
+                    output.add_text(
+                        f"Error loading preview image for {os.path.basename(mod_path)}: {e}", msg_type="warning"
+                    )
         return None
 
     def get_mods(self) -> List[Dict[str, Any]]:
@@ -119,12 +119,14 @@ class Api:
                     cfg = manifest_utils.get_mod(mod_path)
                     always = bool(cfg.get("always", False))
                 preview = self._get_mod_preview(mod_path)
-                mods_data.append({
-                    "name": mod,
-                    "enabled": always or mods_shared.get_state(mod),
-                    "always": always,
-                    "preview": preview,
-                })
+                mods_data.append(
+                    {
+                        "name": mod,
+                        "enabled": always or mods_shared.get_state(mod),
+                        "always": always,
+                        "preview": preview,
+                    }
+                )
             return mods_data
         except Exception as e:
             output.add_text(f"get_mods error: {e}", msg_type="error")
@@ -133,7 +135,7 @@ class Api:
     def get_mod_details(self, mod_name: str, lang: str | None = None) -> Dict[str, Any]:
         try:
             if not lang:
-                lang = _config.get("locale") or "EN"
+                lang = config.get("locale") or "EN"
             mod_path = os.path.join(base.mods_dir, mod_name)
             if not os.path.isdir(mod_path):
                 return {
@@ -227,27 +229,27 @@ class Api:
 
     def is_debug_env(self) -> bool:
         try:
-            return bool(_config.get("debug_env"))
+            return bool(config.get("debug_env"))
         except Exception:
             return False
 
     def get_localization(self, lang: str = "EN") -> Dict[str, str]:
         try:
             if not lang:
-                lang = _config.get("locale") or "EN"
+                lang = config.get("locale") or "EN"
             return localization.get_for_locale(lang) or {}
         except Exception:
             return {}
 
     def get_current_locale(self) -> str:
         try:
-            return _config.get("locale") or "EN"
+            return config.get("locale") or "EN"
         except Exception:
             return "EN"
 
     def set_locale(self, lang: str) -> bool:
         try:
-            _config.set("locale", lang)
+            config.set("locale", lang)
             localization.load_headless()
             return True
         except Exception:
@@ -255,77 +257,169 @@ class Api:
 
     def get_available_game_languages(self) -> List[str]:
         try:
-            return constants.minify_output_list or ["english"]
+            return constants.minify_output_list
         except Exception:
             return ["english"]
 
     def get_current_game_language(self) -> str:
         try:
-            return _config.get("output_locale", "english")
+            return config.get("output_locale", "english")
         except Exception:
             return "english"
 
     def set_game_language(self, lang: str) -> bool:
         try:
-            _config.set("output_locale", lang)
+            config.set("output_locale", lang)
+            helper.sync_output_path()
             mods_shared.enforce_locale_mod_states()
             return True
         except Exception:
             return False
 
     def get_settings(self) -> Dict[str, Any]:
-        settings_schema = [
-            {
-                "key": "opt_into_rcs",
-                "text": "Opt into RCs",
-                "default": _config.DEFAULT_SETTINGS["opt_into_rcs"],
-                "type": "checkbox",
-            },
-            {
-                "key": "fix_options",
-                "text": "Handle language option (current ID)",
-                "default": _config.DEFAULT_SETTINGS["fix_options"],
-                "type": "checkbox",
-            },
-            {
-                "key": "patch_on_launch",
-                "text": "Run patches upon launch if required",
-                "default": _config.DEFAULT_SETTINGS["patch_on_launch"],
-                "type": "checkbox",
-            },
-            {
-                "key": "apply_for_all",
-                "text": "Apply everything for all users",
-                "default": _config.DEFAULT_SETTINGS["apply_for_all"],
-                "type": "checkbox",
-            },
-            {
-                "key": "launch_dota_after_patch",
-                "text": "Launch Dota2 after patching",
-                "default": _config.DEFAULT_SETTINGS["launch_dota_after_patch"],
-                "type": "checkbox",
-            },
-            {
-                "key": "kill_self_after_patch",
-                "text": "Close Minify after patching",
-                "default": _config.DEFAULT_SETTINGS["kill_self_after_patch"],
-                "type": "checkbox",
-            },
-            {
-                "key": "opt_out_vpk_metadata",
-                "text": "Opt-out of VPK metadata",
-                "default": _config.DEFAULT_SETTINGS["opt_out_vpk_metadata"],
-                "type": "checkbox",
-            },
-        ]
-        values = {item["key"]: _config.get(item["key"]) for item in settings_schema}
-        return {"schema": settings_schema, "values": values}
-
-    def set_setting(self, key: str, value: Any) -> bool:
         try:
-            _config.set(key, value)
+            mods_shared.scan_mods()
+            from patch import manifest_utils
+
+            settings_json_path = os.path.join(base.bin_dir, "settings.json")
+            native_schema = config.read_json_file(settings_json_path)
+            if not isinstance(native_schema, list):
+                native_schema = []
+
+            settings_schema = [dict(item) for item in native_schema if isinstance(item, dict)]
+            values = {
+                item["key"]: config.get(item["key"], item.get("default")) for item in settings_schema if "key" in item
+            }
+
+            if os.path.exists(base.mods_dir):
+                for mod_folder in sorted(os.listdir(base.mods_dir)):
+                    if mod_folder.startswith((".", "_")):
+                        continue
+                    mod_path = os.path.join(base.mods_dir, mod_folder)
+                    if not os.path.isdir(mod_path):
+                        continue
+
+                    cfg = manifest_utils.get_mod(mod_path)
+                    mod_settings_list = cfg.get("settings")
+                    if not isinstance(mod_settings_list, list):
+                        continue
+
+                    always = bool(cfg.get("always", False))
+                    mod_enabled = always or mods_shared.get_state(mod_folder)
+
+                    for item in mod_settings_list:
+                        if not isinstance(item, dict):
+                            continue
+                        key = item.get("key")
+                        stype = item.get("type")
+                        if not key or not stype:
+                            continue
+
+                        force = bool(item.get("force", False))
+                        if not (force or mod_enabled):
+                            continue
+
+                        stype_str = str(stype).lower()
+
+                        default_val = item.get("default")
+                        if default_val is None:
+                            if stype_str == "checkbox":
+                                default_val = False
+                            elif stype_str in ("inputbox", "color"):
+                                default_val = ""
+                            elif stype_str in ("number", "slider"):
+                                default_val = item.get("min", 0)
+                            elif stype_str == "list":
+                                default_val = []
+                            elif stype_str == "combo":
+                                items = item.get("items", [])
+                                default_val = items[0] if items else ""
+
+                        schema_entry = {
+                            "key": key,
+                            "text": item.get("text", key),
+                            "type": stype_str,
+                            "default": default_val,
+                            "mod": mod_folder,
+                        }
+                        if force:
+                            schema_entry["force"] = True
+
+                        if stype_str == "combo":
+                            schema_entry["items"] = item.get("items", [])
+                        elif stype_str in ("number", "slider"):
+                            vtype = item.get("var_type")
+                            if not vtype:
+                                vtype = "float" if isinstance(default_val, float) else "int"
+                            schema_entry["var_type"] = vtype
+                            schema_entry["step"] = item.get("step", 0.1 if vtype == "float" else 1)
+                            if "min" in item:
+                                schema_entry["min"] = item["min"]
+                            elif stype_str == "slider":
+                                schema_entry["min"] = 0
+                            if "max" in item:
+                                schema_entry["max"] = item["max"]
+                            elif stype_str == "slider":
+                                schema_entry["max"] = 100
+
+                        mod_store = config.get_mod(mod_folder, {})
+                        cur_val = mod_store.get(key, default_val)
+                        values[key] = cur_val
+                        settings_schema.append(schema_entry)
+
+            return {"schema": settings_schema, "values": values}
+        except Exception as e:
+            output.add_text(f"get_settings error: {e}", msg_type="error")
+            return {"schema": [], "values": {}}
+
+    def set_setting(self, key: str, value: Any, mod_name: str | None = None) -> bool:
+        try:
+            if mod_name:
+                modconf = config.get_mod(mod_name, {})
+                modconf[key] = value
+                config.set_mod(mod_name, modconf)
+            else:
+                config.set(key, value)
             return True
-        except Exception:
+        except Exception as e:
+            output.add_text(f"set_setting error for {key}: {e}", msg_type="error")
+            return False
+
+    def run_mod_function(self, mod_name: str, function_name: str) -> bool:
+        try:
+            mod_path = os.path.join(base.mods_dir, mod_name)
+            script_path = os.path.join(mod_path, "script_utility.py")
+            if not os.path.exists(script_path):
+                output.add_text(f"script_utility.py not found for mod '{mod_name}'", msg_type="warning")
+                return False
+            helper.exec_script_function(script_path, mod_name, function_name)
+            return True
+        except Exception as e:
+            output.add_text(f"run_mod_function error ({mod_name}.{function_name}): {e}", msg_type="error")
+            return False
+
+    def reset_native_settings(self) -> bool:
+        try:
+            settings_json_path = os.path.join(base.bin_dir, "settings.json")
+            native_schema = config.read_json_file(settings_json_path)
+            if isinstance(native_schema, list):
+                for item in native_schema:
+                    if isinstance(item, dict) and "key" in item and "default" in item:
+                        config.set(item["key"], item["default"])
+            return True
+        except Exception as e:
+            output.add_text(f"reset_native_settings error: {e}", msg_type="error")
+            return False
+
+    def reset_mod_settings(self, mod_name: str) -> bool:
+        try:
+            modconf = config.get("modconf", {})
+            if isinstance(modconf, dict) and mod_name in modconf:
+                modconf.pop(mod_name, None)
+                config.set("modconf", modconf)
+            return True
+        except Exception as e:
+            output.add_text(f"reset_mod_settings error for {mod_name}: {e}", msg_type="error")
             return False
 
 
@@ -384,22 +478,13 @@ def _apply_tiling_wm_floating_hints() -> None:
 def launch() -> None:
     base.HEADLESS = False
 
-    os.makedirs("cache", exist_ok=True)
-    os.makedirs("config", exist_ok=True)
-    os.makedirs("logs", exist_ok=True)
-
-    localization.load_headless()
-    utils.setup_system()
-    browsers.initialize()
-    helper.bulk_exec_script("initial", False)
-
     _apply_tiling_wm_floating_hints()
 
     ui_dir = os.path.dirname(os.path.abspath(__file__))
     dist_index = os.path.join(ui_dir, "web", "dist", "index.html")
     url = dist_index
 
-    debug_mode = bool(_config.get("debug_env"))
+    debug_mode = bool(config.get("debug_env"))
     webview.settings["OPEN_DEVTOOLS_IN_DEBUG"] = False
 
     api = Api()

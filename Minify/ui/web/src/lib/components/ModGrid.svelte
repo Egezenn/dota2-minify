@@ -39,15 +39,20 @@
 
 <div class="mod-grid-container">
   <div class="grid-toolbar">
-    <div class="search-box">
-      <input
-        type="text"
-        placeholder="Search mods..."
-        bind:value={searchQuery}
-      />
-      {#if searchQuery}
-        <button on:click={() => (searchQuery = "")}> Clear </button>
-      {/if}
+    <div class="toolbar-title">
+      <h3>Mods</h3>
+    </div>
+    <div class="toolbar-controls">
+      <div class="search-box">
+        <input
+          type="text"
+          placeholder="Search mods..."
+          bind:value={searchQuery}
+        />
+        {#if searchQuery}
+          <button on:click={() => (searchQuery = "")}> Clear </button>
+        {/if}
+      </div>
     </div>
   </div>
 
@@ -72,15 +77,28 @@
     display: flex;
     flex-direction: column;
     height: 100%;
-    gap: 8px;
     overflow: hidden;
   }
 
   .grid-toolbar {
     display: flex;
     align-items: center;
-    padding: 8px;
+    justify-content: space-between;
+    padding: 6px 8px;
     border-bottom: 1px solid #000;
+    font-size: 13px;
+  }
+
+  .toolbar-title h3 {
+    margin: 0;
+    font-size: 15px;
+    font-weight: bold;
+  }
+
+  .toolbar-controls {
+    display: flex;
+    gap: 8px;
+    align-items: center;
   }
 
   .search-box {
