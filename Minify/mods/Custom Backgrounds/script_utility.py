@@ -29,7 +29,7 @@ def select_background():
     allowed_exts = [".png", ".jpg", ".webp", ".mp4", ".webm"]
 
     if not actual_ext or actual_ext not in allowed_exts:
-        output.add_text(
+        ui.alert(
             f"Unsupported Format: The selected file has an unsupported format or invalid magic bytes. Detected: {actual_ext}",
             msg_type="error",
         )
@@ -48,29 +48,29 @@ def select_background():
     try:
         shutil.copy2(file_path, dest_path)
     except Exception as e:
-        output.add_text(f"Error copying file: {e}", msg_type="error")
+        ui.alert(f"Error copying file: {e}", msg_type="error")
         return
 
-    output.add_text(f"Successfully set background to {os.path.basename(dest_path)}.", msg_type="success")
+    ui.alert(f"Successfully set background to {os.path.basename(dest_path)}.", msg_type="success")
 
     original_ext = os.path.splitext(file_path)[1].lower()
     if original_ext == ".jpeg":
         original_ext = ".jpg"
 
     if original_ext != actual_ext:
-        output.add_text(
+        ui.alert(
             f"Warning: Extension mismatch. Renamed from {original_ext} to {actual_ext}.", msg_type="warning"
         )
 
     if actual_ext in [".jpg", ".webp"]:
         if shutil.which("magick") is None:
-            output.add_text(
+            ui.alert(
                 "Warning: ImageMagick (magick) is required to convert this image to PNG during patching but is not found on your system.",
                 msg_type="warning",
             )
     elif actual_ext == ".mp4":
         if shutil.which("ffmpeg") is None:
-            output.add_text(
+            ui.alert(
                 "Warning: FFmpeg is required to convert this video to WEBM during patching but is not found on your system.",
                 msg_type="warning",
             )

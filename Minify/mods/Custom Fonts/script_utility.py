@@ -26,7 +26,7 @@ def select_font():
     allowed_exts = [".ttf", ".otf"]
 
     if not ext or ext not in allowed_exts:
-        output.add_text(
+        ui.alert(
             f"Unsupported Format: Selected file must be a TrueType or OpenType font file (.ttf, .otf). Detected extension: {ext}",
             msg_type="error",
         )
@@ -45,7 +45,7 @@ def select_font():
     try:
         shutil.copy2(file_path, dest_path)
     except Exception as e:
-        output.add_text(f"Error copying font file: {e}", msg_type="error")
+        ui.alert(f"Error copying font file: {e}", msg_type="error")
         return
 
-    output.add_text(f"Successfully copied font to {os.path.basename(dest_path)} in config/.", msg_type="success")
+    ui.alert(f"Successfully copied font to {os.path.basename(dest_path)} in config/.", msg_type="success")

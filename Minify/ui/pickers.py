@@ -12,7 +12,7 @@ def pick_file(title="Select File", file_types=(), initial_dir=None):
         if webview.windows:
             window = webview.windows[0]
             result = window.create_file_dialog(
-                dialog_type=webview.OPEN_DIALOG,
+                dialog_type=webview.FileDialog.OPEN,
                 directory=initial_dir,
                 allow_multiple=False,
                 file_types=tuple(file_types),
@@ -46,7 +46,7 @@ def pick_files(title="Select Files", file_types=(), initial_dir=None):
         if webview.windows:
             window = webview.windows[0]
             result = window.create_file_dialog(
-                dialog_type=webview.OPEN_DIALOG,
+                dialog_type=webview.FileDialog.OPEN,
                 directory=initial_dir,
                 allow_multiple=True,
                 file_types=tuple(file_types),
@@ -80,7 +80,7 @@ def pick_folder(title="Select Folder", initial_dir=None):
         if webview.windows:
             window = webview.windows[0]
             result = window.create_file_dialog(
-                dialog_type=webview.FOLDER_DIALOG,
+                dialog_type=webview.FileDialog.FOLDER,
                 directory=initial_dir,
             )
             if result and len(result) > 0:
@@ -112,7 +112,7 @@ def pick_save_file(title="Save File", default_filename="", file_types=(), initia
         if webview.windows:
             window = webview.windows[0]
             result = window.create_file_dialog(
-                dialog_type=webview.SAVE_DIALOG,
+                dialog_type=webview.FileDialog.SAVE,
                 directory=initial_dir,
                 save_filename=default_filename,
                 file_types=tuple(file_types),

@@ -277,7 +277,7 @@ def test_set_game_language_updates_output_path():
 
 
 def test_ui_pickers():
-    from ui.pickers import get_file_via_picker, pick_file
+    from ui.pickers import pick_file
 
     with patch("webview.windows", [MagicMock()]):
         webview_win = __import__("webview").windows[0]
@@ -286,5 +286,15 @@ def test_ui_pickers():
         res = pick_file("Test Title", ("*.png",))
         assert res == "/path/to/test.png"
 
-        res_alias = get_file_via_picker("Test Title", ("*.png",))
-        assert res_alias == "/path/to/test.png"
+
+def test_ui_alerts():
+    from core import localization
+    from ui.alerts import alert
+
+    localization.localization_dict["test_alert_key"] = "Hello {0}!"
+
+    with patch("webview.windows", [MagicMock()]):
+        webview_win = __import__("webview").windows[0]
+
+        alert("&test_alert_key", "World", msg_type="info")
+        webview_win.evaluate_js.assert_called_once_with('alert("[Notice] Hello World!");')

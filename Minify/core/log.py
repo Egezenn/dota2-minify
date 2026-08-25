@@ -57,6 +57,7 @@ def unhandled_handler(handled=False):
 
 def create_debug_zip():
     from core import fs
+    import ui
 
     with utils.try_pass():
         timestamp = time.strftime("%Y%m%d-%H%M%S")
@@ -76,6 +77,9 @@ def create_debug_zip():
                 if os.path.exists(file_path):
                     zipf.write(file_path)
 
-        with utils.try_pass():
+        if not base.HEADLESS:
+            ui.alert("&heeeeeeeeeeeeeelp")
+        else:
             output.add_text("&heeeeeeeeeeeeeelp", zip_filename)
+
         fs.open_thing(".")
