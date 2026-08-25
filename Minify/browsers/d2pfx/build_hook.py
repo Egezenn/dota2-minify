@@ -33,7 +33,7 @@ def run(mod_list):
             all_active_vpk_mods.append(mod_name)
             continue
 
-        # 2. Identify D2PFX mods via manifest/modcfg
+        # 2. Identify D2PFX mods via manifest
         cfg = manifest_utils.get_mod(mod_path)
         if not cfg:
             continue

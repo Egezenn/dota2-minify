@@ -56,6 +56,7 @@
       <ModCard
         name={mod.name}
         enabled={mod.enabled}
+        always={mod.always}
         ontoggle={(value) => toggleMod(mod.name, value)}
         onDetails={openDetails}
       />

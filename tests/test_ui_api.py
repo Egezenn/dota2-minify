@@ -55,3 +55,50 @@ def test_api_endpoints():
 
     # Test is_debug_env
     assert isinstance(api.is_debug_env(), bool)
+
+
+def test_visual_and_always_manifest_options():
+    import os
+    from core import base, mods_shared
+
+    real_isdir = os.path.isdir
+
+    def mock_listdir(path):
+        if path == base.mods_dir:
+            return ["AlwaysMod", "HiddenMod", "NormalMod"]
+        return []
+
+    def mock_isdir(path):
+        if base.mods_dir in path:
+            return True
+        return real_isdir(path)
+
+    def mock_get_mod(path):
+        mod_name = os.path.basename(path)
+        if mod_name == "AlwaysMod":
+            return {"always": True}
+        elif mod_name == "HiddenMod":
+            return {"visual": False}
+        return {}
+
+    with (
+        patch("os.listdir", side_effect=mock_listdir),
+        patch("os.path.isdir", side_effect=mock_isdir),
+        patch("patch.manifest_utils.get_mod", side_effect=mock_get_mod),
+    ):
+        api = Api()
+        mods = api.get_mods()
+        mods_dict = {m["name"]: m for m in mods}
+
+        # AlwaysMod (always: true) should be in UI grid with always=True, enabled=True
+        assert "AlwaysMod" in mods_dict
+        assert mods_dict["AlwaysMod"]["always"] is True
+        assert mods_dict["AlwaysMod"]["enabled"] is True
+
+        # NormalMod (default visual: true) should be in UI grid
+        assert "NormalMod" in mods_dict
+        assert mods_dict["NormalMod"]["always"] is False
+
+        # HiddenMod (visual: false) must be excluded from UI grid
+        assert "HiddenMod" not in mods_dict
+

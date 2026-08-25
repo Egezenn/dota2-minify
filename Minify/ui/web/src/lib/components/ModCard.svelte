@@ -1,11 +1,21 @@
 <script lang="ts">
   export let name: string;
   export let enabled: boolean;
+  export let always: boolean = false;
   export let ontoggle: (value: boolean) => void;
   export let onDetails: ((name: string) => void) | undefined = undefined;
 
   function handleToggle() {
+    if (always) return;
     ontoggle(!enabled);
+  }
+
+  function handleCardClick() {
+    if (always) {
+      if (onDetails) onDetails(name);
+    } else {
+      handleToggle();
+    }
   }
 
   function handleDetails(e: MouseEvent) {
@@ -17,11 +27,11 @@
 </script>
 
 <div
-  class="mod-card"
-  on:click={handleToggle}
+  class="mod-card {always ? 'always-mod' : ''}"
+  on:click={handleCardClick}
   role="button"
   tabindex="0"
-  on:keydown={(e) => (e.key === "Enter" || e.key === " ") && handleToggle()}
+  on:keydown={(e) => (e.key === "Enter" || e.key === " ") && handleCardClick()}
 >
   <span class="mod-name">{name}</span>
 
@@ -33,7 +43,8 @@
     {/if}
     <input
       type="checkbox"
-      checked={enabled}
+      checked={enabled || always}
+      disabled={always}
       on:change={handleToggle}
       on:click|stopPropagation
     />
@@ -51,6 +62,11 @@
     background: #fff;
     min-height: 40px;
     gap: 8px;
+  }
+
+  .mod-card.always-mod {
+    background: #f4f4f4;
+    opacity: 0.75;
   }
 
   .mod-name {
@@ -77,5 +93,9 @@
 
   input[type="checkbox"] {
     cursor: pointer;
+  }
+
+  input[type="checkbox"]:disabled {
+    cursor: not-allowed;
   }
 </style>

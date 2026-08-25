@@ -85,8 +85,22 @@ class Api:
     def get_mods(self) -> List[Dict[str, Any]]:
         try:
             mods_shared.scan_mods()
-            mod_list = mods_shared.visually_available_mods or mods_shared.mods_alphabetical
-            return [{"name": mod, "enabled": mods_shared.get_state(mod)} for mod in mod_list]
+            from patch import manifest_utils
+
+            mod_list = mods_shared.visually_available_mods
+            mods_data = []
+            for mod in mod_list:
+                mod_path = os.path.join(base.mods_dir, mod)
+                always = False
+                if os.path.isdir(mod_path):
+                    cfg = manifest_utils.get_mod(mod_path)
+                    always = bool(cfg.get("always", False))
+                mods_data.append({
+                    "name": mod,
+                    "enabled": always or mods_shared.get_state(mod),
+                    "always": always,
+                })
+            return mods_data
         except Exception as e:
             output.add_text(f"get_mods error: {e}", msg_type="error")
             return []
@@ -186,7 +200,14 @@ class Api:
 
     def set_mods(self, data: Dict[str, bool]) -> bool:
         try:
+            from patch import manifest_utils
+
             for mod_name, enabled in data.items():
+                mod_path = os.path.join(base.mods_dir, mod_name)
+                if os.path.isdir(mod_path):
+                    cfg = manifest_utils.get_mod(mod_path)
+                    if cfg.get("always", False):
+                        continue
                 mods_shared.set_state(mod_name, bool(enabled))
             return True
         except Exception:
@@ -306,7 +327,7 @@ def _apply_tiling_wm_floating_hints() -> None:
         return
 
     # GTK platform
-    with utils.try_pass:
+    with utils.try_pass():
         import gi
 
         gi.require_version("Gtk", "3.0")
@@ -336,7 +357,7 @@ def _apply_tiling_wm_floating_hints() -> None:
         gtk_platform.BrowserView.__init__ = patched_gtk_init
 
     # Qt platform
-    with utils.try_pass:
+    with utils.try_pass():
         import webview.platforms.qt as qt_pBlatform
 
         orig_qt_init = qt_platform.BrowserView.__init__
