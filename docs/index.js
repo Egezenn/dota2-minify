@@ -10,22 +10,9 @@ function processReleases(releases) {
     return;
   }
 
-  const latestStable = releases.find((release) => !release.prerelease);
   const latestPrerelease = releases.find((release) => release.prerelease);
 
-  if (latestStable) {
-    window.latestStableRelease = latestStable;
-    const stableLink = document.getElementById("latest-stable");
-    const version = latestStable.tag_name.replace("Minify-", ""); // DEPRECATE: bad tag name
-    stableLink.innerHTML = `<ion-icon name="download-outline"></ion-icon> Download (${version})`;
-  }
-
-  if (
-    latestPrerelease &&
-    (!latestStable ||
-      new Date(latestPrerelease.published_at) >
-        new Date(latestStable.published_at))
-  ) {
+  if (latestPrerelease) {
     window.latestPrereleaseRelease = latestPrerelease;
     const downloadButtons = document.getElementById("download-buttons");
     let prereleaseLink = document.getElementById("latest-prerelease");
