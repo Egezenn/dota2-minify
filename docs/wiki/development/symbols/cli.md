@@ -42,7 +42,7 @@ def run_patch(
 
 ## `run_prelaunch(config_path, mods_path)`
 
-Run a prelaunch check (patches if updated since last patch time).
+Run prelaunch checks and scripts.
 
 <details open><summary>Source</summary>
 
@@ -51,7 +51,7 @@ def run_prelaunch(
     config_path: Optional[str] = typer.Option(None, "--config", "-c", help="Path to config file."),
     mods_path: Optional[str] = typer.Option(None, "--mods", "-m", help="Path to mods file."),
 ):
-    """Run a prelaunch check (patches if updated since last patch time)."""
+    """Run prelaunch checks and scripts."""
     _apply_paths(config_path, mods_path)
     current_version = ""
     if os.path.exists(constants.dota_steam_inf_path):
@@ -68,14 +68,14 @@ def run_prelaunch(
     if patch_ran:
         print("Dota 2 version changed or first run. Starting patch...")
         run_patch(config_path=config_path, mods_path=mods_path)
-        _config.set("last_patch_time", time.time())
+        _config.set("last_patch_time", int(time.time()))
     else:
         print("Dota 2 version has not changed. Skipping patch.")
 
     if not patch_ran:
         any_ran = helper.bulk_exec_script("prelaunch")
         if any_ran:
-            _config.set("last_patch_time", time.time())
+            _config.set("last_patch_time", int(time.time()))
 
 ```
 

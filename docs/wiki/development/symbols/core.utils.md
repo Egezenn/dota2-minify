@@ -1,5 +1,76 @@
 # core.utils
 
+## `read_mod_states()`
+
+*No documentation available.*
+
+<details open><summary>Source</summary>
+
+```python
+def read_mod_states() -> dict:
+    if os.path.exists(_MOD_STATES_FILE):
+        try:
+            with open_utf8R(_MOD_STATES_FILE) as f:
+                return json.load(f)
+        except (json.JSONDecodeError, OSError):
+            return {}
+    return {}
+
+```
+
+</details>
+
+## `write_mod_states(states)`
+
+*No documentation available.*
+
+<details open><summary>Source</summary>
+
+```python
+def write_mod_states(states: dict) -> None:
+    os.makedirs(base.cache_dir, exist_ok=True)
+    with open_utf8R(_MOD_STATES_FILE, "w") as f:
+        json.dump(states, f, indent=2)
+
+```
+
+</details>
+
+## `get_mod_state(mod_name, key, default)`
+
+*No documentation available.*
+
+<details open><summary>Source</summary>
+
+```python
+def get_mod_state(mod_name: str, key: str, default=None):
+    states = read_mod_states()
+    mod_data = states.get(mod_name, {})
+    if key not in mod_data and default is not None:
+        states.setdefault(mod_name, {})[key] = default
+        write_mod_states(states)
+    return mod_data.get(key, default)
+
+```
+
+</details>
+
+## `set_mod_state(mod_name, key, value)`
+
+*No documentation available.*
+
+<details open><summary>Source</summary>
+
+```python
+def set_mod_state(mod_name: str, key: str, value) -> None:
+    states = read_mod_states()
+    states.setdefault(mod_name, {})[key] = value
+    write_mod_states(states)
+
+```
+
+</details>
+
 ## `ignore_if_headless(func)`
 
 *No documentation available.*
