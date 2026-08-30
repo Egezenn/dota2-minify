@@ -27,9 +27,9 @@ def uninstall():
     steam.remove_minify_lang()
     steam.restore_boot_language()
 
-    for browser_config in registry.get_browser_configs():
-        if hasattr(browser_config, "on_uninstall"):
-            browser_config.on_uninstall()
+    for plugin in registry.get_plugins():
+        if hasattr(plugin, "on_uninstall"):
+            plugin.on_uninstall()
 
     helper.bulk_exec_script("uninstall")
     output.add_text("&mods_removed_terminal")

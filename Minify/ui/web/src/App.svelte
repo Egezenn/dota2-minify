@@ -6,8 +6,13 @@
   import ModGrid from "./lib/components/ModGrid.svelte";
   import Terminal from "./lib/components/Terminal.svelte";
   import Settings from "./lib/components/Settings.svelte";
+  import DownloadNotification, { type DownloadItem } from "./lib/components/DownloadNotification.svelte";
 
-  let activeTab: "mods" | "terminal" | "settings" = "mods";
+  let activeTab: string = "mods";
+  let pluginTabs: Array<{ id: string; name: string; entry_point?: string }> = [];
+
+  let pluginContents: Record<string, string> = {};
+  let downloads: DownloadItem[] = [];
   let logs: Array<{ text: string; type: string; timestamp?: string }> = [];
   let isPatching = false;
   let autoScroll = true;
@@ -33,6 +38,7 @@
         isDebugEnv = Boolean(await api.is_debug_env());
       }
 
+      // 1. Core featureset loading first
       const [savedUiLang, savedGameLang, uiLangs, gameLangs] =
         await Promise.all([
           api.get_current_locale(),
@@ -59,10 +65,34 @@
       isPatching = Boolean(patchingState);
       if (Array.isArray(mods)) modsStore.set(mods);
       if (locDict) localeStore.set({ lang: targetUiLang, dict: locDict });
+
+      // 2. Plugins loaded asynchronously in the background
+      if (api.get_plugin_tabs) {
+        api.get_plugin_tabs().then(async (tabs) => {
+          pluginTabs = tabs || [];
+          if (api.get_plugin_content) {
+            const contentsMap: Record<string, string> = {};
+            for (const p of pluginTabs) {
+              try {
+                const html = await api.get_plugin_content(p.id);
+                if (html) {
+                  contentsMap[p.id] = html;
+                }
+              } catch (e) {
+                console.error(`Error loading content for plugin ${p.id}:`, e);
+              }
+            }
+            pluginContents = contentsMap;
+          }
+        }).catch((e) => {
+          console.error("Error loading plugin tabs:", e);
+        });
+      }
     } catch (err) {
       console.error("Error initializing PyWebView API:", err);
     }
   }
+
 
   async function initPyWebView() {
     if (window.pywebview?.api) {
@@ -94,12 +124,32 @@
       isPatching = status;
     };
 
+    window.onDownloadProgress = (data: DownloadItem) => {
+      const idx = downloads.findIndex((d) => d.id === data.id);
+      if (idx !== -1) {
+        downloads[idx] = { ...data };
+        downloads = [...downloads];
+      } else {
+        downloads = [...downloads, data];
+      }
+
+      if (data.status === "finished" || data.status === "error") {
+        setTimeout(() => {
+          handleDismissDownload(data.id);
+        }, 3500);
+      }
+    };
+
     initPyWebView();
 
     return () => {
       window.removeEventListener("contextmenu", handleContextMenu);
     };
   });
+
+  function handleDismissDownload(id: string) {
+    downloads = downloads.filter((d) => d.id !== id);
+  }
 
   function getCurrentTime() {
     const now = new Date();
@@ -169,6 +219,7 @@
     {currentGameLang}
     {availableGameLangs}
     {isPatching}
+    {pluginTabs}
     onTabChange={(tab) => (activeTab = tab)}
     onGameLangChange={handleGameLangChange}
     onPatch={handlePatch}
@@ -184,7 +235,26 @@
     <div class="tab-pane" class:hidden={activeTab !== "settings"}>
       <Settings active={activeTab === "settings"} onSettingChange={handleSettingChange} />
     </div>
+    {#each pluginTabs as plugin}
+      <div class="tab-pane" class:hidden={activeTab !== plugin.id}>
+        {#if pluginContents[plugin.id]}
+          <iframe
+            srcdoc={pluginContents[plugin.id]}
+            title={plugin.name}
+            class="plugin-frame"
+          ></iframe>
+        {:else if plugin.entry_point && !plugin.entry_point.startsWith("file://")}
+          <iframe
+            src={plugin.entry_point}
+            title={plugin.name}
+            class="plugin-frame"
+          ></iframe>
+        {/if}
+      </div>
+    {/each}
   </section>
+
+  <DownloadNotification {downloads} onDismiss={handleDismissDownload} />
 </main>
 
 <style>
@@ -211,5 +281,12 @@
 
   .tab-pane.hidden {
     display: none !important;
+  }
+
+  .plugin-frame {
+    width: 100%;
+    height: 100%;
+    border: none;
+    background: #fff;
   }
 </style>

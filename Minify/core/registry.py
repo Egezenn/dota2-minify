@@ -1,22 +1,26 @@
-"Central registry for browsers and plugins"
+"""Central registry for plugins."""
 
 
-class BrowserRegistry:
-    _configs = []
-
-    @classmethod
-    def register(cls, config_module):
-        if config_module not in cls._configs:
-            cls._configs.append(config_module)
+class PluginRegistry:
+    _plugins = []
 
     @classmethod
-    def get_configs(cls):
-        return cls._configs
+    def register(cls, plugin_obj):
+        if plugin_obj not in cls._plugins:
+            cls._plugins.append(plugin_obj)
+
+    @classmethod
+    def get_plugins(cls):
+        return cls._plugins
+
+    @classmethod
+    def clear(cls):
+        cls._plugins.clear()
 
 
-def register_browser(config_module):
-    BrowserRegistry.register(config_module)
+def register_plugin(plugin_obj):
+    PluginRegistry.register(plugin_obj)
 
 
-def get_browser_configs():
-    return BrowserRegistry.get_configs()
+def get_plugins():
+    return PluginRegistry.get_plugins()

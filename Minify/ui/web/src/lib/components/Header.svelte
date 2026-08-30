@@ -1,9 +1,11 @@
 <script lang="ts">
-  export let activeTab: "mods" | "terminal" | "settings";
+  export let activeTab: string;
   export let currentGameLang: string;
   export let availableGameLangs: string[];
   export let isPatching: boolean;
-  export let onTabChange: (tab: "mods" | "terminal" | "settings") => void;
+  export let pluginTabs: Array<{ id: string; name: string }> = [];
+
+  export let onTabChange: (tab: string) => void;
   export let onGameLangChange: (event: Event) => void;
   export let onPatch: () => void;
 </script>
@@ -30,6 +32,15 @@
     >
       Settings
     </button>
+
+    {#each pluginTabs as plugin}
+      <button
+        class="tab-btn {activeTab === plugin.id ? 'active' : ''}"
+        on:click={() => onTabChange(plugin.id)}
+      >
+        {plugin.name}
+      </button>
+    {/each}
   </nav>
 
   <div class="header-action">

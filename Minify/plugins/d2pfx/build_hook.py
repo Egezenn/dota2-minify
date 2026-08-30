@@ -6,7 +6,7 @@ import vpk
 from core import base, constants, fs, log, mods_shared, output
 from patch import manifest_utils, vpk_utils
 
-from browsers.d2pfx import config as browser_config
+from . import __main__ as plugin_main
 
 
 def run(mod_list):
@@ -64,7 +64,7 @@ def run(mod_list):
 
         if cat == "terrains":
             map_vpk_paths.extend(vpk_files)
-        elif cat in browser_config.RENAME_CATEGORIES:
+        elif cat in plugin_main.RENAME_CATEGORIES:
             pfx_high_priority[mod_name] = vpk_files
         else:
             pfx_normal[mod_name] = vpk_files

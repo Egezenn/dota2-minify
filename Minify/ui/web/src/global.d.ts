@@ -50,6 +50,9 @@ declare global {
         run_mod_function: (mod_name: string, function_name: string) => Promise<boolean>;
         reset_native_settings: () => Promise<boolean>;
         reset_mod_settings: (mod_name: string) => Promise<boolean>;
+        get_plugin_tabs?: () => Promise<Array<{ id: string; name: string; icon?: string; entry_point?: string }>>;
+        get_plugin_content?: (plugin_id: string) => Promise<string>;
+        call_plugin_api?: (plugin_id: string, action: string, params?: Record<string, any>) => Promise<any>;
       };
     };
     onLogReceived?: (logEntry: {
@@ -58,5 +61,13 @@ declare global {
       timestamp?: string;
     }) => void;
     onPatchStatusChange?: (status: boolean) => void;
+    onDownloadProgress?: (data: {
+      id: string;
+      name: string;
+      downloaded_bytes: number;
+      total_bytes: number;
+      status: "downloading" | "finished" | "error";
+      error?: string;
+    }) => void;
   }
 }

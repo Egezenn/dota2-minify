@@ -148,11 +148,13 @@ def restore_directory(source: str, backup: str):
     remove_path(backup)
 
 
-def download_file(url: str, target_path: str, progress_tag: Optional[str] = None) -> bool:
+def download_file(url: str, target_path: str, progress_tag: Optional[str] = None, name: Optional[str] = None) -> bool:
     """
     Downloads a file from url to target_path using requests.
-    Updates the UI progress_tag with \"Downloading: X.XX/Y.YY MB\" if provided.
+    Updates the UI progress_tag and emits download progress events.
     """
+    file_name = name or os.path.basename(target_path)
+    task_id = target_path
 
     try:
         response = requests.get(url, stream=True)
@@ -162,22 +164,26 @@ def download_file(url: str, target_path: str, progress_tag: Optional[str] = None
         downloaded = 0
         last_report_time = 0
 
+        output.emit_download_progress(task_id, file_name, 0, total_size, "downloading")
+
         with open(target_path, "wb") as f:
             for chunk in response.iter_content(chunk_size=block_size):
                 if chunk:
                     f.write(chunk)
                     downloaded += len(chunk)
-                    if progress_tag:
-                        current_time = time.time()
-                        if current_time - last_report_time >= 0.1:
+                    current_time = time.time()
+                    if current_time - last_report_time >= 0.1:
+                        output.emit_download_progress(task_id, file_name, downloaded, total_size, "downloading")
+                        if progress_tag:
                             downloaded_mb = downloaded / (1024 * 1024)
                             total_size_mb = total_size / (1024 * 1024)
                             if total_size > 0:
                                 output.add_text(f"Downloading: {downloaded_mb:.2f}/{total_size_mb:.2f} MB")
                             else:
                                 output.add_text(f"Downloading: {downloaded_mb:.2f} MB")
-                            last_report_time = current_time
+                        last_report_time = current_time
 
+        output.emit_download_progress(task_id, file_name, downloaded, total_size, "finished")
         if progress_tag:
             downloaded_mb = downloaded / (1024 * 1024)
             total_size_mb = total_size / (1024 * 1024)
@@ -188,6 +194,8 @@ def download_file(url: str, target_path: str, progress_tag: Optional[str] = None
 
         return True
     except Exception as e:
+        err_msg = str(e)
+        output.emit_download_progress(task_id, file_name, 0, 0, "error", error=err_msg)
         output.add_text(f"Failed to open {target_path}: {e}", msg_type="error")
         return False
 

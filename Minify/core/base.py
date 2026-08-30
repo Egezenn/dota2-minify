@@ -57,6 +57,20 @@ STEAM_DOTA_ID = "570"
 STEAM_DOTA_WORKSHOP_TOOLS_ID = "313250"
 
 # static directory names
+if FROZEN:
+    base_dir = os.path.dirname(os.path.abspath(sys.executable))
+    web_dir = os.path.abspath(os.path.join(base_dir, "ui"))
+else:
+    base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    web_dir = os.path.abspath(os.path.join(base_dir, "ui", "dist"))
+
+plugins_dir = os.path.abspath(os.path.join(base_dir, "plugins"))
+dist_index = os.path.abspath(os.path.join(web_dir, "index.html"))
+
+if base_dir not in sys.path:
+    sys.path.insert(0, base_dir)
+
+
 bin_dir = "bin"
 build_dir = "vpk_build"
 replace_dir = "vpk_replace"
@@ -65,6 +79,7 @@ logs_dir = "logs"
 mods_dir = "mods"
 config_dir = "config"
 cache_dir = "cache"
+
 
 # bin
 blank_files_dir = os.path.join(bin_dir, "blank-files")

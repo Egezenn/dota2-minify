@@ -8,6 +8,8 @@ Minify/config
 Minify/logs
 Minify/backup
 Minify/mods/*
+Minify/plugins/*
+Minify/plugins/*/ui
 scripts/ffi_*.txt
 
 ## Dependencies
@@ -69,6 +71,9 @@ Minify/mods/Custom Backgrounds/*.png
 Minify/mods/Custom Backgrounds/*.web[mp]
 Minify/mods/Custom Backgrounds/video_success
 Minify/mods/User Styles/styling.css
+
+# Official Plug-ins
+!Minify/plugins/d2pfx
 
 # misc
 __pycache__

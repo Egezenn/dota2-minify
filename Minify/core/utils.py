@@ -108,17 +108,20 @@ def parse_color(val):
 
 
 def setup_system():
-    import browsers
     import conditions
     import helper
+    import plugins
 
     from core import fs, localization, migrations, utils
 
     localization.load_headless()
     conditions.is_dota_running("&error_please_close_dota_terminal", "error")
     conditions.is_compiler_found()
-    conditions.resolve_dependencies()
-    browsers.initialize()
+
+    if base.HEADLESS:
+        conditions.resolve_dependencies()
+
+    plugins.initialize()
     helper.bulk_exec_script("initial", False)
 
 

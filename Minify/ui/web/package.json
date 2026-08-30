@@ -5,8 +5,10 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "node build.js",
+    "build:no-plugins": "node build.js --no-plugins",
     "preview": "vite preview"
+
   },
   "dependencies": {
     "marked": "^18.0.11",

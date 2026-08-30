@@ -1,9 +1,13 @@
 import base64
 import json
 import os
+import re
+import sys
+
 import threading
 import time
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Optional
+
 
 import helper
 import patch
@@ -19,9 +23,18 @@ class Api:
         self._lock = threading.Lock()
 
         output.register_listener(self._on_output_log)
+        output.register_download_listener(self._on_download_progress)
 
     def set_window(self, window: Any) -> None:
         self._window = window
+
+    def _on_download_progress(self, data: Dict[str, Any]) -> None:
+        if self._window:
+            try:
+                js_str = json.dumps(data)
+                self._window.evaluate_js(f"window.onDownloadProgress && window.onDownloadProgress({js_str});")
+            except Exception:
+                pass
 
     def _on_output_log(self, text: str, msg_type: str | None) -> None:
         log_entry = {
@@ -274,6 +287,64 @@ class Api:
         except Exception:
             return False
 
+    def _parse_setting_item(
+        self, item: dict, mod_folder: str | None = None, plugin_folder: str | None = None
+    ) -> Dict[str, Any] | None:
+        if not isinstance(item, dict):
+            return None
+        key = item.get("key")
+        stype = item.get("type")
+        if not key or not stype:
+            return None
+
+        stype_str = str(stype).lower()
+        default_val = item.get("default")
+        if default_val is None:
+            if stype_str == "checkbox":
+                default_val = False
+            elif stype_str in ("inputbox", "text", "color"):
+                default_val = ""
+            elif stype_str in ("number", "slider"):
+                default_val = item.get("min", 0)
+            elif stype_str == "list":
+                default_val = []
+            elif stype_str == "combo":
+                items = item.get("items", [])
+                default_val = items[0] if items else ""
+
+        schema_entry = {
+            "key": key,
+            "text": item.get("text", key),
+            "type": stype_str,
+            "default": default_val,
+        }
+
+        if mod_folder:
+            schema_entry["mod"] = mod_folder
+        if plugin_folder:
+            schema_entry["plugin"] = plugin_folder
+        if "force" in item:
+            schema_entry["force"] = bool(item["force"])
+
+        if stype_str == "combo":
+            schema_entry["items"] = item.get("items", [])
+        elif stype_str in ("number", "slider"):
+            vtype = item.get("var_type")
+            if not vtype:
+                vtype = "float" if isinstance(default_val, float) else "int"
+            schema_entry["var_type"] = vtype
+            schema_entry["step"] = item.get("step", 0.1 if vtype == "float" else 1)
+            if "min" in item:
+                schema_entry["min"] = item["min"]
+            elif stype_str == "slider":
+                schema_entry["min"] = 0
+            if "max" in item:
+                schema_entry["max"] = item["max"]
+            elif stype_str == "slider":
+                schema_entry["max"] = 100
+
+        return schema_entry
+
     def get_settings(self) -> Dict[str, Any]:
         try:
             mods_shared.scan_mods()
@@ -284,10 +355,14 @@ class Api:
             if not isinstance(native_schema, list):
                 native_schema = []
 
-            settings_schema = [dict(item) for item in native_schema if isinstance(item, dict)]
-            values = {
-                item["key"]: config.get(item["key"], item.get("default")) for item in settings_schema if "key" in item
-            }
+            settings_schema = []
+            values = {}
+
+            for item in native_schema:
+                parsed = self._parse_setting_item(item)
+                if parsed:
+                    settings_schema.append(parsed)
+                    values[parsed["key"]] = config.get(parsed["key"], parsed["default"])
 
             if os.path.exists(base.mods_dir):
                 for mod_folder in sorted(os.listdir(base.mods_dir)):
@@ -306,64 +381,41 @@ class Api:
                     mod_enabled = always or mods_shared.get_state(mod_folder)
 
                     for item in mod_settings_list:
-                        if not isinstance(item, dict):
-                            continue
-                        key = item.get("key")
-                        stype = item.get("type")
-                        if not key or not stype:
-                            continue
-
-                        force = bool(item.get("force", False))
+                        force = bool(item.get("force", False)) if isinstance(item, dict) else False
                         if not (force or mod_enabled):
                             continue
 
-                        stype_str = str(stype).lower()
+                        parsed = self._parse_setting_item(item, mod_folder=mod_folder)
+                        if parsed:
+                            mod_store = config.get_mod(mod_folder, {})
+                            cur_val = mod_store.get(parsed["key"], parsed["default"])
+                            values[parsed["key"]] = cur_val
+                            settings_schema.append(parsed)
 
-                        default_val = item.get("default")
-                        if default_val is None:
-                            if stype_str == "checkbox":
-                                default_val = False
-                            elif stype_str in ("inputbox", "color"):
-                                default_val = ""
-                            elif stype_str in ("number", "slider"):
-                                default_val = item.get("min", 0)
-                            elif stype_str == "list":
-                                default_val = []
-                            elif stype_str == "combo":
-                                items = item.get("items", [])
-                                default_val = items[0] if items else ""
+            # Plugin manifest settings discovery
+            plugins_dir = base.plugins_dir
+            if os.path.exists(plugins_dir):
+                for plugin_folder in sorted(os.listdir(plugins_dir)):
+                    if plugin_folder.startswith((".", "_")):
+                        continue
+                    plugin_path = os.path.join(plugins_dir, plugin_folder)
+                    if not os.path.isdir(plugin_path):
+                        continue
 
-                        schema_entry = {
-                            "key": key,
-                            "text": item.get("text", key),
-                            "type": stype_str,
-                            "default": default_val,
-                            "mod": mod_folder,
-                        }
-                        if force:
-                            schema_entry["force"] = True
-
-                        if stype_str == "combo":
-                            schema_entry["items"] = item.get("items", [])
-                        elif stype_str in ("number", "slider"):
-                            vtype = item.get("var_type")
-                            if not vtype:
-                                vtype = "float" if isinstance(default_val, float) else "int"
-                            schema_entry["var_type"] = vtype
-                            schema_entry["step"] = item.get("step", 0.1 if vtype == "float" else 1)
-                            if "min" in item:
-                                schema_entry["min"] = item["min"]
-                            elif stype_str == "slider":
-                                schema_entry["min"] = 0
-                            if "max" in item:
-                                schema_entry["max"] = item["max"]
-                            elif stype_str == "slider":
-                                schema_entry["max"] = 100
-
-                        mod_store = config.get_mod(mod_folder, {})
-                        cur_val = mod_store.get(key, default_val)
-                        values[key] = cur_val
-                        settings_schema.append(schema_entry)
+                    manifest_path = os.path.join(plugin_path, "manifest.json")
+                    if os.path.isfile(manifest_path):
+                        try:
+                            manifest = config.read_json_file(manifest_path)
+                            if isinstance(manifest, dict):
+                                plugin_settings_list = manifest.get("settings")
+                                if isinstance(plugin_settings_list, list):
+                                    for item in plugin_settings_list:
+                                        parsed = self._parse_setting_item(item, plugin_folder=plugin_folder)
+                                        if parsed:
+                                            settings_schema.append(parsed)
+                                            values[parsed["key"]] = config.get(parsed["key"], parsed["default"])
+                        except Exception as e:
+                            output.add_text(f"Error reading plugin manifest {manifest_path}: {e}", msg_type="warning")
 
             return {"schema": settings_schema, "values": values}
         except Exception as e:
@@ -420,6 +472,121 @@ class Api:
             output.add_text(f"reset_mod_settings error for {mod_name}: {e}", msg_type="error")
             return False
 
+    def _resolve_plugin_entry(self, p_path: str) -> Optional[str]:
+        target = os.path.abspath(os.path.join(p_path, "ui", "index.html"))
+        return target if os.path.isfile(target) else None
+
+    def get_plugin_tabs(self) -> List[Dict[str, Any]]:
+        tabs = []
+        try:
+            plugins_dir = base.plugins_dir
+            if os.path.exists(plugins_dir):
+                for p_name in sorted(os.listdir(plugins_dir)):
+                    p_path = os.path.join(plugins_dir, p_name)
+                    manifest_path = os.path.join(p_path, "manifest.json")
+                    if os.path.isfile(manifest_path):
+                        try:
+                            manifest = config.read_json_file(manifest_path)
+                            if isinstance(manifest, dict) and "id" in manifest and "name" in manifest:
+                                abs_entry = self._resolve_plugin_entry(p_path)
+                                if abs_entry and os.path.isfile(abs_entry):
+                                    entry_url = (
+                                        f"file://{abs_entry}"
+                                        if not base.is_win
+                                        else f"file:///{abs_entry.replace('\\', '/')}"
+                                    )
+                                    tabs.append(
+                                        {
+                                            "id": manifest["id"],
+                                            "name": manifest["name"],
+                                            "entry_point": entry_url,
+                                        }
+                                    )
+
+                        except Exception as e:
+                            output.add_text(f"Error reading plugin manifest {manifest_path}: {e}", msg_type="warning")
+        except Exception as e:
+            output.add_text(f"get_plugin_tabs error: {e}", msg_type="error")
+        return tabs
+
+    def get_plugin_content(self, plugin_id: str) -> str:
+        try:
+            plugins_dir = base.plugins_dir
+            p_path = os.path.join(plugins_dir, plugin_id)
+            manifest_path = os.path.join(p_path, "manifest.json")
+            if os.path.isfile(manifest_path):
+                manifest = config.read_json_file(manifest_path)
+                abs_entry = self._resolve_plugin_entry(p_path)
+                if abs_entry and os.path.isfile(abs_entry):
+                    with open(abs_entry, "r", encoding="utf-8") as f:
+                        content = f.read()
+
+                    plugin_dir = os.path.dirname(abs_entry)
+
+                    def _inline_file(match, attr_name: str, template: str) -> str:
+                        url = match.group(attr_name)
+                        if url.startswith(("http://", "https://", "data:", "//")):
+                            return match.group(0)
+                        file_path = os.path.normpath(os.path.join(plugin_dir, url.lstrip("./")))
+                        if os.path.isfile(file_path):
+                            with open(file_path, "r", encoding="utf-8") as f:
+                                return template.format(f.read())
+                        return match.group(0)
+
+                    content = re.sub(
+                        r'<link\s+[^>]*?href=["\'](?P<url>[^"\']+)["\'][^>]*?>',
+                        lambda m: _inline_file(m, "url", "<style>\n{}\n</style>"),
+                        content,
+                        flags=re.IGNORECASE,
+                    )
+                    content = re.sub(
+                        r'<script\s+[^>]*?src=["\'](?P<url>[^"\']+)["\'][^>]*?>\s*</script>',
+                        lambda m: _inline_file(m, "url", '<script type="module">\n{}\n</script>'),
+                        content,
+                        flags=re.IGNORECASE,
+                    )
+                    return content
+        except Exception as e:
+            output.add_text(f"get_plugin_content error: {e}", msg_type="error")
+        return ""
+
+    def call_plugin_api(self, plugin_id: str, action: str, params: Dict[str, Any] = None) -> Any:
+        try:
+            import importlib.util
+
+            plugins_dir = base.plugins_dir
+            p_path = os.path.join(plugins_dir, plugin_id)
+            if not os.path.isdir(p_path):
+                return {"error": f"Plugin '{plugin_id}' not found on disk."}
+
+            api_file = os.path.join(p_path, "api.py")
+            if not os.path.isfile(api_file):
+                api_file = os.path.join(p_path, "build_hook.py")
+
+            mod = None
+            if os.path.isfile(api_file):
+                mod_name = f"plugins.{plugin_id}.{os.path.splitext(os.path.basename(api_file))[0]}"
+                if mod_name in sys.modules:
+                    mod = sys.modules[mod_name]
+                else:
+                    spec = importlib.util.spec_from_file_location(
+                        mod_name, api_file, submodule_search_locations=[p_path]
+                    )
+                    if spec and spec.loader:
+                        mod = importlib.util.module_from_spec(spec)
+                        sys.modules[mod_name] = mod
+                        spec.loader.exec_module(mod)
+
+            if mod:
+                if hasattr(mod, "handle_api"):
+                    return mod.handle_api(action, params or {})
+                elif hasattr(mod, action):
+                    return getattr(mod, action)(params or {})
+        except Exception as e:
+            output.add_text(f"call_plugin_api error ({plugin_id}.{action}): {e}", msg_type="error")
+            return {"error": str(e)}
+        return {"error": f"Action '{action}' not handled by plugin '{plugin_id}'."}
+
 
 def _apply_tiling_wm_floating_hints() -> None:
     if not base.is_linux:
@@ -457,7 +624,7 @@ def _apply_tiling_wm_floating_hints() -> None:
 
     # Qt platform
     with utils.try_pass():
-        import webview.platforms.qt as qt_pBlatform
+        import webview.platforms.qt as qt_platform
 
         orig_qt_init = qt_platform.BrowserView.__init__
 
@@ -478,9 +645,12 @@ def launch() -> None:
 
     _apply_tiling_wm_floating_hints()
 
-    ui_dir = os.path.dirname(os.path.abspath(__file__))
-    dist_index = os.path.join(ui_dir, "web", "dist", "index.html")
-    url = dist_index
+    url = base.dist_index
+    if not os.path.isfile(url):
+        output.add_text(
+            f"Error: Web UI build file not found at '{url}'. Please run 'npm run build' inside Minify/ui/web.",
+            msg_type="error",
+        )
 
     debug_mode = bool(config.get("debug_env"))
     webview.settings["OPEN_DEVTOOLS_IN_DEBUG"] = False

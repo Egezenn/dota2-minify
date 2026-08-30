@@ -29,8 +29,10 @@ a = Analysis(
     ["../Minify/__main__.py"],
     pathex=["../Minify"],
     binaries=binaries,
+    excludes=["plugins"],
     hiddenimports=["tkinter"],
 )
+
 pyz = PYZ(a.pure)
 
 exe = EXE(

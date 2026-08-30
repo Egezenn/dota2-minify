@@ -324,11 +324,11 @@ def patcher():
                         fs.remove_path(pak65_path)
 
         # ---------------------------------- STEP 6 ---------------------------------- #
-        # --------------------------- Run Browser Hooks ------------------------------ #
+        # --------------------------- Run Plugin Hooks ------------------------------- #
         # ---------------------------------------------------------------------------- #
-        for browser_config in registry.get_browser_configs():
-            if hasattr(browser_config, "on_build"):
-                browser_config.on_build(mod_list)
+        for plugin in registry.get_plugins():
+            if hasattr(plugin, "on_build"):
+                plugin.on_build(mod_list)
 
         # ---------------------------------- STEP 7 ---------------------------------- #
         # -------------------------- Clean paths and inform -------------------------- #

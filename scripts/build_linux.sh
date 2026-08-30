@@ -5,13 +5,41 @@ cd "$(dirname "$0")"
 rm -rf build
 rm -rf dist
 
-uv run pyinstaller Minify.spec
-
 SRC="$(pwd)/../Minify"
 
-if [ "$1" = "-sym" ]; then
+SYM_LINK=false
+NO_PLUGINS=false
+
+for arg in "$@"; do
+    case "$arg" in
+        -sym|--sym)
+            SYM_LINK=true
+            ;;
+        --no-plugins)
+            NO_PLUGINS=true
+            ;;
+    esac
+done
+
+if [ -d "$SRC/ui/web" ]; then
+    if [ "$NO_PLUGINS" = true ]; then
+        echo "Building web UI (no plugins)..."
+        (cd "$SRC/ui/web" && npm run build -- --no-plugins)
+    else
+        echo "Building web UI and plugins..."
+        (cd "$SRC/ui/web" && npm run build)
+    fi
+fi
+
+uv run pyinstaller Minify.spec
+
+if [ "$SYM_LINK" = true ]; then
     ln -s "$SRC/bin" dist/Minify/bin
     ln -s "$SRC/mods" dist/Minify/mods
+    ln -s "$SRC/ui/dist" dist/Minify/ui
+    if [ "$NO_PLUGINS" = false ] && [ -d "$SRC/plugins" ]; then
+        ln -s "$SRC/plugins" dist/Minify/plugins
+    fi
     if [ -d "$SRC/config" ]; then
         ln -s "$SRC/config" dist/Minify/config
     fi
@@ -27,6 +55,11 @@ if [ "$1" = "-sym" ]; then
 else
     cp -r ../Minify/bin dist/Minify/bin
     cp -r ../Minify/mods dist/Minify/mods
+    cp -r ../Minify/ui/dist dist/Minify/ui
+
+    if [ "$NO_PLUGINS" = false ] && [ -d ../Minify/plugins ]; then
+        cp -r ../Minify/plugins dist/Minify/
+    fi
     if [ -d ../Minify/bin/rescomproot ]; then
         cp -r ../Minify/bin/rescomproot dist/Minify/bin/
     fi

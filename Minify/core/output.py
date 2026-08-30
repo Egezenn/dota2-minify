@@ -7,6 +7,7 @@ RESET = "\033[0m"
 
 
 _listeners = []
+_download_listeners = []
 
 
 def register_listener(callback):
@@ -17,6 +18,34 @@ def register_listener(callback):
 def unregister_listener(callback):
     if callback in _listeners:
         _listeners.remove(callback)
+
+
+def register_download_listener(callback):
+    if callback not in _download_listeners:
+        _download_listeners.append(callback)
+
+
+def unregister_download_listener(callback):
+    if callback in _download_listeners:
+        _download_listeners.remove(callback)
+
+
+def emit_download_progress(
+    task_id: str, name: str, downloaded_bytes: int, total_bytes: int, status: str, error: str | None = None
+):
+    data = {
+        "id": task_id,
+        "name": name,
+        "downloaded_bytes": downloaded_bytes,
+        "total_bytes": total_bytes,
+        "status": status,
+        "error": error,
+    }
+    for listener in list(_download_listeners):
+        try:
+            listener(data)
+        except Exception:
+            pass
 
 
 def add_text(text_or_id, *args, msg_type: str | None = None, **kwargs):

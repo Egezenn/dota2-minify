@@ -10,6 +10,7 @@
     type: string;
     default?: any;
     mod?: string | null;
+    plugin?: string | null;
     force?: boolean;
     items?: string[];
     var_type?: "int" | "float";
@@ -66,6 +67,8 @@
   async function runModFunction(item: SettingItem) {
     if (item.mod && window.pywebview?.api?.run_mod_function) {
       await window.pywebview.api.run_mod_function(item.mod, item.key);
+    } else if (item.plugin && window.pywebview?.api?.call_plugin_api) {
+      await window.pywebview.api.call_plugin_api(item.plugin, item.key);
     }
   }
 
@@ -131,7 +134,11 @@
   $: sections = (() => {
     const map = new Map<string, SettingItem[]>();
     for (const item of schema) {
-      const secName = item.mod ? item.mod : "Application Settings";
+      const secName = item.plugin
+        ? `Plugin: ${item.plugin}`
+        : item.mod
+        ? item.mod
+        : "Application Settings";
       if (!map.has(secName)) {
         map.set(secName, []);
       }
@@ -175,7 +182,7 @@
                 />
                 <span class="setting-text">{item.text}</span>
               </label>
-            {:else if item.type === "inputbox"}
+            {:else if item.type === "inputbox" || item.type === "text"}
               <div class="setting-item-row">
                 <span class="setting-label">{item.text}</span>
                 <input

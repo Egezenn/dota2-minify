@@ -10,7 +10,7 @@ from core import base, config, fs
 # D2PFX Browser Constants
 BASE_URL = "https://raw.githubusercontent.com/h6rd/Dota2PornFxWeb/data/"
 ASSETS_URL = "https://raw.githubusercontent.com/h6rd/Dota2PornFxWeb/main/assets/files/"
-CACHE_DIR = os.path.join(base.cache_dir, "browsers", "d2pfx")
+CACHE_DIR = os.path.join(base.cache_dir, "plugins", "d2pfx")
 PREVIEWS_CACHE_DIR = os.path.join(CACHE_DIR, "previews")
 BLACKLIST = [
     "guides",
@@ -33,8 +33,8 @@ class DataManager:
         self.metadata = {}
         self.constants = {}
 
-    def download_file(self, url, dest, progress_tag=None):
-        return fs.download_file(url, dest, progress_tag=progress_tag)
+    def download_file(self, url, dest, progress_tag=None, name=None):
+        return fs.download_file(url, dest, progress_tag=progress_tag, name=name)
 
     def fetch_gz_json(self, filename, force_refresh=False):
         local_path = os.path.join(self.cache_dir, filename.replace(".gz", ""))

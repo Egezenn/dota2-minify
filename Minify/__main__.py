@@ -31,8 +31,6 @@ import ui
 from core import base, constants, mods_shared, utils
 from core import config as _config
 
-base.HEADLESS = True
-
 app = typer.Typer(
     name="dota2-minify",
     help="Dota2-Minify CLI and GUI.",
@@ -188,5 +186,7 @@ def uninstall(
 
 
 if __name__ == "__main__":
+    has_subcommand = len(sys.argv) > 1 and sys.argv[1] not in ["-h", "--help", "-v", "--version"]
+    base.HEADLESS = bool(has_subcommand)
     utils.setup_system()
     app()
