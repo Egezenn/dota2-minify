@@ -142,13 +142,17 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 8px 12px;
+    height: 38px;
+    padding: 6px 8px;
     border-bottom: 1px solid #000;
+    box-sizing: border-box;
   }
 
   .modal-header h2 {
     font-size: 15px;
+    font-weight: bold;
     margin: 0;
+    line-height: 1.2;
   }
 
   .close-btn {

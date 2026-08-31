@@ -73,6 +73,9 @@ Minify/mods/Custom Backgrounds/video_success
 Minify/mods/User Styles/styling.css
 
 # Official Plug-ins
+!Minify/plugins/__init__.py
+!Minify/plugins/package.json
+!Minify/plugins/tsconfig.json
 !Minify/plugins/d2pfx
 
 # misc

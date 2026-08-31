@@ -19,7 +19,17 @@ Thank you for your interest in contributing! Whether you're fixing a bug, sugges
    This project uses `uv` for dependency management.
 
    ```shell
+   npm --prefix Minify/ui/web install
+   ```
+
+   ```shell
    uv run Minify
+   ```
+
+   For any UI changes:
+
+   ```shell
+   npm --prefix Minify/ui/web run build
    ```
 
    _Note: This will automatically handle the environment and dependencies._
@@ -43,14 +53,8 @@ This script will automatically sync dependencies, check formatting, run the lint
 If you are using VSCode, the following recommended extensions can be found in `.vscode/extensions.json`.
 
 Additionally, we have pre-configured tasks available to streamline development. You can quickly run the application using `Ctrl+Shift+B`.
-Other handy tasks available via `Tasks: Run Task` include:
 
-- **Build via PyInstaller**: Compiles the standalone executable.
-- **Build Installer**: Compiles the app and generates the Inno Setup installer.
-- **Clean**: Clears out build directories (`build/`, `dist/`).
-- **Launch Setup / Installed App**: Quickly test the generated installer or the installed application.
-
-Debugger configurations are also available in `.vscode/launch.json`. However, the overhead of a debugger is rarely worth it; you can typically achieve the same results much faster through rapid iteration—simply run the application and fix errors as they appear in the terminal or `Minify/logs`. For testing logic without a GUI, you can use the CLI mode: `uv run minify --help`.
+Debugger configurations are also available in `.vscode/launch.json`. However, the overhead of a debugger is rarely worth it; you can typically achieve the same results much faster through rapid iteration—simply run the application and fix errors as they appear in the terminal or `Minify/logs`. For testing logic without a GUI, you can use the CLI mode: `uv run Minify --help`.
 
 ## Mod Development
 

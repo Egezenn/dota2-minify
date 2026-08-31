@@ -59,10 +59,12 @@ STEAM_DOTA_WORKSHOP_TOOLS_ID = "313250"
 # static directory names
 if FROZEN:
     base_dir = os.path.dirname(os.path.abspath(sys.executable))
-    web_dir = os.path.abspath(os.path.join(base_dir, "ui"))
+    bundle_dir = getattr(sys, "_MEIPASS", base_dir)
+    web_dir = os.path.abspath(os.path.join(bundle_dir, "ui"))
 else:
     base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    web_dir = os.path.abspath(os.path.join(base_dir, "ui", "dist"))
+    bundle_dir = base_dir
+    web_dir = os.path.abspath(os.path.join(base_dir, "ui", "web", "dist"))
 
 plugins_dir = os.path.abspath(os.path.join(base_dir, "plugins"))
 dist_index = os.path.abspath(os.path.join(web_dir, "index.html"))
@@ -72,6 +74,7 @@ if base_dir not in sys.path:
 
 
 bin_dir = "bin"
+bundle_bin_dir = os.path.abspath(os.path.join(bundle_dir, "bin"))
 build_dir = "vpk_build"
 replace_dir = "vpk_replace"
 merge_dir = "vpk_merge"
@@ -84,7 +87,8 @@ cache_dir = "cache"
 # bin
 blank_files_dir = os.path.join(bin_dir, "blank-files")
 img_dir = os.path.join(bin_dir, "images")
-localization_file_dir = os.path.join(bin_dir, "localization.json")
+localization_file_dir = os.path.join(bundle_bin_dir, "localization.json")
+settings_file_dir = os.path.join(bundle_bin_dir, "settings.json")
 rescomp_override_dir = os.path.join(bin_dir, "rescomproot")
 sounds_dir = os.path.join(bin_dir, "sounds")
 
@@ -97,6 +101,7 @@ log_rescomp = os.path.join(logs_dir, "resourcecompiler.txt")
 
 # cache
 dota_steam_inf_cache = os.path.join(cache_dir, "steam.inf")
+states_file_dir = os.path.join(cache_dir, "states.json")
 
 # config
 main_config_file_dir = os.path.join(config_dir, "minify_config.json")

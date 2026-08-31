@@ -5,7 +5,7 @@ import sys
 
 import jsonc
 
-from core import base, constants, utils
+from core import base, utils
 
 mods_alphabetical = []
 mods_with_order = []
@@ -13,6 +13,21 @@ visually_unavailable_mods = []
 visually_available_mods = []
 mod_dependencies_list = []
 mod_conflicts_list = []
+
+
+def is_ignored_folder(name: str) -> bool:
+    """Returns True if folder is a hidden or ignored directory (starts with . or _)."""
+    return name.startswith((".", "_"))
+
+
+def is_system_mod(name: str) -> bool:
+    """Returns True if mod is an internal core system mod (starts with #)."""
+    return name.startswith("#")
+
+
+def is_user_mod(name: str) -> bool:
+    """Returns True if mod is a user-selectable mod (not ignored and not a system mod)."""
+    return not is_ignored_folder(name) and not is_system_mod(name)
 
 
 def get_state(mod):
@@ -33,7 +48,7 @@ def set_state(mod, value):
 
 
 def enforce_locale_mod_states():
-    from core import config
+    from core import config, constants
 
     locale = config.get("output_locale", "english")
 
@@ -70,7 +85,7 @@ def scan_mods():
 
     for mod in sorted(os.listdir(base.mods_dir), key=str.casefold):
         mod_path = os.path.join(base.mods_dir, mod)
-        if not mod.startswith("_"):
+        if not is_ignored_folder(mod):
             if os.path.isdir(mod_path):
                 _alphabetical.append(mod)
 

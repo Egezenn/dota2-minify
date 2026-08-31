@@ -5,7 +5,8 @@
   import ModCard from "./ModCard.svelte";
   import ModDetailsModal from "./ModDetailsModal.svelte";
 
-  export let onSaveMods: (data: Record<string, boolean>) => void;
+  export let onSaveMods: ((data: Record<string, boolean>) => void) | undefined =
+    undefined;
 
   let searchQuery = "";
   let selectedModForDetails: string | null = null;
@@ -25,7 +26,7 @@
 
     const payload: Record<string, boolean> = {};
     updated.forEach((m) => (payload[m.name] = m.enabled));
-    onSaveMods(payload);
+    if (onSaveMods) onSaveMods(payload);
   }
 
   function openDetails(modName: string) {
@@ -84,15 +85,25 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 6px 8px;
+    height: 38px;
+    padding: 0 8px;
     border-bottom: 1px solid #000;
     font-size: 13px;
+    box-sizing: border-box;
+  }
+
+  .toolbar-title {
+    display: flex;
+    align-items: center;
   }
 
   .toolbar-title h3 {
     margin: 0;
     font-size: 15px;
     font-weight: bold;
+    line-height: 1;
+    display: flex;
+    align-items: center;
   }
 
   .toolbar-controls {
@@ -108,17 +119,25 @@
   }
 
   .search-box input {
-    padding: 4px 8px;
+    height: 24px;
+    padding: 0 8px;
     border: 1px solid #000;
     font-size: 13px;
+    box-sizing: border-box;
   }
 
   .search-box button {
-    padding: 4px 8px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 24px;
+    padding: 0 8px;
     border: 1px solid #000;
     background: #fff;
     color: #000;
     cursor: pointer;
+    line-height: 1;
+    box-sizing: border-box;
   }
 
   .mod-grid {

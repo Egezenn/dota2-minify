@@ -5,13 +5,12 @@ import os
 import time
 
 import requests
-from core import base, config, fs
+from core import base, config, fs, utils
 
 # D2PFX Browser Constants
 BASE_URL = "https://raw.githubusercontent.com/h6rd/Dota2PornFxWeb/data/"
 ASSETS_URL = "https://raw.githubusercontent.com/h6rd/Dota2PornFxWeb/main/assets/files/"
 CACHE_DIR = os.path.join(base.cache_dir, "plugins", "d2pfx")
-PREVIEWS_CACHE_DIR = os.path.join(CACHE_DIR, "previews")
 BLACKLIST = [
     "guides",
     "item-sounds",
@@ -28,13 +27,12 @@ BLACKLIST = [
 class DataManager:
     def __init__(self):
         self.cache_dir = CACHE_DIR
-        self.previews_dir = PREVIEWS_CACHE_DIR
-        fs.create_dirs(self.cache_dir, self.previews_dir)
+        fs.create_dirs(self.cache_dir)
         self.metadata = {}
         self.constants = {}
 
-    def download_file(self, url, dest, progress_tag=None, name=None):
-        return fs.download_file(url, dest, progress_tag=progress_tag, name=name)
+    def download_file(self, url, dest, progress_tag=None, name=None, emit_progress=True):
+        return fs.download_file(url, dest, progress_tag=progress_tag, name=name, emit_progress=emit_progress)
 
     def fetch_gz_json(self, filename, force_refresh=False):
         local_path = os.path.join(self.cache_dir, filename.replace(".gz", ""))
@@ -64,13 +62,13 @@ class DataManager:
         self.metadata = self.fetch_gz_json("mods.json.gz", force_refresh=True)
         self.constants = self.fetch_gz_json("constants.json.gz", force_refresh=True)
         if self.metadata is not None:
-            config.set("d2pfx_last_refresh", int(time.time()))
+            utils.set_state("d2pfx", "last_refresh", int(time.time()))
         return self.metadata is not None
 
     def _needs_refresh(self):
         if not config.get("d2pfx_auto_refresh_catalogue", True):
             return False
-        last_refresh = config.get("d2pfx_last_refresh", 0)
+        last_refresh = utils.get_state("d2pfx", "last_refresh") or config.get("d2pfx_last_refresh", 0)
         return (time.time() - last_refresh) > 86400
 
     def load(self):
@@ -132,7 +130,9 @@ class DataManager:
         return flattened
 
     def get_preview_url(self, cat_id, filename):
-        if filename and filename.endswith(".webp"):
+        if not filename:
+            return None
+        if filename.endswith(".webp"):
             filename = filename.replace(".webp", ".jpg")
         return f"{BASE_URL}previews/{cat_id}/{filename}"
 

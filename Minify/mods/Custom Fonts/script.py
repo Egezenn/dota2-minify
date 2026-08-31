@@ -181,7 +181,7 @@ def main():
 
     try:
         source_hash = hashlib.sha256(found_font_data).hexdigest()
-        stored_hash = utils.get_mod_state(mod_name, "source_hash")
+        stored_hash = utils.get_state(mod_name, "source_hash")
     except Exception:
         source_hash = None
         stored_hash = None
@@ -200,7 +200,7 @@ def main():
         output.add_text(f"Installed: {name}")
 
     if source_hash is not None:
-        utils.set_mod_state(mod_name, "source_hash", source_hash)
+        utils.set_state(mod_name, "source_hash", source_hash)
 
     with open(os.path.join(dota_fonts_path, ".uuid"), "w") as f:
         f.write(str(uuid.uuid4()))

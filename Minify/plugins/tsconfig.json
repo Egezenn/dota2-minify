@@ -1,0 +1,6 @@
+{
+  "extends": "../ui/web/tsconfig.json",
+  "compilerOptions": {
+    "verbatimModuleSyntax": true
+  }
+}

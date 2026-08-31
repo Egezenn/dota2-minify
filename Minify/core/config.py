@@ -38,8 +38,7 @@ def update_json_file(path: str, key: str, value: Any) -> Any:
 
 
 def _get_default_setting(key: str) -> Any:
-    settings_path = os.path.join(base.bin_dir, "settings.json")
-    schema = read_json_file(settings_path)
+    schema = read_json_file(base.settings_file_dir)
     if isinstance(schema, list):
         for item in schema:
             if isinstance(item, dict) and item.get("key") == key:

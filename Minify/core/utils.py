@@ -5,6 +5,7 @@ import json
 import os
 import re
 import uuid
+from pathlib import Path
 from typing import IO, Any
 
 from core import base
@@ -12,38 +13,46 @@ from core import base
 _real_open = builtins.open
 
 
-_MOD_STATES_FILE = os.path.join(base.cache_dir, ".mod_states.json")
-
-
-def read_mod_states() -> dict:
-    if os.path.exists(_MOD_STATES_FILE):
+def read_states() -> dict:
+    if os.path.exists(base.states_file_dir):
         try:
-            with open_utf8R(_MOD_STATES_FILE) as f:
+            with open_utf8R(base.states_file_dir) as f:
                 return json.load(f)
         except (json.JSONDecodeError, OSError):
             return {}
     return {}
 
 
-def write_mod_states(states: dict) -> None:
+def write_states(states_or_key: dict | str, value: Any = None) -> None:
+    states = read_states()
+    if isinstance(states_or_key, dict):
+        states.update(states_or_key)
+    elif isinstance(states_or_key, str):
+        states[states_or_key] = value
+
     os.makedirs(base.cache_dir, exist_ok=True)
-    with open_utf8R(_MOD_STATES_FILE, "w") as f:
+    with open_utf8R(base.states_file_dir, "w") as f:
         json.dump(states, f, indent=2)
 
 
-def get_mod_state(mod_name: str, key: str, default=None):
-    states = read_mod_states()
+def get_state(mod_name: str, key: str, default=None):
+    states = read_states()
     mod_data = states.get(mod_name, {})
     if key not in mod_data and default is not None:
-        states.setdefault(mod_name, {})[key] = default
-        write_mod_states(states)
-    return mod_data.get(key, default)
+        if not isinstance(mod_data, dict):
+            mod_data = {}
+        mod_data[key] = default
+        write_states(mod_name, mod_data)
+    return mod_data.get(key, default) if isinstance(mod_data, dict) else default
 
 
-def set_mod_state(mod_name: str, key: str, value) -> None:
-    states = read_mod_states()
-    states.setdefault(mod_name, {})[key] = value
-    write_mod_states(states)
+def set_state(mod_name: str, key: str, value) -> None:
+    states = read_states()
+    mod_data = states.get(mod_name)
+    if not isinstance(mod_data, dict):
+        mod_data = {}
+    mod_data[key] = value
+    write_states(mod_name, mod_data)
 
 
 def ignore_if_headless(func):
@@ -110,7 +119,6 @@ def parse_color(val):
 def setup_system():
     import conditions
     import helper
-    import plugins
 
     from core import fs, localization, migrations, utils
 
@@ -121,7 +129,13 @@ def setup_system():
     if base.HEADLESS:
         conditions.resolve_dependencies()
 
-    plugins.initialize()
+    try:
+        import plugins
+
+        plugins.initialize()
+    except (ImportError, ModuleNotFoundError):
+        pass
+
     helper.bulk_exec_script("initial", False)
 
 
@@ -176,3 +190,8 @@ def find_system_font(font_name: str) -> str | None:
                 if f.lower().endswith((".ttf", ".otf")) and normalized in _normalize_filename(f):
                     return os.path.join(root, f)
     return None
+
+
+def path_to_uri(file_path: str | Path) -> str:
+    """Converts a local file path to a valid file:// URI cross-platform."""
+    return Path(file_path).resolve().as_uri()

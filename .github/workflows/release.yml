@@ -73,20 +73,18 @@ jobs:
       - name: Install dependencies
         run: uv sync
 
-      - name: Build executable
-        shell: pwsh
-        run: |
-          Set-Location scripts
-          uv run pyinstaller Minify.spec
+      - name: Setup Node.js (for Web UI build)
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
 
-      - name: Move project dependencies
-        shell: pwsh
+      - name: Install Web UI dependencies
         run: |
-          Set-Location scripts
-          Copy-Item -Path "..\Minify\bin" -Destination "dist\Minify\bin" -Recurse
-          Copy-Item -Path "..\Minify\mods" -Destination "dist\Minify\mods" -Recurse
-          Copy-Item -Path "..\README.md" -Destination "dist\Minify\README.md"
-          Copy-Item -Path "..\LICENSE" -Destination "dist\Minify\LICENSE"
+          cd Minify/ui/web
+          npm ci
+
+      - name: Build executable and package release assets
+        run: uv run python scripts/build.py
 
       # --- SIGNING STEP 1: Sign Minify.exe ---
       - name: Upload unsigned Minify binary for SignPath

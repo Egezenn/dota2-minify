@@ -1,6 +1,6 @@
 import os
 
-from core import base, config, fs, log
+from core import base, config, fs, log, mods_shared
 
 
 class Migrations:
@@ -32,7 +32,7 @@ class Migrations:
 
         for mod in os.listdir(base.mods_dir):
             mod_path = os.path.join(base.mods_dir, mod)
-            if not os.path.isdir(mod_path) or mod.startswith("_"):
+            if not os.path.isdir(mod_path) or mods_shared.is_ignored_folder(mod):
                 continue
 
             src = os.path.join(mod_path, src_name)

@@ -179,7 +179,7 @@ def bulk_exec_script(order_name, terminal_output=True):
     bulk_name = f"script_{order_name}.py"
     any_ran = False
     for root, _, files in os.walk(base.mods_dir):
-        if bulk_name in files and not os.path.basename(root).startswith("_"):
+        if bulk_name in files and not mods_shared.is_ignored_folder(os.path.basename(root)):
             cfg = manifest_utils.get_mod(root)
 
             if "browser" in cfg:

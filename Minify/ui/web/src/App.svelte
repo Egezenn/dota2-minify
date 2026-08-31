@@ -2,16 +2,18 @@
   import { onMount } from "svelte";
   import { modsStore } from "./lib/stores/mods";
   import { localeStore } from "./lib/stores/locale";
+  import { loadApiData, refreshMods } from "./lib/api";
   import Header from "./lib/components/Header.svelte";
   import ModGrid from "./lib/components/ModGrid.svelte";
   import Terminal from "./lib/components/Terminal.svelte";
   import Settings from "./lib/components/Settings.svelte";
-  import DownloadNotification, { type DownloadItem } from "./lib/components/DownloadNotification.svelte";
+  import type { DownloadItem } from "./lib/types";
+  import DownloadNotification from "./lib/components/DownloadNotification.svelte";
 
   let activeTab: string = "mods";
   let pluginTabs: Array<{ id: string; name: string; entry_point?: string }> = [];
-
   let pluginContents: Record<string, string> = {};
+
   let downloads: DownloadItem[] = [];
   let logs: Array<{ text: string; type: string; timestamp?: string }> = [];
   let isPatching = false;
@@ -21,86 +23,35 @@
   let availableGameLangs: string[] = [];
   let currentGameLang = "english";
   let initialized = false;
+  let isDebugEnv = false;
 
   $: dict = $localeStore.dict;
   $: currentLang = $localeStore.lang;
 
-  let isDebugEnv = false;
-
-  async function loadApiData() {
+  async function handleLoadApiData() {
     if (initialized) return;
-    const api = window.pywebview?.api;
-    if (!api) return;
-
-    initialized = true;
     try {
-      if (api.is_debug_env) {
-        isDebugEnv = Boolean(await api.is_debug_env());
-      }
-
-      // 1. Core featureset loading first
-      const [savedUiLang, savedGameLang, uiLangs, gameLangs] =
-        await Promise.all([
-          api.get_current_locale(),
-          api.get_current_game_language(),
-          api.get_available_languages(),
-          api.get_available_game_languages(),
-        ]);
-
-      const targetUiLang = savedUiLang || currentLang || "EN";
-      currentGameLang = savedGameLang || "english";
-      if (Array.isArray(uiLangs) && uiLangs.length > 0)
-        availableUiLangs = uiLangs;
-      if (Array.isArray(gameLangs) && gameLangs.length > 0)
-        availableGameLangs = gameLangs;
-
-      const [initialLogs, patchingState, mods, locDict] = await Promise.all([
-        api.get_logs(),
-        api.is_patching(),
-        api.get_mods(),
-        api.get_localization(targetUiLang),
-      ]);
-
-      if (Array.isArray(initialLogs)) logs = initialLogs;
-      isPatching = Boolean(patchingState);
-      if (Array.isArray(mods)) modsStore.set(mods);
-      if (locDict) localeStore.set({ lang: targetUiLang, dict: locDict });
-
-      // 2. Plugins loaded asynchronously in the background
-      if (api.get_plugin_tabs) {
-        api.get_plugin_tabs().then(async (tabs) => {
-          pluginTabs = tabs || [];
-          if (api.get_plugin_content) {
-            const contentsMap: Record<string, string> = {};
-            for (const p of pluginTabs) {
-              try {
-                const html = await api.get_plugin_content(p.id);
-                if (html) {
-                  contentsMap[p.id] = html;
-                }
-              } catch (e) {
-                console.error(`Error loading content for plugin ${p.id}:`, e);
-              }
-            }
-            pluginContents = contentsMap;
-          }
-        }).catch((e) => {
-          console.error("Error loading plugin tabs:", e);
-        });
-      }
+      const data = await loadApiData(currentLang);
+      initialized = true;
+      isDebugEnv = data.isDebugEnv;
+      currentGameLang = data.currentGameLang;
+      availableUiLangs = data.availableUiLangs;
+      availableGameLangs = data.availableGameLangs;
+      logs = data.logs;
+      isPatching = data.isPatching;
+      pluginTabs = data.pluginTabs;
+      pluginContents = data.pluginContents;
     } catch (err) {
       console.error("Error initializing PyWebView API:", err);
     }
   }
 
-
   async function initPyWebView() {
     if (window.pywebview?.api) {
-      await loadApiData();
+      await handleLoadApiData();
       return;
     }
-
-    window.addEventListener("pywebviewready", loadApiData, { once: true });
+    window.addEventListener("pywebviewready", handleLoadApiData, { once: true });
   }
 
   onMount(() => {
@@ -110,13 +61,30 @@
       }
     };
 
+    const handleWindowMessage = (e: MessageEvent) => {
+      if (e.data?.type === "REFRESH_MODS") {
+        refreshMods();
+      }
+    };
+
     window.addEventListener("contextmenu", handleContextMenu);
+    window.addEventListener("message", handleWindowMessage);
+
+    (window as any).onModsRefreshed = refreshMods;
 
     window.onLogReceived = (logEntry: {
       text: string;
       type: string;
       timestamp?: string;
     }) => {
+      const formattedMsg = `[${logEntry.timestamp || ""}] ${logEntry.text}`;
+      if (logEntry.type === "error") {
+        console.error(formattedMsg);
+      } else if (logEntry.type === "warning") {
+        console.warn(formattedMsg);
+      } else {
+        console.log(formattedMsg);
+      }
       logs = [...logs, logEntry];
     };
 
@@ -144,6 +112,7 @@
 
     return () => {
       window.removeEventListener("contextmenu", handleContextMenu);
+      window.removeEventListener("message", handleWindowMessage);
     };
   });
 
@@ -172,48 +141,42 @@
           timestamp: getCurrentTime(),
         },
       ];
-      isPatching = false;
     }
   }
 
-  async function handleSaveMods(data: Record<string, boolean>) {
+  async function handleLanguageChange(lang: string) {
+    const api = window.pywebview?.api;
+    if (!api) return;
     try {
-      await window.pywebview?.api?.set_mods(data);
+      await api.set_locale(lang);
+      const dict = await api.get_localization(lang);
+      if (dict) {
+        localeStore.set({ lang, dict });
+      }
     } catch (err) {
-      console.error("Failed to save mods state:", err);
+      console.error("Error setting language:", err);
     }
   }
 
-  async function handleGameLangChange(event: Event) {
-    const target = event.target as HTMLSelectElement;
-    const newGameLang = target.value;
-    currentGameLang = newGameLang;
+  async function handleGameLanguageChange(lang: string) {
+    const api = window.pywebview?.api;
+    if (!api) return;
     try {
-      await window.pywebview?.api?.set_game_language(newGameLang);
+      await api.set_game_language(lang);
+      currentGameLang = lang;
     } catch (err) {
-      console.error("Failed to set game language:", err);
+      console.error("Error setting game language:", err);
     }
   }
-
-  async function handleClear() {
-    logs = [];
-    try {
-      await window.pywebview?.api?.clear_logs();
-    } catch (err) {
-      console.error("Failed to clear logs:", err);
-    }
-  }
-
-  async function handleSettingChange(key: string, value: boolean) {
-    try {
-      await window.pywebview?.api?.set_setting(key, value);
-    } catch (err) {
-      console.error("Failed to save setting:", err);
+  function handleGameLangSelect(e: Event) {
+    const target = e.target as HTMLSelectElement;
+    if (target) {
+      handleGameLanguageChange(target.value);
     }
   }
 </script>
 
-<main class="app-container">
+<div class="app-container">
   <Header
     {activeTab}
     {currentGameLang}
@@ -221,20 +184,30 @@
     {isPatching}
     {pluginTabs}
     onTabChange={(tab) => (activeTab = tab)}
-    onGameLangChange={handleGameLangChange}
+    onGameLangChange={handleGameLangSelect}
     onPatch={handlePatch}
   />
 
-  <section class="main-content">
+  <main class="content-area">
     <div class="tab-pane" class:hidden={activeTab !== "mods"}>
-      <ModGrid onSaveMods={handleSaveMods} />
+      <ModGrid />
     </div>
+
     <div class="tab-pane" class:hidden={activeTab !== "terminal"}>
-      <Terminal {logs} bind:autoScroll onClear={handleClear} />
+      <Terminal
+        {logs}
+        bind:autoScroll
+        onClear={() => {
+          logs = [];
+          window.pywebview?.api?.clear_logs();
+        }}
+      />
     </div>
+
     <div class="tab-pane" class:hidden={activeTab !== "settings"}>
-      <Settings active={activeTab === "settings"} onSettingChange={handleSettingChange} />
+      <Settings />
     </div>
+
     {#each pluginTabs as plugin}
       <div class="tab-pane" class:hidden={activeTab !== plugin.id}>
         {#if pluginContents[plugin.id]}
@@ -252,41 +225,78 @@
         {/if}
       </div>
     {/each}
-  </section>
+  </main>
 
-  <DownloadNotification {downloads} onDismiss={handleDismissDownload} />
-</main>
+  <div class="download-stack">
+    <DownloadNotification
+      {downloads}
+      onDismiss={handleDismissDownload}
+    />
+  </div>
+</div>
 
 <style>
+  :global(*),
+  :global(*::before),
+  :global(*::after) {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    transition: none !important;
+    animation: none !important;
+  }
+
+  :global(body),
+  :global(html) {
+    width: 100%;
+    height: 100%;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    font-size: 13px;
+    color: #000;
+    background: #fff;
+    overflow: hidden;
+  }
+
   .app-container {
     display: flex;
     flex-direction: column;
     height: 100vh;
     width: 100vw;
-    padding: 8px;
-    gap: 8px;
+    background: #fff;
+    color: #000;
+    position: relative;
   }
 
-  .main-content {
+  .content-area {
     flex: 1;
-    border: 1px solid #ccc;
     overflow: hidden;
-    background: #fff;
+    position: relative;
   }
 
   .tab-pane {
-    width: 100%;
     height: 100%;
+    width: 100%;
   }
 
   .tab-pane.hidden {
-    display: none !important;
+    display: none;
   }
 
   .plugin-frame {
     width: 100%;
     height: 100%;
     border: none;
-    background: #fff;
+  }
+
+  .download-stack {
+    position: fixed;
+    bottom: 12px;
+    right: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    z-index: 9999;
   }
 </style>

@@ -66,22 +66,33 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 8px;
+    height: 38px;
+    padding: 0 8px;
     border: 1px solid #000;
     background: #fff;
+    box-sizing: border-box;
   }
 
   .nav-tabs {
     display: flex;
+    align-items: center;
     gap: 4px;
   }
 
   .tab-btn {
-    padding: 4px 8px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 24px;
+    padding: 0 8px;
     border: 1px solid #000;
     background: #fff;
     color: #000;
+    font-size: 13px;
+    font-family: inherit;
+    line-height: 1;
     cursor: pointer;
+    box-sizing: border-box;
   }
 
   .tab-btn.active {
@@ -96,18 +107,41 @@
     font-size: 13px;
   }
 
-  select {
-    padding: 4px;
-    border: 1px solid #000;
-    background: #fff;
+  .header-action label {
+    display: inline-flex;
+    align-items: center;
+    line-height: 1;
   }
 
-  .patch-btn {
-    padding: 4px 12px;
+  select {
+    display: inline-flex;
+    align-items: center;
+    height: 24px;
+    padding: 0 4px;
     border: 1px solid #000;
     background: #fff;
     color: #000;
-    font-weight: bold;
+    font-size: 13px;
+    font-family: inherit;
+    line-height: 1;
+    box-sizing: border-box;
     cursor: pointer;
+  }
+
+  .patch-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 24px;
+    padding: 0 12px;
+    border: 1px solid #000;
+    background: #fff;
+    color: #000;
+    font-size: 13px;
+    font-family: inherit;
+    font-weight: bold;
+    line-height: 1;
+    cursor: pointer;
+    box-sizing: border-box;
   }
 </style>

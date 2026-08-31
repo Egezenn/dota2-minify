@@ -3,11 +3,15 @@ import re
 from typing import Any, Dict, List
 
 from core import base, config, fs, mods_shared, output, utils
+from core.plugin_sdk import PluginRouter
 
 from . import __main__ as plugin_main
 from .data import DataManager
 
+router = PluginRouter()
 
+
+@router.route
 def get_categories(params: Dict[str, Any] = None) -> List[Dict[str, Any]]:
     dm = DataManager()
     if dm.load():
@@ -25,6 +29,7 @@ def get_categories(params: Dict[str, Any] = None) -> List[Dict[str, Any]]:
     return []
 
 
+@router.route
 def get_mods(params: Dict[str, Any] = None) -> List[Dict[str, Any]]:
     params = params or {}
     cat_id = params.get("cat_id", "")
@@ -122,6 +127,7 @@ def get_mods(params: Dict[str, Any] = None) -> List[Dict[str, Any]]:
     return filtered
 
 
+@router.route
 def get_installed_mods(params: Dict[str, Any] = None) -> List[Dict[str, Any]]:
     from patch import manifest_utils
 
@@ -146,6 +152,7 @@ def get_installed_mods(params: Dict[str, Any] = None) -> List[Dict[str, Any]]:
     return installed
 
 
+@router.route
 def install_mod(params: Dict[str, Any] = None) -> Dict[str, Any]:
     params = params or {}
     mod = params.get("mod", {})
@@ -192,9 +199,34 @@ def install_mod(params: Dict[str, Any] = None) -> Dict[str, Any]:
 
     fs.create_dirs(target_dir)
 
-    # 1. Download Mod File
+    # 1. Download Mod File and Preview File concurrently
+    import concurrent.futures
+
     mod_dest = os.path.join(target_dir, os.path.basename(mod_url))
-    if not dm.download_file(mod_url, mod_dest, name=f"{name} ({cat_id.upper()})"):
+
+    preview_file = mod.get("preview")
+    preview_url = None
+    preview_dest = None
+    if preview_file:
+        preview_url = preview_file if preview_file.startswith("http") else dm.get_preview_url(cat_id, preview_file)
+        preview_dest = os.path.join(target_dir, "preview.jpg")
+
+    def _download_preview():
+        if preview_url and preview_dest:
+            dm.download_file(preview_url, preview_dest, emit_progress=False)
+
+    with concurrent.futures.ThreadPoolExecutor(max_workers=2) as executor:
+        future_preview = executor.submit(_download_preview) if preview_url else None
+        future_mod = executor.submit(dm.download_file, mod_url, mod_dest, None, f"{name} ({cat_id.upper()})")
+
+        mod_success = future_mod.result()
+        if future_preview:
+            try:
+                future_preview.result()
+            except Exception:
+                pass
+
+    if not mod_success:
         fs.remove_path(target_dir)
         return {"success": False, "error": "Failed to download mod file."}
 
@@ -204,13 +236,6 @@ def install_mod(params: Dict[str, Any] = None) -> Dict[str, Any]:
             fs.remove_path(target_dir)
             return {"success": False, "error": "Failed to extract mod archive."}
         fs.remove_path(mod_dest)
-
-    # 2. Download Preview
-    preview_file = mod.get("preview")
-    if preview_file:
-        preview_url = preview_file if preview_file.startswith("http") else dm.get_preview_url(cat_id, preview_file)
-        preview_dest = os.path.join(target_dir, "preview.jpg")
-        dm.download_file(preview_url, preview_dest)
 
     # 3. Create manifest.json
     modcfg = {
@@ -272,6 +297,7 @@ def install_mod(params: Dict[str, Any] = None) -> Dict[str, Any]:
     return {"success": True, "folder": mod_dir_name}
 
 
+@router.route
 def uninstall_mod(params: Dict[str, Any] = None) -> Dict[str, Any]:
     params = params or {}
     mod_name = params.get("mod_name")
@@ -314,6 +340,7 @@ def uninstall_mod(params: Dict[str, Any] = None) -> Dict[str, Any]:
         return {"success": False, "error": "Mod directory not found."}
 
 
+@router.route
 def prune_metadata_cache(params: Dict[str, Any] = None) -> Dict[str, Any]:
     dm = DataManager()
     metadata_file = os.path.join(dm.cache_dir, "mods.json")
@@ -325,24 +352,5 @@ def prune_metadata_cache(params: Dict[str, Any] = None) -> Dict[str, Any]:
     return {"success": success}
 
 
-def prune_image_cache(params: Dict[str, Any] = None) -> Dict[str, Any]:
-    dm = DataManager()
-    fs.remove_path(dm.previews_dir)
-    fs.create_dirs(dm.previews_dir)
-    return {"success": True}
-
-
 def handle_api(action: str, params: Dict[str, Any] = None) -> Any:
-    handlers = {
-        "get_categories": get_categories,
-        "get_mods": get_mods,
-        "get_installed_mods": get_installed_mods,
-        "install_mod": install_mod,
-        "uninstall_mod": uninstall_mod,
-        "prune_metadata_cache": prune_metadata_cache,
-        "prune_image_cache": prune_image_cache,
-    }
-    handler = handlers.get(action)
-    if handler:
-        return handler(params or {})
-    return {"error": f"Unknown action '{action}' in D2PFX plugin API"}
+    return router.dispatch(action, params)

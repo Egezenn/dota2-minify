@@ -1,7 +1,7 @@
 from unittest.mock import MagicMock, patch
 
-from core import registry
 import plugins
+from core import registry
 
 
 def test_plugin_registry():
@@ -68,7 +68,7 @@ def test_get_plugin_content_inlining():
     api = Api()
     content = api.get_plugin_content("d2pfx")
     if content:
-        assert '<script type="module">' in content or "<style>" in content
+        assert "<script" in content or "<style" in content
 
 
 def test_plugin_settings_json_discovery():
@@ -89,11 +89,16 @@ def test_call_plugin_api():
     assert isinstance(res, list)
 
 
-def test_demo_plain_js_plugin():
+def test_demo_plain_js_plugin(tmp_path):
     from ui.app import Api
 
-    api = Api()
-    res = api.call_plugin_api("demo", "ping", {"message": "Hello Test"})
-    assert res.get("status") == "success"
-    assert res.get("echo") == "Hello Test"
+    demo_dir = tmp_path / "demo"
+    demo_dir.mkdir()
+    api_file = demo_dir / "api.py"
+    api_file.write_text("def ping(params):\n    return {'status': 'success', 'echo': params.get('message')}\n")
 
+    with patch("core.base.plugins_dir", str(tmp_path)):
+        api = Api()
+        res = api.call_plugin_api("demo", "ping", {"message": "Hello Test"})
+        assert res.get("status") == "success"
+        assert res.get("echo") == "Hello Test"

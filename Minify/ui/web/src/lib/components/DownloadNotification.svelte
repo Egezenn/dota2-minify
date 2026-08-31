@@ -1,12 +1,5 @@
 <script lang="ts">
-  export interface DownloadItem {
-    id: string;
-    name: string;
-    downloaded_bytes: number;
-    total_bytes: number;
-    status: "downloading" | "finished" | "error";
-    error?: string;
-  }
+  import type { DownloadItem } from "../types";
 
   export let downloads: DownloadItem[] = [];
   export let onDismiss: (id: string) => void = () => {};

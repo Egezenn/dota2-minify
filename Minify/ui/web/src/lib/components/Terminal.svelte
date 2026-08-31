@@ -57,15 +57,25 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 6px 8px;
+    height: 38px;
+    padding: 0 8px;
     border-bottom: 1px solid #000;
     font-size: 13px;
+    box-sizing: border-box;
+  }
+
+  .toolbar-title {
+    display: flex;
+    align-items: center;
   }
 
   .toolbar-title h3 {
     margin: 0;
     font-size: 15px;
     font-weight: bold;
+    line-height: 1;
+    display: flex;
+    align-items: center;
   }
 
   .toolbar-controls {
@@ -74,12 +84,26 @@
     align-items: center;
   }
 
+  .toolbar-controls label {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    line-height: 1;
+    cursor: pointer;
+  }
+
   .toolbar-controls button {
-    padding: 2px 8px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 24px;
+    padding: 0 8px;
     border: 1px solid #000;
     background: #fff;
     color: #000;
+    line-height: 1;
     cursor: pointer;
+    box-sizing: border-box;
   }
 
   .terminal-body {

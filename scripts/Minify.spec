@@ -25,12 +25,19 @@ if platform.system() != "Windows":
         for pattern in ("libtcl*.so*", "libtk*.so*"):
             binaries.extend((path, ".") for path in glob.glob(os.path.join(lib_dir, pattern)))
 
+datas = [
+    (os.path.abspath(os.path.join(SPECPATH, "../Minify/bin/settings.json")), "bin"),
+    (os.path.abspath(os.path.join(SPECPATH, "../Minify/bin/localization.json")), "bin"),
+    (os.path.abspath(os.path.join(SPECPATH, "../Minify/ui/web/dist")), "ui"),
+]
+
 a = Analysis(
     ["../Minify/__main__.py"],
     pathex=["../Minify"],
     binaries=binaries,
+    datas=datas,
     excludes=["plugins"],
-    hiddenimports=["tkinter"],
+    hiddenimports=["tkinter", "core.plugin_sdk"],
 )
 
 pyz = PYZ(a.pure)

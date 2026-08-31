@@ -38,7 +38,7 @@
 >
   <div class="preview-container">
     {#if preview}
-      <img src={preview} alt={name} class="preview-image" />
+      <img src={preview} alt={name} loading="lazy" decoding="async" class="preview-image" />
     {:else}
       <div class="preview-placeholder">
         <span class="placeholder-letter">{initialLetter}</span>

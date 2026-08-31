@@ -1,6 +1,7 @@
 import { build } from "vite";
 import { svelte } from "@sveltejs/vite-plugin-svelte";
 import { sveltePreprocess } from "svelte-preprocess";
+import { viteSingleFile } from "vite-plugin-singlefile";
 import path from "path";
 import fs from "fs";
 import { fileURLToPath } from "url";
@@ -12,9 +13,9 @@ async function runBuild() {
   const noPlugins = process.argv.includes("--no-plugins");
   console.log(`Building main Web UI${noPlugins ? " (no plugins)" : ""}...`);
 
-  const mainOutDir = path.resolve(__dirname, "../dist");
+  const mainOutDir = path.resolve(__dirname, "dist");
 
-  // 1. Build main application to Minify/ui/dist
+  // 1. Build main application to Minify/ui/web/dist
   await build({
     configFile: path.resolve(__dirname, "vite.config.js"),
     base: "./",
@@ -70,7 +71,7 @@ async function runBuild() {
 
         await build({
           configFile: false,
-          plugins: [svelte({ preprocess: sveltePreprocess() })],
+          plugins: [svelte({ preprocess: sveltePreprocess() }), viteSingleFile()],
           base: "./",
           root: stagingDir,
           build: {
