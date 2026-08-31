@@ -9,6 +9,7 @@
   import Settings from "./lib/components/Settings.svelte";
   import type { DownloadItem } from "./lib/types";
   import DownloadNotification from "./lib/components/DownloadNotification.svelte";
+  import UninstallModal from "./lib/components/UninstallModal.svelte";
 
   let activeTab: string = "mods";
   let pluginTabs: Array<{ id: string; name: string; entry_point?: string }> = [];
@@ -18,6 +19,7 @@
   let logs: Array<{ text: string; type: string; timestamp?: string }> = [];
   let isPatching = false;
   let autoScroll = true;
+  let showUninstallModal = false;
 
   let availableUiLangs: string[] = [];
   let availableGameLangs: string[] = [];
@@ -144,6 +146,26 @@
     }
   }
 
+  async function handleUninstallConfirm(removeEverything: boolean) {
+    showUninstallModal = false;
+    if (isPatching) return;
+
+    isPatching = true;
+    activeTab = "terminal";
+    try {
+      await window.pywebview?.api?.start_uninstall(removeEverything);
+    } catch (err) {
+      logs = [
+        ...logs,
+        {
+          text: `Error triggering uninstall: ${err}`,
+          type: "error",
+          timestamp: getCurrentTime(),
+        },
+      ];
+    }
+  }
+
   async function handleLanguageChange(lang: string) {
     const api = window.pywebview?.api;
     if (!api) return;
@@ -168,6 +190,14 @@
       console.error("Error setting game language:", err);
     }
   }
+  async function handleSaveMods(data: Record<string, boolean>) {
+    try {
+      await window.pywebview?.api?.set_mods(data);
+    } catch (err) {
+      console.error("Failed to save mod state:", err);
+    }
+  }
+
   function handleGameLangSelect(e: Event) {
     const target = e.target as HTMLSelectElement;
     if (target) {
@@ -186,11 +216,18 @@
     onTabChange={(tab) => (activeTab = tab)}
     onGameLangChange={handleGameLangSelect}
     onPatch={handlePatch}
+    onUninstallClick={() => (showUninstallModal = true)}
+  />
+
+  <UninstallModal
+    isOpen={showUninstallModal}
+    onConfirm={handleUninstallConfirm}
+    onCancel={() => (showUninstallModal = false)}
   />
 
   <main class="content-area">
     <div class="tab-pane" class:hidden={activeTab !== "mods"}>
-      <ModGrid />
+      <ModGrid onSaveMods={handleSaveMods} />
     </div>
 
     <div class="tab-pane" class:hidden={activeTab !== "terminal"}>

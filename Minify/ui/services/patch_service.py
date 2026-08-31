@@ -29,6 +29,16 @@ class PatchService:
                 pass
 
     def _on_output_log(self, text: str, msg_type: str | None) -> None:
+        if msg_type == "clear":
+            with self._lock:
+                self._logs.clear()
+            if self._window:
+                try:
+                    self._window.evaluate_js("window.onLogReceived && window.onLogReceived({text: '', type: 'clear'});")
+                except Exception:
+                    pass
+            return
+
         log_entry = {
             "text": text,
             "type": msg_type or "info",
@@ -69,6 +79,36 @@ class PatchService:
                         pass
 
         threading.Thread(target=run_patch_thread, daemon=True).start()
+        return {"status": "started"}
+
+    def start_uninstall(self, remove_everything: bool = False) -> Dict[str, Any]:
+        if self._is_patching:
+            return {"status": "already_running"}
+
+        self._is_patching = True
+        if self._window:
+            try:
+                self._window.evaluate_js("window.onPatchStatusChange && window.onPatchStatusChange(true);")
+            except Exception:
+                pass
+
+        def run_uninstall_thread() -> None:
+            try:
+                if remove_everything:
+                    patch.unins.wipe()
+                else:
+                    patch.unins.uninstall()
+            except Exception as e:
+                output.add_text(f"Uninstall failed: {e}", msg_type="error")
+            finally:
+                self._is_patching = False
+                if self._window:
+                    try:
+                        self._window.evaluate_js("window.onPatchStatusChange && window.onPatchStatusChange(false);")
+                    except Exception:
+                        pass
+
+        threading.Thread(target=run_uninstall_thread, daemon=True).start()
         return {"status": "started"}
 
     def is_patching(self) -> bool:

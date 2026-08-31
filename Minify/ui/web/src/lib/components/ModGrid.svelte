@@ -18,7 +18,7 @@
     mod.name.toLowerCase().includes(searchQuery.toLowerCase().trim()),
   );
 
-  function toggleMod(modName: string, enabled: boolean) {
+  async function toggleMod(modName: string, enabled: boolean) {
     const updated = mods.map((m) =>
       m.name === modName ? { ...m, enabled } : m,
     );
@@ -26,7 +26,15 @@
 
     const payload: Record<string, boolean> = {};
     updated.forEach((m) => (payload[m.name] = m.enabled));
-    if (onSaveMods) onSaveMods(payload);
+    if (onSaveMods) {
+      onSaveMods(payload);
+    } else if (window.pywebview?.api?.set_mods) {
+      try {
+        await window.pywebview.api.set_mods(payload);
+      } catch (err) {
+        console.error("Failed to save mods:", err);
+      }
+    }
   }
 
   function openDetails(modName: string) {

@@ -18,6 +18,11 @@
       terminalElement.scrollTop = terminalElement.scrollHeight;
     }
   }
+
+  function cleanAnsi(text: string): string {
+    if (!text) return "";
+    return text.replace(/\033\[[0-9;]*m/g, "").replace(/\x1b\[[0-9;]*m/g, "");
+  }
 </script>
 
 <div class="terminal-container">
@@ -40,7 +45,7 @@
       {#if log.type === "separator"}
         <hr />
       {:else}
-        <div class="log-row">{log.text}</div>
+        <div class="log-row {log.type || 'info'}">{cleanAnsi(log.text)}</div>
       {/if}
     {/each}
   </div>
@@ -124,6 +129,21 @@
     word-break: break-all;
     user-select: text;
     cursor: text;
+    color: #000;
+  }
+
+  .log-row.error {
+    color: #cc0000;
+    font-weight: bold;
+  }
+
+  .log-row.warning {
+    color: #d97706;
+  }
+
+  .log-row.success {
+    color: #2e7d32;
+    font-weight: bold;
   }
 
   hr {

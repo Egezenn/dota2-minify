@@ -29,6 +29,7 @@ declare global {
         set_game_language: (lang: string) => Promise<boolean>;
         set_mods: (data: Record<string, boolean>) => Promise<boolean>;
         start_patch: () => Promise<{ status: string }>;
+        start_uninstall: (remove_everything?: boolean) => Promise<{ status: string }>;
         clear_logs: () => Promise<boolean>;
         get_settings: () => Promise<{
           schema: Array<{

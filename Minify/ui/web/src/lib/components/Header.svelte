@@ -8,6 +8,7 @@
   export let onTabChange: (tab: string) => void;
   export let onGameLangChange: (event: Event) => void;
   export let onPatch: () => void;
+  export let onUninstallClick: () => void;
 </script>
 
 <header class="header">
@@ -55,6 +56,9 @@
       {/each}
     </select>
 
+    <button class="uninstall-btn" on:click={onUninstallClick} disabled={isPatching}>
+      UNINSTALL
+    </button>
     <button class="patch-btn" on:click={onPatch} disabled={isPatching}>
       {isPatching ? "PATCHING..." : "PATCH"}
     </button>
@@ -128,6 +132,7 @@
     cursor: pointer;
   }
 
+  .uninstall-btn,
   .patch-btn {
     display: inline-flex;
     align-items: center;

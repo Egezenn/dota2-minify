@@ -81,3 +81,11 @@ def add_separator():
     print("-" * 50)
     for listener in list(_listeners):
         listener("", "separator")
+
+
+def clean():
+    for listener in list(_listeners):
+        try:
+            listener("", "clear")
+        except Exception:
+            pass

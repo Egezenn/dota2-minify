@@ -21,6 +21,9 @@ class Api:
     def start_patch(self) -> Dict[str, Any]:
         return self.patch_service.start_patch()
 
+    def start_uninstall(self, remove_everything: bool = False) -> Dict[str, Any]:
+        return self.patch_service.start_uninstall(remove_everything)
+
     def is_patching(self) -> bool:
         return self.patch_service.is_patching()
 
@@ -157,15 +160,39 @@ def launch() -> None:
     webview.settings["OPEN_DEVTOOLS_IN_DEBUG"] = False
     webview.settings["ALLOW_FILE_URLS"] = True
 
+    states = utils.read_states()
+    window_size = states.get("window_size", {}) if isinstance(states, dict) else {}
+    initial_width = window_size.get("width", 960)
+    initial_height = window_size.get("height", 680)
+
+    if not isinstance(initial_width, int) or initial_width < 700:
+        initial_width = 960
+    if not isinstance(initial_height, int) or initial_height < 500:
+        initial_height = 680
+
     api = Api()
     window = webview.create_window(
         title=base.TITLE,
         url=url,
         js_api=api,
-        width=960,
-        height=680,
+        width=initial_width,
+        height=initial_height,
         min_size=(700, 500),
         resizable=True,
     )
+
+    def _save_window_size(*args: Any, **kwargs: Any) -> None:
+        w = getattr(window, "width", None)
+        h = getattr(window, "height", None)
+        if w is None and len(args) >= 2:
+            w, h = args[0], args[1]
+        if w and h and isinstance(w, (int, float)) and isinstance(h, (int, float)):
+            w_int, h_int = int(w), int(h)
+            if w_int >= 700 and h_int >= 500:
+                utils.write_states("window_size", {"width": w_int, "height": h_int})
+
+    window.events.resized += _save_window_size
+    window.events.closing += _save_window_size
+
     api.set_window(window)
     webview.start(debug=debug_mode)
