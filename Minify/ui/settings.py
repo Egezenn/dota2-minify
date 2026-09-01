@@ -48,7 +48,7 @@ SETTINGS = [
     {
         "key": "patch_on_launch",
         "text": "Run patches upon launch if required",
-        "default": True,
+        "default": False,
         "type": "checkbox",
     },
     {
