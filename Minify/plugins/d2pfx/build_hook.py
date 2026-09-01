@@ -63,7 +63,11 @@ def run(mod_list):
             continue
 
         if cat == "terrains":
-            map_vpk_paths.extend(vpk_files)
+            if os.path.isdir(os.path.join(mod_path, "maps")):
+                map_vpk_paths.extend(vpk_files)
+            else:
+                pfx_normal[mod_name] = vpk_files
+                all_active_vpk_mods.append(mod_name)
         elif cat in plugin_main.RENAME_CATEGORIES:
             pfx_high_priority[mod_name] = vpk_files
         else:
@@ -77,12 +81,25 @@ def run(mod_list):
         output.add_text("&merging_vpks")
         maps_output_dir = os.path.join(helper.output_path, "maps")
         fs.create_dirs(maps_output_dir)
-        # Just copy the last found map VPK
-        shutil.copy2(map_vpk_paths[-1], os.path.join(maps_output_dir, "dota.vpk"))
+        fs.remove_path(base.merge_dir)
+        fs.create_dirs(base.merge_dir)
+
+        try:
+            vpk_utils.dump(vpk.open(map_vpk_paths[-1]), base.merge_dir)
+        except Exception:
+            log.write_warning("&failed_merge_mod", os.path.basename(map_vpk_paths[-1]))
+
+        vpk_utils.dump_metadata(base.merge_dir)
+        vpk.new(base.merge_dir).save(os.path.join(maps_output_dir, "dota.vpk"))
+        fs.remove_path(base.merge_dir)
     else:
         dota_vpk_path = os.path.join(helper.output_path, "maps", "dota.vpk")
         if os.path.exists(dota_vpk_path):
-            fs.remove_path(dota_vpk_path)
+            if vpk_utils.is_minify_pak(dota_vpk_path):
+                fs.remove_path(dota_vpk_path)
+                maps_output_dir = os.path.join(helper.output_path, "maps")
+                if os.path.isdir(maps_output_dir) and not os.listdir(maps_output_dir):
+                    fs.remove_path(maps_output_dir)
 
     # 2. Cursors
     if cursor_mod_paths:

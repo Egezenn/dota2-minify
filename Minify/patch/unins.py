@@ -15,7 +15,7 @@ def uninstall():
     for path in constants.minify_dota_possible_language_output_paths:
         if os.path.isdir(path):
             maps_vpk_path = os.path.join(path, "maps", "dota.vpk")
-            if os.path.exists(maps_vpk_path):
+            if os.path.exists(maps_vpk_path) and vpk_utils.is_minify_pak(maps_vpk_path):
                 fs.remove_path(os.path.join(path, "maps"))
 
             for item in os.listdir(path):
