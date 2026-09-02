@@ -2,7 +2,7 @@ import os
 from typing import Any, Dict, List
 
 import helper
-from core import base, config, constants, localization, mods_shared, output
+from core import base, config, constants, localization, mods_shared, output, steam
 
 
 class ConfigService:
@@ -60,6 +60,9 @@ class ConfigService:
             return True
         except Exception:
             return False
+
+    def get_steam_accounts(self) -> List[Dict[str, Any]]:
+        return steam.get_steam_accounts()
 
     @staticmethod
     def parse_setting_item(
@@ -135,6 +138,19 @@ class ConfigService:
             for item in native_schema:
                 parsed = self.parse_setting_item(item)
                 if parsed:
+                    if parsed["key"] == "steam_id":
+                        accounts = steam.get_steam_accounts()
+                        parsed["items"] = [
+                            {
+                                "value": acc["id"],
+                                "label": (
+                                    f"{acc['name']} ({acc['id']})"
+                                    if acc.get("name") and acc["name"] != "?"
+                                    else f"User {acc['id']}"
+                                ),
+                            }
+                            for acc in accounts
+                        ]
                     settings_schema.append(parsed)
                     values[parsed["key"]] = config.get(parsed["key"], parsed["default"])
 

@@ -59,8 +59,13 @@
       if (window.pywebview?.api?.set_setting) {
         await window.pywebview.api.set_setting(item.key, newValue, item.mod);
       }
-    } else if (onSettingChange) {
-      onSettingChange(item.key, newValue);
+    } else {
+      if (window.pywebview?.api?.set_setting) {
+        await window.pywebview.api.set_setting(item.key, newValue);
+      }
+      if (onSettingChange) {
+        onSettingChange(item.key, newValue);
+      }
     }
   }
 
@@ -201,7 +206,11 @@
                   on:change={(e) => updateSetting(item, e.currentTarget.value)}
                 >
                   {#each item.items || [] as option}
-                    <option value={option}>{option}</option>
+                    {#if typeof option === "object" && option !== null}
+                      <option value={option.value}>{option.label}</option>
+                    {:else}
+                      <option value={option}>{option}</option>
+                    {/if}
                   {/each}
                 </select>
               </div>

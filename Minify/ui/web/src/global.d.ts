@@ -31,6 +31,9 @@ declare global {
         start_patch: () => Promise<{ status: string }>;
         start_uninstall: (remove_everything?: boolean) => Promise<{ status: string }>;
         clear_logs: () => Promise<boolean>;
+        get_steam_accounts: () => Promise<
+          Array<{ id: string; name: string; account_name?: string; timestamp?: number }>
+        >;
         get_settings: () => Promise<{
           schema: Array<{
             key: string;
@@ -39,7 +42,7 @@ declare global {
             default?: any;
             mod?: string | null;
             force?: boolean;
-            items?: string[];
+            items?: Array<string | { value: string; label: string }>;
             var_type?: "int" | "float";
             step?: number;
             min?: number;

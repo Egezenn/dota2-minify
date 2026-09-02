@@ -47,7 +47,6 @@ def is_minify_pak(vpk_path):
     metadata marker files that dump_metadata() packs into created Paks.
     """
     marker_files = ["minify_mods.json", "minify_vpk_mods.txt", "minify_version.txt"]
-    marker_files += [f"{mod}.txt" for mod in constants.visually_available_mods]
 
     try:
         pak = vpk.open(vpk_path)

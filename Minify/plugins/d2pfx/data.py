@@ -68,7 +68,7 @@ class DataManager:
     def _needs_refresh(self):
         if not config.get("d2pfx_auto_refresh_catalogue", True):
             return False
-        last_refresh = utils.get_state("d2pfx", "last_refresh") or config.get("d2pfx_last_refresh", 0)
+        last_refresh = utils.get_state("d2pfx", "last_refresh", 0)
         return (time.time() - last_refresh) > 86400
 
     def load(self):

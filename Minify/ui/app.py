@@ -66,6 +66,9 @@ class Api:
     def set_game_language(self, lang: str) -> bool:
         return self.config_service.set_game_language(lang)
 
+    def get_steam_accounts(self) -> List[Dict[str, Any]]:
+        return self.config_service.get_steam_accounts()
+
     def get_settings(self) -> Dict[str, Any]:
         return self.config_service.get_settings()
 
@@ -112,15 +115,8 @@ def _apply_tiling_wm_floating_hints() -> None:
         def patched_gtk_init(self: Any, window: Any) -> None:
             orig_gtk_init(self, window)
             if isinstance(self.window, Gtk.Window):
-                try:
-                    dummy_parent = Gtk.Window()
-                    dummy_parent.realize()
-                    self.window.set_transient_for(dummy_parent)
-                except Exception:
-                    pass
                 self.window.set_type_hint(Gdk.WindowTypeHint.DIALOG)
                 self.window.set_role("dialog")
-                self.window.set_modal(True)
                 try:
                     self.window.set_wmclass("Minify", "Minify")
                 except Exception:
@@ -182,9 +178,8 @@ def launch() -> None:
     )
 
     def _save_window_size(*args: Any, **kwargs: Any) -> None:
-        w = getattr(window, "width", None)
-        h = getattr(window, "height", None)
-        if w is None and len(args) >= 2:
+        w, h = None, None
+        if len(args) >= 2:
             w, h = args[0], args[1]
         if w and h and isinstance(w, (int, float)) and isinstance(h, (int, float)):
             w_int, h_int = int(w), int(h)
@@ -192,7 +187,6 @@ def launch() -> None:
                 utils.write_states("window_size", {"width": w_int, "height": h_int})
 
     window.events.resized += _save_window_size
-    window.events.closing += _save_window_size
 
     api.set_window(window)
     webview.start(debug=debug_mode)

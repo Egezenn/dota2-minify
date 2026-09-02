@@ -18,6 +18,13 @@
     "type": "checkbox"
   },
   {
+    "key": "steam_id",
+    "text": "Active Steam User",
+    "default": "",
+    "type": "combo",
+    "items": []
+  },
+  {
     "key": "apply_for_all",
     "text": "Apply everything for all users",
     "default": true,
