@@ -120,7 +120,7 @@ def setup_system():
     import conditions
     import helper
 
-    from core import fs, localization, migrations, utils
+    from core import localization, migrations
 
     localization.load_headless()
     conditions.is_dota_running("&error_please_close_dota_terminal", "error")

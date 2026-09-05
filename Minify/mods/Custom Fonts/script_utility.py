@@ -12,7 +12,7 @@ if minify_root not in sys.path:
     sys.path.insert(0, minify_root)
 
 import ui
-from core import base, fs, output, utils
+from core import base, fs, utils
 
 
 def select_font():

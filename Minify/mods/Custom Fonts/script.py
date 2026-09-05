@@ -17,7 +17,7 @@ import shutil
 import struct
 import uuid
 
-from core import base, config, fs, output, steam, utils
+from core import config, fs, output, steam, utils
 from core.utils import find_system_font
 
 dota_fonts_path = os.path.join(steam.LIBRARY, "steamapps", "common", "dota 2 beta", "game", "dota", "panorama", "fonts")

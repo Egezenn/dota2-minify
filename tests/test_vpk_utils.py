@@ -1,9 +1,7 @@
 import os
 from unittest.mock import patch
 
-import pytest
 import vpk
-from core import base
 from patch import vpk_utils
 
 

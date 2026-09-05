@@ -60,7 +60,6 @@ def test_resolve_locale():
 
 
 def test_remove_minify_lang_success(mock_steam_env, monkeypatch):
-    import vdf
     from core import base
 
     # English locale should resolve to dutch and remove -language dutch
@@ -104,7 +103,6 @@ def test_remove_minify_lang_success(mock_steam_env, monkeypatch):
 
 
 def test_remove_minify_lang_wrong_locale(mock_steam_env, monkeypatch):
-    import vdf
 
     def config_get_side_effect(key, default=None):
         if key == "apply_for_all":
@@ -139,7 +137,6 @@ def test_remove_minify_lang_no_vdf(mock_steam_env, monkeypatch):
 
 
 def test_remove_minify_lang_no_language_arg(mock_steam_env, monkeypatch):
-    import vdf
     from core import base
 
     vdf_data = {
@@ -161,7 +158,6 @@ def test_remove_minify_lang_no_language_arg(mock_steam_env, monkeypatch):
 
 
 def test_remove_minify_lang_single_id(mock_steam_env, monkeypatch):
-    import vdf
     from core import base
 
     # English locale should resolve to dutch
@@ -200,7 +196,6 @@ def test_remove_minify_lang_single_id(mock_steam_env, monkeypatch):
 
 
 def test_remove_minify_lang_no_launch_options(mock_steam_env, monkeypatch):
-    import vdf
     from core import base
 
     vdf_data = {
@@ -218,7 +213,6 @@ def test_remove_minify_lang_no_launch_options(mock_steam_env, monkeypatch):
 
 
 def test_fix_launch_options_no_change_needed(monkeypatch):
-    import vdf
     from core import base
 
     def config_get_side_effect(key, default=None):
@@ -255,7 +249,6 @@ def test_fix_launch_options_no_change_needed(monkeypatch):
 
 
 def test_restore_boot_language_restores_to_english(monkeypatch):
-    import vdf
 
     def config_get_side_effect(key, default=None):
         if key == "output_locale":
@@ -279,7 +272,6 @@ def test_restore_boot_language_restores_to_english(monkeypatch):
 
 
 def test_restore_boot_language_wrong_locale(monkeypatch):
-    import vdf
 
     def config_get_side_effect(key, default=None):
         if key == "output_locale":
@@ -295,7 +287,6 @@ def test_restore_boot_language_wrong_locale(monkeypatch):
 
 
 def test_restore_boot_language_not_dutch(monkeypatch):
-    import vdf
 
     monkeypatch.setattr("core.config.get", lambda key, default=None: "english" if key == "output_locale" else default)
 
@@ -312,7 +303,6 @@ def test_restore_boot_language_not_dutch(monkeypatch):
 
 
 def test_restore_boot_language_no_vcfg(monkeypatch):
-    import vdf
 
     monkeypatch.setattr("core.config.get", lambda key, default=None: "english" if key == "output_locale" else default)
     monkeypatch.setattr("os.path.exists", lambda path: False)

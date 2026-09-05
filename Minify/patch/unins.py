@@ -1,6 +1,5 @@
 import os
 import re
-import time
 
 import helper
 from core import constants, fs, output, registry, steam

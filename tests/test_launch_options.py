@@ -63,7 +63,6 @@ def test_patch_on_launch_disabled_returns_false(monkeypatch):
 
 
 def test_no_command_token_still_adds_prefix(monkeypatch, mock_frozen_env):
-    import vdf
     from core import base
 
     monkeypatch.setattr(base, "is_win", True)
@@ -91,7 +90,6 @@ def test_no_command_token_still_adds_prefix(monkeypatch, mock_frozen_env):
 
 
 def test_inserts_before_command_windows(monkeypatch, mock_frozen_env):
-    import vdf
     from core import base
 
     monkeypatch.setattr(base, "is_win", True)
@@ -121,7 +119,6 @@ def test_inserts_before_command_windows(monkeypatch, mock_frozen_env):
 
 
 def test_inserts_before_command_linux(monkeypatch, mock_frozen_env):
-    import vdf
     from core import base
 
     monkeypatch.setattr(base, "is_win", False)
@@ -151,7 +148,6 @@ def test_inserts_before_command_linux(monkeypatch, mock_frozen_env):
 
 
 def test_no_duplicate_insert(monkeypatch, mock_frozen_env):
-    import vdf
     from core import base
 
     monkeypatch.setattr(base, "is_win", True)
@@ -187,7 +183,6 @@ def test_no_duplicate_insert(monkeypatch, mock_frozen_env):
 
 
 def test_path_with_spaces(monkeypatch, mock_frozen_env):
-    import vdf
     from core import base
 
     monkeypatch.setattr(base, "is_win", True)
@@ -214,7 +209,6 @@ def test_path_with_spaces(monkeypatch, mock_frozen_env):
 
 
 def test_multiple_command_tokens(monkeypatch, mock_frozen_env):
-    import vdf
     from core import base
 
     monkeypatch.setattr(base, "is_win", True)
@@ -248,7 +242,6 @@ def test_multiple_command_tokens(monkeypatch, mock_frozen_env):
 
 
 def test_env_vars_and_wrappers_moved_after_command(monkeypatch, mock_frozen_env):
-    import vdf
     from core import base
 
     monkeypatch.setattr(base, "is_win", True)
@@ -309,7 +302,6 @@ def test_apply_for_all_false(monkeypatch):
     monkeypatch.setattr("os.path.exists", lambda path: True)
     monkeypatch.setattr("core.utils.open_utf8R", MagicMock())
 
-    import vdf
 
     vdf_data = {
         "UserLocalConfigStore": {
@@ -331,7 +323,6 @@ def test_apply_for_all_false(monkeypatch):
 
 
 def test_missing_launch_options(monkeypatch, mock_frozen_env):
-    import vdf
 
     vdf_data = {"UserLocalConfigStore": {"Software": {"Valve": {"Steam": {"apps": {base.STEAM_DOTA_ID: {}}}}}}}
 
@@ -352,7 +343,6 @@ def test_missing_vdf_file(monkeypatch, mock_frozen_env):
 
 
 def test_empty_launch_options(monkeypatch, mock_frozen_env):
-    import vdf
     from core import base
 
     monkeypatch.setattr(base, "is_win", True)

@@ -1,4 +1,3 @@
-import pytest
 from core.plugin_sdk import PluginRouter
 
 

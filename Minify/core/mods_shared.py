@@ -3,9 +3,7 @@
 import os
 import sys
 
-import jsonc
-
-from core import base, utils
+from core import base, config
 
 mods_alphabetical = []
 mods_with_order = []
@@ -31,20 +29,12 @@ def is_user_mod(name: str) -> bool:
 
 
 def get_state(mod):
-    with utils.open_utf8(base.mods_config_dir) as file:
-        states = jsonc.load(file)
-        return states.get(mod, False)
+    states = config.read_json_file(base.mods_config_dir)
+    return states.get(mod, False)
 
 
 def set_state(mod, value):
-    states = {}
-    if os.path.exists(base.mods_config_dir):
-        with utils.open_utf8(base.mods_config_dir) as file:
-            states = jsonc.load(file)
-
-    states[mod] = value
-    with utils.open_utf8(base.mods_config_dir, "w") as file:
-        jsonc.dump(dict(sorted(states.items())), file, indent=2)
+    config.update_json_file(base.mods_config_dir, mod, value)
 
 
 def enforce_locale_mod_states():

@@ -57,7 +57,7 @@ def test_api_endpoints():
     assert isinstance(api.is_debug_env(), bool)
 
     # Test start_uninstall
-    with patch("patch.unins.uninstall") as mock_unins:
+    with patch("patch.unins.uninstall"):
         res = api.start_uninstall(remove_everything=False)
         assert res["status"] in ("started", "already_running")
 

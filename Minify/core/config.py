@@ -4,7 +4,6 @@ JSON(C) config files
 Interactions with main config and mod configs
 """
 
-import os
 from typing import Any, Optional
 
 import jsonc
