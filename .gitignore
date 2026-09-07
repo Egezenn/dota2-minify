@@ -1,5 +1,5 @@
 # Minify
-Minify/bin/gamepakcontents.txt
+Minify/cache/gamepakcontents.txt
 Minify/vpk_build
 Minify/vpk_replace
 Minify/vpk_merge
@@ -16,7 +16,7 @@ scripts/ffi_*.txt
 Minify/*blake3_dotnet*
 Minify/*spirv-cross*
 Minify/*TinyEXR*
-Minify/bin/rescomproot*
+Minify/config/rescomproot*
 Minify/cli-*-*.*
 Minify/libSkiaSharp*
 Minify/rg*

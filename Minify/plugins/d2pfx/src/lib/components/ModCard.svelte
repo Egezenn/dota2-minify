@@ -4,8 +4,10 @@
   export let mod: D2Mod;
   export let installed: boolean = false;
   export let inProgress: boolean = false;
+  export let enabled: boolean = false;
   export let onInstall: (mod: D2Mod) => void;
   export let onUninstall: (mod: D2Mod) => void;
+  export let onToggleEnabled: ((mod: D2Mod, enabled: boolean) => void) | undefined = undefined;
 
   function formatAuthors(author: any, sender: any): string {
     const parts: string[] = [];
@@ -71,6 +73,14 @@
 
   <div class="card-actions">
     {#if installed}
+      <label class="checkbox-container" title={enabled ? "Disable mod" : "Enable mod"}>
+        <input
+          type="checkbox"
+          checked={enabled}
+          disabled={inProgress}
+          on:change={(e) => onToggleEnabled && onToggleEnabled(mod, e.currentTarget.checked)}
+        />
+      </label>
       <button
         class="install-btn installed"
         disabled={inProgress}
@@ -78,13 +88,24 @@
       >
         {inProgress ? "REMOVING..." : "REMOVE"}
       </button>
+    {:else if inProgress}
+      <label class="checkbox-container" title={enabled ? "Disable mod" : "Enable mod"}>
+        <input
+          type="checkbox"
+          checked={enabled}
+          on:change={(e) => onToggleEnabled && onToggleEnabled(mod, e.currentTarget.checked)}
+        />
+      </label>
+      <button class="install-btn" disabled>
+        INSTALLING...
+      </button>
     {:else}
       <button
         class="install-btn"
         disabled={inProgress}
         on:click={() => onInstall(mod)}
       >
-        {inProgress ? "INSTALLING..." : "INSTALL"}
+        INSTALL
       </button>
     {/if}
   </div>
@@ -149,10 +170,13 @@
 
   .card-actions {
     margin-top: 4px;
+    display: flex;
+    gap: 4px;
   }
 
   .install-btn {
-    width: 100%;
+    flex: 1;
+    min-width: 0;
     padding: 4px;
     border: 1px solid #000;
     background: #fff;
@@ -160,6 +184,10 @@
     font-weight: bold;
     cursor: pointer;
     font-size: 11px;
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   .install-btn.installed {
@@ -168,6 +196,30 @@
   }
 
   .install-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .checkbox-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 26px;
+    border: 1px solid #000;
+    background: #fff;
+    cursor: pointer;
+    flex-shrink: 0;
+  }
+
+  .checkbox-container input[type="checkbox"] {
+    cursor: pointer;
+    margin: 0;
+    width: 14px;
+    height: 14px;
+    accent-color: #000;
+  }
+
+  .checkbox-container:has(input:disabled) {
     opacity: 0.5;
     cursor: not-allowed;
   }

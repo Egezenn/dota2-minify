@@ -190,9 +190,21 @@
       console.error("Error setting game language:", err);
     }
   }
+  function broadcastToPlugins(message: any) {
+    const iframes = document.querySelectorAll<HTMLIFrameElement>("iframe.plugin-frame");
+    iframes.forEach((frame) => {
+      try {
+        frame.contentWindow?.postMessage(message, "*");
+      } catch (e) {
+        // ignore
+      }
+    });
+  }
+
   async function handleSaveMods(data: Record<string, boolean>) {
     try {
       await window.pywebview?.api?.set_mods(data);
+      broadcastToPlugins({ type: "MODS_UPDATED" });
     } catch (err) {
       console.error("Failed to save mod state:", err);
     }
@@ -213,7 +225,10 @@
     {availableGameLangs}
     {isPatching}
     {pluginTabs}
-    onTabChange={(tab) => (activeTab = tab)}
+    onTabChange={(tab) => {
+      activeTab = tab;
+      broadcastToPlugins({ type: "TAB_ACTIVE", tab });
+    }}
     onGameLangChange={handleGameLangSelect}
     onPatch={handlePatch}
     onUninstallClick={() => (showUninstallModal = true)}

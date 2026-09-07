@@ -24,6 +24,20 @@ export async function callApi(action: string, params: Record<string, any> = {}):
   return res;
 }
 
+export async function setModState(
+  modName: string,
+  catId: string,
+  label?: string,
+  enabled: boolean = true
+): Promise<any> {
+  return callApi("set_mod_state", {
+    mod_name: modName,
+    cat_id: catId,
+    label,
+    enabled,
+  });
+}
+
 export function getModKey(m: D2Mod, catId: string): string {
   return `${catId}::${m.name}::${m.label || ""}`;
 }

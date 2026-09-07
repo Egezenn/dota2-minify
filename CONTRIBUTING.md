@@ -56,6 +56,20 @@ Additionally, we have pre-configured tasks available to streamline development. 
 
 Debugger configurations are also available in `.vscode/launch.json`. However, the overhead of a debugger is rarely worth it; you can typically achieve the same results much faster through rapid iteration—simply run the application and fix errors as they appear in the terminal or `Minify/logs`. For testing logic without a GUI, you can use the CLI mode: `uv run Minify --help`.
 
+## Building the application
+
+```shell
+uv run scripts/build.py
+```
+
+args:
+
+- `-s`: symlinking instead of copy
+- `--no-plugins`: build without any plugin integrations
+- `--clean`: clean output folders
+- `--skip-npm`, `--skip-pyinstaller`: skip build steps
+- `--setup`: create a setup file
+
 ## Mod Development
 
 If you are contributing new mods or features to existing ones:

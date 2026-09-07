@@ -127,6 +127,30 @@ def get_mods(params: Dict[str, Any] = None) -> List[Dict[str, Any]]:
     return filtered
 
 
+def _resolve_mod_folder(name: str, cat_id: str, label: str = None) -> str:
+    from patch import manifest_utils
+
+    if os.path.exists(base.mods_dir):
+        for folder in os.listdir(base.mods_dir):
+            mod_path = os.path.join(base.mods_dir, folder)
+            if not os.path.isdir(mod_path):
+                continue
+            cfg = manifest_utils.get_mod(mod_path)
+            b_info = cfg.get("browser", {})
+            if (
+                b_info.get("browser") == "d2pfx"
+                and b_info.get("name") == name
+                and b_info.get("category") == cat_id
+                and b_info.get("label") == label
+            ):
+                return folder
+
+    mod_dir_name = f"D2PFX {cat_id.upper()} - {name}"
+    if label:
+        mod_dir_name = f"{mod_dir_name} {label}"
+    return utils.sanitize_win_path(mod_dir_name)
+
+
 @router.route
 def get_installed_mods(params: Dict[str, Any] = None) -> List[Dict[str, Any]]:
     from patch import manifest_utils
@@ -147,9 +171,23 @@ def get_installed_mods(params: Dict[str, Any] = None) -> List[Dict[str, Any]]:
                     "category": browser_info.get("category"),
                     "label": browser_info.get("label"),
                     "folder": folder,
+                    "enabled": mods_shared.get_state(folder),
                 }
             )
     return installed
+
+
+@router.route
+def set_mod_state(params: Dict[str, Any] = None) -> Dict[str, Any]:
+    params = params or {}
+    mod_name = params.get("mod_name") or params.get("name", "")
+    cat_id = params.get("cat_id", "")
+    label = params.get("label")
+    enabled = bool(params.get("enabled", True))
+
+    folder = _resolve_mod_folder(mod_name, cat_id, label)
+    mods_shared.set_state(folder, enabled)
+    return {"success": True, "folder": folder, "enabled": enabled}
 
 
 @router.route
@@ -307,6 +345,7 @@ def uninstall_mod(params: Dict[str, Any] = None) -> Dict[str, Any]:
     from patch import manifest_utils
 
     target_dir = None
+    target_folder = None
     if os.path.exists(base.mods_dir):
         for folder in os.listdir(base.mods_dir):
             mod_path = os.path.join(base.mods_dir, folder)
@@ -321,18 +360,25 @@ def uninstall_mod(params: Dict[str, Any] = None) -> Dict[str, Any]:
                 and b_info.get("label") == label
             ):
                 target_dir = mod_path
+                target_folder = folder
                 break
 
     if not target_dir:
         mod_dir_name = f"D2PFX {cat_id.upper()} - {mod_name}"
         if label:
             mod_dir_name = f"{mod_dir_name} {label}"
-        possible_dir = os.path.join(base.mods_dir, utils.sanitize_win_path(mod_dir_name))
+        target_folder = utils.sanitize_win_path(mod_dir_name)
+        possible_dir = os.path.join(base.mods_dir, target_folder)
         if os.path.exists(possible_dir):
             target_dir = possible_dir
 
     if target_dir and os.path.exists(target_dir):
         fs.remove_path(target_dir)
+        if target_folder:
+            states = config.read_json_file(base.mods_config_dir)
+            if target_folder in states:
+                del states[target_folder]
+                config.write_json_file(base.mods_config_dir, dict(sorted(states.items())))
         mods_shared.scan_mods()
         output.add_text(f"D2PFX mod '{mod_name}' removed.", msg_type="info")
         return {"success": True}

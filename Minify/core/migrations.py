@@ -8,6 +8,7 @@ class Migrations:
         self._migrate_locale_config()
         self._rename_file_in_mods("modcfg.json", "manifest.json")
         self._rename_file_in_mods("xml_mod.json", "xml.json")
+        self._migrate_rescomproot_and_bin()
 
     def _migrate_locale_config(self):
         locale = config.get("output_locale")
@@ -51,6 +52,40 @@ class Migrations:
                         log.write_warning(f"Removed redundant {src_name} in {mod} since {dest_name} exists")
                     except Exception as e:
                         log.write_warning(f"Failed to remove redundant {src_name} in {mod}: {e}")
+
+    def _migrate_rescomproot_and_bin(self):
+        legacy_bin = "bin"
+        legacy_rescomp = os.path.join(legacy_bin, "rescomproot")
+        target_rescomp = os.path.abspath(base.rescomp_override_dir)
+
+        if not os.path.exists(legacy_rescomp):
+            alt_rescomp = os.path.join(base.base_dir, "bin", "rescomproot")
+            if os.path.exists(alt_rescomp):
+                legacy_rescomp = alt_rescomp
+                legacy_bin = os.path.join(base.base_dir, "bin")
+
+        if os.path.exists(legacy_rescomp):
+            if not os.path.exists(target_rescomp):
+                try:
+                    os.makedirs(os.path.dirname(target_rescomp), exist_ok=True)
+                    fs.move_path(legacy_rescomp, target_rescomp)
+                    log.write_warning("Migrated rescomproot to config/")
+                except Exception as e:
+                    log.write_warning(f"Failed to migrate rescomproot: {e}")
+            else:
+                try:
+                    fs.remove_path(legacy_rescomp)
+                    log.write_warning("Removed redundant bin/rescomproot since config/rescomproot exists")
+                except Exception as e:
+                    log.write_warning(f"Failed to remove redundant bin/rescomproot: {e}")
+
+            # Delete the bin directory when rescomproot migration occurs
+            if os.path.exists(legacy_bin):
+                try:
+                    fs.remove_path(legacy_bin)
+                    log.write_warning(f"Removed legacy {legacy_bin} folder")
+                except Exception as e:
+                    log.write_warning(f"Failed to remove legacy {legacy_bin} folder: {e}")
 
 
 Migrations()

@@ -21,4 +21,5 @@ export interface InstalledMod {
   category: string;
   label?: string;
   folder: string;
+  enabled?: boolean;
 }

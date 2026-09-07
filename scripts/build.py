@@ -3,6 +3,7 @@
 
 import argparse
 import os
+import platform
 import shutil
 import subprocess
 import sys
@@ -16,6 +17,10 @@ DIST_MINIFY_DIR = DIST_DIR / "Minify"
 BUILD_DIR = REPO_ROOT / "scripts" / "build"
 WEB_DIR = MINIFY_DIR / "ui" / "web"
 SPEC_FILE = REPO_ROOT / "scripts" / "Minify.spec"
+SCRIPTS_DIR = REPO_ROOT / "scripts"
+
+if str(SCRIPTS_DIR) not in sys.path:
+    sys.path.append(str(SCRIPTS_DIR))
 
 
 def log(msg: str) -> None:
@@ -58,18 +63,6 @@ def link_or_copy(src: Path, dst: Path, use_symlink: bool) -> None:
     else:
         shutil.copy2(src, dst)
         log(f"Copied file: {src.relative_to(REPO_ROOT)} -> {dst.relative_to(REPO_ROOT)}")
-
-
-def copy_bin_selective(src_bin: Path, dst_bin: Path, use_symlink: bool) -> None:
-    if not src_bin.exists():
-        return
-    if dst_bin.is_symlink():
-        dst_bin.unlink()
-    dst_bin.mkdir(parents=True, exist_ok=True)
-    for item in src_bin.iterdir():
-        if item.name in ("settings.json", "localization.json"):
-            continue
-        link_or_copy(item, dst_bin / item.name, use_symlink=use_symlink)
 
 
 def copy_plugins_selective(src_plugins: Path, dst_plugins: Path, use_symlink: bool) -> None:
@@ -150,6 +143,43 @@ def run_pyinstaller() -> None:
         sys.exit(result.returncode)
 
 
+def run_inno_setup() -> None:
+    log("Building Inno Setup installer...")
+    try:
+        import version_util
+
+        version_util.generate_metadata()
+    except Exception as e:
+        log(f"Warning: Failed to generate metadata via version_util: {e}")
+
+    iscc_path = shutil.which("ISCC")
+    if not iscc_path:
+        fallbacks = [
+            r"C:\Program Files (x86)\Inno Setup 6\ISCC.exe",
+            r"C:\Program Files\Inno Setup 6\ISCC.exe",
+            os.path.expandvars(r"%LOCALAPPDATA%\Programs\Inno Setup 6\ISCC.exe"),
+            os.path.expandvars(r"%APPDATA%\Programs\Inno Setup 6\ISCC.exe"),
+        ]
+        for fallback in fallbacks:
+            if os.path.exists(fallback):
+                iscc_path = fallback
+                break
+
+    if not iscc_path:
+        log("Error: Inno Setup compiler (iscc) not found on PATH or default locations.")
+        sys.exit(1)
+
+    installer_iss = str(REPO_ROOT / "scripts" / "installer.iss")
+    cmd = [iscc_path, installer_iss]
+
+    log(f"Running Inno Setup: {' '.join(cmd)}")
+    result = subprocess.run(cmd, cwd=REPO_ROOT / "scripts")
+    if result.returncode != 0:
+        log("Error: Inno Setup build failed.")
+        sys.exit(result.returncode)
+    log("Inno Setup installer created successfully.")
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description="Build Dota 2 Minify application distribution package.")
     parser.add_argument(
@@ -178,6 +208,11 @@ def main() -> None:
         action="store_true",
         help="Skip PyInstaller binary compilation step",
     )
+    parser.add_argument(
+        "--setup",
+        action="store_true",
+        help="Build Inno Setup installer executable after packaging",
+    )
 
     args = parser.parse_args()
 
@@ -196,8 +231,6 @@ def main() -> None:
     use_symlink = args.symlink
 
     log("Packaging release assets into dist/Minify...")
-
-    copy_bin_selective(MINIFY_DIR / "bin", DIST_MINIFY_DIR / "bin", use_symlink)
 
     if (MINIFY_DIR / "config").exists():
         link_or_copy(MINIFY_DIR / "config", DIST_MINIFY_DIR / "config", use_symlink)
@@ -248,6 +281,9 @@ def main() -> None:
     clean_release_dir(DIST_MINIFY_DIR)
 
     log("Build process completed successfully.")
+
+    if args.setup and platform.system() == "Windows":
+        run_inno_setup()
 
 
 if __name__ == "__main__":

@@ -73,8 +73,8 @@ if base_dir not in sys.path:
     sys.path.insert(0, base_dir)
 
 
-bin_dir = "bin"
 bundle_bin_dir = os.path.abspath(os.path.join(bundle_dir, "bin"))
+bin_dir = bundle_bin_dir
 build_dir = "vpk_build"
 replace_dir = "vpk_replace"
 merge_dir = "vpk_merge"
@@ -85,12 +85,11 @@ cache_dir = "cache"
 
 
 # bin
-blank_files_dir = os.path.join(bin_dir, "blank-files")
-img_dir = os.path.join(bin_dir, "images")
+blank_files_dir = os.path.join(bundle_bin_dir, "blank-files")
+img_dir = os.path.join(bundle_bin_dir, "images")
 localization_file_dir = os.path.join(bundle_bin_dir, "localization.json")
 settings_file_dir = os.path.join(bundle_bin_dir, "settings.json")
-rescomp_override_dir = os.path.join(bin_dir, "rescomproot")
-sounds_dir = os.path.join(bin_dir, "sounds")
+sounds_dir = os.path.join(bundle_bin_dir, "sounds")
 
 # logs
 log_crashlog = os.path.join(logs_dir, "crashlog.txt")
@@ -102,8 +101,10 @@ log_rescomp = os.path.join(logs_dir, "resourcecompiler.txt")
 # cache
 dota_steam_inf_cache = os.path.join(cache_dir, "steam.inf")
 states_file_dir = os.path.join(cache_dir, "states.json")
+gamepakcontents_file_dir = os.path.join(cache_dir, "gamepakcontents.txt")
 
 # config
+rescomp_override_dir = os.path.join(config_dir, "rescomproot")
 main_config_file_dir = os.path.join(config_dir, "minify_config.json")
 mods_config_dir = os.path.join(config_dir, "mods.json")
 

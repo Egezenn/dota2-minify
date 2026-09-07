@@ -1,7 +1,7 @@
 <script lang="ts">
   import { onMount } from "svelte";
   import type { Category, D2Mod, InstalledMod } from "./lib/types";
-  import { callApi, getApi, getModKey, isInstalled, notifyParentModsRefreshed } from "./lib/api";
+  import { callApi, getApi, getModKey, isInstalled, notifyParentModsRefreshed, setModState } from "./lib/api";
   import Sidebar from "./lib/components/Sidebar.svelte";
   import Header from "./lib/components/Header.svelte";
   import ModCard from "./lib/components/ModCard.svelte";
@@ -18,6 +18,7 @@
   let isLoadingCategories = false;
   let isLoadingMods = false;
   let installingMap: Record<string, boolean> = {};
+  let enabledMap: Record<string, boolean> = {};
   let actionMessage = "";
 
   async function loadCategories() {
@@ -41,6 +42,14 @@
     try {
       const res = await callApi("get_installed_mods");
       installedMods = Array.isArray(res) ? res : [];
+      const updated: Record<string, boolean> = { ...enabledMap };
+      for (const inst of installedMods) {
+        const key = `${inst.category}::${inst.name}::${inst.label || ""}`;
+        if (inst.enabled !== undefined) {
+          updated[key] = Boolean(inst.enabled);
+        }
+      }
+      enabledMap = updated;
     } catch (err) {
       console.error("Error loading installed D2PFX mods:", err);
       installedMods = [];
@@ -51,7 +60,7 @@
     selectedCategory = cat.id;
     selectedCatName = cat.name;
     selectedCatDesc = cat.description;
-    await fetchMods();
+    await Promise.all([fetchMods(), refreshInstalledMods()]);
   }
 
   async function fetchMods() {
@@ -76,7 +85,16 @@
   async function handleInstall(m: D2Mod) {
     const key = getModKey(m, selectedCategory);
     installingMap = { ...installingMap, [key]: true };
+    enabledMap = { ...enabledMap, [key]: true };
     actionMessage = `Installing ${m.name}...`;
+
+    try {
+      await setModState(m.name, selectedCategory, m.label, true);
+      notifyParentModsRefreshed();
+    } catch (err) {
+      console.error("Error setting mod initial state in mods.json:", err);
+    }
+
     try {
       const res = await callApi("install_mod", { mod: m, cat_id: selectedCategory });
       if (res?.success) {
@@ -96,6 +114,17 @@
     }
   }
 
+  async function handleToggleEnabled(m: D2Mod, nextEnabled: boolean) {
+    const key = getModKey(m, selectedCategory);
+    enabledMap = { ...enabledMap, [key]: nextEnabled };
+    try {
+      await setModState(m.name, selectedCategory, m.label, nextEnabled);
+      notifyParentModsRefreshed();
+    } catch (err) {
+      console.error("Error toggling mod state in mods.json:", err);
+    }
+  }
+
   async function handleUninstall(m: D2Mod) {
     const key = getModKey(m, selectedCategory);
     installingMap = { ...installingMap, [key]: true };
@@ -107,6 +136,9 @@
         label: m.label,
       });
       if (res?.success) {
+        const copyEnabled = { ...enabledMap };
+        delete copyEnabled[key];
+        enabledMap = copyEnabled;
         await refreshInstalledMods();
         notifyParentModsRefreshed();
         actionMessage = `Successfully removed ${m.name}`;
@@ -138,6 +170,26 @@
   }
 
   onMount(() => {
+    const handleParentMessage = (e: MessageEvent) => {
+      if (
+        e.data?.type === "MODS_UPDATED" ||
+        e.data?.type === "TAB_ACTIVE" ||
+        e.data?.type === "REFRESH_MODS"
+      ) {
+        refreshInstalledMods();
+      }
+    };
+
+    window.addEventListener("message", handleParentMessage);
+    window.addEventListener("focus", refreshInstalledMods);
+
+    const handleVisibility = () => {
+      if (!document.hidden) {
+        refreshInstalledMods();
+      }
+    };
+    document.addEventListener("visibilitychange", handleVisibility);
+
     const init = async () => {
       if (getApi()) {
         await loadCategories();
@@ -147,6 +199,12 @@
       }
     };
     init();
+
+    return () => {
+      window.removeEventListener("message", handleParentMessage);
+      window.removeEventListener("focus", refreshInstalledMods);
+      document.removeEventListener("visibilitychange", handleVisibility);
+    };
   });
 </script>
 
@@ -180,8 +238,10 @@
               mod={m}
               installed={isInstalled(m, selectedCategory, installedMods)}
               inProgress={Boolean(installingMap[key])}
+              enabled={Boolean(enabledMap[key])}
               onInstall={handleInstall}
               onUninstall={handleUninstall}
+              onToggleEnabled={handleToggleEnabled}
             />
           {/each}
         </div>

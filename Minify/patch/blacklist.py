@@ -82,7 +82,7 @@ def process_dir(index, line, folder):
             "--no-line-number",
             "--color=never",
             line,
-            os.path.join(base.bin_dir, "gamepakcontents.txt"),
+            base.gamepakcontents_file_dir,
         ],
         capture_output=True,
         text=True,

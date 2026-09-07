@@ -170,7 +170,7 @@ def patcher():
                             xml_modifications.setdefault(path, []).extend(mods)
 
                     if not game_contents_file_init:
-                        gamepakcontents_path = os.path.join(base.bin_dir, "gamepakcontents.txt")
+                        gamepakcontents_path = base.gamepakcontents_file_dir
                         if dota_version_changed or not os.path.exists(gamepakcontents_path):
                             with utils.open_utf8(gamepakcontents_path, "w") as file:
                                 for filepath in dota_pak_contents:

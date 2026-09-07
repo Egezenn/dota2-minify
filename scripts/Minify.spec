@@ -26,8 +26,7 @@ if platform.system() != "Windows":
             binaries.extend((path, ".") for path in glob.glob(os.path.join(lib_dir, pattern)))
 
 datas = [
-    (os.path.abspath(os.path.join(SPECPATH, "../Minify/bin/settings.json")), "bin"),
-    (os.path.abspath(os.path.join(SPECPATH, "../Minify/bin/localization.json")), "bin"),
+    (os.path.abspath(os.path.join(SPECPATH, "../Minify/bin")), "bin"),
     (os.path.abspath(os.path.join(SPECPATH, "../Minify/ui/web/dist")), "ui"),
 ]
 

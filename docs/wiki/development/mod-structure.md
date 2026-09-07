@@ -159,7 +159,7 @@ Normal text supports `inline code` (pink) and https://example.com (orange).
 This file is a list of path to files used to override those with blanks.
 Supported file types can be found in [`bin/blank-files`](https://github.com/Egezenn/dota2-minify/tree/main/Minify/bin/blank-files).
 
-A list of all the files (from the game pak) can be found in `bin/gamepakcontents.txt` of your installation.
+A list of all the files (from the game pak) can be found in `cache/gamepakcontents.txt` of your installation.
 
 | Modifier | Value               | Purpose                          |
 | -------- | ------------------- | -------------------------------- |
