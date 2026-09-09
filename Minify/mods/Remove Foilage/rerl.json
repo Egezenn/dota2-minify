@@ -1,0 +1,8 @@
+{
+  "models/props_tree/tree_oak*.vmdl_c": {
+    "materials/models/props_tree/tree_oak_leaves_05.vmat": "materials/models/props_tree/tree_oak_leaves_00.vmat"
+  },
+  "models/props_tree/dire_tree00*.vmdl_c": {
+    "materials/models/props_tree/tree_oak_leaves_05.vmat": "materials/models/props_tree/tree_oak_leaves_00.vmat"
+  }
+}

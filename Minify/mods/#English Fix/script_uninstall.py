@@ -28,7 +28,7 @@ def main():
             bkup_file = os.path.join(dirpath, fname)
             rel_path = os.path.relpath(bkup_file, bkup_dir).replace("\\", "/")
             dest = os.path.join(game_root, rel_path)
-            os.makedirs(os.path.dirname(dest), exist_ok=True)
+            fs.create_dirs(os.path.dirname(dest))
             shutil.copy2(bkup_file, dest)
             restored += 1
 

@@ -18,7 +18,7 @@ import conditions
 import helper
 from core import base, config, constants, fs, log, mods_shared, output, registry, steam, utils
 
-from patch import blacklist, manifest_utils, replacer, styling, unins, vpk_utils, xml_utils
+from patch import blacklist, manifest_utils, replacer, rerl_processor, styling, unins, vpk_utils, xml_utils
 
 dota_version_changed = False
 
@@ -145,6 +145,7 @@ def patcher():
                         files_uncompiled_dir = os.path.join(mod_path, "files_uncompiled")
                     script_file = os.path.join(mod_path, "script.py")
                     replacer_file = os.path.join(mod_path, "replacer.json")
+                    rerl_file = os.path.join(mod_path, "rerl.json")
                     files_dir = os.path.join(mod_path, "files")
 
                     helper.exec_script(script_file, folder, "loop")
@@ -195,6 +196,10 @@ def patcher():
 
                     # --------------------------------- replacer.csv --------------------------------- #
                     replacer.process(replacer_file, folder, replacer_source_extracts, replacer_targets)
+
+                    # ---------------------------------- rerl.json ---------------------------------- #
+                    if os.path.exists(rerl_file):
+                        rerl_processor.process(rerl_file, folder, dota_pak_contents)
 
             except Exception:
                 log.write_warning()

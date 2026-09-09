@@ -36,13 +36,6 @@ def process(blacklist_txt, folder, blank_file_extensions):
                         f"[Invalid Extension] '{line}' in 'mods/{folder}/blacklist.txt' [line: {index + 1}] does not end in one of the valid extensions -> {blank_file_extensions}"
                     )
 
-    blacklist_data_set = set(blacklist_data)
-    for exclusion in blacklist_data_exclusions:
-        if exclusion not in blacklist_data_set:
-            print(
-                f"[Unnecessary Exclusion] '{exclusion}' in '{folder}' is not necessary, the mod doesn't include this file."
-            )
-
     blacklist_data = [item for item in blacklist_data if item not in blacklist_data_exclusions]
 
     def copy_blank_file(line):

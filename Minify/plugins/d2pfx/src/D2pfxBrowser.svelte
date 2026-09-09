@@ -27,6 +27,15 @@
   let installingMap: Record<string, boolean> = {};
   let enabledMap: Record<string, boolean> = {};
   let actionMessage = "";
+  let previewModal: { url: string; title: string } | null = null;
+
+  function openPreview(url: string, title: string) {
+    previewModal = { url, title };
+  }
+
+  function closePreview() {
+    previewModal = null;
+  }
 
   async function loadCategories() {
     isLoadingCategories = true;
@@ -193,6 +202,15 @@
       }
     };
 
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape" && previewModal) {
+        e.preventDefault();
+        e.stopPropagation();
+        closePreview();
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
     window.addEventListener("message", handleParentMessage);
     window.addEventListener("focus", refreshInstalledMods);
 
@@ -214,6 +232,7 @@
     init();
 
     return () => {
+      window.removeEventListener("keydown", handleKeyDown);
       window.removeEventListener("message", handleParentMessage);
       window.removeEventListener("focus", refreshInstalledMods);
       document.removeEventListener("visibilitychange", handleVisibility);
@@ -255,12 +274,67 @@
               onInstall={handleInstall}
               onUninstall={handleUninstall}
               onToggleEnabled={handleToggleEnabled}
+              onPreview={openPreview}
             />
           {/each}
         </div>
       {/if}
     </div>
   </main>
+
+  {#if previewModal}
+    <div
+      class="lightbox-backdrop"
+      on:click|stopPropagation={closePreview}
+      role="button"
+      tabindex="-1"
+      on:keydown={(e) => {
+        if (e.key === "Escape") {
+          e.stopPropagation();
+          e.preventDefault();
+          closePreview();
+        }
+      }}
+    >
+      <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
+      <!-- svelte-ignore a11y-click-events-have-key-events -->
+      <div
+        class="lightbox-card"
+        on:click|stopPropagation
+        role="dialog"
+        aria-modal="true"
+        aria-label="Image Preview"
+      >
+        <header class="lightbox-header">
+          <span class="lightbox-title">{previewModal.title} - Preview</span>
+          <button
+            class="close-btn"
+            type="button"
+            on:click|stopPropagation={closePreview}
+            aria-label="Close image preview"
+          >
+            &times;
+          </button>
+        </header>
+        <div
+          class="lightbox-body"
+          role="button"
+          tabindex="-1"
+          on:click|stopPropagation={closePreview}
+          on:keydown={(e) => {
+            if (e.key === "Enter" || e.key === " " || e.key === "Escape") {
+              e.stopPropagation();
+              e.preventDefault();
+              closePreview();
+            }
+          }}
+          title="Click to close"
+        >
+          <img src={previewModal.url} alt={previewModal.title} />
+        </div>
+      </div>
+    </div>
+  {/if}
 </div>
 
 <style>
@@ -300,5 +374,82 @@
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
     gap: 10px;
+  }
+
+  .lightbox-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.85);
+    z-index: 2000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+
+  .lightbox-card {
+    background: var(--modal-bg, #fff);
+    border: 1px solid var(--modal-border, #000);
+    display: flex;
+    flex-direction: column;
+    max-width: 92vw;
+    max-height: 92vh;
+    box-sizing: border-box;
+  }
+
+  .lightbox-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 38px;
+    padding: 6px 12px;
+    border-bottom: 1px solid var(--border-color, #000);
+    background: var(--modal-bg, #fff);
+    gap: 12px;
+    box-sizing: border-box;
+  }
+
+  .lightbox-title {
+    font-size: 13px;
+    font-weight: bold;
+    color: var(--text-primary, #000);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .close-btn {
+    background: var(--btn-bg, #fff);
+    color: var(--btn-text, #000);
+    border: 1px solid var(--btn-border, #000);
+    padding: 2px 8px;
+    cursor: pointer;
+  }
+
+  .close-btn:hover {
+    background: var(--btn-hover-bg, #f0f0f0);
+    border-color: var(--btn-hover-border, var(--border-color, #000));
+  }
+
+  .close-btn:active {
+    background: var(--btn-active-bg, #000);
+    color: var(--btn-active-text, #fff);
+  }
+
+  .lightbox-body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    padding: 12px;
+    background: var(--terminal-bg, var(--bg-primary, #000));
+    cursor: zoom-out;
+  }
+
+  .lightbox-body img {
+    max-width: 88vw;
+    max-height: 80vh;
+    object-fit: contain;
+    display: block;
   }
 </style>

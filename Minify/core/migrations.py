@@ -67,7 +67,7 @@ class Migrations:
         if os.path.exists(legacy_rescomp):
             if not os.path.exists(target_rescomp):
                 try:
-                    os.makedirs(os.path.dirname(target_rescomp), exist_ok=True)
+                    fs.create_dirs(os.path.dirname(target_rescomp))
                     fs.move_path(legacy_rescomp, target_rescomp)
                     log.write_warning("Migrated rescomproot to config/")
                 except Exception as e:

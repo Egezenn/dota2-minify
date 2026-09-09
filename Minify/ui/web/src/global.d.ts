@@ -23,6 +23,13 @@ declare global {
           preview: string | null;
           has_notes: boolean;
           has_preview: boolean;
+          methods?: Array<{
+            name: string;
+            type: "tree" | "json" | "blacklist" | "css" | "python" | "xml" | "text";
+            content?: string;
+            tree?: any;
+            badge?: string;
+          }>;
         }>;
         get_localization: (lang: string) => Promise<Record<string, string>>;
         set_locale: (lang: string) => Promise<boolean>;

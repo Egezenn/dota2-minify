@@ -8,6 +8,7 @@
   export let onInstall: (mod: D2Mod) => void;
   export let onUninstall: (mod: D2Mod) => void;
   export let onToggleEnabled: ((mod: D2Mod, enabled: boolean) => void) | undefined = undefined;
+  export let onPreview: ((url: string, title: string) => void) | undefined = undefined;
 
   function formatAuthors(author: any, sender: any): string {
     const parts: string[] = [];
@@ -40,14 +41,25 @@
 <div class="mod-card">
   <div class="preview-box">
     {#if mod.preview_url}
-      <img
-        src={mod.preview_url}
-        alt={mod.name}
-        loading="lazy"
-        decoding="async"
-        class="preview-img"
-        on:error={handleImageError}
-      />
+      <button
+        type="button"
+        class="preview-img-btn"
+        on:click|stopPropagation={() =>
+          onPreview &&
+          mod.preview_url &&
+          onPreview(mod.preview_url, `${mod.name}${mod.label ? ` (${mod.label})` : ""}`)}
+        title="Click to preview image"
+        aria-label={`Preview image for ${mod.name}`}
+      >
+        <img
+          src={mod.preview_url}
+          alt={mod.name}
+          loading="lazy"
+          decoding="async"
+          class="preview-img"
+          on:error={handleImageError}
+        />
+      </button>
     {:else}
       <span class="no-preview">NO PREVIEW</span>
     {/if}
@@ -134,10 +146,26 @@
     margin-bottom: 6px;
   }
 
+  .preview-img-btn {
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    margin: 0;
+    border: none;
+    background: transparent;
+    cursor: zoom-in;
+    display: block;
+  }
+
+  .preview-img-btn:hover .preview-img {
+    opacity: 0.85;
+  }
+
   .preview-img {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    display: block;
   }
 
   .no-preview {

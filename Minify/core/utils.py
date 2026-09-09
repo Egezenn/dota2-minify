@@ -8,7 +8,7 @@ import uuid
 from pathlib import Path
 from typing import IO, Any
 
-from core import base
+from core import base, fs
 
 _real_open = builtins.open
 
@@ -30,7 +30,7 @@ def write_states(states_or_key: dict | str, value: Any = None) -> None:
     elif isinstance(states_or_key, str):
         states[states_or_key] = value
 
-    os.makedirs(base.cache_dir, exist_ok=True)
+    fs.create_dirs(base.cache_dir)
     with open_utf8R(base.states_file_dir, "w") as f:
         json.dump(states, f, indent=2)
 

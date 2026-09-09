@@ -302,7 +302,6 @@ def test_apply_for_all_false(monkeypatch):
     monkeypatch.setattr("os.path.exists", lambda path: True)
     monkeypatch.setattr("core.utils.open_utf8R", MagicMock())
 
-
     vdf_data = {
         "UserLocalConfigStore": {
             "Software": {"Valve": {"Steam": {"apps": {base.STEAM_DOTA_ID: {"LaunchOptions": "-novid %command%"}}}}}

@@ -58,6 +58,7 @@ class PluginService:
                     with open(abs_entry, "r", encoding="utf-8") as f:
                         content = f.read()
                     from ui.services.config_service import ConfigService
+
                     cs = ConfigService()
                     theme_css = cs.get_theme_css(config.get("theme", "light"))
                     base_css = cs.get_base_css()
