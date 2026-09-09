@@ -1,4 +1,5 @@
 import os
+from pathlib import Path
 from typing import Any, Dict, List, Optional
 
 import webview
@@ -84,6 +85,23 @@ class Api:
     def reset_mod_settings(self, mod_name: str) -> bool:
         return self.config_service.reset_mod_settings(mod_name)
 
+    def get_available_themes(self) -> List[Dict[str, str]]:
+        return self.config_service.get_available_themes()
+
+    def get_theme_url(self, theme_name: str | None = None) -> str:
+        return self.config_service.get_theme_url(theme_name)
+
+    def get_theme_css(self, theme_name: str | None = None) -> str:
+        return self.config_service.get_theme_css(theme_name)
+
+    def is_theme_initialized(self) -> bool:
+        states = utils.read_states()
+        return bool(states.get("system_theme_init"))
+
+    def set_theme_initialized(self) -> bool:
+        utils.write_states("system_theme_init", True)
+        return True
+
     def get_plugin_tabs(self) -> List[Dict[str, Any]]:
         return self.plugin_service.get_tabs(resolve_func=self._resolve_plugin_entry)
 
@@ -97,64 +115,18 @@ class Api:
         return self.plugin_service.call_api(plugin_id, action, params)
 
 
-def _apply_tiling_wm_floating_hints() -> None:
-    if not base.is_linux:
-        return
-
-    # GTK platform
-    with utils.try_pass():
-        import gi
-
-        gi.require_version("Gtk", "3.0")
-        gi.require_version("Gdk", "3.0")
-        import webview.platforms.gtk as gtk_platform
-        from gi.repository import Gdk, Gtk
-
-        orig_gtk_init = gtk_platform.BrowserView.__init__
-
-        def patched_gtk_init(self: Any, window: Any) -> None:
-            orig_gtk_init(self, window)
-            if isinstance(self.window, Gtk.Window):
-                self.window.set_type_hint(Gdk.WindowTypeHint.DIALOG)
-                self.window.set_role("dialog")
-                try:
-                    self.window.set_wmclass("Minify", "Minify")
-                except Exception:
-                    pass
-
-        gtk_platform.BrowserView.__init__ = patched_gtk_init
-
-    # Qt platform
-    with utils.try_pass():
-        import webview.platforms.qt as qt_platform
-
-        orig_qt_init = qt_platform.BrowserView.__init__
-
-        def patched_qt_init(self: Any, window: Any) -> None:
-            orig_qt_init(self, window)
-            try:
-                from PyQt5.QtCore import Qt
-
-                self.window.setWindowFlags(self.window.windowFlags() | Qt.Dialog | Qt.Tool)
-            except Exception:
-                pass
-
-        qt_platform.BrowserView.__init__ = patched_qt_init
-
-
 def launch() -> None:
-    _apply_tiling_wm_floating_hints()
-
-    url = base.dist_index
-    if not os.path.isfile(url):
+    if not os.path.isfile(base.dist_index):
         output.add_text(
-            f"Error: Web UI build file not found at '{url}'. Please run 'npm run build' inside Minify/ui/web.",
+            f"Error: Web UI build file not found at '{base.dist_index}'. Please run 'npm run build' inside Minify/ui/web.",
             msg_type="error",
         )
 
     debug_mode = bool(config.get("debug_env"))
     webview.settings["OPEN_DEVTOOLS_IN_DEBUG"] = False
     webview.settings["ALLOW_FILE_URLS"] = True
+
+    url = Path(base.dist_index).as_uri()
 
     states = utils.read_states()
     window_size = states.get("window_size", {}) if isinstance(states, dict) else {}
@@ -167,6 +139,9 @@ def launch() -> None:
         initial_height = 680
 
     api = Api()
+    active_theme = config.get("theme", "light")
+    theme_css = api.get_theme_css(active_theme)
+    bg_color = api.config_service.extract_bg_color(theme_css)
     window = webview.create_window(
         title=base.TITLE,
         url=url,
@@ -175,6 +150,7 @@ def launch() -> None:
         height=initial_height,
         min_size=(700, 500),
         resizable=True,
+        background_color=bg_color,
     )
 
     def _save_window_size(*args: Any, **kwargs: Any) -> None:
@@ -189,4 +165,4 @@ def launch() -> None:
     window.events.resized += _save_window_size
 
     api.set_window(window)
-    webview.start(debug=debug_mode)
+    webview.start(debug=debug_mode, icon=base.favicon_file)

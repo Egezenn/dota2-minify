@@ -1,5 +1,12 @@
 [
   {
+    "key": "theme",
+    "text": "Theme",
+    "default": "light",
+    "type": "combo",
+    "items": []
+  },
+  {
     "key": "opt_into_rcs",
     "text": "Opt into RCs",
     "default": false,

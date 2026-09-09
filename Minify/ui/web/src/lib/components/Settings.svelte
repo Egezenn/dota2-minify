@@ -77,12 +77,12 @@
     }
   }
 
-  function getItemValue(item: SettingItem): any {
-    return values[item.key] ?? item.default;
+  function getItemValue(item: SettingItem, currentValues = values): any {
+    return currentValues[item.key] ?? item.default;
   }
 
-  function getListValue(item: SettingItem): string[] {
-    const val = getItemValue(item);
+  function getListValue(item: SettingItem, currentValues = values): string[] {
+    const val = getItemValue(item, currentValues);
     return Array.isArray(val) ? [...val] : [];
   }
 
@@ -123,6 +123,9 @@
       if (isNative) {
         if (window.pywebview?.api?.reset_native_settings) {
           await window.pywebview.api.reset_native_settings();
+          if (onSettingChange) {
+            onSettingChange("theme", "light");
+          }
         }
       } else {
         const modName = items[0]?.mod;
@@ -179,9 +182,9 @@
           {#each items as item (item.key)}
             {#if item.type === "checkbox"}
               <label class="setting-item-checkbox">
-                <input
+                 <input
                   type="checkbox"
-                  checked={Boolean(getItemValue(item))}
+                  checked={Boolean(getItemValue(item, values))}
                   on:change={(e) =>
                     updateSetting(item, e.currentTarget.checked)}
                 />
@@ -193,7 +196,7 @@
                 <input
                   type="text"
                   class="setting-input"
-                  value={getItemValue(item) ?? ""}
+                  value={getItemValue(item, values) ?? ""}
                   on:change={(e) => updateSetting(item, e.currentTarget.value)}
                 />
               </div>
@@ -202,7 +205,7 @@
                 <span class="setting-label">{item.text}</span>
                 <select
                   class="setting-select"
-                  value={getItemValue(item) ?? ""}
+                  value={getItemValue(item, values) ?? ""}
                   on:change={(e) => updateSetting(item, e.currentTarget.value)}
                 >
                   {#each item.items || [] as option}
@@ -223,7 +226,7 @@
                   step={item.step ?? (item.var_type === "float" ? 0.1 : 1)}
                   min={item.min ?? undefined}
                   max={item.max ?? undefined}
-                  value={getItemValue(item) ?? 0}
+                  value={getItemValue(item, values) ?? 0}
                   on:change={(e) => {
                     const val =
                       item.var_type === "float"
@@ -243,7 +246,7 @@
                     min={item.min ?? 0}
                     max={item.max ?? 100}
                     step={item.step ?? (item.var_type === "float" ? 0.1 : 1)}
-                    value={getItemValue(item) ?? 0}
+                    value={getItemValue(item, values) ?? 0}
                     on:input={(e) => {
                       const val =
                         item.var_type === "float"
@@ -252,7 +255,7 @@
                       updateSetting(item, isNaN(val) ? 0 : val);
                     }}
                   />
-                  <span class="range-val">{getItemValue(item) ?? 0}</span>
+                  <span class="range-val">{getItemValue(item, values) ?? 0}</span>
                 </div>
               </div>
             {:else if item.type === "color"}
@@ -262,14 +265,14 @@
                   <input
                     type="color"
                     class="color-picker"
-                    value={getHex6(getItemValue(item))}
+                    value={getHex6(getItemValue(item, values))}
                     on:change={(e) =>
                       updateSetting(item, e.currentTarget.value)}
                   />
                   <input
                     type="text"
                     class="setting-input color-text"
-                    value={getItemValue(item) ?? ""}
+                    value={getItemValue(item, values) ?? ""}
                     on:change={(e) =>
                       updateSetting(item, e.currentTarget.value)}
                   />
@@ -279,7 +282,7 @@
               <div class="setting-item-col">
                 <span class="setting-label">{item.text}</span>
                 <div class="list-container">
-                  {#each getListValue(item) as entry, idx}
+                  {#each getListValue(item, values) as entry, idx}
                     <div class="list-entry-row">
                       <input
                         type="text"
@@ -336,8 +339,8 @@
     flex-direction: column;
     height: 100%;
     overflow: hidden;
-    background: #fff;
-    color: #000;
+    background: var(--bg-primary, #fff);
+    color: var(--text-primary, #000);
   }
 
   .settings-toolbar {
@@ -346,7 +349,7 @@
     justify-content: space-between;
     height: 38px;
     padding: 0 8px;
-    border-bottom: 1px solid #000;
+    border-bottom: 1px solid var(--border-color, #000);
     font-size: 13px;
     box-sizing: border-box;
   }
@@ -377,18 +380,23 @@
     justify-content: center;
     height: 24px;
     padding: 0 8px;
-    background: #fff;
-    color: #000;
-    border: 1px solid #000;
+    background: var(--btn-bg, #fff);
+    color: var(--btn-text, #000);
+    border: 1px solid var(--btn-border, #000);
     font-size: 12px;
     line-height: 1;
     cursor: pointer;
     box-sizing: border-box;
   }
 
+  .btn-refresh:hover {
+    background: var(--btn-hover-bg, #f0f0f0);
+    border-color: var(--btn-hover-border, var(--border-color, #000));
+  }
+
   .btn-refresh:active {
-    background: #000;
-    color: #fff;
+    background: var(--btn-active-bg, #000);
+    color: var(--btn-active-text, #fff);
   }
 
   .settings-body {
@@ -404,7 +412,8 @@
     display: flex;
     flex-direction: column;
     gap: 8px;
-    border: 1px solid #000;
+    border: 1px solid var(--border-color, #000);
+    background: var(--bg-primary, #fff);
     padding: 10px;
   }
 
@@ -412,7 +421,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border-bottom: 1px solid #000;
+    border-bottom: 1px solid var(--border-color, #000);
     padding-bottom: 4px;
   }
 
@@ -425,17 +434,22 @@
   }
 
   .btn-reset {
-    background: #fff;
-    color: #000;
-    border: 1px solid #000;
+    background: var(--btn-bg, #fff);
+    color: var(--btn-text, #000);
+    border: 1px solid var(--btn-border, #000);
     padding: 1px 6px;
     font-size: 11px;
     cursor: pointer;
   }
 
+  .btn-reset:hover {
+    background: var(--btn-hover-bg, #f0f0f0);
+    border-color: var(--btn-hover-border, var(--border-color, #000));
+  }
+
   .btn-reset:active {
-    background: #000;
-    color: #fff;
+    background: var(--btn-active-bg, #000);
+    color: var(--btn-active-text, #fff);
   }
 
   .section-content {
@@ -476,9 +490,9 @@
   }
 
   .setting-input {
-    background: #fff;
-    color: #000;
-    border: 1px solid #000;
+    background: var(--input-bg, #fff);
+    color: var(--input-text, #000);
+    border: 1px solid var(--input-border, #000);
     padding: 3px 6px;
     font-size: 13px;
     flex: 1;
@@ -490,9 +504,9 @@
   }
 
   .setting-select {
-    background: #fff;
-    color: #000;
-    border: 1px solid #000;
+    background: var(--input-bg, #fff);
+    color: var(--input-text, #000);
+    border: 1px solid var(--input-border, #000);
     padding: 3px 6px;
     font-size: 13px;
     max-width: 280px;
@@ -530,7 +544,7 @@
     width: 28px;
     height: 24px;
     padding: 0;
-    border: 1px solid #000;
+    border: 1px solid var(--input-border, #000);
     background: none;
     cursor: pointer;
   }
@@ -543,7 +557,7 @@
     display: flex;
     flex-direction: column;
     gap: 6px;
-    border: 1px solid #000;
+    border: 1px solid var(--border-color, #000);
     padding: 6px;
   }
 
@@ -556,17 +570,23 @@
 
   .btn-sm,
   .btn-action {
-    background: #fff;
-    color: #000;
-    border: 1px solid #000;
+    background: var(--btn-bg, #fff);
+    color: var(--btn-text, #000);
+    border: 1px solid var(--btn-border, #000);
     padding: 2px 8px;
     font-size: 12px;
     cursor: pointer;
   }
 
+  .btn-sm:hover,
+  .btn-action:hover {
+    background: var(--btn-hover-bg, #f0f0f0);
+    border-color: var(--btn-hover-border, var(--border-color, #000));
+  }
+
   .btn-sm:active,
   .btn-action:active {
-    background: #000;
-    color: #fff;
+    background: var(--btn-active-bg, #000);
+    color: var(--btn-active-text, #fff);
   }
 </style>

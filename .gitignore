@@ -10,6 +10,7 @@ Minify/backup
 Minify/mods/*
 Minify/plugins/*
 Minify/plugins/*/ui
+Minify/themes/*
 scripts/ffi_*.txt
 
 ## Dependencies
@@ -70,13 +71,14 @@ Minify/mods/Custom Backgrounds/*.mp4
 Minify/mods/Custom Backgrounds/*.png
 Minify/mods/Custom Backgrounds/*.web[mp]
 Minify/mods/Custom Backgrounds/video_success
-Minify/mods/User Styles/styling.css
 
-# Official Plug-ins
+# Official Plug-ins & themes
 !Minify/plugins/__init__.py
 !Minify/plugins/package.json
 !Minify/plugins/tsconfig.json
 !Minify/plugins/d2pfx
+!Minify/themes/dark.css
+!Minify/themes/light.css
 
 # misc
 __pycache__

@@ -28,6 +28,7 @@ if platform.system() != "Windows":
 datas = [
     (os.path.abspath(os.path.join(SPECPATH, "../Minify/bin")), "bin"),
     (os.path.abspath(os.path.join(SPECPATH, "../Minify/ui/web/dist")), "ui"),
+    (os.path.abspath(os.path.join(SPECPATH, "../Minify/ui/web/src/app.css")), "ui"),
 ]
 
 a = Analysis(

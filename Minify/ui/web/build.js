@@ -31,6 +31,12 @@ async function runBuild() {
     },
   });
 
+  // Ensure app.css is present in dist for runtime injection
+  const srcAppCss = path.resolve(__dirname, "src/app.css");
+  if (fs.existsSync(srcAppCss)) {
+    fs.copyFileSync(srcAppCss, path.resolve(mainOutDir, "app.css"));
+  }
+
   const pluginsDir = path.resolve(__dirname, "../../plugins");
 
   // If --no-plugins is specified, remove ui directory in all plugins and return

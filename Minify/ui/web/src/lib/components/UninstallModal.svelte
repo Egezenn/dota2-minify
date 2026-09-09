@@ -51,7 +51,7 @@
     left: 0;
     width: 100vw;
     height: 100vh;
-    background: rgba(0, 0, 0, 0.5);
+    background: var(--modal-backdrop, rgba(0, 0, 0, 0.5));
     display: flex;
     align-items: center;
     justify-content: center;
@@ -61,10 +61,11 @@
   .modal-card {
     width: 440px;
     max-width: 90vw;
-    background: #fff;
-    border: 1px solid #000;
+    background: var(--modal-bg, #fff);
+    border: 1px solid var(--modal-border, #000);
     display: flex;
     flex-direction: column;
+    color: var(--text-primary, #000);
   }
 
   .modal-header {
@@ -72,8 +73,8 @@
     align-items: center;
     justify-content: space-between;
     padding: 8px 12px;
-    border-bottom: 1px solid #000;
-    background: #fff;
+    border-bottom: 1px solid var(--border-color, #000);
+    background: var(--modal-bg, #fff);
   }
 
   .modal-header h3 {
@@ -85,6 +86,7 @@
   .close-btn {
     border: none;
     background: transparent;
+    color: var(--text-primary, #000);
     font-size: 14px;
     font-weight: bold;
     cursor: pointer;
@@ -100,7 +102,7 @@
 
   .modal-text {
     font-size: 13px;
-    color: #000;
+    color: var(--text-primary, #000);
     line-height: 1.4;
   }
 
@@ -109,7 +111,7 @@
     align-items: flex-start;
     gap: 8px;
     font-size: 12px;
-    color: #000;
+    color: var(--text-primary, #000);
     cursor: pointer;
     user-select: none;
   }
@@ -125,8 +127,8 @@
     justify-content: flex-end;
     gap: 8px;
     padding: 8px 12px;
-    border-top: 1px solid #000;
-    background: #fff;
+    border-top: 1px solid var(--border-color, #000);
+    background: var(--modal-bg, #fff);
   }
 
   .btn {
@@ -135,16 +137,27 @@
     justify-content: center;
     height: 26px;
     padding: 0 16px;
-    border: 1px solid #000;
-    background: #fff;
-    color: #000;
+    border: 1px solid var(--btn-border, #000);
+    background: var(--btn-bg, #fff);
+    color: var(--btn-text, #000);
     font-size: 13px;
     font-weight: bold;
     cursor: pointer;
   }
 
+  .btn-cancel:hover {
+    background: var(--btn-hover-bg, #f0f0f0);
+    border-color: var(--btn-hover-border, var(--border-color, #000));
+  }
+
+  .btn-cancel:active {
+    background: var(--btn-active-bg, #000);
+    color: var(--btn-active-text, #fff);
+  }
+
   .btn-yes {
-    background: #000;
-    color: #fff;
+    background: var(--accent, #17bebe);
+    color: var(--accent-text, #000);
+    border-color: var(--accent, #17bebe);
   }
 </style>

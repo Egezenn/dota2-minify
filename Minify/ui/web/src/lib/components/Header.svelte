@@ -72,8 +72,8 @@
     justify-content: space-between;
     height: 38px;
     padding: 0 8px;
-    border: 1px solid #000;
-    background: #fff;
+    border: 1px solid var(--border-color, #000);
+    background: var(--bg-primary, #fff);
     box-sizing: border-box;
   }
 
@@ -89,9 +89,9 @@
     justify-content: center;
     height: 24px;
     padding: 0 8px;
-    border: 1px solid #000;
-    background: #fff;
-    color: #000;
+    border: 1px solid var(--btn-border, #000);
+    background: var(--btn-bg, #fff);
+    color: var(--btn-text, #000);
     font-size: 13px;
     font-family: inherit;
     line-height: 1;
@@ -99,9 +99,15 @@
     box-sizing: border-box;
   }
 
+  .tab-btn:hover {
+    background: var(--btn-hover-bg, #f0f0f0);
+    border-color: var(--btn-hover-border, var(--border-color, #000));
+  }
+
   .tab-btn.active {
-    background: #000;
-    color: #fff;
+    background: var(--accent, #17bebe);
+    color: var(--accent-text, #000);
+    border-color: var(--accent, #17bebe);
   }
 
   .header-action {
@@ -109,6 +115,7 @@
     align-items: center;
     gap: 8px;
     font-size: 13px;
+    color: var(--text-primary, #000);
   }
 
   .header-action label {
@@ -122,9 +129,9 @@
     align-items: center;
     height: 24px;
     padding: 0 4px;
-    border: 1px solid #000;
-    background: #fff;
-    color: #000;
+    border: 1px solid var(--input-border, #000);
+    background: var(--input-bg, #fff);
+    color: var(--input-text, #000);
     font-size: 13px;
     font-family: inherit;
     line-height: 1;
@@ -139,14 +146,26 @@
     justify-content: center;
     height: 24px;
     padding: 0 12px;
-    border: 1px solid #000;
-    background: #fff;
-    color: #000;
+    border: 1px solid var(--btn-border, #000);
+    background: var(--btn-bg, #fff);
+    color: var(--btn-text, #000);
     font-size: 13px;
     font-family: inherit;
     font-weight: bold;
     line-height: 1;
     cursor: pointer;
     box-sizing: border-box;
+  }
+
+  .uninstall-btn:hover,
+  .patch-btn:hover {
+    background: var(--btn-hover-bg, #f0f0f0);
+    border-color: var(--btn-hover-border, var(--border-color, #000));
+  }
+
+  .uninstall-btn:active,
+  .patch-btn:active {
+    background: var(--btn-active-bg, #000);
+    color: var(--btn-active-text, #fff);
   }
 </style>

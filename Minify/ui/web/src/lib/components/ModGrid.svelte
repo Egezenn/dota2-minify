@@ -95,7 +95,7 @@
     justify-content: space-between;
     height: 38px;
     padding: 0 8px;
-    border-bottom: 1px solid #000;
+    border-bottom: 1px solid var(--border-color, #000);
     font-size: 13px;
     box-sizing: border-box;
   }
@@ -129,7 +129,9 @@
   .search-box input {
     height: 24px;
     padding: 0 8px;
-    border: 1px solid #000;
+    border: 1px solid var(--input-border, #000);
+    background: var(--input-bg, #fff);
+    color: var(--input-text, #000);
     font-size: 13px;
     box-sizing: border-box;
   }
@@ -140,12 +142,17 @@
     justify-content: center;
     height: 24px;
     padding: 0 8px;
-    border: 1px solid #000;
-    background: #fff;
-    color: #000;
+    border: 1px solid var(--btn-border, #000);
+    background: var(--btn-bg, #fff);
+    color: var(--btn-text, #000);
     cursor: pointer;
     line-height: 1;
     box-sizing: border-box;
+  }
+
+  .search-box button:active {
+    background: var(--btn-active-bg, #000);
+    color: var(--btn-active-text, #fff);
   }
 
   .mod-grid {

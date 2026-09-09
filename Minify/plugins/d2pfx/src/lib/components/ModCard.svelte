@@ -113,19 +113,20 @@
 
 <style>
   .mod-card {
-    border: 1px solid #000;
+    border: 1px solid var(--card-border, #000);
     padding: 8px;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    background: #fff;
+    background: var(--card-bg, #fff);
+    color: var(--text-primary, #000);
   }
 
   .preview-box {
     width: 100%;
     height: 100px;
-    border: 1px solid #000;
-    background: #f8f8f8;
+    border: 1px solid var(--card-border, #000);
+    background: var(--card-preview-bg, #f8f8f8);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -141,7 +142,7 @@
 
   .no-preview {
     font-size: 10px;
-    color: #888;
+    color: var(--text-muted, #888);
   }
 
   .card-details {
@@ -154,17 +155,18 @@
     font-size: 12px;
     margin-bottom: 2px;
     line-height: 1.2;
+    color: var(--text-primary, inherit);
   }
 
   .mod-meta {
     font-size: 10px;
-    color: #555;
+    color: var(--text-secondary, #555);
     margin-bottom: 2px;
   }
 
   .mod-tags {
     font-size: 9px;
-    color: #0055bb;
+    color: var(--accent, #0055bb);
     word-break: break-all;
   }
 
@@ -178,9 +180,9 @@
     flex: 1;
     min-width: 0;
     padding: 4px;
-    border: 1px solid #000;
-    background: #fff;
-    color: #000;
+    border: 1px solid var(--btn-border, #000);
+    background: var(--btn-bg, #fff);
+    color: var(--btn-text, #000);
     font-weight: bold;
     cursor: pointer;
     font-size: 11px;
@@ -190,9 +192,15 @@
     text-overflow: ellipsis;
   }
 
+  .install-btn:hover {
+    background: var(--btn-hover-bg, #f0f0f0);
+    border-color: var(--btn-hover-border, var(--border-color, #000));
+  }
+
   .install-btn.installed {
-    background: #000;
-    color: #fff;
+    background: var(--accent, #17bebe);
+    color: var(--accent-text, #000);
+    border-color: var(--accent, #17bebe);
   }
 
   .install-btn:disabled {
@@ -205,8 +213,8 @@
     align-items: center;
     justify-content: center;
     width: 26px;
-    border: 1px solid #000;
-    background: #fff;
+    border: 1px solid var(--input-border, #000);
+    background: var(--input-bg, #fff);
     cursor: pointer;
     flex-shrink: 0;
   }
@@ -216,7 +224,7 @@
     margin: 0;
     width: 14px;
     height: 14px;
-    accent-color: #000;
+    accent-color: var(--accent, #17bebe);
   }
 
   .checkbox-container:has(input:disabled) {

@@ -54,6 +54,11 @@ declare global {
         run_mod_function: (mod_name: string, function_name: string) => Promise<boolean>;
         reset_native_settings: () => Promise<boolean>;
         reset_mod_settings: (mod_name: string) => Promise<boolean>;
+        get_available_themes?: () => Promise<Array<{ value: string; label: string }>>;
+        get_theme_url?: (theme_name?: string) => Promise<string>;
+        get_theme_css?: (theme_name?: string) => Promise<string>;
+        is_theme_initialized?: () => Promise<boolean>;
+        set_theme_initialized?: () => Promise<boolean>;
         get_plugin_tabs?: () => Promise<Array<{ id: string; name: string; icon?: string; entry_point?: string }>>;
         get_plugin_content?: (plugin_id: string) => Promise<string>;
         call_plugin_api?: (plugin_id: string, action: string, params?: Record<string, any>) => Promise<any>;

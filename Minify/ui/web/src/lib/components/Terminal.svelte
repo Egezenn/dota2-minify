@@ -64,7 +64,7 @@
     justify-content: space-between;
     height: 38px;
     padding: 0 8px;
-    border-bottom: 1px solid #000;
+    border-bottom: 1px solid var(--border-color, #000);
     font-size: 13px;
     box-sizing: border-box;
   }
@@ -103,12 +103,22 @@
     justify-content: center;
     height: 24px;
     padding: 0 8px;
-    border: 1px solid #000;
-    background: #fff;
-    color: #000;
+    border: 1px solid var(--btn-border, #000);
+    background: var(--btn-bg, #fff);
+    color: var(--btn-text, #000);
     line-height: 1;
     cursor: pointer;
     box-sizing: border-box;
+  }
+
+  .toolbar-controls button:hover {
+    background: var(--btn-hover-bg, #f0f0f0);
+    border-color: var(--btn-hover-border, var(--border-color, #000));
+  }
+
+  .toolbar-controls button:active {
+    background: var(--btn-active-bg, #000);
+    color: var(--btn-active-text, #fff);
   }
 
   .terminal-body {
@@ -116,6 +126,8 @@
     padding: 8px;
     font-family: monospace;
     font-size: 12px;
+    background: var(--terminal-bg, #fff);
+    color: var(--terminal-text, #000);
     overflow-y: auto;
     display: flex;
     flex-direction: column;
@@ -129,16 +141,16 @@
     word-break: break-all;
     user-select: text;
     cursor: text;
-    color: #000;
+    color: var(--terminal-text, #000);
   }
 
   .log-row.error {
-    color: #cc0000;
+    color: var(--log-error, #cc0000);
     font-weight: bold;
   }
 
   .log-row.warning {
-    color: #d97706;
+    color: var(--log-warning, #d97706);
   }
 
   .log-row.success {
@@ -148,7 +160,7 @@
 
   hr {
     border: none;
-    border-top: 1px solid #000;
+    border-top: 1px solid var(--border-color, #000);
     margin: 4px 0;
   }
 </style>

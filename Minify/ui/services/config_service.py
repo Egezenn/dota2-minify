@@ -1,4 +1,6 @@
 import os
+from pathlib import Path
+import re
 from typing import Any, Dict, List
 
 import helper
@@ -63,6 +65,117 @@ class ConfigService:
 
     def get_steam_accounts(self) -> List[Dict[str, Any]]:
         return steam.get_steam_accounts()
+
+    def get_available_themes(self) -> List[Dict[str, str]]:
+        themes = []
+        try:
+            themes_dir = getattr(base, "themes_dir", os.path.join(base.base_dir, "themes"))
+            if os.path.exists(themes_dir):
+                for item in sorted(os.listdir(themes_dir)):
+                    if item.lower().endswith(".css") and os.path.isfile(os.path.join(themes_dir, item)):
+                        base_name = os.path.splitext(item)[0]
+                        label = base_name.replace("_", " ").replace("-", " ").title()
+                        themes.append({"value": base_name, "label": label})
+        except Exception as e:
+            output.add_text(f"get_available_themes error: {e}", msg_type="error")
+
+        if not any(t["value"] == "light" for t in themes):
+            themes.insert(0, {"value": "light", "label": "Light"})
+        return themes
+
+    def get_theme_url(self, theme_name: str | None = None) -> str:
+        try:
+            if not theme_name:
+                theme_name = config.get("theme", "light") or "light"
+
+            themes_dir = getattr(base, "themes_dir", os.path.join(base.base_dir, "themes"))
+            clean_name = os.path.basename(str(theme_name))
+            if not clean_name.lower().endswith(".css"):
+                clean_name += ".css"
+
+            theme_path = os.path.join(themes_dir, clean_name)
+            if not os.path.isfile(theme_path):
+                theme_path = os.path.join(themes_dir, "light.css")
+            if os.path.isfile(theme_path):
+                return Path(os.path.abspath(theme_path)).as_uri()
+            return ""
+        except Exception as e:
+            output.add_text(f"get_theme_url error: {e}", msg_type="error")
+            return ""
+
+    def get_theme_css(self, theme_name: str | None = None) -> str:
+        try:
+            if not theme_name:
+                theme_name = config.get("theme", "light") or "light"
+
+            themes_dir = getattr(base, "themes_dir", os.path.join(base.base_dir, "themes"))
+            clean_name = os.path.basename(str(theme_name))
+            if not clean_name.lower().endswith(".css"):
+                clean_name += ".css"
+
+            theme_path = os.path.join(themes_dir, clean_name)
+            if not os.path.isfile(theme_path):
+                theme_path = os.path.join(themes_dir, "light.css")
+            if os.path.isfile(theme_path):
+                with open(theme_path, "r", encoding="utf-8") as f:
+                    return f.read()
+            return ""
+        except Exception as e:
+            output.add_text(f"get_theme_css error: {e}", msg_type="error")
+            return ""
+
+    def get_base_css(self) -> str:
+        try:
+            candidates = [
+                os.path.join(base.web_dir, "app.css"),
+                os.path.join(getattr(base, "bundle_dir", base.base_dir), "ui", "app.css"),
+            ]
+            for p in candidates:
+                if os.path.isfile(p):
+                    with open(p, "r", encoding="utf-8") as f:
+                        return f.read()
+            return ""
+        except Exception as e:
+            output.add_text(f"get_base_css error: {e}", msg_type="error")
+            return ""
+
+    @staticmethod
+    def extract_bg_color(theme_css: str) -> str:
+        if not theme_css:
+            return "#FFFFFF"
+        match = re.search(r"--bg-primary\s*:\s*(#[0-9a-fA-F]{3,6})\b", theme_css)
+        if match:
+            return match.group(1)
+        return "#FFFFFF"
+
+    @staticmethod
+    def inject_theme_into_content(html: str, theme_css: str, base_css: str = "") -> str:
+        if not html:
+            return ""
+        styles = []
+        if base_css:
+            styles.append(f'<style id="minify-base">{base_css}</style>')
+        if theme_css:
+            styles.append(f'<style id="minify-theme">{theme_css}</style>')
+        if not styles:
+            return html
+        theme_tag = "".join(styles)
+        head_close = html.rfind("</head>")
+        if head_close != -1:
+            return html[:head_close] + theme_tag + html[head_close:]
+        return theme_tag + html
+
+    def get_html_with_theme(self, theme_css: str, file_path: str | None = None) -> str:
+        file_path = file_path or base.dist_index
+        if not os.path.isfile(file_path):
+            return ""
+        try:
+            with open(file_path, "r", encoding="utf-8") as f:
+                content = f.read()
+            return self.inject_theme_into_content(content, theme_css)
+        except Exception as e:
+            output.add_text(f"get_html_with_theme error: {e}", msg_type="warning")
+            return ""
 
     @staticmethod
     def parse_setting_item(
@@ -151,6 +264,9 @@ class ConfigService:
                             }
                             for acc in accounts
                         ]
+                    elif parsed["key"] == "theme":
+                        parsed["items"] = self.get_available_themes()
+
                     settings_schema.append(parsed)
                     values[parsed["key"]] = config.get(parsed["key"], parsed["default"])
 

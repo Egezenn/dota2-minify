@@ -40,17 +40,18 @@
 <style>
   .sidebar {
     width: 180px;
-    border-right: 1px solid #000;
+    border-right: 1px solid var(--border-color, #000);
     display: flex;
     flex-direction: column;
-    background: #fff;
+    background: var(--bg-primary, #fff);
+    color: var(--text-primary, #000);
     flex-shrink: 0;
   }
 
   .sidebar-search {
     height: 38px;
     padding: 0 8px;
-    border-bottom: 1px solid #000;
+    border-bottom: 1px solid var(--border-color, #000);
     display: flex;
     align-items: center;
     box-sizing: border-box;
@@ -60,12 +61,16 @@
     width: 100%;
     height: 24px;
     padding: 0 6px;
-    border: 1px solid #000;
-    background: #fff;
-    color: #000;
+    border: 1px solid var(--input-border, #000);
+    background: var(--input-bg, #fff);
+    color: var(--input-text, #000);
     font-size: 12px;
     outline: none;
     box-sizing: border-box;
+  }
+
+  .sidebar-search input:focus {
+    outline: 1px solid var(--accent);
   }
 
   .category-list {
@@ -76,7 +81,7 @@
   .loading-item {
     padding: 8px;
     font-size: 11px;
-    color: #666;
+    color: var(--text-secondary, #666);
   }
 
   .category-item {
@@ -84,16 +89,16 @@
     padding: 6px 8px;
     text-align: left;
     border: none;
-    border-bottom: 1px solid #eee;
-    background: #fff;
-    color: #000;
+    border-bottom: 1px solid var(--border-color, #eee);
+    background: var(--bg-primary, #fff);
+    color: var(--text-primary, #000);
     cursor: pointer;
     font-size: 12px;
   }
 
   .category-item:hover,
   .category-item.active {
-    background: #000;
-    color: #fff;
+    background: var(--accent, #17bebe);
+    color: var(--accent-text, #000);
   }
 </style>

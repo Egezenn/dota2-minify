@@ -1,0 +1,46 @@
+:root {
+  color-scheme: light;
+  --font-sans: system-ui, -apple-system, sans-serif;
+  --font-mono: monospace;
+
+  --bg-primary: #ffffff;
+  --bg-secondary: #f4f4f4;
+  --bg-tertiary: #e8e8e8;
+  --text-primary: #000000;
+  --text-secondary: #555555;
+  --text-muted: #888888;
+  --border-color: #000000;
+
+  --accent: #17bebe;
+  --accent-text: #000000;
+
+  --btn-bg: #ffffff;
+  --btn-text: #000000;
+  --btn-border: #000000;
+  --btn-hover-bg: #f0f0f0;
+  --btn-hover-border: #17bebe;
+  --btn-active-bg: #17bebe;
+  --btn-active-text: #000000;
+
+  --input-bg: #ffffff;
+  --input-text: #000000;
+  --input-border: #000000;
+
+  --card-bg: #ffffff;
+  --card-border: #000000;
+  --card-footer-bg: #ffffff;
+  --card-preview-bg: #f0f0f0;
+
+  --terminal-bg: #ffffff;
+  --terminal-text: #000000;
+  --log-error: #cc0000;
+  --log-warning: #ff8800;
+
+  --modal-backdrop: rgba(0, 0, 0, 0.5);
+  --modal-bg: #ffffff;
+  --modal-border: #000000;
+
+  --scrollbar-track: #f4f4f4;
+  --scrollbar-thumb: #cccccc;
+  --scrollbar-thumb-hover: #17bebe;
+}

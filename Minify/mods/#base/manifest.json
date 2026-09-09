@@ -1,5 +1,5 @@
 {
   "always": true,
-  "order": 0,
+  "visual": false,
   "skip_workshop_check": true
 }

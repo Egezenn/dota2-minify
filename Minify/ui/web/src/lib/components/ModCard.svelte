@@ -71,19 +71,20 @@
     display: flex;
     flex-direction: column;
     height: 100px;
-    border: 1px solid #000;
+    border: 1px solid var(--card-border, #000);
     cursor: pointer;
-    background: #fff;
+    background: var(--card-bg, #fff);
+    color: var(--text-primary, #000);
     overflow: hidden;
     box-sizing: border-box;
   }
 
   .mod-card.always-mod {
-    background: #f4f4f4;
+    background: var(--bg-secondary, #f4f4f4);
   }
 
   .mod-card.always-mod .card-footer {
-    background: #e8e8e8;
+    background: var(--bg-tertiary, #e8e8e8);
     opacity: 0.85;
   }
 
@@ -91,8 +92,8 @@
     height: 60px;
     width: 100%;
     overflow: hidden;
-    border-bottom: 1px solid #000;
-    background: #f0f0f0;
+    border-bottom: 1px solid var(--card-border, #000);
+    background: var(--card-preview-bg, #f0f0f0);
     flex-shrink: 0;
   }
 
@@ -106,7 +107,7 @@
   .preview-placeholder {
     width: 100%;
     height: 100%;
-    background: #f0f0f0;
+    background: var(--card-preview-bg, #f0f0f0);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -116,7 +117,7 @@
   .placeholder-letter {
     font-size: 32px;
     font-weight: 700;
-    color: #888888;
+    color: var(--text-muted, #888888);
     line-height: 1;
     text-transform: uppercase;
   }
@@ -128,7 +129,7 @@
     height: 40px;
     padding: 0 8px;
     gap: 6px;
-    background: #fff;
+    background: var(--card-footer-bg, #fff);
     flex: 1;
   }
 
@@ -138,7 +139,7 @@
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-    color: #000;
+    color: var(--text-primary, #000);
   }
 
   .mod-actions {
@@ -151,10 +152,20 @@
   .details-btn {
     padding: 2px 6px;
     font-size: 11px;
-    color: #000;
-    background: #fff;
-    border: 1px solid #000;
+    color: var(--btn-text, #000);
+    background: var(--btn-bg, #fff);
+    border: 1px solid var(--btn-border, #000);
     cursor: pointer;
+  }
+
+  .details-btn:hover {
+    background: var(--btn-hover-bg, #f0f0f0);
+    border-color: var(--btn-hover-border, var(--border-color, #000));
+  }
+
+  .details-btn:active {
+    background: var(--btn-active-bg, #000);
+    color: var(--btn-active-text, #fff);
   }
 
   input[type="checkbox"] {

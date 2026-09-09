@@ -50,7 +50,6 @@ else:
 
 DOTA_TOOLS_EXECUTABLE_PATH = os.path.join("steamapps", "common", "dota 2 beta", "game", "bin", "win64", "dota2cfg.exe")
 
-# launchers for dota2 won't work as it presumes native version, doesn't really matter
 DOTA_EXECUTABLE_PATH_FALLBACK = os.path.join("steamapps", "common", "dota 2 beta", "game", "bin", "win64", "dota2.exe")
 
 STEAM_DOTA_ID = "570"
@@ -67,6 +66,7 @@ else:
     web_dir = os.path.abspath(os.path.join(base_dir, "ui", "web", "dist"))
 
 plugins_dir = os.path.abspath(os.path.join(base_dir, "plugins"))
+themes_dir = os.path.abspath(os.path.join(base_dir, "themes"))
 dist_index = os.path.abspath(os.path.join(web_dir, "index.html"))
 
 if base_dir not in sys.path:
@@ -87,6 +87,7 @@ cache_dir = "cache"
 # bin
 blank_files_dir = os.path.join(bundle_bin_dir, "blank-files")
 img_dir = os.path.join(bundle_bin_dir, "images")
+favicon_file = os.path.join(img_dir, "favicon.ico")
 localization_file_dir = os.path.join(bundle_bin_dir, "localization.json")
 settings_file_dir = os.path.join(bundle_bin_dir, "settings.json")
 sounds_dir = os.path.join(bundle_bin_dir, "sounds")

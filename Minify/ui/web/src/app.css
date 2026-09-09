@@ -1,6 +1,47 @@
 :root {
   --font-sans: system-ui, -apple-system, sans-serif;
   --font-mono: monospace;
+
+  --bg-primary: transparent;
+  --bg-secondary: #f4f4f4;
+  --bg-tertiary: #e8e8e8;
+  --text-primary: #000000;
+  --text-secondary: #555555;
+  --text-muted: #888888;
+  --border-color: #000000;
+
+  --accent: #000000;
+  --accent-text: #ffffff;
+
+  --btn-bg: #ffffff;
+  --btn-text: #000000;
+  --btn-border: #000000;
+  --btn-hover-bg: #f0f0f0;
+  --btn-hover-border: #17bebe;
+  --btn-active-bg: #17bebe;
+  --btn-active-text: #000000;
+
+  --input-bg: #ffffff;
+  --input-text: #000000;
+  --input-border: #000000;
+
+  --card-bg: #ffffff;
+  --card-border: #000000;
+  --card-footer-bg: #ffffff;
+  --card-preview-bg: #f0f0f0;
+
+  --terminal-bg: #ffffff;
+  --terminal-text: #000000;
+  --log-error: #cc0000;
+  --log-warning: #ff8800;
+
+  --modal-backdrop: rgba(0, 0, 0, 0.5);
+  --modal-bg: #ffffff;
+  --modal-border: #000000;
+
+  --scrollbar-track: #f4f4f4;
+  --scrollbar-thumb: #cccccc;
+  --scrollbar-thumb-hover: #17bebe;
 }
 
 *,
@@ -9,18 +50,18 @@
   box-sizing: border-box;
   margin: 0;
   padding: 0;
-  border-radius: 0 !important;
-  box-shadow: none !important;
-  transition: none !important;
-  animation: none !important;
+  border-radius: 0;
+  box-shadow: none;
+  transition: none;
+  animation: none;
 }
 
 html, body {
   width: 100%;
   height: 100%;
   overflow: hidden;
-  background-color: #ffffff;
-  color: #000000;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
   font-family: var(--font-sans);
   user-select: text;
 }
@@ -30,4 +71,56 @@ html, body {
   height: 100vh;
   display: flex;
   flex-direction: column;
+  opacity: 0;
+  transition: opacity 0.2s ease-in-out;
+}
+
+body.loaded #app {
+  opacity: 1;
+}
+
+input,
+select,
+textarea {
+  background-color: var(--input-bg);
+  color: var(--input-text);
+  border-color: var(--input-border);
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  outline: 1px solid var(--accent);
+}
+
+input[type="checkbox"],
+input[type="range"] {
+  accent-color: var(--accent);
+}
+
+button:hover {
+  background-color: var(--btn-hover-bg);
+  border-color: var(--btn-hover-border, var(--border-color));
+}
+
+button:active {
+  background-color: var(--btn-active-bg);
+  color: var(--btn-active-text);
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--scrollbar-track, var(--bg-secondary));
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--scrollbar-thumb, #cccccc);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--scrollbar-thumb-hover, #999999);
 }

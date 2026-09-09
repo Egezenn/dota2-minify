@@ -122,7 +122,7 @@
   .modal-backdrop {
     position: fixed;
     inset: 0;
-    background: rgba(0, 0, 0, 0.5);
+    background: var(--modal-backdrop, rgba(0, 0, 0, 0.5));
     z-index: 1000;
     display: flex;
     align-items: center;
@@ -130,12 +130,13 @@
   }
 
   .modal-card {
-    background: #fff;
+    background: var(--modal-bg, #fff);
     width: 80vw;
     height: 80vh;
-    border: 1px solid #000;
+    border: 1px solid var(--modal-border, #000);
     display: flex;
     flex-direction: column;
+    color: var(--text-primary, #000);
   }
 
   .modal-header {
@@ -144,7 +145,7 @@
     justify-content: space-between;
     height: 38px;
     padding: 6px 8px;
-    border-bottom: 1px solid #000;
+    border-bottom: 1px solid var(--border-color, #000);
     box-sizing: border-box;
   }
 
@@ -156,11 +157,21 @@
   }
 
   .close-btn {
-    background: #fff;
-    color: #000;
-    border: 1px solid #000;
+    background: var(--btn-bg, #fff);
+    color: var(--btn-text, #000);
+    border: 1px solid var(--btn-border, #000);
     padding: 2px 8px;
     cursor: pointer;
+  }
+
+  .close-btn:hover {
+    background: var(--btn-hover-bg, #f0f0f0);
+    border-color: var(--btn-hover-border, var(--border-color, #000));
+  }
+
+  .close-btn:active {
+    background: var(--btn-active-bg, #000);
+    color: var(--btn-active-text, #fff);
   }
 
   .modal-body {
@@ -178,6 +189,7 @@
     padding: 24px;
     text-align: center;
     font-size: 13px;
+    color: var(--text-secondary, #666);
   }
 
   .image-wrapper {
@@ -191,24 +203,26 @@
     max-height: 58vh;
     object-fit: contain;
     display: block;
-    border: 1px solid #000;
+    border: 1px solid var(--border-color, #000);
   }
 
   .notes-content {
     width: 100%;
-    border: 1px solid #000;
+    border: 1px solid var(--border-color, #000);
+    background: var(--bg-primary, #fff);
+    color: var(--text-primary, #000);
     padding: 16px 20px;
     font-size: 13px;
     line-height: 1.5;
   }
 
   .notes-content :global(.markdown-alert) {
-    border: 1px solid #000;
-    border-left: 4px solid #000;
+    border: 1px solid var(--border-color, #000);
+    border-left: 4px solid var(--border-color, #000);
     padding: 6px 10px;
     margin: 6px 0;
-    background: #fff;
-    color: #000;
+    background: var(--bg-secondary, #fff);
+    color: var(--text-primary, #000);
   }
 
   .notes-content :global(.markdown-alert-title) {
@@ -245,10 +259,11 @@
   }
 
   .notes-content :global(pre) {
-    border: 1px solid #000;
+    border: 1px solid var(--border-color, #000);
     padding: 8px 12px;
     margin: 6px 0;
-    background: #f8f9fa;
+    background: var(--bg-secondary, #f8f9fa);
+    color: var(--text-primary, #000);
     overflow-x: auto;
   }
 
@@ -260,24 +275,32 @@
   }
 
   .notes-content :global(code) {
-    border: 1px solid #000;
+    border: 1px solid var(--border-color, #000);
     padding: 1px 4px;
     font-family: monospace;
     font-size: 12px;
+    background: var(--bg-secondary, transparent);
+    color: var(--text-primary, inherit);
   }
 
   .modal-footer {
     padding: 8px 12px;
-    border-top: 1px solid #000;
+    border-top: 1px solid var(--border-color, #000);
+    background: var(--modal-bg, #fff);
     display: flex;
     justify-content: flex-end;
   }
 
   .btn-close {
-    background: #fff;
-    color: #000;
-    border: 1px solid #000;
+    background: var(--btn-bg, #fff);
+    color: var(--btn-text, #000);
+    border: 1px solid var(--btn-border, #000);
     padding: 4px 12px;
     cursor: pointer;
+  }
+
+  .btn-close:active {
+    background: var(--btn-active-bg, #000);
+    color: var(--btn-active-text, #fff);
   }
 </style>

@@ -12,6 +12,90 @@ export async function refreshMods() {
   }
 }
 
+export function injectThemeIntoFrame(
+  frame: HTMLIFrameElement | EventTarget | null | undefined,
+  css?: string
+) {
+  try {
+    const el = frame as HTMLIFrameElement | null;
+    if (!el?.contentDocument) return;
+    const doc = el.contentDocument;
+    const themeCss =
+      css !== undefined
+        ? css
+        : ((window as any).__lastThemeCss ||
+           document.getElementById("minify-theme")?.textContent ||
+           "");
+    let styleEl = doc.getElementById("minify-theme") as HTMLStyleElement;
+    if (!styleEl) {
+      styleEl = doc.createElement("style");
+      styleEl.id = "minify-theme";
+      doc.head.appendChild(styleEl);
+    }
+    if (styleEl.textContent !== themeCss) {
+      styleEl.textContent = themeCss;
+    }
+    if (doc.body) {
+      doc.body.style.backgroundColor = "transparent";
+    }
+  } catch (e) {
+    // ignore
+  }
+}
+
+export async function applyTheme(themeName?: string): Promise<string> {
+  try {
+    const api = window.pywebview?.api;
+    if (!api) return "";
+
+    let css = "";
+    if (api.get_theme_css) {
+      css = await api.get_theme_css(themeName);
+      (window as any).__lastThemeCss = css;
+    }
+
+    if (api.get_theme_url) {
+      const themeUrl = await api.get_theme_url(themeName);
+      try {
+        localStorage.setItem("minify-theme-url", themeUrl);
+      } catch (e) {}
+      let linkEl = document.getElementById("minify-theme-link") as HTMLLinkElement;
+      if (!linkEl) {
+        linkEl = document.createElement("link");
+        linkEl.id = "minify-theme-link";
+        linkEl.rel = "stylesheet";
+        document.head.appendChild(linkEl);
+      }
+      if (linkEl.href !== themeUrl) {
+        linkEl.href = themeUrl;
+      }
+      const oldStyle = document.getElementById("minify-theme");
+      if (oldStyle && oldStyle.tagName.toLowerCase() === "style") {
+        oldStyle.remove();
+      }
+    } else if (css) {
+      let styleEl = document.getElementById("minify-theme") as HTMLStyleElement;
+      if (!styleEl) {
+        styleEl = document.createElement("style");
+        styleEl.id = "minify-theme";
+        document.head.appendChild(styleEl);
+      }
+      if (styleEl.textContent !== css) {
+        styleEl.textContent = css;
+      }
+    }
+
+    const iframes = document.querySelectorAll<HTMLIFrameElement>("iframe.plugin-frame");
+    iframes.forEach((frame) => injectThemeIntoFrame(frame, css));
+
+    return css;
+  } catch (err) {
+    console.error("Failed to apply theme:", err);
+    return "";
+  }
+}
+
+
 export async function loadApiData(currentLang: string): Promise<{
   isDebugEnv: boolean;
   currentGameLang: string;

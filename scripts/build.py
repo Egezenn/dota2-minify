@@ -247,6 +247,9 @@ def main() -> None:
         else:
             copy_plugins_selective(MINIFY_DIR / "plugins", DIST_MINIFY_DIR / "plugins", use_symlink)
 
+    if (MINIFY_DIR / "themes").exists():
+        link_or_copy(MINIFY_DIR / "themes", DIST_MINIFY_DIR / "themes", use_symlink)
+
     license_file = REPO_ROOT / "LICENSE"
     if not license_file.exists():
         license_file = MINIFY_DIR / "LICENSE"

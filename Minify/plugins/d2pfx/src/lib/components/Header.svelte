@@ -42,8 +42,9 @@
     justify-content: space-between;
     height: 38px;
     padding: 0 8px;
-    border-bottom: 1px solid #000;
-    background: #fff;
+    border-bottom: 1px solid var(--border-color, #000);
+    background: var(--bg-primary, #fff);
+    color: var(--text-primary, #000);
     gap: 12px;
     box-sizing: border-box;
   }
@@ -66,7 +67,7 @@
 
   .cat-info p {
     font-size: 11px;
-    color: #555;
+    color: var(--text-secondary, #555);
     margin: 0;
     line-height: 1;
     display: flex;
@@ -82,9 +83,9 @@
   .top-actions input {
     height: 24px;
     padding: 0 6px;
-    border: 1px solid #000;
-    background: #fff;
-    color: #000;
+    border: 1px solid var(--input-border, #000);
+    background: var(--input-bg, #fff);
+    color: var(--input-text, #000);
     outline: none;
     font-size: 12px;
     width: 140px;
@@ -97,9 +98,9 @@
     justify-content: center;
     height: 24px;
     padding: 0 8px;
-    border: 1px solid #000;
-    background: #fff;
-    color: #000;
+    border: 1px solid var(--btn-border, #000);
+    background: var(--btn-bg, #fff);
+    color: var(--btn-text, #000);
     cursor: pointer;
     font-weight: bold;
     font-size: 11px;
@@ -108,7 +109,12 @@
   }
 
   .action-btn:hover {
-    background: #000;
-    color: #fff;
+    background: var(--btn-hover-bg, #f0f0f0);
+    border-color: var(--btn-hover-border, var(--border-color, #000));
+  }
+
+  .action-btn:active {
+    background: var(--btn-active-bg, #000);
+    color: var(--btn-active-text, #fff);
   }
 </style>

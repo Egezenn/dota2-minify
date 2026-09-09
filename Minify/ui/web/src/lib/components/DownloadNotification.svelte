@@ -58,10 +58,10 @@
     box-sizing: border-box;
     margin: 0;
     padding: 0;
-    border-radius: 0 !important;
-    box-shadow: none !important;
-    transition: none !important;
-    animation: none !important;
+    border-radius: 0;
+    box-shadow: none;
+    transition: none;
+    animation: none;
   }
 
   .download-container {
@@ -78,9 +78,9 @@
   }
 
   .download-card {
-    background: #fff;
-    color: #000;
-    border: 1px solid #000;
+    background: var(--modal-bg, #fff);
+    color: var(--text-primary, #000);
+    border: 1px solid var(--border-color, #000);
     padding: 8px 10px;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   }
@@ -107,33 +107,33 @@
     cursor: pointer;
     font-weight: bold;
     font-size: 14px;
-    color: #000;
+    color: var(--text-primary, #000);
     line-height: 1;
     padding: 0 2px;
   }
 
   .close-btn:hover {
-    color: #ff0000;
+    color: var(--log-error, #ff0000);
   }
 
   .download-stats {
     font-size: 11px;
     font-family: monospace;
     margin-bottom: 6px;
-    color: #333;
+    color: var(--text-secondary, #333);
   }
 
   .progress-bar-bg {
     height: 6px;
-    background: #eee;
-    border: 1px solid #000;
+    background: var(--bg-secondary, #eee);
+    border: 1px solid var(--border-color, #000);
     width: 100%;
     overflow: hidden;
   }
 
   .progress-bar-fill {
     height: 100%;
-    background: #000;
+    background: var(--accent, #17bebe);
   }
 
   .download-status-text {
@@ -143,10 +143,10 @@
   }
 
   .download-status-text.finished {
-    color: #000;
+    color: var(--accent, #17bebe);
   }
 
   .download-status-text.error {
-    color: #cc0000;
+    color: var(--log-error, #cc0000);
   }
 </style>

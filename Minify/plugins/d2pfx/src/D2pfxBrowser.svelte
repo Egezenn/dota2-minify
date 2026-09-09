@@ -1,7 +1,14 @@
 <script lang="ts">
   import { onMount } from "svelte";
   import type { Category, D2Mod, InstalledMod } from "./lib/types";
-  import { callApi, getApi, getModKey, isInstalled, notifyParentModsRefreshed, setModState } from "./lib/api";
+  import {
+    callApi,
+    getApi,
+    getModKey,
+    isInstalled,
+    notifyParentModsRefreshed,
+    setModState,
+  } from "./lib/api";
   import Sidebar from "./lib/components/Sidebar.svelte";
   import Header from "./lib/components/Header.svelte";
   import ModCard from "./lib/components/ModCard.svelte";
@@ -67,7 +74,10 @@
     if (!selectedCategory) return;
     isLoadingMods = true;
     try {
-      const res = await callApi("get_mods", { cat_id: selectedCategory, search: modSearchQuery });
+      const res = await callApi("get_mods", {
+        cat_id: selectedCategory,
+        search: modSearchQuery,
+      });
       mods = Array.isArray(res) ? res : [];
     } catch (err) {
       console.error("Error fetching D2PFX mods:", err);
@@ -96,7 +106,10 @@
     }
 
     try {
-      const res = await callApi("install_mod", { mod: m, cat_id: selectedCategory });
+      const res = await callApi("install_mod", {
+        mod: m,
+        cat_id: selectedCategory,
+      });
       if (res?.success) {
         await refreshInstalledMods();
         notifyParentModsRefreshed();
@@ -251,38 +264,14 @@
 </div>
 
 <style>
-  *,
-  *::before,
-  *::after {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-    border-radius: 0 !important;
-    box-shadow: none !important;
-    transition: none !important;
-    animation: none !important;
-  }
-
-  :global(body), :global(html) {
-    width: 100%;
-    height: 100%;
-    margin: 0 !important;
-    padding: 0 !important;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    font-size: 13px;
-    color: #000;
-    background: #fff;
-    overflow: hidden;
-  }
-
   .d2pfx-container {
     display: flex;
     height: 100vh;
     width: 100vw;
-    margin: 0 !important;
-    padding: 0 !important;
-    background: #fff;
-    color: #000;
+    margin: 0;
+    padding: 0;
+    background: var(--bg-primary, #fff);
+    color: var(--text-primary, #000);
     font-family: inherit;
     font-size: 13px;
   }
@@ -304,7 +293,7 @@
   .empty-grid {
     padding: 16px;
     font-size: 12px;
-    color: #666;
+    color: var(--text-secondary, #666);
   }
 
   .mods-grid {

@@ -56,7 +56,12 @@ class PluginService:
                 abs_entry = self._resolve_plugin_entry(p_path)
                 if abs_entry and os.path.isfile(abs_entry):
                     with open(abs_entry, "r", encoding="utf-8") as f:
-                        return f.read()
+                        content = f.read()
+                    from ui.services.config_service import ConfigService
+                    cs = ConfigService()
+                    theme_css = cs.get_theme_css(config.get("theme", "light"))
+                    base_css = cs.get_base_css()
+                    return cs.inject_theme_into_content(content, theme_css, base_css)
         except Exception as e:
             output.add_text(f"get_plugin_content error: {e}", msg_type="error")
         return ""

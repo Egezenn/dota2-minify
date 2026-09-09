@@ -2,7 +2,7 @@
   import { onMount } from "svelte";
   import { modsStore } from "./lib/stores/mods";
   import { localeStore } from "./lib/stores/locale";
-  import { loadApiData, refreshMods } from "./lib/api";
+  import { loadApiData, refreshMods, applyTheme, injectThemeIntoFrame } from "./lib/api";
   import Header from "./lib/components/Header.svelte";
   import ModGrid from "./lib/components/ModGrid.svelte";
   import Terminal from "./lib/components/Terminal.svelte";
@@ -48,12 +48,53 @@
     }
   }
 
+  async function initTheme() {
+    try {
+      const api = window.pywebview?.api;
+      if (api?.is_theme_initialized && api?.set_theme_initialized) {
+        const themeInit = await api.is_theme_initialized();
+        if (!themeInit) {
+          const prefersDark =
+            typeof window !== "undefined" &&
+            window.matchMedia &&
+            window.matchMedia("(prefers-color-scheme: dark)").matches;
+          const initialTheme = prefersDark ? "dark" : "light";
+          await api.set_setting("theme", initialTheme);
+          await api.set_theme_initialized();
+          await applyTheme(initialTheme);
+          return;
+        }
+      }
+      await applyTheme();
+    } catch (err) {
+      console.error("Error initializing theme:", err);
+    }
+  }
+
+  function dismissLoader() {
+    const loader = document.getElementById("loading-screen");
+    if (loader) {
+      loader.classList.add("fade-out");
+      setTimeout(() => loader.remove(), 250);
+    }
+    document.body.classList.add("loaded");
+  }
+
   async function initPyWebView() {
+    const run = async () => {
+      try {
+        await Promise.all([initTheme(), handleLoadApiData()]);
+      } finally {
+        dismissLoader();
+      }
+    };
+
     if (window.pywebview?.api) {
-      await handleLoadApiData();
+      await run();
       return;
     }
-    window.addEventListener("pywebviewready", handleLoadApiData, { once: true });
+    window.addEventListener("pywebviewready", run, { once: true });
+    setTimeout(dismissLoader, 3000);
   }
 
   onMount(() => {
@@ -216,6 +257,12 @@
       handleGameLanguageChange(target.value);
     }
   }
+
+  async function handleSettingChange(key: string, value: any) {
+    if (key === "theme") {
+      await applyTheme(value);
+    }
+  }
 </script>
 
 <div class="app-container">
@@ -257,7 +304,10 @@
     </div>
 
     <div class="tab-pane" class:hidden={activeTab !== "settings"}>
-      <Settings />
+      <Settings
+        active={activeTab === "settings"}
+        onSettingChange={handleSettingChange}
+      />
     </div>
 
     {#each pluginTabs as plugin}
@@ -267,12 +317,16 @@
             srcdoc={pluginContents[plugin.id]}
             title={plugin.name}
             class="plugin-frame"
+            allowtransparency={true}
+            on:load={(e) => injectThemeIntoFrame(e.currentTarget)}
           ></iframe>
         {:else if plugin.entry_point && !plugin.entry_point.startsWith("file://")}
           <iframe
             src={plugin.entry_point}
             title={plugin.name}
             class="plugin-frame"
+            allowtransparency={true}
+            on:load={(e) => injectThemeIntoFrame(e.currentTarget)}
           ></iframe>
         {/if}
       </div>
@@ -294,10 +348,10 @@
     box-sizing: border-box;
     margin: 0;
     padding: 0;
-    border-radius: 0 !important;
-    box-shadow: none !important;
-    transition: none !important;
-    animation: none !important;
+    border-radius: 0;
+    box-shadow: none;
+    transition: none;
+    animation: none;
   }
 
   :global(body),
@@ -306,8 +360,8 @@
     height: 100%;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     font-size: 13px;
-    color: #000;
-    background: #fff;
+    color: var(--text-primary, #000);
+    background: var(--bg-primary, #fff);
     overflow: hidden;
   }
 
@@ -316,8 +370,8 @@
     flex-direction: column;
     height: 100vh;
     width: 100vw;
-    background: #fff;
-    color: #000;
+    background: var(--bg-primary, #fff);
+    color: var(--text-primary, #000);
     position: relative;
   }
 
@@ -340,6 +394,7 @@
     width: 100%;
     height: 100%;
     border: none;
+    background: transparent;
   }
 
   .download-stack {
