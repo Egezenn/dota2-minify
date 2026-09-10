@@ -247,7 +247,7 @@ def install_mod(params: Dict[str, Any] = None) -> Dict[str, Any]:
     preview_dest = None
     if preview_file:
         preview_url = preview_file if preview_file.startswith("http") else dm.get_preview_url(cat_id, preview_file)
-        preview_dest = os.path.join(target_dir, "preview.jpg")
+        preview_dest = os.path.join(target_dir, "preview.webp")
 
     def _download_preview():
         if preview_url and preview_dest:

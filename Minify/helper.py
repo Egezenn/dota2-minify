@@ -114,6 +114,33 @@ def compile_assets(input_path=None, output_path=None, pak_path=None):
         output.add_text("&compile_no_path")
 
 
+def extract_workshop_tools() -> bool:
+    "Extracts the bare minimum requirements for resourcecompiler.exe"
+    output.clean()
+    fs.remove_path(base.rescomp_override_dir)
+    fails = 0
+
+    for i, path in enumerate(constants.dota_tools_paths):
+        if os.path.exists(path):
+            if os.path.isdir(path):
+                shutil.copytree(path, constants.dota_tools_extraction_paths[i])
+            else:
+                shutil.copy(path, constants.dota_tools_extraction_paths[i])
+        else:
+            output.add_text(f"Extraction of {path} failed", msg_type="error")
+            fails += 1
+
+    if not fails:
+        constants.recalc_rescomp_dirs()
+        if os.path.exists(constants.dota_resource_compiler_path):
+            output.add_text("Extracted workshop tools successfully.")
+            return True
+        else:
+            output.add_text(f"Extraction of {constants.dota_resource_compiler_path} failed", msg_type="error")
+            return False
+    return False
+
+
 def create_img_ref_xml(img_path_list):
     "Helper function to create reference XMLs for images"
     xml_list = []

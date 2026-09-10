@@ -10,6 +10,7 @@ from core import base, config, fs, utils
 # D2PFX Browser Constants
 BASE_URL = "https://raw.githubusercontent.com/h6rd/Dota2PornFxWeb/data/"
 ASSETS_URL = "https://raw.githubusercontent.com/h6rd/Dota2PornFxWeb/main/assets/files/"
+PREVIEWS_URL = "https://raw.githubusercontent.com/h6rd/Dota2PornFxWeb/main/assets/previews/"
 CACHE_DIR = os.path.join(base.cache_dir, "plugins", "d2pfx")
 BLACKLIST = [
     "guides",
@@ -132,9 +133,7 @@ class DataManager:
     def get_preview_url(self, cat_id, filename):
         if not filename:
             return None
-        if filename.endswith(".webp"):
-            filename = filename.replace(".webp", ".jpg")
-        return f"{BASE_URL}previews/{cat_id}/{filename}"
+        return f"{PREVIEWS_URL}{cat_id}/{filename}"
 
     def get_file_url(self, cat_id, filename):
         return f"{ASSETS_URL}{cat_id}/{filename}"

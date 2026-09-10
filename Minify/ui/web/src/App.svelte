@@ -2,17 +2,31 @@
   import { onMount } from "svelte";
   import { modsStore } from "./lib/stores/mods";
   import { localeStore } from "./lib/stores/locale";
-  import { loadApiData, refreshMods, applyTheme, injectThemeIntoFrame } from "./lib/api";
+  import {
+    loadApiData,
+    refreshMods,
+    applyTheme,
+    injectThemeIntoFrame,
+  } from "./lib/api";
   import Header from "./lib/components/Header.svelte";
   import ModGrid from "./lib/components/ModGrid.svelte";
   import Terminal from "./lib/components/Terminal.svelte";
   import Settings from "./lib/components/Settings.svelte";
-  import type { DownloadItem } from "./lib/types";
+  import type { DownloadItem, Announcement, UpdateInfo } from "./lib/types";
   import DownloadNotification from "./lib/components/DownloadNotification.svelte";
   import UninstallModal from "./lib/components/UninstallModal.svelte";
+  import AnnouncementModal from "./lib/components/AnnouncementModal.svelte";
+  import UpdateModal from "./lib/components/UpdateModal.svelte";
+  import WorkshopToolsDetectedModal from "./lib/components/WorkshopToolsDetectedModal.svelte";
+  import {
+    fetchPendingAnnouncements,
+    markAnnouncementSeen,
+  } from "./lib/announcements";
+  import { checkForUpdates, ignoreUpdate, getAppVersion } from "./lib/updater";
 
   let activeTab: string = "mods";
-  let pluginTabs: Array<{ id: string; name: string; entry_point?: string }> = [];
+  let pluginTabs: Array<{ id: string; name: string; entry_point?: string }> =
+    [];
   let pluginContents: Record<string, string> = {};
 
   let downloads: DownloadItem[] = [];
@@ -20,6 +34,11 @@
   let isPatching = false;
   let autoScroll = true;
   let showUninstallModal = false;
+  let pendingAnnouncements: Announcement[] = [];
+  let showAnnouncementModal = false;
+  let pendingUpdate: UpdateInfo | null = null;
+  let showUpdateModal = false;
+  let showWorkshopModal = false;
 
   let availableUiLangs: string[] = [];
   let availableGameLangs: string[] = [];
@@ -51,19 +70,19 @@
   async function initTheme() {
     try {
       const api = window.pywebview?.api;
-      if (api?.is_theme_initialized && api?.set_theme_initialized) {
-        const themeInit = await api.is_theme_initialized();
-        if (!themeInit) {
-          const prefersDark =
-            typeof window !== "undefined" &&
-            window.matchMedia &&
-            window.matchMedia("(prefers-color-scheme: dark)").matches;
-          const initialTheme = prefersDark ? "dark" : "light";
+      const themeInit = await api?.get_state?.("system_theme_init");
+      if (!themeInit) {
+        const prefersDark =
+          typeof window !== "undefined" &&
+          window.matchMedia &&
+          window.matchMedia("(prefers-color-scheme: dark)").matches;
+        const initialTheme = prefersDark ? "dark" : "light";
+        if (api?.set_setting) {
           await api.set_setting("theme", initialTheme);
-          await api.set_theme_initialized();
-          await applyTheme(initialTheme);
-          return;
         }
+        await api?.set_state?.("system_theme_init", true);
+        await applyTheme(initialTheme);
+        return;
       }
       await applyTheme();
     } catch (err) {
@@ -86,6 +105,33 @@
         await Promise.all([initTheme(), handleLoadApiData()]);
       } finally {
         dismissLoader();
+        getAppVersion().then(async (appVersion) => {
+          try {
+            const announcements = await fetchPendingAnnouncements(
+              appVersion || undefined,
+            );
+            if (announcements.length > 0) {
+              pendingAnnouncements = announcements;
+              showAnnouncementModal = true;
+            }
+          } catch (err) {
+            console.error("Failed to fetch announcements:", err);
+          }
+
+          try {
+            const updateInfo = await checkForUpdates({
+              currentVersion: appVersion,
+            });
+            if (updateInfo) {
+              pendingUpdate = updateInfo;
+              if (pendingAnnouncements.length === 0) {
+                showUpdateModal = true;
+              }
+            }
+          } catch (err) {
+            console.error("Failed to check for updates:", err);
+          }
+        });
       }
     };
 
@@ -168,9 +214,7 @@
     return now.toTimeString().split(" ")[0];
   }
 
-  async function handlePatch() {
-    if (isPatching) return;
-
+  async function triggerPatch() {
     isPatching = true;
     activeTab = "terminal";
     try {
@@ -185,6 +229,50 @@
         },
       ];
     }
+  }
+
+  async function handlePatch() {
+    if (isPatching) return;
+
+    try {
+      const needsWorkshop = await window.pywebview?.api?.check_workshop_tools_needed?.();
+      if (needsWorkshop) {
+        showWorkshopModal = true;
+        return;
+      }
+    } catch (err) {
+      console.error("Error checking workshop tools:", err);
+    }
+
+    await triggerPatch();
+  }
+
+  async function handleWorkshopExtract() {
+    showWorkshopModal = false;
+    isPatching = true;
+    activeTab = "terminal";
+    try {
+      await window.pywebview?.api?.extract_workshop_tools?.();
+    } catch (err) {
+      logs = [
+        ...logs,
+        {
+          text: `Error extracting workshop tools: ${err}`,
+          type: "error",
+          timestamp: getCurrentTime(),
+        },
+      ];
+    }
+    await triggerPatch();
+  }
+
+  async function handleWorkshopSkip() {
+    showWorkshopModal = false;
+    await triggerPatch();
+  }
+
+  function handleWorkshopCancel() {
+    showWorkshopModal = false;
   }
 
   async function handleUninstallConfirm(removeEverything: boolean) {
@@ -232,7 +320,9 @@
     }
   }
   function broadcastToPlugins(message: any) {
-    const iframes = document.querySelectorAll<HTMLIFrameElement>("iframe.plugin-frame");
+    const iframes = document.querySelectorAll<HTMLIFrameElement>(
+      "iframe.plugin-frame",
+    );
     iframes.forEach((frame) => {
       try {
         frame.contentWindow?.postMessage(message, "*");
@@ -263,6 +353,45 @@
       await applyTheme(value);
     }
   }
+
+  async function handleDismissAnnouncement(id: string) {
+    await markAnnouncementSeen(id);
+    pendingAnnouncements = pendingAnnouncements.filter((a) => {
+      const annId = a.time
+        ? a.time.replace(/[-+]/g, "").split("=")[0].trim()
+        : "";
+      return annId !== id;
+    });
+    if (pendingAnnouncements.length === 0) {
+      showAnnouncementModal = false;
+      if (pendingUpdate) {
+        showUpdateModal = true;
+      }
+    }
+  }
+
+  function handleCloseAnnouncements() {
+    showAnnouncementModal = false;
+    if (pendingUpdate) {
+      showUpdateModal = true;
+    }
+  }
+
+  function handlePerformUpdate(url: string) {
+    showUpdateModal = false;
+    if (url) {
+      window.open(url, "_blank");
+    }
+  }
+
+  async function handleIgnoreUpdate(version: string) {
+    await ignoreUpdate(version);
+    showUpdateModal = false;
+  }
+
+  function handleCloseUpdateModal() {
+    showUpdateModal = false;
+  }
 </script>
 
 <div class="app-container">
@@ -285,6 +414,28 @@
     isOpen={showUninstallModal}
     onConfirm={handleUninstallConfirm}
     onCancel={() => (showUninstallModal = false)}
+  />
+
+  <AnnouncementModal
+    isOpen={showAnnouncementModal}
+    announcements={pendingAnnouncements}
+    onDismiss={handleDismissAnnouncement}
+    onClose={handleCloseAnnouncements}
+  />
+
+  <UpdateModal
+    isOpen={showUpdateModal}
+    updateInfo={pendingUpdate}
+    {downloads}
+    onIgnore={handleIgnoreUpdate}
+    onClose={handleCloseUpdateModal}
+  />
+
+  <WorkshopToolsDetectedModal
+    isOpen={showWorkshopModal}
+    onExtract={handleWorkshopExtract}
+    onSkip={handleWorkshopSkip}
+    onCancel={handleWorkshopCancel}
   />
 
   <main class="content-area">
@@ -334,10 +485,7 @@
   </main>
 
   <div class="download-stack">
-    <DownloadNotification
-      {downloads}
-      onDismiss={handleDismissDownload}
-    />
+    <DownloadNotification {downloads} onDismiss={handleDismissDownload} />
   </div>
 </div>
 
@@ -358,7 +506,8 @@
   :global(html) {
     width: 100%;
     height: 100%;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+      Helvetica, Arial, sans-serif;
     font-size: 13px;
     color: var(--text-primary, #000);
     background: var(--bg-primary, #fff);

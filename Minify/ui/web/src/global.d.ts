@@ -13,6 +13,8 @@ declare global {
         >;
         is_patching: () => Promise<boolean>;
         is_debug_env: () => Promise<boolean>;
+        get_version: () => Promise<string>;
+        perform_update: (url: string) => Promise<boolean>;
         get_mods: () => Promise<Array<{ name: string; enabled: boolean }>>;
         get_mod_details: (
           modName: string,
@@ -64,8 +66,10 @@ declare global {
         get_available_themes?: () => Promise<Array<{ value: string; label: string }>>;
         get_theme_url?: (theme_name?: string) => Promise<string>;
         get_theme_css?: (theme_name?: string) => Promise<string>;
-        is_theme_initialized?: () => Promise<boolean>;
-        set_theme_initialized?: () => Promise<boolean>;
+        get_state?: (key: string, defaultValue?: any) => Promise<any>;
+        set_state?: (key: string, value: any) => Promise<boolean>;
+        check_workshop_tools_needed?: () => Promise<boolean>;
+        extract_workshop_tools?: () => Promise<boolean>;
         get_plugin_tabs?: () => Promise<Array<{ id: string; name: string; icon?: string; entry_point?: string }>>;
         get_plugin_content?: (plugin_id: string) => Promise<string>;
         call_plugin_api?: (plugin_id: string, action: string, params?: Record<string, any>) => Promise<any>;

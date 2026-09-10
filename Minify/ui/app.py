@@ -3,7 +3,7 @@ from pathlib import Path
 from typing import Any, Dict, List, Optional
 
 import webview
-from core import base, config, output, utils
+from core import base, config, constants, output, utils
 
 from ui.services import ConfigService, DialogService, ModService, PatchService, PluginService
 
@@ -48,6 +48,56 @@ class Api:
 
     def is_debug_env(self) -> bool:
         return self.config_service.is_debug_env()
+
+    def get_version(self) -> str:
+        return base.VERSION
+
+    @staticmethod
+    def is_portable() -> bool:
+        if not base.FROZEN:
+            return True
+        return not os.path.exists(os.path.join(os.path.dirname(sys.executable), "unins000.exe"))
+
+    def perform_update(self, url: str) -> bool:
+        if not base.is_win or self.is_portable():
+            import webbrowser
+
+            webbrowser.open(base.github_io)
+            return False
+
+        import tempfile
+        import threading
+        import time
+        from core import fs, log
+
+        def _update_thread():
+            temp_dir = os.environ.get("TEMP", os.environ.get("TMP", tempfile.gettempdir()))
+            clean_url = url.split("?")[0]
+            installer_name = clean_url.split("/")[-1] or "Minify-Setup.exe"
+            installer_path = os.path.join(temp_dir, installer_name)
+
+            output.add_text(f"Downloading update: {installer_name}...")
+            success = fs.download_file(
+                url=url,
+                target_path=installer_path,
+                name=installer_name,
+                emit_progress=True,
+            )
+            if success and os.path.exists(installer_path):
+                time.sleep(2)
+                output.add_text("Launching installer and closing Minify...")
+                try:
+                    os.startfile(installer_path)
+                except Exception as e:
+                    log.write_crashlog(f"Failed to launch installer: {e}")
+                    output.add_text(f"Failed to launch installer: {e}", msg_type="error")
+                finally:
+                    os._exit(0)
+            else:
+                output.add_text("Update download failed.", msg_type="error")
+
+        threading.Thread(target=_update_thread, daemon=True).start()
+        return True
 
     def get_localization(self, lang: str = "EN") -> Dict[str, str]:
         return self.config_service.get_localization(lang)
@@ -94,13 +144,21 @@ class Api:
     def get_theme_css(self, theme_name: str | None = None) -> str:
         return self.config_service.get_theme_css(theme_name)
 
-    def is_theme_initialized(self) -> bool:
+    def get_state(self, key: str, default: Any = None) -> Any:
         states = utils.read_states()
-        return bool(states.get("system_theme_init"))
+        return states.get(key, default)
 
-    def set_theme_initialized(self) -> bool:
-        utils.write_states("system_theme_init", True)
+    def set_state(self, key: str, value: Any) -> bool:
+        utils.write_states(key, value)
         return True
+
+    def check_workshop_tools_needed(self) -> bool:
+        import conditions
+        return base.is_linux and not constants.rescomp_override and conditions.workshop_installed
+
+    def extract_workshop_tools(self) -> bool:
+        import helper
+        return helper.extract_workshop_tools()
 
     def get_plugin_tabs(self) -> List[Dict[str, Any]]:
         return self.plugin_service.get_tabs(resolve_func=self._resolve_plugin_entry)
