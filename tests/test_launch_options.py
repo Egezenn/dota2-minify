@@ -85,7 +85,7 @@ def test_no_command_token_still_adds_prefix(monkeypatch, mock_frozen_env):
     assert mock_dump.called
     assert (
         vdf_data["UserLocalConfigStore"]["Software"]["Valve"]["Steam"]["apps"][base.STEAM_DOTA_ID]["LaunchOptions"]
-        == 'cmd /c "/path/to/minify" prelaunch && %command% -novid -language english'
+        == '"/path/to/minify" prelaunch %command% -novid -language english'
     )
 
 
@@ -114,7 +114,7 @@ def test_inserts_before_command_windows(monkeypatch, mock_frozen_env):
     assert mock_dump.called
     assert (
         vdf_data["UserLocalConfigStore"]["Software"]["Valve"]["Steam"]["apps"][base.STEAM_DOTA_ID]["LaunchOptions"]
-        == 'cmd /c "/path/to/minify" prelaunch && %command% -novid -language english'
+        == '"/path/to/minify" prelaunch %command% -novid -language english'
     )
 
 
@@ -160,7 +160,7 @@ def test_no_duplicate_insert(monkeypatch, mock_frozen_env):
                     "Steam": {
                         "apps": {
                             base.STEAM_DOTA_ID: {
-                                "LaunchOptions": 'cmd /c "/path/to/minify" prelaunch && %command% -novid -language english'
+                                "LaunchOptions": '"/path/to/minify" prelaunch %command% -novid -language english'
                             }
                         }
                     }
@@ -178,7 +178,7 @@ def test_no_duplicate_insert(monkeypatch, mock_frozen_env):
     assert not mock_dump.called
     assert (
         vdf_data["UserLocalConfigStore"]["Software"]["Valve"]["Steam"]["apps"][base.STEAM_DOTA_ID]["LaunchOptions"]
-        == 'cmd /c "/path/to/minify" prelaunch && %command% -novid -language english'
+        == '"/path/to/minify" prelaunch %command% -novid -language english'
     )
 
 
@@ -204,7 +204,7 @@ def test_path_with_spaces(monkeypatch, mock_frozen_env):
     assert mock_dump.called
     assert (
         vdf_data["UserLocalConfigStore"]["Software"]["Valve"]["Steam"]["apps"][base.STEAM_DOTA_ID]["LaunchOptions"]
-        == r'cmd /c "C:\Program Files\Dota2 Minify\minify.exe" prelaunch && %command% -novid'
+        == r'"C:\Program Files\Dota2 Minify\minify.exe" prelaunch %command% -novid'
     )
 
 
@@ -237,7 +237,7 @@ def test_multiple_command_tokens(monkeypatch, mock_frozen_env):
     assert mock_dump.called
     assert (
         vdf_data["UserLocalConfigStore"]["Software"]["Valve"]["Steam"]["apps"][base.STEAM_DOTA_ID]["LaunchOptions"]
-        == 'cmd /c "/path/to/minify" prelaunch && %command% -novid -language english -something_else'
+        == '"/path/to/minify" prelaunch %command% -novid -language english -something_else'
     )
 
 
@@ -272,7 +272,7 @@ def test_env_vars_and_wrappers_moved_after_command(monkeypatch, mock_frozen_env)
     assert mock_dump.called
     assert (
         vdf_data["UserLocalConfigStore"]["Software"]["Valve"]["Steam"]["apps"][base.STEAM_DOTA_ID]["LaunchOptions"]
-        == 'cmd /c "/path/to/minify" prelaunch && %command% WAYLAND=1 mangohud -novid -language english'
+        == '"/path/to/minify" prelaunch %command% WAYLAND=1 mangohud -novid -language english'
     )
 
 
@@ -317,7 +317,7 @@ def test_apply_for_all_false(monkeypatch):
     assert mock_dump.called
     assert (
         vdf_data["UserLocalConfigStore"]["Software"]["Valve"]["Steam"]["apps"][base.STEAM_DOTA_ID]["LaunchOptions"]
-        == 'cmd /c "/path/to/minify" prelaunch && %command% -novid'
+        == '"/path/to/minify" prelaunch %command% -novid'
     )
 
 
@@ -362,5 +362,5 @@ def test_empty_launch_options(monkeypatch, mock_frozen_env):
     assert mock_dump.called
     assert (
         vdf_data["UserLocalConfigStore"]["Software"]["Valve"]["Steam"]["apps"][base.STEAM_DOTA_ID]["LaunchOptions"]
-        == 'cmd /c "/path/to/minify" prelaunch && %command%'
+        == '"/path/to/minify" prelaunch %command%'
     )

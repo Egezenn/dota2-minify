@@ -1,18 +1,19 @@
 import os
 import sys
 
+current_dir = os.path.dirname(os.path.abspath(__file__))
+if current_dir not in sys.path:
+    sys.path.insert(0, current_dir)
+
 from core import base
 
 base.original_cwd = os.getcwd()
-current_dir = os.path.dirname(os.path.abspath(__file__))
 
 # Ensure root directories
 if getattr(sys, "frozen", False):
     os.chdir(os.path.dirname(os.path.realpath(sys.executable)))
 else:
     os.chdir(current_dir)
-    if current_dir not in sys.path:
-        sys.path.insert(0, current_dir)
 
 os.makedirs("cache", exist_ok=True)
 os.makedirs("config", exist_ok=True)
@@ -102,10 +103,14 @@ def run_patch(
     patch.patcher()
 
 
-@app.command(name="prelaunch")
+@app.command(
+    name="prelaunch",
+    context_settings={"allow_extra_args": True, "ignore_unknown_options": True},
+)
 def run_prelaunch(
-    config_path: Optional[str] = typer.Option(None, "--config", "-c", help="Path to config file."),
-    mods_path: Optional[str] = typer.Option(None, "--mods", "-m", help="Path to mods file."),
+    ctx: typer.Context,
+    config_path: Optional[str] = typer.Option(None, "--config", help="Path to config file."),
+    mods_path: Optional[str] = typer.Option(None, "--mods", help="Path to mods file."),
 ):
     """Run prelaunch checks and scripts."""
     _apply_paths(config_path, mods_path)
@@ -132,6 +137,22 @@ def run_prelaunch(
         any_ran = helper.bulk_exec_script("prelaunch")
         if any_ran:
             _config.set("last_patch_time", int(time.time()))
+
+    if ctx and ctx.args:
+        original_cwd = getattr(base, "original_cwd", None)
+        game_cwd = (
+            original_cwd
+            if original_cwd and os.path.exists(original_cwd)
+            else (os.path.dirname(ctx.args[0]) if os.path.dirname(ctx.args[0]) else None)
+        )
+        try:
+            proc = subprocess.Popen(ctx.args, cwd=game_cwd)
+        except Exception as e:
+            print(f"Failed to launch game: {e}")
+            raise typer.Exit(code=1)
+
+        exit_code = proc.wait()
+        raise typer.Exit(code=exit_code)
 
 
 @app.command()

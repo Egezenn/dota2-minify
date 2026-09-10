@@ -102,7 +102,7 @@ def add_prelaunch_to_launch_options(check_only=False):
         tokens = launch_options.split()
 
         if base.is_win:
-            prefix = f'cmd /c "{sys.executable}" prelaunch &&'
+            prefix = f'"{sys.executable}" prelaunch'
         else:
             prefix = f'bash -c "{sys.executable} prelaunch" &&'
 

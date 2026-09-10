@@ -157,4 +157,75 @@ def test_uninstall_force_calls_wipe():
 
     assert result.exit_code == 0
     unins.wipe.assert_called_once()
-    unins.wipe.assert_called_once()
+
+
+def test_prelaunch_standalone_no_args():
+    mock_file = MagicMock()
+    mock_file.read.return_value = "version_123"
+    mock_file.__enter__.return_value = mock_file
+    mock_file.__exit__.return_value = None
+
+    with (
+        mock_patch.object(minify_main, "run_patch"),
+        mock_patch.object(minify_main.utils, "open_utf8R", return_value=mock_file),
+        mock_patch("subprocess.Popen") as mock_popen,
+    ):
+        result = runner.invoke(app, ["prelaunch"])
+
+    assert result.exit_code == 0
+    mock_popen.assert_not_called()
+
+
+def test_prelaunch_with_trailing_game_args(tmp_path):
+    mock_file = MagicMock()
+    mock_file.read.return_value = "version_123"
+    mock_file.__enter__.return_value = mock_file
+    mock_file.__exit__.return_value = None
+
+    mock_proc = MagicMock()
+    mock_proc.wait.return_value = 0
+
+    with (
+        mock_patch.object(minify_main, "run_patch"),
+        mock_patch.object(minify_main.utils, "open_utf8R", return_value=mock_file),
+        mock_patch.object(base, "original_cwd", str(tmp_path), create=True),
+        mock_patch("subprocess.Popen", return_value=mock_proc) as mock_popen,
+    ):
+        result = runner.invoke(app, ["prelaunch", "dota2.exe", "-novid", "-language", "dutch"])
+
+    assert result.exit_code == 0
+    mock_popen.assert_called_once_with(["dota2.exe", "-novid", "-language", "dutch"], cwd=str(tmp_path))
+    mock_proc.wait.assert_called_once()
+
+
+def test_prelaunch_runs_bulk_script_when_version_matches():
+    mock_file = MagicMock()
+    mock_file.read.return_value = "version_123"
+    mock_file.__enter__.return_value = mock_file
+    mock_file.__exit__.return_value = None
+
+    with (
+        mock_patch.object(minify_main.utils, "open_utf8R", return_value=mock_file),
+        mock_patch("helper.bulk_exec_script", return_value=False) as mock_bulk,
+    ):
+        result = runner.invoke(app, ["prelaunch"])
+
+    assert result.exit_code == 0
+    mock_bulk.assert_called_once_with("prelaunch")
+
+
+def test_prelaunch_handles_launch_error():
+    mock_file = MagicMock()
+    mock_file.read.return_value = "version_123"
+    mock_file.__enter__.return_value = mock_file
+    mock_file.__exit__.return_value = None
+
+    with (
+        mock_patch.object(minify_main, "run_patch"),
+        mock_patch.object(minify_main.utils, "open_utf8R", return_value=mock_file),
+        mock_patch("subprocess.Popen", side_effect=OSError("Exec format error")),
+    ):
+        result = runner.invoke(app, ["prelaunch", "nonexistent.exe"])
+
+    assert result.exit_code == 1
+    assert "Failed to launch game" in result.output
