@@ -15,7 +15,7 @@ def extract(vpk_to_extract_from, paths, path_to_extract_to=base.build_dir):
 
     def extract_file(path):
         if not os.path.exists(full_path := os.path.join(path_to_extract_to, path)):  # extract files from VPK only once
-            output.add_text("&extracting_terminal", path)
+            output.add_text("&extracting_terminal", path, indent=True)
             with vpk_lock:
                 pakfile = vpk_to_extract_from.get_file(path)
 

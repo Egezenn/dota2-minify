@@ -48,7 +48,7 @@ def emit_download_progress(
             pass
 
 
-def add_text(text_or_id, *args, msg_type: str | None = None, **kwargs):
+def add_text(text_or_id, *args, msg_type: str | None = None, indent: bool = False, **kwargs):
     from core import localization
 
     text = text_or_id
@@ -57,6 +57,10 @@ def add_text(text_or_id, *args, msg_type: str | None = None, **kwargs):
 
     if args:
         text = text.format(*args)
+
+    if indent:
+        indent_str = "   " if isinstance(indent, bool) else (" " * indent if isinstance(indent, int) else "   ")
+        text = "\n".join(f"{indent_str}{line}" if line else "" for line in text.split("\n"))
 
     prefix = ""
     if msg_type == "error":

@@ -1,5 +1,6 @@
 <script lang="ts">
   import type { Category } from "../types";
+  import { t } from "../i18n";
 
   export let categories: Category[] = [];
   export let selectedCategory: string = "";
@@ -17,13 +18,13 @@
   <div class="sidebar-search">
     <input
       type="text"
-      placeholder="Search categories..."
+      placeholder={$t("placeholder_search_categories")}
       bind:value={searchQuery}
     />
   </div>
   <div class="category-list">
     {#if isLoadingCategories}
-      <div class="loading-item">Loading categories...</div>
+      <div class="loading-item">{$t("label_loading_categories")}</div>
     {:else}
       {#each filteredCategories as cat}
         <button

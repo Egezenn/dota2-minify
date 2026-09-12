@@ -438,7 +438,7 @@ class ModService:
 
     @staticmethod
     def parse_notes_for_locale(notes_text: str, lang: str) -> str:
-        if not notes_text or "<!-- LANG:" not in notes_text:
+        if not notes_text or "<!-- lang:" not in notes_text.lower():
             return notes_text.strip()
 
         sections: Dict[str, str] = {}
@@ -447,21 +447,21 @@ class ModService:
 
         for line in notes_text.splitlines():
             trimmed = line.strip()
-            if trimmed.startswith("<!-- LANG:") and trimmed.endswith("-->"):
+            if trimmed.lower().startswith("<!-- lang:") and trimmed.endswith("-->"):
                 if current_lang:
                     sections[current_lang] = "\n".join(lines).strip()
-                current_lang = trimmed[10:-3].strip().upper()
+                current_lang = trimmed[10:-3].strip().lower()
                 lines = []
             else:
                 lines.append(line)
         if current_lang:
             sections[current_lang] = "\n".join(lines).strip()
 
-        target_lang = (lang or "EN").upper()
+        target_lang = (lang or "en").lower()
         if target_lang in sections:
             return sections[target_lang]
-        elif "EN" in sections:
-            return sections["EN"]
+        elif "en" in sections:
+            return sections["en"]
         elif sections:
             return next(iter(sections.values()))
 

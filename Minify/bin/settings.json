@@ -1,57 +1,71 @@
 [
   {
+    "key": "locale",
+    "text": "&setting_locale",
+    "default": "en",
+    "type": "combo",
+    "items": []
+  },
+  {
+    "key": "output_locale",
+    "text": "&setting_output_locale",
+    "default": "english",
+    "type": "combo",
+    "items": []
+  },
+  {
     "key": "theme",
-    "text": "Theme",
+    "text": "&setting_theme",
     "default": "light",
     "type": "combo",
     "items": []
   },
   {
     "key": "opt_into_rcs",
-    "text": "Opt into RCs",
+    "text": "&setting_opt_into_rcs",
     "default": false,
     "type": "checkbox"
   },
   {
     "key": "fix_options",
-    "text": "Handle language option (current ID)",
+    "text": "&setting_fix_options",
     "default": true,
     "type": "checkbox"
   },
   {
     "key": "patch_on_launch",
-    "text": "Run patches upon launch if required",
+    "text": "&setting_patch_on_launch",
     "default": true,
     "type": "checkbox"
   },
   {
     "key": "steam_id",
-    "text": "Active Steam User",
+    "text": "&setting_steam_id",
     "default": "",
     "type": "combo",
     "items": []
   },
   {
     "key": "apply_for_all",
-    "text": "Apply everything for all users",
+    "text": "&setting_apply_for_all",
     "default": true,
     "type": "checkbox"
   },
   {
     "key": "launch_dota_after_patch",
-    "text": "Launch Dota2 after patching",
+    "text": "&setting_launch_dota_after_patch",
     "default": false,
     "type": "checkbox"
   },
   {
     "key": "kill_self_after_patch",
-    "text": "Close Minify after patching",
+    "text": "&setting_kill_self_after_patch",
     "default": false,
     "type": "checkbox"
   },
   {
     "key": "opt_out_vpk_metadata",
-    "text": "Opt-out of VPK metadata",
+    "text": "&setting_opt_out_vpk_metadata",
     "default": false,
     "type": "checkbox"
   }

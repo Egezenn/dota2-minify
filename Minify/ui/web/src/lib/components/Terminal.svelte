@@ -1,5 +1,6 @@
 <script lang="ts">
   import { tick } from "svelte";
+  import { t } from "../i18n";
 
   export let logs: Array<{ text: string; type: string; timestamp?: string }> =
     [];
@@ -21,22 +22,22 @@
 
   function cleanAnsi(text: string): string {
     if (!text) return "";
-    return text.replace(/\033\[[0-9;]*m/g, "").replace(/\x1b\[[0-9;]*m/g, "");
+    return text.replace(/\x1b\[[0-9;]*m/g, "");
   }
 </script>
 
 <div class="terminal-container">
   <div class="terminal-toolbar">
     <div class="toolbar-title">
-      <h3>Terminal</h3>
+      <h3>{$t("title_terminal")}</h3>
     </div>
 
     <div class="toolbar-controls">
       <label>
         <input type="checkbox" bind:checked={autoScroll} />
-        Auto-scroll
+        {$t("label_autoscroll")}
       </label>
-      <button on:click={onClear}> Clear </button>
+      <button on:click={onClear}> {$t("button_clear")} </button>
     </div>
   </div>
 

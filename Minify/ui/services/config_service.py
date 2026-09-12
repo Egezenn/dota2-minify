@@ -10,9 +10,9 @@ from core import base, config, constants, localization, mods_shared, output, ste
 class ConfigService:
     def get_available_languages(self) -> List[str]:
         try:
-            return localization.get_available() or ["EN"]
+            return localization.get_available() or ["en"]
         except Exception:
-            return ["EN"]
+            return ["en"]
 
     def is_debug_env(self) -> bool:
         try:
@@ -20,19 +20,24 @@ class ConfigService:
         except Exception:
             return False
 
-    def get_localization(self, lang: str = "EN") -> Dict[str, str]:
+    def get_localization(self, lang: str = "en") -> Dict[str, str]:
         try:
             if not lang:
-                lang = config.get("locale") or "EN"
+                lang = config.get("locale") or "en"
             return localization.get_for_locale(lang) or {}
         except Exception:
             return {}
 
     def get_current_locale(self) -> str:
         try:
-            return config.get("locale") or "EN"
+            val = config.get("locale") or "en"
+            avail = self.get_available_languages()
+            for a in avail:
+                if a.lower() == val.lower():
+                    return a
+            return val
         except Exception:
-            return "EN"
+            return "en"
 
     def set_locale(self, lang: str) -> bool:
         try:
@@ -266,6 +271,10 @@ class ConfigService:
                         ]
                     elif parsed["key"] == "theme":
                         parsed["items"] = self.get_available_themes()
+                    elif parsed["key"] == "locale":
+                        parsed["items"] = self.get_available_languages()
+                    elif parsed["key"] == "output_locale":
+                        parsed["items"] = self.get_available_game_languages()
 
                     settings_schema.append(parsed)
                     values[parsed["key"]] = config.get(parsed["key"], parsed["default"])
@@ -336,7 +345,12 @@ class ConfigService:
                 modconf[key] = value
                 config.set_mod(mod_name, modconf)
             else:
-                config.set(key, value)
+                if key == "locale":
+                    self.set_locale(value)
+                elif key == "output_locale":
+                    self.set_game_language(value)
+                else:
+                    config.set(key, value)
             return True
         except Exception as e:
             output.add_text(f"set_setting error for {key}: {e}", msg_type="error")
@@ -361,7 +375,7 @@ class ConfigService:
             if isinstance(native_schema, list):
                 for item in native_schema:
                     if isinstance(item, dict) and "key" in item and "default" in item:
-                        config.set(item["key"], item["default"])
+                        self.set_setting(item["key"], item["default"])
             return True
         except Exception as e:
             output.add_text(f"reset_native_settings error: {e}", msg_type="error")

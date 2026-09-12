@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { t } from "../i18n";
+
   export let isOpen: boolean = false;
   export let onExtract: () => void;
   export let onSkip: () => void;
@@ -23,24 +25,24 @@
   <div class="modal-backdrop" on:click|self={handleClose}>
     <div class="modal-card">
       <div class="modal-header">
-        <h3>Extract Workshop Tools</h3>
+        <h3>{$t("title_extract_workshop_tools")}</h3>
         <button class="close-btn" on:click={handleClose}>✕</button>
       </div>
 
       <div class="modal-body">
         <p class="modal-text">
-          Dota 2 Workshop Tools is detected in your game files.
+          {$t("modal_workshop_tools_detected")}
         </p>
         <p class="modal-subtext">
-          Would you like to extract them for later use?
+          {$t("modal_workshop_tools_prompt")}
         </p>
       </div>
 
       <div class="modal-footer">
-        <button class="btn btn-cancel" on:click={handleClose}>Cancel</button>
-        <button class="btn btn-skip" on:click={handleSkip}>No, Skip</button>
+        <button class="btn btn-cancel" on:click={handleClose}>{$t("button_cancel")}</button>
+        <button class="btn btn-skip" on:click={handleSkip}>{$t("button_skip")}</button>
         <button class="btn btn-extract" on:click={handleExtract}
-          >Yes, Extract</button
+          >{$t("button_extract")}</button
         >
       </div>
     </div>

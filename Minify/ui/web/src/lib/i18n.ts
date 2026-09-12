@@ -1,31 +1,25 @@
+import { derived } from 'svelte/store';
+import { localeStore } from './stores/locale';
+
 /**
- * Resolves raw text containing optional '&key' prefix or format placeholders.
- * @param raw - The string to resolve (e.g. "&button_patch", "Hello {0}")
- * @param args - Positional arguments for {0}, {1} replacement
- * @param dict - Current localization key-value map
+ * Reactive derived store for localized text.
+ * Automatically updates all subscribing Svelte components when localeStore changes.
+ *
+ * Example:
+ *   {$t('button_close')}
+ *   {$t('status_download_failed', [err])}
  */
-export function resolveText(
-  raw: string | undefined | null,
-  args?: (string | number)[],
-  dict?: Record<string, string>
-): string {
-  if (!raw) return '';
-
-  let text = raw;
-  if (text.startsWith('&')) {
-    const key = text.slice(1);
-    if (dict && key in dict) {
-      text = dict[key];
-    } else {
-      return '';
+export const t = derived(localeStore, ($locale) => {
+  return (key: string, args?: (string | number)[]): string => {
+    if (!key) return '';
+    const cleanKey = key.startsWith('&') ? key.slice(1) : key;
+    let text = $locale.dict && cleanKey in $locale.dict ? $locale.dict[cleanKey] : cleanKey;
+    if (args && args.length > 0) {
+      args.forEach((arg, index) => {
+        text = text.replace(new RegExp(`\\{${index}\\}`, 'g'), String(arg));
+      });
     }
-  }
+    return text;
+  };
+});
 
-  if (args && args.length > 0) {
-    args.forEach((arg, index) => {
-      text = text.replace(new RegExp(`\\{${index}\\}`, 'g'), String(arg));
-    });
-  }
-
-  return text;
-}

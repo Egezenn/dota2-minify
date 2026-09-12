@@ -1,6 +1,7 @@
 <script lang="ts">
   import { onMount, onDestroy } from "svelte";
   import type { UpdateInfo, DownloadItem } from "../types";
+  import { t } from "../i18n";
 
   export let isOpen: boolean = false;
   export let updateInfo: UpdateInfo | null = null;
@@ -125,11 +126,11 @@
     <div class="modal-card">
       <div class="modal-header">
         <div class="header-title-group">
-          <h3>Update Available</h3>
+          <h3>{$t("title_update_available")}</h3>
           <span class="badge">v{updateInfo.version}</span>
         </div>
         {#if !isDownloading}
-          <button class="close-btn" on:click={handleCloseModal} title="Close"
+          <button class="close-btn" on:click={handleCloseModal} title={$t("button_close")}
             >✕</button
           >
         {/if}
@@ -137,17 +138,17 @@
 
       <div class="modal-body">
         <p class="modal-text">
-          A new version of Dota 2 Minify is available to download.
+          {$t("modal_update_message")}
         </p>
 
         <div class="version-box">
           <div class="version-col">
-            <span class="version-label">Current:</span>
+            <span class="version-label">{$t("label_current_version")}</span>
             <span class="version-value">v{updateInfo.currentVersion}</span>
           </div>
           <span class="version-arrow">➔</span>
           <div class="version-col">
-            <span class="version-label">New:</span>
+            <span class="version-label">{$t("label_new_version")}</span>
             <span class="version-value new-version">v{updateInfo.version}</span>
           </div>
         </div>
@@ -179,7 +180,7 @@
 
             {#if downloadStatus === "finished"}
               <div class="status-msg finished">
-                ✓ Download complete! Launching installer and closing Minify...
+                {$t("msg_download_complete_launching")}
               </div>
             {:else if downloadStatus === "error"}
               <div class="status-msg error">
@@ -189,7 +190,7 @@
           </div>
         {:else if updateInfo.body}
           <div class="changelog-container">
-            <span class="changelog-label">Release Notes:</span>
+            <span class="changelog-label">{$t("label_release_notes")}</span>
             <div class="changelog-box">
               {updateInfo.body}
             </div>
@@ -200,34 +201,34 @@
       <div class="modal-footer">
         {#if !isDownloading}
           <button class="btn btn-cancel" on:click={handleIgnore}>
-            Ignore This Version
+            {$t("button_ignore_version")}
           </button>
 
           <div class="action-controls">
             <button class="btn btn-cancel" on:click={handleCloseModal}
-              >Later</button
+              >{$t("button_later")}</button
             >
             <button class="btn btn-yes" on:click={handleStartDownload}
-              >Update Now</button
+              >{$t("button_update_now")}</button
             >
           </div>
         {:else if downloadStatus === "downloading"}
-          <div class="status-msg-running">Downloading...</div>
+          <div class="status-msg-running">{$t("status_downloading")}</div>
           <div class="action-controls">
-            <button class="btn btn-yes" disabled>Downloading...</button>
+            <button class="btn btn-yes" disabled>{$t("status_downloading")}</button>
           </div>
         {:else if downloadStatus === "finished"}
-          <div class="status-msg finished">Launching installer...</div>
+          <div class="status-msg finished">{$t("status_launching_installer")}</div>
           <div class="action-controls">
-            <button class="btn btn-yes" disabled>Closing...</button>
+            <button class="btn btn-yes" disabled>{$t("status_closing")}</button>
           </div>
         {:else if downloadStatus === "error"}
           <button class="btn btn-cancel" on:click={handleCloseModal}
-            >Close</button
+            >{$t("button_close")}</button
           >
           <div class="action-controls">
             <button class="btn btn-yes" on:click={handleStartDownload}
-              >Retry</button
+              >{$t("button_retry")}</button
             >
           </div>
         {/if}

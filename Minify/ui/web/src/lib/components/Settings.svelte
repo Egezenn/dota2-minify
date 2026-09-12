@@ -1,5 +1,6 @@
 <script lang="ts">
   import { onMount } from "svelte";
+  import { t } from "../i18n";
 
   export let active: boolean = false;
   export let onSettingChange: ((key: string, value: any) => void) | undefined = undefined;
@@ -12,7 +13,7 @@
     mod?: string | null;
     plugin?: string | null;
     force?: boolean;
-    items?: string[];
+    items?: Array<string | { value: string; label: string }>;
     var_type?: "int" | "float";
     step?: number;
     min?: number;
@@ -125,6 +126,8 @@
           await window.pywebview.api.reset_native_settings();
           if (onSettingChange) {
             onSettingChange("theme", "light");
+            onSettingChange("locale", "en");
+            onSettingChange("output_locale", "english");
           }
         }
       } else {
@@ -138,6 +141,13 @@
       console.error(`Failed to reset section ${sectionTitle}:`, err);
     }
   }
+
+  $: getSettingLabel = (item: SettingItem): string => {
+    if (item.text) {
+      return item.text.startsWith("&") ? $t(item.text) : item.text;
+    }
+    return item.key ? $t(`setting_${item.key}`) : "";
+  };
 
   $: sections = (() => {
     const map = new Map<string, SettingItem[]>();
@@ -159,10 +169,12 @@
 <div class="settings-container">
   <div class="settings-toolbar">
     <div class="toolbar-title">
-      <h3>Settings</h3>
+      <h3>{$t("title_settings")}</h3>
     </div>
     <div class="toolbar-controls">
-      <button class="btn-refresh" on:click={loadSettings}>Refresh</button>
+      <button class="btn-refresh" on:click={loadSettings}>
+        {$t("button_refresh")}
+      </button>
     </div>
   </div>
 
@@ -170,12 +182,16 @@
     {#each sections as [sectionTitle, items]}
       <div class="settings-section">
         <div class="section-header">
-          <h4 class="section-title">{sectionTitle}</h4>
+          <h4 class="section-title">
+            {sectionTitle === "Application Settings"
+              ? $t("section_application_settings")
+              : sectionTitle}
+          </h4>
           <button
             class="btn-reset"
             on:click={() => resetSection(sectionTitle, items)}
           >
-            Reset
+            {$t("button_reset")}
           </button>
         </div>
         <div class="section-content">
@@ -188,11 +204,11 @@
                   on:change={(e) =>
                     updateSetting(item, e.currentTarget.checked)}
                 />
-                <span class="setting-text">{item.text}</span>
+                <span class="setting-text">{getSettingLabel(item)}</span>
               </label>
             {:else if item.type === "inputbox" || item.type === "text"}
               <div class="setting-item-row">
-                <span class="setting-label">{item.text}</span>
+                <span class="setting-label">{getSettingLabel(item)}</span>
                 <input
                   type="text"
                   class="setting-input"
@@ -202,7 +218,7 @@
               </div>
             {:else if item.type === "combo"}
               <div class="setting-item-row">
-                <span class="setting-label">{item.text}</span>
+                <span class="setting-label">{getSettingLabel(item)}</span>
                 <select
                   class="setting-select"
                   value={getItemValue(item, values) ?? ""}
@@ -219,7 +235,7 @@
               </div>
             {:else if item.type === "number"}
               <div class="setting-item-row">
-                <span class="setting-label">{item.text}</span>
+                <span class="setting-label">{getSettingLabel(item)}</span>
                 <input
                   type="number"
                   class="setting-input setting-number"
@@ -238,7 +254,7 @@
               </div>
             {:else if item.type === "slider"}
               <div class="setting-item-row">
-                <span class="setting-label">{item.text}</span>
+                <span class="setting-label">{getSettingLabel(item)}</span>
                 <div class="slider-group">
                   <input
                     type="range"
@@ -260,7 +276,7 @@
               </div>
             {:else if item.type === "color"}
               <div class="setting-item-row">
-                <span class="setting-label">{item.text}</span>
+                <span class="setting-label">{getSettingLabel(item)}</span>
                 <div class="color-picker-group">
                   <input
                     type="color"
@@ -280,7 +296,7 @@
               </div>
             {:else if item.type === "list"}
               <div class="setting-item-col">
-                <span class="setting-label">{item.text}</span>
+                <span class="setting-label">{getSettingLabel(item)}</span>
                 <div class="list-container">
                   {#each getListValue(item, values) as entry, idx}
                     <div class="list-entry-row">
@@ -295,7 +311,7 @@
                         class="btn-sm"
                         on:click={() => removeListEntry(item, idx)}
                       >
-                        Remove
+                        {$t("button_remove")}
                       </button>
                     </div>
                   {/each}
@@ -303,21 +319,21 @@
                     <input
                       type="text"
                       class="setting-input"
-                      placeholder="Add item..."
+                      placeholder={$t("placeholder_add_item")}
                       bind:value={newListItemInputs[item.key]}
                       on:keydown={(e) => {
                         if (e.key === "Enter") addListEntry(item);
                       }}
                     />
-                    <button class="btn-sm" on:click={() => addListEntry(item)}
-                      >Add</button
-                    >
+                    <button class="btn-sm" on:click={() => addListEntry(item)}>
+                      {$t("button_add")}
+                    </button>
                   </div>
                 </div>
               </div>
             {:else if item.type === "button"}
               <div class="setting-item-row">
-                <span class="setting-label">{item.text}</span>
+                <span class="setting-label">{getSettingLabel(item)}</span>
                 <button
                   class="btn-action"
                   on:click={() => runModFunction(item)}

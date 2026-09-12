@@ -7,7 +7,7 @@ from core import base, constants, fs, log, output, utils
 
 def process_replacer(item):
     source, target = item
-    output.add_text("&replacing_terminal", source, target)
+    output.add_text("&replacing_terminal", source, target, indent=True)
     fs.create_dirs(os.path.dirname(target_dir := os.path.join(constants.minify_dota_compile_output_path, target)))
     shutil.copy(os.path.join(base.replace_dir, source), target_dir)
 

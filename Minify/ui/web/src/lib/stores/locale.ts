@@ -6,6 +6,6 @@ export interface LocaleState {
 }
 
 export const localeStore = writable<LocaleState>({
-  lang: 'EN',
+  lang: 'en',
   dict: {},
 });

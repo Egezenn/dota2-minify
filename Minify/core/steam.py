@@ -167,7 +167,7 @@ def fix_launch_options(check_only=False):
                     user_name = user["name"]
                     break
 
-            output.add_text("&discrepancy_launch_options", user_name, locale)
+            output.add_text("&discrepancy_launch_options", user_name, locale, indent=True)
 
             data["UserLocalConfigStore"]["Software"]["Valve"]["Steam"]["apps"][base.STEAM_DOTA_ID]["LaunchOptions"] = (
                 f"-language {locale} {remove_lang_args(launch_options)}"

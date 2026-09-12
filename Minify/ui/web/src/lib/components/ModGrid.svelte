@@ -1,7 +1,7 @@
 <script lang="ts">
   import { modsStore } from "../stores/mods";
   import { localeStore } from "../stores/locale";
-  import { resolveText } from "../i18n";
+  import { t } from "../i18n";
   import ModCard from "./ModCard.svelte";
   import ModDetailsModal from "./ModDetailsModal.svelte";
 
@@ -11,7 +11,6 @@
   let searchQuery = "";
   let selectedModForDetails: string | null = null;
 
-  $: dict = $localeStore.dict;
   $: mods = $modsStore;
 
   $: filteredMods = mods.filter((mod) =>
@@ -49,17 +48,19 @@
 <div class="mod-grid-container">
   <div class="grid-toolbar">
     <div class="toolbar-title">
-      <h3>Mods</h3>
+      <h3>{$t("title_mods")}</h3>
     </div>
     <div class="toolbar-controls">
       <div class="search-box">
         <input
           type="text"
-          placeholder="Search mods..."
+          placeholder={$t("placeholder_search_mods")}
           bind:value={searchQuery}
         />
         {#if searchQuery}
-          <button on:click={() => (searchQuery = "")}> Clear </button>
+          <button on:click={() => (searchQuery = "")}>
+            {$t("button_clear")}
+          </button>
         {/if}
       </div>
     </div>

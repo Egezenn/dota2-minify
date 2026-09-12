@@ -38,12 +38,12 @@ def main():
                 actual_ext = ".jpg"
 
             if not actual_ext:
-                output.add_text("-> Unsupported background format\n   {}", p, msg_type="error")
+                output.add_text("Unsupported background format\n   {}", p, msg_type="error", indent=True)
                 return
 
             if actual_ext != ext:
                 new_p = os.path.join(base.config_dir, f"background{actual_ext}")
-                output.add_text("-> Background extension mismatch\n   {} -> {}", p, new_p, msg_type="warning")
+                output.add_text("Background extension mismatch\n   {} -> {}", p, new_p, msg_type="warning", indent=True)
                 fs.move_path(p, new_p)
                 return
 
@@ -71,10 +71,11 @@ def main():
                     )
                 else:
                     output.add_text(
-                        "-> Conversion tools missing\n   {} ({})",
+                        "Conversion tools missing\n   {} ({})",
                         "ImageMagick",
                         f"{actual_ext} -> .png",
                         msg_type="error",
+                        indent=True,
                     )
                     return
 
@@ -127,7 +128,11 @@ def main():
                     )
                 else:
                     output.add_text(
-                        "-> Conversion tools missing\n   {} ({})", "FFmpeg", f"{actual_ext} -> .webm", msg_type="error"
+                        "Conversion tools missing\n   {} ({})",
+                        "FFmpeg",
+                        f"{actual_ext} -> .webm",
+                        msg_type="error",
+                        indent=True,
                     )
                     return
 

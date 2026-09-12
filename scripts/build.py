@@ -96,6 +96,10 @@ def copy_plugins_selective(src_plugins: Path, dst_plugins: Path, use_symlink: bo
         if ui_dir.is_dir():
             link_or_copy(ui_dir, p_dst / "ui", use_symlink=use_symlink)
 
+        locales_dir = item / "locales"
+        if locales_dir.is_dir():
+            link_or_copy(locales_dir, p_dst / "locales", use_symlink=use_symlink)
+
 
 def clean_release_dir(dst_dir: Path) -> None:
     for root, dirs, files in os.walk(dst_dir, topdown=False):
@@ -234,6 +238,9 @@ def main() -> None:
 
     if (MINIFY_DIR / "config").exists():
         link_or_copy(MINIFY_DIR / "config", DIST_MINIFY_DIR / "config", use_symlink)
+
+    if (MINIFY_DIR / "locales").exists():
+        link_or_copy(MINIFY_DIR / "locales", DIST_MINIFY_DIR / "locales", use_symlink)
 
     link_or_copy(MINIFY_DIR / "mods", DIST_MINIFY_DIR / "mods", use_symlink)
 

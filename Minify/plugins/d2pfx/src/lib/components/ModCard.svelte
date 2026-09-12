@@ -1,5 +1,6 @@
 <script lang="ts">
   import type { D2Mod } from "../types";
+  import { t } from "../i18n";
 
   export let mod: D2Mod;
   export let installed: boolean = false;
@@ -48,7 +49,7 @@
           onPreview &&
           mod.preview_url &&
           onPreview(mod.preview_url, `${mod.name}${mod.label ? ` (${mod.label})` : ""}`)}
-        title="Click to preview image"
+        title={$t("title_click_to_preview")}
         aria-label={`Preview image for ${mod.name}`}
       >
         <img
@@ -61,7 +62,7 @@
         />
       </button>
     {:else}
-      <span class="no-preview">NO PREVIEW</span>
+      <span class="no-preview">{$t("label_no_preview")}</span>
     {/if}
   </div>
 
@@ -85,7 +86,7 @@
 
   <div class="card-actions">
     {#if installed}
-      <label class="checkbox-container" title={enabled ? "Disable mod" : "Enable mod"}>
+      <label class="checkbox-container" title={enabled ? $t("label_disable_mod") : $t("label_enable_mod")}>
         <input
           type="checkbox"
           checked={enabled}
@@ -98,10 +99,10 @@
         disabled={inProgress}
         on:click={() => onUninstall(mod)}
       >
-        {inProgress ? "REMOVING..." : "REMOVE"}
+        {inProgress ? $t("button_removing") : $t("button_remove")}
       </button>
     {:else if inProgress}
-      <label class="checkbox-container" title={enabled ? "Disable mod" : "Enable mod"}>
+      <label class="checkbox-container" title={enabled ? $t("label_disable_mod") : $t("label_enable_mod")}>
         <input
           type="checkbox"
           checked={enabled}
@@ -109,7 +110,7 @@
         />
       </label>
       <button class="install-btn" disabled>
-        INSTALLING...
+        {$t("button_installing")}
       </button>
     {:else}
       <button
@@ -117,7 +118,7 @@
         disabled={inProgress}
         on:click={() => onInstall(mod)}
       >
-        INSTALL
+        {$t("button_install")}
       </button>
     {/if}
   </div>

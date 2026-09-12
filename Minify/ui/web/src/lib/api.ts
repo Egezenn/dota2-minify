@@ -98,9 +98,6 @@ export async function applyTheme(themeName?: string): Promise<string> {
 
 export async function loadApiData(currentLang: string): Promise<{
   isDebugEnv: boolean;
-  currentGameLang: string;
-  availableUiLangs: string[];
-  availableGameLangs: string[];
   logs: any[];
   isPatching: boolean;
   pluginTabs: Array<{ id: string; name: string; entry_point?: string }>;
@@ -112,9 +109,6 @@ export async function loadApiData(currentLang: string): Promise<{
   }
 
   let isDebugEnv = false;
-  let currentGameLang = "english";
-  let availableUiLangs: string[] = [];
-  let availableGameLangs: string[] = [];
   let logs: any[] = [];
   let isPatching = false;
   let pluginTabs: Array<{ id: string; name: string; entry_point?: string }> = [];
@@ -124,18 +118,8 @@ export async function loadApiData(currentLang: string): Promise<{
     isDebugEnv = Boolean(await api.is_debug_env());
   }
 
-  const [savedUiLang, savedGameLang, uiLangs, gameLangs] = await Promise.all([
-    api.get_current_locale(),
-    api.get_current_game_language(),
-    api.get_available_languages(),
-    api.get_available_game_languages(),
-  ]);
-
-  const targetUiLang = savedUiLang || currentLang || "EN";
-  currentGameLang = savedGameLang || "english";
-
-  if (Array.isArray(uiLangs) && uiLangs.length > 0) availableUiLangs = uiLangs;
-  if (Array.isArray(gameLangs) && gameLangs.length > 0) availableGameLangs = gameLangs;
+  const savedUiLang = await api.get_current_locale();
+  const targetUiLang = savedUiLang || currentLang || "en";
 
   const [initialLogs, patchingState, mods, locDict] = await Promise.all([
     api.get_logs(),
@@ -172,9 +156,6 @@ export async function loadApiData(currentLang: string): Promise<{
 
   return {
     isDebugEnv,
-    currentGameLang,
-    availableUiLangs,
-    availableGameLangs,
     logs,
     isPatching,
     pluginTabs,

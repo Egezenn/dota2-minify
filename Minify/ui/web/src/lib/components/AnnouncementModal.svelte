@@ -2,6 +2,7 @@
   import { onMount, onDestroy } from "svelte";
   import type { Announcement } from "../types";
   import { getAnnouncementId } from "../announcements";
+  import { t } from "../i18n";
 
   export let isOpen: boolean = false;
   export let announcements: Announcement[] = [];
@@ -63,14 +64,14 @@
     <div class="modal-card">
       <div class="modal-header">
         <div class="header-title-group">
-          <h3>{current.title || "Announcement"}</h3>
+          <h3>{current.title || $t("title_announcement")}</h3>
           {#if announcements.length > 1}
             <span class="badge"
               >({currentIndex + 1} / {announcements.length})</span
             >
           {/if}
         </div>
-        <button class="close-btn" on:click={onClose} title="Close">✕</button>
+        <button class="close-btn" on:click={onClose} title={$t("button_close")}>✕</button>
       </div>
 
       <div class="modal-body">
@@ -80,7 +81,7 @@
 
         {#if urls.length > 0}
           <div class="urls-container">
-            <span class="urls-label">Related Links:</span>
+            <span class="urls-label">{$t("label_related_links")}</span>
             <div class="urls-list">
               {#each urls as u}
                 <a
@@ -106,21 +107,21 @@
               on:click={handlePrev}
               disabled={currentIndex === 0}
             >
-              Previous
+              {$t("button_previous")}
             </button>
             <button
               class="btn btn-nav"
               on:click={handleNext}
               disabled={currentIndex === announcements.length - 1}
             >
-              Next
+              {$t("button_next")}
             </button>
           </div>
         {/if}
 
         <div class="action-controls">
-          <button class="btn btn-cancel" on:click={onClose}>Close</button>
-          <button class="btn btn-yes" on:click={handleDismiss}>OK</button>
+          <button class="btn btn-cancel" on:click={onClose}>{$t("button_close")}</button>
+          <button class="btn btn-yes" on:click={handleDismiss}>{$t("button_ok")}</button>
         </div>
       </div>
     </div>

@@ -307,7 +307,7 @@ def patcher():
                 try:
                     mod_vpk = vpk.open(mod_path)
                     vpk_utils.dump(mod_vpk, base.merge_dir, check_exists=True)
-                    output.add_text("&merged_mod", mod_name)
+                    output.add_text("&merged_mod", mod_name, indent=True)
                 except Exception:
                     log.write_warning("&failed_merge_mod", mod_name)
 
@@ -369,9 +369,9 @@ def patcher():
                     for p in psutil.process_iter(attrs=["name"])
                 ):
                     if steam_close_retries >= 3:
-                        output.add_text("&failed_steam_close", 3, msg_type="error")
+                        output.add_text("&failed_steam_close", 3, msg_type="error", indent=True)
                         break
-                    output.add_text("&waiting_steam_to_close")
+                    output.add_text("&waiting_steam_to_close", indent=True)
                     time.sleep(2)
                     steam_close_retries += 1
                 time.sleep(1)

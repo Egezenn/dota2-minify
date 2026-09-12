@@ -60,7 +60,7 @@ def process(rerl_file: str, folder: str, dota_pak_contents) -> None:
                     fs.create_dirs(os.path.dirname(dest_file))
                     with open(dest_file, "wb") as f:
                         f.write(patched_data)
-                    output.add_text(f"Decoupled {count} RERL reference(s) in {clean_path}")
+                    output.add_text(f"Decoupled {count} RERL reference(s) in {clean_path}", indent=True)
 
             except Exception as e:
                 log.write_warning(f"Failed to patch RERL for '{clean_path}' in {folder}: {e}")

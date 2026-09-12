@@ -52,10 +52,10 @@ def main():
                 new_grid_data = response.json()
             else:
                 log.write_warning(f"Couldn't fetch grids from {REMOTE_URL}. Status: {response.status_code}")
-                output.add_text("&connection_error", msg_type="error")
+                output.add_text("&connection_error", msg_type="error", indent=True)
         except Exception as e:
             log.write_warning(f"Failed to fetch remote grids: {e}")
-            output.add_text("&connection_error", msg_type="error")
+            output.add_text("&connection_error", msg_type="error", indent=True)
 
     if new_grid_data and "configs" in new_grid_data:
         original_grid_path = os.path.join(dest_path, "hero_grid_config.json")

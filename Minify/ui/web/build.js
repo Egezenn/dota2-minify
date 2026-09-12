@@ -71,7 +71,6 @@ async function runBuild() {
         const stagingDir = path.resolve(stagingParent, folder);
         fs.mkdirSync(stagingDir, { recursive: true });
         fs.cpSync(pluginSrcDir, stagingDir, { recursive: true });
-
         const stagedHtml = path.resolve(stagingDir, "index.html");
         const pluginOutDir = path.resolve(pluginsDir, folder, "ui");
 

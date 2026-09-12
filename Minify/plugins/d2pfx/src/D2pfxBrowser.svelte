@@ -12,6 +12,7 @@
   import Sidebar from "./lib/components/Sidebar.svelte";
   import Header from "./lib/components/Header.svelte";
   import ModCard from "./lib/components/ModCard.svelte";
+  import { t, setPluginLocale } from "./lib/i18n";
 
   let categories: Category[] = [];
   let selectedCategory: string = "";
@@ -199,8 +200,22 @@
         e.data?.type === "REFRESH_MODS"
       ) {
         refreshInstalledMods();
+      } else if (e.data?.type === "LOCALE_CHANGED" && e.data.lang) {
+        setPluginLocale(e.data.lang, e.data.dict);
       }
     };
+
+    try {
+      const parentApi = (window.parent as any)?.pywebview?.api;
+      if (parentApi?.get_current_locale) {
+        Promise.all([
+          parentApi.get_current_locale(),
+          parentApi.get_localization ? parentApi.get_localization() : null,
+        ]).then(([lang, dict]) => {
+          if (lang) setPluginLocale(lang, dict || {});
+        }).catch(() => {});
+      }
+    } catch (_) {}
 
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape" && previewModal) {
@@ -259,9 +274,9 @@
 
     <div class="mods-grid-container">
       {#if isLoadingMods}
-        <div class="loading-grid">Loading mods...</div>
+        <div class="loading-grid">{$t("label_loading_mods")}</div>
       {:else if mods.length === 0}
-        <div class="empty-grid">No mods found in this category.</div>
+        <div class="empty-grid">{$t("label_no_mods_found")}</div>
       {:else}
         <div class="mods-grid">
           {#each mods as m}
@@ -306,12 +321,12 @@
         aria-label="Image Preview"
       >
         <header class="lightbox-header">
-          <span class="lightbox-title">{previewModal.title} - Preview</span>
+          <span class="lightbox-title">{previewModal.title} - {$t("label_preview")}</span>
           <button
             class="close-btn"
             type="button"
             on:click|stopPropagation={closePreview}
-            aria-label="Close image preview"
+            aria-label={$t("button_close")}
           >
             &times;
           </button>
@@ -328,7 +343,7 @@
               closePreview();
             }
           }}
-          title="Click to close"
+          title={$t("title_click_to_close")}
         >
           <img src={previewModal.url} alt={previewModal.title} />
         </div>

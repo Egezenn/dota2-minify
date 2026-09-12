@@ -76,6 +76,7 @@ def main():
     output.add_text(
         f"Extracted and renamed {total} localization files ({len(disk_locale_files)} from game files).",
         msg_type="success",
+        indent=True,
     )
 
 

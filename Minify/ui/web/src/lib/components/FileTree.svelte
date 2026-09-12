@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { t } from "../i18n";
+
   export let node: any;
   export let depth: number = 0;
   export let isRoot: boolean = true;
@@ -24,7 +26,7 @@
         <svelte:self node={child} depth={0} isRoot={false} />
       {/each}
     {:else}
-      <div class="tree-empty">Empty directory</div>
+      <div class="tree-empty">{$t("label_empty_directory")}</div>
     {/if}
   </div>
 {:else if node.type === "directory"}

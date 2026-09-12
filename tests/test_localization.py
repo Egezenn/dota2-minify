@@ -13,9 +13,9 @@ def get_git_tracked_py_files(root_dir):
 
 def test_unused_localization_keys():
     root_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
-    loc_path = os.path.join(root_dir, "Minify", "bin", "localization.json")
+    loc_path = os.path.join(root_dir, "Minify", "locales", "en.json")
 
-    assert os.path.exists(loc_path), f"localization.json not found at {loc_path}"
+    assert os.path.exists(loc_path), f"en.json not found at {loc_path}"
 
     with open(loc_path, "r", encoding="utf-8") as f:
         loc_data = json.load(f)
@@ -70,7 +70,7 @@ def test_get_for_locale():
 if __name__ == "__main__":
     root = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
     py_files = get_git_tracked_py_files(root)
-    loc_path = os.path.join(root, "Minify", "bin", "localization.json")
+    loc_path = os.path.join(root, "Minify", "locales", "en.json")
     with open(loc_path, "r", encoding="utf-8") as f:
         loc_data = json.load(f)
     keys = list(loc_data.keys())

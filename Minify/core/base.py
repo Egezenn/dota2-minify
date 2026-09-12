@@ -88,7 +88,8 @@ cache_dir = "cache"
 blank_files_dir = os.path.join(bundle_bin_dir, "blank-files")
 img_dir = os.path.join(bundle_bin_dir, "images")
 favicon_file = os.path.join(img_dir, "favicon.ico")
-localization_file_dir = os.path.join(bundle_bin_dir, "localization.json")
+locales_dir = os.path.abspath(os.path.join(bundle_dir, "locales"))
+localization_file_dir = os.path.join(locales_dir, "en.json")
 settings_file_dir = os.path.join(bundle_bin_dir, "settings.json")
 sounds_dir = os.path.join(bundle_bin_dir, "sounds")
 

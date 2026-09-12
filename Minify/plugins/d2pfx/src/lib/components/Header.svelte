@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { t } from "../i18n";
+
   export let categoryName: string = "";
   export let categoryDesc: string = "";
   export let searchQuery: string = "";
@@ -15,7 +17,7 @@
 
 <header class="top-bar">
   <div class="cat-info">
-    <h3>{categoryName || "Select a category"}</h3>
+    <h3>{categoryName || $t("label_select_category")}</h3>
     {#if categoryDesc}
       <p>{categoryDesc}</p>
     {/if}
@@ -24,13 +26,13 @@
   <div class="top-actions">
     <input
       type="text"
-      placeholder="Search mods..."
+      placeholder={$t("placeholder_search_mods")}
       value={searchQuery}
       on:input={handleInput}
     />
 
     <button class="action-btn" on:click={onRefreshData}>
-      Refresh Data
+      {$t("button_refresh_data")}
     </button>
   </div>
 </header>

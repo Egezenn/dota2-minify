@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { t } from "../i18n";
+
   export let isOpen: boolean = false;
   export let onConfirm: (removeEverything: boolean) => void;
   export let onCancel: () => void;
@@ -21,24 +23,24 @@
   <div class="modal-backdrop" on:click|self={handleCancel}>
     <div class="modal-card">
       <div class="modal-header">
-        <h3>Uninstall Mods</h3>
+        <h3>{$t("title_uninstall_mods")}</h3>
         <button class="close-btn" on:click={handleCancel}>✕</button>
       </div>
 
       <div class="modal-body">
         <p class="modal-text">
-          This will uninstall all the mods related to minify, are you sure?
+          {$t("modal_uninstall_message")}
         </p>
 
         <label class="checkbox-label">
           <input type="checkbox" bind:checked={removeEverything} />
-          <span>Remove everything (Will delete any of the mods you may have manually installed!)</span>
+          <span>{$t("label_remove_everything")}</span>
         </label>
       </div>
 
       <div class="modal-footer">
-        <button class="btn btn-cancel" on:click={handleCancel}>Cancel</button>
-        <button class="btn btn-yes" on:click={handleConfirm}>Yes</button>
+        <button class="btn btn-cancel" on:click={handleCancel}>{$t("button_cancel")}</button>
+        <button class="btn btn-yes" on:click={handleConfirm}>{$t("button_yes")}</button>
       </div>
     </div>
   </div>

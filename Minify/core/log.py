@@ -23,7 +23,7 @@ def write_crashlog(header=None, exc_type=None, exc_value=None, exc_traceback=Non
         create_debug_zip()
 
 
-def write_warning(header=None, *args):
+def write_warning(header=None, *args, **kwargs):
     if not os.path.exists(base.log_warnings):
         with utils.open_utf8R(base.log_warnings, "w") as file:
             pass
@@ -45,7 +45,7 @@ def write_warning(header=None, *args):
         file.write(f"{console_message}\n{'-' * 50}\n\n")
 
     if console_message:
-        output.add_text(console_message, *args, msg_type="warning")
+        output.add_text(console_message, *args, msg_type="warning", **kwargs)
 
 
 def unhandled_handler(handled=False):

@@ -181,13 +181,13 @@ def exec_script(script_path, mod_name, order_name, _terminal_output=True):
         main_func = getattr(module, "main", None)
         if callable(main_func):
             if _terminal_output:
-                output.add_text("&script_execution", mod_name, order_name)
+                output.add_text("&script_execution", mod_name, order_name, indent=True)
             result = main_func()
             if _terminal_output:
-                output.add_text("&script_success", mod_name, order_name, msg_type="success")
+                output.add_text("&script_success", mod_name, order_name, msg_type="success", indent=True)
             return result
         else:
-            log.write_warning("&script_no_main", mod_name, order_name)
+            log.write_warning("&script_no_main", mod_name, order_name, indent=True)
 
     return None
 

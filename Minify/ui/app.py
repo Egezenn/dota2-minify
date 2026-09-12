@@ -99,7 +99,7 @@ class Api:
         threading.Thread(target=_update_thread, daemon=True).start()
         return True
 
-    def get_localization(self, lang: str = "EN") -> Dict[str, str]:
+    def get_localization(self, lang: str = "en") -> Dict[str, str]:
         return self.config_service.get_localization(lang)
 
     def get_current_locale(self) -> str:
@@ -165,6 +165,9 @@ class Api:
 
     def get_plugin_content(self, plugin_id: str) -> str:
         return self.plugin_service.get_content(plugin_id)
+
+    def get_plugin_localization(self, plugin_id: str, lang: str = "en") -> Dict[str, str]:
+        return self.plugin_service.get_localization(plugin_id, lang)
 
     def _resolve_plugin_entry(self, p_path: str) -> Optional[str]:
         return self.plugin_service._resolve_plugin_entry(p_path)

@@ -170,7 +170,9 @@ def main():
 
     if not found_font:
         output.add_text(
-            "No font configured: set a font name in settings or place font.otf/ttf in config/", msg_type="error"
+            "No font configured: set a font name in settings or place font.otf/ttf in config/",
+            msg_type="error",
+            indent=True,
         )
         return
 
@@ -190,14 +192,14 @@ def main():
         dest = os.path.join(dota_fonts_path, name)
         is_patched = os.path.exists(dest) and _is_patched(dest, family, fullname, postscript)
         if is_patched and source_hash is not None and source_hash == stored_hash:
-            output.add_text(f"Skipped (already patched): {name}")
+            output.add_text(f"Skipped (already patched): {name}", indent=True)
             continue
         if is_patched:
-            output.add_text(f"Font changed, re-patching: {name}")
+            output.add_text(f"Font changed, re-patching: {name}", indent=True)
         fs.remove_path(dest)
         shutil.copy2(found_font, dest)
         _patch_font(dest, family, fullname, postscript)
-        output.add_text(f"Installed: {name}")
+        output.add_text(f"Installed: {name}", indent=True)
 
     if source_hash is not None:
         utils.set_state(mod_name, "source_hash", source_hash)

@@ -4,6 +4,8 @@
   import markedAlert from "marked-alert";
   import hljs from "highlight.js";
   import FileTree from "./FileTree.svelte";
+  import { t } from "../i18n";
+  import { localeStore } from "../stores/locale";
 
   export let modName: string | null = null;
   export let onClose: () => void;
@@ -50,7 +52,7 @@
   });
 
   $: if (modName) {
-    fetchDetails(modName);
+    fetchDetails(modName, $localeStore.lang);
   }
 
   function escapeHtml(str: string): string {
@@ -153,12 +155,12 @@
     }
   }
 
-  async function fetchDetails(name: string) {
+  async function fetchDetails(name: string, lang?: string) {
     loading = true;
     details = null;
     try {
       if (window.pywebview?.api?.get_mod_details) {
-        const res = await window.pywebview.api.get_mod_details(name);
+        const res = await window.pywebview.api.get_mod_details(name, lang);
         if (res) {
           details = {
             ...res,
@@ -226,7 +228,7 @@
           class="close-btn"
           type="button"
           on:click={onClose}
-          aria-label="Close modal"
+          aria-label={$t("button_close")}
         >
           &times;
         </button>
@@ -234,7 +236,7 @@
 
       <div class="modal-body">
         {#if loading}
-          <div class="loading-state">Loading...</div>
+          <div class="loading-state">{$t("loading")}</div>
         {:else if details}
           {#if (details.has_preview && details.preview) || (details.has_notes && details.notes)}
             <div
@@ -247,8 +249,8 @@
                     type="button"
                     class="image-preview-btn"
                     on:click={() => (previewLightboxOpen = true)}
-                    title="Click to preview image"
-                    aria-label="Preview image full size"
+                    title={$t("title_click_to_preview")}
+                    aria-label={$t("title_click_to_preview")}
                   >
                     <img src={details.preview} alt={`Preview for ${modName}`} />
                   </button>
@@ -292,21 +294,21 @@
                         </div>
                       </div>
                     {:else}
-                      <div class="empty-method-content">Empty file</div>
+                      <div class="empty-method-content">{$t("label_empty_file")}</div>
                     {/if}
                   </div>
                 </details>
               {/each}
             </div>
           {:else if !details.has_notes && !details.has_preview}
-            <div class="empty-state">No notes, preview, or mod files available.</div>
+            <div class="empty-state">{$t("label_no_mod_details")}</div>
           {/if}
         {/if}
       </div>
 
       <footer class="modal-footer">
         <button class="btn-close" type="button" on:click={onClose}>
-          Close
+          {$t("button_close")}
         </button>
       </footer>
     </div>
@@ -336,12 +338,12 @@
         aria-label="Image Preview"
       >
         <header class="lightbox-header">
-          <span class="lightbox-title">{modName} - Preview</span>
+          <span class="lightbox-title">{modName} - {$t("label_preview")}</span>
           <button
             class="close-btn"
             type="button"
             on:click|stopPropagation={() => (previewLightboxOpen = false)}
-            aria-label="Close image preview"
+            aria-label={$t("button_close")}
           >
             &times;
           </button>

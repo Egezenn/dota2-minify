@@ -32,6 +32,6 @@ def main():
             fs.create_dirs(fallback_dir)
             with open(fallback_path, "wb") as file:
                 file.write(response.content)
-            output.add_text(f"Downloaded the static 10s file for {current_dir}")
+            output.add_text(f"Downloaded the static 10s file for {current_dir}", indent=True)
         else:
             log.write_warning("Fallback download failed!")

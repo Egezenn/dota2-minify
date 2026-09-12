@@ -17,7 +17,7 @@ from core import constants, fs, output
 def main():
     bkup_dir = os.path.join(minify_root, "backup", "#English Fix")
     if not os.path.isdir(bkup_dir):
-        output.add_text("No backup found for #English Fix disk files.", msg_type="warning")
+        output.add_text("No backup found for #English Fix disk files.", msg_type="warning", indent=True)
         return
 
     game_root = os.path.dirname(os.path.dirname(constants.dota_game_pak_path))
@@ -33,7 +33,7 @@ def main():
             restored += 1
 
     fs.remove_path(bkup_dir)
-    output.add_text(f"Restored {restored} disk files from backup.", msg_type="success")
+    output.add_text(f"Restored {restored} disk files from backup.", msg_type="success", indent=True)
 
 
 if __name__ == "__main__":

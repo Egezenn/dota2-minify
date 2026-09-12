@@ -1,5 +1,6 @@
 <script lang="ts">
   import type { DownloadItem } from "../types";
+  import { t } from "../i18n";
 
   export let downloads: DownloadItem[] = [];
   export let onDismiss: (id: string) => void = () => {};
@@ -21,7 +22,7 @@
       <div class="download-card {item.status}">
         <div class="download-header">
           <span class="download-title">{item.name}</span>
-          <button class="close-btn" on:click={() => onDismiss(item.id)} title="Dismiss">×</button>
+          <button class="close-btn" on:click={() => onDismiss(item.id)} title={$t("button_dismiss")}>×</button>
         </div>
 
         {#if item.status === "downloading"}
@@ -39,11 +40,11 @@
           {/if}
         {:else if item.status === "finished"}
           <div class="download-status-text finished">
-            ✓ Download Complete ({formatMB(item.downloaded_bytes)})
+            {$t("status_download_complete", [formatMB(item.downloaded_bytes)])}
           </div>
         {:else if item.status === "error"}
           <div class="download-status-text error">
-            Failed: {item.error || "Unknown error"}
+            {$t("status_download_failed", [item.error || "Unknown error"])}
           </div>
         {/if}
       </div>

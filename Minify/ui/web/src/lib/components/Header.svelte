@@ -1,12 +1,11 @@
 <script lang="ts">
+  import { t } from "../i18n";
+
   export let activeTab: string;
-  export let currentGameLang: string;
-  export let availableGameLangs: string[];
   export let isPatching: boolean;
   export let pluginTabs: Array<{ id: string; name: string }> = [];
 
   export let onTabChange: (tab: string) => void;
-  export let onGameLangChange: (event: Event) => void;
   export let onPatch: () => void;
   export let onUninstallClick: () => void;
 </script>
@@ -17,21 +16,21 @@
       class="tab-btn {activeTab === 'mods' ? 'active' : ''}"
       on:click={() => onTabChange("mods")}
     >
-      Mods
+      {$t("tab_mods")}
     </button>
 
     <button
       class="tab-btn {activeTab === 'terminal' ? 'active' : ''}"
       on:click={() => onTabChange("terminal")}
     >
-      Terminal
+      {$t("tab_terminal")}
     </button>
 
     <button
       class="tab-btn {activeTab === 'settings' ? 'active' : ''}"
       on:click={() => onTabChange("settings")}
     >
-      Settings
+      {$t("tab_settings")}
     </button>
 
     {#each pluginTabs as plugin}
@@ -39,28 +38,17 @@
         class="tab-btn {activeTab === plugin.id ? 'active' : ''}"
         on:click={() => onTabChange(plugin.id)}
       >
-        {plugin.name}
+        {$t(plugin.name)}
       </button>
     {/each}
   </nav>
 
   <div class="header-action">
-    <label for="game-lang-select">Game: </label>
-    <select
-      id="game-lang-select"
-      value={currentGameLang}
-      on:change={onGameLangChange}
-    >
-      {#each availableGameLangs as gLang}
-        <option value={gLang}>{gLang}</option>
-      {/each}
-    </select>
-
     <button class="uninstall-btn" on:click={onUninstallClick} disabled={isPatching}>
-      UNINSTALL
+      {$t("button_uninstall")}
     </button>
     <button class="patch-btn" on:click={onPatch} disabled={isPatching}>
-      {isPatching ? "PATCHING..." : "PATCH"}
+      {isPatching ? $t("button_patching") : $t("button_patch")}
     </button>
   </div>
 </header>
@@ -116,27 +104,6 @@
     gap: 8px;
     font-size: 13px;
     color: var(--text-primary, #000);
-  }
-
-  .header-action label {
-    display: inline-flex;
-    align-items: center;
-    line-height: 1;
-  }
-
-  select {
-    display: inline-flex;
-    align-items: center;
-    height: 24px;
-    padding: 0 4px;
-    border: 1px solid var(--input-border, #000);
-    background: var(--input-bg, #fff);
-    color: var(--input-text, #000);
-    font-size: 13px;
-    font-family: inherit;
-    line-height: 1;
-    box-sizing: border-box;
-    cursor: pointer;
   }
 
   .uninstall-btn,

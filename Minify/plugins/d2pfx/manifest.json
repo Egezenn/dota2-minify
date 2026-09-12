@@ -1,22 +1,22 @@
 {
   "id": "d2pfx",
-  "name": "D2PFX Browser",
+  "name": "&tab_d2pfx",
   "settings": [
     {
       "key": "d2pfx_filter_nsfw",
-      "text": "Filter 18+ Mods (D2PFX)",
+      "text": "&setting_d2pfx_filter_nsfw",
       "default": true,
       "type": "checkbox"
     },
     {
       "key": "d2pfx_filter_anime",
-      "text": "Filter Anime Mods (D2PFX)",
+      "text": "&setting_d2pfx_filter_anime",
       "default": false,
       "type": "checkbox"
     },
     {
       "key": "d2pfx_auto_refresh_catalogue",
-      "text": "Auto-Refresh D2PFX Catalogue",
+      "text": "&setting_d2pfx_auto_refresh_catalogue",
       "default": true,
       "type": "checkbox"
     }

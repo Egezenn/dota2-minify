@@ -48,7 +48,7 @@ def main():
             if removed_count > 0:
                 config.write_json_file(original_grid_path, current_config)
             else:
-                output.add_text(f"No hero grids with '{IMPORT_SUFFIX}' found to remove.")
+                output.add_text(f"No hero grids with '{IMPORT_SUFFIX}' found to remove.", indent=True)
         else:
             log.write_warning("Config file missing 'configs' key.")
 

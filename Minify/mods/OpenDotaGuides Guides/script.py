@@ -38,7 +38,7 @@ def main():
         response = requests.get(odg_latest, timeout=15)
     except Exception as e:
         log.write_warning(f"Connection error while fetching guides: {e}")
-        output.add_text("&connection_error", msg_type="error")
+        output.add_text("&connection_error", msg_type="error", indent=True)
         return
     if response.status_code == 200:
         with open(zip_path, "wb") as file:
@@ -54,7 +54,7 @@ def main():
         fs.remove_path(temp_dump_path, zip_path)
     else:
         log.write_warning(f"Failed to fetch guides. Status code: {response.status_code}")
-        output.add_text("&connection_error", msg_type="error")
+        output.add_text("&connection_error", msg_type="error", indent=True)
 
 
 if __name__ == "__main__":

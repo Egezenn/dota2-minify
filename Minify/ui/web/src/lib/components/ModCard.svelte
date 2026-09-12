@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { t } from "../i18n";
   export let name: string;
   export let enabled: boolean;
   export let always: boolean = false;
@@ -52,7 +53,7 @@
     <div class="mod-actions">
       {#if onDetails}
         <button class="details-btn" type="button" on:click={handleDetails}>
-          Details
+          {$t("button_details")}
         </button>
       {/if}
       <input

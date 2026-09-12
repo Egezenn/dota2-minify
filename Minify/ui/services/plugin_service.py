@@ -67,6 +67,11 @@ class PluginService:
             output.add_text(f"get_plugin_content error: {e}", msg_type="error")
         return ""
 
+    def get_localization(self, plugin_id: str, lang: str = "en") -> Dict[str, str]:
+        from core import localization
+
+        return localization.get_for_plugin(plugin_id, lang)
+
     def call_api(self, plugin_id: str, action: str, params: Dict[str, Any] = None) -> Any:
         try:
             import importlib.util

@@ -158,7 +158,7 @@ def run(mod_list):
             for path in vpk_paths:
                 try:
                     vpk_utils.dump(vpk.open(path), base.merge_dir, check_exists=True)
-                    output.add_text("&merged_mod", mod_name)
+                    output.add_text("&merged_mod", mod_name, indent=True)
                 except Exception:
                     log.write_warning("&failed_merge_mod", mod_name)
 
@@ -176,7 +176,7 @@ def run(mod_list):
             for path in vpk_paths:
                 try:
                     vpk_utils.dump(vpk.open(path), base.merge_dir, check_exists=True)
-                    output.add_text("&merged_mod", mod_name)
+                    output.add_text("&merged_mod", mod_name, indent=True)
                 except Exception:
                     log.write_warning("&failed_merge_mod", mod_name)
 

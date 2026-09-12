@@ -40,13 +40,9 @@
   let showUpdateModal = false;
   let showWorkshopModal = false;
 
-  let availableUiLangs: string[] = [];
-  let availableGameLangs: string[] = [];
-  let currentGameLang = "english";
   let initialized = false;
   let isDebugEnv = false;
 
-  $: dict = $localeStore.dict;
   $: currentLang = $localeStore.lang;
 
   async function handleLoadApiData() {
@@ -55,9 +51,6 @@
       const data = await loadApiData(currentLang);
       initialized = true;
       isDebugEnv = data.isDebugEnv;
-      currentGameLang = data.currentGameLang;
-      availableUiLangs = data.availableUiLangs;
-      availableGameLangs = data.availableGameLangs;
       logs = data.logs;
       isPatching = data.isPatching;
       pluginTabs = data.pluginTabs;
@@ -303,6 +296,7 @@
       const dict = await api.get_localization(lang);
       if (dict) {
         localeStore.set({ lang, dict });
+        broadcastToPlugins({ type: "LOCALE_CHANGED", lang, dict });
       }
     } catch (err) {
       console.error("Error setting language:", err);
@@ -314,7 +308,6 @@
     if (!api) return;
     try {
       await api.set_game_language(lang);
-      currentGameLang = lang;
     } catch (err) {
       console.error("Error setting game language:", err);
     }
@@ -341,16 +334,13 @@
     }
   }
 
-  function handleGameLangSelect(e: Event) {
-    const target = e.target as HTMLSelectElement;
-    if (target) {
-      handleGameLanguageChange(target.value);
-    }
-  }
-
   async function handleSettingChange(key: string, value: any) {
     if (key === "theme") {
       await applyTheme(value);
+    } else if (key === "locale") {
+      await handleLanguageChange(value);
+    } else if (key === "output_locale") {
+      await handleGameLanguageChange(value);
     }
   }
 
@@ -397,15 +387,12 @@
 <div class="app-container">
   <Header
     {activeTab}
-    {currentGameLang}
-    {availableGameLangs}
     {isPatching}
     {pluginTabs}
     onTabChange={(tab) => {
       activeTab = tab;
       broadcastToPlugins({ type: "TAB_ACTIVE", tab });
     }}
-    onGameLangChange={handleGameLangSelect}
     onPatch={handlePatch}
     onUninstallClick={() => (showUninstallModal = true)}
   />
