@@ -1,6 +1,7 @@
 "Dynamic localization handling"
 
 import os
+
 import jsonc
 
 from core import base, config, utils

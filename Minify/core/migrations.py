@@ -94,8 +94,9 @@ class Migrations:
                     log.write_warning(f"Failed to remove legacy {legacy_bin} folder: {e}")
 
     def _migrate_legacy_paks(self):
-        from core import constants, utils
         from patch import vpk_utils
+
+        from core import constants, utils
 
         states = utils.read_states()
         if states.get("legacy_paks_migrated"):

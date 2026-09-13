@@ -68,6 +68,7 @@ class Api:
         import tempfile
         import threading
         import time
+
         from core import fs, log
 
         def _update_thread():
@@ -154,10 +155,12 @@ class Api:
 
     def check_workshop_tools_needed(self) -> bool:
         import conditions
+
         return base.is_linux and not constants.rescomp_override and conditions.workshop_installed
 
     def extract_workshop_tools(self) -> bool:
         import helper
+
         return helper.extract_workshop_tools()
 
     def get_plugin_tabs(self) -> List[Dict[str, Any]]:
