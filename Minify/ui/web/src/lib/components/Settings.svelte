@@ -120,8 +120,7 @@
 
   async function resetSection(sectionTitle: string, items: SettingItem[]) {
     try {
-      const isNative =
-        sectionTitle === "Application Settings" || !items[0]?.mod;
+      const isNative = sectionTitle === "Application Settings" || !items[0]?.mod;
       if (isNative) {
         if (window.pywebview?.api?.reset_native_settings) {
           await window.pywebview.api.reset_native_settings();
@@ -156,8 +155,8 @@
       const secName = item.plugin
         ? `Plugin: ${item.plugin}`
         : item.mod
-        ? (item.mod_display_name || item.mod)
-        : "Application Settings";
+          ? item.mod_display_name || item.mod
+          : "Application Settings";
       if (!map.has(secName)) {
         map.set(secName, []);
       }
@@ -184,14 +183,9 @@
       <div class="settings-section">
         <div class="section-header">
           <h4 class="section-title">
-            {sectionTitle === "Application Settings"
-              ? $t("section_application_settings")
-              : sectionTitle}
+            {sectionTitle === "Application Settings" ? $t("section_application_settings") : sectionTitle}
           </h4>
-          <button
-            class="btn-reset"
-            on:click={() => resetSection(sectionTitle, items)}
-          >
+          <button class="btn-reset" on:click={() => resetSection(sectionTitle, items)}>
             {$t("button_reset")}
           </button>
         </div>
@@ -199,11 +193,10 @@
           {#each items as item (item.key)}
             {#if item.type === "checkbox"}
               <label class="setting-item-checkbox">
-                 <input
+                <input
                   type="checkbox"
                   checked={Boolean(getItemValue(item, values))}
-                  on:change={(e) =>
-                    updateSetting(item, e.currentTarget.checked)}
+                  on:change={(e) => updateSetting(item, e.currentTarget.checked)}
                 />
                 <span class="setting-text">{getSettingLabel(item)}</span>
               </label>
@@ -283,15 +276,13 @@
                     type="color"
                     class="color-picker"
                     value={getHex6(getItemValue(item, values))}
-                    on:change={(e) =>
-                      updateSetting(item, e.currentTarget.value)}
+                    on:change={(e) => updateSetting(item, e.currentTarget.value)}
                   />
                   <input
                     type="text"
                     class="setting-input color-text"
                     value={getItemValue(item, values) ?? ""}
-                    on:change={(e) =>
-                      updateSetting(item, e.currentTarget.value)}
+                    on:change={(e) => updateSetting(item, e.currentTarget.value)}
                   />
                 </div>
               </div>
@@ -305,13 +296,9 @@
                         type="text"
                         class="setting-input"
                         value={entry}
-                        on:change={(e) =>
-                          updateListEntry(item, idx, e.currentTarget.value)}
+                        on:change={(e) => updateListEntry(item, idx, e.currentTarget.value)}
                       />
-                      <button
-                        class="btn-sm"
-                        on:click={() => removeListEntry(item, idx)}
-                      >
+                      <button class="btn-sm" on:click={() => removeListEntry(item, idx)}>
                         {$t("button_remove")}
                       </button>
                     </div>
@@ -335,12 +322,7 @@
             {:else if item.type === "button"}
               <div class="setting-item-row">
                 <span class="setting-label">{getSettingLabel(item)}</span>
-                <button
-                  class="btn-action"
-                  on:click={() => runModFunction(item)}
-                >
-                  Run Function
-                </button>
+                <button class="btn-action" on:click={() => runModFunction(item)}> Run Function </button>
               </div>
             {/if}
           {/each}

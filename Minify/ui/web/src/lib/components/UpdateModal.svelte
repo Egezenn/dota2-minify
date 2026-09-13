@@ -124,9 +124,7 @@
           <span class="badge">v{updateInfo.version}</span>
         </div>
         {#if !isDownloading}
-          <button class="close-btn" on:click={handleCloseModal} title={$t("button_close")}
-            >✕</button
-          >
+          <button class="close-btn" on:click={handleCloseModal} title={$t("button_close")}>✕</button>
         {/if}
       </div>
 
@@ -155,10 +153,7 @@
               >
               <span class="download-numbers">
                 {#if totalBytes > 0}
-                  {formatMB(downloadedBytes)} / {formatMB(totalBytes)} ({getPercent(
-                    downloadedBytes,
-                    totalBytes,
-                  )}%)
+                  {formatMB(downloadedBytes)} / {formatMB(totalBytes)} ({getPercent(downloadedBytes, totalBytes)}%)
                 {:else}
                   {formatMB(downloadedBytes)}
                 {/if}
@@ -166,10 +161,7 @@
             </div>
 
             <div class="progress-bar-bg">
-              <div
-                class="progress-bar-fill"
-                style="width: {getPercent(downloadedBytes, totalBytes)}%"
-              ></div>
+              <div class="progress-bar-fill" style="width: {getPercent(downloadedBytes, totalBytes)}%"></div>
             </div>
 
             {#if downloadStatus === "finished"}
@@ -199,12 +191,8 @@
           </button>
 
           <div class="action-controls">
-            <button class="btn btn-cancel" on:click={handleCloseModal}
-              >{$t("button_later")}</button
-            >
-            <button class="btn btn-yes" on:click={handleStartDownload}
-              >{$t("button_update_now")}</button
-            >
+            <button class="btn btn-cancel" on:click={handleCloseModal}>{$t("button_later")}</button>
+            <button class="btn btn-yes" on:click={handleStartDownload}>{$t("button_update_now")}</button>
           </div>
         {:else if downloadStatus === "downloading"}
           <div class="status-msg-running">{$t("status_downloading")}</div>
@@ -217,13 +205,9 @@
             <button class="btn btn-yes" disabled>{$t("status_closing")}</button>
           </div>
         {:else if downloadStatus === "error"}
-          <button class="btn btn-cancel" on:click={handleCloseModal}
-            >{$t("button_close")}</button
-          >
+          <button class="btn btn-cancel" on:click={handleCloseModal}>{$t("button_close")}</button>
           <div class="action-controls">
-            <button class="btn btn-yes" on:click={handleStartDownload}
-              >{$t("button_retry")}</button
-            >
+            <button class="btn btn-yes" on:click={handleStartDownload}>{$t("button_retry")}</button>
           </div>
         {/if}
       </div>

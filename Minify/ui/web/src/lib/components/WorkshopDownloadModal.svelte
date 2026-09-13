@@ -19,8 +19,7 @@
       if (success) {
         onSuccess();
       } else {
-        errorMessage =
-          "Download or extraction failed. Check Terminal for details.";
+        errorMessage = "Download or extraction failed. Check Terminal for details.";
       }
     } catch (err) {
       errorMessage = String(err);
@@ -50,11 +49,7 @@
           {$t("title_download_workshop_tools")}
         </h3>
         {#if !isDownloading}
-          <button
-            class="close-btn"
-            on:click={handleLater}
-            title={$t("button_close")}>✕</button
-          >
+          <button class="close-btn" on:click={handleLater} title={$t("button_close")}>✕</button>
         {/if}
       </div>
 
@@ -82,17 +77,11 @@
       <div class="modal-footer">
         {#if isDownloading}
           <div class="status-msg-running">{$t("status_downloading")}</div>
-          <button class="btn btn-yes" disabled
-            >{$t("status_downloading")}</button
-          >
+          <button class="btn btn-yes" disabled>{$t("status_downloading")}</button>
         {:else if errorMessage}
-          <button class="btn btn-cancel" on:click={handleLater}
-            >{$t("button_close")}</button
-          >
+          <button class="btn btn-cancel" on:click={handleLater}>{$t("button_close")}</button>
           <div class="action-controls">
-            <button class="btn btn-yes" on:click={handleDownload}
-              >{$t("button_retry")}</button
-            >
+            <button class="btn btn-yes" on:click={handleDownload}>{$t("button_retry")}</button>
           </div>
         {:else}
           <button class="btn btn-cancel" on:click={handleIgnore}>

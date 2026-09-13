@@ -1,4 +1,4 @@
-import { writable } from 'svelte/store';
+import { writable } from "svelte/store";
 
 export interface LocaleState {
   lang: string;
@@ -6,6 +6,6 @@ export interface LocaleState {
 }
 
 export const localeStore = writable<LocaleState>({
-  lang: 'en',
+  lang: "en",
   dict: {},
 });

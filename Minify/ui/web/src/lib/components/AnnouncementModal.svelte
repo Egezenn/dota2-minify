@@ -66,9 +66,7 @@
         <div class="header-title-group">
           <h3>{current.title || $t("title_announcement")}</h3>
           {#if announcements.length > 1}
-            <span class="badge"
-              >({currentIndex + 1} / {announcements.length})</span
-            >
+            <span class="badge">({currentIndex + 1} / {announcements.length})</span>
           {/if}
         </div>
         <button class="close-btn" on:click={onClose} title={$t("button_close")}>✕</button>
@@ -84,12 +82,7 @@
             <span class="urls-label">{$t("label_related_links")}</span>
             <div class="urls-list">
               {#each urls as u}
-                <a
-                  href={u}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  class="url-btn"
-                >
+                <a href={u} target="_blank" rel="noopener noreferrer" class="url-btn">
                   <span class="url-text">{u}</span>
                   <span class="url-icon">↗</span>
                 </a>
@@ -102,18 +95,10 @@
       <div class="modal-footer">
         {#if announcements.length > 1}
           <div class="nav-controls">
-            <button
-              class="btn btn-nav"
-              on:click={handlePrev}
-              disabled={currentIndex === 0}
-            >
+            <button class="btn btn-nav" on:click={handlePrev} disabled={currentIndex === 0}>
               {$t("button_previous")}
             </button>
-            <button
-              class="btn btn-nav"
-              on:click={handleNext}
-              disabled={currentIndex === announcements.length - 1}
-            >
+            <button class="btn btn-nav" on:click={handleNext} disabled={currentIndex === announcements.length - 1}>
               {$t("button_next")}
             </button>
           </div>

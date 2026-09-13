@@ -9,18 +9,12 @@
 
   let searchQuery = "";
 
-  $: filteredCategories = categories.filter((c) =>
-    c.name.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  $: filteredCategories = categories.filter((c) => c.name.toLowerCase().includes(searchQuery.toLowerCase()));
 </script>
 
 <aside class="sidebar">
   <div class="sidebar-search">
-    <input
-      type="text"
-      placeholder={$t("placeholder_search_categories")}
-      bind:value={searchQuery}
-    />
+    <input type="text" placeholder={$t("placeholder_search_categories")} bind:value={searchQuery} />
   </div>
   <div class="category-list">
     {#if isLoadingCategories}

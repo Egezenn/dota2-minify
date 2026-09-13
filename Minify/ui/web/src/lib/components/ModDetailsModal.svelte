@@ -47,8 +47,7 @@
         const lang = typeof token === "object" ? token.lang : arguments[1];
         const validLang = lang && hljs.getLanguage(lang) ? lang : undefined;
         const highlighted = validLang
-          ? hljs.highlight(text, { language: validLang, ignoreIllegals: true })
-              .value
+          ? hljs.highlight(text, { language: validLang, ignoreIllegals: true }).value
           : escapeHtml(text || "");
         return `<pre><code class="hljs ${validLang ? `language-${validLang}` : ""}">${highlighted}</code></pre>`;
       },
@@ -103,8 +102,7 @@
     if (!code) return "";
     try {
       if (hljs.getLanguage(lang)) {
-        return hljs.highlight(code, { language: lang, ignoreIllegals: true })
-          .value;
+        return hljs.highlight(code, { language: lang, ignoreIllegals: true }).value;
       }
     } catch {
       // fallback
@@ -127,12 +125,7 @@
       }
 
       let lines: string[] = [];
-      if (
-        m.type &&
-        m.type !== "tree" &&
-        m.type !== "blacklist" &&
-        m.type !== "text"
-      ) {
+      if (m.type && m.type !== "tree" && m.type !== "blacklist" && m.type !== "text") {
         const highlighted = highlightCode(content, m.type);
         lines = splitHighlightedLines(highlighted);
       } else if (content) {
@@ -225,23 +218,10 @@
   >
     <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
     <!-- svelte-ignore a11y-click-events-have-key-events -->
-    <div
-      class="modal-card"
-      on:click|stopPropagation
-      role="dialog"
-      aria-modal="true"
-      aria-labelledby="modal-title"
-    >
+    <div class="modal-card" on:click|stopPropagation role="dialog" aria-modal="true" aria-labelledby="modal-title">
       <header class="modal-header">
         <h2 id="modal-title">{displayName}</h2>
-        <button
-          class="close-btn"
-          type="button"
-          on:click={onClose}
-          aria-label={$t("button_close")}
-        >
-          &times;
-        </button>
+        <button class="close-btn" type="button" on:click={onClose} aria-label={$t("button_close")}> &times; </button>
       </header>
 
       <div class="modal-body">
@@ -251,10 +231,7 @@
           {#if (details.has_preview && details.preview) || (details.has_notes && details.notes)}
             <div
               class="mod-overview"
-              class:has-both={details.has_preview &&
-                details.preview &&
-                details.has_notes &&
-                details.notes}
+              class:has-both={details.has_preview && details.preview && details.has_notes && details.notes}
             >
               {#if details.has_preview && details.preview}
                 <div class="image-wrapper">
@@ -265,10 +242,7 @@
                     title={$t("title_click_to_preview")}
                     aria-label={$t("title_click_to_preview")}
                   >
-                    <img
-                      src={details.preview}
-                      alt={`Preview for ${displayName}`}
-                    />
+                    <img src={details.preview} alt={`Preview for ${displayName}`} />
                   </button>
                 </div>
               {/if}
@@ -288,9 +262,7 @@
                   <summary class="mod-method-summary">
                     <div class="summary-left">
                       <span class="summary-arrow">▶</span>
-                      <span class="method-icon"
-                        >{getMethodIcon(method.type)}</span
-                      >
+                      <span class="method-icon">{getMethodIcon(method.type)}</span>
                       <span class="method-name">{method.name}</span>
                     </div>
                     {#if method.badge}
@@ -306,9 +278,7 @@
                           {#each method.highlightedLines as line, i}
                             <div class="code-row">
                               <span class="line-no">{i + 1}</span>
-                              <span class="line-content"
-                                >{@html line || "&nbsp;"}</span
-                              >
+                              <span class="line-content">{@html line || "&nbsp;"}</span>
                             </div>
                           {/each}
                         </div>
@@ -352,17 +322,9 @@
     >
       <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
       <!-- svelte-ignore a11y-click-events-have-key-events -->
-      <div
-        class="lightbox-card"
-        on:click|stopPropagation
-        role="dialog"
-        aria-modal="true"
-        aria-label="Image Preview"
-      >
+      <div class="lightbox-card" on:click|stopPropagation role="dialog" aria-modal="true" aria-label="Image Preview">
         <header class="lightbox-header">
-          <span class="lightbox-title"
-            >{displayName} - {$t("label_preview")}</span
-          >
+          <span class="lightbox-title">{displayName} - {$t("label_preview")}</span>
           <button
             class="close-btn"
             type="button"

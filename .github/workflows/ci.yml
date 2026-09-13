@@ -18,11 +18,34 @@ jobs:
           enable-cache: true
           python-version: "3.13"
 
-      - name: Install dependencies
+      - name: Install Python dependencies
         run: uv sync --group dev
 
       - name: Run Ruff Format Check
         run: uv run ruff format Minify tests --check
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+          cache-dependency-path: Minify/ui/web/package-lock.json
+
+      - name: Install web dependencies
+        run: npm --prefix Minify/ui/web ci
+
+      - name: Run Prettier Check
+        run: npx --yes -p prettier -p prettier-plugin-svelte@3 bash -c "prettier --plugin=\$(dirname \$(which prettier))/../prettier-plugin-svelte/plugin.js --check \"Minify/**/*.{svelte,ts,js,css,json,html}\""
+
+      - name: Run TypeScript Check
+        run: |
+          npx --yes -p typescript tsc --project Minify/ui/web/tsconfig.json --noEmit
+          npx --yes -p typescript tsc --project Minify/plugins/tsconfig.json --noEmit
+
+      - name: Run Svelte Check
+        run: |
+          npx --yes svelte-check@3 --tsconfig Minify/ui/web/tsconfig.json
+          npx --yes svelte-check@3 --tsconfig Minify/plugins/tsconfig.json
 
       - name: Run Ruff Check
         run: uv run ruff check Minify tests

@@ -28,7 +28,7 @@ export async function setModState(
   modName: string,
   catId: string,
   label?: string,
-  enabled: boolean = true
+  enabled: boolean = true,
 ): Promise<any> {
   return callApi("set_mod_state", {
     mod_name: modName,
@@ -44,10 +44,7 @@ export function getModKey(m: D2Mod, catId: string): string {
 
 export function isInstalled(m: D2Mod, catId: string, installedList: InstalledMod[]): boolean {
   return installedList.some(
-    (inst) =>
-      inst.name === m.name &&
-      inst.category === catId &&
-      (inst.label || "") === (m.label || "")
+    (inst) => inst.name === m.name && inst.category === catId && (inst.label || "") === (m.label || ""),
   );
 }
 

@@ -2,8 +2,7 @@
   import { tick } from "svelte";
   import { t } from "../i18n";
 
-  export let logs: Array<{ text: string; type: string; timestamp?: string }> =
-    [];
+  export let logs: Array<{ text: string; type: string; timestamp?: string }> = [];
   export let autoScroll: boolean = true;
   export let onClear: () => void;
 

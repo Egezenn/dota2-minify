@@ -199,4 +199,3 @@ def disable_workshop_mods():
 
             if is_workshop_required_mod(mod_path, manifest):
                 mods_shared.set_state(folder, False)
-

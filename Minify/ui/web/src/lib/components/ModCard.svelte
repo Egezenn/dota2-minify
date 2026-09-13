@@ -10,7 +10,9 @@
   export let onDetails: ((name: string) => void) | undefined = undefined;
 
   $: effectiveName = displayName || name;
-  $: initialLetter = ((effectiveName || "").replace(/^[^a-zA-Z0-9]+/, "").charAt(0) || (effectiveName || "").charAt(0)).toUpperCase();
+  $: initialLetter = (
+    (effectiveName || "").replace(/^[^a-zA-Z0-9]+/, "").charAt(0) || (effectiveName || "").charAt(0)
+  ).toUpperCase();
 
   function handleToggle() {
     if (always || untickable) return;

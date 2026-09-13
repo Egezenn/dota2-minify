@@ -41,9 +41,7 @@
       <div class="modal-footer">
         <button class="btn btn-cancel" on:click={handleClose}>{$t("button_cancel")}</button>
         <button class="btn btn-skip" on:click={handleSkip}>{$t("button_skip")}</button>
-        <button class="btn btn-extract" on:click={handleExtract}
-          >{$t("button_extract")}</button
-        >
+        <button class="btn btn-extract" on:click={handleExtract}>{$t("button_extract")}</button>
       </div>
     </div>
   </div>

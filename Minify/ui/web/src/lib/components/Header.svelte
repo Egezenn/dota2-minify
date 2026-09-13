@@ -12,32 +12,20 @@
 
 <header class="header">
   <nav class="nav-tabs">
-    <button
-      class="tab-btn {activeTab === 'mods' ? 'active' : ''}"
-      on:click={() => onTabChange("mods")}
-    >
+    <button class="tab-btn {activeTab === 'mods' ? 'active' : ''}" on:click={() => onTabChange("mods")}>
       {$t("tab_mods")}
     </button>
 
-    <button
-      class="tab-btn {activeTab === 'terminal' ? 'active' : ''}"
-      on:click={() => onTabChange("terminal")}
-    >
+    <button class="tab-btn {activeTab === 'terminal' ? 'active' : ''}" on:click={() => onTabChange("terminal")}>
       {$t("tab_terminal")}
     </button>
 
-    <button
-      class="tab-btn {activeTab === 'settings' ? 'active' : ''}"
-      on:click={() => onTabChange("settings")}
-    >
+    <button class="tab-btn {activeTab === 'settings' ? 'active' : ''}" on:click={() => onTabChange("settings")}>
       {$t("tab_settings")}
     </button>
 
     {#each pluginTabs as plugin}
-      <button
-        class="tab-btn {activeTab === plugin.id ? 'active' : ''}"
-        on:click={() => onTabChange(plugin.id)}
-      >
+      <button class="tab-btn {activeTab === plugin.id ? 'active' : ''}" on:click={() => onTabChange(plugin.id)}>
         {$t(plugin.name)}
       </button>
     {/each}

@@ -2,12 +2,7 @@
   import { onMount } from "svelte";
   import { modsStore } from "./lib/stores/mods";
   import { localeStore } from "./lib/stores/locale";
-  import {
-    loadApiData,
-    refreshMods,
-    applyTheme,
-    injectThemeIntoFrame,
-  } from "./lib/api";
+  import { loadApiData, refreshMods, applyTheme, injectThemeIntoFrame } from "./lib/api";
   import Header from "./lib/components/Header.svelte";
   import ModGrid from "./lib/components/ModGrid.svelte";
   import Terminal from "./lib/components/Terminal.svelte";
@@ -19,15 +14,11 @@
   import UpdateModal from "./lib/components/UpdateModal.svelte";
   import WorkshopToolsDetectedModal from "./lib/components/WorkshopToolsDetectedModal.svelte";
   import WorkshopDownloadModal from "./lib/components/WorkshopDownloadModal.svelte";
-  import {
-    fetchPendingAnnouncements,
-    markAnnouncementSeen,
-  } from "./lib/announcements";
+  import { fetchPendingAnnouncements, markAnnouncementSeen } from "./lib/announcements";
   import { checkForUpdates, ignoreUpdate, getAppVersion } from "./lib/updater";
 
   let activeTab: string = "mods";
-  let pluginTabs: Array<{ id: string; name: string; entry_point?: string }> =
-    [];
+  let pluginTabs: Array<{ id: string; name: string; entry_point?: string }> = [];
   let pluginContents: Record<string, string> = {};
 
   let downloads: DownloadItem[] = [];
@@ -103,9 +94,7 @@
         getAppVersion().then(async (appVersion) => {
           let announcementsShown = false;
           try {
-            const announcements = await fetchPendingAnnouncements(
-              appVersion || undefined,
-            );
+            const announcements = await fetchPendingAnnouncements(appVersion || undefined);
             if (announcements.length > 0) {
               pendingAnnouncements = announcements;
               showAnnouncementModal = true;
@@ -164,11 +153,7 @@
 
     (window as any).onModsRefreshed = refreshMods;
 
-    window.onLogReceived = (logEntry: {
-      text: string;
-      type: string;
-      timestamp?: string;
-    }) => {
+    window.onLogReceived = (logEntry: { text: string; type: string; timestamp?: string }) => {
       const formattedMsg = `[${logEntry.timestamp || ""}] ${logEntry.text}`;
       if (logEntry.type === "error") {
         console.error(formattedMsg);
@@ -238,8 +223,7 @@
     if (isPatching) return;
 
     try {
-      const needsWorkshop =
-        await window.pywebview?.api?.check_workshop_tools_needed?.();
+      const needsWorkshop = await window.pywebview?.api?.check_workshop_tools_needed?.();
       if (needsWorkshop) {
         showWorkshopModal = true;
         return;
@@ -324,9 +308,7 @@
     }
   }
   function broadcastToPlugins(message: any) {
-    const iframes = document.querySelectorAll<HTMLIFrameElement>(
-      "iframe.plugin-frame",
-    );
+    const iframes = document.querySelectorAll<HTMLIFrameElement>("iframe.plugin-frame");
     iframes.forEach((frame) => {
       try {
         frame.contentWindow?.postMessage(message, "*");
@@ -358,9 +340,7 @@
   async function handleDismissAnnouncement(id: string) {
     await markAnnouncementSeen(id);
     pendingAnnouncements = pendingAnnouncements.filter((a) => {
-      const annId = a.time
-        ? a.time.replace(/[-+]/g, "").split("=")[0].trim()
-        : "";
+      const annId = a.time ? a.time.replace(/[-+]/g, "").split("=")[0].trim() : "";
       return annId !== id;
     });
     if (pendingAnnouncements.length === 0) {
@@ -402,12 +382,9 @@
 
   async function checkWorkshopDownload() {
     try {
-      const isInstalled =
-        await window.pywebview?.api?.is_workshop_installed?.();
+      const isInstalled = await window.pywebview?.api?.is_workshop_installed?.();
       if (isInstalled === false) {
-        const ignored = await window.pywebview?.api?.get_state?.(
-          "ignore_workshop_download",
-        );
+        const ignored = await window.pywebview?.api?.get_state?.("ignore_workshop_download");
         if (!ignored) {
           showWorkshopDownloadModal = true;
         }
@@ -420,10 +397,7 @@
   async function handleIgnoreWorkshopDownload() {
     showWorkshopDownloadModal = false;
     try {
-      await window.pywebview?.api?.set_state?.(
-        "ignore_workshop_download",
-        true,
-      );
+      await window.pywebview?.api?.set_state?.("ignore_workshop_download", true);
     } catch (err) {
       console.error("Failed to save ignore_workshop_download state:", err);
     }
@@ -504,10 +478,7 @@
     </div>
 
     <div class="tab-pane" class:hidden={activeTab !== "settings"}>
-      <Settings
-        active={activeTab === "settings"}
-        onSettingChange={handleSettingChange}
-      />
+      <Settings active={activeTab === "settings"} onSettingChange={handleSettingChange} />
     </div>
 
     {#each pluginTabs as plugin}
@@ -555,8 +526,7 @@
   :global(html) {
     width: 100%;
     height: 100%;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-      Helvetica, Arial, sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     font-size: 13px;
     color: var(--text-primary, #000);
     background: var(--bg-primary, #fff);

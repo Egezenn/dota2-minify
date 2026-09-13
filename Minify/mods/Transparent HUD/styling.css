@@ -245,12 +245,28 @@ DOTAScoreboardPlayer {
 }
 
 .Reborn #HealthProgress .ProgressBarRight {
-  background-color: gradient(linear, 0% 0%, 0% 100%, from(#212121), color-stop(0.2, #2e2e2e), color-stop(0.5, #2e2e2e), to(#212121));
+  background-color: gradient(
+    linear,
+    0% 0%,
+    0% 100%,
+    from(#212121),
+    color-stop(0.2, #2e2e2e),
+    color-stop(0.5, #2e2e2e),
+    to(#212121)
+  );
   background-color-opacity: 0.5;
 }
 
 .Reborn #ManaProgress .ProgressBarRight {
-  background-color: gradient(linear, 0% 0%, 0% 100%, from(#212121), color-stop(0.2, #2e2e2e), color-stop(0.5, #2e2e2e), to(#212121));
+  background-color: gradient(
+    linear,
+    0% 0%,
+    0% 100%,
+    from(#212121),
+    color-stop(0.2, #2e2e2e),
+    color-stop(0.5, #2e2e2e),
+    to(#212121)
+  );
   background-color-opacity: 0.5;
 }
 

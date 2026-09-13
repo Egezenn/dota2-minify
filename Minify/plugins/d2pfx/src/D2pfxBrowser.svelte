@@ -1,14 +1,7 @@
 <script lang="ts">
   import { onMount } from "svelte";
   import type { Category, D2Mod, InstalledMod } from "./lib/types";
-  import {
-    callApi,
-    getApi,
-    getModKey,
-    isInstalled,
-    notifyParentModsRefreshed,
-    setModState,
-  } from "./lib/api";
+  import { callApi, getApi, getModKey, isInstalled, notifyParentModsRefreshed, setModState } from "./lib/api";
   import Sidebar from "./lib/components/Sidebar.svelte";
   import Header from "./lib/components/Header.svelte";
   import ModCard from "./lib/components/ModCard.svelte";
@@ -194,11 +187,7 @@
 
   onMount(() => {
     const handleParentMessage = (e: MessageEvent) => {
-      if (
-        e.data?.type === "MODS_UPDATED" ||
-        e.data?.type === "TAB_ACTIVE" ||
-        e.data?.type === "REFRESH_MODS"
-      ) {
+      if (e.data?.type === "MODS_UPDATED" || e.data?.type === "TAB_ACTIVE" || e.data?.type === "REFRESH_MODS") {
         refreshInstalledMods();
       } else if (e.data?.type === "LOCALE_CHANGED" && e.data.lang) {
         setPluginLocale(e.data.lang, e.data.dict);
@@ -208,12 +197,11 @@
     try {
       const parentApi = (window.parent as any)?.pywebview?.api;
       if (parentApi?.get_current_locale) {
-        Promise.all([
-          parentApi.get_current_locale(),
-          parentApi.get_localization ? parentApi.get_localization() : null,
-        ]).then(([lang, dict]) => {
-          if (lang) setPluginLocale(lang, dict || {});
-        }).catch(() => {});
+        Promise.all([parentApi.get_current_locale(), parentApi.get_localization ? parentApi.get_localization() : null])
+          .then(([lang, dict]) => {
+            if (lang) setPluginLocale(lang, dict || {});
+          })
+          .catch(() => {});
       }
     } catch (_) {}
 
@@ -256,12 +244,7 @@
 </script>
 
 <div class="d2pfx-container">
-  <Sidebar
-    {categories}
-    {selectedCategory}
-    {isLoadingCategories}
-    onSelectCategory={selectCategory}
-  />
+  <Sidebar {categories} {selectedCategory} {isLoadingCategories} onSelectCategory={selectCategory} />
 
   <main class="main-pane">
     <Header
@@ -313,13 +296,7 @@
     >
       <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
       <!-- svelte-ignore a11y-click-events-have-key-events -->
-      <div
-        class="lightbox-card"
-        on:click|stopPropagation
-        role="dialog"
-        aria-modal="true"
-        aria-label="Image Preview"
-      >
+      <div class="lightbox-card" on:click|stopPropagation role="dialog" aria-modal="true" aria-label="Image Preview">
         <header class="lightbox-header">
           <span class="lightbox-title">{previewModal.title} - {$t("label_preview")}</span>
           <button

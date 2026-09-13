@@ -6,8 +6,7 @@
   import ModCard from "./ModCard.svelte";
   import ModDetailsModal from "./ModDetailsModal.svelte";
 
-  export let onSaveMods: ((data: Record<string, boolean>) => void) | undefined =
-    undefined;
+  export let onSaveMods: ((data: Record<string, boolean>) => void) | undefined = undefined;
 
   let searchQuery = "";
   let selectedModForDetails: string | null = null;
@@ -29,16 +28,11 @@
 
   $: filteredMods = mods.filter((mod) => {
     const q = searchQuery.toLowerCase().trim();
-    return (
-      (mod.display_name && mod.display_name.toLowerCase().includes(q)) ||
-      mod.name.toLowerCase().includes(q)
-    );
+    return (mod.display_name && mod.display_name.toLowerCase().includes(q)) || mod.name.toLowerCase().includes(q);
   });
 
   async function toggleMod(modName: string, enabled: boolean) {
-    const updated = mods.map((m) =>
-      m.name === modName ? { ...m, enabled } : m,
-    );
+    const updated = mods.map((m) => (m.name === modName ? { ...m, enabled } : m));
     modsStore.set(updated);
 
     const payload: Record<string, boolean> = {};
@@ -69,21 +63,12 @@
       <h3>{$t("title_mods")}</h3>
     </div>
     <div class="toolbar-controls">
-      <button
-        class="refresh-btn"
-        class:refreshing={isRefreshing}
-        on:click={handleRefresh}
-        title={$t("button_refresh")}
-      >
+      <button class="refresh-btn" class:refreshing={isRefreshing} on:click={handleRefresh} title={$t("button_refresh")}>
         <span class="refresh-icon" class:spin={isRefreshing}>↻</span>
         {$t("button_refresh")}
       </button>
       <div class="search-box">
-        <input
-          type="text"
-          placeholder={$t("placeholder_search_mods")}
-          bind:value={searchQuery}
-        />
+        <input type="text" placeholder={$t("placeholder_search_mods")} bind:value={searchQuery} />
         {#if searchQuery}
           <button on:click={() => (searchQuery = "")}>
             {$t("button_clear")}

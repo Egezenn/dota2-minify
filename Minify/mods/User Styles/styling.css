@@ -91,7 +91,10 @@ DOTAAbilityDetails {
 /* remove madstone animations */
 #inventory_neutral_level_up .NeutralLevelUpAvailableGlow,
 .GotMadstone .inventory_neutral_got_madstone_container,
-.GotMadstone #inventory_neutral_madstone_holder .inventory_neutral_madstone_counter_container #inventory_neutral_madstone_text {
+.GotMadstone
+  #inventory_neutral_madstone_holder
+  .inventory_neutral_madstone_counter_container
+  #inventory_neutral_madstone_text {
   animation-name: none;
 }
 

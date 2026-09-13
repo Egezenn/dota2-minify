@@ -24,12 +24,7 @@
   </div>
 
   <div class="top-actions">
-    <input
-      type="text"
-      placeholder={$t("placeholder_search_mods")}
-      value={searchQuery}
-      on:input={handleInput}
-    />
+    <input type="text" placeholder={$t("placeholder_search_mods")} value={searchQuery} on:input={handleInput} />
 
     <button class="action-btn" on:click={onRefreshData}>
       {$t("button_refresh_data")}

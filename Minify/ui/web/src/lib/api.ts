@@ -12,10 +12,7 @@ export async function refreshMods() {
   }
 }
 
-export function injectThemeIntoFrame(
-  frame: HTMLIFrameElement | EventTarget | null | undefined,
-  css?: string
-) {
+export function injectThemeIntoFrame(frame: HTMLIFrameElement | EventTarget | null | undefined, css?: string) {
   try {
     const el = frame as HTMLIFrameElement | null;
     if (!el?.contentDocument) return;
@@ -23,9 +20,7 @@ export function injectThemeIntoFrame(
     const themeCss =
       css !== undefined
         ? css
-        : ((window as any).__lastThemeCss ||
-           document.getElementById("minify-theme")?.textContent ||
-           "");
+        : (window as any).__lastThemeCss || document.getElementById("minify-theme")?.textContent || "";
     let styleEl = doc.getElementById("minify-theme") as HTMLStyleElement;
     if (!styleEl) {
       styleEl = doc.createElement("style");
@@ -94,7 +89,6 @@ export async function applyTheme(themeName?: string): Promise<string> {
     return "";
   }
 }
-
 
 export async function loadApiData(currentLang: string): Promise<{
   isDebugEnv: boolean;

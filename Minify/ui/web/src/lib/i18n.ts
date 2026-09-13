@@ -1,5 +1,5 @@
-import { derived } from 'svelte/store';
-import { localeStore } from './stores/locale';
+import { derived } from "svelte/store";
+import { localeStore } from "./stores/locale";
 
 /**
  * Reactive derived store for localized text.
@@ -11,15 +11,14 @@ import { localeStore } from './stores/locale';
  */
 export const t = derived(localeStore, ($locale) => {
   return (key: string, args?: (string | number)[]): string => {
-    if (!key) return '';
-    const cleanKey = key.startsWith('&') ? key.slice(1) : key;
+    if (!key) return "";
+    const cleanKey = key.startsWith("&") ? key.slice(1) : key;
     let text = $locale.dict && cleanKey in $locale.dict ? $locale.dict[cleanKey] : cleanKey;
     if (args && args.length > 0) {
       args.forEach((arg, index) => {
-        text = text.replace(new RegExp(`\\{${index}\\}`, 'g'), String(arg));
+        text = text.replace(new RegExp(`\\{${index}\\}`, "g"), String(arg));
       });
     }
     return text;
   };
 });
-

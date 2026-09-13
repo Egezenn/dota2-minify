@@ -27,7 +27,10 @@
   function formatTags(tags: any): string {
     if (!tags) return "";
     if (Array.isArray(tags)) return tags.join(", ");
-    if (typeof tags === "object") return Object.keys(tags).filter((k) => tags[k]).join(", ");
+    if (typeof tags === "object")
+      return Object.keys(tags)
+        .filter((k) => tags[k])
+        .join(", ");
     return String(tags);
   }
 
@@ -94,11 +97,7 @@
           on:change={(e) => onToggleEnabled && onToggleEnabled(mod, e.currentTarget.checked)}
         />
       </label>
-      <button
-        class="install-btn installed"
-        disabled={inProgress}
-        on:click={() => onUninstall(mod)}
-      >
+      <button class="install-btn installed" disabled={inProgress} on:click={() => onUninstall(mod)}>
         {inProgress ? $t("button_removing") : $t("button_remove")}
       </button>
     {:else if inProgress}
@@ -113,11 +112,7 @@
         {$t("button_installing")}
       </button>
     {:else}
-      <button
-        class="install-btn"
-        disabled={inProgress}
-        on:click={() => onInstall(mod)}
-      >
+      <button class="install-btn" disabled={inProgress} on:click={() => onInstall(mod)}>
         {$t("button_install")}
       </button>
     {/if}

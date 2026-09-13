@@ -69,11 +69,13 @@ export async function ignoreUpdate(version: string): Promise<void> {
   }
 }
 
-export async function checkForUpdates(options: {
-  currentVersion?: string | null;
-  optIntoRcs?: boolean;
-  force?: boolean;
-} = {}): Promise<UpdateInfo | null> {
+export async function checkForUpdates(
+  options: {
+    currentVersion?: string | null;
+    optIntoRcs?: boolean;
+    force?: boolean;
+  } = {},
+): Promise<UpdateInfo | null> {
   const current = options.currentVersion !== undefined ? options.currentVersion : await getAppVersion();
   if (!current) {
     return null;
@@ -117,8 +119,12 @@ export async function checkForUpdates(options: {
 
         let downloadUrl = "";
         if (Array.isArray(rel.assets)) {
-          const exeAsset = rel.assets.find((a: any) => typeof a.name === "string" && a.name.toLowerCase().endsWith(".exe"));
-          const zipAsset = rel.assets.find((a: any) => typeof a.name === "string" && a.name.toLowerCase().endsWith(".zip"));
+          const exeAsset = rel.assets.find(
+            (a: any) => typeof a.name === "string" && a.name.toLowerCase().endsWith(".exe"),
+          );
+          const zipAsset = rel.assets.find(
+            (a: any) => typeof a.name === "string" && a.name.toLowerCase().endsWith(".zip"),
+          );
           const chosen = exeAsset || zipAsset || rel.assets[0];
           if (chosen?.browser_download_url) {
             downloadUrl = chosen.browser_download_url;

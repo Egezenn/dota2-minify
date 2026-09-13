@@ -1,0 +1,7 @@
+node_modules
+dist
+build
+package-lock.json
+Minify/ui/web/dist
+Minify/plugins/*/ui
+.staging
