@@ -33,6 +33,9 @@ def dump(vpk_obj, output_dir, check_exists=True):
     for filepath in vpk_obj:
         # Sanitize filepath to prevent invalid characters or quotes
         clean_path = filepath.strip().strip('"').strip("'").replace("\\", "/").lstrip("/")
+        if not clean_path:
+            continue
+
         full_path = os.path.join(output_dir, clean_path)
         if check_exists and os.path.exists(full_path):
             continue

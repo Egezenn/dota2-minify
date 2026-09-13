@@ -146,6 +146,9 @@ def restore_directory(source: str, backup: str):
     for name in os.listdir(backup):
         move_path(os.path.join(backup, name), os.path.join(source, name))
     remove_path(backup)
+    parent = os.path.dirname(backup)
+    if os.path.exists(parent) and not os.listdir(parent):
+        remove_path(parent)
 
 
 def download_file(

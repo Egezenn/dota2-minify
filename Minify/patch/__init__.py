@@ -126,6 +126,28 @@ def patcher():
             for conflict_mod, active_conflicts in conflicts_found.items():
                 output.add_text(f"{conflict_mod} -> {', '.join(active_conflicts)}", msg_type="error")
             return
+        # ---------------------------------- PRE-BUILD ------------------------------- #
+        # ------------------------- Dump Base VPK Mods (Layer 1) --------------------- #
+        # ---------------------------------------------------------------------------- #
+        vpk_mods_to_merge = []
+        for mod_name in mod_list:
+            if mod_name.endswith(".vpk") and mods_shared.get_state(mod_name):
+                vpk_mods_to_merge.append(mod_name)
+
+        if vpk_mods_to_merge:
+            output.add_text("&merging_vpks")
+            for mod_name in vpk_mods_to_merge:
+                mod_path = os.path.join(base.mods_dir, mod_name)
+                try:
+                    mod_vpk = vpk.open(mod_path)
+                    vpk_utils.dump(mod_vpk, constants.minify_dota_compile_output_path, check_exists=True)
+                    output.add_text("&merged_mod", mod_name, indent=True)
+                except Exception:
+                    log.write_warning("&failed_merge_mod", mod_name)
+
+        for plugin in registry.get_plugins():
+            if hasattr(plugin, "on_pre_build"):
+                plugin.on_pre_build(mod_list)
 
         game_contents_file_init = False
         for folder in mod_list:
@@ -279,61 +301,22 @@ def patcher():
                 executor.map(replacer.process_replacer, replacer_targets)
 
         # ---------------------------------- STEP 4 ---------------------------------- #
+        # ------------------------ Run Plugin Override Hooks ------------------------- #
+        # ---------------------------------------------------------------------------- #
+        for plugin in registry.get_plugins():
+            if hasattr(plugin, "on_post_build"):
+                plugin.on_post_build(mod_list)
+
+        # ---------------------------------- STEP 5 ---------------------------------- #
         # -------- Create VPK from game folder and save into Minify directory -------- #
         # ---------------------------------------------------------------------------- #
+
         vpk_utils.dump_metadata(constants.minify_dota_compile_output_path)
 
         fs.create_dirs(helper.output_path)
-        native_mods = vpk.new(constants.minify_dota_compile_output_path)
         output.add_text("&compiling_terminal")
+        native_mods = vpk.new(constants.minify_dota_compile_output_path)
         native_mods.save(os.path.join(helper.output_path, "pak66_dir.vpk"))
-
-        # ---------------------------------- STEP 5 ---------------------------------- #
-        # -------------------------- Merge VPKs into pak65 --------------------------- #
-        # ---------------------------------------------------------------------------- #
-
-        # Check if there are any VPK mods selected
-        vpk_mods_to_merge = []
-        for mod_name in mod_list:
-            if mod_name.endswith(".vpk") and mods_shared.get_state(mod_name):
-                vpk_mods_to_merge.append(mod_name)
-
-        # Only create pak65 if there are VPK mods to merge
-        if vpk_mods_to_merge:
-            output.add_text("&merging_vpks")
-
-            for mod_name in vpk_mods_to_merge:
-                mod_path = os.path.join(base.mods_dir, mod_name)
-                try:
-                    mod_vpk = vpk.open(mod_path)
-                    vpk_utils.dump(mod_vpk, base.merge_dir, check_exists=True)
-                    output.add_text("&merged_mod", mod_name, indent=True)
-                except Exception:
-                    log.write_warning("&failed_merge_mod", mod_name)
-
-            vpk_utils.dump_metadata(base.merge_dir, vpk_mods=vpk_mods_to_merge)
-
-            output.add_text("&creating_merged_vpk")
-            merged_mods = vpk.new(base.merge_dir)
-            merged_mods.save(os.path.join(helper.output_path, "pak65_dir.vpk"))
-
-            output.add_text("&success_merged_vpk", msg_type="success")
-        else:
-            # No VPK mods selected - remove pak65 if it exists from previous patches
-            pak65_path = os.path.join(helper.output_path, "pak65_dir.vpk")
-            if os.path.exists(pak65_path):
-                with utils.try_pass():
-                    # Verify it's a Minify-created pak65 by checking metadata
-                    pak65_contents = vpk.open(pak65_path)
-                    if "minify_vpk_mods.txt" in pak65_contents or "minify_version.txt" in pak65_contents:
-                        fs.remove_path(pak65_path)
-
-        # ---------------------------------- STEP 6 ---------------------------------- #
-        # --------------------------- Run Plugin Hooks ------------------------------- #
-        # ---------------------------------------------------------------------------- #
-        for plugin in registry.get_plugins():
-            if hasattr(plugin, "on_build"):
-                plugin.on_build(mod_list)
 
         # ---------------------------------- STEP 7 ---------------------------------- #
         # -------------------------- Clean paths and inform -------------------------- #

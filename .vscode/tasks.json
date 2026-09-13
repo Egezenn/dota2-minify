@@ -1,0 +1,30 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "build",
+      "type": "shell",
+      "command": "npm --prefix Minify/ui/web run build"
+    },
+    {
+      "label": "run",
+      "type": "shell",
+      "command": "uv run Minify"
+    },
+    {
+      "label": "build & run",
+      "type": "shell",
+      "command": "uv run Minify",
+      "dependsOn": ["npm: build"],
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      }
+    },
+    {
+      "label": "patch",
+      "type": "shell",
+      "command": "uv run Minify patch"
+    }
+  ]
+}

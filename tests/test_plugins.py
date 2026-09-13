@@ -37,14 +37,18 @@ def test_plugin_build_and_uninstall_hooks():
 
     target_plugin = active_plugins[0]
     with (
-        patch.object(target_plugin, "on_build", create=True) as mock_build,
+        patch.object(target_plugin, "on_pre_build", create=True) as mock_pre_build,
+        patch.object(target_plugin, "on_post_build", create=True) as mock_post_build,
         patch.object(target_plugin, "on_uninstall", create=True) as mock_unins,
     ):
         for p in registry.get_plugins():
-            if hasattr(p, "on_build"):
-                p.on_build(["test_mod"])
+            if hasattr(p, "on_pre_build"):
+                p.on_pre_build(["test_mod"])
+            if hasattr(p, "on_post_build"):
+                p.on_post_build(["test_mod"])
 
-        mock_build.assert_called_once_with(["test_mod"])
+        mock_pre_build.assert_called_once_with(["test_mod"])
+        mock_post_build.assert_called_once_with(["test_mod"])
 
         for p in registry.get_plugins():
             if hasattr(p, "on_uninstall"):

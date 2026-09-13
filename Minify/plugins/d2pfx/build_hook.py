@@ -3,24 +3,19 @@ import shutil
 
 import helper
 import vpk
-from core import base, constants, fs, log, mods_shared, output
+from core import base, constants, fs, log, mods_shared, output, utils
 from patch import manifest_utils, vpk_utils
 
 from . import __main__ as plugin_main
 
 
-def run(mod_list):
-    # Shared storage for identified mods
+def scan_d2pfx_mods(mod_list):
     pfx_high_priority = {}  # mod_name: [vpk_paths]
     pfx_normal = {}  # mod_name: [vpk_paths]
     map_vpk_paths = []
     cursor_mod_paths = []
 
-    # List of all active VPK-based mods (for pak65 metadata)
-    all_active_vpk_mods = []
-
     for mod_name in mod_list:
-        # Check if mod is active
         if not mods_shared.get_state(mod_name):
             continue
 
@@ -28,31 +23,20 @@ def run(mod_list):
         if not os.path.isdir(mod_path):
             continue
 
-        # 1. Identify Standard VPK mods (for pak65 metadata reconstruction)
-        if mod_name.endswith(".vpk"):
-            all_active_vpk_mods.append(mod_name)
-            continue
-
-        # 2. Identify D2PFX mods via manifest
         cfg = manifest_utils.get_mod(mod_path)
         if not cfg:
             continue
 
         browser_info = cfg.get("browser", {})
-
         is_d2pfx = browser_info.get("browser") == "d2pfx" or str(browser_info.get("name", "")).startswith("d2pfx")
-
         if not is_d2pfx:
             continue
 
         cat = browser_info.get("category")
-
-        # Cursors are directories containing cursor image/resource files
         if cat == "cursors":
             cursor_mod_paths.append(mod_path)
             continue
 
-        # Find VPKs for VPK-based D2PFX mods
         vpk_files = []
         for root, _, files in os.walk(mod_path):
             for f in files:
@@ -67,14 +51,16 @@ def run(mod_list):
                 map_vpk_paths.extend(vpk_files)
             else:
                 pfx_normal[mod_name] = vpk_files
-                all_active_vpk_mods.append(mod_name)
         elif cat in plugin_main.RENAME_CATEGORIES:
             pfx_high_priority[mod_name] = vpk_files
         else:
             pfx_normal[mod_name] = vpk_files
-            all_active_vpk_mods.append(mod_name)
 
-    # --- BUILD EXECUTION ---
+    return pfx_normal, pfx_high_priority, map_vpk_paths, cursor_mod_paths
+
+
+def run_pre_build(mod_list):
+    pfx_normal, _, map_vpk_paths, cursor_mod_paths = scan_d2pfx_mods(mod_list)
 
     # 1. Maps (dota.vpk)
     if map_vpk_paths:
@@ -140,53 +126,39 @@ def run(mod_list):
     else:
         restore_d2pfx_cursors()
 
-    # 3. Normal Priority (pak65)
+    # 3. Normal Priority VPKs (Base Layer)
     if pfx_normal:
         output.add_text("&merging_vpks")
-        fs.remove_path(base.merge_dir)
-        fs.create_dirs(base.merge_dir)
-
-        pak65_path = os.path.join(helper.output_path, "pak65_dir.vpk")
-        # Extract existing pak65 (from build.py) to merge D2PFX on top
-        if os.path.exists(pak65_path):
-            try:
-                vpk_utils.dump(vpk.open(pak65_path), base.merge_dir)
-            except Exception:
-                pass
-
         for mod_name, vpk_paths in pfx_normal.items():
             for path in vpk_paths:
                 try:
-                    vpk_utils.dump(vpk.open(path), base.merge_dir, check_exists=True)
+                    vpk_utils.dump(
+                        vpk.open(path),
+                        constants.minify_dota_compile_output_path,
+                        check_exists=True,
+                    )
                     output.add_text("&merged_mod", mod_name, indent=True)
                 except Exception:
                     log.write_warning("&failed_merge_mod", mod_name)
 
-        vpk_utils.dump_metadata(base.merge_dir, vpk_mods=all_active_vpk_mods)
-        vpk.new(base.merge_dir).save(pak65_path)
-        fs.remove_path(base.merge_dir)
 
-    # 4. High Priority (pak67)
+def run_post_build(mod_list):
+    _, pfx_high_priority, _, _ = scan_d2pfx_mods(mod_list)
+
+    # High Priority VPKs (Override Layer)
     if pfx_high_priority:
         output.add_text("&merging_vpks")
-        fs.remove_path(base.merge_dir)
-        fs.create_dirs(base.merge_dir)
-
         for mod_name, vpk_paths in pfx_high_priority.items():
             for path in vpk_paths:
                 try:
-                    vpk_utils.dump(vpk.open(path), base.merge_dir, check_exists=True)
+                    vpk_utils.dump(
+                        vpk.open(path),
+                        constants.minify_dota_compile_output_path,
+                        check_exists=False,
+                    )
                     output.add_text("&merged_mod", mod_name, indent=True)
                 except Exception:
                     log.write_warning("&failed_merge_mod", mod_name)
-
-        vpk_utils.dump_metadata(base.merge_dir, extra_lists={"minify_d2pfx_mods.txt": list(pfx_high_priority.keys())})
-        vpk.new(base.merge_dir).save(os.path.join(helper.output_path, "pak67_dir.vpk"))
-        fs.remove_path(base.merge_dir)
-    else:
-        pak67_path = os.path.join(helper.output_path, "pak67_dir.vpk")
-        if os.path.exists(pak67_path):
-            fs.remove_path(pak67_path)
 
 
 def restore_d2pfx_cursors():
@@ -205,4 +177,4 @@ def restore_d2pfx_cursors():
                 restored += 1
         fs.remove_path(cursor_bkup_dir)
         if restored > 0:
-            output.add_text(f"Restored {restored} original cursor files.", msg_type="success")
+            output.add_text(f"Restored {restored} original cursor files.", msg_type="success", indent=True)

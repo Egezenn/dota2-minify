@@ -10,10 +10,16 @@ RENAME_CATEGORIES = ["trees", "river", "shaders", "herofx", "ranged-attack", "he
 registry.register_plugin(sys.modules[__name__])
 
 
-def on_build(mod_list):
-    from plugins.d2pfx.build_hook import run
+def on_pre_build(mod_list):
+    from plugins.d2pfx.build_hook import run_pre_build
 
-    run(mod_list)
+    run_pre_build(mod_list)
+
+
+def on_post_build(mod_list):
+    from plugins.d2pfx.build_hook import run_post_build
+
+    run_post_build(mod_list)
 
 
 def on_uninstall():

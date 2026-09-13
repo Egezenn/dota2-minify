@@ -1,6 +1,6 @@
 import os
 
-from core import base, config, fs, log, mods_shared
+from core import base, config, fs, log, mods_shared, output
 
 
 class Migrations:
@@ -9,6 +9,7 @@ class Migrations:
         self._rename_file_in_mods("modcfg.json", "manifest.json")
         self._rename_file_in_mods("xml_mod.json", "xml.json")
         self._migrate_rescomproot_and_bin()
+        self._migrate_legacy_paks()
 
     def _migrate_locale_config(self):
         locale = config.get("output_locale")
@@ -48,13 +49,13 @@ class Migrations:
                 if not os.path.exists(dest):
                     try:
                         fs.move_path(src, dest)
-                        log.write_warning(f"Migrated {src_name} to {dest_name} in {mod}")
+                        output.add_text(f"Migrated {src_name} to {dest_name} in {mod}")
                     except Exception as e:
                         log.write_warning(f"Failed to migrate {src_name} to {dest_name} in {mod}: {e}")
                 else:
                     try:
                         fs.remove_path(src)
-                        log.write_warning(f"Removed redundant {src_name} in {mod} since {dest_name} exists")
+                        output.add_text(f"Removed redundant {src_name} in {mod} since {dest_name} exists")
                     except Exception as e:
                         log.write_warning(f"Failed to remove redundant {src_name} in {mod}: {e}")
 
@@ -74,13 +75,13 @@ class Migrations:
                 try:
                     fs.create_dirs(os.path.dirname(target_rescomp))
                     fs.move_path(legacy_rescomp, target_rescomp)
-                    log.write_warning("Migrated rescomproot to config/")
+                    output.add_text("Migrated rescomproot to config/")
                 except Exception as e:
                     log.write_warning(f"Failed to migrate rescomproot: {e}")
             else:
                 try:
                     fs.remove_path(legacy_rescomp)
-                    log.write_warning("Removed redundant bin/rescomproot since config/rescomproot exists")
+                    output.add_text("Removed redundant bin/rescomproot since config/rescomproot exists")
                 except Exception as e:
                     log.write_warning(f"Failed to remove redundant bin/rescomproot: {e}")
 
@@ -88,9 +89,31 @@ class Migrations:
             if os.path.exists(legacy_bin):
                 try:
                     fs.remove_path(legacy_bin)
-                    log.write_warning(f"Removed legacy {legacy_bin} folder")
+                    output.add_text(f"Removed legacy {legacy_bin} folder")
                 except Exception as e:
                     log.write_warning(f"Failed to remove legacy {legacy_bin} folder: {e}")
+
+    def _migrate_legacy_paks(self):
+        from core import constants, utils
+        from patch import vpk_utils
+
+        states = utils.read_states()
+        if states.get("legacy_paks_migrated"):
+            return
+
+        target_dir = config.get("output_path", constants.minify_default_dota_pak_output_path)
+
+        if os.path.isdir(target_dir):
+            for item in ("pak65_dir.vpk", "pak67_dir.vpk"):
+                pak_path = os.path.join(target_dir, item)
+                if os.path.isfile(pak_path) and vpk_utils.is_minify_pak(pak_path):
+                    try:
+                        fs.remove_path(pak_path)
+                        output.add_text(f"Migrated and removed legacy Minify pak: {pak_path}")
+                    except Exception as e:
+                        log.write_warning(f"Failed to remove legacy pak {pak_path}: {e}")
+
+        utils.write_states("legacy_paks_migrated", True)
 
 
 Migrations()
