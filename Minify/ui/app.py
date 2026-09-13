@@ -82,6 +82,7 @@ class Api:
                 url=url,
                 target_path=installer_path,
                 name=installer_name,
+                task_id="app-update",
                 emit_progress=True,
             )
             if success and os.path.exists(installer_path):
@@ -162,6 +163,98 @@ class Api:
         import helper
 
         return helper.extract_workshop_tools()
+
+    def is_workshop_installed(self) -> bool:
+        import conditions
+
+        return bool(conditions.workshop_installed)
+
+    def download_workshop_tools(self) -> bool:
+        import tempfile
+        import requests
+        import conditions
+        from core import fs, log
+
+        repo_url = (
+            "https://github.com/Dota-Modding-Community/workshoptools/releases/latest/download/resourcecompiler.zip"
+        )
+        api_url = "https://api.github.com/repos/Dota-Modding-Community/workshoptools/releases/latest"
+        download_url = repo_url
+
+        try:
+            resp = requests.get(api_url, headers={"User-Agent": "dota2-minify"}, timeout=10)
+            if resp.status_code == 200:
+                assets = resp.json().get("assets", [])
+                for asset in assets:
+                    if asset.get("name", "").endswith(".zip"):
+                        download_url = asset.get("browser_download_url", repo_url)
+                        break
+        except Exception as e:
+            log.write_warning(f"Could not query GitHub API for workshoptools release: {e}")
+
+        temp_dir = os.environ.get("TEMP", os.environ.get("TMP", tempfile.gettempdir()))
+        zip_path = os.path.join(temp_dir, "workshoptools.zip")
+
+        output.add_text(f"Downloading Workshop Tools from {download_url}...")
+        success = fs.download_file(
+            url=download_url,
+            target_path=zip_path,
+            name="workshoptools.zip",
+            task_id="workshoptools",
+            emit_progress=True,
+        )
+        if not success or not os.path.exists(zip_path):
+            output.add_text("Failed to download Workshop Tools.", msg_type="error")
+            return False
+
+        output.add_text("Expanding Workshop Tools to config/rescomproot...")
+        target_dir = base.rescomp_override_dir
+        try:
+            fs.create_dirs(target_dir)
+            extract_success = fs.extract_archive(zip_path, target_dir)
+            if not extract_success:
+                output.add_text("Failed to extract Workshop Tools archive.", msg_type="error")
+                return False
+
+            inner_dir = os.path.join(target_dir, "resourcecompiler")
+            if os.path.isdir(inner_dir):
+                for item in os.listdir(inner_dir):
+                    src = os.path.join(inner_dir, item)
+                    dst = os.path.join(target_dir, item)
+                    if os.path.exists(dst):
+                        fs.remove_path(dst)
+                    fs.move_path(src, dst)
+                fs.remove_path(inner_dir)
+
+            fs.remove_path(zip_path)
+
+            constants.recalc_rescomp_dirs()
+
+            if (base.is_linux or base.is_mac) and os.path.exists(constants.dota_resource_compiler_path):
+                import stat
+
+                st = os.stat(constants.dota_resource_compiler_path)
+                os.chmod(
+                    constants.dota_resource_compiler_path,
+                    st.st_mode | stat.S_IXUSR | stat.S_IXGRP | stat.S_IXOTH,
+                )
+
+            compiler_exists = os.path.exists(constants.dota_resource_compiler_path)
+            conditions.workshop_installed = compiler_exists
+
+            if compiler_exists:
+                output.add_text("Workshop Tools installed successfully!", msg_type="success")
+                return True
+            else:
+                output.add_text(
+                    f"resourcecompiler.exe was not found at {constants.dota_resource_compiler_path}",
+                    msg_type="error",
+                )
+                return False
+        except Exception as e:
+            log.write_crashlog(f"Error expanding Workshop Tools: {e}")
+            output.add_text(f"Error expanding Workshop Tools: {e}", msg_type="error")
+            return False
 
     def get_plugin_tabs(self) -> List[Dict[str, Any]]:
         return self.plugin_service.get_tabs(resolve_func=self._resolve_plugin_entry)

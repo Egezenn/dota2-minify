@@ -15,7 +15,7 @@
       "label": "build & run",
       "type": "shell",
       "command": "uv run Minify",
-      "dependsOn": ["npm: build"],
+      "dependsOn": ["build"],
       "group": {
         "kind": "build",
         "isDefault": true

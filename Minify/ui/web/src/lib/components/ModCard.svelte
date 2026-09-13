@@ -4,6 +4,7 @@
   export let displayName: string = "";
   export let enabled: boolean;
   export let always: boolean = false;
+  export let untickable: boolean = false;
   export let preview: string | null | undefined = undefined;
   export let ontoggle: (value: boolean) => void;
   export let onDetails: ((name: string) => void) | undefined = undefined;
@@ -12,12 +13,12 @@
   $: initialLetter = ((effectiveName || "").replace(/^[^a-zA-Z0-9]+/, "").charAt(0) || (effectiveName || "").charAt(0)).toUpperCase();
 
   function handleToggle() {
-    if (always) return;
+    if (always || untickable) return;
     ontoggle(!enabled);
   }
 
   function handleCardClick() {
-    if (always) {
+    if (always || untickable) {
       if (onDetails) onDetails(name);
     } else {
       handleToggle();
@@ -33,7 +34,8 @@
 </script>
 
 <div
-  class="mod-card {always ? 'always-mod' : ''}"
+  class="mod-card {always ? 'always-mod' : ''} {untickable ? 'untickable-mod' : ''}"
+  class:active={!untickable && (enabled || always)}
   on:click={handleCardClick}
   role="button"
   tabindex="0"
@@ -60,8 +62,8 @@
       {/if}
       <input
         type="checkbox"
-        checked={enabled || always}
-        disabled={always}
+        checked={!untickable && (enabled || always)}
+        disabled={always || untickable}
         on:change={handleToggle}
         on:click|stopPropagation
       />
@@ -80,6 +82,15 @@
     color: var(--text-primary, #000);
     overflow: hidden;
     box-sizing: border-box;
+    transition: border-color 0.15s ease;
+  }
+
+  .mod-card.active {
+    border-color: var(--accent, #17bebe);
+  }
+
+  .mod-card.active .preview-container {
+    border-bottom-color: var(--accent, #17bebe);
   }
 
   .mod-card.always-mod {
@@ -88,6 +99,15 @@
 
   .mod-card.always-mod .card-footer {
     background: var(--bg-tertiary, #e8e8e8);
+    opacity: 0.85;
+  }
+
+  .mod-card.untickable-mod {
+    opacity: 0.6;
+    cursor: default;
+  }
+
+  .mod-card.untickable-mod .card-footer {
     opacity: 0.85;
   }
 

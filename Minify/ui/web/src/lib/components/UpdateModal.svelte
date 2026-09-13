@@ -15,13 +15,7 @@
   let totalBytes = 0;
   let errorMessage = "";
 
-  $: updateDownload = downloads.find(
-    (d) =>
-      d.name.toLowerCase().includes("setup") ||
-      d.name.toLowerCase().includes("minify") ||
-      d.id.toLowerCase().includes("setup") ||
-      d.id === "app-update",
-  );
+  $: updateDownload = downloads.find((d) => d.id === "app-update");
 
   $: if (updateDownload) {
     isDownloading = true;

@@ -148,9 +148,9 @@
   }
 
   .btn-extract {
-    background: var(--accent-color, #007acc);
-    color: #ffffff;
-    border-color: var(--accent-color, #007acc);
+    background: var(--accent, #17bebe);
+    color: var(--accent-text, #000000);
+    border-color: var(--accent, #17bebe);
   }
 
   .btn-extract:hover {

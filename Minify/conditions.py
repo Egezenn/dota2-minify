@@ -174,6 +174,21 @@ def check_binaries():
     return True
 
 
+def is_workshop_required_mod(mod_path: str, manifest: dict | None = None) -> bool:
+    if manifest is None:
+        from patch import manifest_utils
+
+        manifest = manifest_utils.get_mod(mod_path)
+
+    if manifest.get("skip_workshop_check"):
+        return False
+
+    for method_path in workshop_required_methods:
+        if os.path.exists(os.path.join(mod_path, method_path)):
+            return True
+    return False
+
+
 def disable_workshop_mods():
     if not workshop_installed:
         from patch import manifest_utils
@@ -182,10 +197,6 @@ def disable_workshop_mods():
             mod_path = os.path.join(base.mods_dir, folder)
             manifest = manifest_utils.get_mod(mod_path)
 
-            if manifest.get("skip_workshop_check"):
-                continue
+            if is_workshop_required_mod(mod_path, manifest):
+                mods_shared.set_state(folder, False)
 
-            for method_path in workshop_required_methods:
-                if os.path.exists(os.path.join(mod_path, method_path)):
-                    mods_shared.set_state(folder, False)
-                    break

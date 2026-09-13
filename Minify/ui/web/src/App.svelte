@@ -18,6 +18,7 @@
   import AnnouncementModal from "./lib/components/AnnouncementModal.svelte";
   import UpdateModal from "./lib/components/UpdateModal.svelte";
   import WorkshopToolsDetectedModal from "./lib/components/WorkshopToolsDetectedModal.svelte";
+  import WorkshopDownloadModal from "./lib/components/WorkshopDownloadModal.svelte";
   import {
     fetchPendingAnnouncements,
     markAnnouncementSeen,
@@ -39,6 +40,7 @@
   let pendingUpdate: UpdateInfo | null = null;
   let showUpdateModal = false;
   let showWorkshopModal = false;
+  let showWorkshopDownloadModal = false;
 
   let initialized = false;
   let isDebugEnv = false;
@@ -99,6 +101,7 @@
       } finally {
         dismissLoader();
         getAppVersion().then(async (appVersion) => {
+          let announcementsShown = false;
           try {
             const announcements = await fetchPendingAnnouncements(
               appVersion || undefined,
@@ -106,11 +109,13 @@
             if (announcements.length > 0) {
               pendingAnnouncements = announcements;
               showAnnouncementModal = true;
+              announcementsShown = true;
             }
           } catch (err) {
             console.error("Failed to fetch announcements:", err);
           }
 
+          let updateShown = false;
           try {
             const updateInfo = await checkForUpdates({
               currentVersion: appVersion,
@@ -119,10 +124,15 @@
               pendingUpdate = updateInfo;
               if (pendingAnnouncements.length === 0) {
                 showUpdateModal = true;
+                updateShown = true;
               }
             }
           } catch (err) {
             console.error("Failed to check for updates:", err);
+          }
+
+          if (!announcementsShown && !updateShown) {
+            await checkWorkshopDownload();
           }
         });
       }
@@ -228,7 +238,8 @@
     if (isPatching) return;
 
     try {
-      const needsWorkshop = await window.pywebview?.api?.check_workshop_tools_needed?.();
+      const needsWorkshop =
+        await window.pywebview?.api?.check_workshop_tools_needed?.();
       if (needsWorkshop) {
         showWorkshopModal = true;
         return;
@@ -356,14 +367,18 @@
       showAnnouncementModal = false;
       if (pendingUpdate) {
         showUpdateModal = true;
+      } else {
+        await checkWorkshopDownload();
       }
     }
   }
 
-  function handleCloseAnnouncements() {
+  async function handleCloseAnnouncements() {
     showAnnouncementModal = false;
     if (pendingUpdate) {
       showUpdateModal = true;
+    } else {
+      await checkWorkshopDownload();
     }
   }
 
@@ -377,10 +392,50 @@
   async function handleIgnoreUpdate(version: string) {
     await ignoreUpdate(version);
     showUpdateModal = false;
+    await checkWorkshopDownload();
   }
 
-  function handleCloseUpdateModal() {
+  async function handleCloseUpdateModal() {
     showUpdateModal = false;
+    await checkWorkshopDownload();
+  }
+
+  async function checkWorkshopDownload() {
+    try {
+      const isInstalled =
+        await window.pywebview?.api?.is_workshop_installed?.();
+      if (isInstalled === false) {
+        const ignored = await window.pywebview?.api?.get_state?.(
+          "ignore_workshop_download",
+        );
+        if (!ignored) {
+          showWorkshopDownloadModal = true;
+        }
+      }
+    } catch (err) {
+      console.error("Failed to check workshop status:", err);
+    }
+  }
+
+  async function handleIgnoreWorkshopDownload() {
+    showWorkshopDownloadModal = false;
+    try {
+      await window.pywebview?.api?.set_state?.(
+        "ignore_workshop_download",
+        true,
+      );
+    } catch (err) {
+      console.error("Failed to save ignore_workshop_download state:", err);
+    }
+  }
+
+  function handleLaterWorkshopDownload() {
+    showWorkshopDownloadModal = false;
+  }
+
+  async function handleWorkshopDownloadSuccess() {
+    showWorkshopDownloadModal = false;
+    await refreshMods();
   }
 </script>
 
@@ -423,6 +478,13 @@
     onExtract={handleWorkshopExtract}
     onSkip={handleWorkshopSkip}
     onCancel={handleWorkshopCancel}
+  />
+
+  <WorkshopDownloadModal
+    isOpen={showWorkshopDownloadModal}
+    onIgnore={handleIgnoreWorkshopDownload}
+    onLater={handleLaterWorkshopDownload}
+    onSuccess={handleWorkshopDownloadSuccess}
   />
 
   <main class="content-area">

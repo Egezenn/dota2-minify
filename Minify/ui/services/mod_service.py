@@ -34,26 +34,34 @@ class ModService:
     def get_mods(self) -> List[Dict[str, Any]]:
         try:
             mods_shared.scan_mods()
+            import conditions
             from patch import manifest_utils
+
+            if not conditions.workshop_installed:
+                conditions.disable_workshop_mods()
 
             mod_list = mods_shared.visually_available_mods
             mods_data = []
             for mod in mod_list:
                 mod_path = os.path.join(base.mods_dir, mod)
                 always = False
+                untickable = False
                 display_name = mod
                 if os.path.isdir(mod_path):
                     cfg = manifest_utils.get_mod(mod_path)
                     always = bool(cfg.get("always", False))
                     if isinstance(cfg, dict) and cfg.get("name"):
                         display_name = str(cfg["name"])
+                    if not conditions.workshop_installed and conditions.is_workshop_required_mod(mod_path, cfg):
+                        untickable = True
                 preview = self.get_mod_preview(mod_path)
                 mods_data.append(
                     {
                         "name": mod,
                         "display_name": display_name,
-                        "enabled": always or mods_shared.get_state(mod),
+                        "enabled": not untickable and (always or mods_shared.get_state(mod)),
                         "always": always,
+                        "untickable": untickable,
                         "preview": preview,
                     }
                 )
@@ -483,6 +491,7 @@ class ModService:
 
     def set_mods(self, data: Dict[str, bool]) -> bool:
         try:
+            import conditions
             from patch import manifest_utils
 
             for mod_name, enabled in data.items():
@@ -490,6 +499,8 @@ class ModService:
                 if os.path.isdir(mod_path):
                     cfg = manifest_utils.get_mod(mod_path)
                     if cfg.get("always", False):
+                        continue
+                    if not conditions.workshop_installed and conditions.is_workshop_required_mod(mod_path, cfg):
                         continue
                 mods_shared.set_state(mod_name, bool(enabled))
             return True

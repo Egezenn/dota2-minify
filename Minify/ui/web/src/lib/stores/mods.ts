@@ -5,6 +5,7 @@ export interface ModItem {
   display_name?: string;
   enabled: boolean;
   always?: boolean;
+  untickable?: boolean;
   preview?: string | null;
 }
 

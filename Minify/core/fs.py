@@ -157,13 +157,14 @@ def download_file(
     progress_tag: Optional[str] = None,
     name: Optional[str] = None,
     emit_progress: bool = True,
+    task_id: Optional[str] = None,
 ) -> bool:
     """
     Downloads a file from url to target_path using requests.
     Updates the UI progress_tag and emits download progress events if emit_progress is True.
     """
     file_name = name or os.path.basename(target_path)
-    task_id = target_path
+    task_id = task_id or target_path
 
     try:
         response = requests.get(url, stream=True)

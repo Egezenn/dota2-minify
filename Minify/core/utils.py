@@ -125,6 +125,7 @@ def setup_system():
     localization.load_headless()
     conditions.is_dota_running("&error_please_close_dota_terminal", "error")
     conditions.is_compiler_found()
+    conditions.disable_workshop_mods()
 
     if base.HEADLESS:
         conditions.resolve_dependencies()

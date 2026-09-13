@@ -39,7 +39,7 @@
   }
 </script>
 
-<div class="mod-card">
+<div class="mod-card" class:active={installed && enabled}>
   <div class="preview-box">
     {#if mod.preview_url}
       <button
@@ -133,6 +133,11 @@
     justify-content: space-between;
     background: var(--card-bg, #fff);
     color: var(--text-primary, #000);
+    transition: border-color 0.15s ease;
+  }
+
+  .mod-card.active {
+    border-color: var(--accent, #17bebe);
   }
 
   .preview-box {

@@ -2,6 +2,7 @@
   import { modsStore } from "../stores/mods";
   import { localeStore } from "../stores/locale";
   import { t } from "../i18n";
+  import { refreshMods } from "../api";
   import ModCard from "./ModCard.svelte";
   import ModDetailsModal from "./ModDetailsModal.svelte";
 
@@ -10,6 +11,19 @@
 
   let searchQuery = "";
   let selectedModForDetails: string | null = null;
+  let isRefreshing = false;
+
+  async function handleRefresh() {
+    if (isRefreshing) return;
+    isRefreshing = true;
+    try {
+      await refreshMods();
+    } finally {
+      setTimeout(() => {
+        isRefreshing = false;
+      }, 300);
+    }
+  }
 
   $: mods = $modsStore;
 
@@ -55,6 +69,15 @@
       <h3>{$t("title_mods")}</h3>
     </div>
     <div class="toolbar-controls">
+      <button
+        class="refresh-btn"
+        class:refreshing={isRefreshing}
+        on:click={handleRefresh}
+        title={$t("button_refresh")}
+      >
+        <span class="refresh-icon" class:spin={isRefreshing}>↻</span>
+        {$t("button_refresh")}
+      </button>
       <div class="search-box">
         <input
           type="text"
@@ -77,6 +100,7 @@
         displayName={mod.display_name}
         enabled={mod.enabled}
         always={mod.always}
+        untickable={mod.untickable}
         preview={mod.preview}
         ontoggle={(value) => toggleMod(mod.name, value)}
         onDetails={openDetails}
@@ -124,6 +148,48 @@
     display: flex;
     gap: 8px;
     align-items: center;
+  }
+
+  .refresh-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    height: 24px;
+    padding: 0 8px;
+    border: 1px solid var(--btn-border, #000);
+    background: var(--btn-bg, #fff);
+    color: var(--btn-text, #000);
+    font-size: 12px;
+    cursor: pointer;
+    line-height: 1;
+    box-sizing: border-box;
+  }
+
+  .refresh-btn:hover {
+    background: var(--btn-hover-bg, #f0f0f0);
+    border-color: var(--btn-hover-border, var(--border-color, #000));
+  }
+
+  .refresh-btn:active {
+    background: var(--btn-active-bg, #000);
+    color: var(--btn-active-text, #fff);
+  }
+
+  .refresh-icon {
+    display: inline-block;
+    font-size: 14px;
+    line-height: 1;
+  }
+
+  .refresh-icon.spin {
+    animation: spin 0.6s linear infinite;
+  }
+
+  @keyframes spin {
+    100% {
+      transform: rotate(360deg);
+    }
   }
 
   .search-box {
