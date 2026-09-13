@@ -239,9 +239,6 @@ def main() -> None:
     if (MINIFY_DIR / "config").exists():
         link_or_copy(MINIFY_DIR / "config", DIST_MINIFY_DIR / "config", use_symlink)
 
-    if (MINIFY_DIR / "locales").exists():
-        link_or_copy(MINIFY_DIR / "locales", DIST_MINIFY_DIR / "locales", use_symlink)
-
     link_or_copy(MINIFY_DIR / "mods", DIST_MINIFY_DIR / "mods", use_symlink)
 
     if (MINIFY_DIR / "plugins").exists():

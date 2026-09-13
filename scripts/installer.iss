@@ -31,10 +31,13 @@ VersionInfoCopyright=Copyright (C) 2026 Egezenn
 
 [UninstallDelete]
 ; Clean up runtime-generated folders on uninstall
+Type: filesandordirs; Name: "{app}\backup"
+Type: filesandordirs; Name: "{app}\cache"
 Type: filesandordirs; Name: "{app}\config"
 Type: filesandordirs; Name: "{app}\logs"
 Type: filesandordirs; Name: "{app}\mods"
 Type: filesandordirs; Name: "{app}\mods_old_*"
+Type: filesandordirs; Name: "{app}\minify_debug_*"
 ; Also clean up build directories if somehow leftover
 Type: filesandordirs; Name: "{app}\vpk_build"
 Type: filesandordirs; Name: "{app}\vpk_replace"

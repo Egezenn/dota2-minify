@@ -44,3 +44,7 @@
   --scrollbar-thumb: #2e2e2e;
   --scrollbar-thumb-hover: #17bebe;
 }
+
+.gh-icon {
+  filter: invert(1);
+}

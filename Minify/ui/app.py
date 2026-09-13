@@ -26,6 +26,11 @@ class Api:
     def start_uninstall(self, remove_everything: bool = False) -> Dict[str, Any]:
         return self.patch_service.start_uninstall(remove_everything)
 
+    def open_url(self, url: str) -> None:
+        import webbrowser
+
+        webbrowser.open(url)
+
     def is_patching(self) -> bool:
         return self.patch_service.is_patching()
 

@@ -49,6 +49,7 @@ declare global {
         set_mods: (data: Record<string, boolean>) => Promise<boolean>;
         start_patch: () => Promise<{ status: string }>;
         start_uninstall: (remove_everything?: boolean) => Promise<{ status: string }>;
+        open_url?: (url: string) => Promise<void> | void;
         clear_logs: () => Promise<boolean>;
         get_steam_accounts: () => Promise<
           Array<{
