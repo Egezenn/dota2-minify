@@ -26,8 +26,7 @@
 
 [![Translations via Weblate](https://img.shields.io/badge/Translations%20via-Weblate-2eccaa?style=for-the-badge&logo=weblate&logoColor=white)](https://hosted.weblate.org)
 
-[![translation](https://hosted.weblate.org/widgets/dota2-minify/-/main-localization/horizontal-auto.svg)](https://hosted.weblate.org/engage/dota2-minify)
-[![translation](https://hosted.weblate.org/widgets/dota2-minify/-/mod-localization/horizontal-auto.svg)](https://hosted.weblate.org/engage/dota2-minify)
+[![Translation status](https://hosted.weblate.org/widget/dota2-minify/multi-auto.svg)](https://hosted.weblate.org/engage/dota2-minify/)
 
 ![ss1](docs/assets/screenshot-1.jpg)
 ![ss2](docs/assets/screenshot-2.jpg)
