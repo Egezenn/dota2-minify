@@ -24,15 +24,10 @@ def scan_d2pfx_mods(mod_list):
             continue
 
         cfg = manifest_utils.get_mod(mod_path)
-        if not cfg:
+        if not cfg or cfg.get("browser") != "d2pfx":
             continue
 
-        browser_info = cfg.get("browser", {})
-        is_d2pfx = browser_info.get("browser") == "d2pfx" or str(browser_info.get("name", "")).startswith("d2pfx")
-        if not is_d2pfx:
-            continue
-
-        cat = browser_info.get("category")
+        cat = cfg.get("category")
         if cat == "cursors":
             cursor_mod_paths.append(mod_path)
             continue

@@ -2,6 +2,7 @@ import { writable } from 'svelte/store';
 
 export interface ModItem {
   name: string;
+  display_name?: string;
   enabled: boolean;
   always?: boolean;
   preview?: string | null;

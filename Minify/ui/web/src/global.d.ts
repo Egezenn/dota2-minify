@@ -17,12 +17,13 @@ declare global {
         is_debug_env: () => Promise<boolean>;
         get_version: () => Promise<string>;
         perform_update: (url: string) => Promise<boolean>;
-        get_mods: () => Promise<Array<{ name: string; enabled: boolean }>>;
+        get_mods: () => Promise<Array<{ name: string; display_name?: string; enabled: boolean; always?: boolean; preview?: string | null }>>;
         get_mod_details: (
           modName: string,
           lang?: string,
         ) => Promise<{
           name: string;
+          display_name?: string;
           notes: string | null;
           preview: string | null;
           has_notes: boolean;
@@ -52,6 +53,7 @@ declare global {
             type: string;
             default?: any;
             mod?: string | null;
+            mod_display_name?: string;
             force?: boolean;
             items?: Array<string | { value: string; label: string }>;
             var_type?: "int" | "float";

@@ -2,7 +2,7 @@ import sys
 
 from core import registry
 
-VERSION = "0.4"
+VERSION = "0.5"
 RENAME_CATEGORIES = ["trees", "river", "shaders", "herofx", "ranged-attack", "hero-items", "optimization"]
 
 

@@ -11,6 +11,7 @@
     type: string;
     default?: any;
     mod?: string | null;
+    mod_display_name?: string | null;
     plugin?: string | null;
     force?: boolean;
     items?: Array<string | { value: string; label: string }>;
@@ -155,7 +156,7 @@
       const secName = item.plugin
         ? `Plugin: ${item.plugin}`
         : item.mod
-        ? item.mod
+        ? (item.mod_display_name || item.mod)
         : "Application Settings";
       if (!map.has(secName)) {
         map.set(secName, []);

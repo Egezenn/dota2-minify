@@ -10,6 +10,7 @@ class Migrations:
         self._rename_file_in_mods("xml_mod.json", "xml.json")
         self._migrate_rescomproot_and_bin()
         self._migrate_legacy_paks()
+        self._migrate_flatten_d2pfx_manifests()
 
     def _migrate_locale_config(self):
         locale = config.get("output_locale")
@@ -115,6 +116,66 @@ class Migrations:
                         log.write_warning(f"Failed to remove legacy pak {pak_path}: {e}")
 
         utils.write_states("legacy_paks_migrated", True)
+
+    def _migrate_flatten_d2pfx_manifests(self):
+        if not os.path.exists(base.mods_dir):
+            return
+
+        for mod in os.listdir(base.mods_dir):
+            mod_path = os.path.join(base.mods_dir, mod)
+            if not os.path.isdir(mod_path) or mods_shared.is_ignored_folder(mod):
+                continue
+
+            manifest_path = os.path.join(mod_path, "manifest.json")
+            if not os.path.isfile(manifest_path):
+                continue
+
+            try:
+                manifest = config.read_json_file(manifest_path)
+                if not isinstance(manifest, dict):
+                    continue
+
+                browser_info = manifest.get("browser")
+                if not isinstance(browser_info, dict):
+                    continue
+
+                if browser_info.get("browser") != "d2pfx":
+                    continue
+
+                raw_tags = browser_info.get("tags")
+                if isinstance(raw_tags, dict):
+                    tags = [k for k, v in raw_tags.items() if v]
+                elif isinstance(raw_tags, list):
+                    tags = raw_tags
+                elif raw_tags is None:
+                    tags = []
+                else:
+                    tags = [str(raw_tags)]
+
+                new_manifest = {
+                    "browser": "d2pfx",
+                    "name": browser_info.get("name"),
+                    "category": browser_info.get("category"),
+                    "author": browser_info.get("author"),
+                    "sender": browser_info.get("sender"),
+                    "links": browser_info.get("links", []),
+                    "tags": tags,
+                    "version": browser_info.get("version"),
+                    "label": browser_info.get("label"),
+                }
+
+                for k, v in browser_info.items():
+                    if k not in new_manifest:
+                        new_manifest[k] = v
+
+                for k, v in manifest.items():
+                    if k != "browser" and k not in new_manifest:
+                        new_manifest[k] = v
+
+                config.write_json_file(manifest_path, new_manifest)
+                output.add_text(f"Flattened d2pfx manifest in {mod}")
+            except Exception as e:
+                log.write_warning(f"Failed to flatten d2pfx manifest in {mod}: {e}")
 
 
 Migrations()

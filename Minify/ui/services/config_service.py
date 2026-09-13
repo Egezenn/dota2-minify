@@ -328,6 +328,8 @@ class ConfigService:
 
                         parsed = self.parse_setting_item(item, mod_folder=mod_folder)
                         if parsed:
+                            if isinstance(cfg, dict) and cfg.get("name"):
+                                parsed["mod_display_name"] = str(cfg["name"])
                             mod_store = config.get_mod(mod_folder, {})
                             cur_val = mod_store.get(parsed["key"], parsed["default"])
                             values[parsed["key"]] = cur_val

@@ -1,6 +1,26 @@
 {
   "id": "d2pfx",
   "name": "&tab_d2pfx",
+  "category_conflicts": [
+    "ancient",
+    "couriers",
+    "creep-deny",
+    "cursors",
+    "emblems",
+    "high-five",
+    "item-icons",
+    "music",
+    "pedestal",
+    "ranged-attack",
+    "ranks",
+    "river",
+    "roshan",
+    "shaders",
+    "ti-bp-effects",
+    "tormentor",
+    "versus-screens",
+    "wards"
+  ],
   "settings": [
     {
       "key": "d2pfx_filter_nsfw",

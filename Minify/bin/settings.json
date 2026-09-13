@@ -27,14 +27,14 @@
     "type": "checkbox"
   },
   {
-    "key": "fix_options",
-    "text": "&setting_fix_options",
+    "key": "patch_on_launch",
+    "text": "&setting_patch_on_launch",
     "default": true,
     "type": "checkbox"
   },
   {
-    "key": "patch_on_launch",
-    "text": "&setting_patch_on_launch",
+    "key": "fix_options",
+    "text": "&setting_fix_options",
     "default": true,
     "type": "checkbox"
   },

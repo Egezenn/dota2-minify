@@ -136,12 +136,11 @@ def _resolve_mod_folder(name: str, cat_id: str, label: str = None) -> str:
             if not os.path.isdir(mod_path):
                 continue
             cfg = manifest_utils.get_mod(mod_path)
-            b_info = cfg.get("browser", {})
             if (
-                b_info.get("browser") == "d2pfx"
-                and b_info.get("name") == name
-                and b_info.get("category") == cat_id
-                and b_info.get("label") == label
+                cfg.get("browser") == "d2pfx"
+                and cfg.get("name") == name
+                and cfg.get("category") == cat_id
+                and cfg.get("label") == label
             ):
                 return folder
 
@@ -163,13 +162,12 @@ def get_installed_mods(params: Dict[str, Any] = None) -> List[Dict[str, Any]]:
         if not os.path.isdir(mod_path):
             continue
         cfg = manifest_utils.get_mod(mod_path)
-        browser_info = cfg.get("browser", {})
-        if browser_info.get("browser") == "d2pfx":
+        if cfg.get("browser") == "d2pfx":
             installed.append(
                 {
-                    "name": browser_info.get("name"),
-                    "category": browser_info.get("category"),
-                    "label": browser_info.get("label"),
+                    "name": cfg.get("name"),
+                    "category": cfg.get("category"),
+                    "label": cfg.get("label"),
                     "folder": folder,
                     "enabled": mods_shared.get_state(folder),
                 }
@@ -276,18 +274,25 @@ def install_mod(params: Dict[str, Any] = None) -> Dict[str, Any]:
         fs.remove_path(mod_dest)
 
     # 3. Create manifest.json
+    if isinstance(tags, dict):
+        active_tags = [k for k, v in tags.items() if v]
+    elif isinstance(tags, list):
+        active_tags = tags
+    elif tags is None:
+        active_tags = []
+    else:
+        active_tags = [str(tags)]
+
     modcfg = {
-        "browser": {
-            "browser": "d2pfx",
-            "name": name,
-            "category": cat_id,
-            "author": author,
-            "sender": sender,
-            "links": links,
-            "tags": tags,
-            "version": plugin_main.VERSION,
-            "label": label,
-        },
+        "browser": "d2pfx",
+        "name": name,
+        "category": cat_id,
+        "author": author,
+        "sender": sender,
+        "links": links,
+        "tags": active_tags,
+        "version": plugin_main.VERSION,
+        "label": label,
     }
     rename_cats = plugin_main.RENAME_CATEGORIES
 
@@ -297,7 +302,7 @@ def install_mod(params: Dict[str, Any] = None) -> Dict[str, Any]:
     config.write_json_file(os.path.join(target_dir, "manifest.json"), modcfg)
 
     # 4. Create notes.md
-    version = modcfg["browser"]["version"]
+    version = modcfg.get("version") or plugin_main.VERSION
     notes_content = f"Installed via D2PFX Browser {version}\n\n"
     if cat_id and cat_id.lower() != "unknown":
         notes_content += f"Category: {cat_id}\n"
@@ -352,12 +357,11 @@ def uninstall_mod(params: Dict[str, Any] = None) -> Dict[str, Any]:
             if not os.path.isdir(mod_path):
                 continue
             cfg = manifest_utils.get_mod(mod_path)
-            b_info = cfg.get("browser", {})
             if (
-                b_info.get("browser") == "d2pfx"
-                and b_info.get("name") == mod_name
-                and b_info.get("category") == cat_id
-                and b_info.get("label") == label
+                cfg.get("browser") == "d2pfx"
+                and cfg.get("name") == mod_name
+                and cfg.get("category") == cat_id
+                and cfg.get("label") == label
             ):
                 target_dir = mod_path
                 target_folder = folder

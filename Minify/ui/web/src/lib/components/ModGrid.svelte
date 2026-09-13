@@ -13,9 +13,13 @@
 
   $: mods = $modsStore;
 
-  $: filteredMods = mods.filter((mod) =>
-    mod.name.toLowerCase().includes(searchQuery.toLowerCase().trim()),
-  );
+  $: filteredMods = mods.filter((mod) => {
+    const q = searchQuery.toLowerCase().trim();
+    return (
+      (mod.display_name && mod.display_name.toLowerCase().includes(q)) ||
+      mod.name.toLowerCase().includes(q)
+    );
+  });
 
   async function toggleMod(modName: string, enabled: boolean) {
     const updated = mods.map((m) =>
@@ -70,6 +74,7 @@
     {#each filteredMods as mod (mod.name)}
       <ModCard
         name={mod.name}
+        displayName={mod.display_name}
         enabled={mod.enabled}
         always={mod.always}
         preview={mod.preview}

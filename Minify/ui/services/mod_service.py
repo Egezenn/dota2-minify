@@ -41,13 +41,17 @@ class ModService:
             for mod in mod_list:
                 mod_path = os.path.join(base.mods_dir, mod)
                 always = False
+                display_name = mod
                 if os.path.isdir(mod_path):
                     cfg = manifest_utils.get_mod(mod_path)
                     always = bool(cfg.get("always", False))
+                    if isinstance(cfg, dict) and cfg.get("name"):
+                        display_name = str(cfg["name"])
                 preview = self.get_mod_preview(mod_path)
                 mods_data.append(
                     {
                         "name": mod,
+                        "display_name": display_name,
                         "enabled": always or mods_shared.get_state(mod),
                         "always": always,
                         "preview": preview,
@@ -395,9 +399,18 @@ class ModService:
             mod_path = os.path.join(base.mods_dir, mod_name)
             methods = self.get_mod_methods(mod_name, mod_path)
 
+            display_name = mod_name
+            if os.path.isdir(mod_path):
+                from patch import manifest_utils
+
+                cfg = manifest_utils.get_mod(mod_path)
+                if isinstance(cfg, dict) and cfg.get("name"):
+                    display_name = str(cfg["name"])
+
             if not os.path.isdir(mod_path):
                 return {
                     "name": mod_name,
+                    "display_name": display_name,
                     "notes": None,
                     "preview": None,
                     "has_notes": False,
@@ -419,6 +432,7 @@ class ModService:
 
             return {
                 "name": mod_name,
+                "display_name": display_name,
                 "notes": notes_content,
                 "preview": preview_data_url,
                 "has_notes": bool(notes_content),

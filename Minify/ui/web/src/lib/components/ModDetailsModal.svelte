@@ -23,12 +23,15 @@
   let previewLightboxOpen = false;
   let details: {
     name: string;
+    display_name?: string;
     notes: string | null;
     preview: string | null;
     has_notes: boolean;
     has_preview: boolean;
     methods?: ModMethod[];
   } | null = null;
+
+  $: displayName = details?.display_name || details?.name || modName;
 
   marked.setOptions({
     gfm: true,
@@ -44,7 +47,8 @@
         const lang = typeof token === "object" ? token.lang : arguments[1];
         const validLang = lang && hljs.getLanguage(lang) ? lang : undefined;
         const highlighted = validLang
-          ? hljs.highlight(text, { language: validLang, ignoreIllegals: true }).value
+          ? hljs.highlight(text, { language: validLang, ignoreIllegals: true })
+              .value
           : escapeHtml(text || "");
         return `<pre><code class="hljs ${validLang ? `language-${validLang}` : ""}">${highlighted}</code></pre>`;
       },
@@ -99,7 +103,8 @@
     if (!code) return "";
     try {
       if (hljs.getLanguage(lang)) {
-        return hljs.highlight(code, { language: lang, ignoreIllegals: true }).value;
+        return hljs.highlight(code, { language: lang, ignoreIllegals: true })
+          .value;
       }
     } catch {
       // fallback
@@ -122,7 +127,12 @@
       }
 
       let lines: string[] = [];
-      if (m.type && m.type !== "tree" && m.type !== "blacklist" && m.type !== "text") {
+      if (
+        m.type &&
+        m.type !== "tree" &&
+        m.type !== "blacklist" &&
+        m.type !== "text"
+      ) {
         const highlighted = highlightCode(content, m.type);
         lines = splitHighlightedLines(highlighted);
       } else if (content) {
@@ -223,7 +233,7 @@
       aria-labelledby="modal-title"
     >
       <header class="modal-header">
-        <h2 id="modal-title">{modName}</h2>
+        <h2 id="modal-title">{displayName}</h2>
         <button
           class="close-btn"
           type="button"
@@ -241,7 +251,10 @@
           {#if (details.has_preview && details.preview) || (details.has_notes && details.notes)}
             <div
               class="mod-overview"
-              class:has-both={details.has_preview && details.preview && details.has_notes && details.notes}
+              class:has-both={details.has_preview &&
+                details.preview &&
+                details.has_notes &&
+                details.notes}
             >
               {#if details.has_preview && details.preview}
                 <div class="image-wrapper">
@@ -252,7 +265,10 @@
                     title={$t("title_click_to_preview")}
                     aria-label={$t("title_click_to_preview")}
                   >
-                    <img src={details.preview} alt={`Preview for ${modName}`} />
+                    <img
+                      src={details.preview}
+                      alt={`Preview for ${displayName}`}
+                    />
                   </button>
                 </div>
               {/if}
@@ -272,7 +288,9 @@
                   <summary class="mod-method-summary">
                     <div class="summary-left">
                       <span class="summary-arrow">▶</span>
-                      <span class="method-icon">{getMethodIcon(method.type)}</span>
+                      <span class="method-icon"
+                        >{getMethodIcon(method.type)}</span
+                      >
                       <span class="method-name">{method.name}</span>
                     </div>
                     {#if method.badge}
@@ -288,13 +306,17 @@
                           {#each method.highlightedLines as line, i}
                             <div class="code-row">
                               <span class="line-no">{i + 1}</span>
-                              <span class="line-content">{@html line || "&nbsp;"}</span>
+                              <span class="line-content"
+                                >{@html line || "&nbsp;"}</span
+                              >
                             </div>
                           {/each}
                         </div>
                       </div>
                     {:else}
-                      <div class="empty-method-content">{$t("label_empty_file")}</div>
+                      <div class="empty-method-content">
+                        {$t("label_empty_file")}
+                      </div>
                     {/if}
                   </div>
                 </details>
@@ -338,7 +360,9 @@
         aria-label="Image Preview"
       >
         <header class="lightbox-header">
-          <span class="lightbox-title">{modName} - {$t("label_preview")}</span>
+          <span class="lightbox-title"
+            >{displayName} - {$t("label_preview")}</span
+          >
           <button
             class="close-btn"
             type="button"
@@ -362,7 +386,7 @@
           }}
           title="Click to close"
         >
-          <img src={details.preview} alt={`Preview for ${modName}`} />
+          <img src={details.preview} alt={`Preview for ${displayName}`} />
         </div>
       </div>
     </div>
@@ -381,14 +405,15 @@
   }
 
   .modal-card {
+    --modal-height: 80vh;
     background: var(--modal-bg, #fff);
     width: 80vw;
-    height: 80vh;
+    height: var(--modal-height);
     border: 1px solid var(--modal-border, #000);
     display: flex;
     flex-direction: column;
     color: var(--text-primary, #000);
-    container-type: inline-size;
+    container-type: size;
   }
 
   .modal-header {
@@ -720,7 +745,8 @@
 
   .mod-method-body {
     border-top: 1px solid var(--border-color, #000);
-    max-height: 420px;
+    max-height: calc(var(--modal-height, 60vh) * 0.8);
+    max-height: 60cqh;
     overflow: auto;
     background: var(--terminal-bg, var(--bg-primary, #fff));
   }

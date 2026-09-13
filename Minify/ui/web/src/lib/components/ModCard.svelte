@@ -1,13 +1,15 @@
 <script lang="ts">
   import { t } from "../i18n";
   export let name: string;
+  export let displayName: string = "";
   export let enabled: boolean;
   export let always: boolean = false;
   export let preview: string | null | undefined = undefined;
   export let ontoggle: (value: boolean) => void;
   export let onDetails: ((name: string) => void) | undefined = undefined;
 
-  $: initialLetter = ((name || "").replace(/^[^a-zA-Z0-9]+/, "").charAt(0) || (name || "").charAt(0)).toUpperCase();
+  $: effectiveName = displayName || name;
+  $: initialLetter = ((effectiveName || "").replace(/^[^a-zA-Z0-9]+/, "").charAt(0) || (effectiveName || "").charAt(0)).toUpperCase();
 
   function handleToggle() {
     if (always) return;
@@ -39,7 +41,7 @@
 >
   <div class="preview-container">
     {#if preview}
-      <img src={preview} alt={name} loading="lazy" decoding="async" class="preview-image" />
+      <img src={preview} alt={effectiveName} loading="lazy" decoding="async" class="preview-image" />
     {:else}
       <div class="preview-placeholder">
         <span class="placeholder-letter">{initialLetter}</span>
@@ -48,7 +50,7 @@
   </div>
 
   <div class="card-footer">
-    <span class="mod-name" title={name}>{name}</span>
+    <span class="mod-name" title={effectiveName}>{effectiveName}</span>
 
     <div class="mod-actions">
       {#if onDetails}

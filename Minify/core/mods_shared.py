@@ -12,6 +12,18 @@ visually_available_mods = []
 mod_dependencies_list = []
 mod_conflicts_list = []
 
+CATEGORY_CONFLICTS = [
+    "announcers",
+    "backgrounds",
+    "fonts",
+    "huds",
+    "mega-kill",
+    "pings",
+    "river",
+    "terrains",
+    "trees",
+]
+
 
 def is_ignored_folder(name: str) -> bool:
     """Returns True if folder is a hidden or ignored directory (starts with . or _)."""
@@ -52,6 +64,29 @@ def enforce_locale_mod_states():
         set_state(mod, mod in required_for_current)
 
 
+def get_conflicting_categories() -> set:
+    categories = set(CATEGORY_CONFLICTS)
+
+    try:
+        plugins_dir = getattr(base, "plugins_dir", None)
+        if plugins_dir and os.path.exists(plugins_dir):
+            for entry in os.listdir(plugins_dir):
+                if is_ignored_folder(entry):
+                    continue
+                p_manifest = os.path.join(plugins_dir, entry, "manifest.json")
+                if os.path.isfile(p_manifest):
+                    p_cfg = config.read_json_file(p_manifest)
+                    if isinstance(p_cfg, dict):
+                        ext = p_cfg.get("category_conflicts") or p_cfg.get("conflicting_categories")
+                        if ext and isinstance(ext, (list, set, tuple)):
+                            for c in ext:
+                                categories.add(str(c).lower())
+    except Exception:
+        pass
+
+    return categories
+
+
 def scan_mods():
     from patch import manifest_utils
 
@@ -72,6 +107,8 @@ def scan_mods():
     _available = []
     _dependencies = []
     _conflicts = []
+    category_mods = {}
+    active_conflicting_cats = get_conflicting_categories()
 
     for mod in sorted(os.listdir(base.mods_dir), key=str.casefold):
         mod_path = os.path.join(base.mods_dir, mod)
@@ -84,12 +121,15 @@ def scan_mods():
                 order = cfg.get("order", 1)
                 dependencies = cfg.get("dependencies", None)
                 conflicts = cfg.get("conflicts", None)
+                category = cfg.get("category", None)
                 visual = cfg.get("visual", True)
                 _available.append(mod) if visual else _unavailable.append(mod)
                 if dependencies is not None:
                     _dependencies.append({mod: dependencies})
                 if conflicts is not None:
-                    _conflicts.append({mod: conflicts})
+                    _conflicts.append({mod: [conflicts] if isinstance(conflicts, str) else list(conflicts)})
+                if category and str(category).lower() in active_conflicting_cats:
+                    category_mods.setdefault(str(category).lower(), []).append(mod)
 
                 # Default order, blacklist mods should always be indexed last
                 if blacklist_exist and not cfg:
@@ -101,6 +141,21 @@ def scan_mods():
                 _alphabetical.append(mod)
                 _available.append(mod)
                 _with_order.append({mod: 1})
+
+    for cat, mods_in_cat in category_mods.items():
+        if len(mods_in_cat) > 1:
+            for mod in mods_in_cat:
+                conflicting_mods = [m for m in mods_in_cat if m != mod]
+                found = False
+                for item in _conflicts:
+                    if mod in item:
+                        for c in conflicting_mods:
+                            if c not in item[mod]:
+                                item[mod].append(c)
+                        found = True
+                        break
+                if not found:
+                    _conflicts.append({mod: list(conflicting_mods)})
 
     temp_sorted = sorted(_with_order, key=lambda d: list(d.values())[0])
     _with_order = [list(d.keys())[0] for d in temp_sorted]
