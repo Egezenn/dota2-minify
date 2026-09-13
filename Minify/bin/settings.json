@@ -29,7 +29,7 @@
   {
     "key": "patch_on_launch",
     "text": "&setting_patch_on_launch",
-    "default": true,
+    "default": false,
     "type": "checkbox"
   },
   {

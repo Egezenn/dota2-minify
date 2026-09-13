@@ -206,6 +206,7 @@ def test_prelaunch_runs_bulk_script_when_version_matches():
 
     with (
         mock_patch.object(minify_main.utils, "open_utf8R", return_value=mock_file),
+        mock_patch.object(minify_main.os.path, "exists", return_value=True),
         mock_patch("helper.bulk_exec_script", return_value=False) as mock_bulk,
     ):
         result = runner.invoke(app, ["prelaunch"])

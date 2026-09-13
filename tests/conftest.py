@@ -50,7 +50,13 @@ original_exists = os.path.exists
 
 
 def fake_exists(path):
-    if "/fake/steam" in path or "steamapps" in path or "dota" in path or path == base.mods_dir:
+    if (
+        "/fake/steam" in path
+        or "steamapps" in path
+        or "dota" in path
+        or path == base.mods_dir
+        or path == base.dota_steam_inf_cache
+    ):
         return True
     return original_exists(path)
 

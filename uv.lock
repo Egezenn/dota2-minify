@@ -224,8 +224,6 @@ dependencies = [
     { name = "json-with-comments" },
     { name = "playsound3" },
     { name = "psutil" },
-    { name = "pycairo", marker = "sys_platform == 'linux'" },
-    { name = "pygobject", marker = "sys_platform == 'linux'" },
     { name = "pywebview" },
     { name = "requests", extra = ["socks"] },
     { name = "typer" },
@@ -235,6 +233,8 @@ dependencies = [
 
 [package.optional-dependencies]
 linux = [
+    { name = "pycairo" },
+    { name = "pygobject" },
     { name = "pywebview", extra = ["gtk"] },
 ]
 
@@ -251,8 +251,8 @@ requires-dist = [
     { name = "json-with-comments", specifier = ">=1.2.10" },
     { name = "playsound3", specifier = ">=3.3.0" },
     { name = "psutil", specifier = ">=7.1.3" },
-    { name = "pycairo", marker = "sys_platform == 'linux'", specifier = ">=1.26.0" },
-    { name = "pygobject", marker = "sys_platform == 'linux'", specifier = ">=3.50.0" },
+    { name = "pycairo", marker = "extra == 'linux'", specifier = ">=1.26.0" },
+    { name = "pygobject", marker = "extra == 'linux'", specifier = ">=3.50.0" },
     { name = "pywebview", specifier = ">=6.2.1" },
     { name = "pywebview", extras = ["gtk"], marker = "extra == 'linux'" },
     { name = "requests", extras = ["socks"], specifier = ">=2.32.5" },
