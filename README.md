@@ -26,13 +26,20 @@
 
 [![Translations via Weblate](https://img.shields.io/badge/Translations%20via-Weblate-2eccaa?style=for-the-badge&logo=weblate&logoColor=white)](https://hosted.weblate.org)
 
-[![translation](https://hosted.weblate.org/widgets/dota2-minify/-/main-localization/horizontal-auto.svg)](https://hosted.weblate.org/engage/dota2-minify)
-[![translation](https://hosted.weblate.org/widgets/dota2-minify/-/mod-localization/horizontal-auto.svg)](https://hosted.weblate.org/engage/dota2-minify)
+[![Translation status](https://hosted.weblate.org/widget/dota2-minify/multi-auto.svg)](https://hosted.weblate.org/engage/dota2-minify/)
 
 ![ss1](docs/assets/screenshot-1.jpg)
 ![ss2](docs/assets/screenshot-2.jpg)
 
 </div>
+
+## Features
+
+- **Cross-platform**: Native WebView UI and CLI support on Windows and Linux (partial macOS)
+- **Clean, reversible and patch-proof**: Everything gets compiled into a single `pak66_dir.vpk` without modifying original game files
+- **Powerful modding API**: CSS hijacks, programmatic XML insertions, replacements, Python hooks and more to create anything you can imagine
+- **Plugin friendly**: Develop plugins on `plugins/` that can work alongside the base application
+- **Theming support**: Create a new look for the application with a stylesheet on `themes/`
 
 ## Thanks
 

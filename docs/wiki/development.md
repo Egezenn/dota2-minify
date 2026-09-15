@@ -41,7 +41,3 @@ For a detailed breakdown of modification types and how to use them, refer to the
 - [Mod Structure](development/mod-structure.md)
 - [Scripting](development/scripting.md)
 - [UI Modding (Panorama)](development/ui-modding.md)
-
-### Compilation
-
-For instructions, refer to the [workflow](https://github.com/Egezenn/dota2-minify/blob/main/.github/workflows/release.yml).
