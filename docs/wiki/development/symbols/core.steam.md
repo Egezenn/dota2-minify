@@ -89,12 +89,12 @@ def add_prelaunch_to_launch_options(check_only=False):
     if not base.FROZEN:
         return False
 
-    if not config.get("patch_on_launch", False):
+    if not config.get("patch_on_launch"):
         return False
 
     steam_ids = []
     accounts = get_steam_accounts()
-    if config.get("apply_for_all", True):
+    if config.get("apply_for_all"):
         for account in accounts:
             steam_ids.append(account["id"])
     else:
@@ -119,7 +119,7 @@ def add_prelaunch_to_launch_options(check_only=False):
         tokens = launch_options.split()
 
         if base.is_win:
-            prefix = f'cmd /c "{sys.executable}" prelaunch &&'
+            prefix = f'"{sys.executable}" prelaunch'
         else:
             prefix = f'bash -c "{sys.executable} prelaunch" &&'
 
@@ -162,7 +162,7 @@ def fix_launch_options(check_only=False):
     steam_ids = []
     successful_ids = []
     accounts = get_steam_accounts()
-    if config.get("apply_for_all", True):
+    if config.get("apply_for_all"):
         for account in accounts:
             steam_ids.append(account["id"])
     else:
@@ -194,7 +194,7 @@ def fix_launch_options(check_only=False):
                     user_name = user["name"]
                     break
 
-            output.add_text("&discrepancy_launch_options", user_name, locale)
+            output.add_text("&discrepancy_launch_options", user_name, locale, indent=True)
 
             data["UserLocalConfigStore"]["Software"]["Valve"]["Steam"]["apps"][base.STEAM_DOTA_ID]["LaunchOptions"] = (
                 f"-language {locale} {remove_lang_args(launch_options)}"
@@ -221,7 +221,7 @@ def remove_minify_lang():
     steam_ids = []
     successful_ids = []
     accounts = get_steam_accounts()
-    if config.get("apply_for_all", True):
+    if config.get("apply_for_all"):
         for account in accounts:
             steam_ids.append(account["id"])
     else:
@@ -489,42 +489,137 @@ def handle_non_default_path(steam_root):
 
 </details>
 
+## `steam64_to_account_id(steam64)`
+
+Converts a 64-bit SteamID to a 32-bit AccountID string using bitwise masking.
+
+<details open><summary>Source</summary>
+
+```python
+def steam64_to_account_id(steam64: int | str) -> str:
+    """Converts a 64-bit SteamID to a 32-bit AccountID string using bitwise masking."""
+    try:
+        return str(int(steam64) & 0xFFFFFFFF)
+    except (ValueError, TypeError):
+        return str(steam64)
+```
+
+</details>
+
+## `account_id_to_steam64(account_id)`
+
+Converts a 32-bit AccountID to a 64-bit SteamID using bitwise OR.
+
+<details open><summary>Source</summary>
+
+```python
+def account_id_to_steam64(account_id: int | str) -> int:
+    """Converts a 32-bit AccountID to a 64-bit SteamID using bitwise OR."""
+    try:
+        return int(account_id) | BASE_STEAM_64
+    except (ValueError, TypeError):
+        return 0
+```
+
+</details>
+
+## `get_loginusers_data()`
+
+Parse loginusers.vdf to map 32-bit account_id -> login info dict
+
+<details open><summary>Source</summary>
+
+```python
+def get_loginusers_data() -> dict:
+    "Parse loginusers.vdf to map 32-bit account_id -> login info dict"
+    user_map = {}
+    if not ROOT:
+        return user_map
+
+    loginusers_path = os.path.join(ROOT, "config", "loginusers.vdf")
+    if os.path.exists(loginusers_path):
+        try:
+            with utils.open_utf8R(loginusers_path) as f:
+                data = vdf.load(f)
+                users = data.get("users", {})
+                if isinstance(users, dict):
+                    for s64_str, udata in users.items():
+                        if not isinstance(udata, dict):
+                            continue
+                        acc_id = steam64_to_account_id(s64_str)
+                        ts_val = udata.get("Timestamp", 0)
+                        try:
+                            ts = int(ts_val)
+                        except (ValueError, TypeError):
+                            ts = 0
+
+                        user_map[acc_id] = {
+                            "steam64": s64_str,
+                            "persona_name": str(udata.get("PersonaName", "")),
+                            "account_name": str(udata.get("AccountName", "")),
+                            "timestamp": ts,
+                            "autologin": udata.get("AutoLogin") == "1",
+                        }
+        except Exception as e:
+            log.write_warning(f"Error reading loginusers.vdf: {e}")
+
+    return user_map
+```
+
+</details>
+
 ## `get_steam_accounts()`
 
-Get all users that have Dota2 data
+Get all users that have Dota2 data, sorted by last active login timestamp descending
 
 <details open><summary>Source</summary>
 
 ```python
 def get_steam_accounts():
-    "Get all users that have Dota2 data"
+    "Get all users that have Dota2 data, sorted by last active login timestamp descending"
     accounts = []
     if not ROOT or not os.path.exists(os.path.join(ROOT, "userdata")):
         return accounts
 
     try:
-        user_ids = sorted(
-            [
-                x
-                for x in os.listdir(os.path.join(ROOT, "userdata"))
-                if x.isdigit() and os.path.isdir(os.path.join(ROOT, "userdata", x))
-            ],
-            key=lambda x: int(x),
-        )
+        loginusers_map = get_loginusers_data()
+        user_ids = [
+            x
+            for x in os.listdir(os.path.join(ROOT, "userdata"))
+            if x.isdigit() and os.path.isdir(os.path.join(ROOT, "userdata", x))
+        ]
         for user_id in user_ids:
             if not os.path.exists(os.path.join(ROOT, "userdata", user_id, base.STEAM_DOTA_ID)):
                 continue
 
-            localconfig_path = os.path.join(ROOT, "userdata", user_id, "config", "localconfig.vdf")
-            if os.path.exists(localconfig_path):
-                try:
-                    with utils.open_utf8R(localconfig_path) as f:
-                        data = vdf.load(f)
-                        friends = data.get("UserLocalConfigStore", {}).get("friends", {})
-                        username = friends.get("PersonaName", "?")
-                        accounts.append({"id": user_id, "name": username})
-                except Exception:
-                    accounts.append({"id": user_id, "name": "?"})
+            login_info = loginusers_map.get(user_id, {})
+            username = login_info.get("persona_name", "")
+            account_name = login_info.get("account_name", "")
+            timestamp = login_info.get("timestamp", 0)
+
+            if not username:
+                localconfig_path = os.path.join(ROOT, "userdata", user_id, "config", "localconfig.vdf")
+                if os.path.exists(localconfig_path):
+                    try:
+                        with utils.open_utf8R(localconfig_path) as f:
+                            data = vdf.load(f)
+                            friends = data.get("UserLocalConfigStore", {}).get("friends", {})
+                            username = friends.get("PersonaName", "?")
+                    except Exception:
+                        username = "?"
+                else:
+                    username = "?"
+
+            accounts.append(
+                {
+                    "id": user_id,
+                    "name": username,
+                    "account_name": account_name,
+                    "timestamp": timestamp,
+                }
+            )
+
+        accounts.sort(key=lambda acc: acc["timestamp"], reverse=True)
     except Exception:
         log.write_warning("Failed to fetch steam accounts")
 

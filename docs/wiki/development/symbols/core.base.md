@@ -164,12 +164,52 @@ STEAM_DOTA_WORKSHOP_TOOLS_ID = "313250"
 
 </details>
 
+### `plugins_dir`
+
+<details open><summary>Source</summary>
+
+```python
+plugins_dir = os.path.abspath(os.path.join(base_dir, "plugins"))
+```
+
+</details>
+
+### `themes_dir`
+
+<details open><summary>Source</summary>
+
+```python
+themes_dir = os.path.abspath(os.path.join(base_dir, "themes"))
+```
+
+</details>
+
+### `dist_index`
+
+<details open><summary>Source</summary>
+
+```python
+dist_index = os.path.abspath(os.path.join(web_dir, "index.html"))
+```
+
+</details>
+
+### `bundle_bin_dir`
+
+<details open><summary>Source</summary>
+
+```python
+bundle_bin_dir = os.path.abspath(os.path.join(bundle_dir, "bin"))
+```
+
+</details>
+
 ### `bin_dir`
 
 <details open><summary>Source</summary>
 
 ```python
-bin_dir = "bin"
+bin_dir = bundle_bin_dir
 ```
 
 </details>
@@ -249,7 +289,7 @@ cache_dir = "cache"
 <details open><summary>Source</summary>
 
 ```python
-blank_files_dir = os.path.join(bin_dir, "blank-files")
+blank_files_dir = os.path.join(bundle_bin_dir, "blank-files")
 ```
 
 </details>
@@ -259,7 +299,27 @@ blank_files_dir = os.path.join(bin_dir, "blank-files")
 <details open><summary>Source</summary>
 
 ```python
-img_dir = os.path.join(bin_dir, "images")
+img_dir = os.path.join(bundle_bin_dir, "images")
+```
+
+</details>
+
+### `favicon_file`
+
+<details open><summary>Source</summary>
+
+```python
+favicon_file = os.path.join(img_dir, "favicon.ico")
+```
+
+</details>
+
+### `locales_dir`
+
+<details open><summary>Source</summary>
+
+```python
+locales_dir = os.path.abspath(os.path.join(bundle_dir, "locales"))
 ```
 
 </details>
@@ -269,17 +329,17 @@ img_dir = os.path.join(bin_dir, "images")
 <details open><summary>Source</summary>
 
 ```python
-localization_file_dir = os.path.join(bin_dir, "localization.json")
+localization_file_dir = os.path.join(locales_dir, "en.json")
 ```
 
 </details>
 
-### `rescomp_override_dir`
+### `settings_file_dir`
 
 <details open><summary>Source</summary>
 
 ```python
-rescomp_override_dir = os.path.join(bin_dir, "rescomproot")
+settings_file_dir = os.path.join(bundle_bin_dir, "settings.json")
 ```
 
 </details>
@@ -289,7 +349,7 @@ rescomp_override_dir = os.path.join(bin_dir, "rescomproot")
 <details open><summary>Source</summary>
 
 ```python
-sounds_dir = os.path.join(bin_dir, "sounds")
+sounds_dir = os.path.join(bundle_bin_dir, "sounds")
 ```
 
 </details>
@@ -350,6 +410,36 @@ log_rescomp = os.path.join(logs_dir, "resourcecompiler.txt")
 
 ```python
 dota_steam_inf_cache = os.path.join(cache_dir, "steam.inf")
+```
+
+</details>
+
+### `states_file_dir`
+
+<details open><summary>Source</summary>
+
+```python
+states_file_dir = os.path.join(cache_dir, "states.json")
+```
+
+</details>
+
+### `gamepakcontents_file_dir`
+
+<details open><summary>Source</summary>
+
+```python
+gamepakcontents_file_dir = os.path.join(cache_dir, "gamepakcontents.txt")
+```
+
+</details>
+
+### `rescomp_override_dir`
+
+<details open><summary>Source</summary>
+
+```python
+rescomp_override_dir = os.path.join(config_dir, "rescomproot")
 ```
 
 </details>

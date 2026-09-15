@@ -2,6 +2,23 @@
 
 Dangling random functions
 
+## `sync_output_path()`
+
+*No documentation available.*
+
+<details open><summary>Source</summary>
+
+```python
+def sync_output_path():
+    global output_path
+    locale = config.get_locale()
+    matching = [lang for lang in constants.minify_dota_possible_language_output_paths if locale in lang]
+    output_path = matching[0] if matching else constants.minify_default_dota_pak_output_path
+    config.set("output_path", output_path)
+```
+
+</details>
+
 ## `get_blank_file_extensions()`
 
 *No documentation available.*
@@ -118,6 +135,42 @@ def compile_assets(input_path=None, output_path=None, pak_path=None):
 
 </details>
 
+## `extract_workshop_tools()`
+
+Extracts the bare minimum requirements for resourcecompiler.exe
+
+<details open><summary>Source</summary>
+
+```python
+def extract_workshop_tools() -> bool:
+    "Extracts the bare minimum requirements for resourcecompiler.exe"
+    output.clean()
+    fs.remove_path(base.rescomp_override_dir)
+    fails = 0
+
+    for i, path in enumerate(constants.dota_tools_paths):
+        if os.path.exists(path):
+            if os.path.isdir(path):
+                shutil.copytree(path, constants.dota_tools_extraction_paths[i])
+            else:
+                shutil.copy(path, constants.dota_tools_extraction_paths[i])
+        else:
+            output.add_text(f"Extraction of {path} failed", msg_type="error")
+            fails += 1
+
+    if not fails:
+        constants.recalc_rescomp_dirs()
+        if os.path.exists(constants.dota_resource_compiler_path):
+            output.add_text("Extracted workshop tools successfully.")
+            return True
+        else:
+            output.add_text(f"Extraction of {constants.dota_resource_compiler_path} failed", msg_type="error")
+            return False
+    return False
+```
+
+</details>
+
 ## `create_img_ref_xml(img_path_list)`
 
 Helper function to create reference XMLs for images
@@ -162,8 +215,10 @@ def exec_script(script_path, mod_name, order_name, _terminal_output=True):
             return
 
         script_dir = os.path.dirname(script_path)
-        if script_dir not in sys.path:
-            sys.path.insert(0, script_dir)
+        if script_dir in sys.path:
+            sys.path.remove(script_dir)
+        sys.path.insert(0, script_dir)
+        sys.modules.pop("script", None)
 
         module_name = mod_name.replace(" ", "").lower() + f"_{order_name}_script"
         spec = importlib.util.spec_from_file_location(module_name, script_path)
@@ -173,13 +228,13 @@ def exec_script(script_path, mod_name, order_name, _terminal_output=True):
         main_func = getattr(module, "main", None)
         if callable(main_func):
             if _terminal_output:
-                output.add_text("&script_execution", mod_name, order_name)
+                output.add_text("&script_execution", mod_name, order_name, indent=True)
             result = main_func()
             if _terminal_output:
-                output.add_text("&script_success", mod_name, order_name, msg_type="success")
+                output.add_text("&script_success", mod_name, order_name, msg_type="success", indent=True)
             return result
         else:
-            log.write_warning("&script_no_main", mod_name, order_name)
+            log.write_warning("&script_no_main", mod_name, order_name, indent=True)
 
     return None
 ```
@@ -214,7 +269,7 @@ def bulk_exec_script(order_name, terminal_output=True):
     bulk_name = f"script_{order_name}.py"
     any_ran = False
     for root, _, files in os.walk(base.mods_dir):
-        if bulk_name in files and not os.path.basename(root).startswith("_"):
+        if bulk_name in files and not mods_shared.is_ignored_folder(os.path.basename(root)):
             cfg = manifest_utils.get_mod(root)
 
             if "browser" in cfg:
@@ -255,8 +310,10 @@ def exec_script_function(script_path, mod_name, function_name="main"):
             return
 
         script_dir = os.path.dirname(script_path)
-        if script_dir not in sys.path:
-            sys.path.insert(0, script_dir)
+        if script_dir in sys.path:
+            sys.path.remove(script_dir)
+        sys.path.insert(0, script_dir)
+        sys.modules.pop("script", None)
 
         module_name = mod_name.replace(" ", "").lower() + "_utility"
         spec = importlib.util.spec_from_file_location(module_name, script_path)

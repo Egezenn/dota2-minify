@@ -30,6 +30,61 @@ def unregister_listener(callback):
 
 </details>
 
+## `register_download_listener(callback)`
+
+*No documentation available.*
+
+<details open><summary>Source</summary>
+
+```python
+def register_download_listener(callback):
+    if callback not in _download_listeners:
+        _download_listeners.append(callback)
+```
+
+</details>
+
+## `unregister_download_listener(callback)`
+
+*No documentation available.*
+
+<details open><summary>Source</summary>
+
+```python
+def unregister_download_listener(callback):
+    if callback in _download_listeners:
+        _download_listeners.remove(callback)
+```
+
+</details>
+
+## `emit_download_progress(task_id, name, downloaded_bytes, total_bytes, status, error)`
+
+*No documentation available.*
+
+<details open><summary>Source</summary>
+
+```python
+def emit_download_progress(
+    task_id: str, name: str, downloaded_bytes: int, total_bytes: int, status: str, error: str | None = None
+):
+    data = {
+        "id": task_id,
+        "name": name,
+        "downloaded_bytes": downloaded_bytes,
+        "total_bytes": total_bytes,
+        "status": status,
+        "error": error,
+    }
+    for listener in list(_download_listeners):
+        try:
+            listener(data)
+        except Exception:
+            pass
+```
+
+</details>
+
 ## `add_text(text_or_id)`
 
 *No documentation available.*
@@ -37,7 +92,7 @@ def unregister_listener(callback):
 <details open><summary>Source</summary>
 
 ```python
-def add_text(text_or_id, *args, msg_type: str | None = None, **kwargs):
+def add_text(text_or_id, *args, msg_type: str | None = None, indent: bool = False, **kwargs):
     from core import localization
 
     text = text_or_id
@@ -46,6 +101,10 @@ def add_text(text_or_id, *args, msg_type: str | None = None, **kwargs):
 
     if args:
         text = text.format(*args)
+
+    if indent:
+        indent_str = "   " if isinstance(indent, bool) else (" " * indent if isinstance(indent, int) else "   ")
+        text = "\n".join(f"{indent_str}{line}" if line else "" for line in text.split("\n"))
 
     prefix = ""
     if msg_type == "error":
@@ -61,10 +120,7 @@ def add_text(text_or_id, *args, msg_type: str | None = None, **kwargs):
         print(f"{prefix}{text.encode('ascii', 'replace').decode('ascii')}{RESET}")
 
     for listener in list(_listeners):
-        try:
-            listener(text, msg_type)
-        except Exception:
-            pass
+        listener(text, msg_type)
 
     return None
 ```
@@ -81,8 +137,22 @@ def add_text(text_or_id, *args, msg_type: str | None = None, **kwargs):
 def add_separator():
     print("-" * 50)
     for listener in list(_listeners):
+        listener("", "separator")
+```
+
+</details>
+
+## `clean()`
+
+*No documentation available.*
+
+<details open><summary>Source</summary>
+
+```python
+def clean():
+    for listener in list(_listeners):
         try:
-            listener("-" * 50, "separator")
+            listener("", "clear")
         except Exception:
             pass
 ```

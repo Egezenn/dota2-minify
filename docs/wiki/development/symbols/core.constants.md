@@ -11,7 +11,12 @@ Swaps the variables for resourcecompiler.exe when extracted
 ```python
 def recalc_rescomp_dirs():
     "Swaps the variables for resourcecompiler.exe when extracted"
-    global minify_dota_compile_input_path, minify_dota_compile_output_path, dota_resource_compiler_path
+    global \
+        minify_dota_compile_input_path, \
+        minify_dota_compile_output_path, \
+        dota_resource_compiler_path, \
+        rescomp_override
+    rescomp_override = os.path.exists(base.rescomp_override_dir)
     if rescomp_override:
         minify_dota_compile_input_path = os.path.join(base.rescomp_override_dir, "content", "dota_addons", "minify")
         minify_dota_compile_output_path = os.path.join(base.rescomp_override_dir, "game", "dota_addons", "minify")
@@ -295,7 +300,7 @@ dota_tools_extraction_paths = [
 <details open><summary>Source</summary>
 
 ```python
-s2v_cli_ver = "18.0"
+s2v_cli_ver = "20.0"
 ```
 
 </details>
@@ -305,7 +310,7 @@ s2v_cli_ver = "18.0"
 <details open><summary>Source</summary>
 
 ```python
-rg_ver = "15.1.0"
+rg_ver = "15.2.0"
 ```
 
 </details>

@@ -9,135 +9,333 @@
 ```python
 class Api:
     def __init__(self) -> None:
-        self.window: Any = None
-        self._is_patching: bool = False
-        self._logs: List[Dict[str, Any]] = []
-        self._lock = threading.Lock()
-
-        output.register_listener(self._on_output_log)
+        self.patch_service = PatchService()
+        self.mod_service = ModService()
+        self.config_service = ConfigService()
+        self.plugin_service = PluginService()
+        self.dialog_service = DialogService()
 
     def set_window(self, window: Any) -> None:
-        self.window = window
-
-    def _on_output_log(self, text: str, msg_type: str | None) -> None:
-        log_entry = {
-            "text": text,
-            "type": msg_type or "info",
-            "timestamp": time.strftime("%H:%M:%S"),
-        }
-        with self._lock:
-            self._logs.append(log_entry)
-
-        if self.window:
-            try:
-                js_str = json.dumps(log_entry)
-                self.window.evaluate_js(f"window.onLogReceived && window.onLogReceived({js_str});")
-            except Exception:
-                pass
+        self.patch_service.set_window(window)
 
     def start_patch(self) -> Dict[str, Any]:
-        if self._is_patching:
-            return {"status": "already_running"}
+        return self.patch_service.start_patch()
 
-        self._is_patching = True
-        if self.window:
-            try:
-                self.window.evaluate_js("window.onPatchStatusChange && window.onPatchStatusChange(true);")
-            except Exception:
-                pass
+    def start_uninstall(self, remove_everything: bool = False) -> Dict[str, Any]:
+        return self.patch_service.start_uninstall(remove_everything)
 
-        def run_patch_thread() -> None:
-            try:
-                output.add_text("Starting patch process...", msg_type="info")
-                patch.patcher()
-                output.add_text("Patch operation completed.", msg_type="success")
-            except Exception as e:
-                output.add_text(f"Patch failed: {e}", msg_type="error")
-            finally:
-                self._is_patching = False
-                if self.window:
-                    try:
-                        self.window.evaluate_js("window.onPatchStatusChange && window.onPatchStatusChange(false);")
-                    except Exception:
-                        pass
+    def open_url(self, url: str) -> None:
+        import webbrowser
 
-        threading.Thread(target=run_patch_thread, daemon=True).start()
-        return {"status": "started"}
+        webbrowser.open(url)
 
     def is_patching(self) -> bool:
-        return self._is_patching
+        return self.patch_service.is_patching()
 
     def get_logs(self) -> List[Dict[str, Any]]:
-        with self._lock:
-            return list(self._logs)
+        return self.patch_service.get_logs()
 
     def clear_logs(self) -> bool:
-        with self._lock:
-            self._logs.clear()
-        return True
+        return self.patch_service.clear_logs()
 
     def get_mods(self) -> List[Dict[str, Any]]:
-        mods_shared.scan_mods()
-        mod_list = mods_shared.visually_available_mods or mods_shared.mods_alphabetical
-        return [{"name": mod, "enabled": mods_shared.get_state(mod)} for mod in mod_list]
+        return self.mod_service.get_mods()
+
+    def get_mod_details(self, mod_name: str, lang: str | None = None) -> Dict[str, Any]:
+        return self.mod_service.get_mod_details(mod_name, lang)
 
     def set_mods(self, data: Dict[str, bool]) -> bool:
-        try:
-            for mod_name, enabled in data.items():
-                mods_shared.set_state(mod_name, bool(enabled))
+        return self.mod_service.set_mods(data)
+
+    def get_available_languages(self) -> List[str]:
+        return self.config_service.get_available_languages()
+
+    def is_debug_env(self) -> bool:
+        return self.config_service.is_debug_env()
+
+    def get_version(self) -> str:
+        return base.VERSION
+
+    @staticmethod
+    def is_portable() -> bool:
+        if not base.FROZEN:
             return True
-        except Exception:
+        return not os.path.exists(os.path.join(os.path.dirname(sys.executable), "unins000.exe"))
+
+    def perform_update(self, url: str) -> bool:
+        if not base.is_win or self.is_portable():
+            import webbrowser
+
+            webbrowser.open(base.github_io)
             return False
 
-    def get_localization(self, lang: str = "EN") -> Dict[str, str]:
-        if not lang:
-            lang = config.get("locale", "EN")
-        return localization.get_for_locale(lang)
+        import tempfile
+        import threading
+        import time
+
+        from core import fs, log
+
+        def _update_thread():
+            temp_dir = os.environ.get("TEMP", os.environ.get("TMP", tempfile.gettempdir()))
+            clean_url = url.split("?")[0]
+            installer_name = clean_url.split("/")[-1] or "Minify-Setup.exe"
+            installer_path = os.path.join(temp_dir, installer_name)
+
+            output.add_text(f"Downloading update: {installer_name}...")
+            success = fs.download_file(
+                url=url,
+                target_path=installer_path,
+                name=installer_name,
+                task_id="app-update",
+                emit_progress=True,
+            )
+            if success and os.path.exists(installer_path):
+                time.sleep(2)
+                output.add_text("Launching installer and closing Minify...")
+                try:
+                    os.startfile(installer_path)
+                except Exception as e:
+                    log.write_crashlog(f"Failed to launch installer: {e}")
+                    output.add_text(f"Failed to launch installer: {e}", msg_type="error")
+                finally:
+                    os._exit(0)
+            else:
+                output.add_text("Update download failed.", msg_type="error")
+
+        threading.Thread(target=_update_thread, daemon=True).start()
+        return True
+
+    def get_localization(self, lang: str = "en") -> Dict[str, str]:
+        return self.config_service.get_localization(lang)
+
+    def get_current_locale(self) -> str:
+        return self.config_service.get_current_locale()
+
+    def set_locale(self, lang: str) -> bool:
+        return self.config_service.set_locale(lang)
+
+    def get_available_game_languages(self) -> List[str]:
+        return self.config_service.get_available_game_languages()
+
+    def get_current_game_language(self) -> str:
+        return self.config_service.get_current_game_language()
+
+    def set_game_language(self, lang: str) -> bool:
+        return self.config_service.set_game_language(lang)
+
+    def get_steam_accounts(self) -> List[Dict[str, Any]]:
+        return self.config_service.get_steam_accounts()
+
+    def get_settings(self) -> Dict[str, Any]:
+        return self.config_service.get_settings()
+
+    def set_setting(self, key: str, value: Any, mod_name: str | None = None) -> bool:
+        return self.config_service.set_setting(key, value, mod_name)
+
+    def run_mod_function(self, mod_name: str, function_name: str) -> bool:
+        return self.config_service.run_mod_function(mod_name, function_name)
+
+    def reset_native_settings(self) -> bool:
+        return self.config_service.reset_native_settings()
+
+    def reset_mod_settings(self, mod_name: str) -> bool:
+        return self.config_service.reset_mod_settings(mod_name)
+
+    def get_available_themes(self) -> List[Dict[str, str]]:
+        return self.config_service.get_available_themes()
+
+    def get_theme_url(self, theme_name: str | None = None) -> str:
+        return self.config_service.get_theme_url(theme_name)
+
+    def get_theme_css(self, theme_name: str | None = None) -> str:
+        return self.config_service.get_theme_css(theme_name)
+
+    def get_state(self, key: str, default: Any = None) -> Any:
+        states = utils.read_states()
+        return states.get(key, default)
+
+    def set_state(self, key: str, value: Any) -> bool:
+        utils.write_states(key, value)
+        return True
+
+    def check_workshop_tools_needed(self) -> bool:
+        import conditions
+
+        return base.is_linux and not constants.rescomp_override and conditions.workshop_installed
+
+    def extract_workshop_tools(self) -> bool:
+        import helper
+
+        return helper.extract_workshop_tools()
+
+    def is_workshop_installed(self) -> bool:
+        import conditions
+
+        return bool(conditions.workshop_installed)
+
+    def download_workshop_tools(self) -> bool:
+        import tempfile
+        import requests
+        import conditions
+        from core import fs, log
+
+        repo_url = (
+            "https://github.com/Dota-Modding-Community/workshoptools/releases/latest/download/resourcecompiler.zip"
+        )
+        api_url = "https://api.github.com/repos/Dota-Modding-Community/workshoptools/releases/latest"
+        download_url = repo_url
+
+        try:
+            resp = requests.get(api_url, headers={"User-Agent": "dota2-minify"}, timeout=10)
+            if resp.status_code == 200:
+                assets = resp.json().get("assets", [])
+                for asset in assets:
+                    if asset.get("name", "").endswith(".zip"):
+                        download_url = asset.get("browser_download_url", repo_url)
+                        break
+        except Exception as e:
+            log.write_warning(f"Could not query GitHub API for workshoptools release: {e}")
+
+        temp_dir = os.environ.get("TEMP", os.environ.get("TMP", tempfile.gettempdir()))
+        zip_path = os.path.join(temp_dir, "workshoptools.zip")
+
+        output.add_text(f"Downloading Workshop Tools from {download_url}...")
+        success = fs.download_file(
+            url=download_url,
+            target_path=zip_path,
+            name="workshoptools.zip",
+            task_id="workshoptools",
+            emit_progress=True,
+        )
+        if not success or not os.path.exists(zip_path):
+            output.add_text("Failed to download Workshop Tools.", msg_type="error")
+            return False
+
+        output.add_text("Expanding Workshop Tools to config/rescomproot...")
+        target_dir = base.rescomp_override_dir
+        try:
+            fs.create_dirs(target_dir)
+            extract_success = fs.extract_archive(zip_path, target_dir)
+            if not extract_success:
+                output.add_text("Failed to extract Workshop Tools archive.", msg_type="error")
+                return False
+
+            inner_dir = os.path.join(target_dir, "resourcecompiler")
+            if os.path.isdir(inner_dir):
+                for item in os.listdir(inner_dir):
+                    src = os.path.join(inner_dir, item)
+                    dst = os.path.join(target_dir, item)
+                    if os.path.exists(dst):
+                        fs.remove_path(dst)
+                    fs.move_path(src, dst)
+                fs.remove_path(inner_dir)
+
+            fs.remove_path(zip_path)
+
+            constants.recalc_rescomp_dirs()
+
+            if (base.is_linux or base.is_mac) and os.path.exists(constants.dota_resource_compiler_path):
+                import stat
+
+                st = os.stat(constants.dota_resource_compiler_path)
+                os.chmod(
+                    constants.dota_resource_compiler_path,
+                    st.st_mode | stat.S_IXUSR | stat.S_IXGRP | stat.S_IXOTH,
+                )
+
+            compiler_exists = os.path.exists(constants.dota_resource_compiler_path)
+            conditions.workshop_installed = compiler_exists
+
+            if compiler_exists:
+                output.add_text("Workshop Tools installed successfully!", msg_type="success")
+                return True
+            else:
+                output.add_text(
+                    f"resourcecompiler.exe was not found at {constants.dota_resource_compiler_path}",
+                    msg_type="error",
+                )
+                return False
+        except Exception as e:
+            log.write_crashlog(f"Error expanding Workshop Tools: {e}")
+            output.add_text(f"Error expanding Workshop Tools: {e}", msg_type="error")
+            return False
+
+    def get_plugin_tabs(self) -> List[Dict[str, Any]]:
+        return self.plugin_service.get_tabs(resolve_func=self._resolve_plugin_entry)
+
+    def get_plugin_content(self, plugin_id: str) -> str:
+        return self.plugin_service.get_content(plugin_id)
+
+    def get_plugin_localization(self, plugin_id: str, lang: str = "en") -> Dict[str, str]:
+        return self.plugin_service.get_localization(plugin_id, lang)
+
+    def _resolve_plugin_entry(self, p_path: str) -> Optional[str]:
+        return self.plugin_service._resolve_plugin_entry(p_path)
+
+    def call_plugin_api(self, plugin_id: str, action: str, params: Dict[str, Any] = None) -> Any:
+        return self.plugin_service.call_api(plugin_id, action, params)
 ```
 
 </details>
 
-## `launch_ui()`
+## `launch()`
 
 *No documentation available.*
 
 <details open><summary>Source</summary>
 
 ```python
-def launch_ui() -> None:
-    localization.load_headless()
-    utils.setup_system()
-    browsers.initialize()
-    helper.bulk_exec_script("initial", False)
+def launch() -> None:
+    if not os.path.isfile(base.dist_index):
+        output.add_text(
+            f"Error: Web UI build file not found at '{base.dist_index}'. Please run 'npm run build' inside Minify/ui/web.",
+            msg_type="error",
+        )
 
-    ui_dir = os.path.dirname(os.path.abspath(__file__))
-    dist_index = os.path.join(ui_dir, "web", "dist", "index.html")
+    debug_mode = bool(config.get("debug_env"))
+    webview.settings["OPEN_DEVTOOLS_IN_DEBUG"] = False
+    webview.settings["ALLOW_FILE_URLS"] = True
 
-    url = dist_index
+    url = Path(base.dist_index).as_uri()
 
-    dev_port = 5173
-    try:
-        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        sock.settimeout(0.3)
-        res = sock.connect_ex(("127.0.0.1", dev_port))
-        sock.close()
-        if res == 0:
-            url = f"http://localhost:{dev_port}"
-    except Exception:
-        pass
+    states = utils.read_states()
+    window_size = states.get("window_size", {}) if isinstance(states, dict) else {}
+    initial_width = window_size.get("width", 960)
+    initial_height = window_size.get("height", 680)
+
+    if not isinstance(initial_width, int) or initial_width < 700:
+        initial_width = 960
+    if not isinstance(initial_height, int) or initial_height < 500:
+        initial_height = 680
 
     api = Api()
+    active_theme = config.get("theme", "light")
+    theme_css = api.get_theme_css(active_theme)
+    bg_color = api.config_service.extract_bg_color(theme_css)
     window = webview.create_window(
-        title="Dota 2 Minify",
+        title=base.TITLE,
         url=url,
         js_api=api,
-        width=960,
-        height=680,
+        width=initial_width,
+        height=initial_height,
         min_size=(700, 500),
         resizable=True,
+        background_color=bg_color,
     )
+
+    def _save_window_size(*args: Any, **kwargs: Any) -> None:
+        w, h = None, None
+        if len(args) >= 2:
+            w, h = args[0], args[1]
+        if w and h and isinstance(w, (int, float)) and isinstance(h, (int, float)):
+            w_int, h_int = int(w), int(h)
+            if w_int >= 700 and h_int >= 500:
+                utils.write_states("window_size", {"width": w_int, "height": h_int})
+
+    window.events.resized += _save_window_size
+
     api.set_window(window)
-    webview.start()
+    webview.start(debug=debug_mode, icon=base.favicon_file)
 ```
 
 </details>

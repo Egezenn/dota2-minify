@@ -69,6 +69,9 @@ def get(key: str, default_value: Any = None) -> Any:
     if key in data:
         return data[key]
 
+    if default_value is None:
+        default_value = _get_default_setting(key)
+
     if default_value is not None:
         return update_json_file(base.main_config_file_dir, key, default_value)
 
@@ -120,17 +123,18 @@ def set_mod(mod_name: str, config_data: dict) -> None:
 
 </details>
 
-## `get_locale(default)`
+## `get_locale()`
 
-*No documentation available.*
+Returns the valid locale instead of unresolved.
 
 <details open><summary>Source</summary>
 
 ```python
-def get_locale(default="english"):
+def get_locale():
+    "Returns the valid locale instead of unresolved."
     from core import constants
 
-    return constants.resolve_locale(get("output_locale", default))
+    return constants.resolve_locale(get("output_locale", "english"))
 ```
 
 </details>

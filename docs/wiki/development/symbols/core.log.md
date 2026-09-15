@@ -33,7 +33,7 @@ def write_crashlog(header=None, exc_type=None, exc_value=None, exc_traceback=Non
 <details open><summary>Source</summary>
 
 ```python
-def write_warning(header=None, *args):
+def write_warning(header=None, *args, **kwargs):
     if not os.path.exists(base.log_warnings):
         with utils.open_utf8R(base.log_warnings, "w") as file:
             pass
@@ -55,7 +55,7 @@ def write_warning(header=None, *args):
         file.write(f"{console_message}\n{'-' * 50}\n\n")
 
     if console_message:
-        output.add_text(console_message, *args, msg_type="warning")
+        output.add_text(console_message, *args, msg_type="warning", **kwargs)
 ```
 
 </details>
@@ -84,6 +84,8 @@ def unhandled_handler(handled=False):
 
 ```python
 def create_debug_zip():
+    import ui
+
     from core import fs
 
     with utils.try_pass():
@@ -104,8 +106,11 @@ def create_debug_zip():
                 if os.path.exists(file_path):
                     zipf.write(file_path)
 
-        with utils.try_pass():
+        if not base.HEADLESS:
+            ui.alert("&heeeeeeeeeeeeeelp")
+        else:
             output.add_text("&heeeeeeeeeeeeeelp", zip_filename)
+
         fs.open_thing(".")
 ```
 

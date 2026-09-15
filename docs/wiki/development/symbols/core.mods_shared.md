@@ -2,6 +2,48 @@
 
 Shared mod scanning logic
 
+## `is_ignored_folder(name)`
+
+Returns True if folder is a hidden or ignored directory (starts with . or _).
+
+<details open><summary>Source</summary>
+
+```python
+def is_ignored_folder(name: str) -> bool:
+    """Returns True if folder is a hidden or ignored directory (starts with . or _)."""
+    return name.startswith((".", "_"))
+```
+
+</details>
+
+## `is_system_mod(name)`
+
+Returns True if mod is an internal core system mod (starts with #).
+
+<details open><summary>Source</summary>
+
+```python
+def is_system_mod(name: str) -> bool:
+    """Returns True if mod is an internal core system mod (starts with #)."""
+    return name.startswith("#")
+```
+
+</details>
+
+## `is_user_mod(name)`
+
+Returns True if mod is a user-selectable mod (not ignored and not a system mod).
+
+<details open><summary>Source</summary>
+
+```python
+def is_user_mod(name: str) -> bool:
+    """Returns True if mod is a user-selectable mod (not ignored and not a system mod)."""
+    return not is_ignored_folder(name) and not is_system_mod(name)
+```
+
+</details>
+
 ## `get_state(mod)`
 
 *No documentation available.*
@@ -10,9 +52,8 @@ Shared mod scanning logic
 
 ```python
 def get_state(mod):
-    with utils.open_utf8(base.mods_config_dir) as file:
-        states = jsonc.load(file)
-        return states.get(mod, False)
+    states = config.read_json_file(base.mods_config_dir)
+    return states.get(mod, False)
 ```
 
 </details>
@@ -25,14 +66,7 @@ def get_state(mod):
 
 ```python
 def set_state(mod, value):
-    states = {}
-    if os.path.exists(base.mods_config_dir):
-        with utils.open_utf8(base.mods_config_dir) as file:
-            states = jsonc.load(file)
-
-    states[mod] = value
-    with utils.open_utf8(base.mods_config_dir, "w") as file:
-        jsonc.dump(dict(sorted(states.items())), file, indent=2)
+    config.update_json_file(base.mods_config_dir, mod, value)
 ```
 
 </details>
@@ -45,11 +79,50 @@ def set_state(mod, value):
 
 ```python
 def enforce_locale_mod_states():
-    from core import config
+    from core import config, constants
 
     locale = config.get("output_locale", "english")
-    for required_mod in constants.LOCALE_MOD_REQUIREMENTS.get(locale, []):
-        set_state(required_mod, True)
+
+    all_locale_mods = set()
+    for mods_list in constants.LOCALE_MOD_REQUIREMENTS.values():
+        all_locale_mods.update(mods_list)
+
+    required_for_current = set(constants.LOCALE_MOD_REQUIREMENTS.get(locale, []))
+
+    for mod in all_locale_mods:
+        set_state(mod, mod in required_for_current)
+```
+
+</details>
+
+## `get_conflicting_categories()`
+
+*No documentation available.*
+
+<details open><summary>Source</summary>
+
+```python
+def get_conflicting_categories() -> set:
+    categories = set(CATEGORY_CONFLICTS)
+
+    try:
+        plugins_dir = getattr(base, "plugins_dir", None)
+        if plugins_dir and os.path.exists(plugins_dir):
+            for entry in os.listdir(plugins_dir):
+                if is_ignored_folder(entry):
+                    continue
+                p_manifest = os.path.join(plugins_dir, entry, "manifest.json")
+                if os.path.isfile(p_manifest):
+                    p_cfg = config.read_json_file(p_manifest)
+                    if isinstance(p_cfg, dict):
+                        ext = p_cfg.get("category_conflicts") or p_cfg.get("conflicting_categories")
+                        if ext and isinstance(ext, (list, set, tuple)):
+                            for c in ext:
+                                categories.add(str(c).lower())
+    except Exception:
+        pass
+
+    return categories
 ```
 
 </details>
@@ -81,10 +154,12 @@ def scan_mods():
     _available = []
     _dependencies = []
     _conflicts = []
+    category_mods = {}
+    active_conflicting_cats = get_conflicting_categories()
 
     for mod in sorted(os.listdir(base.mods_dir), key=str.casefold):
         mod_path = os.path.join(base.mods_dir, mod)
-        if not mod.startswith("_"):
+        if not is_ignored_folder(mod):
             if os.path.isdir(mod_path):
                 _alphabetical.append(mod)
 
@@ -93,12 +168,15 @@ def scan_mods():
                 order = cfg.get("order", 1)
                 dependencies = cfg.get("dependencies", None)
                 conflicts = cfg.get("conflicts", None)
+                category = cfg.get("category", None)
                 visual = cfg.get("visual", True)
                 _available.append(mod) if visual else _unavailable.append(mod)
                 if dependencies is not None:
                     _dependencies.append({mod: dependencies})
                 if conflicts is not None:
-                    _conflicts.append({mod: conflicts})
+                    _conflicts.append({mod: [conflicts] if isinstance(conflicts, str) else list(conflicts)})
+                if category and str(category).lower() in active_conflicting_cats:
+                    category_mods.setdefault(str(category).lower(), []).append(mod)
 
                 # Default order, blacklist mods should always be indexed last
                 if blacklist_exist and not cfg:
@@ -110,6 +188,21 @@ def scan_mods():
                 _alphabetical.append(mod)
                 _available.append(mod)
                 _with_order.append({mod: 1})
+
+    for cat, mods_in_cat in category_mods.items():
+        if len(mods_in_cat) > 1:
+            for mod in mods_in_cat:
+                conflicting_mods = [m for m in mods_in_cat if m != mod]
+                found = False
+                for item in _conflicts:
+                    if mod in item:
+                        for c in conflicting_mods:
+                            if c not in item[mod]:
+                                item[mod].append(c)
+                        found = True
+                        break
+                if not found:
+                    _conflicts.append({mod: list(conflicting_mods)})
 
     temp_sorted = sorted(_with_order, key=lambda d: list(d.values())[0])
     _with_order = [list(d.keys())[0] for d in temp_sorted]
