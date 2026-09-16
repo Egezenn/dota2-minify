@@ -1,1 +1,9 @@
-{}
+{
+  "button_add": "Ekle",
+  "button_cancel": "Vazgeç",
+  "button_clear": "Temizle",
+  "button_close": "Kapat",
+  "button_details": "Detaylar",
+  "button_dismiss": "Görmezden gel",
+  "button_extract": "Evet, çıkart"
+}
