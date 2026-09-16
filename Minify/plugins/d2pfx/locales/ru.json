@@ -1,24 +1,5 @@
 {
   "button_close": "Закрыть",
-  "button_install": "",
-  "button_installing": "",
-  "button_refresh_data": "",
-  "button_remove": "",
-  "button_removing": "",
-  "label_disable_mod": "",
-  "label_enable_mod": "",
-  "label_loading_categories": "",
-  "label_loading_mods": "",
-  "label_no_mods_found": "",
-  "label_no_preview": "",
   "label_preview": "Предварительный просмотр",
-  "label_select_category": "",
-  "placeholder_search_categories": "",
-  "placeholder_search_mods": "Поиск модов...",
-  "setting_d2pfx_auto_refresh_catalogue": "",
-  "setting_d2pfx_filter_anime": "",
-  "setting_d2pfx_filter_nsfw": "",
-  "tab_d2pfx": "",
-  "title_click_to_close": "",
-  "title_click_to_preview": ""
+  "placeholder_search_mods": "Поиск модов..."
 }
