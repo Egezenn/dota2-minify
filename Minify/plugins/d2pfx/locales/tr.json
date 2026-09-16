@@ -1,3 +1,24 @@
 {
-  "button_close": "Kapat"
+  "button_close": "Kapat",
+  "button_install": "İNDİR",
+  "button_installing": "İNDİRİLİYOR...",
+  "button_refresh_data": "Veriyi Yenile",
+  "button_remove": "KALDIR",
+  "button_removing": "KALDIRILIYOR...",
+  "label_disable_mod": "Modu devre dışı bırak",
+  "label_enable_mod": "Modu etkinleştir",
+  "label_loading_categories": "Kategoriler yükleniyor...",
+  "label_loading_mods": "Modlar yükleniyor...",
+  "label_no_mods_found": "Bu kategoride mod bulunamadı.",
+  "label_no_preview": "ÖNİZLEME YOK",
+  "label_preview": "Önizleme",
+  "label_select_category": "Kategori seç",
+  "placeholder_search_categories": "Kategori ara...",
+  "placeholder_search_mods": "Mod ara...",
+  "setting_d2pfx_auto_refresh_catalogue": "D2PFX Kataloğunu Otomatik Yenile",
+  "setting_d2pfx_filter_anime": "Anime Modlarını Filtrele (D2PFX)",
+  "setting_d2pfx_filter_nsfw": "18+ Modları Filtrele (D2PFX)",
+  "tab_d2pfx": "D2PFX Tarayıcısı",
+  "title_click_to_close": "Kapatmak için tıkla",
+  "title_click_to_preview": "Resmi önizlemek için tıklayın"
 }
