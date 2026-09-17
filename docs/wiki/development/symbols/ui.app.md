@@ -334,8 +334,71 @@ def launch() -> None:
 
     window.events.resized += _save_window_size
 
+    # to prevent MSHTML
+    if not is_webview_available():
+        _show_missing_dialog()
+        return
+
     api.set_window(window)
-    webview.start(debug=debug_mode, icon=base.favicon_file)
+    try:
+        webview.start(debug=debug_mode, icon=base.favicon_file)
+    except Exception:
+        if not is_webview_available():
+            _show_missing_dialog()
+            return
+        raise
+```
+
+</details>
+
+## `is_webview_available()`
+
+*No documentation available.*
+
+<details open><summary>Source</summary>
+
+```python
+def is_webview_available() -> bool:
+    if base.is_win:
+        return is_webview2_installed()
+    try:
+        return bool(webview.initialize())
+    except Exception:
+        return False
+```
+
+</details>
+
+## `is_webview2_installed()`
+
+*No documentation available.*
+
+<details open><summary>Source</summary>
+
+```python
+def is_webview2_installed() -> bool:
+    import winreg
+
+    guids = [
+        "{F3017226-FE2A-4295-8BDF-00C3A9A7E4C5}",  # Microsoft Edge WebView2 Runtime
+        "{2CD8A007-E189-409D-A2C8-9AF4EF3C72AA}",  # WebView2 Beta
+        "{0D50BFEC-CD6A-4F9A-964C-C7416E3ACB10}",  # WebView2 Dev
+        "{65C35B14-6C1D-4122-AC46-7148CC9D6497}",  # WebView2 Canary
+    ]
+    for root in (winreg.HKEY_LOCAL_MACHINE, winreg.HKEY_CURRENT_USER):
+        for guid in guids:
+            for sub in (
+                rf"SOFTWARE\Microsoft\EdgeUpdate\Clients\{guid}",
+                rf"SOFTWARE\WOW6432Node\Microsoft\EdgeUpdate\Clients\{guid}",
+            ):
+                try:
+                    with winreg.OpenKey(root, sub) as key:
+                        val, _ = winreg.QueryValueEx(key, "pv")
+                        if val and val != "0.0.0.0":
+                            return True
+                except OSError:
+                    pass
+    return False
 ```
 
 </details>

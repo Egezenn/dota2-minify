@@ -9,7 +9,7 @@ Variables that almost never change
 <details open><summary>Source</summary>
 
 ```python
-VERSION = "1.13.1"
+VERSION = "2rc3"
 ```
 
 </details>

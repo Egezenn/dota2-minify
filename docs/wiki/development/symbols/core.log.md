@@ -18,7 +18,7 @@ def write_crashlog(header=None, exc_type=None, exc_value=None, exc_traceback=Non
             else:
                 file.write(traceback.format_exc())
         else:
-            file.write({"".join(traceback.format_exception(exc_type, exc_value, exc_traceback))})
+            file.write("".join(traceback.format_exception(exc_type, exc_value, exc_traceback)))
 
     if base.FROZEN:
         create_debug_zip()

@@ -209,10 +209,13 @@ def parse_color(val):
 
 ```python
 def setup_system():
+    import sys
     import conditions
     import helper
 
-    from core import localization, migrations
+    from core import localization, log, migrations
+
+    sys.excepthook = log.unhandled_handler()
 
     localization.load_headless()
     conditions.is_dota_running("&error_please_close_dota_terminal", "error")
