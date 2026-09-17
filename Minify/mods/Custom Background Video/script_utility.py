@@ -16,17 +16,14 @@ from core import base, fs, utils
 
 
 def select_background():
-    title = "Select Background Image or Video"
-    file_types = ("Media Files (*.png;*.jpg;*.jpeg;*.webp;*.mp4;*.webm)", "All Files (*.*)")
+    title = "Select Background Video"
+    file_types = ("Video Files (*.mp4;*.webm)", "All Files (*.*)")
     file_path = ui.pick_file(title, file_types)
     if not file_path:
         return
 
     actual_ext = fs.get_file_type(file_path)
-    if actual_ext == ".jpeg":
-        actual_ext = ".jpg"
-
-    allowed_exts = [".png", ".jpg", ".webp", ".mp4", ".webm"]
+    allowed_exts = [".mp4", ".webm"]
 
     if not actual_ext or actual_ext not in allowed_exts:
         ui.alert(
@@ -51,24 +48,14 @@ def select_background():
         ui.alert(f"Error copying file: {e}", msg_type="error")
         return
 
-    ui.alert(f"Successfully set background to {os.path.basename(dest_path)}.", msg_type="success")
+    ui.alert(f"Successfully set background video to {os.path.basename(dest_path)}.", msg_type="success")
 
     original_ext = os.path.splitext(file_path)[1].lower()
-    if original_ext == ".jpeg":
-        original_ext = ".jpg"
-
     if original_ext != actual_ext:
         ui.alert(f"Warning: Extension mismatch. Renamed from {original_ext} to {actual_ext}.", msg_type="warning")
 
-    if actual_ext in [".jpg", ".webp"]:
-        if shutil.which("magick") is None:
-            ui.alert(
-                "Warning: ImageMagick (magick) is required to convert this image to PNG during patching but is not found on your system.",
-                msg_type="warning",
-            )
-    elif actual_ext == ".mp4":
-        if shutil.which("ffmpeg") is None:
-            ui.alert(
-                "Warning: FFmpeg is required to convert this video to WEBM during patching but is not found on your system.",
-                msg_type="warning",
-            )
+    if actual_ext != ".webm" and shutil.which("ffmpeg") is None:
+        ui.alert(
+            "Warning: FFmpeg is required to convert this video to WEBM (VP9) during patching but is not found on your system.",
+            msg_type="warning",
+        )

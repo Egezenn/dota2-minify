@@ -3,7 +3,7 @@
     {
       "action": "insert_before",
       "selector": "#BackgroundScene",
-      "xml": "<Movie id='BackgroundMovie' src='s2r://panorama/videos/background.webm' autoplay='onload' repeat='true' hittest='false' />"
+      "xml": "<Movie id='BackgroundMovie' src='s2r://panorama/videos/background.webm' autoplay='onload' repeat='true' controls='none' hittest='false' />"
     },
     {
       "action": "set_attribute",
@@ -12,11 +12,10 @@
       "value": ""
     }
   ],
-  // could use a seperate xml for the values
   "panorama/layout/dashboard.xml": [
     {
       "action": "set_attribute",
-      "selector": "DashboardBackgroundManager",
+      "selector": "#DashboardBackgroundManager",
       "attribute": "override-background",
       "value": "DOTADashboardBackgroundLastMatch"
     }

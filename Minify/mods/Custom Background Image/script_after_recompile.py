@@ -31,5 +31,6 @@ def main():
                 "images",
                 "backgrounds",
                 "imgref.vxml_c",
-            )
+            ),
+            os.path.join(base.config_dir, "_background.png"),
         )

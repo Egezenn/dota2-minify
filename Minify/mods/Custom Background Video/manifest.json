@@ -1,0 +1,10 @@
+{
+  "category": "backgrounds",
+  "settings": [
+    {
+      "key": "select_background",
+      "text": "Select Background Video",
+      "type": "button"
+    }
+  ]
+}
