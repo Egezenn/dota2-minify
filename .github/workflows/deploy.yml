@@ -19,6 +19,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Pull latest changes
+        run: git pull
+
       - name: Install uv
         if: github.event_name == 'workflow_dispatch' || github.event_name == 'workflow_call'
         uses: astral-sh/setup-uv@v5
