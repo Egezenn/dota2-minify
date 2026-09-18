@@ -21,7 +21,6 @@
   * [core.output](/development/symbols/core.output)
   * [core.plugin_sdk](/development/symbols/core.plugin_sdk)
   * [core.registry](/development/symbols/core.registry)
-  * [core.rerl](/development/symbols/core.rerl)
   * [core.steam](/development/symbols/core.steam)
   * [core.utils](/development/symbols/core.utils)
   * [helper](/development/symbols/helper)

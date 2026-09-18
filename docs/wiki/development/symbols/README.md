@@ -16,7 +16,6 @@
 - [core.output](/development/symbols/core.output) - Agnostic output interface
 - [core.plugin_sdk](/development/symbols/core.plugin_sdk) - Plugin SDK for Dota 2 Minify plugins.
 - [core.registry](/development/symbols/core.registry) - Central registry for plugins.
-- [core.rerl](/development/symbols/core.rerl)
 - [core.steam](/development/symbols/core.steam) - Module to find steam root and library that Dota2 is in (always accounts the Windows' executable path to find if used through an emulation layer).
 - [core.utils](/development/symbols/core.utils)
 - [ui.alerts](/development/symbols/ui.alerts)
