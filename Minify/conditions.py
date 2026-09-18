@@ -10,7 +10,7 @@ import vdf
 from core import base, constants, fs, log, mods_shared, output, steam
 
 workshop_installed = False
-workshop_required_methods = ["styling.css", "xml.json", "files_uncompiled"]
+workshop_required_methods = ["styling.css", "xml.json", "files_uncompiled", "remap.json"]
 
 
 def is_dota_running(text_tag, text_type):

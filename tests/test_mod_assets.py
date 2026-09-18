@@ -8,7 +8,7 @@ from core import base, utils
 
 def test_mod_assets_exist_in_gamepak():
     """
-    Validates that file paths declared in mod blacklists, replacers, and RERL rules
+    Validates that file paths declared in mod blacklists, replacers, and remap rules
     actually exist in the game pak. Only runs if gamepakcontents exists in the
     environment, else passes.
     """
@@ -56,13 +56,13 @@ def test_mod_assets_exist_in_gamepak():
                 if source and source not in gamepak_contents:
                     errors.append(f"mods/{entry.name}/replacer.json (source): {source}")
 
-        # 3. Validate rerl.json patterns
-        rerl_path = os.path.join(entry.path, "rerl.json")
-        if os.path.isfile(rerl_path):
-            with utils.open_utf8(rerl_path) as f:
+        # 3. Validate remap.json patterns
+        remap_path = os.path.join(entry.path, "remap.json")
+        if os.path.isfile(remap_path):
+            with utils.open_utf8(remap_path) as f:
                 rules = json.load(f)
             for target_pattern in rules:
                 if not any(fnmatch.fnmatch(f, target_pattern) for f in gamepak_contents):
-                    errors.append(f"mods/{entry.name}/rerl.json (target pattern matched nothing): {target_pattern}")
+                    errors.append(f"mods/{entry.name}/remap.json (target pattern matched nothing): {target_pattern}")
 
     assert not errors, "Non-existent asset paths found in mods:\n" + "\n".join(errors)
