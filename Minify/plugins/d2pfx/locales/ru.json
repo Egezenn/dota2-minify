@@ -1,0 +1,19 @@
+{
+  "button_close": "Закрыть",
+  "button_install": "УСТАНОВИТЬ",
+  "button_installing": "УСТАНОВКА...",
+  "button_refresh_data": "Обновить данные",
+  "button_remove": "УДАЛИТЬ",
+  "button_removing": "УДАЛЕНИЕ...",
+  "label_disable_mod": "Отключить мод",
+  "label_enable_mod": "Включить мод",
+  "label_loading_categories": "Загрузка категорий...",
+  "label_loading_mods": "Загрузка модов...",
+  "label_no_mods_found": "Моды в этой категории не найдены.",
+  "label_no_preview": "НЕТ ПРЕДПРОСМОТРА",
+  "label_preview": "Предпросмотр",
+  "label_select_category": "Выберите категорию",
+  "placeholder_search_categories": "Поиск категорий...",
+  "placeholder_search_mods": "Поиск модов...",
+  "setting_d2pfx_auto_refresh_catalogue": "Автообновление каталога D2PFX"
+}
