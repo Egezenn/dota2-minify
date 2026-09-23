@@ -88,6 +88,9 @@ def _main(
         is_eager=True,
     ),
 ):
+    base.HEADLESS = ctx.invoked_subcommand is not None
+    utils.setup_system()
+
     if ctx.invoked_subcommand is None:
         ui.launch()
 
@@ -207,7 +210,4 @@ def uninstall(
 
 
 if __name__ == "__main__":
-    has_subcommand = len(sys.argv) > 1 and sys.argv[1] not in ["-h", "--help", "-v", "--version"]
-    base.HEADLESS = bool(has_subcommand)
-    utils.setup_system()
     app()

@@ -61,6 +61,8 @@ class Migrations:
                         log.write_warning(f"Failed to remove redundant {src_name} in {mod}: {e}")
 
     def _migrate_rescomproot_and_bin(self):
+        if not base.FROZEN:
+            return
         legacy_bin = "bin"
         legacy_rescomp = os.path.join(legacy_bin, "rescomproot")
         target_rescomp = os.path.abspath(base.rescomp_override_dir)

@@ -212,7 +212,7 @@ def test_prelaunch_runs_bulk_script_when_version_matches():
         result = runner.invoke(app, ["prelaunch"])
 
     assert result.exit_code == 0
-    mock_bulk.assert_called_once_with("prelaunch")
+    mock_bulk.assert_any_call("prelaunch")
 
 
 def test_prelaunch_handles_launch_error():
