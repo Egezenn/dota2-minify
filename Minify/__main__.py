@@ -89,7 +89,8 @@ def _main(
     ),
 ):
     base.HEADLESS = ctx.invoked_subcommand is not None
-    utils.setup_system()
+    if ctx.invoked_subcommand not in ("config", "mods"):
+        utils.setup_system()
 
     if ctx.invoked_subcommand is None:
         ui.launch()
