@@ -10,7 +10,7 @@
   "Mute Taunt Sounds": "Silencia los sonidos de las burlas.",
   "Mute Voice Line Sounds": "Silencia los sonidos de línea de voz.",
   "OpenDotaGuides Guides": "Reemplaza las guías por defecto con las de OpenDotaGuides.\n\n> [!WARNING]\n> Se requiere que las configuraciones por defecto estén seleccionadas para verlas en el juego.\n\nFuente: https://github.com/Egezenn/OpenDotaGuides/releases/latest",
-  "Remove Foilage": "Elimina todos los arbustos, flores, rocas y cualquier otro objeto decorativo del suelo para que solo existan los bloques.\n\n> [!WARNING]\n> El terreno por defecto es requerido.",
+  "Remove Foliage": "Elimina todos los arbustos, flores, rocas y cualquier otro objeto decorativo del suelo para que solo existan los bloques.\n\n> [!WARNING]\n> El terreno por defecto es requerido.",
   "Remove Hero Renders": "Elimina las vistas previas de los héroes y las renderiza desde la UI.\n\nLa variable de consola `map_enable_portrait_worlds 0` logra el mismo objetivo, sin embargo te quedarás estancado en las pantallas de MVP.",
   "Remove Main Menu Background": "Elimina el fondo del menú principal.",
   "Remove Pings": "Elimina todas las partículas de ping y los sonidos.",
