@@ -249,11 +249,24 @@ def install_mod(params: Dict[str, Any] = None) -> Dict[str, Any]:
 
     def _download_preview():
         if preview_url and preview_dest:
-            dm.download_file(preview_url, preview_dest, emit_progress=False)
+            dm.download_file(
+                preview_url,
+                preview_dest,
+                emit_progress=False,
+                fallback_url=dm.to_hf_fallback(preview_url),
+            )
 
     with concurrent.futures.ThreadPoolExecutor(max_workers=2) as executor:
         future_preview = executor.submit(_download_preview) if preview_url else None
-        future_mod = executor.submit(dm.download_file, mod_url, mod_dest, None, f"{name} ({cat_id.upper()})")
+        future_mod = executor.submit(
+            dm.download_file,
+            mod_url,
+            mod_dest,
+            None,
+            f"{name} ({cat_id.upper()})",
+            True,
+            dm.to_hf_fallback(mod_url),
+        )
 
         mod_success = future_mod.result()
         if future_preview:
