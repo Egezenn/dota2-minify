@@ -315,8 +315,10 @@ def patcher():
 
         fs.create_dirs(helper.output_path)
         output.add_text("&compiling_terminal")
-        native_mods = vpk.new(constants.minify_dota_compile_output_path)
-        native_mods.save(os.path.join(helper.output_path, "pak66_dir.vpk"))
+        vpk_utils.pack(
+            constants.minify_dota_compile_output_path,
+            os.path.join(helper.output_path, "pak66_dir.vpk"),
+        )
 
         # ---------------------------------- STEP 7 ---------------------------------- #
         # -------------------------- Clean paths and inform -------------------------- #

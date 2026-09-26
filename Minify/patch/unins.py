@@ -21,7 +21,10 @@ def uninstall():
                 pak_path = os.path.join(path, item)
                 if os.path.isfile(pak_path) and re.fullmatch(pak_pattern, item):
                     if vpk_utils.is_minify_pak(pak_path):
-                        fs.remove_path(pak_path)
+                        prefix = item.split("_")[0]
+                        for sibling in os.listdir(path):
+                            if sibling.startswith(f"{prefix}_") and sibling.endswith(".vpk"):
+                                fs.remove_path(os.path.join(path, sibling))
 
     steam.remove_minify_lang()
     steam.restore_boot_language()
