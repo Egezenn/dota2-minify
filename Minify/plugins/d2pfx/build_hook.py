@@ -14,6 +14,7 @@ def scan_d2pfx_mods(mod_list):
     pfx_normal = {}  # mod_name: [vpk_paths]
     map_vpk_paths = []
     cursor_mod_paths = []
+    standalone_vpk_paths = []
 
     for mod_name in mod_list:
         if not mods_shared.get_state(mod_name):
@@ -41,21 +42,44 @@ def scan_d2pfx_mods(mod_list):
         if not vpk_files:
             continue
 
+        # Prevent pak66_dir.vpk from overflowing 2GB (signed 32-bit offset causes Dota crash: Failed to read 16 bytes)
+        remaining_vpks = []
+        for vpk_file in vpk_files:
+            fname = os.path.basename(vpk_file).lower()
+            fsize = os.path.getsize(vpk_file)
+            if fname.startswith("pak") and fname.endswith("_dir.vpk") and fname != "pak66_dir.vpk" and fsize > 100 * 1024 * 1024:
+                standalone_vpk_paths.append((mod_name, vpk_file))
+            else:
+                remaining_vpks.append(vpk_file)
+
+        if not remaining_vpks:
+            continue
+
         if cat == "terrains":
             if os.path.isdir(os.path.join(mod_path, "maps")):
-                map_vpk_paths.extend(vpk_files)
+                map_vpk_paths.extend(remaining_vpks)
             else:
-                pfx_normal[mod_name] = vpk_files
+                pfx_normal[mod_name] = remaining_vpks
         elif cat in plugin_main.RENAME_CATEGORIES:
-            pfx_high_priority[mod_name] = vpk_files
+            pfx_high_priority[mod_name] = remaining_vpks
         else:
-            pfx_normal[mod_name] = vpk_files
+            pfx_normal[mod_name] = remaining_vpks
 
-    return pfx_normal, pfx_high_priority, map_vpk_paths, cursor_mod_paths
+    return pfx_normal, pfx_high_priority, map_vpk_paths, cursor_mod_paths, standalone_vpk_paths
 
 
 def run_pre_build(mod_list):
-    pfx_normal, _, map_vpk_paths, cursor_mod_paths = scan_d2pfx_mods(mod_list)
+    pfx_normal, _, map_vpk_paths, cursor_mod_paths, standalone_vpk_paths = scan_d2pfx_mods(mod_list)
+
+    # Standalone large VPKs (e.g. Warcraft III voices) copied directly to prevent 2GB overflow
+    for mod_name, vpk_path in standalone_vpk_paths:
+        dest_file = os.path.join(helper.output_path, os.path.basename(vpk_path))
+        try:
+            if not os.path.exists(dest_file) or os.path.getsize(dest_file) != os.path.getsize(vpk_path):
+                shutil.copy2(vpk_path, dest_file)
+            output.add_text("&merged_mod", mod_name, indent=True)
+        except Exception:
+            log.write_warning("&failed_merge_mod", mod_name)
 
     # 1. Maps (dota.vpk)
     if map_vpk_paths:
@@ -138,7 +162,7 @@ def run_pre_build(mod_list):
 
 
 def run_post_build(mod_list):
-    _, pfx_high_priority, _, _ = scan_d2pfx_mods(mod_list)
+    _, pfx_high_priority, _, _, _ = scan_d2pfx_mods(mod_list)
 
     # High Priority VPKs (Override Layer)
     if pfx_high_priority:
