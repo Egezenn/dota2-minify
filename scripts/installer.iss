@@ -14,7 +14,7 @@ UninstallDisplayIcon={app}\Minify.exe
 Compression=lzma2
 SolidCompression=yes
 OutputDir=.
-OutputBaseFilename=Minify-Setup-{#AppVersion}
+OutputBaseFilename=Minify-Setup-v{#AppVersion}
 ; Ensure the app is closed before installing/updating
 CloseApplications=yes
 AppMutex=MinifyMutex
