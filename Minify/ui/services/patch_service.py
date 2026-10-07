@@ -68,8 +68,6 @@ class PatchService:
         def run_patch_thread() -> None:
             try:
                 patch.patcher()
-            except Exception as e:
-                output.add_text(f"Patch failed: {e}", msg_type="error")
             finally:
                 self._is_patching = False
                 if self._window:
@@ -98,8 +96,6 @@ class PatchService:
                     patch.unins.wipe()
                 else:
                     patch.unins.uninstall()
-            except Exception as e:
-                output.add_text(f"Uninstall failed: {e}", msg_type="error")
             finally:
                 self._is_patching = False
                 if self._window:

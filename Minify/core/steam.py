@@ -461,48 +461,41 @@ def get_steam_accounts():
     if not ROOT or not os.path.exists(os.path.join(ROOT, "userdata")):
         return accounts
 
-    try:
-        loginusers_map = get_loginusers_data()
-        user_ids = [
-            x
-            for x in os.listdir(os.path.join(ROOT, "userdata"))
-            if x.isdigit() and os.path.isdir(os.path.join(ROOT, "userdata", x))
-        ]
-        for user_id in user_ids:
-            if not os.path.exists(os.path.join(ROOT, "userdata", user_id, base.STEAM_DOTA_ID)):
-                continue
+    loginusers_map = get_loginusers_data()
+    user_ids = [
+        x
+        for x in os.listdir(os.path.join(ROOT, "userdata"))
+        if x.isdigit() and os.path.isdir(os.path.join(ROOT, "userdata", x))
+    ]
+    for user_id in user_ids:
+        if not os.path.exists(os.path.join(ROOT, "userdata", user_id, base.STEAM_DOTA_ID)):
+            continue
 
-            login_info = loginusers_map.get(user_id, {})
-            username = login_info.get("persona_name", "")
-            account_name = login_info.get("account_name", "")
-            timestamp = login_info.get("timestamp", 0)
+        login_info = loginusers_map.get(user_id, {})
+        username = login_info.get("persona_name", "")
+        account_name = login_info.get("account_name", "")
+        timestamp = login_info.get("timestamp", 0)
 
-            if not username:
-                localconfig_path = os.path.join(ROOT, "userdata", user_id, "config", "localconfig.vdf")
-                if os.path.exists(localconfig_path):
-                    try:
-                        with utils.open_utf8R(localconfig_path) as f:
-                            data = vdf.load(f)
-                            friends = data.get("UserLocalConfigStore", {}).get("friends", {})
-                            username = friends.get("PersonaName", "?")
-                    except Exception:
-                        username = "?"
-                else:
-                    username = "?"
+        if not username:
+            localconfig_path = os.path.join(ROOT, "userdata", user_id, "config", "localconfig.vdf")
+            if os.path.exists(localconfig_path):
+                with utils.open_utf8R(localconfig_path) as f:
+                    data = vdf.load(f)
+                    friends = data.get("UserLocalConfigStore", {}).get("friends", {})
+                    username = friends.get("PersonaName", "?")
+            else:
+                username = "?"
 
-            accounts.append(
-                {
-                    "id": user_id,
-                    "name": username,
-                    "account_name": account_name,
-                    "timestamp": timestamp,
-                }
-            )
+        accounts.append(
+            {
+                "id": user_id,
+                "name": username,
+                "account_name": account_name,
+                "timestamp": timestamp,
+            }
+        )
 
-        accounts.sort(key=lambda acc: acc["timestamp"], reverse=True)
-    except Exception:
-        log.write_warning("Failed to fetch steam accounts")
-
+    accounts.sort(key=lambda acc: acc["timestamp"], reverse=True)
     return accounts
 
 

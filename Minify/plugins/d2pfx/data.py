@@ -20,8 +20,9 @@ BLACKLIST = [
     "tools",
     "sites",
     "packs",
-    "huds",  # https://github.com/Egezenn/dota2-minify/issues/143
     "fonts",
+    "huds",  # Contains direct panorama overrides
+    "parts",  # ^
 ]
 
 

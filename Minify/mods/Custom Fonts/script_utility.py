@@ -42,10 +42,6 @@ def select_font():
 
     dest_path = os.path.join(base.config_dir, f"font{ext}")
 
-    try:
-        shutil.copy2(file_path, dest_path)
-    except Exception as e:
-        ui.alert(f"Error copying font file: {e}", msg_type="error")
-        return
+    shutil.copy2(file_path, dest_path)
 
     ui.alert(f"Successfully copied font to {os.path.basename(dest_path)} in config/.", msg_type="success")

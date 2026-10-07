@@ -54,7 +54,8 @@ def _merge_plugin_localizations(target_dict: dict, lang: str = "en"):
 
 def load_headless():
     global localization_dict, locale
-    locale = (config.get("locale") or "en").lower()
+    raw_locale = config.get("locale")
+    locale = (raw_locale if isinstance(raw_locale, str) else "en").lower()
     localization_dict = _load_dict(base.locales_dir, locale)
     _merge_plugin_localizations(localization_dict, locale)
 

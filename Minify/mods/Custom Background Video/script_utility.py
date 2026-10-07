@@ -42,11 +42,7 @@ def select_background():
 
     dest_path = os.path.join(base.config_dir, f"background{actual_ext}")
 
-    try:
-        shutil.copy2(file_path, dest_path)
-    except Exception as e:
-        ui.alert(f"Error copying file: {e}", msg_type="error")
-        return
+    shutil.copy2(file_path, dest_path)
 
     ui.alert(f"Successfully set background video to {os.path.basename(dest_path)}.", msg_type="success")
 

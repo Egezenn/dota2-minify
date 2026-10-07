@@ -234,11 +234,11 @@ def test_mod_settings_injection():
         mock_exec_func.assert_called_once()
 
     # Test reset_native_settings and reset_mod_settings
+    assert api.reset_native_settings() is True
     with (
         patch("core.config.set") as mock_config_set,
         patch("core.config.get", return_value={"TestMod": {"example_inputbox": "val"}}),
     ):
-        assert api.reset_native_settings() is True
         assert api.reset_mod_settings("TestMod") is True
         mock_config_set.assert_called_with("modconf", {})
 

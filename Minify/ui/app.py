@@ -215,51 +215,46 @@ class Api:
 
         output.add_text("Expanding Workshop Tools to config/rescomproot...")
         target_dir = base.rescomp_override_dir
-        try:
-            fs.create_dirs(target_dir)
-            extract_success = fs.extract_archive(zip_path, target_dir)
-            if not extract_success:
-                output.add_text("Failed to extract Workshop Tools archive.", msg_type="error")
-                return False
+        fs.create_dirs(target_dir)
+        extract_success = fs.extract_archive(zip_path, target_dir)
+        if not extract_success:
+            output.add_text("Failed to extract Workshop Tools archive.", msg_type="error")
+            return False
 
-            inner_dir = os.path.join(target_dir, "resourcecompiler")
-            if os.path.isdir(inner_dir):
-                for item in os.listdir(inner_dir):
-                    src = os.path.join(inner_dir, item)
-                    dst = os.path.join(target_dir, item)
-                    if os.path.exists(dst):
-                        fs.remove_path(dst)
-                    fs.move_path(src, dst)
-                fs.remove_path(inner_dir)
+        inner_dir = os.path.join(target_dir, "resourcecompiler")
+        if os.path.isdir(inner_dir):
+            for item in os.listdir(inner_dir):
+                src = os.path.join(inner_dir, item)
+                dst = os.path.join(target_dir, item)
+                if os.path.exists(dst):
+                    fs.remove_path(dst)
+                fs.move_path(src, dst)
+            fs.remove_path(inner_dir)
 
-            fs.remove_path(zip_path)
+        fs.remove_path(zip_path)
 
-            constants.recalc_rescomp_dirs()
+        constants.recalc_rescomp_dirs()
 
-            if (base.is_linux or base.is_mac) and os.path.exists(constants.dota_resource_compiler_path):
-                import stat
+        if (base.is_linux or base.is_mac) and os.path.exists(constants.dota_resource_compiler_path):
+            import stat
 
-                st = os.stat(constants.dota_resource_compiler_path)
-                os.chmod(
-                    constants.dota_resource_compiler_path,
-                    st.st_mode | stat.S_IXUSR | stat.S_IXGRP | stat.S_IXOTH,
-                )
+            st = os.stat(constants.dota_resource_compiler_path)
+            os.chmod(
+                constants.dota_resource_compiler_path,
+                st.st_mode | stat.S_IXUSR | stat.S_IXGRP | stat.S_IXOTH,
+            )
 
-            compiler_exists = os.path.exists(constants.dota_resource_compiler_path)
-            conditions.workshop_installed = compiler_exists
+        compiler_exists = os.path.exists(constants.dota_resource_compiler_path)
+        conditions.workshop_installed = compiler_exists
 
-            if compiler_exists:
-                output.add_text("Workshop Tools installed successfully!", msg_type="success")
-                return True
-            else:
-                output.add_text(
-                    f"resourcecompiler.exe was not found at {constants.dota_resource_compiler_path}",
-                    msg_type="error",
-                )
-                return False
-        except Exception as e:
-            log.write_crashlog(f"Error expanding Workshop Tools: {e}")
-            output.add_text(f"Error expanding Workshop Tools: {e}", msg_type="error")
+        if compiler_exists:
+            output.add_text("Workshop Tools installed successfully!", msg_type="success")
+            return True
+        else:
+            output.add_text(
+                f"resourcecompiler.exe was not found at {constants.dota_resource_compiler_path}",
+                msg_type="error",
+            )
             return False
 
     def get_plugin_tabs(self) -> List[Dict[str, Any]]:

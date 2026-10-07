@@ -67,7 +67,7 @@ original_listdir = os.listdir
 
 
 def fake_listdir(path):
-    if path == base.mods_dir:
+    if "/fake/steam" in str(path) or path == base.mods_dir:
         return []
     return original_listdir(path)
 
