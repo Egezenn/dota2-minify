@@ -189,7 +189,9 @@ def patcher():
                     if conditions.workshop_installed and xml_file and os.path.exists(xml_file):
                         with utils.open_utf8(xml_file) as file:
                             mod_xml = jsonc.load(file)
-                        for path, mods in mod_xml.items():
+                        effective_settings = manifest_utils.get_effective_settings(mod_cfg, config.get_mod(folder))
+                        processed_xml = xml_utils.process_mod_xml(mod_xml, effective_settings)
+                        for path, mods in processed_xml.items():
                             xml_modifications.setdefault(path, []).extend(mods)
 
                     if not game_contents_file_init:
@@ -202,7 +204,13 @@ def patcher():
 
                     # ------------------------------- blacklist.txt ------------------------------ #
                     if os.path.exists(blacklist_txt):
-                        blacklist.process(blacklist_txt, folder, blank_file_extensions)
+                        blacklist.process(
+                            blacklist_txt,
+                            folder,
+                            blank_file_extensions,
+                            mod_cfg=mod_cfg,
+                            mod_settings=config.get_mod(folder),
+                        )
 
                     # --------------------------------- styling.css --------------------------------- #
                     if conditions.workshop_installed and os.path.exists(styling_css):
@@ -217,11 +225,24 @@ def patcher():
                         )
 
                     # --------------------------------- replacer.csv --------------------------------- #
-                    replacer.process(replacer_file, folder, replacer_source_extracts, replacer_targets)
+                    replacer.process(
+                        replacer_file,
+                        folder,
+                        replacer_source_extracts,
+                        replacer_targets,
+                        mod_cfg=mod_cfg,
+                        mod_settings=config.get_mod(folder),
+                    )
 
                     # ---------------------------------- remap.json --------------------------------- #
                     if conditions.workshop_installed and os.path.exists(remap_file):
-                        remap_processor.process(remap_file, folder, dota_pak_contents)
+                        remap_processor.process(
+                            remap_file,
+                            folder,
+                            dota_pak_contents,
+                            mod_cfg=mod_cfg,
+                            mod_settings=config.get_mod(folder),
+                        )
 
             except Exception:
                 log.write_warning()

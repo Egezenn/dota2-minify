@@ -2,6 +2,7 @@ import os
 import re
 
 from core import base, fs, utils
+from patch import manifest_utils
 
 
 def apply_styles_to_file(item):
@@ -80,18 +81,8 @@ def parse_styling_file(styling_css, mod_cfg, folder, mod_settings, styling_dicti
     with utils.open_utf8(styling_css) as file:
         content = file.read()
 
-    # Fallback to manifest defaults
-    defaults = {
-        s["key"]: s["default"]
-        for s in mod_cfg.get("settings", [])
-        if isinstance(s, dict) and "key" in s and "default" in s
-    }
-
-    content = re.sub(
-        r"<&(.*?)>",
-        lambda m: str(mod_settings.get(m.group(1), defaults.get(m.group(1), m.group(0)))),
-        content,
-    )
+    settings = manifest_utils.get_effective_settings(mod_cfg, mod_settings)
+    content = manifest_utils.process_css_content(content, settings)
 
     matches = list(re.finditer(r"/\*\s*([cg]):(.*?)\s*\*/", content))
     for i, match in enumerate(matches):

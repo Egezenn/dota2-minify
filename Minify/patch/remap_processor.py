@@ -1,13 +1,17 @@
 import fnmatch
-import json
+try:
+    import jsonc as json
+except ImportError:
+    import json
 import os
 import subprocess
 
 import conditions
 from core import base, constants, fs, log, output, utils
+from patch import manifest_utils
 
 
-def process(remap_file: str, folder: str, dota_pak_contents) -> None:
+def process(remap_file: str, folder: str, dota_pak_contents, mod_cfg=None, mod_settings=None) -> None:
     """
     Processes remap.json for a mod, matching targeted compiled resources
     and remapping references in decompiled source files.
@@ -17,13 +21,48 @@ def process(remap_file: str, folder: str, dota_pak_contents) -> None:
 
     try:
         with utils.open_utf8(remap_file) as file:
-            rules: dict[str, dict[str, str]] = json.load(file)
+            rules: dict = json.load(file)
     except Exception as e:
         log.write_warning(f"Failed to parse remap.json for {folder}: {e}")
         return
 
-    for target_pattern, redirect_map in rules.items():
-        if not target_pattern or not redirect_map:
+    settings = manifest_utils.get_effective_settings(mod_cfg, mod_settings)
+
+    for target_pattern, rule_val in rules.items():
+        if not target_pattern or not rule_val or not isinstance(rule_val, dict):
+            continue
+
+        target_pattern = manifest_utils.interpolate_variables(target_pattern, settings)
+
+        cond = rule_val.get("if") or rule_val.get("condition")
+        if cond is not None and not manifest_utils.evaluate_condition(cond, settings):
+            continue
+
+        raw_redirects = (
+            rule_val.get("redirects")
+            if "redirects" in rule_val and isinstance(rule_val["redirects"], dict)
+            else rule_val
+        )
+
+        redirect_map: dict[str, str] = {}
+        for src_ref, dst_ref in raw_redirects.items():
+            if src_ref in ("if", "condition", "redirects"):
+                continue
+            if isinstance(dst_ref, str):
+                src_clean = manifest_utils.interpolate_variables(src_ref, settings)
+                dst_clean = manifest_utils.interpolate_variables(dst_ref, settings)
+                redirect_map[src_clean] = dst_clean
+            elif isinstance(dst_ref, dict):
+                sub_cond = dst_ref.get("if") or dst_ref.get("condition")
+                if sub_cond is not None and not manifest_utils.evaluate_condition(sub_cond, settings):
+                    continue
+                target_str = dst_ref.get("target") or dst_ref.get("dst") or dst_ref.get("to")
+                if target_str:
+                    src_clean = manifest_utils.interpolate_variables(src_ref, settings)
+                    dst_clean = manifest_utils.interpolate_variables(str(target_str), settings)
+                    redirect_map[src_clean] = dst_clean
+
+        if not redirect_map:
             continue
 
         target_paths = []

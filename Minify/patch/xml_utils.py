@@ -217,3 +217,46 @@ def apply_modifications(xml_file, modifications):
         tree.write(xml_file, encoding="utf-8", xml_declaration=False)
     except TypeError:
         tree.write(xml_file)
+
+
+def process_mod_xml(mod_xml: dict, settings: dict) -> dict[str, list[dict]]:
+    """
+    Evaluates conditionality and variable interpolation for rules defined in xml.json.
+    """
+    from patch import manifest_utils
+
+    result: dict[str, list[dict]] = {}
+    if not isinstance(mod_xml, dict):
+        return result
+
+    for path, mods in mod_xml.items():
+        if not path or not isinstance(mods, list):
+            continue
+
+        clean_path = manifest_utils.interpolate_variables(str(path), settings)
+        processed_mods = []
+
+        for mod in mods:
+            if not isinstance(mod, dict):
+                continue
+
+            cond = mod.get("if") or mod.get("condition")
+            if cond is not None and not manifest_utils.evaluate_condition(cond, settings):
+                continue
+
+            clean_mod = {}
+            for k, v in mod.items():
+                if k in ("if", "condition"):
+                    continue
+                if isinstance(v, str):
+                    clean_mod[k] = manifest_utils.interpolate_variables(v, settings)
+                else:
+                    clean_mod[k] = v
+
+            processed_mods.append(clean_mod)
+
+        if processed_mods:
+            result.setdefault(clean_path, []).extend(processed_mods)
+
+    return result
+

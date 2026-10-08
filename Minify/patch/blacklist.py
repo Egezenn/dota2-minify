@@ -4,37 +4,42 @@ import subprocess
 from concurrent.futures import ThreadPoolExecutor
 
 from core import base, constants, fs, log, utils
+from patch import manifest_utils
 
 
-def process(blacklist_txt, folder, blank_file_extensions):
+def process(blacklist_txt, folder, blank_file_extensions, mod_cfg=None, mod_settings=None):
     with utils.open_utf8(blacklist_txt) as file:
-        lines = file.readlines()
-        blacklist_data = []
-        blacklist_data_exclusions = set()
-        blank_exts = tuple(blank_file_extensions)
+        raw_lines = file.readlines()
 
-        for index, line in enumerate(lines):
-            line = line.strip()
+    settings = manifest_utils.get_effective_settings(mod_cfg, mod_settings)
+    lines = manifest_utils.process_blacklist_lines(raw_lines, settings)
 
-            if not line or line.startswith("#"):
-                continue
+    blacklist_data = []
+    blacklist_data_exclusions = set()
+    blank_exts = tuple(blank_file_extensions)
 
-            elif line.startswith((">>", "**")):
-                blacklist_data.extend(process_dir(index, line, folder))
+    for index, line in enumerate(lines):
+        line = line.strip()
 
-            elif line.startswith("*-"):
-                blacklist_data_exclusions.update(process_dir(index, line, folder))
+        if not line or line.startswith("#"):
+            continue
 
-            elif line.startswith("--"):
-                blacklist_data_exclusions.add(line[2:])
+        elif line.startswith((">>", "**")):
+            blacklist_data.extend(process_dir(index, line, folder))
 
+        elif line.startswith("*-"):
+            blacklist_data_exclusions.update(process_dir(index, line, folder))
+
+        elif line.startswith("--"):
+            blacklist_data_exclusions.add(line[2:])
+
+        else:
+            if line.endswith(blank_exts):
+                blacklist_data.append(line)
             else:
-                if line.endswith(blank_exts):
-                    blacklist_data.append(line)
-                else:
-                    log.write_warning(
-                        f"[Invalid Extension] '{line}' in 'mods/{folder}/blacklist.txt' [line: {index + 1}] does not end in one of the valid extensions -> {blank_file_extensions}"
-                    )
+                log.write_warning(
+                    f"[Invalid Extension] '{line}' in 'mods/{folder}/blacklist.txt' [line: {index + 1}] does not end in one of the valid extensions -> {blank_file_extensions}"
+                )
 
     blacklist_data = [item for item in blacklist_data if item not in blacklist_data_exclusions]
 
