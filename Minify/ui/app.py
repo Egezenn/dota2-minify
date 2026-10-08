@@ -280,6 +280,9 @@ def launch() -> None:
             msg_type="error",
         )
 
+    if base.is_win:
+        os.environ.setdefault("WEBVIEW2_ADDITIONAL_BROWSER_ARGUMENTS", "--disable-gpu")  # #186
+
     debug_mode = bool(config.get("debug_env"))
     webview.settings["OPEN_DEVTOOLS_IN_DEBUG"] = False
     webview.settings["ALLOW_FILE_URLS"] = True
@@ -347,27 +350,23 @@ def is_webview_available() -> bool:
 
 
 def is_webview2_installed() -> bool:
-    import winreg
-
-    guids = [
-        "{F3017226-FE2A-4295-8BDF-00C3A9A7E4C5}",  # Microsoft Edge WebView2 Runtime
-        "{2CD8A007-E189-409D-A2C8-9AF4EF3C72AA}",  # WebView2 Beta
-        "{0D50BFEC-CD6A-4F9A-964C-C7416E3ACB10}",  # WebView2 Dev
-        "{65C35B14-6C1D-4122-AC46-7148CC9D6497}",  # WebView2 Canary
+    candidate_dirs = [
+        os.path.join(
+            os.environ.get("ProgramFiles(x86)", r"C:\Program Files (x86)"), "Microsoft", "EdgeWebView", "Application"
+        ),
+        os.path.join(os.environ.get("ProgramFiles", r"C:\Program Files"), "Microsoft", "EdgeWebView", "Application"),
+        os.path.join(os.environ.get("LOCALAPPDATA", ""), "Microsoft", "EdgeWebView", "Application"),
     ]
-    for root in (winreg.HKEY_LOCAL_MACHINE, winreg.HKEY_CURRENT_USER):
-        for guid in guids:
-            for sub in (
-                rf"SOFTWARE\Microsoft\EdgeUpdate\Clients\{guid}",
-                rf"SOFTWARE\WOW6432Node\Microsoft\EdgeUpdate\Clients\{guid}",
-            ):
-                try:
-                    with winreg.OpenKey(root, sub) as key:
-                        val, _ = winreg.QueryValueEx(key, "pv")
-                        if val and val != "0.0.0.0":
-                            return True
-                except OSError:
-                    pass
+
+    for base_dir in candidate_dirs:
+        if not base_dir or not os.path.isdir(base_dir):
+            continue
+        try:
+            for _, _, files in os.walk(base_dir):
+                if "msedgewebview2.exe" in files:
+                    return True
+        except OSError:
+            pass
     return False
 
 
