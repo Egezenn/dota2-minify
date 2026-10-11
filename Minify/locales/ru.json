@@ -62,6 +62,7 @@
   "section_advanced_settings": "Дополнительные настройки",
   "section_application_settings": "Параметры приложения",
   "setting_apply_for_all": "Применить все для всех пользователей",
+  "setting_fix_options": "Обработка параметра языка (текущий ID)",
   "setting_locale": "Язык интерфейса",
   "setting_output_locale": "Язык игры",
   "setting_steam_id": "Активный пользователь Steam",
