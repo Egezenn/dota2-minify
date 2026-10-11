@@ -7,6 +7,7 @@
 
   interface SettingItem {
     key: string;
+    value_key?: string;
     text: string;
     type: string;
     default?: any;
@@ -14,6 +15,7 @@
     mod_display_name?: string | null;
     plugin?: string | null;
     force?: boolean;
+    advanced?: boolean;
     items?: Array<string | { value: string; label: string }>;
     var_type?: "int" | "float";
     step?: number;
@@ -54,7 +56,7 @@
   }
 
   async function updateSetting(item: SettingItem, newValue: any) {
-    values[item.key] = newValue;
+    values[item.value_key ?? item.key] = newValue;
     values = { ...values };
 
     if (item.mod) {
@@ -80,7 +82,11 @@
   }
 
   function getItemValue(item: SettingItem, currentValues = values): any {
-    return currentValues[item.key] ?? item.default;
+    return currentValues[item.value_key ?? item.key] ?? item.default;
+  }
+
+  function getItemKey(item: SettingItem): string {
+    return item.value_key ?? item.key;
   }
 
   function getListValue(item: SettingItem, currentValues = values): string[] {
@@ -101,11 +107,12 @@
   }
 
   function addListEntry(item: SettingItem) {
-    const inputVal = (newListItemInputs[item.key] || "").trim();
+    const itemKey = getItemKey(item);
+    const inputVal = (newListItemInputs[itemKey] || "").trim();
     if (!inputVal) return;
     const list = getListValue(item);
     list.push(inputVal);
-    newListItemInputs[item.key] = "";
+    newListItemInputs[itemKey] = "";
     newListItemInputs = { ...newListItemInputs };
     updateSetting(item, list);
   }
@@ -190,7 +197,7 @@
           </button>
         </div>
         <div class="section-content">
-          {#each items as item (item.key)}
+          {#each items.filter((item) => sectionTitle !== "Application Settings" || !item.advanced) as item (getItemKey(item))}
             {#if item.type === "checkbox"}
               <label class="setting-item-checkbox">
                 <input
@@ -308,7 +315,7 @@
                       type="text"
                       class="setting-input"
                       placeholder={$t("placeholder_add_item")}
-                      bind:value={newListItemInputs[item.key]}
+                      bind:value={newListItemInputs[getItemKey(item)]}
                       on:keydown={(e) => {
                         if (e.key === "Enter") addListEntry(item);
                       }}
@@ -326,6 +333,42 @@
               </div>
             {/if}
           {/each}
+          {#if sectionTitle === "Application Settings"}
+            <details class="advanced-settings">
+              <summary>{$t("section_advanced_settings")}</summary>
+              <div class="section-content">
+                {#each items.filter((item) => item.advanced) as item (getItemKey(item))}
+                  {#if item.type === "checkbox"}
+                    <label class="setting-item-checkbox">
+                      <input
+                        type="checkbox"
+                        checked={Boolean(getItemValue(item, values))}
+                        on:change={(e) => updateSetting(item, e.currentTarget.checked)}
+                      />
+                      <span class="setting-text">{getSettingLabel(item)}</span>
+                    </label>
+                  {:else if item.type === "combo"}
+                    <div class="setting-item-row">
+                      <span class="setting-label">{getSettingLabel(item)}</span>
+                      <select
+                        class="setting-select"
+                        value={getItemValue(item, values) ?? ""}
+                        on:change={(e) => updateSetting(item, e.currentTarget.value)}
+                      >
+                        {#each item.items || [] as option}
+                          {#if typeof option === "object" && option !== null}
+                            <option value={option.value}>{option.label}</option>
+                          {:else}
+                            <option value={option}>{option}</option>
+                          {/if}
+                        {/each}
+                      </select>
+                    </div>
+                  {/if}
+                {/each}
+              </div>
+            </details>
+          {/if}
         </div>
       </div>
     {/each}
@@ -455,6 +498,20 @@
     display: flex;
     flex-direction: column;
     gap: 10px;
+  }
+
+  .advanced-settings {
+    border-top: 1px solid var(--border-color, #000);
+    padding-top: 8px;
+  }
+
+  .advanced-settings summary {
+    font-size: 12px;
+    cursor: pointer;
+  }
+
+  .advanced-settings .section-content {
+    padding-top: 10px;
   }
 
   .setting-item-checkbox {

@@ -110,8 +110,6 @@ def evaluate_condition(condition_expr: Any, settings: Dict[str, Any]) -> bool:
     - None / True -> True
     - False -> False
     - "key" -> is_truthy(settings.get("key"))
-    - "key:true" / "key:false" -> is_truthy(settings.get("key")) == expected_bool
-    - "key:some_value" -> str(settings.get("key", "")).strip().lower() == "some_value"
     """
     if condition_expr is None or condition_expr is True:
         return True
@@ -125,22 +123,7 @@ def evaluate_condition(condition_expr: Any, settings: Dict[str, Any]) -> bool:
     if not condition_expr:
         return True
 
-    if ":" in condition_expr:
-        key, expected_val = condition_expr.split(":", 1)
-        key = key.strip()
-        expected_val = expected_val.strip().lower()
-        actual_val = settings.get(key)
-
-        if expected_val in ("true", "1", "yes"):
-            return is_truthy(actual_val)
-        elif expected_val in ("false", "0", "no"):
-            return not is_truthy(actual_val)
-        else:
-            return str(actual_val).strip().lower() == expected_val
-    else:
-        key = condition_expr
-        actual_val = settings.get(key)
-        return is_truthy(actual_val)
+    return is_truthy(settings.get(condition_expr))
 
 
 def interpolate_variables(text: str, settings: Dict[str, Any]) -> str:

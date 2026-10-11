@@ -24,6 +24,7 @@
     "key": "opt_into_rcs",
     "text": "&setting_opt_into_rcs",
     "default": false,
+    "advanced": true,
     "type": "checkbox"
   },
   {
@@ -42,6 +43,7 @@
     "key": "steam_id",
     "text": "&setting_steam_id",
     "default": "",
+    "advanced": true,
     "type": "combo",
     "items": []
   },
@@ -49,12 +51,14 @@
     "key": "apply_for_all",
     "text": "&setting_apply_for_all",
     "default": true,
+    "advanced": true,
     "type": "checkbox"
   },
   {
     "key": "opt_out_vpk_metadata",
     "text": "&setting_opt_out_vpk_metadata",
     "default": false,
+    "advanced": true,
     "type": "checkbox"
   }
 ]

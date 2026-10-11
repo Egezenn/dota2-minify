@@ -1,0 +1,106 @@
+{
+  "settings": [
+    {
+      "key": "remove_hero_portraits",
+      "text": "Remove hero portraits",
+      "type": "checkbox",
+      "default": false
+    },
+    {
+      "key": "remove_stat_filters",
+      "text": "Remove stat filters from search",
+      "type": "checkbox",
+      "default": false
+    },
+    {
+      "key": "remove_dota_plus_ad",
+      "text": "Remove Dota Plus stats banner",
+      "type": "checkbox",
+      "default": false
+    },
+    {
+      "key": "remove_play_backgrounds",
+      "text": "Remove play button backgrounds and dashboard blur",
+      "type": "checkbox",
+      "default": false
+    },
+    {
+      "key": "remove_ability_details",
+      "text": "Remove ability detail elements",
+      "type": "checkbox",
+      "default": false
+    },
+    {
+      "key": "remove_madstone_animations",
+      "text": "Remove madstone animations",
+      "type": "checkbox",
+      "default": false
+    },
+    {
+      "key": "remove_tooltip_transitions",
+      "text": "Remove tooltip transitions",
+      "type": "checkbox",
+      "default": false
+    },
+    {
+      "key": "remove_popup_dims_and_blurs",
+      "text": "Remove popup dimming and blurring",
+      "type": "checkbox",
+      "default": false
+    },
+    {
+      "key": "expand_pregame",
+      "text": "Expand pregame guide panel",
+      "type": "checkbox",
+      "default": false
+    },
+    {
+      "key": "unlist_friends_sections",
+      "text": "Hide selected friends sections",
+      "type": "checkbox",
+      "default": false
+    },
+    {
+      "key": "change_item_action_colors",
+      "text": "Change item action menu colors",
+      "type": "checkbox",
+      "default": false
+    },
+    {
+      "key": "shrink_shop_ui",
+      "text": "Shrink shop UI and remove animation",
+      "type": "checkbox",
+      "default": false
+    },
+    {
+      "key": "hide_monster_hunter_overlay",
+      "text": "Hide Monster Hunter hero overlay",
+      "type": "checkbox",
+      "default": false
+    },
+    {
+      "key": "hide_hero_badge_model",
+      "text": "Hide hero badge model",
+      "type": "checkbox",
+      "default": false
+    },
+    {
+      "key": "hide_secondary_ability_bar",
+      "text": "Hide seasonal secondary ability bar",
+      "type": "checkbox",
+      "default": false
+    },
+    {
+      "key": "hide_last_match_details",
+      "text": "Hide last match details",
+      "type": "checkbox",
+      "default": false
+    },
+    {
+      "key": "hide_event_containers",
+      "text": "Hide event containers",
+      "type": "checkbox",
+      "default": false
+    }
+  ]
+}

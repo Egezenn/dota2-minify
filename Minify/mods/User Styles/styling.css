@@ -1,3 +1,4 @@
+/* if:remove_hero_portraits */
 /* g:panorama/styles/hud/hud_reborn */
 /* remove hero portraits */
 #PortraitGroup {
@@ -18,24 +19,33 @@
   z-index: 1;
 }
 
+/* endif */
+
 /* ----------------------------------------------------- */
 
+/* if:remove_stat_filters */
 /* g:panorama/styles/hud/dota_hud_shop_search_results */
 /* remove stat filters from search */
 #SearchResultsStatToggles {
   visibility: collapse;
 }
 
+/* endif */
+
 /* ----------------------------------------------------- */
 
+/* if:remove_dota_plus_ad */
 /* g:panorama/styles/dashboard_page_profile_hero_stats */
 /* remove dota+ ad banner from last matches */
 #DotaPlusStatsBanner {
   visibility: collapse;
 }
 
+/* endif */
+
 /* ----------------------------------------------------- */
 
+/* if:remove_play_backgrounds */
 /* g:panorama/styles/play */
 /* remove play button backgrounds */
 .PlayTabBackgroundImage {
@@ -58,8 +68,11 @@ DOTADashboard.PopupBackgroundBlur #FriendMenu {
   saturation: 1;
 }
 
+/* endif */
+
 /* ----------------------------------------------------- */
 
+/* if:remove_ability_details */
 /* g:panorama/styles/ability_details */
 /* remove useless item info */
 #Contents.AbilityContents {
@@ -85,8 +98,11 @@ DOTAAbilityDetails {
   visibility: collapse;
 }
 
+/* endif */
+
 /* ----------------------------------------------------- */
 
+/* if:remove_madstone_animations */
 /* g:panorama/styles/hud/hud_reborn */
 /* remove madstone animations */
 #inventory_neutral_level_up .NeutralLevelUpAvailableGlow,
@@ -98,16 +114,22 @@ DOTAAbilityDetails {
   animation-name: none;
 }
 
+/* endif */
+
 /* ----------------------------------------------------- */
 
+/* if:remove_tooltip_transitions */
 /* c:panorama/styles/tooltips/tooltip_base */
 /* remove tooltip transitions */
 .TooltipContainer {
   transition-duration: 0s;
 }
 
+/* endif */
+
 /* ----------------------------------------------------- */
 
+/* if:remove_popup_dims_and_blurs */
 /* c:panorama/styles/popups/popup_manager */
 /* remove dims & blurs */
 #BlurBackground,
@@ -115,8 +137,11 @@ DOTAAbilityDetails {
   visibility: collapse;
 }
 
+/* endif */
+
 /* ----------------------------------------------------- */
 
+/* if:expand_pregame */
 /* g:panorama/styles/hud/dota_hud_pregame */
 /* expand pregame after selection ui */
 #RightContainer {
@@ -160,8 +185,11 @@ DOTAHudPreGame .RightColumn {
   width: 100%;
 }
 
+/* endif */
+
 /* ----------------------------------------------------- */
 
+/* if:unlist_friends_sections */
 /* g:panorama/styles/friend_menu */
 /* unlist some friends sections */
 #GuildMembersOnline.Collapsed,
@@ -176,8 +204,11 @@ DOTAHudPreGame .RightColumn {
 /* #FriendsOffline.Collapsed */
 /* #FriendsPending.Collapsed */
 
+/* endif */
+
 /* ----------------------------------------------------- */
 
+/* if:change_item_action_colors */
 /* g:panorama/styles/hud/context_menu_inventory_item */
 /* change the color of item action menu backgrounds */
 .ShowMarkForSellNewBadge #MarkForSellNewBadge {
@@ -223,8 +254,11 @@ DOTAHudPreGame .RightColumn {
 /* #DropImmediate */
 /* #ConsumeItem */
 
+/* endif */
+
 /* ----------------------------------------------------- */
 
+/* if:shrink_shop_ui */
 /* g:panorama/styles/hud/dota_hud_shop */
 /* make shop ui smaller, remove it's animation (may cause defects in grid listing) */
 DOTAHUDShop {
@@ -232,41 +266,58 @@ DOTAHUDShop {
   ui-scale: 90%;
 }
 
+/* endif */
+
 /* ----------------------------------------------------- */
 
+/* if:hide_monster_hunter_overlay */
 /* g:panorama/styles/hero_grid_new */
 /* new weird gray mh overlay? */
 .Season_MonsterHunter #MonsterHunterHeroAtlasProgressionOverlay {
   visibility: collapse;
 }
 
+/* endif */
+
 /* ----------------------------------------------------- */
 
+/* if:hide_hero_badge_model */
 /* g:panorama/styles/hero_badge  */
 DOTAHeroBadge.ModelStyle > DOTAScenePanel {
   visibility: collapse;
 }
 
+/* endif */
+
 /* ----------------------------------------------------- */
 
+/* if:hide_secondary_ability_bar */
 /* g:panorama/styles/hud/hud_reborn */
 /* removes sesonal ability bar(snowballs, penguins, etc.) */
 #SecondaryAbilityContainer {
   visibility: collapse;
 }
 
+/* endif */
+
 /* ----------------------------------------------------- */
 
+/* if:hide_last_match_details */
 /* removes the last match details */
 .OnHomePage #MissingDataContainer,
 .OnHomePage #DetailsContainer {
   visibility: collapse;
 }
 
+/* endif */
+
 /* ----------------------------------------------------- */
 
+/* if:hide_event_containers */
 /* g:panorama/styles/dashboard_page_home */
 /* removes the event containers */
 #FrontpageContents {
   visibility: collapse;
 }
+
+/* endif */

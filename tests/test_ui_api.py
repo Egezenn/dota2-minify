@@ -210,13 +210,13 @@ def test_mod_settings_injection():
         assert len(mod_items) == 8
 
         # Verify values
-        assert values["example_inputbox"] == "custom_val"
-        assert values["example_checkbox"] is False
-        assert values["example_combo"] == "Value 1"
-        assert values["example_number"] == 10
-        assert values["example_slider"] == 50
-        assert values["example_color"] == "#ff0000ff"
-        assert values["example_list"] == ["Item 1", "Item 2"]
+        assert values["mod:TestMod:example_inputbox"] == "custom_val"
+        assert values["mod:TestMod:example_checkbox"] is False
+        assert values["mod:TestMod:example_combo"] == "Value 1"
+        assert values["mod:TestMod:example_number"] == 10
+        assert values["mod:TestMod:example_slider"] == 50
+        assert values["mod:TestMod:example_color"] == "#ff0000ff"
+        assert values["mod:TestMod:example_list"] == ["Item 1", "Item 2"]
 
     # Test set_setting with mod setting
     with patch("core.config.set_mod") as mock_set_mod, patch("core.config.get_mod", return_value={}):

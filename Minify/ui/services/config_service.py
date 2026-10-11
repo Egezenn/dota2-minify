@@ -167,10 +167,14 @@ class ConfigService:
 
         schema_entry = {
             "key": key,
+            "value_key": f"mod:{mod_folder}:{key}" if mod_folder else key,
             "text": item.get("text", key),
             "type": stype_str,
             "default": default_val,
         }
+
+        if item.get("advanced") is True:
+            schema_entry["advanced"] = True
 
         if mod_folder:
             schema_entry["mod"] = mod_folder
@@ -255,7 +259,7 @@ class ConfigService:
                                 parsed = self.parse_setting_item(item, plugin_folder=plugin_folder)
                                 if parsed:
                                     settings_schema.append(parsed)
-                                    values[parsed["key"]] = config.get(parsed["key"], parsed["default"])
+                                    values[parsed["value_key"]] = config.get(parsed["key"], parsed["default"])
 
         # Mod manifest settings discovery
         if os.path.exists(base.mods_dir):
@@ -285,7 +289,7 @@ class ConfigService:
                             parsed["mod_display_name"] = str(cfg["name"])
                         mod_store = config.get_mod(mod_folder, {})
                         cur_val = mod_store.get(parsed["key"], parsed["default"])
-                        values[parsed["key"]] = cur_val
+                        values[parsed["value_key"]] = cur_val
                         settings_schema.append(parsed)
 
         return {"schema": settings_schema, "values": values}

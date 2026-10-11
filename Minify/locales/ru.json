@@ -59,6 +59,7 @@
   "script_execution": "Выполнение скрипта {0} на этапе \"{1}\".",
   "script_no_main": "{0} \"{1}\" скрипт не имеет функции main!",
   "script_success": "Успешно выполнен скрипт {0} \"{1}\".",
+  "section_advanced_settings": "Дополнительные настройки",
   "section_application_settings": "Параметры приложения",
   "setting_apply_for_all": "Применить все для всех пользователей",
   "setting_locale": "Язык интерфейса",
