@@ -51,7 +51,8 @@ var XmlInspector;
     for (const key of keysToCheck) {
       try {
         const val = panel[key];
-        if (val === undefined || val === null || val === "" || typeof val === "function" || typeof val === "object") continue;
+        if (val === undefined || val === null || val === "" || typeof val === "function" || typeof val === "object")
+          continue;
         if (key === "visible" && (val === true || val === "true")) continue;
         if (key === "hittest" && (val === true || val === "true")) continue;
         if (key === "hittestchildren" && (val === true || val === "true")) continue;

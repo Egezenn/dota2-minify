@@ -90,7 +90,9 @@ def pack(source_dir, output_vpk_dir_path, chunk_size: int | None = DEFAULT_VPK_C
                         current_chunk_file = open_chunk_file(current_chunk_idx)
 
                     crc = 0
-                    file_offset = current_chunk_file.tell() - embedded_data_offset if embedded else current_chunk_file.tell()
+                    file_offset = (
+                        current_chunk_file.tell() - embedded_data_offset if embedded else current_chunk_file.tell()
+                    )
                     with open(src_path, "rb") as f:
                         while chunk := f.read(65536):
                             crc = binascii.crc32(chunk, crc)
@@ -126,9 +128,7 @@ def pack(source_dir, output_vpk_dir_path, chunk_size: int | None = DEFAULT_VPK_C
         # VPK2 header: signature (0x55aa1234), version (2), tree_length,
         # embed_chunk_len, archive_md5_len, self_hashes_len (48), sig_len (0)
         embed_chunk_length = current_chunk_size if embedded else 0
-        f.write(
-            struct.pack("3I4I", 0x55AA1234, 2, tree_length, embed_chunk_length, len(archive_md5_entries), 48, 0)
-        )
+        f.write(struct.pack("3I4I", 0x55AA1234, 2, tree_length, embed_chunk_length, len(archive_md5_entries), 48, 0))
         header_len = f.tell()
 
         tree_bytes = bytearray()
