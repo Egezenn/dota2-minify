@@ -52,18 +52,6 @@
     "type": "checkbox"
   },
   {
-    "key": "launch_dota_after_patch",
-    "text": "&setting_launch_dota_after_patch",
-    "default": false,
-    "type": "checkbox"
-  },
-  {
-    "key": "kill_self_after_patch",
-    "text": "&setting_kill_self_after_patch",
-    "default": false,
-    "type": "checkbox"
-  },
-  {
     "key": "opt_out_vpk_metadata",
     "text": "&setting_opt_out_vpk_metadata",
     "default": false,

@@ -82,8 +82,6 @@
   "section_application_settings": "Application Settings",
   "setting_apply_for_all": "Apply everything for all users",
   "setting_fix_options": "Handle language option (current ID)",
-  "setting_kill_self_after_patch": "Close Minify after patching",
-  "setting_launch_dota_after_patch": "Launch Dota2 after patching",
   "setting_locale": "Interface Language",
   "setting_opt_into_rcs": "Opt into RCs",
   "setting_opt_out_vpk_metadata": "Opt-out of VPK metadata",

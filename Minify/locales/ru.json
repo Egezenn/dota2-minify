@@ -61,8 +61,6 @@
   "script_success": "Успешно выполнен скрипт {0} \"{1}\".",
   "section_application_settings": "Параметры приложения",
   "setting_apply_for_all": "Применить все для всех пользователей",
-  "setting_kill_self_after_patch": "Закрыть Minify после применения патча",
-  "setting_launch_dota_after_patch": "Запустить Dota2 после применения патча",
   "setting_locale": "Язык интерфейса",
   "setting_output_locale": "Язык игры",
   "setting_steam_id": "Активный пользователь Steam",

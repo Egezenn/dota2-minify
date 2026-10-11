@@ -53,7 +53,6 @@ DOTA_TOOLS_EXECUTABLE_PATH = os.path.join("steamapps", "common", "dota 2 beta", 
 DOTA_EXECUTABLE_PATH_FALLBACK = os.path.join("steamapps", "common", "dota 2 beta", "game", "bin", "win64", "dota2.exe")
 
 STEAM_DOTA_ID = "570"
-STEAM_DOTA_WORKSHOP_TOOLS_ID = "313250"
 
 # static directory names
 if FROZEN:

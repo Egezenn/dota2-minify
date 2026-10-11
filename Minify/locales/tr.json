@@ -82,8 +82,6 @@
   "section_application_settings": "Uygulama Ayarları",
   "setting_apply_for_all": "Tüm kullanıcılar için her şeyi uygula",
   "setting_fix_options": "Dil seçeneğini kontrol et (şu anki ID)",
-  "setting_kill_self_after_patch": "Minify'ı yamalamadan sonra kapat",
-  "setting_launch_dota_after_patch": "Yamalamadan sonra Dota2'yi başlat",
   "setting_locale": "Arayüz Dili",
   "setting_opt_into_rcs": "RC'lere katıl",
   "setting_opt_out_vpk_metadata": "VPK meta verilerinden çekil",

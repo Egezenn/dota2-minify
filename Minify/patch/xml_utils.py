@@ -107,6 +107,8 @@ def ensure_unique_include(root, container_tag, src_value):
 
 
 def apply_modifications(xml_file, modifications):
+    if not modifications:
+        return
     if not os.path.exists(xml_file):
         log.write_warning(f"[Missing XML] '{xml_file}' not found; skipping modifications")
         return
@@ -255,7 +257,7 @@ def process_mod_xml(mod_xml: dict, settings: dict) -> dict[str, list[dict]]:
 
             processed_mods.append(clean_mod)
 
-        if processed_mods:
+        if processed_mods or not mods:
             result.setdefault(clean_path, []).extend(processed_mods)
 
     return result

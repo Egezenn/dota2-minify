@@ -4,7 +4,6 @@ import os
 import shutil
 import subprocess
 import time
-import webbrowser
 from concurrent.futures import ThreadPoolExecutor
 
 import jsonc
@@ -404,9 +403,6 @@ def patcher():
         if os.path.exists(base.log_warnings) and os.path.getsize(base.log_warnings) != 0:
             output.add_text("&minify_encountered_errors_terminal", msg_type="warning")
         playsound3.playsound(os.path.join(base.sounds_dir, "success.wav"), block=False)
-
-        if config.get("launch_dota_after_patch"):
-            webbrowser.open(f"steam://rungameid/{base.STEAM_DOTA_ID}")
 
     # chimes are from pixabay.com/sound-effects/chime-74910/
     except (PermissionError, playsound3.PlaysoundException):

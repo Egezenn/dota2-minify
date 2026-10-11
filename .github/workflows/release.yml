@@ -45,20 +45,6 @@ jobs:
           enable-cache: true
           python-version: "3.13"
 
-      - name: Set version
-        shell: pwsh
-        run: |
-          $releaseName = "${{ github.event.inputs.release_name }}"
-          $version = $releaseName.Substring(8)  # DEPRECATE: bad tag name, replace with 1
-          (Get-Content Minify/core/base.py) -replace '^VERSION = .*', "VERSION = `"$version`"" | Set-Content Minify/core/base.py
-      - uses: stefanzweifel/git-auto-commit-action@v5
-        if: ${{ inputs.prerelease == 'false' && matrix.os == 'ubuntu-latest' }}
-        with:
-          commit_message: "Version change"
-          commit_author: "github-actions[bot] <github-actions[bot]@users.noreply.github.com>"
-          commit_user_name: "github-actions[bot]"
-          commit_user_email: "github-actions[bot]@users.noreply.github.com"
-
       - name: Make and activate virtual environment (Windows)
         if: matrix.os == 'windows-latest'
         run: |
@@ -97,7 +83,7 @@ jobs:
 
       - name: Sign Minify.exe via SignPath
         if: matrix.os == 'windows-latest'
-        uses: signpath/github-action-submit-signing-request@v2
+        uses: signpath/github-action-submit-signing-request@v3
         with:
           api-token: "${{ secrets.SIGNPATH_API_TOKEN }}"
           organization-id: "${{ secrets.SIGNPATH_ORGANIZATION_ID }}"
@@ -134,7 +120,7 @@ jobs:
 
       - name: Sign Installer via SignPath
         if: matrix.os == 'windows-latest'
-        uses: signpath/github-action-submit-signing-request@v2
+        uses: signpath/github-action-submit-signing-request@v3
         with:
           api-token: "${{ secrets.SIGNPATH_API_TOKEN }}"
           organization-id: "${{ secrets.SIGNPATH_ORGANIZATION_ID }}"
