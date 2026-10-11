@@ -60,5 +60,12 @@
     "default": false,
     "advanced": true,
     "type": "checkbox"
+  },
+  {
+    "key": "non_chunked_vpk",
+    "text": "&setting_non_chunked_vpk",
+    "default": false,
+    "advanced": true,
+    "type": "checkbox"
   }
 ]

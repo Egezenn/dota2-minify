@@ -338,6 +338,7 @@ def patcher():
         vpk_utils.pack(
             constants.minify_dota_compile_output_path,
             os.path.join(helper.output_path, "pak66_dir.vpk"),
+            chunk_size=None if config.get("non_chunked_vpk") else vpk_utils.DEFAULT_VPK_CHUNK_SIZE,
         )
 
         # ---------------------------------- STEP 7 ---------------------------------- #

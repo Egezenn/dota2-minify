@@ -1,8 +1,11 @@
+/* if:remove_player_detail_transition */
 /* g:panorama/styles/context_menus/context_menu_player */
 #MenuOptionsPanel {
   transition-duration: 0s;
 }
+/* endif */
 
+/* if:remove_player_mini_showcase */
 /* g:panorama/styles/friend_menu */
 #EditShowcaseButton {
   visibility: collapse;
@@ -12,9 +15,12 @@
 .ShowcaseData {
   visibility: collapse;
 }
+/* endif */
 
+/* if:remove_player_showcase */
 /* g:panorama/styles/showcase/showcase_contents */
 #ShowcaseBackground,
 #ShowcaseForeground {
   visibility: collapse;
 }
+/* endif */

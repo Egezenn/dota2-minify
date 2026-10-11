@@ -4,7 +4,7 @@ from pathlib import Path
 from typing import Any, Dict, List, Optional
 
 import webview
-from core import base, config, constants, output, utils
+from core import base, config, constants, fs, output, utils
 
 from ui.services import ConfigService, DialogService, ModService, PatchService, PluginService
 
@@ -30,6 +30,9 @@ class Api:
         import webbrowser
 
         webbrowser.open(url)
+
+    def open_config_directory(self) -> None:
+        fs.open_thing(base.config_dir)
 
     def is_patching(self) -> bool:
         return self.patch_service.is_patching()

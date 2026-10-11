@@ -50,6 +50,7 @@ declare global {
         start_patch: () => Promise<{ status: string }>;
         start_uninstall: (remove_everything?: boolean) => Promise<{ status: string }>;
         open_url?: (url: string) => Promise<void> | void;
+        open_config_directory?: () => Promise<void> | void;
         clear_logs: () => Promise<boolean>;
         get_steam_accounts: () => Promise<
           Array<{

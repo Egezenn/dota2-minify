@@ -1,3 +1,29 @@
 {
-  "category": "huds"
+  "category": "huds",
+  "settings": [
+    {
+      "key": "transparent_hud_color_40",
+      "text": "HUD color (#00000040)",
+      "default": "#00000040",
+      "type": "color"
+    },
+    {
+      "key": "transparent_hud_color_80",
+      "text": "HUD color (#00000080)",
+      "default": "#00000080",
+      "type": "color"
+    },
+    {
+      "key": "transparent_hud_color_a0",
+      "text": "HUD color (#000000a0)",
+      "default": "#000000a0",
+      "type": "color"
+    },
+    {
+      "key": "transparent_hud_color_d8",
+      "text": "HUD color (#000000d8)",
+      "default": "#000000d8",
+      "type": "color"
+    }
+  ]
 }

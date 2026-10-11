@@ -1,0 +1,22 @@
+{
+  "settings": [
+    {
+      "key": "remove_player_detail_transition",
+      "text": "Remove player detail transition",
+      "type": "checkbox",
+      "default": true
+    },
+    {
+      "key": "remove_player_mini_showcase",
+      "text": "Remove player mini showcase",
+      "type": "checkbox",
+      "default": true
+    },
+    {
+      "key": "remove_player_showcase",
+      "text": "Remove player showcase",
+      "type": "checkbox",
+      "default": true
+    }
+  ]
+}

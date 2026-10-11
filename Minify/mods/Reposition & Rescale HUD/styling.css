@@ -5,29 +5,47 @@ DOTAChat#HudChat {
 
 /* g:panorama/styles/hud/dota_hud_top_bar */
 DOTATopBar {
-  ui-scale: 75%;
+  ui-scale: <&top_bar_scale>;
 }
 
 #TimeOfDay {
-  ui-scale: 125%;
+  ui-scale: <&time_of_day_scale>;
 }
 
 #TimeOfDayBG {
-  ui-scale: 125%;
+  ui-scale: <&time_of_day_bg_scale>;
 }
 
 /* g:panorama/styles/hud/hud_reborn */
 #lower_hud,
 #minimap_container {
-  ui-scale: 90%;
-  margin-left: 10%;
-  margin-right: 10%;
+  ui-scale: <&lower_hud_minimap_scale>;
+  margin-left: <&lower_hud_minimap_margin_left>;
+  margin-right: <&lower_hud_minimap_margin_right>;
 }
 
 #SpectatorToastManager {
-  ui-scale: 75%;
+  ui-scale: <&spectator_toast_scale>;
 }
 
 #center_with_stats {
-  ui-scale: 85%;
+  ui-scale: <&center_with_stats_scale>;
 }
+
+/* g:panorama/styles/hero_grid_new */
+.HeroCard #HeroImage {
+  margin: 0px <&margin_between_heroes> <&margin_between_heroes> 0px;
+}
+
+/* if:remove_rightside_overflow */
+#GridCategories {
+  overflow: clip scroll;
+}
+/* endif */
+
+/* g:panorama/styles/hud/hud_simple_hero_description */
+/* if:remove_similiar_heroes */
+.SimilarHeroes {
+  visibility: collapse;
+}
+/* endif */

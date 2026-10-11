@@ -1,0 +1,10 @@
+{
+  "settings": [
+    {
+      "key": "disable_all_hero_lines",
+      "text": "Disable all hero lines",
+      "type": "checkbox",
+      "default": false
+    }
+  ]
+}

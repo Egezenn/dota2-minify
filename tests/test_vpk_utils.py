@@ -1,4 +1,6 @@
+import hashlib
 import os
+import struct
 from unittest.mock import patch
 
 import vpk
@@ -99,11 +101,71 @@ def test_pack_chunked_and_read(tmp_path):
     assert chunk_0.exists()
     assert chunk_1.exists()
 
+    # Validate the VPK v2 checksums against the generated external archives.
+    with open(dir_vpk_path, "rb") as f:
+        header = struct.unpack("<7I", f.read(28))
+        _, _, tree_length, file_data_length, archive_md5_length, other_md5_length, _ = header
+        tree = f.read(tree_length)
+        archive_md5_entries = f.read(archive_md5_length)
+        checksums = f.read(other_md5_length)
+
+    assert archive_md5_length > 0
+    assert archive_md5_length % 28 == 0
+    assert hashlib.md5(tree).digest() == checksums[:16]
+    assert hashlib.md5(archive_md5_entries).digest() == checksums[16:32]
+    with open(dir_vpk_path, "rb") as f:
+        whole_file_data = f.read(28 + tree_length + file_data_length + archive_md5_length + 32)
+    assert hashlib.md5(whole_file_data).digest() == checksums[32:48]
+
+    archive_coverage = {}
+    for offset in range(0, archive_md5_length, 28):
+        archive_idx, hash_type, chunk_offset, length, checksum = struct.unpack_from(
+            "<HHII16s", archive_md5_entries, offset
+        )
+        assert hash_type == 0
+        chunk_path = out_dir / f"pak66_{archive_idx:03d}.vpk"
+        with open(chunk_path, "rb") as chunk_file:
+            chunk_file.seek(chunk_offset)
+            assert hashlib.md5(chunk_file.read(length)).digest() == checksum
+        archive_coverage.setdefault(archive_idx, []).append((chunk_offset, length))
+
+    for archive_idx, ranges in archive_coverage.items():
+        chunk_size = os.path.getsize(out_dir / f"pak66_{archive_idx:03d}.vpk")
+        assert ranges[0][0] == 0
+        assert sum(length for _, length in ranges) == chunk_size
+
     # Read back with standard vpk reader
     pak = vpk.open(dir_vpk_path)
     assert pak.get_file("root_file.txt").read().decode("utf-8") == "Root file content"
     assert pak.get_file("subdir/nested.txt").read().decode("utf-8") == "Nested file content " * 50
     assert pak.get_file("subdir/other.bin").read() == b"\x01\x02\x03\x04" * 100
+
+
+def test_pack_non_chunked_and_read(tmp_path):
+    source_dir = tmp_path / "source"
+    source_dir.mkdir()
+    (source_dir / "file.txt").write_text("Single archive content")
+    (source_dir / "second.txt").write_text("Another file")
+
+    out_dir = tmp_path / "out"
+    dir_vpk_path = str(out_dir / "pak66_dir.vpk")
+
+    vpk_utils.pack(str(source_dir), dir_vpk_path, chunk_size=1)
+    assert (out_dir / "pak66_001.vpk").exists()
+
+    vpk_utils.pack(str(source_dir), dir_vpk_path, chunk_size=None)
+
+    assert sorted(path.name for path in out_dir.iterdir()) == ["pak66_dir.vpk"]
+
+    with open(dir_vpk_path, "rb") as f:
+        header = struct.unpack("<7I", f.read(28))
+    assert header[3] == len("Single archive content") + len("Another file")
+
+    pak = vpk.open(dir_vpk_path)
+    assert pak["file.txt"].archive_index == 0x7FFF
+    assert pak.verify()
+    assert pak.get_file("file.txt").read().decode("utf-8") == "Single archive content"
+    assert pak.get_file("second.txt").read().decode("utf-8") == "Another file"
 
 
 def test_pack_cleans_stale_chunks(tmp_path):

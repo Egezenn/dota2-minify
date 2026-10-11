@@ -84,6 +84,7 @@
   "setting_apply_for_all": "Apply everything for all users",
   "setting_fix_options": "Handle language option",
   "setting_locale": "Interface Language",
+  "setting_non_chunked_vpk": "Build VPKs as a single file",
   "setting_opt_into_rcs": "Opt into RCs",
   "setting_opt_out_vpk_metadata": "Opt-out of VPK metadata",
   "setting_output_locale": "Game Language",

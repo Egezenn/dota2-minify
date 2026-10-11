@@ -84,6 +84,7 @@
   "setting_apply_for_all": "Tüm kullanıcılar için her şeyi uygula",
   "setting_fix_options": "Dil seçeneğini kontrol et",
   "setting_locale": "Arayüz Dili",
+  "setting_non_chunked_vpk": "VPK'leri tek dosya olarak oluştur",
   "setting_opt_into_rcs": "RC'lere katıl",
   "setting_opt_out_vpk_metadata": "VPK meta verilerinden çekil",
   "setting_output_locale": "Oyun Dili",

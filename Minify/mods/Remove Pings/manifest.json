@@ -1,4 +1,12 @@
 {
   "category": "pings",
-  "conflicts": ["Revert Ping Sounds"]
+  "conflicts": ["Revert Ping Sounds"],
+  "settings": [
+    {
+      "key": "disable_ping_particles",
+      "text": "Disable ping particles",
+      "type": "checkbox",
+      "default": true
+    }
+  ]
 }

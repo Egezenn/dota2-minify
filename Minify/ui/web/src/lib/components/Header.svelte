@@ -49,6 +49,16 @@
       <button
         type="button"
         class="header-link-btn"
+        on:click={() => window.pywebview?.api?.open_config_directory?.()}
+        title="Open Config Directory"
+        aria-label="Open Config Directory"
+      >
+        CFG
+      </button>
+
+      <button
+        type="button"
+        class="header-link-btn"
         on:click={() => openExternal("https://egezenn.github.io/dota2-minify")}
         title="GitHub IO"
         aria-label="GitHub IO"

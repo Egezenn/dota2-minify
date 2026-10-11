@@ -10,12 +10,14 @@ import vpk
 from core import base, config, constants, fs, log, output, utils
 
 DEFAULT_VPK_CHUNK_SIZE = 100 * 1024 * 1024
+VPK_ARCHIVE_MD5_CHUNK_SIZE = 1024 * 1024
 
 
-def pack(source_dir, output_vpk_dir_path, chunk_size=DEFAULT_VPK_CHUNK_SIZE):
+def pack(source_dir, output_vpk_dir_path, chunk_size: int | None = DEFAULT_VPK_CHUNK_SIZE):
     """
-    Packs source_dir into a multi-chunk VPK v2 archive (pak66_dir.vpk + pak66_000.vpk, ...).
-    Each chunk file is capped at chunk_size bytes.
+    Packs source_dir into a VPK v2 archive (pak66_dir.vpk + pak66_000.vpk, ...).
+    Each external archive is capped at chunk_size bytes. When chunk_size is None,
+    file data is embedded in the directory VPK.
     """
     base_name = os.path.splitext(output_vpk_dir_path)[0]
     chunk_prefix = base_name[:-4] if base_name.endswith("_dir") else base_name
@@ -60,24 +62,35 @@ def pack(source_dir, output_vpk_dir_path, chunk_size=DEFAULT_VPK_CHUNK_SIZE):
     current_chunk_idx = 0
     current_chunk_size = 0
     current_chunk_file = None
+    embedded_data_offset = 28 + tree_length
+    embedded = chunk_size is None
 
     def open_chunk_file(idx):
         return open(f"{chunk_prefix}_{idx:03d}.vpk", "wb")
 
     try:
-        current_chunk_file = open_chunk_file(current_chunk_idx)
+        if embedded:
+            current_chunk_idx = 0x7FFF
+            current_chunk_file = open(output_vpk_dir_path, "w+b")
+            current_chunk_file.seek(embedded_data_offset)
+        else:
+            current_chunk_file = open_chunk_file(current_chunk_idx)
         for ext, relpaths in tree.items():
             for relpath, file_entries in relpaths.items():
                 for name, full_name, src_path in file_entries:
                     file_size = os.path.getsize(src_path)
-                    if current_chunk_size > 0 and (current_chunk_size + file_size > chunk_size):
+                    if (
+                        chunk_size is not None
+                        and current_chunk_size > 0
+                        and current_chunk_size + file_size > chunk_size
+                    ):
                         current_chunk_file.close()
                         current_chunk_idx += 1
                         current_chunk_size = 0
                         current_chunk_file = open_chunk_file(current_chunk_idx)
 
                     crc = 0
-                    file_offset = current_chunk_file.tell()
+                    file_offset = current_chunk_file.tell() - embedded_data_offset if embedded else current_chunk_file.tell()
                     with open(src_path, "rb") as f:
                         while chunk := f.read(65536):
                             crc = binascii.crc32(chunk, crc)
@@ -89,11 +102,33 @@ def pack(source_dir, output_vpk_dir_path, chunk_size=DEFAULT_VPK_CHUNK_SIZE):
         if current_chunk_file:
             current_chunk_file.close()
 
+    archive_md5_entries = bytearray()
+    if not embedded:
+        for archive_idx in range(current_chunk_idx + 1):
+            archive_path = f"{chunk_prefix}_{archive_idx:03d}.vpk"
+            archive_size = os.path.getsize(archive_path)
+            with open(archive_path, "rb") as archive_file:
+                for offset in range(0, archive_size, VPK_ARCHIVE_MD5_CHUNK_SIZE):
+                    data = archive_file.read(VPK_ARCHIVE_MD5_CHUNK_SIZE)
+                    archive_md5_entries.extend(
+                        struct.pack(
+                            "HHII16s",
+                            archive_idx,
+                            0,
+                            offset,
+                            len(data),
+                            hashlib.md5(data).digest(),
+                        )
+                    )
+
     # Write _dir.vpk directory file
-    with open(output_vpk_dir_path, "w+b") as f:
+    with open(output_vpk_dir_path, "r+b" if embedded else "w+b") as f:
         # VPK2 header: signature (0x55aa1234), version (2), tree_length,
-        # embed_chunk_len (0), chunk_hashes_len (0), self_hashes_len (48), sig_len (0)
-        f.write(struct.pack("3I4I", 0x55AA1234, 2, tree_length, 0, 0, 48, 0))
+        # embed_chunk_len, archive_md5_len, self_hashes_len (48), sig_len (0)
+        embed_chunk_length = current_chunk_size if embedded else 0
+        f.write(
+            struct.pack("3I4I", 0x55AA1234, 2, tree_length, embed_chunk_length, len(archive_md5_entries), 48, 0)
+        )
         header_len = f.tell()
 
         tree_bytes = bytearray()
@@ -111,20 +146,24 @@ def pack(source_dir, output_vpk_dir_path, chunk_size=DEFAULT_VPK_CHUNK_SIZE):
 
         assert len(tree_bytes) == tree_length, f"Tree length mismatch: expected {tree_length}, got {len(tree_bytes)}"
         f.write(tree_bytes)
+        if embedded:
+            f.seek(header_len + tree_length + embed_chunk_length)
+        f.write(archive_md5_entries)
 
-        # Hashes: tree_checksum, chunk_hashes_checksum, file_checksum
+        # Hashes: tree_checksum, archive_md5_entries_checksum, file_checksum
         tree_checksum = hashlib.md5(tree_bytes).digest()
-        chunk_hashes_checksum = hashlib.md5(b"").digest()
+        archive_md5_checksum = hashlib.md5(archive_md5_entries).digest()
 
-        f.seek(0)
         file_checksum = hashlib.md5()
-        file_checksum.update(f.read(header_len + tree_length))
+        f.seek(0)
+        data_length = header_len + tree_length + embed_chunk_length + len(archive_md5_entries)
+        file_checksum.update(f.read(data_length))
         file_checksum.update(tree_checksum)
-        file_checksum.update(chunk_hashes_checksum)
+        file_checksum.update(archive_md5_checksum)
 
-        f.seek(header_len + tree_length)
+        f.seek(data_length)
         f.write(tree_checksum)
-        f.write(chunk_hashes_checksum)
+        f.write(archive_md5_checksum)
         f.write(file_checksum.digest())
 
 

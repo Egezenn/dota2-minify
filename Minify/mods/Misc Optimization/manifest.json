@@ -1,0 +1,16 @@
+{
+  "settings": [
+    {
+      "key": "disable_courier_particles",
+      "text": "Disable courier particles",
+      "type": "checkbox",
+      "default": true
+    },
+    {
+      "key": "disable_event_particles",
+      "text": "Disable event particles",
+      "type": "checkbox",
+      "default": false
+    }
+  ]
+}

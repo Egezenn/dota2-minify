@@ -1,0 +1,16 @@
+{
+  "settings": [
+    {
+      "key": "enable_web_buttons",
+      "text": "Enable web buttons",
+      "type": "checkbox",
+      "default": true
+    },
+    {
+      "key": "enable_panorama_buttons",
+      "text": "Enable Panorama buttons",
+      "type": "checkbox",
+      "default": false
+    }
+  ]
+}

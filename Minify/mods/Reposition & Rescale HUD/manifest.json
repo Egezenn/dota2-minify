@@ -1,0 +1,70 @@
+{
+  "settings": [
+    {
+      "key": "top_bar_scale",
+      "text": "Top bar scale",
+      "default": "75%",
+      "type": "inputbox"
+    },
+    {
+      "key": "time_of_day_scale",
+      "text": "Time of day scale",
+      "default": "125%",
+      "type": "inputbox"
+    },
+    {
+      "key": "time_of_day_bg_scale",
+      "text": "Time of day background scale",
+      "default": "125%",
+      "type": "inputbox"
+    },
+    {
+      "key": "lower_hud_minimap_scale",
+      "text": "Lower HUD and minimap scale",
+      "default": "90%",
+      "type": "inputbox"
+    },
+    {
+      "key": "lower_hud_minimap_margin_left",
+      "text": "Lower HUD and minimap left margin",
+      "default": "10%",
+      "type": "inputbox"
+    },
+    {
+      "key": "lower_hud_minimap_margin_right",
+      "text": "Lower HUD and minimap right margin",
+      "default": "10%",
+      "type": "inputbox"
+    },
+    {
+      "key": "spectator_toast_scale",
+      "text": "Spectator toast scale",
+      "default": "75%",
+      "type": "inputbox"
+    },
+    {
+      "key": "center_with_stats_scale",
+      "text": "Center with stats scale",
+      "default": "85%",
+      "type": "inputbox"
+    },
+    {
+      "key": "margin_between_heroes",
+      "text": "Margin between heroes",
+      "default": "4px",
+      "type": "inputbox"
+    },
+    {
+      "key": "remove_rightside_overflow",
+      "text": "Remove right-side overflow",
+      "default": true,
+      "type": "checkbox"
+    },
+    {
+      "key": "remove_similiar_heroes",
+      "text": "Remove similar heroes",
+      "default": true,
+      "type": "checkbox"
+    }
+  ]
+}

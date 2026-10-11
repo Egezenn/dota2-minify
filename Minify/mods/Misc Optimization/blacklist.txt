@@ -1,5 +1,9 @@
-**particles/econ/courier/.*\.vpcf_c
->>particles/econ/events/diretide_2020/emblem
+#if:disable_courier_particles
+>>particles/econ/courier
+#endif
+#if:disable_event_particles
+>>particles/econ/events
+#endif
 >>particles/econ/items/effigies/status_fx_effigies
 particles/addons_gameplay/fountain_tintable_ambient.vpcf_c
 particles/addons_gameplay/lamp_flame_tintable.vpcf_c
