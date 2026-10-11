@@ -10,11 +10,25 @@
 class Migrations:
     def __init__(self):
         self._migrate_locale_config()
+        self._migrate_removed_post_patch_settings()
         self._rename_file_in_mods("modcfg.json", "manifest.json")
         self._rename_file_in_mods("xml_mod.json", "xml.json")
         self._migrate_rescomproot_and_bin()
         self._migrate_legacy_paks()
         self._migrate_flatten_d2pfx_manifests()
+
+    def _migrate_removed_post_patch_settings(self):
+        data = config.read_json_file(base.main_config_file_dir)
+        if not isinstance(data, dict):
+            return
+        removed = {"launch_dota_after_patch", "kill_self_after_patch"} & data.keys()
+        if not removed:
+            return
+
+        for key in removed:
+            data.pop(key)
+        config.write_json_file(base.main_config_file_dir, data)
+        output.add_text("Removed obsolete post-patch settings from configuration")
 
     def _migrate_locale_config(self):
         locale = config.get("output_locale")

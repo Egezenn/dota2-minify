@@ -29,6 +29,9 @@ class Api:
 
         webbrowser.open(url)
 
+    def open_config_directory(self) -> None:
+        fs.open_thing(base.config_dir)
+
     def is_patching(self) -> bool:
         return self.patch_service.is_patching()
 
@@ -213,51 +216,46 @@ class Api:
 
         output.add_text("Expanding Workshop Tools to config/rescomproot...")
         target_dir = base.rescomp_override_dir
-        try:
-            fs.create_dirs(target_dir)
-            extract_success = fs.extract_archive(zip_path, target_dir)
-            if not extract_success:
-                output.add_text("Failed to extract Workshop Tools archive.", msg_type="error")
-                return False
+        fs.create_dirs(target_dir)
+        extract_success = fs.extract_archive(zip_path, target_dir)
+        if not extract_success:
+            output.add_text("Failed to extract Workshop Tools archive.", msg_type="error")
+            return False
 
-            inner_dir = os.path.join(target_dir, "resourcecompiler")
-            if os.path.isdir(inner_dir):
-                for item in os.listdir(inner_dir):
-                    src = os.path.join(inner_dir, item)
-                    dst = os.path.join(target_dir, item)
-                    if os.path.exists(dst):
-                        fs.remove_path(dst)
-                    fs.move_path(src, dst)
-                fs.remove_path(inner_dir)
+        inner_dir = os.path.join(target_dir, "resourcecompiler")
+        if os.path.isdir(inner_dir):
+            for item in os.listdir(inner_dir):
+                src = os.path.join(inner_dir, item)
+                dst = os.path.join(target_dir, item)
+                if os.path.exists(dst):
+                    fs.remove_path(dst)
+                fs.move_path(src, dst)
+            fs.remove_path(inner_dir)
 
-            fs.remove_path(zip_path)
+        fs.remove_path(zip_path)
 
-            constants.recalc_rescomp_dirs()
+        constants.recalc_rescomp_dirs()
 
-            if (base.is_linux or base.is_mac) and os.path.exists(constants.dota_resource_compiler_path):
-                import stat
+        if (base.is_linux or base.is_mac) and os.path.exists(constants.dota_resource_compiler_path):
+            import stat
 
-                st = os.stat(constants.dota_resource_compiler_path)
-                os.chmod(
-                    constants.dota_resource_compiler_path,
-                    st.st_mode | stat.S_IXUSR | stat.S_IXGRP | stat.S_IXOTH,
-                )
+            st = os.stat(constants.dota_resource_compiler_path)
+            os.chmod(
+                constants.dota_resource_compiler_path,
+                st.st_mode | stat.S_IXUSR | stat.S_IXGRP | stat.S_IXOTH,
+            )
 
-            compiler_exists = os.path.exists(constants.dota_resource_compiler_path)
-            conditions.workshop_installed = compiler_exists
+        compiler_exists = os.path.exists(constants.dota_resource_compiler_path)
+        conditions.workshop_installed = compiler_exists
 
-            if compiler_exists:
-                output.add_text("Workshop Tools installed successfully!", msg_type="success")
-                return True
-            else:
-                output.add_text(
-                    f"resourcecompiler.exe was not found at {constants.dota_resource_compiler_path}",
-                    msg_type="error",
-                )
-                return False
-        except Exception as e:
-            log.write_crashlog(f"Error expanding Workshop Tools: {e}")
-            output.add_text(f"Error expanding Workshop Tools: {e}", msg_type="error")
+        if compiler_exists:
+            output.add_text("Workshop Tools installed successfully!", msg_type="success")
+            return True
+        else:
+            output.add_text(
+                f"resourcecompiler.exe was not found at {constants.dota_resource_compiler_path}",
+                msg_type="error",
+            )
             return False
 
     def get_plugin_tabs(self) -> List[Dict[str, Any]]:
@@ -291,6 +289,9 @@ def launch() -> None:
             f"Error: Web UI build file not found at '{base.dist_index}'. Please run 'npm run build' inside Minify/ui/web.",
             msg_type="error",
         )
+
+    if base.is_win:
+        os.environ.setdefault("WEBVIEW2_ADDITIONAL_BROWSER_ARGUMENTS", "--disable-gpu")  # #186
 
     debug_mode = bool(config.get("debug_env"))
     webview.settings["OPEN_DEVTOOLS_IN_DEBUG"] = False
@@ -377,27 +378,23 @@ def is_webview_available() -> bool:
 
 ```python
 def is_webview2_installed() -> bool:
-    import winreg
-
-    guids = [
-        "{F3017226-FE2A-4295-8BDF-00C3A9A7E4C5}",  # Microsoft Edge WebView2 Runtime
-        "{2CD8A007-E189-409D-A2C8-9AF4EF3C72AA}",  # WebView2 Beta
-        "{0D50BFEC-CD6A-4F9A-964C-C7416E3ACB10}",  # WebView2 Dev
-        "{65C35B14-6C1D-4122-AC46-7148CC9D6497}",  # WebView2 Canary
+    candidate_dirs = [
+        os.path.join(
+            os.environ.get("ProgramFiles(x86)", r"C:\Program Files (x86)"), "Microsoft", "EdgeWebView", "Application"
+        ),
+        os.path.join(os.environ.get("ProgramFiles", r"C:\Program Files"), "Microsoft", "EdgeWebView", "Application"),
+        os.path.join(os.environ.get("LOCALAPPDATA", ""), "Microsoft", "EdgeWebView", "Application"),
     ]
-    for root in (winreg.HKEY_LOCAL_MACHINE, winreg.HKEY_CURRENT_USER):
-        for guid in guids:
-            for sub in (
-                rf"SOFTWARE\Microsoft\EdgeUpdate\Clients\{guid}",
-                rf"SOFTWARE\WOW6432Node\Microsoft\EdgeUpdate\Clients\{guid}",
-            ):
-                try:
-                    with winreg.OpenKey(root, sub) as key:
-                        val, _ = winreg.QueryValueEx(key, "pv")
-                        if val and val != "0.0.0.0":
-                            return True
-                except OSError:
-                    pass
+
+    for base_dir in candidate_dirs:
+        if not base_dir or not os.path.isdir(base_dir):
+            continue
+        try:
+            for _, _, files in os.walk(base_dir):
+                if "msedgewebview2.exe" in files:
+                    return True
+        except OSError:
+            pass
     return False
 ```
 

@@ -9,7 +9,7 @@ Variables that almost never change
 <details open><summary>Source</summary>
 
 ```python
-VERSION = "2rc5"
+VERSION = "2rc6"
 ```
 
 </details>
@@ -150,16 +150,6 @@ DOTA_EXECUTABLE_PATH_FALLBACK = os.path.join("steamapps", "common", "dota 2 beta
 
 ```python
 STEAM_DOTA_ID = "570"
-```
-
-</details>
-
-### `STEAM_DOTA_WORKSHOP_TOOLS_ID`
-
-<details open><summary>Source</summary>
-
-```python
-STEAM_DOTA_WORKSHOP_TOOLS_ID = "313250"
 ```
 
 </details>

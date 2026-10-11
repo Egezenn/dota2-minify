@@ -69,7 +69,12 @@ def write_warning(header=None, *args, **kwargs):
 ```python
 def unhandled_handler(handled=False):
     def handler(exc_type, exc_value, exc_traceback):
-        return write_crashlog(exc_type, exc_value, exc_traceback, handled=handled)
+        return write_crashlog(
+            handled=handled,
+            exc_type=exc_type,
+            exc_value=exc_value,
+            exc_traceback=exc_traceback,
+        )
 
     return handler
 ```
