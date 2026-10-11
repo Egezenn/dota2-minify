@@ -58,4 +58,3 @@ def process(
                 log.write_warning(f"Invalid entry in replacer.json for {folder}: {target} -> {source_val}")
     except Exception as e:
         log.write_warning(f"Failed to parse replacer.json for {folder}: {e}")
-

@@ -78,9 +78,7 @@ def get_mod(mod_path):
     return {}
 
 
-def get_effective_settings(
-    mod_cfg: Optional[Dict[str, Any]], mod_settings: Optional[Dict[str, Any]]
-) -> Dict[str, Any]:
+def get_effective_settings(mod_cfg: Optional[Dict[str, Any]], mod_settings: Optional[Dict[str, Any]]) -> Dict[str, Any]:
     """
     Combines default setting values defined in mod manifest with configured mod settings.
     """
@@ -231,4 +229,3 @@ def process_css_content(content: str, settings: Dict[str, Any]) -> str:
 
     text = "".join(result)
     return interpolate_variables(text, settings)
-

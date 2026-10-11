@@ -1,4 +1,5 @@
 import fnmatch
+
 try:
     import jsonc as json
 except ImportError:

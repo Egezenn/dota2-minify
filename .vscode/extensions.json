@@ -1,8 +1,3 @@
 {
-  "recommendations": [
-    "meta.pyrefly",
-    "ms-python.black-formatter",
-    "ms-python.debugpy",
-    "ms-python.python"
-  ]
+  "recommendations": ["meta.pyrefly", "ms-python.debugpy", "ms-python.python", "charliermarsh.ruff"]
 }

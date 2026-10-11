@@ -259,4 +259,3 @@ def process_mod_xml(mod_xml: dict, settings: dict) -> dict[str, list[dict]]:
             result.setdefault(clean_path, []).extend(processed_mods)
 
     return result
-
