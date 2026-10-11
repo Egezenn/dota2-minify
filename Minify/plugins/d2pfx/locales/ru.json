@@ -15,5 +15,10 @@
   "label_select_category": "Выберите категорию",
   "placeholder_search_categories": "Поиск категорий...",
   "placeholder_search_mods": "Поиск модов...",
-  "setting_d2pfx_auto_refresh_catalogue": "Автообновление каталога D2PFX"
+  "setting_d2pfx_auto_refresh_catalogue": "Автообновление каталога D2PFX",
+  "setting_d2pfx_filter_anime": "Фильтровать аниме-моды (D2PFX)",
+  "setting_d2pfx_filter_nsfw": "Фильтровать 18+ моды (D2PFX)",
+  "tab_d2pfx": "Браузер D2PFX",
+  "title_click_to_close": "Нажмите, чтобы закрыть",
+  "title_click_to_preview": "Нажмите, чтобы просмотреть изображение"
 }
