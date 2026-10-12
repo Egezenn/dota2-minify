@@ -2,6 +2,7 @@ import importlib
 import importlib.util
 import os
 import sys
+import types
 
 from core import base, config, output, registry
 
@@ -42,7 +43,20 @@ def initialize():
 
             py_file = os.path.join(p_path, "__main__.py")
             if os.path.isfile(py_file):
-                mod_name = f"plugins.{entry}.__main__"
+                plugin_id = manifest.get("id")
+                if not isinstance(plugin_id, str) or not plugin_id:
+                    continue
+                package_name = f"plugins.{plugin_id}"
+                package = sys.modules.get(package_name)
+                if package is None:
+                    package = types.ModuleType(package_name)
+                    package.__path__ = [p_path]
+                    package.__package__ = package_name
+                    sys.modules[package_name] = package
+                elif p_path not in getattr(package, "__path__", []):
+                    output.add_text(f"Duplicate plugin id '{plugin_id}' in '{entry}'.", msg_type="warning")
+                    continue
+                mod_name = f"{package_name}.__main__"
                 spec = importlib.util.spec_from_file_location(
                     mod_name,
                     py_file,
@@ -51,7 +65,11 @@ def initialize():
                 if spec and spec.loader:
                     mod = importlib.util.module_from_spec(spec)
                     sys.modules[mod_name] = mod
-                    spec.loader.exec_module(mod)
+                    try:
+                        spec.loader.exec_module(mod)
+                    except Exception:
+                        sys.modules.pop(mod_name, None)
+                        raise
                     if mod not in registry.get_plugins():
                         registry.register_plugin(mod)
 

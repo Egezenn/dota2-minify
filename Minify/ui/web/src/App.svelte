@@ -53,6 +53,25 @@
     }
   }
 
+  async function refreshPluginTabs() {
+    const api = window.pywebview?.api;
+    if (!api?.get_plugin_tabs) return;
+    try {
+      const tabs = (await api.get_plugin_tabs()) || [];
+      const contents: Record<string, string> = {};
+      if (api.get_plugin_content) {
+        for (const plugin of tabs) {
+          const html = await api.get_plugin_content(plugin.id);
+          if (html) contents[plugin.id] = html;
+        }
+      }
+      pluginTabs = tabs;
+      pluginContents = contents;
+    } catch (err) {
+      console.error("Failed to refresh plugin tabs:", err);
+    }
+  }
+
   async function initTheme() {
     try {
       const api = window.pywebview?.api;
@@ -145,6 +164,10 @@
     const handleWindowMessage = (e: MessageEvent) => {
       if (e.data?.type === "REFRESH_MODS") {
         refreshMods();
+      } else if (e.data?.type === "REFRESH_PLUGIN_TABS") {
+        refreshPluginTabs();
+      } else if (e.data?.type === "REFRESH_THEME") {
+        applyTheme();
       }
     };
 

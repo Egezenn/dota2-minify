@@ -78,6 +78,7 @@ Minify/mods/Custom Background Video/video_success
 !Minify/plugins/package.json
 !Minify/plugins/tsconfig.json
 !Minify/plugins/d2pfx
+!Minify/plugins/community
 !Minify/themes/dark.css
 !Minify/themes/light.css
 

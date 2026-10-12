@@ -106,3 +106,20 @@ def test_demo_plain_js_plugin(tmp_path):
         res = api.call_plugin_api("demo", "ping", {"message": "Hello Test"})
         assert res.get("status") == "success"
         assert res.get("echo") == "Hello Test"
+
+
+def test_plugin_manifest_id_resolves_registry_name_folder(tmp_path):
+    from ui.app import Api
+
+    plugin_dir = tmp_path / "Wiki Browser"
+    plugin_dir.mkdir()
+    (plugin_dir / "manifest.json").write_text('{"id":"wiki-browser","name":"Wiki"}')
+    (plugin_dir / "ui").mkdir()
+    (plugin_dir / "ui" / "index.html").write_text("<html><body>Wiki</body></html>")
+    (plugin_dir / "api.py").write_text("def ping(params):\n    return {'folder': __file__}\n")
+
+    with patch("core.base.plugins_dir", str(tmp_path)):
+        api = Api()
+        assert api.get_plugin_content("wiki-browser").endswith("Wiki</body></html>")
+        result = api.call_plugin_api("wiki-browser", "ping")
+        assert result["folder"].startswith(str(plugin_dir))
