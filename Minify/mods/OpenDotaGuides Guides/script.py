@@ -12,6 +12,7 @@ if minify_root not in sys.path:
 # isort: split
 
 import shutil
+from urllib.parse import quote
 
 import conditions
 import requests
@@ -24,7 +25,7 @@ zip_path = os.path.join(current_dir, "OpenDotaGuides.zip")
 temp_dump_path = os.path.join(current_dir, "temp")
 
 
-def main():
+def main(release_tag=None):
     with utils.try_pass():
         if conditions.workshop_installed:
             shutil.copy(
@@ -34,12 +35,17 @@ def main():
 
     fs.remove_path(zip_path)
 
+    download_url = (
+        f"https://github.com/Egezenn/OpenDotaGuides/releases/download/{quote(release_tag, safe='')}/itembuilds.zip"
+        if release_tag
+        else odg_latest
+    )
     try:
-        response = requests.get(odg_latest, timeout=15)
+        response = requests.get(download_url, timeout=15)
     except Exception as e:
         log.write_warning(f"Connection error while fetching guides: {e}")
         output.add_text("&connection_error", msg_type="error", indent=True)
-        return
+        return False
     if response.status_code == 200:
         with open(zip_path, "wb") as file:
             file.write(response.content)
@@ -52,9 +58,11 @@ def main():
                 os.path.join(dota_itembuilds_path, file),
             )
         fs.remove_path(temp_dump_path, zip_path)
+        return True
     else:
         log.write_warning(f"Failed to fetch guides. Status code: {response.status_code}")
         output.add_text("&connection_error", msg_type="error", indent=True)
+        return False
 
 
 if __name__ == "__main__":

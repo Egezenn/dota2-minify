@@ -20,6 +20,9 @@ If you're seeing a mod that is grayed out, it requires this DLC.
 
 ### Downloading the DLC
 
+> [!INFO]
+> v2 has a popup for you to download the required toolset that's only ~70MB download, 250MB extracted.
+
 - Right-click on Dota2 in Steam and click **Properties**.
 
 ![tools-instruction-1](../assets/tools-instruction-1.jpg)

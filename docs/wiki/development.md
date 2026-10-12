@@ -26,6 +26,7 @@ Minify has a programmatical approach to most modifications to keep everything mi
 | `preview.jpg` \| `preview.png`                                          | Yes                          | -                    |
 | [`blacklist.txt`](development/mod-structure.md#blacklisttxt)            | No                           | No                   |
 | [`replacer.json`](development/mod-structure.md#replacerjson)            | No                           | No                   |
+| [`remap.json`](development/mod-structure.md#remapjson)                   | No                           | Yes                  |
 | [`script.py`](development/scripting.md#scriptpy)                        | No<sup>3</sup>               | No                   |
 | [`styling.css`](development/ui-modding.md#stylingcss)                   | No                           | Yes                  |
 | [`xml.json`](development/ui-modding.md#xmljson)                         | No                           | Yes                  |

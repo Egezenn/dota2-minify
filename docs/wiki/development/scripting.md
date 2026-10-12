@@ -11,42 +11,36 @@ Following are necesities for modders, briefly explained:
 
 ### `script.py` template
 
-If and when there is a specific behavior to be automated you can include a python script along with your mod. You can find the template below.
+If and when there is a specific behavior to be automated you can include a Python script along with your mod. Use the bootstrap below to make Minify's own modules importable when running the script from a different working directory.
 
 Appending `_initial, _after_decompile, _after_recompile, _after_patch, _uninstall` to your script's name will adjust when it'll be executed. Thus giving you the full control of how your mod can be handled. By default it executes while iterating over each mod when you are patching.
 
 ```python
-# This script template can be run both manually and from minify.
-# You are able to use packages and modules from minify (you need an activated environment from the minify root or running with the tool `uv` can automatically handle this.)
 import os
 import sys
+from pathlib import Path
 
-current_dir = os.path.dirname(os.path.abspath(__file__))
-mod_name = os.path.basename(current_dir)
-minify_root = os.path.abspath(os.path.join(current_dir, os.pardir, os.pardir))
+mod_dir = Path(__file__).resolve().parent
+minify_root = mod_dir.parents[1]
+
 os.chdir(minify_root)
+if str(minify_root) not in sys.path:
+    sys.path.insert(0, str(minify_root))
 
-if minify_root not in sys.path:
-    sys.path.insert(0, minify_root)
-
-# isort: split
-
-# Any package or module native to minify can be imported here
-# import requests
-#
-# import fs
-# ...
+# Import Minify modules after adding minify_root to sys.path.
+# from core import base, config, fs, output
+# import helper
 
 
 def main():
     pass
-    # Code specific to your mod goes here, minify will try to execute this block.
-    # If any exceptions occur, it'll be written to `logs` directory
 
 
 if __name__ == "__main__":
     main()
 ```
+
+The Minify runner imports the script and calls its `main()` function, so keep hook logic in `main()` (not only under the `__main__` guard). Adding Minify's source directory to `sys.path` enables project imports but does not install third-party packages or change the Python interpreter. For standalone runs from a repository checkout, use `uv run --project <repository-root> python <path-to-script>` or activate that checkout's virtual environment. Do not hard-code `.venv`/`site-packages` paths. The repository's `AGENTS/python-scripts.md` contains additional dependency guidance.
 
 ### Platform & Version Utilities
 

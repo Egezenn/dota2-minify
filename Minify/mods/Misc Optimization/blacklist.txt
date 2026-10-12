@@ -3,6 +3,7 @@
 #endif
 #if:disable_event_particles
 >>particles/econ/events
+*-.*\.vsnap_c$
 #endif
 >>particles/econ/items/effigies/status_fx_effigies
 particles/addons_gameplay/fountain_tintable_ambient.vpcf_c

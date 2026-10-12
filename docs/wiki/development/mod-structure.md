@@ -16,6 +16,7 @@ mods
 │   ├── preview.jpg | preview.png
 │   ├── blacklist.txt
 │   ├── replacer.json
+│   ├── remap.json
 │   ├── script.py
 │   ├── script_initial.py
 │   ├── script_after_decompile.py
@@ -197,3 +198,30 @@ Example:
 ```
 
 ![example-replacer](../../assets/example-replacer.jpg)
+
+### `remap.json`
+
+This file redirects text references inside compiled game resources. It requires the
+Workshop Tools and is applied when a patch is built; unlike `replacer.json`, it
+does not swap whole files.
+
+Each top-level key is a compiled resource path from the game pak. Use `*`, `?`,
+or `[]` patterns to target multiple paths. Its value is either a map of
+`"reference_to_find": "replacement_reference"` pairs, or an object with a
+`redirects` map and an optional `if` condition:
+
+```json
+{
+  "panorama/layout/custom_game/custom_game_root.vxml_c": {
+    "if": "example_checkbox",
+    "redirects": {
+      "materials/custom_game/old_material.vmat_c": "materials/custom_game/new_material.vmat_c"
+    }
+  }
+}
+```
+
+The condition names a manifest setting and enables the rule when that setting is
+truthy. You can use `<&setting_key>` in paths and references to insert setting
+values. Matching compiled resources are decompiled, their references are
+replaced, and the edited source is included in the patch build.

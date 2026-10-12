@@ -1,5 +1,6 @@
 import os
 import sys
+from urllib.parse import quote
 
 current_dir = os.path.dirname(os.path.abspath(__file__))
 mod_name = os.path.basename(current_dir)
@@ -12,16 +13,13 @@ if minify_root not in sys.path:
 # isort: split
 
 import requests
-
-# isort: split
-
 from core import base, config, log, output, steam
 
 IMPORT_SUFFIX = " #Minify-Import"
 REMOTE_URL = "https://github.com/Egezenn/dota2-precompiled-grids/releases/latest/download/hero_grid_config.json"
 
 
-def main():
+def main(release_tag=None):
     steam_id_config = config.get("steam_id", "")
 
     userdata_path = os.path.join(steam.ROOT, "userdata")
@@ -38,7 +36,7 @@ def main():
         log.write_warning(
             f"A valid user ID or path to your steam installation couldn't be found for {mod_name}, manually set it from `minify_config.json` under `modconf` > `{mod_name}` key with `steam_path`"
         )
-        return
+        return False
 
     # Check for local config first
     local_config_path = os.path.join(current_dir, "config", "hero_grid_config.json")
@@ -47,11 +45,16 @@ def main():
     else:
         # Fetch from remote
         try:
-            response = requests.get(REMOTE_URL, timeout=10)
+            download_url = (
+                f"https://github.com/Egezenn/dota2-precompiled-grids/releases/download/{quote(release_tag, safe='')}/hero_grid_config.json"
+                if release_tag
+                else REMOTE_URL
+            )
+            response = requests.get(download_url, timeout=10)
             if response.status_code == 200:
                 new_grid_data = response.json()
             else:
-                log.write_warning(f"Couldn't fetch grids from {REMOTE_URL}. Status: {response.status_code}")
+                log.write_warning(f"Couldn't fetch grids from {download_url}. Status: {response.status_code}")
                 output.add_text("&connection_error", msg_type="error", indent=True)
         except Exception as e:
             log.write_warning(f"Failed to fetch remote grids: {e}")
@@ -84,8 +87,10 @@ def main():
 
         # Write back the updated config
         config.write_json_file(original_grid_path, current_config)
+        return True
     else:
         log.write_warning("No grid data found to import.")
+        return False
 
 
 if __name__ == "__main__":
