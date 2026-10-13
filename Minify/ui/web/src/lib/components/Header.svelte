@@ -9,10 +9,12 @@
   export let activeTab: string;
   export let isPatching: boolean;
   export let pluginTabs: Array<{ id: string; name: string }> = [];
+  export let showWorkshopToolsButton: boolean = false;
 
   export let onTabChange: (tab: string) => void;
   export let onPatch: () => void;
   export let onUninstallClick: () => void;
+  export let onWorkshopToolsClick: () => void;
 
   function openExternal(url: string) {
     if (window.pywebview?.api?.open_url) {
@@ -46,6 +48,18 @@
 
   <div class="header-action">
     <div class="header-links">
+      {#if showWorkshopToolsButton}
+        <button
+          type="button"
+          class="header-link-btn"
+          on:click={onWorkshopToolsClick}
+          title="Workshop Tools"
+          aria-label="Workshop Tools"
+        >
+          WT
+        </button>
+      {/if}
+
       <button
         type="button"
         class="header-link-btn"

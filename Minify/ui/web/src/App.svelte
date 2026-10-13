@@ -32,6 +32,7 @@
   let showUpdateModal = false;
   let showWorkshopModal = false;
   let showWorkshopDownloadModal = false;
+  let isWorkshopInstalled: boolean | null = null;
 
   let initialized = false;
   let isDebugEnv = false;
@@ -107,7 +108,7 @@
   async function initPyWebView() {
     const run = async () => {
       try {
-        await Promise.all([initTheme(), handleLoadApiData()]);
+        await Promise.all([initTheme(), handleLoadApiData(), checkWorkshopToolsAvailability()]);
       } finally {
         dismissLoader();
         getAppVersion().then(async (appVersion) => {
@@ -404,16 +405,35 @@
   }
 
   async function checkWorkshopDownload() {
-    try {
-      const isInstalled = await window.pywebview?.api?.is_workshop_installed?.();
-      if (isInstalled === false) {
+    const isInstalled = isWorkshopInstalled ?? (await checkWorkshopToolsAvailability());
+    if (isInstalled === false) {
+      try {
         const ignored = await window.pywebview?.api?.get_state?.("ignore_workshop_download");
         if (!ignored) {
           showWorkshopDownloadModal = true;
         }
+      } catch (err) {
+        console.error("Failed to check workshop download preference:", err);
+      }
+    }
+  }
+
+  async function checkWorkshopToolsAvailability(): Promise<boolean | null> {
+    try {
+      const isInstalled = await window.pywebview?.api?.is_workshop_installed?.();
+      if (typeof isInstalled === "boolean") {
+        isWorkshopInstalled = isInstalled;
+        return isInstalled;
       }
     } catch (err) {
       console.error("Failed to check workshop status:", err);
+    }
+    return null;
+  }
+
+  async function handleWorkshopToolsClick() {
+    if ((await checkWorkshopToolsAvailability()) === false) {
+      showWorkshopDownloadModal = true;
     }
   }
 
@@ -432,6 +452,7 @@
 
   async function handleWorkshopDownloadSuccess() {
     showWorkshopDownloadModal = false;
+    isWorkshopInstalled = true;
     await refreshMods();
   }
 </script>
@@ -441,6 +462,8 @@
     {activeTab}
     {isPatching}
     {pluginTabs}
+    showWorkshopToolsButton={isWorkshopInstalled === false}
+    onWorkshopToolsClick={handleWorkshopToolsClick}
     onTabChange={(tab) => {
       activeTab = tab;
       broadcastToPlugins({ type: "TAB_ACTIVE", tab });

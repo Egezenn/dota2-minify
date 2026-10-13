@@ -146,11 +146,7 @@
 
   <nav class="filters" aria-label="Package type">
     {#each packageTypes as type}
-      <button
-        type="button"
-        class:active={selectedType === type}
-        on:click={() => (selectedType = type)}
-      >
+      <button type="button" class:active={selectedType === type} on:click={() => (selectedType = type)}>
         {$t(`community_filter_${type === "all" ? "all" : `${type}s`}`)}
       </button>
     {/each}
