@@ -1,5 +1,8 @@
 {
+  "community_button_loading": "Загрузка...",
+  "community_button_refresh": "Обновить",
   "community_filter_all": "Все",
+  "community_filter_mods": "Моды",
   "community_filter_plugins": "Плагины",
   "community_filter_themes": "Темы",
   "community_loading_packages": "Загрузка совместимых пакетов...",
