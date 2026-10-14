@@ -1,30 +1,18 @@
 <script lang="ts">
   import { onMount } from "svelte";
   import { setPluginLocale, t } from "./lib/i18n";
-
-  interface RegistryEntry {
-    id: string;
-    name: string;
-    type: "mod" | "plugin" | "theme";
-    repo: string;
-    preview: string;
-    notes_url: string;
-    installed: boolean;
-    installed_tag: string | null;
-    latest_tag: string | null;
-    update_available: boolean;
-    available: boolean;
-    error: string | null;
-  }
+  import type { RegistryEntry } from "./lib/types";
+  import ModCard from "./lib/components/ModCard.svelte";
+  import ModDetailsModal from "./lib/components/ModDetailsModal.svelte";
 
   let entries: RegistryEntry[] = [];
   let selectedType = "all";
   let searchText = "";
   let loading = false;
   let activeItem = "";
-  let expandedItem = "";
+  let selectedEntry: RegistryEntry | null = null;
   let notes = "";
-  let message = "";
+  let notesLoading = false;
   let errorMessage = "";
   const packageTypes = ["all", "mod", "theme", "plugin"] as const;
 
@@ -54,16 +42,24 @@
     }
   }
 
-  async function showNotes(entry: RegistryEntry) {
-    expandedItem = expandedItem === entry.id ? "" : entry.id;
+  async function openDetails(entry: RegistryEntry) {
+    selectedEntry = entry;
     notes = "";
-    if (!expandedItem) return;
+    notesLoading = true;
     try {
       const details = await callRegistry("get_item_details", { id: entry.id });
-      notes = details?.notes || $t("community_no_notes");
+      notes = details?.notes || "";
     } catch (error) {
       notes = $t("community_error_notes", [String(error)]);
+    } finally {
+      notesLoading = false;
     }
+  }
+
+  function closeDetails() {
+    selectedEntry = null;
+    notes = "";
+    notesLoading = false;
   }
 
   function notifyPluginTabsChanged() {
@@ -80,16 +76,9 @@
 
   async function runAction(entry: RegistryEntry, action: "install_item" | "update_item" | "uninstall_item") {
     activeItem = entry.id;
-    message = "";
     errorMessage = "";
     try {
       await callRegistry(action, { id: entry.id });
-      const statusKey = {
-        install_item: "community_status_installed",
-        update_item: "community_status_updated",
-        uninstall_item: "community_status_uninstalled",
-      }[action];
-      message = $t(statusKey, [entry.name]);
       if (entry.type === "plugin") notifyPluginTabsChanged();
       if (entry.type === "mod") notifyModsChanged();
       if (entry.type === "theme") notifyThemeChanged();
@@ -152,84 +141,29 @@
     {/each}
   </nav>
 
-  {#if message}<p class="notice">{message}</p>{/if}
-  {#if errorMessage}<p class="error" role="alert">{errorMessage}</p>{/if}
-
   <main class="catalogue">
     {#if loading && entries.length === 0}
       <p class="empty">{$t("community_loading_packages")}</p>
     {:else if filteredEntries.length === 0 && !errorMessage}
       <p class="empty">{$t("community_no_packages")}</p>
     {:else if filteredEntries.length > 0}
-      <div class="cards">
+      <div class="mod-grid">
         {#each filteredEntries as entry (entry.id)}
-          <article class="entry">
-            {#if entry.preview}
-              <a class="preview" href={entry.preview} target="_blank" rel="noreferrer">
-                <img src={entry.preview} alt={`${entry.name} preview`} loading="lazy" />
-              </a>
-            {/if}
-            <div class="entry-content">
-              <div class="entry-heading">
-                <h3>{entry.name}</h3>
-                <span class="type">{$t(`community_type_${entry.type}`)}</span>
-              </div>
-              <p class="release">
-                {#if entry.installed}
-                  {$t("community_installed_tag", [entry.installed_tag || $t("community_unknown_tag")])}
-                {:else}
-                  {$t("community_latest_tag", [entry.latest_tag || $t("community_unavailable_tag")])}
-                {/if}
-              </p>
-              {#if entry.installed && entry.update_available}
-                <p class="update-label">{$t("community_update_available", [entry.latest_tag || ""])}</p>
-              {/if}
-              {#if entry.error}
-                <p class="error entry-error">{entry.error}</p>
-              {/if}
-              <div class="entry-actions">
-                {#if entry.installed && entry.update_available}
-                  <button
-                    type="button"
-                    class="primary"
-                    disabled={activeItem === entry.id}
-                    on:click={() => runAction(entry, "update_item")}
-                  >
-                    {activeItem === entry.id ? $t("community_button_updating") : $t("community_button_update")}
-                  </button>
-                {:else if !entry.installed}
-                  <button
-                    type="button"
-                    class="primary"
-                    disabled={!entry.available || activeItem === entry.id}
-                    on:click={() => runAction(entry, "install_item")}
-                  >
-                    {activeItem === entry.id ? $t("community_button_installing") : $t("community_button_install")}
-                  </button>
-                {/if}
-                {#if entry.installed}
-                  <button
-                    type="button"
-                    disabled={activeItem === entry.id}
-                    on:click={() => runAction(entry, "uninstall_item")}
-                  >
-                    {$t("community_button_uninstall")}
-                  </button>
-                {/if}
-                <button type="button" on:click={() => showNotes(entry)}>
-                  {expandedItem === entry.id ? $t("community_button_hide_details") : $t("community_button_details")}
-                </button>
-                <a href={entry.repo} target="_blank" rel="noreferrer">{$t("community_button_repository")}</a>
-              </div>
-              {#if expandedItem === entry.id}
-                <pre class="notes">{notes || $t("community_loading_details")}</pre>
-              {/if}
-            </div>
-          </article>
+          <ModCard
+            {entry}
+            inProgress={activeItem === entry.id}
+            updating={activeItem === entry.id}
+            onInstall={(e) => runAction(e, "install_item")}
+            onUpdate={(e) => runAction(e, "update_item")}
+            onUninstall={(e) => runAction(e, "uninstall_item")}
+            onDetails={openDetails}
+          />
         {/each}
       </div>
     {/if}
   </main>
+
+  <ModDetailsModal entry={selectedEntry} {notes} loading={notesLoading} onClose={closeDetails} />
 </div>
 
 <style>
@@ -254,8 +188,6 @@
 
   .toolbar,
   .filters,
-  .entry-heading,
-  .entry-actions,
   .toolbar-actions {
     display: flex;
     align-items: center;
@@ -271,7 +203,6 @@
   }
 
   h2,
-  h3,
   p {
     margin: 0;
   }
@@ -290,20 +221,17 @@
     color: var(--input-text, #e0e0e0);
   }
 
-  button,
-  .entry-actions a {
+  button {
     padding: 5px 9px;
     border: 1px solid var(--btn-border, #333);
     border-radius: 0;
     background: var(--btn-bg, #1e1e1e);
     color: var(--btn-text, #e0e0e0);
     font: inherit;
-    text-decoration: none;
     cursor: pointer;
   }
 
-  button:hover:not(:disabled),
-  .entry-actions a:hover {
+  button:hover:not(:disabled) {
     background: var(--btn-hover-bg, #282828);
     border-color: var(--btn-hover-border, var(--accent, #17bebe));
   }
@@ -319,8 +247,7 @@
     border-bottom: 1px solid var(--border-color, #333);
   }
 
-  .filters button.active,
-  button.primary {
+  .filters button.active {
     background: var(--accent, #17bebe);
     color: var(--accent-text, #000);
     border-color: var(--accent, #17bebe);
@@ -328,102 +255,20 @@
 
   .catalogue {
     flex: 1;
-    overflow: auto;
-    padding: 12px;
-  }
-
-  .cards {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-    align-items: start;
-    gap: 12px;
-  }
-
-  .entry {
-    overflow: hidden;
-    border: 1px solid var(--card-border, #333);
-    border-radius: 10px;
-    background: var(--card-bg, #181818);
-  }
-
-  .preview {
-    display: block;
-    height: 150px;
-    background: var(--card-preview-bg, #141414);
-    text-align: center;
-  }
-
-  .preview img {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-  }
-
-  .entry-content {
-    display: grid;
-    gap: 8px;
-    padding: 10px;
-  }
-
-  .entry-heading {
-    justify-content: space-between;
-  }
-
-  .entry-heading h3 {
-    font-size: 14px;
-  }
-
-  .type {
-    padding: 2px 7px;
-    border: 1px solid var(--border-color, #333);
-    border-radius: 999px;
-    color: var(--text-secondary, #aaa);
-    text-transform: capitalize;
-  }
-
-  .release,
-  .update-label,
-  .empty {
-    color: var(--text-secondary, #aaa);
-  }
-
-  .update-label {
-    color: var(--accent, #17bebe);
-  }
-
-  .entry-actions {
-    flex-wrap: wrap;
-  }
-
-  .notes {
-    overflow: auto;
-    max-height: 220px;
-    margin: 0;
+    overflow-y: auto;
     padding: 8px;
-    border-radius: 6px;
-    background: var(--terminal-bg, #0c0d0e);
-    color: var(--terminal-text, #d4d4d4);
-    font: 12px/1.45 var(--font-mono, monospace);
-    white-space: pre-wrap;
   }
 
-  .notice,
-  .error {
-    margin: 8px 12px 0;
-    color: var(--accent, #17bebe);
-  }
-
-  .error {
-    color: var(--log-error, #ff5555);
-  }
-
-  .entry-error {
-    margin: 0;
-    font-size: 12px;
+  .mod-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    align-content: start;
+    gap: 8px;
   }
 
   .empty {
     padding: 20px;
     text-align: center;
+    color: var(--text-secondary, #aaa);
   }
 </style>

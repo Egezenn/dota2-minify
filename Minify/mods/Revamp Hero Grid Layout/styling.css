@@ -15,7 +15,7 @@ DOTAHeroesPage#DOTAHeroesPage {
 
 /* g:panorama/styles/hero_grid_new */
 .HeroCard #HeroImage {
-  margin: 0px 4px 4px 0px;
+  margin: 0px <&margin_between_heroes> <&margin_between_heroes> 0px;
 }
 
 .HeroCard {
@@ -30,9 +30,11 @@ DOTAHeroGridNew#HeroGrid {
   height: 600px;
 }
 
+/* if:remove_rightside_overflow */
 #GridCategories {
   overflow: clip scroll;
 }
+/* endif */
 
 .RolesOverlayBranding {
   visibility: collapse;
@@ -74,9 +76,11 @@ DOTAHeroGridNew#HeroGrid {
 }
 
 /* g:panorama/styles/hud/hud_simple_hero_description */
+/* if:remove_similiar_heroes */
 .SimilarHeroes {
   visibility: collapse;
 }
+/* endif */
 
 /* g:panorama/styles/tooltips/tooltip_hero_card */
 #MainContents {

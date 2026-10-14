@@ -4,7 +4,7 @@ import os
 from typing import Any, Dict, List
 
 import vpk
-from core import base, config, mods_shared, utils
+from core import base, config, localization, mods_shared, utils
 
 
 class ModService:
@@ -384,7 +384,7 @@ class ModService:
         if os.path.exists(notes_path):
             with utils.open_utf8(notes_path) as f:
                 raw_notes = f.read()
-            notes_content = self.parse_notes_for_locale(raw_notes, lang)
+            notes_content = localization.parse_notes_for_locale(raw_notes, lang)
 
         preview_data_url = self.get_mod_preview(mod_path)
 
@@ -397,37 +397,6 @@ class ModService:
             "has_preview": bool(preview_data_url),
             "methods": methods,
         }
-
-    @staticmethod
-    def parse_notes_for_locale(notes_text: str, lang: str) -> str:
-        if not notes_text or "<!-- lang:" not in notes_text.lower():
-            return notes_text.strip()
-
-        sections: Dict[str, str] = {}
-        current_lang: str | None = None
-        lines: List[str] = []
-
-        for line in notes_text.splitlines():
-            trimmed = line.strip()
-            if trimmed.lower().startswith("<!-- lang:") and trimmed.endswith("-->"):
-                if current_lang:
-                    sections[current_lang] = "\n".join(lines).strip()
-                current_lang = trimmed[10:-3].strip().lower()
-                lines = []
-            else:
-                lines.append(line)
-        if current_lang:
-            sections[current_lang] = "\n".join(lines).strip()
-
-        target_lang = (lang or "en").lower()
-        if target_lang in sections:
-            return sections[target_lang]
-        elif "en" in sections:
-            return sections["en"]
-        elif sections:
-            return next(iter(sections.values()))
-
-        return notes_text.strip()
 
     def set_mods(self, data: Dict[str, bool]) -> bool:
         import conditions

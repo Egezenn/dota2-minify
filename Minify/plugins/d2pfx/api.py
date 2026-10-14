@@ -1,5 +1,6 @@
 import os
 import re
+import tempfile
 from typing import Any, Dict, List
 
 from core import base, config, fs, mods_shared, output, utils
@@ -9,6 +10,50 @@ from . import __main__ as plugin_main
 from .data import DataManager
 
 router = PluginRouter()
+D2PFX_INSTALLS_KEY = "d2pfx_installs"
+
+
+def _install_records() -> Dict[str, Dict[str, Any]]:
+    states = utils.read_states()
+    records = states.get(D2PFX_INSTALLS_KEY, {})
+    if not isinstance(records, dict):
+        return {}
+
+    normalized = {}
+    for key, record in records.items():
+        if not isinstance(record, dict):
+            continue
+        category = record.get("category")
+        name = record.get("name")
+        label = record.get("label")
+        if isinstance(category, str) and isinstance(name, str):
+            normalized_key = _install_key(category, name, label)
+        else:
+            normalized_key = key.removesuffix("::") if isinstance(key, str) else key
+        normalized[normalized_key] = {field: record[field] for field in ("source_date", "folder") if field in record}
+
+    if normalized != records:
+        utils.write_states(D2PFX_INSTALLS_KEY, normalized)
+    return normalized
+
+
+def _install_key(category: str, name: str, label: str = None) -> str:
+    key = f"{category}::{name}"
+    return f"{key}::{label}" if label else key
+
+
+def _save_install_record(record: Dict[str, Any]) -> None:
+    records = _install_records()
+    records[_install_key(record["category"], record["name"], record.get("label"))] = {
+        "source_date": record.get("source_date"),
+        "folder": record["folder"],
+    }
+    utils.write_states(D2PFX_INSTALLS_KEY, records)
+
+
+def _source_date(mod: Dict[str, Any]):
+    meta = mod.get("meta")
+    return meta.get("date") if isinstance(meta, dict) else None
 
 
 @router.route
@@ -155,6 +200,7 @@ def get_installed_mods(params: Dict[str, Any] = None) -> List[Dict[str, Any]]:
     from patch import manifest_utils
 
     installed = []
+    records = _install_records()
     if not os.path.exists(base.mods_dir):
         return []
     for folder in os.listdir(base.mods_dir):
@@ -163,6 +209,7 @@ def get_installed_mods(params: Dict[str, Any] = None) -> List[Dict[str, Any]]:
             continue
         cfg = manifest_utils.get_mod(mod_path)
         if cfg.get("browser") == "d2pfx":
+            record = records.get(_install_key(cfg.get("category", ""), cfg.get("name", ""), cfg.get("label")), {})
             installed.append(
                 {
                     "name": cfg.get("name"),
@@ -170,6 +217,9 @@ def get_installed_mods(params: Dict[str, Any] = None) -> List[Dict[str, Any]]:
                     "label": cfg.get("label"),
                     "folder": folder,
                     "enabled": mods_shared.get_state(folder),
+                    "source_date": record.get("source_date", cfg.get("source_date"))
+                    if isinstance(record, dict)
+                    else cfg.get("source_date"),
                 }
             )
     return installed
@@ -190,6 +240,21 @@ def set_mod_state(params: Dict[str, Any] = None) -> Dict[str, Any]:
 
 @router.route
 def install_mod(params: Dict[str, Any] = None) -> Dict[str, Any]:
+    return _install_mod(params)
+
+
+@router.route
+def update_mod(params: Dict[str, Any] = None) -> Dict[str, Any]:
+    params = params or {}
+    mod = params.get("mod", {})
+    cat_id = params.get("cat_id", "")
+    target_dir = os.path.join(base.mods_dir, _resolve_mod_folder(mod.get("name", ""), cat_id, mod.get("label")))
+    if not os.path.isdir(target_dir):
+        return {"success": False, "error": "Installed mod directory not found."}
+    return _install_mod(params, update_target=target_dir)
+
+
+def _install_mod(params: Dict[str, Any] = None, update_target: str = None) -> Dict[str, Any]:
     params = params or {}
     mod = params.get("mod", {})
     cat_id = params.get("cat_id", "")
@@ -231,7 +296,8 @@ def install_mod(params: Dict[str, Any] = None) -> Dict[str, Any]:
     mod_dir_name = f"D2PFX {cat_id.upper()} - {name}"
     if label:
         mod_dir_name = f"{mod_dir_name} {label}"
-    target_dir = os.path.join(base.mods_dir, utils.sanitize_win_path(mod_dir_name))
+    final_target_dir = update_target or os.path.join(base.mods_dir, utils.sanitize_win_path(mod_dir_name))
+    target_dir = tempfile.mkdtemp(prefix=".d2pfx-update-", dir=base.mods_dir) if update_target else final_target_dir
 
     fs.create_dirs(target_dir)
 
@@ -293,6 +359,7 @@ def install_mod(params: Dict[str, Any] = None) -> Dict[str, Any]:
         "tags": active_tags,
         "version": plugin_main.VERSION,
         "label": label,
+        "source_date": _source_date(mod),
     }
     rename_cats = plugin_main.RENAME_CATEGORIES
 
@@ -334,10 +401,23 @@ def install_mod(params: Dict[str, Any] = None) -> Dict[str, Any]:
     with open(os.path.join(target_dir, "notes.md"), "w", encoding="utf-8") as f:
         f.write(notes_content)
 
+    if update_target:
+        backup_dir = tempfile.mkdtemp(prefix=".d2pfx-backup-", dir=base.mods_dir)
+        os.rmdir(backup_dir)
+        os.replace(final_target_dir, backup_dir)
+        try:
+            os.replace(target_dir, final_target_dir)
+        except OSError:
+            os.replace(backup_dir, final_target_dir)
+            fs.remove_path(target_dir)
+            raise
+        fs.remove_path(backup_dir)
+
+    _save_install_record({**modcfg, "folder": os.path.basename(final_target_dir)})
     mods_shared.scan_mods()
     output.add_text(f"D2PFX mod '{name}' installed successfully.", msg_type="success")
 
-    return {"success": True, "folder": mod_dir_name}
+    return {"success": True, "folder": os.path.basename(final_target_dir)}
 
 
 @router.route
@@ -378,6 +458,9 @@ def uninstall_mod(params: Dict[str, Any] = None) -> Dict[str, Any]:
 
     if target_dir and os.path.exists(target_dir):
         fs.remove_path(target_dir)
+        records = _install_records()
+        records.pop(_install_key(cat_id, mod_name, label), None)
+        utils.write_states(D2PFX_INSTALLS_KEY, records)
         if target_folder:
             states = config.read_json_file(base.mods_config_dir)
             if target_folder in states:

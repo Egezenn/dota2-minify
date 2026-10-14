@@ -11,7 +11,7 @@ from typing import Any
 
 import requests
 
-from core import base, config, fs, mods_shared, utils
+from core import base, config, fs, localization, mods_shared, utils
 
 REGISTRY_URL = "https://raw.githubusercontent.com/Dota-Modding-Community/community/main/registry.json"
 STATES_KEY = "community_installs"
@@ -39,6 +39,62 @@ def _repo_parts(repo_url: str) -> tuple[str, str]:
 
 def _latest_release(item: dict[str, Any]) -> dict[str, Any]:
     owner, repo = _repo_parts(str(item.get("repo", "")))
+    releases = _release_compatibility(item)
+    if releases is not None:
+        supported_tags = {tag for tag, versions in releases.items() if base.VERSION in versions}
+        if not supported_tags:
+            raise ValueError(f"No release supports Minify {base.VERSION}.")
+        response = requests.get(
+            f"https://api.github.com/repos/{owner}/{repo}/releases?per_page=100",
+            headers=HEADERS,
+            timeout=15,
+        )
+        response.raise_for_status()
+        candidates = response.json()
+        if not isinstance(candidates, list):
+            raise ValueError("GitHub returned an invalid release list.")
+        canonical_repo = None
+        for candidate in candidates:
+            if not isinstance(candidate, dict):
+                continue
+            canonical_url = urllib.parse.urlparse(str(candidate.get("html_url", "")))
+            canonical_parts = [part for part in canonical_url.path.strip("/").split("/") if part]
+            if (
+                canonical_url.scheme == "https"
+                and canonical_url.netloc.lower() == "github.com"
+                and len(canonical_parts) >= 2
+                and canonical_parts[0].lower() == owner.lower()
+            ):
+                canonical_repo = canonical_parts[1]
+                break
+        if canonical_repo is None:
+            raise ValueError("GitHub returned an invalid canonical repository URL.")
+
+        asset_name = _release_asset_name(item, owner, canonical_repo)
+        for candidate in candidates:
+            if not isinstance(candidate, dict):
+                continue
+            tag = candidate.get("tag_name")
+            if not isinstance(tag, str) or tag not in supported_tags:
+                continue
+            assets = candidate.get("assets")
+            if not isinstance(assets, list):
+                continue
+            asset = next(
+                (asset for asset in assets if isinstance(asset, dict) and asset.get("name") == asset_name),
+                None,
+            )
+            asset_url = urllib.parse.urlparse(str(asset.get("browser_download_url", ""))) if asset else None
+            expected_path = f"/{owner}/{canonical_repo}/releases/download/{tag}/{asset_name}"
+            if (
+                asset_url
+                and asset_url.scheme == "https"
+                and asset_url.netloc.lower() == "github.com"
+                and asset_url.path == expected_path
+            ):
+                return {"tag": tag, "asset_url": asset["browser_download_url"]}
+        raise ValueError(f"No compatible release asset is available for Minify {base.VERSION}.")
+
     response = requests.get(
         f"https://api.github.com/repos/{owner}/{repo}/releases/latest",
         headers=HEADERS,
@@ -62,6 +118,17 @@ def _latest_release(item: dict[str, Any]) -> dict[str, Any]:
             raise ValueError("GitHub returned an invalid canonical repository URL.")
         repo = repo_parts[1]
 
+    asset_name = _release_asset_name(item, owner, repo)
+    assets = release.get("assets", [])
+    asset = next((candidate for candidate in assets if candidate.get("name") == asset_name), None)
+    if not asset or not str(asset.get("browser_download_url", "")).startswith(
+        f"https://github.com/{owner}/{repo}/releases/download/"
+    ):
+        raise ValueError(f"Release {tag} does not include the registry asset {asset_name}.")
+    return {"tag": tag, "asset_url": asset["browser_download_url"]}
+
+
+def _release_asset_name(item: dict[str, Any], owner: str, repo: str) -> str:
     asset_url = item.get("latest-asset")
     parsed_asset = urllib.parse.urlparse(asset_url if isinstance(asset_url, str) else "")
     expected_prefix = f"/{owner}/{repo}/releases/latest/download/"
@@ -75,13 +142,7 @@ def _latest_release(item: dict[str, Any]) -> dict[str, Any]:
     asset_name = urllib.parse.unquote(parsed_asset.path[len(expected_prefix) :])
     if not asset_name or "/" in asset_name or "\\" in asset_name:
         raise ValueError("The registry's latest-asset URL has an invalid asset filename.")
-    assets = release.get("assets", [])
-    asset = next((candidate for candidate in assets if candidate.get("name") == asset_name), None)
-    if not asset or not str(asset.get("browser_download_url", "")).startswith(
-        f"https://github.com/{owner}/{repo}/releases/download/"
-    ):
-        raise ValueError(f"Release {tag} does not include the registry asset {asset_name}.")
-    return {"tag": tag, "asset_url": asset["browser_download_url"]}
+    return asset_name
 
 
 def _install_records() -> dict[str, dict[str, Any]]:
@@ -94,8 +155,14 @@ def _item_key(item_type: str, name: str) -> str:
     return f"{item_type}:{name}"
 
 
-def _compatible_versions(item: dict[str, Any]) -> list[str]:
-    versions = item.get("versions")
+def _release_compatibility(item: dict[str, Any]) -> dict[str, list[str]] | None:
+    releases = item.get("releases")
+    if not isinstance(releases, dict):
+        return None
+    return {tag: _version_list(versions) for tag, versions in releases.items() if isinstance(tag, str) and tag}
+
+
+def _version_list(versions: Any) -> list[str]:
     if isinstance(versions, str):
         return [version.strip() for version in versions.split(",") if version.strip()]
     if isinstance(versions, list):
@@ -103,16 +170,33 @@ def _compatible_versions(item: dict[str, Any]) -> list[str]:
     return []
 
 
+def _compatible_versions(item: dict[str, Any]) -> list[str]:
+    releases = _release_compatibility(item)
+    if releases is not None:
+        return list(dict.fromkeys(version for versions in releases.values() for version in versions))
+    versions = item.get("versions")
+    return _version_list(versions)
+
+
+def _tag_is_compatible(item: dict[str, Any], tag: Any) -> bool:
+    releases = _release_compatibility(item)
+    if releases is not None:
+        return isinstance(tag, str) and base.VERSION in releases.get(tag, [])
+    return base.VERSION in _compatible_versions(item)
+
+
 def _enrich_entry(item: dict[str, Any], records: dict[str, dict[str, Any]]) -> dict[str, Any] | None:
     item_type = str(item.get("type", "")).lower()
     name = item.get("name")
     if item_type not in REGISTRY_TYPES or not isinstance(name, str) or not name.strip():
         return None
-    if base.VERSION not in _compatible_versions(item):
-        return None
 
     key = _item_key(item_type, name)
     record = records.get(key, {})
+    installed = isinstance(record, dict) and bool(record)
+    compatible = base.VERSION in _compatible_versions(item)
+    if not compatible and not installed:
+        return None
     result = {
         "id": key,
         "name": name,
@@ -122,19 +206,22 @@ def _enrich_entry(item: dict[str, Any], records: dict[str, dict[str, Any]]) -> d
         "notes_url": item.get("notes", ""),
         "manifest_url": item.get("manifest", ""),
         "compatible_versions": _compatible_versions(item),
-        "installed": isinstance(record, dict) and bool(record),
+        "installed": installed,
         "installed_tag": record.get("tag") if isinstance(record, dict) else None,
+        "installed_compatible": installed and _tag_is_compatible(item, record.get("tag")),
+        "current_version": base.VERSION,
         "latest_tag": None,
         "update_available": False,
         "available": False,
         "error": None,
     }
-    try:
-        latest = _latest_release(item)
-        result.update(latest_tag=latest["tag"], available=True)
-        result["update_available"] = result["installed"] and result["installed_tag"] != latest["tag"]
-    except (requests.RequestException, ValueError, KeyError) as exc:
-        result["error"] = str(exc)
+    if compatible:
+        try:
+            latest = _latest_release(item)
+            result.update(latest_tag=latest["tag"], available=True)
+            result["update_available"] = installed and result["installed_tag"] != latest["tag"]
+        except (requests.RequestException, ValueError, KeyError) as exc:
+            result["error"] = str(exc)
     return result
 
 
@@ -155,7 +242,8 @@ def get_item_details(params: dict[str, Any] | None = None) -> dict[str, Any]:
             if notes_url:
                 response = requests.get(notes_url, headers=HEADERS, timeout=15)
                 response.raise_for_status()
-                notes = response.text[:100_000]
+                lang = config.get("locale") or "en"
+                notes = localization.parse_notes_for_locale(response.text[:100_000], lang)
             return {"notes": notes, "manifest_url": item.get("manifest", "")}
     raise ValueError("The registry item no longer exists.")
 

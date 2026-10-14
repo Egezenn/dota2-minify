@@ -5,8 +5,11 @@
   export let mod: D2Mod;
   export let installed: boolean = false;
   export let inProgress: boolean = false;
+  export let updating: boolean = false;
+  export let updateAvailable: boolean = false;
   export let enabled: boolean = false;
   export let onInstall: (mod: D2Mod) => void;
+  export let onUpdate: (mod: D2Mod) => void;
   export let onUninstall: (mod: D2Mod) => void;
   export let onToggleEnabled: ((mod: D2Mod, enabled: boolean) => void) | undefined = undefined;
   export let onPreview: ((url: string, title: string) => void) | undefined = undefined;
@@ -97,6 +100,11 @@
           on:change={(e) => onToggleEnabled && onToggleEnabled(mod, e.currentTarget.checked)}
         />
       </label>
+      {#if updateAvailable}
+        <button class="install-btn update" disabled={inProgress} on:click={() => onUpdate(mod)}>
+          {updating ? $t("button_updating") : $t("button_update")}
+        </button>
+      {/if}
       <button class="install-btn installed" disabled={inProgress} on:click={() => onUninstall(mod)}>
         {inProgress ? $t("button_removing") : $t("button_remove")}
       </button>
@@ -230,6 +238,11 @@
     background: var(--accent, #17bebe);
     color: var(--accent-text, #000);
     border-color: var(--accent, #17bebe);
+  }
+
+  .install-btn.update {
+    border-color: var(--accent, #17bebe);
+    color: var(--accent, #17bebe);
   }
 
   .install-btn:disabled {

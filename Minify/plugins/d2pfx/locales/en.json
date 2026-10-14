@@ -5,6 +5,8 @@
   "button_refresh_data": "Refresh Data",
   "button_remove": "REMOVE",
   "button_removing": "REMOVING...",
+  "button_update": "UPDATE",
+  "button_updating": "UPDATING...",
   "label_disable_mod": "Disable mod",
   "label_enable_mod": "Enable mod",
   "label_loading_categories": "Loading categories...",

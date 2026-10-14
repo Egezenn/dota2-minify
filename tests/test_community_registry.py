@@ -218,32 +218,115 @@ def test_plugin_id_resolves_from_registry_name_folder(tmp_path, monkeypatch):
     assert service._resolve_plugin_entry(str(plugin_dir)) == str(plugin_dir / "ui" / "index.html")
 
 
-def test_catalogue_filters_incompatible_entries_and_displays_release_tag(monkeypatch):
+def test_catalogue_keeps_incompatible_installs_visible(monkeypatch):
     monkeypatch.setattr(base, "VERSION", "2rc6")
     monkeypatch.setattr(
         community_api,
         "_get_registry",
         lambda: [
-            {"name": "Compatible", "type": "mod", "versions": "2rc5,2rc6"},
-            {"name": "Incompatible", "type": "plugin", "versions": "2rc5"},
+            {
+                "name": "Compatible",
+                "type": "mod",
+                "releases": {"1.0.0": ["2rc5"], "1.0.1": ["2rc6"]},
+            },
+            {"name": "Incompatible", "type": "plugin", "releases": {"1.0.0": ["2rc5"]}},
+            {"name": "Not Installed", "type": "theme", "releases": {"1.0.0": ["2rc5"]}},
         ],
     )
     monkeypatch.setattr(
         community_api,
         "_install_records",
-        lambda: {"mod:Compatible": {"tag": "v1.0"}},
+        lambda: {
+            "mod:Compatible": {"tag": "1.0.0"},
+            "plugin:Incompatible": {"tag": "1.0.0"},
+        },
     )
     monkeypatch.setattr(
         community_api,
         "_latest_release",
-        lambda _item: {"tag": "v2.0", "asset_url": "https://example.test/package.zip"},
+        lambda _item: {"tag": "1.0.1", "asset_url": "https://example.test/package.zip"},
     )
 
     entries = community_api.get_catalogue()
-    assert [entry["name"] for entry in entries] == ["Compatible"]
-    assert entries[0]["installed_tag"] == "v1.0"
-    assert entries[0]["latest_tag"] == "v2.0"
+    assert [entry["name"] for entry in entries] == ["Compatible", "Incompatible"]
+    assert entries[0]["installed_tag"] == "1.0.0"
+    assert entries[0]["installed_compatible"] is False
+    assert entries[0]["latest_tag"] == "1.0.1"
     assert entries[0]["update_available"] is True
+    assert entries[1]["installed"] is True
+    assert entries[1]["installed_compatible"] is False
+    assert entries[1]["latest_tag"] is None
+    assert entries[1]["update_available"] is False
+
+
+@pytest.mark.parametrize(
+    ("locale", "expected"),
+    [("tr", "Turkish notes."), ("de", "English notes."), ("en", "English notes.")],
+)
+def test_item_details_filters_notes_by_locale(monkeypatch, locale, expected):
+    class Response:
+        text = "<!-- lang:en -->\n\nEnglish notes.\n\n<!-- lang:tr -->\n\nTurkish notes.\n"
+
+        def raise_for_status(self):
+            return None
+
+    monkeypatch.setattr(
+        community_api,
+        "_get_registry",
+        lambda: [{"name": "Example", "type": "mod", "notes": "https://example.test/notes.md"}],
+    )
+    monkeypatch.setattr(community_api.requests, "get", lambda *_args, **_kwargs: Response())
+    monkeypatch.setattr(
+        community_api.config,
+        "get",
+        lambda key, default=None: locale if key == "locale" else default,
+    )
+
+    details = community_api.get_item_details({"id": "mod:Example"})
+    assert details["notes"] == expected
+
+
+def test_latest_release_selects_newest_release_compatible_with_minify(monkeypatch):
+    monkeypatch.setattr(base, "VERSION", "2rc6")
+
+    class Response:
+        def raise_for_status(self):
+            return None
+
+        def json(self):
+            return [
+                {
+                    "tag_name": "1.0.2",
+                    "html_url": "https://github.com/test/theme/releases/tag/1.0.2",
+                    "assets": [
+                        {
+                            "name": "theme.zip",
+                            "browser_download_url": ("https://github.com/test/theme/releases/download/1.0.2/theme.zip"),
+                        }
+                    ],
+                },
+                {
+                    "tag_name": "1.0.1",
+                    "html_url": "https://github.com/test/theme/releases/tag/1.0.1",
+                    "assets": [
+                        {
+                            "name": "theme.zip",
+                            "browser_download_url": ("https://github.com/test/theme/releases/download/1.0.1/theme.zip"),
+                        }
+                    ],
+                },
+            ]
+
+    monkeypatch.setattr(community_api.requests, "get", lambda *_args, **_kwargs: Response())
+    item = {
+        "repo": "https://github.com/test/theme",
+        "latest-asset": "https://github.com/test/theme/releases/latest/download/theme.zip",
+        "releases": {"1.0.2": ["2rc7"], "1.0.1": ["2rc6"]},
+    }
+    assert community_api._latest_release(item) == {
+        "tag": "1.0.1",
+        "asset_url": "https://github.com/test/theme/releases/download/1.0.1/theme.zip",
+    }
 
 
 def test_latest_release_accepts_repository_rename_and_uses_release_asset(monkeypatch):
