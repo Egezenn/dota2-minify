@@ -1,1 +1,9 @@
-{}
+{
+  "community_filter_all": "Все",
+  "community_filter_plugins": "Плагины",
+  "community_filter_themes": "Темы",
+  "community_loading_packages": "Загрузка совместимых пакетов...",
+  "community_no_packages": "Не найдено совместимых пакетов.",
+  "community_search_placeholder": "Искать пакеты...",
+  "community_title": "Сообщество"
+}
