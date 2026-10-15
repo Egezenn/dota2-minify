@@ -4,6 +4,7 @@ import shutil
 import stat
 import sys
 import tempfile
+import time
 import urllib.parse
 import zipfile
 from pathlib import Path, PurePosixPath
@@ -17,15 +18,50 @@ REGISTRY_URL = "https://raw.githubusercontent.com/Dota-Modding-Community/communi
 STATES_KEY = "community_installs"
 REGISTRY_TYPES = {"mod", "plugin", "theme"}
 HEADERS = {"User-Agent": "Dota2-Minify-Community-Registry"}
-MAX_ARCHIVE_SIZE = 1024 * 1024 * 1024
+MAX_ARCHIVE_SIZE = 5 * 1024 * 1024 * 1024
+REGISTRY_CACHE_NAME = "registry.json"
+REGISTRY_STATE_KEY = "community_registry"
+REGISTRY_REFRESH_INTERVAL = 86400
 
 
 def _get_registry() -> list[dict[str, Any]]:
-    response = requests.get(REGISTRY_URL, headers=HEADERS, timeout=15)
-    response.raise_for_status()
-    registry = response.json()
+    cache_path = os.path.join(base.cache_dir, "plugins", "community", REGISTRY_CACHE_NAME)
+    last_refresh = utils.get_state(REGISTRY_STATE_KEY, "last_refresh", 0)
+    cache_exists = os.path.isfile(cache_path)
+    refresh_due = (
+        config.get("community_auto_refresh_catalogue", True)
+        and (time.time() - last_refresh) > REGISTRY_REFRESH_INTERVAL
+    )
+
+    if cache_exists and not refresh_due:
+        return _read_registry_cache(cache_path)
+
+    try:
+        response = requests.get(REGISTRY_URL, headers=HEADERS, timeout=15)
+        response.raise_for_status()
+        registry = response.json()
+        if not isinstance(registry, list):
+            raise ValueError("The community registry must contain a JSON array.")
+        registry = [item for item in registry if isinstance(item, dict)]
+        fs.create_dirs(os.path.dirname(cache_path))
+        with open(cache_path, "w", encoding="utf-8") as cache_file:
+            json.dump(registry, cache_file, indent=2)
+        utils.set_state(REGISTRY_STATE_KEY, "last_refresh", int(time.time()))
+        return registry
+    except (OSError, requests.RequestException, ValueError, TypeError) as exc:
+        if cache_exists:
+            return _read_registry_cache(cache_path)
+        raise RuntimeError(f"Failed to fetch the community registry: {exc}") from exc
+
+
+def _read_registry_cache(cache_path: str) -> list[dict[str, Any]]:
+    try:
+        with open(cache_path, "r", encoding="utf-8") as cache_file:
+            registry = json.load(cache_file)
+    except (OSError, json.JSONDecodeError) as exc:
+        raise RuntimeError(f"Failed to read the cached community registry: {exc}") from exc
     if not isinstance(registry, list):
-        raise ValueError("The community registry must contain a JSON array.")
+        raise ValueError("The cached community registry must contain a JSON array.")
     return [item for item in registry if isinstance(item, dict)]
 
 
@@ -285,7 +321,7 @@ def _unpack_zip(archive_path: str, destination: str) -> None:
                 raise ValueError(f"Symbolic links are not allowed in archives: {info.filename}")
             declared_total += info.file_size
             if declared_total > MAX_ARCHIVE_SIZE:
-                raise ValueError("Archive contents exceed the 1 GiB extraction limit.")
+                raise ValueError("Archive contents exceed the 5 GiB extraction limit.")
             target = (root / Path(*member.parts)).resolve()
             if not target.is_relative_to(root):
                 raise ValueError(f"Archive path escapes its destination: {info.filename}")
@@ -297,7 +333,7 @@ def _unpack_zip(archive_path: str, destination: str) -> None:
                     while chunk := source.read(64 * 1024):
                         extracted_total += len(chunk)
                         if extracted_total > MAX_ARCHIVE_SIZE:
-                            raise ValueError("Archive contents exceed the 1 GiB extraction limit.")
+                            raise ValueError("Archive contents exceed the 5 GiB extraction limit.")
                         output.write(chunk)
 
 

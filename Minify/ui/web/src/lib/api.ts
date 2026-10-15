@@ -125,7 +125,9 @@ export async function loadApiData(currentLang: string): Promise<{
   if (Array.isArray(initialLogs)) logs = initialLogs;
   isPatching = Boolean(patchingState);
   if (Array.isArray(mods)) modsStore.set(mods);
-  if (locDict) localeStore.set({ lang: targetUiLang, dict: locDict });
+  if (locDict && Object.keys(locDict).length > 0) {
+    localeStore.set({ lang: targetUiLang, dict: locDict });
+  }
 
   if (api.get_plugin_tabs) {
     try {

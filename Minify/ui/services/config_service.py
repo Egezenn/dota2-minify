@@ -15,9 +15,18 @@ class ConfigService:
         return bool(config.get("debug_env"))
 
     def get_localization(self, lang: str = "en") -> Dict[str, str]:
-        if not lang:
-            lang = config.get("locale") or "en"
-        return localization.get_for_locale(lang) or {}
+        requested_lang = lang or config.get("locale") or "en"
+        if not isinstance(requested_lang, str):
+            requested_lang = "en"
+        available = self.get_available_languages()
+        resolved_lang = next(
+            (available_lang for available_lang in available if available_lang.lower() == requested_lang.lower()),
+            "en",
+        )
+        localized = localization.get_for_locale(resolved_lang)
+        if localized:
+            return localized
+        return localization.get_for_locale("en")
 
     def get_current_locale(self) -> str:
         val = config.get("locale") or "en"
@@ -25,7 +34,7 @@ class ConfigService:
         for a in avail:
             if a.lower() == val.lower():
                 return a
-        return val
+        return "en"
 
     def set_locale(self, lang: str) -> bool:
         config.set("locale", lang)

@@ -46,6 +46,7 @@ def test_d2pfx_install_and_uninstall_persist_install_record(tmp_path, monkeypatc
         "folder": result["folder"],
     }
     assert state["existing"] == {"preserved": True}
+    assert json.loads((config_dir / "mods.json").read_text(encoding="utf-8"))[result["folder"]] is True
 
     updated_mod = {**mod, "file": "https://example.test/v2/mod.vpk", "meta": {"date": 200}}
     updated = d2pfx_api.update_mod({"mod": updated_mod, "cat_id": "effects"})

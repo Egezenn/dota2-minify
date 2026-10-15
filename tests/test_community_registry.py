@@ -1,6 +1,7 @@
 import io
 import json
 import zipfile
+from unittest.mock import Mock
 
 import pytest
 
@@ -47,6 +48,25 @@ def registry_environment(tmp_path, monkeypatch):
     monkeypatch.setattr(community_api, "_refresh_plugin_runtime", lambda _plugin_id: None)
 
     return root, mods, plugins, themes, state
+
+
+def test_registry_is_cached_and_reused(registry_environment, monkeypatch):
+    root, _mods, _plugins, _themes, state = registry_environment
+    registry = [{"type": "mod", "name": "Cached Mod"}]
+    response = Mock()
+    response.json.return_value = registry
+    response.raise_for_status.return_value = None
+    monkeypatch.setattr(community_api.config, "get", lambda _key, default=None: default)
+    requests_get = Mock(return_value=response)
+    monkeypatch.setattr(community_api.requests, "get", requests_get)
+
+    assert community_api._get_registry() == registry
+    cache_path = root / "cache" / "plugins" / "community" / "registry.json"
+    assert json.loads(cache_path.read_text(encoding="utf-8")) == registry
+    assert state[community_api.REGISTRY_STATE_KEY]["last_refresh"] > 0
+
+    requests_get.side_effect = AssertionError("cached registry should be used")
+    assert community_api._get_registry() == registry
 
 
 @pytest.mark.parametrize(

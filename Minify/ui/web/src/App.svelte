@@ -155,6 +155,19 @@
     setTimeout(dismissLoader, 3000);
   }
 
+  function changeTab(tab: string) {
+    activeTab = tab;
+    broadcastToPlugins({ type: "TAB_ACTIVE", tab });
+  }
+
+  function cycleTab(forward: boolean) {
+    const tabs = ["mods", "terminal", "settings", ...pluginTabs.map((plugin) => plugin.id)];
+    const currentIndex = tabs.indexOf(activeTab);
+    const offset = forward ? 1 : -1;
+    const nextIndex = (currentIndex + offset + tabs.length) % tabs.length;
+    changeTab(tabs[currentIndex === -1 ? 0 : nextIndex]);
+  }
+
   onMount(() => {
     const handleContextMenu = (e: MouseEvent) => {
       if (!isDebugEnv) {
@@ -163,7 +176,9 @@
     };
 
     const handleWindowMessage = (e: MessageEvent) => {
-      if (e.data?.type === "REFRESH_MODS") {
+      if (e.data?.type === "CYCLE_TAB") {
+        cycleTab(e.data.forward !== false);
+      } else if (e.data?.type === "REFRESH_MODS") {
         refreshMods();
       } else if (e.data?.type === "REFRESH_PLUGIN_TABS") {
         refreshPluginTabs();
@@ -172,8 +187,17 @@
       }
     };
 
+    const handleKeydown = (e: KeyboardEvent) => {
+      if (e.ctrlKey && e.key === "Tab") {
+        e.preventDefault();
+        e.stopPropagation();
+        cycleTab(!e.shiftKey);
+      }
+    };
+
     window.addEventListener("contextmenu", handleContextMenu);
     window.addEventListener("message", handleWindowMessage);
+    window.addEventListener("keydown", handleKeydown);
 
     (window as any).onModsRefreshed = refreshMods;
 
@@ -214,6 +238,7 @@
     return () => {
       window.removeEventListener("contextmenu", handleContextMenu);
       window.removeEventListener("message", handleWindowMessage);
+      window.removeEventListener("keydown", handleKeydown);
     };
   });
 
@@ -464,10 +489,7 @@
     {pluginTabs}
     showWorkshopToolsButton={isWorkshopInstalled === false}
     onWorkshopToolsClick={handleWorkshopToolsClick}
-    onTabChange={(tab) => {
-      activeTab = tab;
-      broadcastToPlugins({ type: "TAB_ACTIVE", tab });
-    }}
+    onTabChange={changeTab}
     onPatch={handlePatch}
     onUninstallClick={() => (showUninstallModal = true)}
   />

@@ -414,6 +414,8 @@ def _install_mod(params: Dict[str, Any] = None, update_target: str = None) -> Di
         fs.remove_path(backup_dir)
 
     _save_install_record({**modcfg, "folder": os.path.basename(final_target_dir)})
+    if update_target is None:
+        mods_shared.set_state(os.path.basename(final_target_dir), True)
     mods_shared.scan_mods()
     output.add_text(f"D2PFX mod '{name}' installed successfully.", msg_type="success")
 
