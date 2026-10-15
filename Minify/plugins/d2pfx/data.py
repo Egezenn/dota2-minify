@@ -82,20 +82,38 @@ class DataManager:
         return self.metadata is not None
 
     def get_categories(self):
-        if not self.metadata:
+        if not self.constants:
             return []
-        mods_data = self.metadata.get("modsData", {})
-        return sorted([c for c in mods_data.keys() if c.lower() not in BLACKLIST])
+        ids = []
+        for cat in self.constants.get("categories", []):
+            cat_id = cat.get("id") if isinstance(cat, dict) else None
+            if not cat_id or cat.get("hidden") or cat_id.lower() in BLACKLIST:
+                continue
+            ids.append(cat_id)
+        return ids
+
+    def _translation(self, key, locale):
+        translations = self.constants.get("translations", {})
+
+        localized = translations.get(locale)
+        if isinstance(localized, dict) and isinstance(localized.get(key), str):
+            return localized[key]
+
+        if isinstance(translations.get(key), str):
+            return translations[key]
+
+        if isinstance(self.constants.get(key), str):
+            return self.constants[key]
+
+        return None
 
     def get_category_name(self, cat_id):
-        if not self.constants:
-            return cat_id.capitalize()
-        return self.constants.get(cat_id, cat_id.capitalize())
+        locale = config.get("locale", "en")
+        return self._translation(cat_id, locale) or cat_id.capitalize()
 
     def get_category_description(self, cat_id):
-        if not self.constants:
-            return ""
-        return self.constants.get(f"{cat_id}-desc", "")
+        locale = config.get("locale", "en")
+        return self._translation(f"{cat_id}-desc", locale) or ""
 
     def get_mods(self, cat_id):
         if not self.metadata:

@@ -1,166 +1,188 @@
 const modsContainer = document.getElementById("mods-container");
-const modpacksContainer = document.getElementById("modpacks-container");
-const toolsContainer = document.getElementById("tools-container");
-const skinsContainer = document.getElementById("skins-container");
+const themesContainer = document.getElementById("themes-container");
+const pluginsContainer = document.getElementById("plugins-container");
 const notesModal = new bootstrap.Modal(document.getElementById("notesModal"));
 const notesModalLabel = document.getElementById("notesModalLabel");
 const notesContent = document.getElementById("notes-content");
 
-const cacheKey = "github-community-data";
+const cacheKey = "community-registry-data";
 const cachedData = JSON.parse(localStorage.getItem(cacheKey));
 const now = new Date().getTime();
 
-function createCard(item) {
-  const col = document.createElement("div");
-  col.className = "col";
+function renderNotes(item, markdown) {
+  const tempDiv = document.createElement("div");
+  tempDiv.innerHTML = marked.parse(markdown).replace(/<p>\s*!!:\s*/g, '<p class="note-emphasized">');
 
+  const images = tempDiv.getElementsByTagName("img");
+  for (let i = 0; i < images.length; i++) {
+    const src = images[i].getAttribute("src");
+    if (src && !/^(https?:)?\/\//.test(src)) {
+      images[i].src = new URL(src, item.notes).href;
+    }
+  }
+
+  notesContent.innerHTML = tempDiv.innerHTML;
+}
+
+function openNotes(item) {
+  notesModalLabel.textContent = `${item.name} Notes`;
+  notesModal.show();
+
+  if (!item.notes) {
+    notesContent.innerHTML = "<p>No notes available for this mod.</p>";
+    return;
+  }
+
+  const notesCacheKey = `community-mod-notes-${item.notes}`;
+  const cachedNotes = JSON.parse(sessionStorage.getItem(notesCacheKey));
+  const now = new Date().getTime();
+
+  if (cachedNotes && now - cachedNotes.timestamp < 60000) {
+    renderNotes(item, cachedNotes.content);
+    return;
+  }
+
+  notesContent.innerHTML = "<p>Loading...</p>";
+
+  fetch(item.notes)
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+      return response.text();
+    })
+    .then((text) => {
+      const enMatch = text.match(/<!-- LANG:en -->([\s\S]*?)(?=<!-- LANG:\w+ -->|$)/i);
+      const content = enMatch ? enMatch[1].trim() : text;
+      renderNotes(item, content);
+      sessionStorage.setItem(notesCacheKey, JSON.stringify({ timestamp: now, content: content }));
+    })
+    .catch((error) => {
+      notesContent.innerHTML = "<p>Could not load notes. The file might not exist for this mod.</p>";
+      console.error("Error fetching notes:", error);
+    });
+}
+
+function createCard(item) {
   const card = document.createElement("div");
   card.className = "card h-100 text-center mod-card";
   card.style.cursor = "pointer";
   card.setAttribute("role", "button");
 
-  const img = document.createElement("img");
-  img.src = Mirror.getCommunityRawUrl(encodeURIComponent(item) + "/image.png");
-  img.className = "card-img-top";
-  img.alt = `${item} image`;
-  img.style.objectFit = "cover";
-  img.style.height = "140px";
-  img.onerror = function () {
-    this.style.display = "none";
-  };
+  if (item.preview) {
+    const img = document.createElement("img");
+    img.src = item.preview;
+    img.className = "card-img-top";
+    img.alt = `${item.name} preview`;
+    img.style.objectFit = "cover";
+    img.style.height = "140px";
+    img.onerror = function () {
+      this.style.display = "none";
+    };
+    card.appendChild(img);
+  }
 
   const cardBody = document.createElement("div");
-  cardBody.className =
-    "card-body d-flex align-items-center justify-content-center";
+  cardBody.className = "card-body d-flex align-items-center justify-content-center";
 
   const title = document.createElement("h5");
   title.className = "card-title mb-0";
-  title.textContent = item;
+  title.textContent = item.name;
 
   cardBody.appendChild(title);
-  card.appendChild(img);
   card.appendChild(cardBody);
 
-  card.addEventListener("click", () => {
-    const notesCacheKey = `community-mod-notes-${item}`;
-    const cachedNotes = JSON.parse(sessionStorage.getItem(notesCacheKey));
-    const now = new Date().getTime();
+  if (item.repo || item["latest-asset"]) {
+    const footer = document.createElement("div");
+    footer.className = "card-footer d-flex justify-content-center gap-3";
 
-    notesModalLabel.textContent = `${item} Notes`;
-    notesModal.show();
+    if (item.repo) {
+      const repoLink = document.createElement("a");
+      repoLink.href = item.repo;
+      repoLink.target = "_blank";
+      repoLink.rel = "noopener noreferrer";
+      repoLink.textContent = "Repo";
 
-    if (cachedNotes && now - cachedNotes.timestamp < 60000) {
-      notesContent.innerHTML = cachedNotes.content;
-    } else {
-      const notesUrl = Mirror.getCommunityRawUrl(
-        encodeURIComponent(item) + "/notes.html",
-      );
-      notesContent.innerHTML = "<p>Loading...</p>";
-
-      fetch(notesUrl)
-        .then((response) => {
-          if (!response.ok) {
-            throw new Error("Network response was not ok");
-          }
-          return response.text();
-        })
-        .then((text) => {
-          const tempDiv = document.createElement("div");
-          tempDiv.innerHTML = text;
-          const images = tempDiv.getElementsByTagName("img");
-          for (let i = 0; i < images.length; i++) {
-            const img = images[i];
-            const src = img.getAttribute("src");
-            if (src && !src.startsWith("http")) {
-              img.src = Mirror.getCommunityRawUrl(
-                encodeURIComponent(item) + "/" + src,
-              );
-            }
-          }
-          notesContent.innerHTML = tempDiv.innerHTML;
-          sessionStorage.setItem(
-            notesCacheKey,
-            JSON.stringify({
-              timestamp: now,
-              content: tempDiv.innerHTML,
-            }),
-          );
-        })
-        .catch((error) => {
-          notesContent.innerHTML =
-            "<p>Could not load notes. The file might not exist for this mod.</p>";
-          console.error("Error fetching notes:", error);
-        });
+      const repoItem = document.createElement("span");
+      repoItem.className = "d-inline-flex align-items-center gap-1";
+      repoItem.addEventListener("click", (e) => e.stopPropagation());
+      const repoIcon = document.createElement("ion-icon");
+      repoIcon.name = "logo-github";
+      repoItem.appendChild(repoIcon);
+      repoItem.appendChild(repoLink);
+      footer.appendChild(repoItem);
     }
-  });
+
+    if (item["latest-asset"]) {
+      const downloadLink = document.createElement("a");
+      downloadLink.href = item["latest-asset"];
+      downloadLink.textContent = "Download";
+
+      const downloadItem = document.createElement("span");
+      downloadItem.className = "d-inline-flex align-items-center gap-1";
+      downloadItem.addEventListener("click", (e) => e.stopPropagation());
+      const downloadIcon = document.createElement("ion-icon");
+      downloadIcon.name = "download-outline";
+      downloadItem.appendChild(downloadIcon);
+      downloadItem.appendChild(downloadLink);
+      footer.appendChild(downloadItem);
+    }
+
+    card.appendChild(footer);
+  }
+
+  card.addEventListener("click", () => openNotes(item));
 
   return card;
 }
 
-function processData(items, meta) {
+function processData(items) {
   modsContainer.innerHTML = "";
-  modpacksContainer.innerHTML = "";
-  toolsContainer.innerHTML = "";
-  skinsContainer.innerHTML = "";
+  themesContainer.innerHTML = "";
+  pluginsContainer.innerHTML = "";
 
   items.forEach((item) => {
+    const type = item.type || "mod";
     const card = createCard(item);
-    // Default to 'mod' if not specified or found in meta
-    const type = meta[item] && meta[item].type ? meta[item].type : "mod";
 
-    if (type === "tool") {
-      toolsContainer.appendChild(card);
-    } else if (type === "modpack") {
-      modpacksContainer.appendChild(card);
-    } else if (type === "skin") {
-      skinsContainer.appendChild(card);
+    if (type === "theme") {
+      themesContainer.appendChild(card);
+    } else if (type === "plugin") {
+      pluginsContainer.appendChild(card);
     } else {
       modsContainer.appendChild(card);
     }
   });
 
-  document.getElementById("mods-section").style.display =
-    modsContainer.hasChildNodes() ? "block" : "none";
-  document.getElementById("modpacks-section").style.display =
-    modsContainer.hasChildNodes() ? "block" : "none";
-  document.getElementById("tools-section").style.display =
-    toolsContainer.hasChildNodes() ? "block" : "none";
-  document.getElementById("skins-section").style.display =
-    skinsContainer.hasChildNodes() ? "block" : "none";
+  document.getElementById("mods-section").style.display = modsContainer.hasChildNodes() ? "block" : "none";
+  document.getElementById("themes-section").style.display = themesContainer.hasChildNodes() ? "block" : "none";
+  document.getElementById("plugins-section").style.display = pluginsContainer.hasChildNodes() ? "block" : "none";
 }
 
 if (cachedData && now - cachedData.timestamp < 60000) {
-  processData(cachedData.items, cachedData.meta);
+  processData(cachedData.items);
 } else {
   const fetchData = (retry = true) => {
-    Promise.all([
-      fetch(Mirror.getCommunityContentsApiUrl()).then((r) => {
-        if (r.status !== 200) {
+    fetch(Mirror.getCommunityRegistryUrl())
+      .then((response) => {
+        if (!response.ok) {
           if (retry) throw { retry: true };
-          throw new Error(`HTTP status ${r.status}`);
+          throw new Error(`HTTP status ${response.status}`);
         }
-        return r.json();
-      }),
-      fetch(Mirror.getCommunityRawUrl("meta.json"))
-        .then((r) => (r.ok ? r.json() : {}))
-        .catch(() => ({})),
-    ])
-      .then(([contentsData, metaData]) => {
-        if (Array.isArray(contentsData) && contentsData.length > 0) {
-          const items = contentsData
-            .filter((item) => item.type === "dir")
-            .map((item) => item.name);
+        return response.json();
+      })
+      .then((registry) => {
+        if (Array.isArray(registry) && registry.length > 0) {
           localStorage.setItem(
             cacheKey,
             JSON.stringify({
               timestamp: new Date().getTime(),
-              items: items,
-              meta: metaData,
+              items: registry,
             }),
           );
-          processData(items, metaData);
+          processData(registry);
         } else {
-          throw new Error("Invalid community data");
+          throw new Error("Invalid community registry data");
         }
       })
       .catch((error) => {
@@ -169,9 +191,10 @@ if (cachedData && now - cachedData.timestamp < 60000) {
           return;
         }
         if (cachedData) {
-          processData(cachedData.items, cachedData.meta);
+          processData(cachedData.items);
+        } else {
+          modsContainer.textContent = "Could not load data.";
         }
-        modsContainer.textContent = "Could not load data.";
         console.error("Error fetching data:", error);
       });
   };

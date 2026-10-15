@@ -22,7 +22,19 @@
   }
 </script>
 
-<div class="mod-card" class:active={entry.installed}>
+<div
+  class="mod-card"
+  class:active={entry.installed}
+  role="button"
+  tabindex="0"
+  on:click={() => onDetails(entry)}
+  on:keydown={(e) => {
+    if (e.target === e.currentTarget && (e.key === "Enter" || e.key === " ")) {
+      e.preventDefault();
+      onDetails(entry);
+    }
+  }}
+>
   <div class="preview-container">
     {#if entry.preview}
       <img
@@ -93,6 +105,11 @@
     overflow: hidden;
     box-sizing: border-box;
     transition: border-color 0.15s ease;
+    cursor: pointer;
+  }
+
+  .mod-card:hover {
+    border-color: var(--accent, #17bebe);
   }
 
   .mod-card.active {
