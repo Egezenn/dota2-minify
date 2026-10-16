@@ -17,7 +17,7 @@ import conditions
 import helper
 from core import base, config, constants, fs, log, mods_shared, output, registry, steam, utils
 
-from patch import blacklist, manifest_utils, remap_processor, replacer, styling, validators, vpk_utils, xml_utils
+from patch import blacklist, manifest_utils, remap_processor, replacer, styling, unins, validators, vpk_utils, xml_utils
 
 dota_version_changed = False
 

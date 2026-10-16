@@ -15,7 +15,7 @@ import pytest
     ],
 )
 def test_resourcecompiler_accepts_success_summary(summary):
-    validators.validate_resourcecompiler_result(0, summary)
+    validators.resourcecompiler(0, summary)
 
 
 @pytest.mark.parametrize(
@@ -28,11 +28,11 @@ def test_resourcecompiler_accepts_success_summary(summary):
 )
 def test_resourcecompiler_rejects_failures(returncode, output):
     with pytest.raises(RuntimeError):
-        validators.validate_resourcecompiler_result(returncode, output)
+        validators.resourcecompiler(returncode, output)
 
 
 def test_source2viewer_accepts_successful_run():
-    validators.validate_source2viewer_result(0, b"--- Dump written to file.xml\n")
+    validators.source2viewer(0, b"--- Dump written to file.xml\n")
 
 
 @pytest.mark.parametrize(
@@ -44,7 +44,7 @@ def test_source2viewer_accepts_successful_run():
 )
 def test_source2viewer_rejects_decompile_failure(returncode, output):
     with pytest.raises(RuntimeError):
-        validators.validate_source2viewer_result(returncode, output)
+        validators.source2viewer(returncode, output)
 
 
 def test_resourcecompiler_writes_combined_log_and_validates():

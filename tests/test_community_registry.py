@@ -309,38 +309,9 @@ def test_item_details_filters_notes_by_locale(monkeypatch, locale, expected):
 def test_latest_release_selects_newest_release_compatible_with_minify(monkeypatch):
     monkeypatch.setattr(base, "VERSION", "2rc6")
 
-    class Response:
-        def raise_for_status(self):
-            return None
-
-        def json(self):
-            return [
-                {
-                    "tag_name": "1.0.2",
-                    "html_url": "https://github.com/test/theme/releases/tag/1.0.2",
-                    "assets": [
-                        {
-                            "name": "theme.zip",
-                            "browser_download_url": ("https://github.com/test/theme/releases/download/1.0.2/theme.zip"),
-                        }
-                    ],
-                },
-                {
-                    "tag_name": "1.0.1",
-                    "html_url": "https://github.com/test/theme/releases/tag/1.0.1",
-                    "assets": [
-                        {
-                            "name": "theme.zip",
-                            "browser_download_url": ("https://github.com/test/theme/releases/download/1.0.1/theme.zip"),
-                        }
-                    ],
-                },
-            ]
-
-    monkeypatch.setattr(community_api.requests, "get", lambda *_args, **_kwargs: Response())
     item = {
         "repo": "https://github.com/test/theme",
-        "latest-asset": "https://github.com/test/theme/releases/latest/download/theme.zip",
+        "asset-url": "https://github.com/test/theme/releases/download/{tag}/theme.zip",
         "releases": {"1.0.2": ["2rc7"], "1.0.1": ["2rc6"]},
     }
     assert community_api._latest_release(item) == {
@@ -349,89 +320,30 @@ def test_latest_release_selects_newest_release_compatible_with_minify(monkeypatc
     }
 
 
-def test_latest_release_accepts_repository_rename_and_uses_release_asset(monkeypatch):
-    class Response:
-        url = "https://api.github.com/repos/Egezenn/minify-wiki-browser/releases/latest"
-
-        def raise_for_status(self):
-            return None
-
-        def json(self):
-            return {
-                "tag_name": "v1.0",
-                "html_url": "https://github.com/Egezenn/minify-wiki-browser/releases/tag/v1.0",
-                "assets": [
-                    {
-                        "name": "minify-wiki-browser.zip",
-                        "browser_download_url": (
-                            "https://github.com/Egezenn/minify-wiki-browser/releases/download/"
-                            "v1.0/minify-wiki-browser.zip"
-                        ),
-                    }
-                ],
-            }
-
-    monkeypatch.setattr(community_api.requests, "get", lambda *_args, **_kwargs: Response())
+def test_latest_release_selects_highest_compatible_registry_tag(monkeypatch):
     item = {
-        "repo": "https://github.com/Egezenn/minifiy-wiki-browser",
-        "latest-asset": (
-            "https://github.com/Egezenn/minify-wiki-browser/releases/latest/download/minify-wiki-browser.zip"
-        ),
-    }
-    result = community_api._latest_release(item)
-    assert result["tag"] == "v1.0"
-    assert result["asset_url"].endswith("/v1.0/minify-wiki-browser.zip")
-
-
-def test_latest_release_uses_cached_release_when_github_is_rate_limited(registry_environment, monkeypatch):
-    monkeypatch.setattr(base, "VERSION", "2rc6")
-    root, *_ = registry_environment
-    cache_path = root / "cache" / "plugins" / "community" / "cache.json"
-    cache_path.parent.mkdir(parents=True, exist_ok=True)
-    cache_path.write_text(
-        json.dumps(
-            {
-                "mod:As-Is-FoW": {
-                    "tag": "v2",
-                    "asset_url": "https://github.com/Egezenn/As-Is-FoW/releases/download/v2/mod.zip",
-                }
-            }
-        ),
-        encoding="utf-8",
-    )
-
-    class RateLimitedResponse:
-        def raise_for_status(self):
-            raise community_api.requests.HTTPError("403 Client Error: rate limit exceeded")
-
-    monkeypatch.setattr(community_api.requests, "get", lambda *_args, **_kwargs: RateLimitedResponse())
-    item = {
-        "name": "As-Is-FoW",
-        "type": "mod",
-        "repo": "https://github.com/Egezenn/As-Is-FoW",
+        "asset-url": "https://github.com/test/theme/releases/download/{tag}/theme.zip",
+        "releases": {
+            "1.0.0": ["2rc7"],
+            "1.0.2": ["2rc7"],
+            "1.0.1": ["2rc7"],
+        },
     }
 
     assert community_api._latest_release(item) == {
-        "tag": "v2",
-        "asset_url": "https://github.com/Egezenn/As-Is-FoW/releases/download/v2/mod.zip",
+        "tag": "1.0.2",
+        "asset_url": "https://github.com/test/theme/releases/download/1.0.2/theme.zip",
     }
 
 
-def test_registry_refresh_clears_release_cache(registry_environment, monkeypatch):
-    root, *_ = registry_environment
-    cache_path = root / "cache" / "plugins" / "community" / "cache.json"
-    cache_path.parent.mkdir(parents=True, exist_ok=True)
-    cache_path.write_text(json.dumps({"mod:Old": {"tag": "v1"}}), encoding="utf-8")
-
-    response = Mock()
-    response.raise_for_status.return_value = None
-    response.json.return_value = []
-    monkeypatch.setattr(community_api.requests, "get", lambda *_args, **_kwargs: response)
-    monkeypatch.setattr(community_api.config, "get", lambda _key, default=None: default)
-
-    community_api._get_registry()
-
-    assert json.loads(cache_path.read_text(encoding="utf-8")) == {}
+def test_latest_release_uses_registry_latest_asset_without_api(monkeypatch):
+    item = {
+        "asset-url": "https://codeberg.org/test/theme/releases/download/{tag}/theme.zip",
+    }
+    assert community_api._latest_release(item) == {
+        "tag": "latest",
+        "asset_url": "https://codeberg.org/test/theme/releases/download/latest/theme.zip",
+    }
 
 
 def test_archive_extraction_rejects_path_traversal(tmp_path):

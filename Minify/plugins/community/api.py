@@ -1,5 +1,6 @@
 import json
 import os
+import re
 import shutil
 import stat
 import sys
@@ -20,7 +21,6 @@ REGISTRY_TYPES = {"mod", "plugin", "theme"}
 HEADERS = {"User-Agent": "Dota2-Minify-Community-Registry"}
 MAX_ARCHIVE_SIZE = 5 * 1024 * 1024 * 1024
 REGISTRY_CACHE_NAME = "registry.json"
-RELEASE_CACHE_NAME = "cache.json"
 REGISTRY_STATE_KEY = "community_registry"
 REGISTRY_REFRESH_INTERVAL = 86400
 
@@ -47,7 +47,6 @@ def _get_registry() -> list[dict[str, Any]]:
         fs.create_dirs(os.path.dirname(cache_path))
         with open(cache_path, "w", encoding="utf-8") as cache_file:
             json.dump(registry, cache_file, indent=2)
-        _write_release_cache({})
         utils.set_state(REGISTRY_STATE_KEY, "last_refresh", int(time.time()))
         return registry
     except (OSError, requests.RequestException, ValueError, TypeError) as exc:
@@ -67,171 +66,30 @@ def _read_registry_cache(cache_path: str) -> list[dict[str, Any]]:
     return [item for item in registry if isinstance(item, dict)]
 
 
-def _repo_parts(repo_url: str) -> tuple[str, str]:
-    parsed = urllib.parse.urlparse(repo_url)
-    parts = [part for part in parsed.path.strip("/").split("/") if part]
-    if parsed.scheme != "https" or parsed.netloc.lower() != "github.com" or len(parts) != 2:
-        raise ValueError("The registry entry has an invalid GitHub repository URL.")
-    return parts[0], parts[1].removesuffix(".git")
-
-
-def _cached_release(item: dict[str, Any]) -> dict[str, Any] | None:
-    cached = _read_release_cache()
-    key = _item_key(str(item.get("type", "")).lower(), str(item.get("name", "")))
-    if isinstance(cached, dict):
-        release = cached.get(key)
-        if isinstance(release, dict) and isinstance(release.get("tag"), str) and isinstance(
-            release.get("asset_url"), str
-        ):
-            return {"tag": release["tag"], "asset_url": release["asset_url"]}
-
-    return None
-
-
-def _release_cache_path() -> str:
-    return os.path.join(base.cache_dir, "plugins", "community", RELEASE_CACHE_NAME)
-
-
-def _read_release_cache() -> dict[str, Any]:
-    try:
-        with open(_release_cache_path(), "r", encoding="utf-8") as cache_file:
-            cache = json.load(cache_file)
-    except (OSError, json.JSONDecodeError):
-        return {}
-    return cache if isinstance(cache, dict) else {}
-
-
-def _write_release_cache(cache: dict[str, Any]) -> None:
-    cache_path = _release_cache_path()
-    fs.create_dirs(os.path.dirname(cache_path))
-    with open(cache_path, "w", encoding="utf-8") as cache_file:
-        json.dump(cache, cache_file, indent=2)
-
-
-def _remember_release(item: dict[str, Any], release: dict[str, Any]) -> dict[str, Any]:
-    cached = _read_release_cache()
-    key = _item_key(str(item.get("type", "")).lower(), str(item.get("name", "")))
-    cached[key] = release
-    _write_release_cache(cached)
-    return release
-
-
-def _fetch_latest_release(item: dict[str, Any]) -> dict[str, Any]:
-    owner, repo = _repo_parts(str(item.get("repo", "")))
-    releases = _release_compatibility(item)
-    if releases is not None:
-        supported_tags = {tag for tag, versions in releases.items() if base.VERSION in versions}
-        if not supported_tags:
-            raise ValueError(f"No release supports Minify {base.VERSION}.")
-        response = requests.get(
-            f"https://api.github.com/repos/{owner}/{repo}/releases?per_page=100",
-            headers=HEADERS,
-            timeout=15,
-        )
-        response.raise_for_status()
-        candidates = response.json()
-        if not isinstance(candidates, list):
-            raise ValueError("GitHub returned an invalid release list.")
-        canonical_repo = None
-        for candidate in candidates:
-            if not isinstance(candidate, dict):
-                continue
-            canonical_url = urllib.parse.urlparse(str(candidate.get("html_url", "")))
-            canonical_parts = [part for part in canonical_url.path.strip("/").split("/") if part]
-            if (
-                canonical_url.scheme == "https"
-                and canonical_url.netloc.lower() == "github.com"
-                and len(canonical_parts) >= 2
-                and canonical_parts[0].lower() == owner.lower()
-            ):
-                canonical_repo = canonical_parts[1]
-                break
-        if canonical_repo is None:
-            raise ValueError("GitHub returned an invalid canonical repository URL.")
-
-        asset_name = _release_asset_name(item, owner, canonical_repo)
-        for candidate in candidates:
-            if not isinstance(candidate, dict):
-                continue
-            tag = candidate.get("tag_name")
-            if not isinstance(tag, str) or tag not in supported_tags:
-                continue
-            assets = candidate.get("assets")
-            if not isinstance(assets, list):
-                continue
-            asset = next(
-                (asset for asset in assets if isinstance(asset, dict) and asset.get("name") == asset_name),
-                None,
-            )
-            asset_url = urllib.parse.urlparse(str(asset.get("browser_download_url", ""))) if asset else None
-            expected_path = f"/{owner}/{canonical_repo}/releases/download/{tag}/{asset_name}"
-            if (
-                asset_url
-                and asset_url.scheme == "https"
-                and asset_url.netloc.lower() == "github.com"
-                and asset_url.path == expected_path
-            ):
-                return _remember_release(item, {"tag": tag, "asset_url": asset["browser_download_url"]})
-        raise ValueError(f"No compatible release asset is available for Minify {base.VERSION}.")
-
-    response = requests.get(
-        f"https://api.github.com/repos/{owner}/{repo}/releases/latest",
-        headers=HEADERS,
-        timeout=15,
-    )
-    response.raise_for_status()
-    release = response.json()
-    tag = release.get("tag_name")
-    if not isinstance(tag, str) or not tag:
-        raise ValueError("The repository's latest release has no tag.")
-    canonical_repo = release.get("html_url")
-    if isinstance(canonical_repo, str):
-        parsed_repo = urllib.parse.urlparse(canonical_repo)
-        repo_parts = [part for part in parsed_repo.path.strip("/").split("/") if part]
-        if (
-            parsed_repo.scheme != "https"
-            or parsed_repo.netloc.lower() != "github.com"
-            or len(repo_parts) < 2
-            or repo_parts[0].lower() != owner.lower()
-        ):
-            raise ValueError("GitHub returned an invalid canonical repository URL.")
-        repo = repo_parts[1]
-
-    asset_name = _release_asset_name(item, owner, repo)
-    assets = release.get("assets", [])
-    asset = next((candidate for candidate in assets if candidate.get("name") == asset_name), None)
-    if not asset or not str(asset.get("browser_download_url", "")).startswith(
-        f"https://github.com/{owner}/{repo}/releases/download/"
-    ):
-        raise ValueError(f"Release {tag} does not include the registry asset {asset_name}.")
-    return _remember_release(item, {"tag": tag, "asset_url": asset["browser_download_url"]})
-
-
 def _latest_release(item: dict[str, Any]) -> dict[str, Any]:
-    try:
-        return _fetch_latest_release(item)
-    except requests.RequestException:
-        cached = _cached_release(item)
-        if cached is not None:
-            return cached
-        raise
+    releases = _release_compatibility(item)
+    asset_template = item.get("asset-url")
+    if not isinstance(asset_template, str) or not asset_template or "{tag}" not in asset_template:
+        raise ValueError("The registry entry has an invalid asset URL template.")
+
+    if releases is None:
+        tag = "latest"
+    else:
+        compatible_tags = [tag for tag, versions in releases.items() if base.VERSION in versions]
+        tag = max(compatible_tags, key=_release_version_key, default=None)
+        if tag is None:
+            raise ValueError(f"No release supports Minify {base.VERSION}.")
+
+    asset_url = asset_template.replace("{tag}", urllib.parse.quote(tag, safe=""))
+    parsed_asset = urllib.parse.urlparse(asset_url)
+    if parsed_asset.scheme != "https" or not parsed_asset.netloc:
+        raise ValueError("The registry entry has an invalid asset URL template.")
+    return {"tag": tag, "asset_url": asset_url}
 
 
-def _release_asset_name(item: dict[str, Any], owner: str, repo: str) -> str:
-    asset_url = item.get("latest-asset")
-    parsed_asset = urllib.parse.urlparse(asset_url if isinstance(asset_url, str) else "")
-    expected_prefix = f"/{owner}/{repo}/releases/latest/download/"
-    if (
-        parsed_asset.scheme != "https"
-        or parsed_asset.netloc.lower() != "github.com"
-        or not parsed_asset.path.startswith(expected_prefix)
-    ):
-        raise ValueError("The registry's latest-asset URL does not match its repository.")
-
-    asset_name = urllib.parse.unquote(parsed_asset.path[len(expected_prefix) :])
-    if not asset_name or "/" in asset_name or "\\" in asset_name:
-        raise ValueError("The registry's latest-asset URL has an invalid asset filename.")
-    return asset_name
+def _release_version_key(tag: str) -> tuple[int, ...]:
+    numbers = re.findall(r"\d+", tag)
+    return tuple(int(number) for number in numbers) if numbers else (-1,)
 
 
 def _install_records() -> dict[str, dict[str, Any]]:
