@@ -5,6 +5,8 @@
   "button_refresh_data": "Veriyi Yenile",
   "button_remove": "KALDIR",
   "button_removing": "KALDIRILIYOR...",
+  "button_update": "GÜNCELLE",
+  "button_updating": "GÜNCELLENİYOR...",
   "label_disable_mod": "Modu devre dışı bırak",
   "label_enable_mod": "Modu etkinleştir",
   "label_loading_categories": "Kategoriler yükleniyor...",
