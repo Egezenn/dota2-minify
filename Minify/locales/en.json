@@ -41,6 +41,7 @@
   "downloading_cli_terminal": "-> Downloading Source2Viewer-CLI...",
   "downloading_ripgrep_terminal": "-> Downloading ripgrep...",
   "error_please_close_dota_terminal": "Please close Dota 2 to continue.",
+  "error_wine_not_found_terminal": "Wine is required on non-Windows systems to run the resourcecompiler, but it was not found on PATH.",
   "extracted_cli_terminal": "-> Extracted {0}",
   "extracting_terminal": "Extracting: {0}",
   "failed_download": "Failed to download dependencies after {0} retries. Please download `rg` or `Source2Viewer-CLI` manually.\nhttps://github.com/BurntSushi/ripgrep/releases\nhttps://github.com/ValveResourceFormat/ValveResourceFormat/releases",
