@@ -383,6 +383,57 @@ def test_latest_release_accepts_repository_rename_and_uses_release_asset(monkeyp
     assert result["asset_url"].endswith("/v1.0/minify-wiki-browser.zip")
 
 
+def test_latest_release_uses_cached_release_when_github_is_rate_limited(registry_environment, monkeypatch):
+    monkeypatch.setattr(base, "VERSION", "2rc6")
+    root, *_ = registry_environment
+    cache_path = root / "cache" / "plugins" / "community" / "cache.json"
+    cache_path.parent.mkdir(parents=True, exist_ok=True)
+    cache_path.write_text(
+        json.dumps(
+            {
+                "mod:As-Is-FoW": {
+                    "tag": "v2",
+                    "asset_url": "https://github.com/Egezenn/As-Is-FoW/releases/download/v2/mod.zip",
+                }
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    class RateLimitedResponse:
+        def raise_for_status(self):
+            raise community_api.requests.HTTPError("403 Client Error: rate limit exceeded")
+
+    monkeypatch.setattr(community_api.requests, "get", lambda *_args, **_kwargs: RateLimitedResponse())
+    item = {
+        "name": "As-Is-FoW",
+        "type": "mod",
+        "repo": "https://github.com/Egezenn/As-Is-FoW",
+    }
+
+    assert community_api._latest_release(item) == {
+        "tag": "v2",
+        "asset_url": "https://github.com/Egezenn/As-Is-FoW/releases/download/v2/mod.zip",
+    }
+
+
+def test_registry_refresh_clears_release_cache(registry_environment, monkeypatch):
+    root, *_ = registry_environment
+    cache_path = root / "cache" / "plugins" / "community" / "cache.json"
+    cache_path.parent.mkdir(parents=True, exist_ok=True)
+    cache_path.write_text(json.dumps({"mod:Old": {"tag": "v1"}}), encoding="utf-8")
+
+    response = Mock()
+    response.raise_for_status.return_value = None
+    response.json.return_value = []
+    monkeypatch.setattr(community_api.requests, "get", lambda *_args, **_kwargs: response)
+    monkeypatch.setattr(community_api.config, "get", lambda _key, default=None: default)
+
+    community_api._get_registry()
+
+    assert json.loads(cache_path.read_text(encoding="utf-8")) == {}
+
+
 def test_archive_extraction_rejects_path_traversal(tmp_path):
     archive_path = tmp_path / "bad.zip"
     archive_path.write_bytes(_zip_bytes({"../escape.txt": "bad"}))

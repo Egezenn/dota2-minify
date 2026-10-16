@@ -17,7 +17,7 @@ import conditions
 import helper
 from core import base, config, constants, fs, log, mods_shared, output, registry, steam, utils
 
-from patch import blacklist, manifest_utils, remap_processor, replacer, styling, unins, vpk_utils, xml_utils
+from patch import blacklist, manifest_utils, remap_processor, replacer, styling, validators, vpk_utils, xml_utils
 
 dota_version_changed = False
 
@@ -260,7 +260,7 @@ def patcher():
             # ---------------------------------------------------------------------------- #
             output.add_text("&decompiling_terminal")
 
-            with open(base.log_s2v, "w") as file:
+            with open(base.log_s2v, "wb") as file:
                 for pak_path, extracts in (
                     (constants.dota_core_pak_path, core_extracts),
                     (constants.dota_game_pak_path, dota_extracts),
@@ -278,14 +278,12 @@ def patcher():
                             "--output",
                             base.build_dir,
                         ],
-                        stdout=file,
+                        stdout=subprocess.PIPE,
                         stderr=subprocess.STDOUT,
                         creationflags=subprocess.CREATE_NO_WINDOW if base.is_win else 0,
                     )
-                    if res.returncode != 0:
-                        log.write_warning(
-                            f"Source2Viewer exited with code {res.returncode}. See {base.log_s2v} for details."
-                        )
+                    file.write(res.stdout)
+                    validators.source2viewer(res.returncode, res.stdout)
 
             with ThreadPoolExecutor() as executor:
                 xml_mod_args = [(os.path.join(base.build_dir, path), mods) for path, mods in xml_modifications.items()]

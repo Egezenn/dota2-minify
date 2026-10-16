@@ -9,7 +9,7 @@ from pathlib import Path
 
 import vpk
 from core import base, config, constants, fs, log, mods_shared, output, utils
-from patch import manifest_utils
+from patch import manifest_utils, validators
 
 compiler_filepicker_path = ""
 output_path = config.get("output_path", constants.minify_default_dota_pak_output_path)
@@ -51,11 +51,11 @@ def compile():
         rescomp = subprocess.run(
             command,
             stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,  # compiler complains if minify_dota_compile_input_path is empty
+            stderr=subprocess.STDOUT,
             creationflags=subprocess.CREATE_NO_WINDOW if base.is_win else 0,
         )
-        if rescomp.stdout != b"":
-            file.write(rescomp.stdout)
+        file.write(rescomp.stdout)
+        validators.resourcecompiler(rescomp.returncode, rescomp.stdout)
 
 
 def compile_assets(input_path=None, output_path=None, pak_path=None):

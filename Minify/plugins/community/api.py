@@ -20,6 +20,7 @@ REGISTRY_TYPES = {"mod", "plugin", "theme"}
 HEADERS = {"User-Agent": "Dota2-Minify-Community-Registry"}
 MAX_ARCHIVE_SIZE = 5 * 1024 * 1024 * 1024
 REGISTRY_CACHE_NAME = "registry.json"
+RELEASE_CACHE_NAME = "cache.json"
 REGISTRY_STATE_KEY = "community_registry"
 REGISTRY_REFRESH_INTERVAL = 86400
 
@@ -46,6 +47,7 @@ def _get_registry() -> list[dict[str, Any]]:
         fs.create_dirs(os.path.dirname(cache_path))
         with open(cache_path, "w", encoding="utf-8") as cache_file:
             json.dump(registry, cache_file, indent=2)
+        _write_release_cache({})
         utils.set_state(REGISTRY_STATE_KEY, "last_refresh", int(time.time()))
         return registry
     except (OSError, requests.RequestException, ValueError, TypeError) as exc:
@@ -73,7 +75,48 @@ def _repo_parts(repo_url: str) -> tuple[str, str]:
     return parts[0], parts[1].removesuffix(".git")
 
 
-def _latest_release(item: dict[str, Any]) -> dict[str, Any]:
+def _cached_release(item: dict[str, Any]) -> dict[str, Any] | None:
+    cached = _read_release_cache()
+    key = _item_key(str(item.get("type", "")).lower(), str(item.get("name", "")))
+    if isinstance(cached, dict):
+        release = cached.get(key)
+        if isinstance(release, dict) and isinstance(release.get("tag"), str) and isinstance(
+            release.get("asset_url"), str
+        ):
+            return {"tag": release["tag"], "asset_url": release["asset_url"]}
+
+    return None
+
+
+def _release_cache_path() -> str:
+    return os.path.join(base.cache_dir, "plugins", "community", RELEASE_CACHE_NAME)
+
+
+def _read_release_cache() -> dict[str, Any]:
+    try:
+        with open(_release_cache_path(), "r", encoding="utf-8") as cache_file:
+            cache = json.load(cache_file)
+    except (OSError, json.JSONDecodeError):
+        return {}
+    return cache if isinstance(cache, dict) else {}
+
+
+def _write_release_cache(cache: dict[str, Any]) -> None:
+    cache_path = _release_cache_path()
+    fs.create_dirs(os.path.dirname(cache_path))
+    with open(cache_path, "w", encoding="utf-8") as cache_file:
+        json.dump(cache, cache_file, indent=2)
+
+
+def _remember_release(item: dict[str, Any], release: dict[str, Any]) -> dict[str, Any]:
+    cached = _read_release_cache()
+    key = _item_key(str(item.get("type", "")).lower(), str(item.get("name", "")))
+    cached[key] = release
+    _write_release_cache(cached)
+    return release
+
+
+def _fetch_latest_release(item: dict[str, Any]) -> dict[str, Any]:
     owner, repo = _repo_parts(str(item.get("repo", "")))
     releases = _release_compatibility(item)
     if releases is not None:
@@ -128,7 +171,7 @@ def _latest_release(item: dict[str, Any]) -> dict[str, Any]:
                 and asset_url.netloc.lower() == "github.com"
                 and asset_url.path == expected_path
             ):
-                return {"tag": tag, "asset_url": asset["browser_download_url"]}
+                return _remember_release(item, {"tag": tag, "asset_url": asset["browser_download_url"]})
         raise ValueError(f"No compatible release asset is available for Minify {base.VERSION}.")
 
     response = requests.get(
@@ -161,7 +204,17 @@ def _latest_release(item: dict[str, Any]) -> dict[str, Any]:
         f"https://github.com/{owner}/{repo}/releases/download/"
     ):
         raise ValueError(f"Release {tag} does not include the registry asset {asset_name}.")
-    return {"tag": tag, "asset_url": asset["browser_download_url"]}
+    return _remember_release(item, {"tag": tag, "asset_url": asset["browser_download_url"]})
+
+
+def _latest_release(item: dict[str, Any]) -> dict[str, Any]:
+    try:
+        return _fetch_latest_release(item)
+    except requests.RequestException:
+        cached = _cached_release(item)
+        if cached is not None:
+            return cached
+        raise
 
 
 def _release_asset_name(item: dict[str, Any], owner: str, repo: str) -> str:
