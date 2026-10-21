@@ -60,11 +60,11 @@ def compile():
         rescomp = subprocess.run(
             command,
             stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,  # compiler complains if minify_dota_compile_input_path is empty
+            stderr=subprocess.STDOUT,
             creationflags=subprocess.CREATE_NO_WINDOW if base.is_win else 0,
         )
-        if rescomp.stdout != b"":
-            file.write(rescomp.stdout)
+        file.write(rescomp.stdout)
+        validators.resourcecompiler(rescomp.returncode, rescomp.stdout)
 ```
 
 </details>
