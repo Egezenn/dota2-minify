@@ -14,6 +14,7 @@
   import UpdateModal from "./lib/components/UpdateModal.svelte";
   import WorkshopToolsDetectedModal from "./lib/components/WorkshopToolsDetectedModal.svelte";
   import WorkshopDownloadModal from "./lib/components/WorkshopDownloadModal.svelte";
+  import LegacyModsModal from "./lib/components/LegacyModsModal.svelte";
   import { fetchPendingAnnouncements, markAnnouncementSeen } from "./lib/announcements";
   import { checkForUpdates, ignoreUpdate, getAppVersion } from "./lib/updater";
 
@@ -33,6 +34,8 @@
   let showWorkshopModal = false;
   let showWorkshopDownloadModal = false;
   let isWorkshopInstalled: boolean | null = null;
+  let legacyMods: string[] = [];
+  let showLegacyModsModal = false;
 
   let initialized = false;
   let isDebugEnv = false;
@@ -105,10 +108,32 @@
     document.body.classList.add("loaded");
   }
 
+  async function checkLegacyMods() {
+    try {
+      const entries = await window.pywebview?.api?.get_legacy_mods?.();
+      if (Array.isArray(entries) && entries.length > 0) {
+        legacyMods = entries;
+        showLegacyModsModal = true;
+      }
+    } catch (err) {
+      console.error("Failed to check for legacy mods:", err);
+    }
+  }
+
+  async function finishLegacyMods(importMods: boolean) {
+    showLegacyModsModal = false;
+    try {
+      await window.pywebview?.api?.import_legacy_mods?.(importMods);
+      if (importMods) await refreshMods();
+    } catch (err) {
+      console.error("Failed to finish legacy mod migration:", err);
+    }
+  }
+
   async function initPyWebView() {
     const run = async () => {
       try {
-        await Promise.all([initTheme(), handleLoadApiData(), checkWorkshopToolsAvailability()]);
+        await Promise.all([initTheme(), handleLoadApiData(), checkWorkshopToolsAvailability(), checkLegacyMods()]);
       } finally {
         dismissLoader();
         getAppVersion().then(async (appVersion) => {
@@ -520,6 +545,13 @@
     onExtract={handleWorkshopExtract}
     onSkip={handleWorkshopSkip}
     onCancel={handleWorkshopCancel}
+  />
+
+  <LegacyModsModal
+    isOpen={showLegacyModsModal}
+    entries={legacyMods}
+    onImport={() => finishLegacyMods(true)}
+    onDiscard={() => finishLegacyMods(false)}
   />
 
   <WorkshopDownloadModal

@@ -37,6 +37,17 @@ def _install_records() -> Dict[str, Dict[str, Any]]:
     return normalized
 
 
+def reconcile_install_states() -> None:
+    records = _install_records()
+    valid_records = {
+        key: record
+        for key, record in records.items()
+        if isinstance(record.get("folder"), str) and os.path.isdir(os.path.join(base.mods_dir, record["folder"]))
+    }
+    if valid_records != records:
+        utils.write_states(D2PFX_INSTALLS_KEY, valid_records)
+
+
 def _install_key(category: str, name: str, label: str = None) -> str:
     key = f"{category}::{name}"
     return f"{key}::{label}" if label else key

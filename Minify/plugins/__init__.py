@@ -75,3 +75,10 @@ def initialize():
 
         except Exception as e:
             output.add_text(f"Error initializing plugin '{entry}': {e}", msg_type="warning")
+
+    for plugin in registry.get_plugins():
+        if hasattr(plugin, "on_initialize"):
+            try:
+                plugin.on_initialize()
+            except Exception as e:
+                output.add_text(f"Error running plugin initialization hook: {e}", msg_type="warning")

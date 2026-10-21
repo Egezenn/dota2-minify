@@ -1,3 +1,4 @@
+import hashlib
 import io
 import json
 import zipfile
@@ -67,6 +68,23 @@ def test_registry_is_cached_and_reused(registry_environment, monkeypatch):
 
     requests_get.side_effect = AssertionError("cached registry should be used")
     assert community_api._get_registry() == registry
+
+
+def test_reconcile_install_states_removes_missing_packages(registry_environment):
+    root, mods, _plugins, themes, state = registry_environment
+    (mods / "Present Mod").mkdir()
+    present_theme = themes / "Present Theme.css"
+    present_theme.write_text("body {}", encoding="utf-8")
+    state[community_api.STATES_KEY] = {
+        "mod:Present Mod": {"type": "mod", "path": "mods/Present Mod"},
+        "theme:Present Theme": {"type": "theme", "files": ["themes/Present Theme.css"]},
+        "mod:Missing Mod": {"type": "mod", "path": "mods/Missing Mod"},
+    }
+
+    community_api.reconcile_install_states()
+
+    assert set(state[community_api.STATES_KEY]) == {"mod:Present Mod", "theme:Present Theme"}
+    assert (root / "mods" / "Present Mod").is_dir()
 
 
 @pytest.mark.parametrize(
@@ -344,6 +362,28 @@ def test_latest_release_uses_registry_latest_asset_without_api(monkeypatch):
         "tag": "latest",
         "asset_url": "https://codeberg.org/test/theme/releases/download/latest/theme.zip",
     }
+
+
+def test_latest_release_includes_sha512_for_selected_tag(monkeypatch):
+    monkeypatch.setattr(base, "VERSION", "2rc6")
+    checksum = "a" * 128
+    item = {
+        "asset-url": "https://github.com/test/theme/releases/download/{tag}/theme.zip",
+        "sha512": {"1.0.0": checksum},
+        "releases": {"1.0.0": ["2rc6"]},
+    }
+
+    assert community_api._latest_release(item)["sha512"] == checksum
+
+
+def test_archive_checksum_is_verified(tmp_path):
+    archive_path = tmp_path / "package.zip"
+    archive_path.write_bytes(b"package")
+    checksum = hashlib.sha512(b"package").hexdigest()
+
+    community_api._verify_archive_checksum(str(archive_path), checksum)
+    with pytest.raises(ValueError, match="checksum does not match"):
+        community_api._verify_archive_checksum(str(archive_path), "0" * 128)
 
 
 def test_archive_extraction_rejects_path_traversal(tmp_path):

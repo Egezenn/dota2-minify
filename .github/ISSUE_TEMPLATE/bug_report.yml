@@ -45,7 +45,6 @@ body:
       options:
         - Windows 11
         - Windows 10
-        - Windows 8.x
         - Linux
         - Other (specify)
       default: 0
@@ -58,7 +57,6 @@ body:
       label: What is your system architecture?
       options:
         - x64 (64-bit)
-        - x86 (32-bit)
         - ARM
         - Other (specify)
       default: 0
@@ -70,6 +68,4 @@ body:
     attributes:
       label: Debug Zip
       description: |
-        **IMPORTANT**: Please provide a **debug zip**. If one is already cretaed, attach it to this issue. You can create one manually by clicking the **Hammer Icon** and clicking **Create debug zip** in Minify.
-    validations:
-      required: true
+        Provide a **debug zip**.
