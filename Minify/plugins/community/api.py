@@ -1,3 +1,5 @@
+import hashlib
+import hmac
 import json
 import os
 import re
@@ -84,7 +86,26 @@ def _latest_release(item: dict[str, Any]) -> dict[str, Any]:
     parsed_asset = urllib.parse.urlparse(asset_url)
     if parsed_asset.scheme != "https" or not parsed_asset.netloc:
         raise ValueError("The registry entry has an invalid asset URL template.")
-    return {"tag": tag, "asset_url": asset_url}
+    checksums = item.get("sha512")
+    release = {"tag": tag, "asset_url": asset_url}
+    if isinstance(checksums, dict):
+        checksum = checksums.get(tag)
+        if not isinstance(checksum, str) or not re.fullmatch(r"[0-9a-fA-F]{128}", checksum):
+            raise ValueError(f"The registry entry has no valid SHA-512 checksum for release {tag}.")
+        release["sha512"] = checksum.lower()
+    return release
+
+
+def _verify_archive_checksum(archive_path: str, expected: Any) -> None:
+    if not isinstance(expected, str) or not re.fullmatch(r"[0-9a-fA-F]{128}", expected):
+        raise ValueError("The release has no valid SHA-512 checksum.")
+    digest = hashlib.sha512()
+    with open(archive_path, "rb") as archive:
+        for chunk in iter(lambda: archive.read(1024 * 1024), b""):
+            digest.update(chunk)
+    actual = digest.hexdigest()
+    if not hmac.compare_digest(actual, expected.lower()):
+        raise ValueError("Downloaded package checksum does not match the registry.")
 
 
 def _release_version_key(tag: str) -> tuple[int, ...]:
@@ -96,6 +117,35 @@ def _install_records() -> dict[str, dict[str, Any]]:
     states = utils.read_states()
     records = states.get(STATES_KEY, {})
     return records if isinstance(records, dict) else {}
+
+
+def _remove_missing_install_records(records: dict[str, dict[str, Any]]) -> dict[str, dict[str, Any]]:
+    valid_records = {}
+    for key, record in records.items():
+        if not isinstance(record, dict):
+            continue
+        item_type = record.get("type")
+        if item_type in {"mod", "plugin"}:
+            relative = record.get("path")
+            exists = isinstance(relative, str) and os.path.isdir(os.path.join(base.base_dir, relative))
+        elif item_type == "theme":
+            files = record.get("files")
+            exists = (
+                isinstance(files, list)
+                and bool(files)
+                and all(isinstance(path, str) and os.path.isfile(os.path.join(base.base_dir, path)) for path in files)
+            )
+        else:
+            exists = False
+        if exists:
+            valid_records[key] = record
+    if valid_records != records:
+        utils.write_states(STATES_KEY, valid_records)
+    return valid_records
+
+
+def reconcile_install_states() -> None:
+    _remove_missing_install_records(_install_records())
 
 
 def _item_key(item_type: str, name: str) -> str:
@@ -376,6 +426,8 @@ def _install_package(item: dict[str, Any], release: dict[str, Any], record: dict
             task_id=f"community:{key}",
         ):
             raise RuntimeError(f"Failed to download {name} ({release['tag']}).")
+        if "sha512" in release:
+            _verify_archive_checksum(archive_path, release["sha512"])
         extracted_root = os.path.join(work_dir, "extracted")
         os.makedirs(extracted_root)
         _unpack_zip(archive_path, extracted_root)

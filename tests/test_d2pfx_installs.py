@@ -81,3 +81,23 @@ def test_install_records_compacts_legacy_records(monkeypatch):
     compact_record = {"source_date": 100, "folder": "D2PFX EFFECTS - Example Mod"}
     assert records == {"effects::Example Mod": compact_record}
     assert state[d2pfx_api.D2PFX_INSTALLS_KEY] == {"effects::Example Mod": compact_record}
+
+
+def test_reconcile_install_states_removes_missing_mods(tmp_path, monkeypatch):
+    mods = tmp_path / "mods"
+    mods.mkdir()
+    present = mods / "Present Mod"
+    present.mkdir()
+    state = {
+        d2pfx_api.D2PFX_INSTALLS_KEY: {
+            "effects::Present Mod": {"source_date": 100, "folder": "Present Mod"},
+            "effects::Missing Mod": {"source_date": 100, "folder": "Missing Mod"},
+        }
+    }
+    monkeypatch.setattr(base, "mods_dir", str(mods))
+    monkeypatch.setattr(d2pfx_api.utils, "read_states", lambda: json.loads(json.dumps(state)))
+    monkeypatch.setattr(d2pfx_api.utils, "write_states", lambda key, value: state.update({key: value}))
+
+    d2pfx_api.reconcile_install_states()
+
+    assert set(state[d2pfx_api.D2PFX_INSTALLS_KEY]) == {"effects::Present Mod"}
