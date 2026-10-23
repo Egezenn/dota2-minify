@@ -179,7 +179,12 @@ class Api:
         entries = []
         if backup_dirs:
             backup_dir = backup_dirs[-1]
-            entries.extend(f"{backup_dir.name}/{entry.name}" for entry in sorted(backup_dir.iterdir()))
+            mods_dir = Path(base.mods_dir)
+            entries.extend(
+                f"{backup_dir.name}/{entry.name}"
+                for entry in sorted(backup_dir.iterdir())
+                if not (mods_dir / entry.name).exists()
+            )
         return entries
 
     def import_legacy_mods(self, import_mods: bool = True) -> Dict[str, Any]:

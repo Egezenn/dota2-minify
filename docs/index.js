@@ -118,10 +118,10 @@ if (downloadModal) {
       modalTitle.innerHTML = `Download ${typeText}, ${version}<br><small class="text-muted">Dated ${new Date(release.published_at).toLocaleString()}</small>`;
 
       const windowsSetupAsset = release.assets.find((asset) =>
-        asset.name.endsWith(".exe"),
+        asset.name.startsWith("Minify-Setup-") && asset.name.endsWith(".exe"),
       );
       const windowsPortableAsset = release.assets.find((asset) =>
-        asset.name.endsWith("-windows.zip"),
+        asset.name.startsWith("Minify-Portable-") && asset.name.endsWith(".exe"),
       );
       const linuxAsset = release.assets.find((asset) =>
         asset.name.endsWith("-linux.zip"),

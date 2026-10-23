@@ -2,7 +2,7 @@
 
 Minify is available for Windows, Linux and Mac<sup>1</sup>!
 
-You can download the archives from the link below:
+You can download the archives and Windows portable executable from the link below:
 
 https://egezenn.github.io/dota2-minify
 
@@ -10,7 +10,7 @@ https://egezenn.github.io/dota2-minify
 
 ## Running
 
-Extract the contents of the `.zip` file you've downloaded to someplace you like or use the setup for Windows. You can run the `Minify` executable afterwards.
+Run the Windows portable executable directly, or extract the `.zip` archive to someplace you like. You can also use the Windows setup installer.
 
 > [!WARNING]
 >

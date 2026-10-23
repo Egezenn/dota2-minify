@@ -20,6 +20,8 @@ CloseApplications=yes
 AppMutex=MinifyMutex
 ; Suppress the Start Menu folder page
 DisableProgramGroupPage=yes
+DisableWelcomePage=yes
+DisableFinishedPage=yes
 AllowNoIcons=yes
 
 ; Version Info (FFI) for the setup executable itself
