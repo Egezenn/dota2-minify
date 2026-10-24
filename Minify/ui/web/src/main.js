@@ -13,18 +13,20 @@ if (!window.pywebview && (window.location.protocol === "http:" || window.locatio
   const api = new Proxy(
     {},
     {
-      get: (_target, method) => async (...args) => {
-        const response = await fetch("/api", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ method, args }),
-        });
-        const payload = await response.json();
-        if (!response.ok || payload.error) {
-          throw new Error(payload.error || `API request failed: ${response.status}`);
-        }
-        return payload.result;
-      },
+      get:
+        (_target, method) =>
+        async (...args) => {
+          const response = await fetch("/api", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ method, args }),
+          });
+          const payload = await response.json();
+          if (!response.ok || payload.error) {
+            throw new Error(payload.error || `API request failed: ${response.status}`);
+          }
+          return payload.result;
+        },
     },
   );
   window.pywebview = { api };
