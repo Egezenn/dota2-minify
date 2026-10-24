@@ -23,6 +23,7 @@
   let pluginContents: Record<string, string> = {};
 
   let downloads: DownloadItem[] = [];
+  const dismissedDownloads = new Set<string>();
   let logs: Array<{ text: string; type: string; timestamp?: string }> = [];
   let isPatching = false;
   let autoScroll = true;
@@ -206,6 +207,10 @@
               if (Array.isArray(currentLogs)) {
                 logs = currentLogs;
               }
+              const currentDownloads = await window.pywebview?.api?.get_downloads();
+              if (Array.isArray(currentDownloads)) {
+                downloads = currentDownloads.filter((download) => !dismissedDownloads.has(download.id));
+              }
             } catch (err) {
               console.error("Failed to refresh hosted patch logs:", err);
             }
@@ -289,6 +294,7 @@
   });
 
   function handleDismissDownload(id: string) {
+    dismissedDownloads.add(id);
     downloads = downloads.filter((d) => d.id !== id);
   }
 

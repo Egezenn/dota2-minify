@@ -54,6 +54,9 @@ class Api:
     def get_logs(self) -> List[Dict[str, Any]]:
         return self.patch_service.get_logs()
 
+    def get_downloads(self) -> List[Dict[str, Any]]:
+        return self.patch_service.get_downloads()
+
     def clear_logs(self) -> bool:
         return self.patch_service.clear_logs()
 
@@ -384,15 +387,16 @@ def launch(host: bool = False) -> None:
     window.events.resized += _save_window_size
 
     # to prevent MSHTML
-    if not is_webview_available():
-        _show_missing_dialog()
+    if base.is_win and not is_webview2_installed():
+        print("WebView2 not installed, opening in browser...")
+        _open_in_browser()
         return
 
     api.set_window(window)
     try:
         webview.start(debug=debug_mode, icon=base.favicon_file)
     except Exception as e:
-        if not is_webview_available():
+        if base.is_win and not is_webview2_installed():
             print(e)
             _open_in_browser()
             return
@@ -456,6 +460,18 @@ def _start_local_server(directory: str, api: Api) -> ThreadingHTTPServer:
 
         def do_GET(self) -> None:
             parsed = urlparse(self.path)
+            if parsed.path == "/favicon.ico":
+                try:
+                    with open(base.favicon_file, "rb") as favicon:
+                        payload = favicon.read()
+                    self.send_response(200)
+                    self.send_header("Content-Type", "image/x-icon")
+                    self.send_header("Content-Length", str(len(payload)))
+                    self.end_headers()
+                    self.wfile.write(payload)
+                except OSError:
+                    self.send_error(404)
+                return
             if parsed.path.startswith("/themes/"):
                 self.path = unquote(parsed.path[len("/themes/") :])
                 self.directory = base.themes_dir
@@ -496,15 +512,6 @@ def _start_local_server(directory: str, api: Api) -> ThreadingHTTPServer:
     return server
 
 
-def is_webview_available() -> bool:
-    if base.is_win:
-        return is_webview2_installed()
-    try:
-        return bool(webview.initialize())
-    except Exception as e:
-        print(e)
-        return False
-
 
 def is_webview2_installed() -> bool:
     candidate_dirs = [
@@ -527,29 +534,3 @@ def is_webview2_installed() -> bool:
     return False
 
 
-def _show_missing_dialog() -> None:
-    try:
-        import tkinter as tk
-        from tkinter import messagebox
-        import webbrowser
-
-        root = tk.Tk()
-        root.withdraw()
-        root.wm_attributes("-topmost", 1)
-
-        if base.is_win:
-            url = "https://developer.microsoft.com/en-us/microsoft-edge/webview2/"
-            msg = (
-                "Microsoft Edge WebView2 Runtime is required to run the GUI, but it is not installed.\n\n"
-                f"Please install it from:\n{url}\n\n"
-                "Also, you can install it via terminal:\n"
-                "winget install -e --id Microsoft.EdgeWebView2Runtime\n\n"
-                "Would you like to open the download page now?"
-            )
-            if messagebox.askyesno("WebView2 Required", msg):
-                webbrowser.open(url)
-        else:
-            messagebox.showerror("Error", "WebView is not available on this system.")
-        root.destroy()
-    except Exception:
-        pass

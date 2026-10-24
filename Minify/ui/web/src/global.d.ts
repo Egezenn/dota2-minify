@@ -11,6 +11,16 @@ declare global {
         get_available_languages: () => Promise<string[]>;
         get_available_game_languages: () => Promise<string[]>;
         get_logs: () => Promise<Array<{ text: string; type: string; timestamp?: string }>>;
+        get_downloads: () => Promise<
+          Array<{
+            id: string;
+            name: string;
+            downloaded_bytes: number;
+            total_bytes: number;
+            status: "downloading" | "finished" | "error";
+            error?: string;
+          }>
+        >;
         is_patching: () => Promise<boolean>;
         is_debug_env: () => Promise<boolean>;
         get_version: () => Promise<string>;

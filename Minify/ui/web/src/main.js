@@ -1,7 +1,15 @@
 import "./app.css";
 import App from "./App.svelte";
 
-if (!window.pywebview) {
+if (window.location.protocol === "http:" || window.location.protocol === "https:") {
+  const favicon = document.createElement("link");
+  favicon.rel = "icon";
+  favicon.href = "/favicon.ico";
+  favicon.type = "image/x-icon";
+  document.head.appendChild(favicon);
+}
+
+if (!window.pywebview && (window.location.protocol === "http:" || window.location.protocol === "https:")) {
   const api = new Proxy(
     {},
     {
