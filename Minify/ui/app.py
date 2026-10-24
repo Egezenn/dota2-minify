@@ -396,11 +396,8 @@ def launch(host: bool = False) -> None:
     try:
         webview.start(debug=debug_mode, icon=base.favicon_file)
     except Exception as e:
-        if base.is_win and not is_webview2_installed():
-            print(e)
-            _open_in_browser()
-            return
-        raise
+        print(f"WebView initialization failed, opening in browser: {e}")
+        _open_in_browser()
 
 
 def _open_in_browser() -> None:
@@ -532,5 +529,4 @@ def is_webview2_installed() -> bool:
         except OSError:
             pass
     return False
-
 
