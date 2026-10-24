@@ -50,6 +50,7 @@ declare global {
         start_patch: () => Promise<{ status: string }>;
         start_uninstall: (remove_everything?: boolean) => Promise<{ status: string }>;
         open_url?: (url: string) => Promise<void> | void;
+        shutdown_host?: () => Promise<boolean>;
         open_config_directory?: () => Promise<void> | void;
         clear_logs: () => Promise<boolean>;
         get_steam_accounts: () => Promise<
@@ -82,7 +83,6 @@ declare global {
         reset_native_settings: () => Promise<boolean>;
         reset_mod_settings: (mod_name: string) => Promise<boolean>;
         get_available_themes?: () => Promise<Array<{ value: string; label: string }>>;
-        get_theme_url?: (theme_name?: string) => Promise<string>;
         get_theme_css?: (theme_name?: string) => Promise<string>;
         get_state?: (key: string, defaultValue?: any) => Promise<any>;
         set_state?: (key: string, value: any) => Promise<boolean>;

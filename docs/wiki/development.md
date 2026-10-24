@@ -11,6 +11,7 @@ Prerequisites are `git`, `python` and `uv`. (also `tk` for tkinter and `wine` fo
 ```shell
 git clone https://github.com/Egezenn/dota2-minify
 cd dota2-minify
+uv sync --extra linux # if on linux
 uv run Minify
 ```
 

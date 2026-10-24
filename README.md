@@ -110,7 +110,6 @@ This project wouldn't be available without the work of the community. Thanks to 
 | ---------------------------------------------------------------------- | ----------------------------------------- | ------------------------------------------------------------------------------------ |
 | [defusedxml](https://github.com/tiran/defusedxml)                      | Secure XML parsing                        | [PSFL license](https://github.com/tiran/defusedxml/blob/main/LICENSE)                |
 | [json-with-comments](https://github.com/n-takumasa/json-with-comments) | JSON parsing with comments                | [MIT license](https://github.com/n-takumasa/json-with-comments/blob/main/LICENSE)    |
-| [playsound3](https://github.com/szmikler/playsound3)                   | Playing sounds                            | [MIT license](https://github.com/szmikler/playsound3/blob/main/LICENSE)              |
 | [psutil](https://github.com/giampaolo/psutil)                          | Checking processes existences             | [BSD-3-Clause license](https://github.com/giampaolo/psutil/blob/master/LICENSE)      |
 | [pycairo](https://github.com/pygobject/pycairo)                        | Cairo graphics bindings for GTK           | [LGPL-2.1 / MPL-1.1 license](https://github.com/pygobject/pycairo/blob/main/COPYING) |
 | [pygobject](https://gitlab.gnome.org/GNOME/pygobject)                  | GObject GTK bindings                      | [LGPL-2.1 license](https://gitlab.gnome.org/GNOME/pygobject/-/blob/main/COPYING)     |

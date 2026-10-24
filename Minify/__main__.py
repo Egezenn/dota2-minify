@@ -87,13 +87,14 @@ def _main(
         callback=_version_callback,
         is_eager=True,
     ),
+    host: bool = typer.Option(False, "--host", help="Host the UI on a local port and open it in the default browser."),
 ):
     base.HEADLESS = ctx.invoked_subcommand is not None
     if ctx.invoked_subcommand not in ("config", "mods"):
         utils.setup_system()
 
     if ctx.invoked_subcommand is None:
-        ui.launch()
+        ui.launch(host=host)
 
 
 @app.command(name="patch")

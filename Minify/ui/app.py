@@ -1,7 +1,11 @@
 import os
+import json
 import shutil
 import sys
+import threading
+from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
+from urllib.parse import unquote, urlparse
 from typing import Any, Dict, List, Optional
 
 import webview
@@ -12,6 +16,7 @@ from ui.services import ConfigService, DialogService, ModService, PatchService, 
 
 class Api:
     def __init__(self) -> None:
+        self._host_shutdown: Any = None
         self.patch_service = PatchService()
         self.mod_service = ModService()
         self.config_service = ConfigService()
@@ -20,6 +25,14 @@ class Api:
 
     def set_window(self, window: Any) -> None:
         self.patch_service.set_window(window)
+
+    def set_host_shutdown(self, callback: Any) -> None:
+        self._host_shutdown = callback
+
+    def shutdown_host(self) -> bool:
+        if self._host_shutdown:
+            self._host_shutdown()
+        return True
 
     def start_patch(self) -> Dict[str, Any]:
         return self.patch_service.start_patch()
@@ -149,9 +162,6 @@ class Api:
 
     def get_available_themes(self) -> List[Dict[str, str]]:
         return self.config_service.get_available_themes()
-
-    def get_theme_url(self, theme_name: str | None = None) -> str:
-        return self.config_service.get_theme_url(theme_name)
 
     def get_theme_css(self, theme_name: str | None = None) -> str:
         return self.config_service.get_theme_css(theme_name)
@@ -317,7 +327,7 @@ class Api:
         return self.plugin_service.call_api(plugin_id, action, params)
 
 
-def launch() -> None:
+def launch(host: bool = False) -> None:
     if not os.path.isfile(base.dist_index):
         output.add_text(
             f"Error: Web UI build file not found at '{base.dist_index}'. Please run 'npm run build' inside Minify/ui/web.",
@@ -342,6 +352,10 @@ def launch() -> None:
         initial_width = 960
     if not isinstance(initial_height, int) or initial_height < 500:
         initial_height = 680
+
+    if host:
+        _open_in_browser()
+        return
 
     api = Api()
     active_theme = config.get("theme", "light")
@@ -377,11 +391,109 @@ def launch() -> None:
     api.set_window(window)
     try:
         webview.start(debug=debug_mode, icon=base.favicon_file)
-    except Exception:
+    except Exception as e:
         if not is_webview_available():
-            _show_missing_dialog()
+            print(e)
+            _open_in_browser()
             return
         raise
+
+
+def _open_in_browser() -> None:
+    import webbrowser
+
+    stop_event = threading.Event()
+    api = Api()
+    server = _start_local_server(os.path.dirname(base.dist_index), api)
+    api.set_host_shutdown(lambda: _request_host_shutdown(stop_event, server))
+    url = f"http://127.0.0.1:{server.server_port}/index.html"
+    if not webbrowser.open(url):
+        _stop_local_server(server)
+        return
+    try:
+        stop_event.wait()
+    except KeyboardInterrupt:
+        pass
+    finally:
+        _stop_local_server(server)
+
+
+def _request_host_shutdown(stop_event: threading.Event, server: ThreadingHTTPServer) -> None:
+    stop_event.set()
+    threading.Thread(target=_stop_local_server, args=(server,), daemon=True).start()
+
+
+def _stop_local_server(server: ThreadingHTTPServer) -> None:
+    server.shutdown()
+    server.server_close()
+    serve_thread = getattr(server, "_serve_thread", None)
+    if serve_thread is not None and serve_thread is not threading.current_thread():
+        serve_thread.join(timeout=5)
+
+
+def _start_local_server(directory: str, api: Api) -> ThreadingHTTPServer:
+    def _host_file_urls(value: Any) -> Any:
+        if isinstance(value, str) and value.startswith("file://"):
+            path = unquote(urlparse(value).path).replace("/", os.sep)
+            if len(path) > 2 and path[0] == os.sep and path[2] == ":":
+                path = path[1:]
+            for root, prefix in ((base.themes_dir, "/themes/"), (base.plugins_dir, "/plugins/")):
+                try:
+                    relative = os.path.relpath(path, root)
+                except ValueError:
+                    continue
+                if not relative.startswith(".."):
+                    return prefix + relative.replace(os.sep, "/")
+        if isinstance(value, list):
+            return [_host_file_urls(item) for item in value]
+        if isinstance(value, dict):
+            return {key: _host_file_urls(item) for key, item in value.items()}
+        return value
+
+    class LocalHandler(SimpleHTTPRequestHandler):
+        def __init__(self, *args: Any, **kwargs: Any) -> None:
+            super().__init__(*args, directory=directory, **kwargs)
+
+        def do_GET(self) -> None:
+            parsed = urlparse(self.path)
+            if parsed.path.startswith("/themes/"):
+                self.path = unquote(parsed.path[len("/themes/") :])
+                self.directory = base.themes_dir
+            elif parsed.path.startswith("/plugins/"):
+                self.path = unquote(parsed.path[len("/plugins/") :])
+                self.directory = base.plugins_dir
+            super().do_GET()
+
+        def do_POST(self) -> None:
+            if self.path != "/api":
+                self.send_error(404)
+                return
+            try:
+                length = int(self.headers.get("Content-Length", "0"))
+                request = json.loads(self.rfile.read(length))
+                method_name = request["method"]
+                method = getattr(api, method_name)
+                if method_name.startswith("_") or not callable(method):
+                    raise ValueError("Invalid API method")
+                result = method(*request.get("args", []), **request.get("kwargs", {}))
+                result = _host_file_urls(result)
+                payload = json.dumps({"result": result}).encode("utf-8")
+                self.send_response(200)
+            except Exception as error:
+                payload = json.dumps({"error": str(error)}).encode("utf-8")
+                self.send_response(500)
+            self.send_header("Content-Type", "application/json")
+            self.send_header("Content-Length", str(len(payload)))
+            self.end_headers()
+            self.wfile.write(payload)
+
+    handler = LocalHandler
+    server = ThreadingHTTPServer(("127.0.0.1", 0), handler)
+    server.daemon_threads = True
+    serve_thread = threading.Thread(target=server.serve_forever, daemon=False, name="minify-http-server")
+    server._serve_thread = serve_thread
+    serve_thread.start()
+    return server
 
 
 def is_webview_available() -> bool:
@@ -389,7 +501,8 @@ def is_webview_available() -> bool:
         return is_webview2_installed()
     try:
         return bool(webview.initialize())
-    except Exception:
+    except Exception as e:
+        print(e)
         return False
 
 

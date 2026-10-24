@@ -49,35 +49,15 @@ export async function applyTheme(themeName?: string): Promise<string> {
       (window as any).__lastThemeCss = css;
     }
 
-    if (api.get_theme_url) {
-      const themeUrl = await api.get_theme_url(themeName);
-      try {
-        localStorage.setItem("minify-theme-url", themeUrl);
-      } catch (e) {}
-      let linkEl = document.getElementById("minify-theme-link") as HTMLLinkElement;
-      if (!linkEl) {
-        linkEl = document.createElement("link");
-        linkEl.id = "minify-theme-link";
-        linkEl.rel = "stylesheet";
-        document.head.appendChild(linkEl);
-      }
-      if (linkEl.href !== themeUrl) {
-        linkEl.href = themeUrl;
-      }
-      const oldStyle = document.getElementById("minify-theme");
-      if (oldStyle && oldStyle.tagName.toLowerCase() === "style") {
-        oldStyle.remove();
-      }
-    } else if (css) {
-      let styleEl = document.getElementById("minify-theme") as HTMLStyleElement;
-      if (!styleEl) {
-        styleEl = document.createElement("style");
-        styleEl.id = "minify-theme";
-        document.head.appendChild(styleEl);
-      }
-      if (styleEl.textContent !== css) {
-        styleEl.textContent = css;
-      }
+    document.getElementById("minify-theme-link")?.remove();
+    let styleEl = document.getElementById("minify-theme") as HTMLStyleElement;
+    if (!styleEl) {
+      styleEl = document.createElement("style");
+      styleEl.id = "minify-theme";
+      document.head.appendChild(styleEl);
+    }
+    if (styleEl.textContent !== css) {
+      styleEl.textContent = css;
     }
 
     const iframes = document.querySelectorAll<HTMLIFrameElement>("iframe.plugin-frame");

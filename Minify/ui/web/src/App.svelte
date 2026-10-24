@@ -108,6 +108,10 @@
     document.body.classList.add("loaded");
   }
 
+  function shutdownHost() {
+    window.pywebview?.api?.shutdown_host?.();
+  }
+
   async function checkLegacyMods() {
     try {
       const entries = await window.pywebview?.api?.get_legacy_mods?.();
@@ -194,6 +198,20 @@
   }
 
   onMount(() => {
+    const hostedLogPolling =
+      window.location.protocol === "http:"
+        ? window.setInterval(async () => {
+            try {
+              const currentLogs = await window.pywebview?.api?.get_logs();
+              if (Array.isArray(currentLogs)) {
+                logs = currentLogs;
+              }
+            } catch (err) {
+              console.error("Failed to refresh hosted patch logs:", err);
+            }
+          }, 500)
+        : undefined;
+
     const handleContextMenu = (e: MouseEvent) => {
       if (!isDebugEnv) {
         e.preventDefault();
@@ -264,6 +282,9 @@
       window.removeEventListener("contextmenu", handleContextMenu);
       window.removeEventListener("message", handleWindowMessage);
       window.removeEventListener("keydown", handleKeydown);
+      if (hostedLogPolling !== undefined) {
+        window.clearInterval(hostedLogPolling);
+      }
     };
   });
 
@@ -517,6 +538,7 @@
     onTabChange={changeTab}
     onPatch={handlePatch}
     onUninstallClick={() => (showUninstallModal = true)}
+    onShutdown={shutdownHost}
   />
 
   <UninstallModal

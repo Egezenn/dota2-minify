@@ -1,6 +1,5 @@
 import os
 import re
-from pathlib import Path
 from typing import Any, Dict, List
 
 import helper
@@ -69,22 +68,6 @@ class ConfigService:
         if not any(t["value"] == "light" for t in themes):
             themes.insert(0, {"value": "light", "label": "Light"})
         return themes
-
-    def get_theme_url(self, theme_name: str | None = None) -> str:
-        if not theme_name:
-            theme_name = config.get("theme", "light") or "light"
-
-        themes_dir = getattr(base, "themes_dir", os.path.join(base.base_dir, "themes"))
-        clean_name = os.path.basename(str(theme_name))
-        if not clean_name.lower().endswith(".css"):
-            clean_name += ".css"
-
-        theme_path = os.path.join(themes_dir, clean_name)
-        if not os.path.isfile(theme_path):
-            theme_path = os.path.join(themes_dir, "light.css")
-        if os.path.isfile(theme_path):
-            return Path(os.path.abspath(theme_path)).as_uri()
-        return ""
 
     def get_theme_css(self, theme_name: str | None = None) -> str:
         if not theme_name:

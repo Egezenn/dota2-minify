@@ -1,6 +1,6 @@
 <script lang="ts">
   import { t } from "../i18n";
-  import { Folder, Hammer } from "lucide-svelte";
+  import { Folder, Hammer, Power } from "lucide-svelte";
   import ghIcon from "../../assets/github.svg";
   import wikiIcon from "../../assets/wiki.ico";
   import discordIcon from "../../assets/discord.svg";
@@ -16,6 +16,7 @@
   export let onPatch: () => void;
   export let onUninstallClick: () => void;
   export let onWorkshopToolsClick: () => void;
+  export let onShutdown: () => void;
 
   function openExternal(url: string) {
     if (window.pywebview?.api?.open_url) {
@@ -48,6 +49,18 @@
   </nav>
 
   <div class="header-action">
+    {#if window.location.protocol === "http:"}
+      <button
+        type="button"
+        class="header-link-btn shutdown-btn"
+        on:click={onShutdown}
+        title="Close Server"
+        aria-label="Close Server"
+      >
+        <Power size={14} strokeWidth={2} />
+      </button>
+    {/if}
+
     <div class="header-links">
       {#if showWorkshopToolsButton}
         <button
@@ -182,6 +195,15 @@
     gap: 8px;
     font-size: 13px;
     color: var(--text-primary, #000);
+  }
+
+  .shutdown-btn {
+    color: #d32f2f;
+  }
+
+  .shutdown-btn:hover {
+    color: #b71c1c;
+    border-color: #d32f2f;
   }
 
   .header-links {
