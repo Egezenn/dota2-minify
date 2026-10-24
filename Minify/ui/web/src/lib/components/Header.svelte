@@ -1,5 +1,6 @@
 <script lang="ts">
   import { t } from "../i18n";
+  import { Folder, Hammer } from "lucide-svelte";
   import ghIcon from "../../assets/github.svg";
   import wikiIcon from "../../assets/wiki.ico";
   import discordIcon from "../../assets/discord.svg";
@@ -56,7 +57,7 @@
           title="Workshop Tools"
           aria-label="Workshop Tools"
         >
-          WT
+          <Hammer size={14} strokeWidth={2} />
         </button>
       {/if}
 
@@ -67,7 +68,7 @@
         title="Open Config Directory"
         aria-label="Open Config Directory"
       >
-        CFG
+        <Folder size={14} strokeWidth={2} />
       </button>
 
       <button
@@ -208,6 +209,10 @@
     background: var(--btn-hover-bg, #f0f0f0);
     border-color: var(--btn-hover-border, var(--border-color, #000));
     color: var(--accent, #17bebe);
+  }
+
+  .header-link-btn :global(svg) {
+    display: block;
   }
 
   .header-link-btn:active {

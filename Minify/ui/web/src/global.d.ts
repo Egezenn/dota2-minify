@@ -90,6 +90,8 @@ declare global {
         extract_workshop_tools?: () => Promise<boolean>;
         is_workshop_installed?: () => Promise<boolean>;
         download_workshop_tools?: () => Promise<boolean>;
+        get_legacy_mods?: () => Promise<string[]>;
+        import_legacy_mods?: (import_mods?: boolean) => Promise<Record<string, any>>;
         get_plugin_tabs?: () => Promise<
           Array<{
             id: string;

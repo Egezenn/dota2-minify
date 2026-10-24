@@ -7,7 +7,6 @@ import time
 from concurrent.futures import ThreadPoolExecutor
 
 import jsonc
-import playsound3
 import psutil
 import vpk
 
@@ -401,11 +400,6 @@ def patcher():
 
         if os.path.exists(base.log_warnings) and os.path.getsize(base.log_warnings) != 0:
             output.add_text("&minify_encountered_errors_terminal", msg_type="warning")
-        playsound3.playsound(os.path.join(base.sounds_dir, "success.wav"), block=False)
-
-    # chimes are from pixabay.com/sound-effects/chime-74910/
-    except (PermissionError, playsound3.PlaysoundException):
-        log.write_warning()
 
     except Exception:
         log.write_crashlog()
@@ -413,4 +407,3 @@ def patcher():
         output.add_separator()
         output.add_text("&failure_terminal", msg_type="error")
         output.add_text("&check_logs_terminal", msg_type="warning")
-        playsound3.playsound(os.path.join(base.sounds_dir, "fail.wav"), block=False)

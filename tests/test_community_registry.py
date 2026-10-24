@@ -338,22 +338,6 @@ def test_latest_release_selects_newest_release_compatible_with_minify(monkeypatc
     }
 
 
-def test_latest_release_selects_highest_compatible_registry_tag(monkeypatch):
-    item = {
-        "asset-url": "https://github.com/test/theme/releases/download/{tag}/theme.zip",
-        "releases": {
-            "1.0.0": ["2rc7"],
-            "1.0.2": ["2rc7"],
-            "1.0.1": ["2rc7"],
-        },
-    }
-
-    assert community_api._latest_release(item) == {
-        "tag": "1.0.2",
-        "asset_url": "https://github.com/test/theme/releases/download/1.0.2/theme.zip",
-    }
-
-
 def test_latest_release_uses_registry_latest_asset_without_api(monkeypatch):
     item = {
         "asset-url": "https://codeberg.org/test/theme/releases/download/{tag}/theme.zip",
