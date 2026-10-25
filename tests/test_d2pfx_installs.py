@@ -21,6 +21,10 @@ def test_d2pfx_install_and_uninstall_persist_install_record(tmp_path, monkeypatc
     monkeypatch.setattr(d2pfx_api.output, "add_text", lambda *_args, **_kwargs: None)
 
     class FakeDataManager:
+        @staticmethod
+        def to_hf_fallback(url):
+            return None
+
         def download_file(self, url, destination, *_args, **_kwargs):
             with open(destination, "wb") as mod_file:
                 mod_file.write(b"updated mod" if "v2" in url else b"mod")

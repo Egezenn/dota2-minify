@@ -110,7 +110,11 @@ def run_patch(
 
 @app.command(
     name="prelaunch",
-    context_settings={"allow_extra_args": True, "ignore_unknown_options": True},
+    context_settings={
+        "allow_extra_args": True,
+        "ignore_unknown_options": True,
+        "help_option_names": ["--help"],
+    },
 )
 def run_prelaunch(
     ctx: typer.Context,
