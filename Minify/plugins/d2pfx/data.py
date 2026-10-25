@@ -2,7 +2,9 @@ import gzip
 import io
 import json
 import os
+import threading
 import time
+from urllib.parse import urlparse
 
 import requests
 from core import base, config, fs, output, utils
@@ -40,6 +42,7 @@ class DataManager:
     HOST_REACHABLE_CACHE = {}
     REACHABILITY_TTL = 60
     NOTIFIED_HOSTS = set()
+    _STATE_LOCK = threading.Lock()
 
     def __init__(self):
         self.cache_dir = CACHE_DIR
@@ -58,47 +61,41 @@ class DataManager:
 
     @classmethod
     def is_url_reachable(cls, url, timeout=3):
-        from urllib.parse import urlparse
-
         host = urlparse(url).netloc
-        cached = cls.HOST_REACHABLE_CACHE.get(host)
-        now = time.time()
-        if cached and (now - cached[1]) < cls.REACHABILITY_TTL:
-            return cached[0]
+        with cls._STATE_LOCK:
+            cached = cls.HOST_REACHABLE_CACHE.get(host)
+            now = time.time()
+            if cached and (now - cached[1]) < cls.REACHABILITY_TTL:
+                return cached[0]
 
-        try:
-            requests.head(url, timeout=timeout, allow_redirects=True)
-            reachable = True
-        except Exception:
-            reachable = False
+            try:
+                response = requests.head(url, timeout=timeout, allow_redirects=True)
+                response.raise_for_status()
+                reachable = True
+            except Exception:
+                reachable = False
 
-        cls.HOST_REACHABLE_CACHE[host] = (reachable, now)
-        return reachable
+            cls.HOST_REACHABLE_CACHE[host] = (reachable, now)
+            return reachable
 
     @classmethod
     def notify_fallback_once(cls, gh_url):
-        from urllib.parse import urlparse
-
         host = urlparse(gh_url).netloc
-        if host in cls.NOTIFIED_HOSTS:
-            return
-        cls.NOTIFIED_HOSTS.add(host)
-        try:
-            output.add_text(f"{host} unreachable, D2PFX is using the Hugging Face mirror", msg_type="info")
-        except Exception:
-            print(f"{host} unreachable, D2PFX is using the Hugging Face mirror")
+        with cls._STATE_LOCK:
+            if host in cls.NOTIFIED_HOSTS:
+                return
+            cls.NOTIFIED_HOSTS.add(host)
+        output.add_text(f"{host} unreachable, D2PFX is using the Hugging Face mirror", msg_type="info")
 
     def download_file(self, url, dest, progress_tag=None, name=None, emit_progress=True, fallback_url=None):
         fallback_url = fallback_url or self.to_hf_fallback(url)
+        use_fallback = bool(fallback_url and fallback_url != url)
 
-        if fallback_url and fallback_url != url and not self.is_url_reachable(url):
-            self.notify_fallback_once(url)
-            return fs.download_file(
-                fallback_url, dest, progress_tag=progress_tag, name=name, emit_progress=emit_progress
-            )
+        success = False
+        if not (use_fallback and not self.is_url_reachable(url)):
+            success = fs.download_file(url, dest, progress_tag=progress_tag, name=name, emit_progress=emit_progress)
 
-        success = fs.download_file(url, dest, progress_tag=progress_tag, name=name, emit_progress=emit_progress)
-        if not success and fallback_url and fallback_url != url:
+        if not success and use_fallback:
             self.notify_fallback_once(url)
             success = fs.download_file(
                 fallback_url, dest, progress_tag=progress_tag, name=name, emit_progress=emit_progress
@@ -126,16 +123,22 @@ class DataManager:
         for gz_url in candidate_urls:
             try:
                 response = requests.get(gz_url, timeout=10)
-                if response.status_code == 200:
-                    with gzip.GzipFile(fileobj=io.BytesIO(response.content)) as f:
-                        data = json.load(f)
-                        with open(local_path, "w", encoding="utf-8") as out:
-                            json.dump(data, out, indent=2)
-                        return data
+                response.raise_for_status()
             except Exception:
-                continue  # try the next candidate silently
+                if gz_url == gh_url:
+                    self.notify_fallback_once(gh_url)
+                continue
 
-        print(f"D2PFX: Unable to download {filename} from either GitHub or Hugging Face")
+            try:
+                with gzip.GzipFile(fileobj=io.BytesIO(response.content)) as f:
+                    data = json.load(f)
+                with open(local_path, "w", encoding="utf-8") as out:
+                    json.dump(data, out, indent=2)
+                return data
+            except Exception:
+                continue  # decompression, parsing, or local write failed; try the next candidate
+
+        output.add_text(f"D2PFX: Unable to download {filename} from either GitHub or Hugging Face", msg_type="error")
         return None
 
     def refresh(self):
