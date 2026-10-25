@@ -15,7 +15,7 @@ ASSETS_URL = "https://raw.githubusercontent.com/h6rd/Dota2PornFxWeb/main/assets/
 PREVIEWS_URL = "https://raw.githubusercontent.com/h6rd/Dota2PornFxWeb/main/assets/previews/"
 
 # Hugging Face fallback
-HF_BASE_URL = "https://huggingface.co/datasets/hrdq/Dota2PornFx/resolve/main/compressed/"
+HF_DATA_URL = "https://huggingface.co/datasets/hrdq/Dota2PornFx/resolve/data/data/"
 HF_ASSETS_URL = "https://huggingface.co/datasets/hrdq/Dota2PornFx/resolve/main/assets/files/"
 HF_PREVIEWS_URL = "https://huggingface.co/datasets/hrdq/Dota2PornFx/resolve/main/assets/previews/"
 
@@ -106,7 +106,7 @@ class DataManager:
     def fetch_gz_json(self, filename, force_refresh=False):
         local_path = os.path.join(self.cache_dir, filename.replace(".gz", ""))
         gh_url = f"{BASE_URL}data/{filename}"
-        hf_url = f"{HF_BASE_URL}data/{filename}"
+        hf_url = f"{HF_DATA_URL}{filename}"
 
         if not force_refresh and os.path.exists(local_path):
             try:
