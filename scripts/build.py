@@ -152,7 +152,7 @@ def run_inno_setup(scripts: tuple[str, ...] = ("installer.iss", "portable.iss"))
     try:
         import version_util
 
-        version_util.generate_metadata()
+        version_util.generate_metadata(str(SCRIPTS_DIR))
     except Exception as e:
         log(f"Warning: Failed to generate metadata via version_util: {e}")
 
