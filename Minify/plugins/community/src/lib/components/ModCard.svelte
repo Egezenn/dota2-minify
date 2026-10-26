@@ -25,6 +25,7 @@
 <div
   class="mod-card"
   class:active={entry.installed}
+  class:incompatible={entry.installed && !entry.installed_compatible}
   role="button"
   tabindex="0"
   on:click={() => onDetails(entry)}
@@ -36,6 +37,17 @@
   }}
 >
   <div class="preview-container">
+    {#if entry.installed && !entry.installed_compatible}
+      <span
+        class="incompatible-badge"
+        title={$t("community_installed_incompatible", [
+          entry.installed_tag || $t("community_unknown_tag"),
+          entry.current_version,
+        ])}
+      >
+        {$t("community_incompatible_badge")}
+      </span>
+    {/if}
     {#if entry.preview}
       <img
         src={entry.preview}
@@ -120,13 +132,38 @@
     border-bottom-color: var(--accent, #17bebe);
   }
 
+  .mod-card.incompatible {
+    border-color: var(--log-error, #ff5555);
+  }
+
+  .mod-card.incompatible .preview-container {
+    border-bottom-color: var(--log-error, #ff5555);
+  }
+
   .preview-container {
+    position: relative;
     height: 60px;
     width: 100%;
     overflow: hidden;
     border-bottom: 1px solid var(--card-border, #000);
     background: var(--card-preview-bg, #f0f0f0);
     flex-shrink: 0;
+  }
+
+  .incompatible-badge {
+    position: absolute;
+    top: 4px;
+    left: 4px;
+    z-index: 1;
+    padding: 1px 5px;
+    border-radius: 2px;
+    background: var(--log-error, #ff5555);
+    color: #fff;
+    font-size: 10px;
+    font-weight: 700;
+    line-height: 1.4;
+    text-transform: uppercase;
+    pointer-events: none;
   }
 
   .preview-image {

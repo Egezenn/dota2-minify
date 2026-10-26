@@ -11,6 +11,7 @@
   "community_no_packages": "No packages found.",
   "community_installed_tag": "Installed: {0}",
   "community_installed_incompatible": "Installed release {0} is not compatible with Minify {1}.",
+  "community_incompatible_badge": "Incompatible",
   "community_latest_tag": "Latest: {0}",
   "community_update_available": "Update available: {0}",
   "community_button_install": "Install",

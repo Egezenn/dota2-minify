@@ -15,7 +15,7 @@ VPK_ARCHIVE_MD5_CHUNK_SIZE = 1024 * 1024
 
 def pack(source_dir, output_vpk_dir_path, chunk_size: int | None = DEFAULT_VPK_CHUNK_SIZE):
     """
-    Packs source_dir into a VPK v2 archive (pak66_dir.vpk + pak66_000.vpk, ...).
+    Packs source_dir into a VPK v2 archive (e.g. pak66_dir.vpk + pak66_000.vpk, ...).
     Each external archive is capped at chunk_size bytes. When chunk_size is None,
     file data is embedded in the directory VPK.
     """
