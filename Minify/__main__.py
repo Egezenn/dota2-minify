@@ -87,7 +87,11 @@ def _main(
         callback=_version_callback,
         is_eager=True,
     ),
-    host: bool = typer.Option(False, "--host", help="Host the UI on a local port and open it in the default browser."),
+    host: bool = typer.Option(
+        False,
+        "--host",
+        help="Host the UI on a local port in an app window (uses the 'browser_exec' config key if set).",
+    ),
 ):
     base.HEADLESS = ctx.invoked_subcommand is not None
     if ctx.invoked_subcommand not in ("config", "mods"):

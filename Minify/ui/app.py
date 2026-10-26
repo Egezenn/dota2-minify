@@ -1,7 +1,9 @@
 import os
 import json
 import shutil
+import subprocess
 import sys
+import tempfile
 import threading
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
@@ -337,6 +339,10 @@ def launch(host: bool = False) -> None:
             msg_type="error",
         )
 
+    if host:
+        _open_in_browser()
+        return
+
     if base.is_win:
         os.environ.setdefault("WEBVIEW2_ADDITIONAL_BROWSER_ARGUMENTS", "--disable-gpu")  # #186
 
@@ -355,10 +361,6 @@ def launch(host: bool = False) -> None:
         initial_width = 960
     if not isinstance(initial_height, int) or initial_height < 500:
         initial_height = 680
-
-    if host:
-        _open_in_browser()
-        return
 
     api = Api()
     active_theme = config.get("theme", "light")
@@ -388,16 +390,152 @@ def launch(host: bool = False) -> None:
 
     # to prevent MSHTML
     if base.is_win and not is_webview2_installed():
-        print("WebView2 not installed, opening in browser...")
+        output.add_text("WebView2 not installed, opening in browser...", msg_type="warning")
         _open_in_browser()
         return
+
+    webview_failed = False
+
+    if base.is_win:
+        try:
+            from webview.platforms.edgechromium import EdgeChrome
+
+            orig_on_ready = EdgeChrome.on_webview_ready
+
+            def _patched_on_ready(self_ec: Any, sender: Any, args: Any) -> Any:
+                nonlocal webview_failed
+                if not getattr(args, "IsSuccess", True):
+                    output.add_text(
+                        f"WebView2 initialization failed ({getattr(args, 'InitializationException', 'unknown error')}), opening in browser...",
+                        msg_type="warning",
+                    )
+                    webview_failed = True
+                    try:
+                        self_ec.form.Close()
+                    except Exception:
+                        pass
+                    return
+                return orig_on_ready(self_ec, sender, args)
+
+            EdgeChrome.on_webview_ready = _patched_on_ready
+        except Exception:
+            pass
 
     api.set_window(window)
     try:
         webview.start(debug=debug_mode, icon=base.favicon_file)
     except Exception as e:
-        print(f"WebView initialization failed, opening in browser: {e}")
+        output.add_text(f"WebView initialization failed, opening in browser: {e}", msg_type="warning")
         _open_in_browser()
+        return
+
+    if webview_failed:
+        _open_in_browser()
+
+
+def _find_app_browser() -> Optional[str]:
+    candidates: List[str] = []
+    if base.is_win:
+        local = os.environ.get("LOCALAPPDATA", "")
+        pf = os.environ.get("ProgramFiles", r"C:\Program Files")
+        pf86 = os.environ.get("ProgramFiles(x86)", r"C:\Program Files (x86)")
+        candidates = [
+            os.path.join(pf, "Chromium", "Application", "chrome.exe"),
+            os.path.join(pf86, "Chromium", "Application", "chrome.exe"),
+            os.path.join(local, "Chromium", "Application", "chrome.exe"),
+            os.path.join(pf, "Helium", "Application", "helium.exe"),
+            os.path.join(pf86, "Helium", "Application", "helium.exe"),
+            os.path.join(local, "Helium", "Application", "helium.exe"),
+            os.path.join(local, "Programs", "Helium", "helium.exe"),
+            os.path.join(pf, "BraveSoftware", "Brave-Browser", "Application", "brave.exe"),
+            os.path.join(local, "BraveSoftware", "Brave-Browser", "Application", "brave.exe"),
+            os.path.join(pf, "Vivaldi", "Application", "vivaldi.exe"),
+            os.path.join(pf86, "Vivaldi", "Application", "vivaldi.exe"),
+            os.path.join(local, "Vivaldi", "Application", "vivaldi.exe"),
+            os.path.join(pf, "Google", "Chrome", "Application", "chrome.exe"),
+            os.path.join(pf86, "Google", "Chrome", "Application", "chrome.exe"),
+            os.path.join(local, "Google", "Chrome", "Application", "chrome.exe"),
+            os.path.join(pf86, "Microsoft", "Edge", "Application", "msedge.exe"),
+            os.path.join(pf, "Microsoft", "Edge", "Application", "msedge.exe"),
+            os.path.join(local, "Microsoft", "Edge", "Application", "msedge.exe"),
+            os.path.join(pf, "Opera", "opera.exe"),
+            os.path.join(local, "Programs", "Opera", "opera.exe"),
+            os.path.join(pf, "Opera GX", "opera.exe"),
+            os.path.join(local, "Programs", "Opera GX", "opera.exe"),
+        ]
+    elif base.is_mac:
+        candidates = [
+            "/Applications/Chromium.app/Contents/MacOS/Chromium",
+            "/Applications/Helium.app/Contents/MacOS/Helium",
+            "/Applications/Brave Browser.app/Contents/MacOS/Brave Browser",
+            "/Applications/Vivaldi.app/Contents/MacOS/Vivaldi",
+            "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
+            "/Applications/Microsoft Edge.app/Contents/MacOS/Microsoft Edge",
+            "/Applications/Opera.app/Contents/MacOS/Opera",
+            "/Applications/Opera GX.app/Contents/MacOS/Opera GX",
+        ]
+    elif base.is_linux:
+        for name in (
+            "chromium",
+            "chromium-browser",
+            "helium",
+            "helium-browser",
+            "brave-browser",
+            "vivaldi",
+            "vivaldi-stable",
+            "google-chrome",
+            "google-chrome-stable",
+            "microsoft-edge",
+            "microsoft-edge-stable",
+            "opera",
+        ):
+            path = shutil.which(name)
+            if path:
+                candidates.append(path)
+
+    for path in candidates:
+        if path and os.path.isfile(path):
+            return path
+    return None
+
+
+def _resolve_browser_exe() -> Optional[str]:
+    browser = config.get("browser_exec")
+    if isinstance(browser, str) and browser.strip():
+        exe = os.path.expanduser(browser.strip())
+        candidates = [exe, shutil.which(exe)]
+        original_cwd = getattr(base, "original_cwd", None)
+        if original_cwd:
+            candidates.append(os.path.join(original_cwd, exe))
+        for candidate in candidates:
+            if candidate and os.path.isfile(candidate):
+                return candidate
+        output.add_text(f"Browser not found at '{browser}', trying auto-detection...", msg_type="warning")
+    return _find_app_browser()
+
+
+def _launch_app_window(url: str) -> Optional[tuple[Any, str]]:
+    exe = _resolve_browser_exe()
+    if not exe:
+        return None
+    profile_dir = tempfile.mkdtemp(prefix="minify-browser-")
+    try:
+        process = subprocess.Popen(
+            [
+                exe,
+                f"--app={url}",
+                f"--user-data-dir={profile_dir}",
+                "--window-size=960,680",
+                "--no-first-run",
+                "--no-default-browser-check",
+            ],
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL,
+        )
+    except OSError:
+        shutil.rmtree(profile_dir, ignore_errors=True)
+        return None
+    return process, profile_dir
 
 
 def _open_in_browser() -> None:
@@ -408,14 +546,29 @@ def _open_in_browser() -> None:
     server = _start_local_server(os.path.dirname(base.dist_index), api)
     api.set_host_shutdown(lambda: _request_host_shutdown(stop_event, server))
     url = f"http://127.0.0.1:{server.server_port}/index.html"
-    if not webbrowser.open(url):
+    launch_result = _launch_app_window(url)
+    app_window = launch_result[0] if launch_result else None
+    profile_dir = launch_result[1] if launch_result else None
+    if app_window is None and not webbrowser.open(url):
         _stop_local_server(server)
         return
     try:
-        stop_event.wait()
+        if app_window is not None:
+            while app_window.poll() is None and not stop_event.is_set():
+                stop_event.wait(0.5)
+        else:
+            stop_event.wait()
     except KeyboardInterrupt:
         pass
     finally:
+        if app_window is not None and app_window.poll() is None:
+            app_window.terminate()
+            try:
+                app_window.wait(timeout=5)
+            except subprocess.TimeoutExpired:
+                app_window.kill()
+        if profile_dir:
+            shutil.rmtree(profile_dir, ignore_errors=True)
         _stop_local_server(server)
 
 

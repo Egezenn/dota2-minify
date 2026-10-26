@@ -43,6 +43,11 @@ on:
         required: true
         type: boolean
         default: true
+      skip_signpath:
+        description: "Skip SignPath signing and publish unsigned Windows binaries"
+        required: true
+        type: boolean
+        default: false
 
 permissions:
   contents: write
@@ -80,6 +85,7 @@ jobs:
           path: scripts/dist/Minify
 
   sign-minify:
+    if: ${{ !inputs.skip_signpath }}
     needs: build-windows
     runs-on: windows-latest
     steps:
@@ -116,15 +122,22 @@ jobs:
           path: scripts/dist/Minify
 
   package-windows:
-    if: ${{ inputs.build_installer || inputs.build_portable }}
-    needs: sign-minify
+    if: ${{ always() && (inputs.build_installer || inputs.build_portable) && needs.build-windows.result == 'success' && (inputs.skip_signpath || needs.sign-minify.result == 'success') }}
+    needs: [build-windows, sign-minify]
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v4
       - name: Download signed Windows bundle
+        if: ${{ !inputs.skip_signpath }}
         uses: actions/download-artifact@v4
         with:
           name: signed-windows-bundle
+          path: scripts/dist/Minify
+      - name: Download unsigned Windows bundle
+        if: ${{ inputs.skip_signpath }}
+        uses: actions/download-artifact@v4
+        with:
+          name: windows-bundle
           path: scripts/dist/Minify
       - name: Install uv
         uses: astral-sh/setup-uv@v5
@@ -153,7 +166,7 @@ jobs:
           path: scripts/Minify-Portable-*.exe
 
   sign-installer:
-    if: ${{ inputs.build_installer }}
+    if: ${{ !inputs.skip_signpath && inputs.build_installer }}
     needs: package-windows
     runs-on: windows-latest
     steps:
@@ -186,7 +199,7 @@ jobs:
           path: signed-installer/*.exe
 
   sign-portable:
-    if: ${{ inputs.build_portable }}
+    if: ${{ !inputs.skip_signpath && inputs.build_portable }}
     needs: package-windows
     runs-on: windows-latest
     steps:
@@ -220,20 +233,32 @@ jobs:
 
   publish-windows:
     if: ${{ always() && (inputs.build_installer || inputs.build_portable) }}
-    needs: [sign-installer, sign-portable]
+    needs: [package-windows, sign-installer, sign-portable]
     runs-on: windows-latest
     steps:
       - name: Download signed installer
-        if: ${{ inputs.build_installer }}
+        if: ${{ !inputs.skip_signpath && inputs.build_installer }}
         uses: actions/download-artifact@v4
         with:
           name: signed-installer
           path: scripts
       - name: Download signed portable executable
-        if: ${{ inputs.build_portable }}
+        if: ${{ !inputs.skip_signpath && inputs.build_portable }}
         uses: actions/download-artifact@v4
         with:
           name: signed-portable
+          path: scripts
+      - name: Download unsigned installer
+        if: ${{ inputs.skip_signpath && inputs.build_installer }}
+        uses: actions/download-artifact@v4
+        with:
+          name: unsigned-installer-package
+          path: scripts
+      - name: Download unsigned portable executable
+        if: ${{ inputs.skip_signpath && inputs.build_portable }}
+        uses: actions/download-artifact@v4
+        with:
+          name: unsigned-portable-package
           path: scripts
       - name: Upload Windows packages as workflow artifacts
         if: ${{ inputs.upload_artifacts }}
