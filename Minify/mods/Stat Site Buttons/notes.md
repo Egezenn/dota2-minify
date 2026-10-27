@@ -1,6 +1,6 @@
 <!-- lang:en -->
 
-Adds 3rd party website links (dotabuff, stratz, opendota) to the profiles of other players and matches.
+Adds 3rd party website links (dotabuff, stratz, opendota, dota2protracker) to the profiles of other players, matches and shop's guide section.
 
 <!-- lang:es -->
 

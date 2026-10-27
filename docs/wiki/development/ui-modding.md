@@ -61,11 +61,11 @@ Example:
   "panorama/layout/popups/popup_accept_match.xml": [
     {
       "action": "add_script",
-      "src": "s2r://panorama/scripts/popups/popup_auto_accept_match.vjs_c"
+      "src": "s2r://panorama/scripts/popups/popup_auto_accept_match.vjs"
     },
     {
       "action": "set_attribute",
-      "tag": "PopupAcceptMatch",
+      "selector": "PopupAcceptMatch",
       "attribute": "onload",
       "value": "AcceptMatchPopup()"
     }
@@ -77,7 +77,7 @@ Supported actions:
 
 | `add_script` | Adds a script include to the `<scripts>` section.                                        |
 | :----------- | :--------------------------------------------------------------------------------------- |
-| `src`        | Path to the script (e.g., `s2r://panorama/scripts/popups/popup_auto_accept_match.vjs_c`) |
+| `src`        | Path to the script (e.g., `s2r://panorama/scripts/popups/popup_auto_accept_match.vjs`) |
 
 | `add_style_include` | Adds a style include to the `<styles>` section.                                    |
 | :------------------ | :--------------------------------------------------------------------------------- |

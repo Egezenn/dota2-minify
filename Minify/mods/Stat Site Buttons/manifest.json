@@ -11,6 +11,12 @@
       "text": "Enable Panorama buttons",
       "type": "checkbox",
       "default": false
+    },
+    {
+      "key": "enable_guide_buttons",
+      "text": "Enable web buttons",
+      "type": "checkbox",
+      "default": true
     }
   ]
 }

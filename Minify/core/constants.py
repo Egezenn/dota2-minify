@@ -136,7 +136,7 @@ dota_tools_extraction_paths = [
     os.path.join(base.rescomp_override_dir, "game", "dota", "gameinfo.gi"),
 ]
 
-s2v_cli_ver = "20.0"
+s2v_cli_ver = "20.1"
 rg_ver = "15.2.0"
 
 try:

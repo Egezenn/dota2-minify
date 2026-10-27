@@ -2,7 +2,7 @@
   "panorama/layout/dashboard.xml": [
     {
       "action": "add_script",
-      "src": "s2r://panorama/scripts/minify_devtools.vjs_c"
+      "src": "s2r://panorama/scripts/minify_devtools.vjs"
     },
     {
       "action": "add_child",

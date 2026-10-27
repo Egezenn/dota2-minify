@@ -1,5 +1,5 @@
 /* g:panorama/styles/showcase/dashboard_page_showcase */
-.SSBIPModButton {
+.SSBModButton {
   border-radius: 5px;
   margin-right: 5px;
   padding: 3px;
@@ -31,7 +31,7 @@
   background-color: #2e1b83;
 }
 
-.SSBIPModButton Label {
+.SSBModButton Label {
   font-size: 14px;
   color: #ffffff;
   vertical-align: center;
@@ -40,7 +40,7 @@
 }
 
 /* g:panorama/styles/dashboard_page_post_game */
-.SSBIPModButton {
+.SSBModButton {
   border-radius: 5px;
   margin-right: 5px;
   padding: 3px;
@@ -72,7 +72,7 @@
   background-color: #2e1b83;
 }
 
-.SSBIPModButton Label {
+.SSBModButton Label {
   font-size: 14px;
   color: #ffffff;
   vertical-align: center;
@@ -97,4 +97,43 @@ DOTAPageWebBrowser {
 
 .BrowserCloseButton {
   margin-right: 12px;
+}
+
+/* g:panorama/styles/hud/dota_hud_shop */
+.GuideButtonContainer {
+  flow-children: right;
+  background-color: #000000aa;
+  width: 100%;
+}
+
+.GuideButton {
+  width: 33%;
+  height: 24px;
+  border-radius: 5px;
+  margin-bottom: 3px;
+  transition-duration: 0.2s;
+  transition-property: background-color;
+}
+
+.GuideButton Label {
+  width: 100%;
+  height: 100%;
+  color: #ffffff;
+  font-size: 16px;
+  font-weight: bold;
+  horizontal-align: center;
+  vertical-align: center;
+  text-align: center;
+}
+
+.DOTABUFF {
+  background-color: #ed3b1c;
+}
+
+.D2PT {
+  background-color: #061D23;
+}
+
+.STRATZ {
+  background-color: #201553;
 }
