@@ -171,6 +171,41 @@ class Api:
 
         return helper.extract_workshop_tools()
 
+    def get_legacy_mods(self) -> List[str]:
+        backup_dirs = sorted(path for path in Path(base.base_dir).glob("mods_old_*") if path.is_dir())
+        entries = []
+        if backup_dirs:
+            backup_dir = backup_dirs[-1]
+            entries.extend(f"{backup_dir.name}/{entry.name}" for entry in sorted(backup_dir.iterdir()))
+        return entries
+
+    def import_legacy_mods(self, import_mods: bool = True) -> Dict[str, Any]:
+        migrated = []
+        discarded = []
+        fs.create_dirs(base.mods_dir)
+        backup_dirs = sorted(path for path in Path(base.base_dir).glob("mods_old_*") if path.is_dir())
+        backup_dir = backup_dirs[-1] if backup_dirs else None
+        if backup_dir:
+            for source in sorted(backup_dir.iterdir()):
+                destination = Path(base.mods_dir) / source.name
+                try:
+                    if not import_mods or destination.exists():
+                        discarded.append(source.name)
+                        fs.remove_path(str(source))
+                    else:
+                        shutil.move(str(source), str(destination))
+                        migrated.append(source.name)
+                except OSError:
+                    discarded.append(source.name)
+                    fs.remove_path(str(source))
+            try:
+                backup_dir.rmdir()
+            except OSError:
+                pass
+            for stale_dir in backup_dirs[:-1]:
+                fs.remove_path(str(stale_dir))
+        return {"migrated": migrated, "discarded": discarded}
+
     def is_workshop_installed(self) -> bool:
         import conditions
 

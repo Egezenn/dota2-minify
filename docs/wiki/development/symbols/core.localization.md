@@ -82,3 +82,45 @@ def get_for_plugin(plugin_id: str, lang: str = "en") -> dict:
 ```
 
 </details>
+
+## `parse_notes_for_locale(notes_text, lang)`
+
+Return only the requested language section from ``<!-- lang:xx -->`` marked notes.
+
+<details open><summary>Source</summary>
+
+```python
+def parse_notes_for_locale(notes_text: str, lang: str = "en") -> str:
+    """Return only the requested language section from ``<!-- lang:xx -->`` marked notes."""
+    if not notes_text or "<!-- lang:" not in notes_text.lower():
+        return notes_text.strip()
+
+    sections: dict[str, str] = {}
+    current_lang: str | None = None
+    lines: list[str] = []
+
+    marker = "<!-- lang:"
+    for line in notes_text.splitlines():
+        trimmed = line.strip()
+        if trimmed.lower().startswith(marker) and trimmed.endswith("-->"):
+            if current_lang:
+                sections[current_lang] = "\n".join(lines).strip()
+            current_lang = trimmed[len(marker) : -len("-->")].strip().lower()
+            lines = []
+        else:
+            lines.append(line)
+    if current_lang:
+        sections[current_lang] = "\n".join(lines).strip()
+
+    target_lang = (lang or "en").lower()
+    if target_lang in sections:
+        return sections[target_lang]
+    if "en" in sections:
+        return sections["en"]
+    if sections:
+        return next(iter(sections.values()))
+
+    return notes_text.strip()
+```
+
+</details>

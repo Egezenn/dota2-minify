@@ -12,11 +12,13 @@ try:
     import version_util
 
     if platform.system() == "Windows":
-        version_util.generate_metadata()
+        version_util.generate_metadata(SPECPATH)
 except ImportError:
     print("Warning: version_util not found, skipping metadata generation")
 except Exception as e:
     print(f"Error generating metadata: {e}")
+
+ffi_main_path = os.path.join(SPECPATH, "ffi_main.txt")
 
 binaries = []
 if platform.system() != "Windows":
@@ -51,7 +53,7 @@ exe = EXE(
     name="Minify",
     console=False,
     icon=["..\\Minify\\bin\\images\\favicon.ico"],
-    version="ffi_main.txt" if os.path.exists("ffi_main.txt") else None,
+    version=ffi_main_path if os.path.exists(ffi_main_path) else None,
 )
 
 coll = COLLECT(
@@ -62,6 +64,6 @@ coll = COLLECT(
 )
 
 try:
-    os.remove("ffi_main.txt")
+    os.remove(ffi_main_path)
 except:
     pass

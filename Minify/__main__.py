@@ -87,29 +87,49 @@ def _main(
         callback=_version_callback,
         is_eager=True,
     ),
+    host: bool = typer.Option(
+        False,
+        "--host",
+        help="Host the UI on a local port in an app window (uses the 'browser_exec' config key if set).",
+    ),
 ):
     base.HEADLESS = ctx.invoked_subcommand is not None
     if ctx.invoked_subcommand not in ("config", "mods"):
         utils.setup_system()
 
     if ctx.invoked_subcommand is None:
-        ui.launch()
+        ui.launch(host=host)
 
 
 @app.command(name="patch")
 def run_patch(
     config_path: Optional[str] = typer.Option(None, "--config", "-c", help="Path to config file."),
     mods_path: Optional[str] = typer.Option(None, "--mods", "-m", help="Path to mods file."),
+    number: int = typer.Option(
+        66,
+        "--number",
+        "-n",
+        min=0,
+        max=99,
+        help="Pak number for the output VPK (default: 66).",
+    ),
+    mods_string: Optional[str] = typer.Option(
+        None, "--mods-string", help='Compile only these comma-separated mods, e.g. "foo,bar". Doesn\'t eval conditions.'
+    ),
 ):
     """Run a patch."""
     _apply_paths(config_path, mods_path)
     print("Starting patch process...")
-    patch.patcher()
+    patch.patcher(number=number, mods_string=mods_string)
 
 
 @app.command(
     name="prelaunch",
-    context_settings={"allow_extra_args": True, "ignore_unknown_options": True},
+    context_settings={
+        "allow_extra_args": True,
+        "ignore_unknown_options": True,
+        "help_option_names": ["--help"],
+    },
 )
 def run_prelaunch(
     ctx: typer.Context,

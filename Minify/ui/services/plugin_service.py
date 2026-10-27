@@ -8,6 +8,19 @@ from typing import Any, Dict, List, Optional
 from core import base, config, mods_shared, utils
 
 
+PLUGIN_TAB_NAVIGATION_SCRIPT = """
+<script>
+  window.addEventListener("keydown", function (event) {
+    if (event.ctrlKey && event.key === "Tab") {
+      event.preventDefault();
+      event.stopPropagation();
+      window.parent.postMessage({ type: "CYCLE_TAB", forward: !event.shiftKey }, "*");
+    }
+  });
+</script>
+"""
+
+
 class PluginService:
     def __init__(self) -> None:
         self._lock = threading.Lock()
@@ -79,7 +92,11 @@ class PluginService:
                 cs = ConfigService()
                 theme_css = cs.get_theme_css(config.get("theme", "light"))
                 base_css = cs.get_base_css()
-                return cs.inject_theme_into_content(content, theme_css, base_css)
+                content = cs.inject_theme_into_content(content, theme_css, base_css)
+                head_close = content.rfind("</head>")
+                if head_close != -1:
+                    return content[:head_close] + PLUGIN_TAB_NAVIGATION_SCRIPT + content[head_close:]
+                return PLUGIN_TAB_NAVIGATION_SCRIPT + content
         return ""
 
     def get_localization(self, plugin_id: str, lang: str = "en") -> Dict[str, str]:

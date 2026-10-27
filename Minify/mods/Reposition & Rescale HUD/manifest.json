@@ -47,24 +47,6 @@
       "text": "Center with stats scale",
       "default": "85%",
       "type": "inputbox"
-    },
-    {
-      "key": "margin_between_heroes",
-      "text": "Margin between heroes",
-      "default": "4px",
-      "type": "inputbox"
-    },
-    {
-      "key": "remove_rightside_overflow",
-      "text": "Remove right-side overflow",
-      "default": true,
-      "type": "checkbox"
-    },
-    {
-      "key": "remove_similiar_heroes",
-      "text": "Remove similar heroes",
-      "default": true,
-      "type": "checkbox"
     }
   ]
 }

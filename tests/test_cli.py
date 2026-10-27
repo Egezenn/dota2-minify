@@ -29,7 +29,31 @@ def test_patch_calls_patcher():
         result = runner.invoke(app, ["patch"])
 
     assert result.exit_code == 0
-    mock_patcher.assert_called_once()
+    mock_patcher.assert_called_once_with(number=66, mods_string=None)
+
+
+def test_patch_accepts_number():
+    with mock_patch.object(patch_mod, "patcher") as mock_patcher:
+        result = runner.invoke(app, ["patch", "--number", "67"])
+
+    assert result.exit_code == 0
+    mock_patcher.assert_called_once_with(number=67, mods_string=None)
+
+
+def test_patch_accepts_mods_string():
+    with mock_patch.object(patch_mod, "patcher") as mock_patcher:
+        result = runner.invoke(app, ["patch", "--mods-string", "Dark Terrain,Stat Site Buttons"])
+
+    assert result.exit_code == 0
+    mock_patcher.assert_called_once_with(number=66, mods_string="Dark Terrain,Stat Site Buttons")
+
+
+def test_patch_rejects_invalid_number():
+    with mock_patch.object(patch_mod, "patcher") as mock_patcher:
+        result = runner.invoke(app, ["patch", "--number", "100"])
+
+    assert result.exit_code == 2
+    mock_patcher.assert_not_called()
 
 
 def test_patch_accepts_config_and_mods_paths(tmp_path):

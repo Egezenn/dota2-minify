@@ -60,20 +60,6 @@
         }
       }
     </style>
-    <script>
-      (function () {
-        try {
-          var themeUrl = localStorage.getItem("minify-theme-url");
-          if (themeUrl) {
-            var link = document.createElement("link");
-            link.id = "minify-theme-link";
-            link.rel = "stylesheet";
-            link.href = themeUrl;
-            document.head.appendChild(link);
-          }
-        } catch (e) {}
-      })();
-    </script>
   </head>
   <body>
     <div id="loading-screen">

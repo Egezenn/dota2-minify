@@ -12,6 +12,7 @@ class PatchService:
         self._window: Any = None
         self._is_patching: bool = False
         self._logs: List[Dict[str, Any]] = []
+        self._downloads: Dict[str, Dict[str, Any]] = {}
         self._lock = threading.Lock()
 
         output.register_listener(self._on_output_log)
@@ -21,12 +22,18 @@ class PatchService:
         self._window = window
 
     def _on_download_progress(self, data: Dict[str, Any]) -> None:
+        with self._lock:
+            self._downloads[data["id"]] = dict(data)
         if self._window:
             try:
                 js_str = json.dumps(data)
                 self._window.evaluate_js(f"window.onDownloadProgress && window.onDownloadProgress({js_str});")
             except Exception:
                 pass
+
+    def get_downloads(self) -> List[Dict[str, Any]]:
+        with self._lock:
+            return list(self._downloads.values())
 
     def _on_output_log(self, text: str, msg_type: str | None) -> None:
         if msg_type == "clear":

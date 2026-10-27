@@ -1,6 +1,8 @@
+import hashlib
 import io
 import json
 import zipfile
+from unittest.mock import Mock
 
 import pytest
 
@@ -47,6 +49,42 @@ def registry_environment(tmp_path, monkeypatch):
     monkeypatch.setattr(community_api, "_refresh_plugin_runtime", lambda _plugin_id: None)
 
     return root, mods, plugins, themes, state
+
+
+def test_registry_is_cached_and_reused(registry_environment, monkeypatch):
+    root, _mods, _plugins, _themes, state = registry_environment
+    registry = [{"type": "mod", "name": "Cached Mod"}]
+    response = Mock()
+    response.json.return_value = registry
+    response.raise_for_status.return_value = None
+    monkeypatch.setattr(community_api.config, "get", lambda _key, default=None: default)
+    requests_get = Mock(return_value=response)
+    monkeypatch.setattr(community_api.requests, "get", requests_get)
+
+    assert community_api._get_registry() == registry
+    cache_path = root / "cache" / "plugins" / "community" / "registry.json"
+    assert json.loads(cache_path.read_text(encoding="utf-8")) == registry
+    assert state[community_api.REGISTRY_STATE_KEY]["last_refresh"] > 0
+
+    requests_get.side_effect = AssertionError("cached registry should be used")
+    assert community_api._get_registry() == registry
+
+
+def test_reconcile_install_states_removes_missing_packages(registry_environment):
+    root, mods, _plugins, themes, state = registry_environment
+    (mods / "Present Mod").mkdir()
+    present_theme = themes / "Present Theme.css"
+    present_theme.write_text("body {}", encoding="utf-8")
+    state[community_api.STATES_KEY] = {
+        "mod:Present Mod": {"type": "mod", "path": "mods/Present Mod"},
+        "theme:Present Theme": {"type": "theme", "files": ["themes/Present Theme.css"]},
+        "mod:Missing Mod": {"type": "mod", "path": "mods/Missing Mod"},
+    }
+
+    community_api.reconcile_install_states()
+
+    assert set(state[community_api.STATES_KEY]) == {"mod:Present Mod", "theme:Present Theme"}
+    assert (root / "mods" / "Present Mod").is_dir()
 
 
 @pytest.mark.parametrize(
@@ -218,66 +256,118 @@ def test_plugin_id_resolves_from_registry_name_folder(tmp_path, monkeypatch):
     assert service._resolve_plugin_entry(str(plugin_dir)) == str(plugin_dir / "ui" / "index.html")
 
 
-def test_catalogue_filters_incompatible_entries_and_displays_release_tag(monkeypatch):
+def test_catalogue_keeps_incompatible_installs_visible(monkeypatch):
     monkeypatch.setattr(base, "VERSION", "2rc6")
     monkeypatch.setattr(
         community_api,
         "_get_registry",
         lambda: [
-            {"name": "Compatible", "type": "mod", "versions": "2rc5,2rc6"},
-            {"name": "Incompatible", "type": "plugin", "versions": "2rc5"},
+            {
+                "name": "Compatible",
+                "type": "mod",
+                "releases": {"1.0.0": ["2rc5"], "1.0.1": ["2rc6"]},
+            },
+            {"name": "Incompatible", "type": "plugin", "releases": {"1.0.0": ["2rc5"]}},
+            {"name": "Not Installed", "type": "theme", "releases": {"1.0.0": ["2rc5"]}},
         ],
     )
     monkeypatch.setattr(
         community_api,
         "_install_records",
-        lambda: {"mod:Compatible": {"tag": "v1.0"}},
+        lambda: {
+            "mod:Compatible": {"tag": "1.0.0"},
+            "plugin:Incompatible": {"tag": "1.0.0"},
+        },
     )
     monkeypatch.setattr(
         community_api,
         "_latest_release",
-        lambda _item: {"tag": "v2.0", "asset_url": "https://example.test/package.zip"},
+        lambda _item: {"tag": "1.0.1", "asset_url": "https://example.test/package.zip"},
     )
 
     entries = community_api.get_catalogue()
-    assert [entry["name"] for entry in entries] == ["Compatible"]
-    assert entries[0]["installed_tag"] == "v1.0"
-    assert entries[0]["latest_tag"] == "v2.0"
+    assert [entry["name"] for entry in entries] == ["Compatible", "Incompatible"]
+    assert entries[0]["installed_tag"] == "1.0.0"
+    assert entries[0]["installed_compatible"] is False
+    assert entries[0]["latest_tag"] == "1.0.1"
     assert entries[0]["update_available"] is True
+    assert entries[1]["installed"] is True
+    assert entries[1]["installed_compatible"] is False
+    assert entries[1]["latest_tag"] is None
+    assert entries[1]["update_available"] is False
 
 
-def test_latest_release_accepts_repository_rename_and_uses_release_asset(monkeypatch):
+@pytest.mark.parametrize(
+    ("locale", "expected"),
+    [("tr", "Turkish notes."), ("de", "English notes."), ("en", "English notes.")],
+)
+def test_item_details_filters_notes_by_locale(monkeypatch, locale, expected):
     class Response:
-        url = "https://api.github.com/repos/Egezenn/minify-wiki-browser/releases/latest"
+        text = "<!-- lang:en -->\n\nEnglish notes.\n\n<!-- lang:tr -->\n\nTurkish notes.\n"
 
         def raise_for_status(self):
             return None
 
-        def json(self):
-            return {
-                "tag_name": "v1.0",
-                "html_url": "https://github.com/Egezenn/minify-wiki-browser/releases/tag/v1.0",
-                "assets": [
-                    {
-                        "name": "minify-wiki-browser.zip",
-                        "browser_download_url": (
-                            "https://github.com/Egezenn/minify-wiki-browser/releases/download/"
-                            "v1.0/minify-wiki-browser.zip"
-                        ),
-                    }
-                ],
-            }
-
+    monkeypatch.setattr(
+        community_api,
+        "_get_registry",
+        lambda: [{"name": "Example", "type": "mod", "notes": "https://example.test/notes.md"}],
+    )
     monkeypatch.setattr(community_api.requests, "get", lambda *_args, **_kwargs: Response())
+    monkeypatch.setattr(
+        community_api.config,
+        "get",
+        lambda key, default=None: locale if key == "locale" else default,
+    )
+
+    details = community_api.get_item_details({"id": "mod:Example"})
+    assert details["notes"] == expected
+
+
+def test_latest_release_selects_newest_release_compatible_with_minify(monkeypatch):
+    monkeypatch.setattr(base, "VERSION", "2rc6")
+
     item = {
-        "repo": "https://github.com/Egezenn/minifiy-wiki-browser",
-        "latest-asset": (
-            "https://github.com/Egezenn/minify-wiki-browser/releases/latest/download/minify-wiki-browser.zip"
-        ),
+        "repo": "https://github.com/test/theme",
+        "asset-url": "https://github.com/test/theme/releases/download/{tag}/theme.zip",
+        "releases": {"1.0.2": ["2rc7"], "1.0.1": ["2rc6"]},
     }
-    result = community_api._latest_release(item)
-    assert result["tag"] == "v1.0"
-    assert result["asset_url"].endswith("/v1.0/minify-wiki-browser.zip")
+    assert community_api._latest_release(item) == {
+        "tag": "1.0.1",
+        "asset_url": "https://github.com/test/theme/releases/download/1.0.1/theme.zip",
+    }
+
+
+def test_latest_release_uses_registry_latest_asset_without_api(monkeypatch):
+    item = {
+        "asset-url": "https://codeberg.org/test/theme/releases/download/{tag}/theme.zip",
+    }
+    assert community_api._latest_release(item) == {
+        "tag": "latest",
+        "asset_url": "https://codeberg.org/test/theme/releases/download/latest/theme.zip",
+    }
+
+
+def test_latest_release_includes_sha512_for_selected_tag(monkeypatch):
+    monkeypatch.setattr(base, "VERSION", "2rc6")
+    checksum = "a" * 128
+    item = {
+        "asset-url": "https://github.com/test/theme/releases/download/{tag}/theme.zip",
+        "sha512": {"1.0.0": checksum},
+        "releases": {"1.0.0": ["2rc6"]},
+    }
+
+    assert community_api._latest_release(item)["sha512"] == checksum
+
+
+def test_archive_checksum_is_verified(tmp_path):
+    archive_path = tmp_path / "package.zip"
+    archive_path.write_bytes(b"package")
+    checksum = hashlib.sha512(b"package").hexdigest()
+
+    community_api._verify_archive_checksum(str(archive_path), checksum)
+    with pytest.raises(ValueError, match="checksum does not match"):
+        community_api._verify_archive_checksum(str(archive_path), "0" * 128)
 
 
 def test_archive_extraction_rejects_path_traversal(tmp_path):

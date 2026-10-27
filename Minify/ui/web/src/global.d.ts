@@ -11,6 +11,16 @@ declare global {
         get_available_languages: () => Promise<string[]>;
         get_available_game_languages: () => Promise<string[]>;
         get_logs: () => Promise<Array<{ text: string; type: string; timestamp?: string }>>;
+        get_downloads: () => Promise<
+          Array<{
+            id: string;
+            name: string;
+            downloaded_bytes: number;
+            total_bytes: number;
+            status: "downloading" | "finished" | "error";
+            error?: string;
+          }>
+        >;
         is_patching: () => Promise<boolean>;
         is_debug_env: () => Promise<boolean>;
         get_version: () => Promise<string>;
@@ -50,6 +60,7 @@ declare global {
         start_patch: () => Promise<{ status: string }>;
         start_uninstall: (remove_everything?: boolean) => Promise<{ status: string }>;
         open_url?: (url: string) => Promise<void> | void;
+        shutdown_host?: () => Promise<boolean>;
         open_config_directory?: () => Promise<void> | void;
         clear_logs: () => Promise<boolean>;
         get_steam_accounts: () => Promise<
@@ -82,7 +93,6 @@ declare global {
         reset_native_settings: () => Promise<boolean>;
         reset_mod_settings: (mod_name: string) => Promise<boolean>;
         get_available_themes?: () => Promise<Array<{ value: string; label: string }>>;
-        get_theme_url?: (theme_name?: string) => Promise<string>;
         get_theme_css?: (theme_name?: string) => Promise<string>;
         get_state?: (key: string, defaultValue?: any) => Promise<any>;
         set_state?: (key: string, value: any) => Promise<boolean>;
@@ -90,6 +100,8 @@ declare global {
         extract_workshop_tools?: () => Promise<boolean>;
         is_workshop_installed?: () => Promise<boolean>;
         download_workshop_tools?: () => Promise<boolean>;
+        get_legacy_mods?: () => Promise<string[]>;
+        import_legacy_mods?: (import_mods?: boolean) => Promise<Record<string, any>>;
         get_plugin_tabs?: () => Promise<
           Array<{
             id: string;

@@ -1,6 +1,5 @@
 import os
 import re
-from pathlib import Path
 from typing import Any, Dict, List
 
 import helper
@@ -15,9 +14,18 @@ class ConfigService:
         return bool(config.get("debug_env"))
 
     def get_localization(self, lang: str = "en") -> Dict[str, str]:
-        if not lang:
-            lang = config.get("locale") or "en"
-        return localization.get_for_locale(lang) or {}
+        requested_lang = lang or config.get("locale") or "en"
+        if not isinstance(requested_lang, str):
+            requested_lang = "en"
+        available = self.get_available_languages()
+        resolved_lang = next(
+            (available_lang for available_lang in available if available_lang.lower() == requested_lang.lower()),
+            "en",
+        )
+        localized = localization.get_for_locale(resolved_lang)
+        if localized:
+            return localized
+        return localization.get_for_locale("en")
 
     def get_current_locale(self) -> str:
         val = config.get("locale") or "en"
@@ -25,7 +33,7 @@ class ConfigService:
         for a in avail:
             if a.lower() == val.lower():
                 return a
-        return val
+        return "en"
 
     def set_locale(self, lang: str) -> bool:
         config.set("locale", lang)
@@ -60,22 +68,6 @@ class ConfigService:
         if not any(t["value"] == "light" for t in themes):
             themes.insert(0, {"value": "light", "label": "Light"})
         return themes
-
-    def get_theme_url(self, theme_name: str | None = None) -> str:
-        if not theme_name:
-            theme_name = config.get("theme", "light") or "light"
-
-        themes_dir = getattr(base, "themes_dir", os.path.join(base.base_dir, "themes"))
-        clean_name = os.path.basename(str(theme_name))
-        if not clean_name.lower().endswith(".css"):
-            clean_name += ".css"
-
-        theme_path = os.path.join(themes_dir, clean_name)
-        if not os.path.isfile(theme_path):
-            theme_path = os.path.join(themes_dir, "light.css")
-        if os.path.isfile(theme_path):
-            return Path(os.path.abspath(theme_path)).as_uri()
-        return ""
 
     def get_theme_css(self, theme_name: str | None = None) -> str:
         if not theme_name:

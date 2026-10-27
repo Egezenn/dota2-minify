@@ -26,3 +26,9 @@ def on_uninstall():
     from plugins.d2pfx.build_hook import restore_d2pfx_cursors
 
     restore_d2pfx_cursors()
+
+
+def on_initialize():
+    from plugins.d2pfx.api import reconcile_install_states
+
+    reconcile_install_states()

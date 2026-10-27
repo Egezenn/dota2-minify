@@ -2,7 +2,7 @@
 
 Minify is available for Windows, Linux and Mac<sup>1</sup>!
 
-You can download the archives from the link below:
+You can download the archives and Windows portable executable from the link below:
 
 https://egezenn.github.io/dota2-minify
 
@@ -10,7 +10,7 @@ https://egezenn.github.io/dota2-minify
 
 ## Running
 
-Extract the contents of the `.zip` file you've downloaded to someplace you like or use the setup for Windows. You can run the `Minify` executable afterwards.
+Run the Windows portable executable directly, or extract the `.zip` archive to someplace you like. You can also use the Windows setup installer.
 
 > [!WARNING]
 >
@@ -21,7 +21,7 @@ Select the mods you'd like, the language you want to use and patch!
 
 You can view information about a mod on their respective `Details` page. You can also look at them through [here](https://egezenn.github.io/dota2-minify/mods.html).
 
-After the sound, Steam may restart while Minify is adjusting your Dota2 launch options. Then you're good to go!
+Steam may restart while Minify is adjusting your Dota2 launch options. Then you're good to go!
 
 > [!INFO]
 > You may see some mods grayed out/untickable. For these, you need the [Workshop DLC](troubleshooting_faq.md?id=workshop-tools-dlc).
@@ -30,4 +30,4 @@ After the sound, Steam may restart while Minify is adjusting your Dota2 launch o
 
 You can find more mods, plugins and themes with the included browser plugins.
 
-<!-- TODO: settings, dev panel, pictures.. -->
+<!-- TODO: settings, pictures.. -->

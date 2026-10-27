@@ -1,7 +1,9 @@
 (function () {
   "use strict";
 
-  // TODO: Need to mirror community mods & use deployment URLs instead of raw
+  // Community registry is not mirrored; both point at the upstream org repo
+  var COMMUNITY_REGISTRY_BASE = "https://raw.githubusercontent.com/Dota-Modding-Community/community/main";
+
   var MIRRORS = {
     github: {
       name: "GitHub",
@@ -13,13 +15,9 @@
       api: {
         releases: "https://api.github.com/repos/egezenn/dota2-minify/releases",
         contents: "https://api.github.com/repos/egezenn/dota2-minify/contents",
-        communityContents:
-          "https://api.github.com/repos/egezenn/dota2-minify-community/contents",
       },
       raw: {
         base: "https://raw.githubusercontent.com/Egezenn/dota2-minify/main",
-        communityBase:
-          "https://raw.githubusercontent.com/Egezenn/dota2-minify-community/main",
       },
       ping: "https://api.github.com/repos/egezenn/dota2-minify",
     },
@@ -31,17 +29,11 @@
       repo: "https://codeberg.org/egezenn/dota2-minify",
       wiki: "https://codeberg.org/egezenn/dota2-minify/wiki",
       api: {
-        releases:
-          "https://codeberg.org/api/v1/repos/egezenn/dota2-minify/releases",
-        contents:
-          "https://codeberg.org/api/v1/repos/egezenn/dota2-minify/contents",
-        communityContents:
-          "https://codeberg.org/api/v1/repos/egezenn/dota2-minify-community/contents",
+        releases: "https://codeberg.org/api/v1/repos/egezenn/dota2-minify/releases",
+        contents: "https://codeberg.org/api/v1/repos/egezenn/dota2-minify/contents",
       },
       raw: {
         base: "https://codeberg.org/egezenn/dota2-minify/raw/branch/main",
-        communityBase:
-          "https://codeberg.org/egezenn/dota2-minify-community/raw/branch/main",
       },
       ping: "https://codeberg.org/api/v1/repos/egezenn/dota2-minify",
     },
@@ -56,10 +48,7 @@
 
   var hostname = window.location.hostname;
   for (var key in MIRRORS) {
-    if (
-      hostname === MIRRORS[key].hostname ||
-      hostname.endsWith("." + MIRRORS[key].hostname)
-    ) {
+    if (hostname === MIRRORS[key].hostname || hostname.endsWith("." + MIRRORS[key].hostname)) {
       currentKey = key;
       currentMirror = MIRRORS[key];
       break;
@@ -80,11 +69,8 @@
     getRawUrl: function (path) {
       return currentMirror.raw.base + "/" + path;
     },
-    getCommunityContentsApiUrl: function () {
-      return currentMirror.api.communityContents;
-    },
-    getCommunityRawUrl: function (path) {
-      return currentMirror.raw.communityBase + "/" + path;
+    getCommunityRegistryUrl: function () {
+      return COMMUNITY_REGISTRY_BASE + "/registry.json";
     },
     getWikiUrl: function () {
       return currentMirror.wiki;
@@ -148,11 +134,9 @@
       target.name +
       " mirror?";
     document.getElementById("mirror-switch-btn").href = target.siteBase;
-    document.getElementById("mirror-switch-btn").textContent =
-      "Switch to " + target.name;
+    document.getElementById("mirror-switch-btn").textContent = "Switch to " + target.name;
     document.getElementById("mirror-switch-btn").style.display = "";
-    document.getElementById("mirror-dismiss-btn").textContent =
-      "Stay on " + currentMirror.name;
+    document.getElementById("mirror-dismiss-btn").textContent = "Stay on " + currentMirror.name;
     el.style.display = "flex";
 
     document.getElementById("mirror-dismiss-btn").onclick = function () {
@@ -204,6 +188,7 @@
 
   if (qs.has("clear-cache")) {
     localStorage.removeItem("github-releases");
+    localStorage.removeItem("community-registry-data");
     localStorage.removeItem(DISMISS_KEY);
     sessionStorage.clear();
     navigator.serviceWorker.ready.then(function (reg) {

@@ -1,6 +1,13 @@
 import os
+import json
+import shutil
+import subprocess
 import sys
+import tempfile
+import threading
+from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
+from urllib.parse import unquote, urlparse
 from typing import Any, Dict, List, Optional
 
 import webview
@@ -11,6 +18,7 @@ from ui.services import ConfigService, DialogService, ModService, PatchService, 
 
 class Api:
     def __init__(self) -> None:
+        self._host_shutdown: Any = None
         self.patch_service = PatchService()
         self.mod_service = ModService()
         self.config_service = ConfigService()
@@ -19,6 +27,14 @@ class Api:
 
     def set_window(self, window: Any) -> None:
         self.patch_service.set_window(window)
+
+    def set_host_shutdown(self, callback: Any) -> None:
+        self._host_shutdown = callback
+
+    def shutdown_host(self) -> bool:
+        if self._host_shutdown:
+            self._host_shutdown()
+        return True
 
     def start_patch(self) -> Dict[str, Any]:
         return self.patch_service.start_patch()
@@ -39,6 +55,9 @@ class Api:
 
     def get_logs(self) -> List[Dict[str, Any]]:
         return self.patch_service.get_logs()
+
+    def get_downloads(self) -> List[Dict[str, Any]]:
+        return self.patch_service.get_downloads()
 
     def clear_logs(self) -> bool:
         return self.patch_service.clear_logs()
@@ -149,9 +168,6 @@ class Api:
     def get_available_themes(self) -> List[Dict[str, str]]:
         return self.config_service.get_available_themes()
 
-    def get_theme_url(self, theme_name: str | None = None) -> str:
-        return self.config_service.get_theme_url(theme_name)
-
     def get_theme_css(self, theme_name: str | None = None) -> str:
         return self.config_service.get_theme_css(theme_name)
 
@@ -172,6 +188,46 @@ class Api:
         import helper
 
         return helper.extract_workshop_tools()
+
+    def get_legacy_mods(self) -> List[str]:
+        backup_dirs = sorted(path for path in Path(base.base_dir).glob("mods_old_*") if path.is_dir())
+        entries = []
+        if backup_dirs:
+            backup_dir = backup_dirs[-1]
+            mods_dir = Path(base.mods_dir)
+            entries.extend(
+                f"{backup_dir.name}/{entry.name}"
+                for entry in sorted(backup_dir.iterdir())
+                if not (mods_dir / entry.name).exists()
+            )
+        return entries
+
+    def import_legacy_mods(self, import_mods: bool = True) -> Dict[str, Any]:
+        migrated = []
+        discarded = []
+        fs.create_dirs(base.mods_dir)
+        backup_dirs = sorted(path for path in Path(base.base_dir).glob("mods_old_*") if path.is_dir())
+        backup_dir = backup_dirs[-1] if backup_dirs else None
+        if backup_dir:
+            for source in sorted(backup_dir.iterdir()):
+                destination = Path(base.mods_dir) / source.name
+                try:
+                    if not import_mods or destination.exists():
+                        discarded.append(source.name)
+                        fs.remove_path(str(source))
+                    else:
+                        shutil.move(str(source), str(destination))
+                        migrated.append(source.name)
+                except OSError:
+                    discarded.append(source.name)
+                    fs.remove_path(str(source))
+            try:
+                backup_dir.rmdir()
+            except OSError:
+                pass
+            for stale_dir in backup_dirs[:-1]:
+                fs.remove_path(str(stale_dir))
+        return {"migrated": migrated, "discarded": discarded}
 
     def is_workshop_installed(self) -> bool:
         import conditions
@@ -276,12 +332,16 @@ class Api:
         return self.plugin_service.call_api(plugin_id, action, params)
 
 
-def launch() -> None:
+def launch(host: bool = False) -> None:
     if not os.path.isfile(base.dist_index):
         output.add_text(
             f"Error: Web UI build file not found at '{base.dist_index}'. Please run 'npm run build' inside Minify/ui/web.",
             msg_type="error",
         )
+
+    if host:
+        _open_in_browser()
+        return
 
     if base.is_win:
         os.environ.setdefault("WEBVIEW2_ADDITIONAL_BROWSER_ARGUMENTS", "--disable-gpu")  # #186
@@ -329,27 +389,277 @@ def launch() -> None:
     window.events.resized += _save_window_size
 
     # to prevent MSHTML
-    if not is_webview_available():
-        _show_missing_dialog()
+    if base.is_win and not is_webview2_installed():
+        output.add_text("WebView2 not installed, opening in browser...", msg_type="warning")
+        _open_in_browser()
         return
+
+    webview_failed = False
+
+    if base.is_win:
+        try:
+            from webview.platforms.edgechromium import EdgeChrome
+
+            orig_on_ready = EdgeChrome.on_webview_ready
+
+            def _patched_on_ready(self_ec: Any, sender: Any, args: Any) -> Any:
+                nonlocal webview_failed
+                if not getattr(args, "IsSuccess", True):
+                    output.add_text(
+                        f"WebView2 initialization failed ({getattr(args, 'InitializationException', 'unknown error')}), opening in browser...",
+                        msg_type="warning",
+                    )
+                    webview_failed = True
+                    try:
+                        self_ec.form.Close()
+                    except Exception:
+                        pass
+                    return
+                return orig_on_ready(self_ec, sender, args)
+
+            EdgeChrome.on_webview_ready = _patched_on_ready
+        except Exception:
+            pass
 
     api.set_window(window)
     try:
         webview.start(debug=debug_mode, icon=base.favicon_file)
-    except Exception:
-        if not is_webview_available():
-            _show_missing_dialog()
-            return
-        raise
+    except Exception as e:
+        output.add_text(f"WebView initialization failed, opening in browser: {e}", msg_type="warning")
+        _open_in_browser()
+        return
+
+    if webview_failed:
+        _open_in_browser()
 
 
-def is_webview_available() -> bool:
+def _find_app_browser() -> Optional[str]:
+    candidates: List[str] = []
     if base.is_win:
-        return is_webview2_installed()
+        local = os.environ.get("LOCALAPPDATA", "")
+        pf = os.environ.get("ProgramFiles", r"C:\Program Files")
+        pf86 = os.environ.get("ProgramFiles(x86)", r"C:\Program Files (x86)")
+        candidates = [
+            os.path.join(pf, "Chromium", "Application", "chrome.exe"),
+            os.path.join(pf86, "Chromium", "Application", "chrome.exe"),
+            os.path.join(local, "Chromium", "Application", "chrome.exe"),
+            os.path.join(pf, "Helium", "Application", "helium.exe"),
+            os.path.join(pf86, "Helium", "Application", "helium.exe"),
+            os.path.join(local, "Helium", "Application", "helium.exe"),
+            os.path.join(local, "Programs", "Helium", "helium.exe"),
+            os.path.join(pf, "BraveSoftware", "Brave-Browser", "Application", "brave.exe"),
+            os.path.join(local, "BraveSoftware", "Brave-Browser", "Application", "brave.exe"),
+            os.path.join(pf, "Vivaldi", "Application", "vivaldi.exe"),
+            os.path.join(pf86, "Vivaldi", "Application", "vivaldi.exe"),
+            os.path.join(local, "Vivaldi", "Application", "vivaldi.exe"),
+            os.path.join(pf, "Google", "Chrome", "Application", "chrome.exe"),
+            os.path.join(pf86, "Google", "Chrome", "Application", "chrome.exe"),
+            os.path.join(local, "Google", "Chrome", "Application", "chrome.exe"),
+            os.path.join(pf86, "Microsoft", "Edge", "Application", "msedge.exe"),
+            os.path.join(pf, "Microsoft", "Edge", "Application", "msedge.exe"),
+            os.path.join(local, "Microsoft", "Edge", "Application", "msedge.exe"),
+            os.path.join(pf, "Opera", "opera.exe"),
+            os.path.join(local, "Programs", "Opera", "opera.exe"),
+            os.path.join(pf, "Opera GX", "opera.exe"),
+            os.path.join(local, "Programs", "Opera GX", "opera.exe"),
+        ]
+    elif base.is_mac:
+        candidates = [
+            "/Applications/Chromium.app/Contents/MacOS/Chromium",
+            "/Applications/Helium.app/Contents/MacOS/Helium",
+            "/Applications/Brave Browser.app/Contents/MacOS/Brave Browser",
+            "/Applications/Vivaldi.app/Contents/MacOS/Vivaldi",
+            "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
+            "/Applications/Microsoft Edge.app/Contents/MacOS/Microsoft Edge",
+            "/Applications/Opera.app/Contents/MacOS/Opera",
+            "/Applications/Opera GX.app/Contents/MacOS/Opera GX",
+        ]
+    elif base.is_linux:
+        for name in (
+            "chromium",
+            "chromium-browser",
+            "helium",
+            "helium-browser",
+            "brave-browser",
+            "vivaldi",
+            "vivaldi-stable",
+            "google-chrome",
+            "google-chrome-stable",
+            "microsoft-edge",
+            "microsoft-edge-stable",
+            "opera",
+        ):
+            path = shutil.which(name)
+            if path:
+                candidates.append(path)
+
+    for path in candidates:
+        if path and os.path.isfile(path):
+            return path
+    return None
+
+
+def _resolve_browser_exe() -> Optional[str]:
+    browser = config.get("browser_exec")
+    if isinstance(browser, str) and browser.strip():
+        exe = os.path.expanduser(browser.strip())
+        candidates = [exe, shutil.which(exe)]
+        original_cwd = getattr(base, "original_cwd", None)
+        if original_cwd:
+            candidates.append(os.path.join(original_cwd, exe))
+        for candidate in candidates:
+            if candidate and os.path.isfile(candidate):
+                return candidate
+        output.add_text(f"Browser not found at '{browser}', trying auto-detection...", msg_type="warning")
+    return _find_app_browser()
+
+
+def _launch_app_window(url: str) -> Optional[tuple[Any, str]]:
+    exe = _resolve_browser_exe()
+    if not exe:
+        return None
+    profile_dir = tempfile.mkdtemp(prefix="minify-browser-")
     try:
-        return bool(webview.initialize())
-    except Exception:
-        return False
+        process = subprocess.Popen(
+            [
+                exe,
+                f"--app={url}",
+                f"--user-data-dir={profile_dir}",
+                "--window-size=960,680",
+                "--no-first-run",
+                "--no-default-browser-check",
+            ],
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL,
+        )
+    except OSError:
+        shutil.rmtree(profile_dir, ignore_errors=True)
+        return None
+    return process, profile_dir
+
+
+def _open_in_browser() -> None:
+    import webbrowser
+
+    stop_event = threading.Event()
+    api = Api()
+    server = _start_local_server(os.path.dirname(base.dist_index), api)
+    api.set_host_shutdown(lambda: _request_host_shutdown(stop_event, server))
+    url = f"http://127.0.0.1:{server.server_port}/index.html"
+    launch_result = _launch_app_window(url)
+    app_window = launch_result[0] if launch_result else None
+    profile_dir = launch_result[1] if launch_result else None
+    if app_window is None and not webbrowser.open(url):
+        _stop_local_server(server)
+        return
+    try:
+        if app_window is not None:
+            while app_window.poll() is None and not stop_event.is_set():
+                stop_event.wait(0.5)
+        else:
+            stop_event.wait()
+    except KeyboardInterrupt:
+        pass
+    finally:
+        if app_window is not None and app_window.poll() is None:
+            app_window.terminate()
+            try:
+                app_window.wait(timeout=5)
+            except subprocess.TimeoutExpired:
+                app_window.kill()
+        if profile_dir:
+            shutil.rmtree(profile_dir, ignore_errors=True)
+        _stop_local_server(server)
+
+
+def _request_host_shutdown(stop_event: threading.Event, server: ThreadingHTTPServer) -> None:
+    stop_event.set()
+    threading.Thread(target=_stop_local_server, args=(server,), daemon=True).start()
+
+
+def _stop_local_server(server: ThreadingHTTPServer) -> None:
+    server.shutdown()
+    server.server_close()
+    serve_thread = getattr(server, "_serve_thread", None)
+    if serve_thread is not None and serve_thread is not threading.current_thread():
+        serve_thread.join(timeout=5)
+
+
+def _start_local_server(directory: str, api: Api) -> ThreadingHTTPServer:
+    def _host_file_urls(value: Any) -> Any:
+        if isinstance(value, str) and value.startswith("file://"):
+            path = unquote(urlparse(value).path).replace("/", os.sep)
+            if len(path) > 2 and path[0] == os.sep and path[2] == ":":
+                path = path[1:]
+            for root, prefix in ((base.themes_dir, "/themes/"), (base.plugins_dir, "/plugins/")):
+                try:
+                    relative = os.path.relpath(path, root)
+                except ValueError:
+                    continue
+                if not relative.startswith(".."):
+                    return prefix + relative.replace(os.sep, "/")
+        if isinstance(value, list):
+            return [_host_file_urls(item) for item in value]
+        if isinstance(value, dict):
+            return {key: _host_file_urls(item) for key, item in value.items()}
+        return value
+
+    class LocalHandler(SimpleHTTPRequestHandler):
+        def __init__(self, *args: Any, **kwargs: Any) -> None:
+            super().__init__(*args, directory=directory, **kwargs)
+
+        def do_GET(self) -> None:
+            parsed = urlparse(self.path)
+            if parsed.path == "/favicon.ico":
+                try:
+                    with open(base.favicon_file, "rb") as favicon:
+                        payload = favicon.read()
+                    self.send_response(200)
+                    self.send_header("Content-Type", "image/x-icon")
+                    self.send_header("Content-Length", str(len(payload)))
+                    self.end_headers()
+                    self.wfile.write(payload)
+                except OSError:
+                    self.send_error(404)
+                return
+            if parsed.path.startswith("/themes/"):
+                self.path = unquote(parsed.path[len("/themes/") :])
+                self.directory = base.themes_dir
+            elif parsed.path.startswith("/plugins/"):
+                self.path = unquote(parsed.path[len("/plugins/") :])
+                self.directory = base.plugins_dir
+            super().do_GET()
+
+        def do_POST(self) -> None:
+            if self.path != "/api":
+                self.send_error(404)
+                return
+            try:
+                length = int(self.headers.get("Content-Length", "0"))
+                request = json.loads(self.rfile.read(length))
+                method_name = request["method"]
+                method = getattr(api, method_name)
+                if method_name.startswith("_") or not callable(method):
+                    raise ValueError("Invalid API method")
+                result = method(*request.get("args", []), **request.get("kwargs", {}))
+                result = _host_file_urls(result)
+                payload = json.dumps({"result": result}).encode("utf-8")
+                self.send_response(200)
+            except Exception as error:
+                payload = json.dumps({"error": str(error)}).encode("utf-8")
+                self.send_response(500)
+            self.send_header("Content-Type", "application/json")
+            self.send_header("Content-Length", str(len(payload)))
+            self.end_headers()
+            self.wfile.write(payload)
+
+    handler = LocalHandler
+    server = ThreadingHTTPServer(("127.0.0.1", 0), handler)
+    server.daemon_threads = True
+    serve_thread = threading.Thread(target=server.serve_forever, daemon=False, name="minify-http-server")
+    server._serve_thread = serve_thread
+    serve_thread.start()
+    return server
 
 
 def is_webview2_installed() -> bool:
@@ -371,31 +681,3 @@ def is_webview2_installed() -> bool:
         except OSError:
             pass
     return False
-
-
-def _show_missing_dialog() -> None:
-    try:
-        import tkinter as tk
-        from tkinter import messagebox
-        import webbrowser
-
-        root = tk.Tk()
-        root.withdraw()
-        root.wm_attributes("-topmost", 1)
-
-        if base.is_win:
-            url = "https://developer.microsoft.com/en-us/microsoft-edge/webview2/"
-            msg = (
-                "Microsoft Edge WebView2 Runtime is required to run the GUI, but it is not installed.\n\n"
-                f"Please install it from:\n{url}\n\n"
-                "Also, you can install it via terminal:\n"
-                "winget install -e --id Microsoft.EdgeWebView2Runtime\n\n"
-                "Would you like to open the download page now?"
-            )
-            if messagebox.askyesno("WebView2 Required", msg):
-                webbrowser.open(url)
-        else:
-            messagebox.showerror("Error", "WebView is not available on this system.")
-        root.destroy()
-    except Exception:
-        pass

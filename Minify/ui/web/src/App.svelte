@@ -14,6 +14,7 @@
   import UpdateModal from "./lib/components/UpdateModal.svelte";
   import WorkshopToolsDetectedModal from "./lib/components/WorkshopToolsDetectedModal.svelte";
   import WorkshopDownloadModal from "./lib/components/WorkshopDownloadModal.svelte";
+  import LegacyModsModal from "./lib/components/LegacyModsModal.svelte";
   import { fetchPendingAnnouncements, markAnnouncementSeen } from "./lib/announcements";
   import { checkForUpdates, ignoreUpdate, getAppVersion } from "./lib/updater";
 
@@ -22,6 +23,7 @@
   let pluginContents: Record<string, string> = {};
 
   let downloads: DownloadItem[] = [];
+  const dismissedDownloads = new Set<string>();
   let logs: Array<{ text: string; type: string; timestamp?: string }> = [];
   let isPatching = false;
   let autoScroll = true;
@@ -32,6 +34,9 @@
   let showUpdateModal = false;
   let showWorkshopModal = false;
   let showWorkshopDownloadModal = false;
+  let isWorkshopInstalled: boolean | null = null;
+  let legacyMods: string[] = [];
+  let showLegacyModsModal = false;
 
   let initialized = false;
   let isDebugEnv = false;
@@ -104,10 +109,36 @@
     document.body.classList.add("loaded");
   }
 
+  function shutdownHost() {
+    window.pywebview?.api?.shutdown_host?.();
+  }
+
+  async function checkLegacyMods() {
+    try {
+      const entries = await window.pywebview?.api?.get_legacy_mods?.();
+      if (Array.isArray(entries) && entries.length > 0) {
+        legacyMods = entries;
+        showLegacyModsModal = true;
+      }
+    } catch (err) {
+      console.error("Failed to check for legacy mods:", err);
+    }
+  }
+
+  async function finishLegacyMods(importMods: boolean) {
+    showLegacyModsModal = false;
+    try {
+      await window.pywebview?.api?.import_legacy_mods?.(importMods);
+      if (importMods) await refreshMods();
+    } catch (err) {
+      console.error("Failed to finish legacy mod migration:", err);
+    }
+  }
+
   async function initPyWebView() {
     const run = async () => {
       try {
-        await Promise.all([initTheme(), handleLoadApiData()]);
+        await Promise.all([initTheme(), handleLoadApiData(), checkWorkshopToolsAvailability(), checkLegacyMods()]);
       } finally {
         dismissLoader();
         getAppVersion().then(async (appVersion) => {
@@ -154,7 +185,38 @@
     setTimeout(dismissLoader, 3000);
   }
 
+  function changeTab(tab: string) {
+    activeTab = tab;
+    broadcastToPlugins({ type: "TAB_ACTIVE", tab });
+  }
+
+  function cycleTab(forward: boolean) {
+    const tabs = ["mods", "terminal", "settings", ...pluginTabs.map((plugin) => plugin.id)];
+    const currentIndex = tabs.indexOf(activeTab);
+    const offset = forward ? 1 : -1;
+    const nextIndex = (currentIndex + offset + tabs.length) % tabs.length;
+    changeTab(tabs[currentIndex === -1 ? 0 : nextIndex]);
+  }
+
   onMount(() => {
+    const hostedLogPolling =
+      window.location.protocol === "http:"
+        ? window.setInterval(async () => {
+            try {
+              const currentLogs = await window.pywebview?.api?.get_logs();
+              if (Array.isArray(currentLogs)) {
+                logs = currentLogs;
+              }
+              const currentDownloads = await window.pywebview?.api?.get_downloads();
+              if (Array.isArray(currentDownloads)) {
+                downloads = currentDownloads.filter((download) => !dismissedDownloads.has(download.id));
+              }
+            } catch (err) {
+              console.error("Failed to refresh hosted patch logs:", err);
+            }
+          }, 500)
+        : undefined;
+
     const handleContextMenu = (e: MouseEvent) => {
       if (!isDebugEnv) {
         e.preventDefault();
@@ -162,7 +224,9 @@
     };
 
     const handleWindowMessage = (e: MessageEvent) => {
-      if (e.data?.type === "REFRESH_MODS") {
+      if (e.data?.type === "CYCLE_TAB") {
+        cycleTab(e.data.forward !== false);
+      } else if (e.data?.type === "REFRESH_MODS") {
         refreshMods();
       } else if (e.data?.type === "REFRESH_PLUGIN_TABS") {
         refreshPluginTabs();
@@ -171,8 +235,17 @@
       }
     };
 
+    const handleKeydown = (e: KeyboardEvent) => {
+      if (e.ctrlKey && e.key === "Tab") {
+        e.preventDefault();
+        e.stopPropagation();
+        cycleTab(!e.shiftKey);
+      }
+    };
+
     window.addEventListener("contextmenu", handleContextMenu);
     window.addEventListener("message", handleWindowMessage);
+    window.addEventListener("keydown", handleKeydown);
 
     (window as any).onModsRefreshed = refreshMods;
 
@@ -213,10 +286,15 @@
     return () => {
       window.removeEventListener("contextmenu", handleContextMenu);
       window.removeEventListener("message", handleWindowMessage);
+      window.removeEventListener("keydown", handleKeydown);
+      if (hostedLogPolling !== undefined) {
+        window.clearInterval(hostedLogPolling);
+      }
     };
   });
 
   function handleDismissDownload(id: string) {
+    dismissedDownloads.add(id);
     downloads = downloads.filter((d) => d.id !== id);
   }
 
@@ -404,16 +482,35 @@
   }
 
   async function checkWorkshopDownload() {
-    try {
-      const isInstalled = await window.pywebview?.api?.is_workshop_installed?.();
-      if (isInstalled === false) {
+    const isInstalled = isWorkshopInstalled ?? (await checkWorkshopToolsAvailability());
+    if (isInstalled === false) {
+      try {
         const ignored = await window.pywebview?.api?.get_state?.("ignore_workshop_download");
         if (!ignored) {
           showWorkshopDownloadModal = true;
         }
+      } catch (err) {
+        console.error("Failed to check workshop download preference:", err);
+      }
+    }
+  }
+
+  async function checkWorkshopToolsAvailability(): Promise<boolean | null> {
+    try {
+      const isInstalled = await window.pywebview?.api?.is_workshop_installed?.();
+      if (typeof isInstalled === "boolean") {
+        isWorkshopInstalled = isInstalled;
+        return isInstalled;
       }
     } catch (err) {
       console.error("Failed to check workshop status:", err);
+    }
+    return null;
+  }
+
+  async function handleWorkshopToolsClick() {
+    if ((await checkWorkshopToolsAvailability()) === false) {
+      showWorkshopDownloadModal = true;
     }
   }
 
@@ -432,6 +529,7 @@
 
   async function handleWorkshopDownloadSuccess() {
     showWorkshopDownloadModal = false;
+    isWorkshopInstalled = true;
     await refreshMods();
   }
 </script>
@@ -441,12 +539,12 @@
     {activeTab}
     {isPatching}
     {pluginTabs}
-    onTabChange={(tab) => {
-      activeTab = tab;
-      broadcastToPlugins({ type: "TAB_ACTIVE", tab });
-    }}
+    showWorkshopToolsButton={isWorkshopInstalled === false}
+    onWorkshopToolsClick={handleWorkshopToolsClick}
+    onTabChange={changeTab}
     onPatch={handlePatch}
     onUninstallClick={() => (showUninstallModal = true)}
+    onShutdown={shutdownHost}
   />
 
   <UninstallModal
@@ -475,6 +573,13 @@
     onExtract={handleWorkshopExtract}
     onSkip={handleWorkshopSkip}
     onCancel={handleWorkshopCancel}
+  />
+
+  <LegacyModsModal
+    isOpen={showLegacyModsModal}
+    entries={legacyMods}
+    onImport={() => finishLegacyMods(true)}
+    onDiscard={() => finishLegacyMods(false)}
   />
 
   <WorkshopDownloadModal

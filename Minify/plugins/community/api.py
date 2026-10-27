@@ -1,9 +1,13 @@
+import hashlib
+import hmac
 import json
 import os
+import re
 import shutil
 import stat
 import sys
 import tempfile
+import time
 import urllib.parse
 import zipfile
 from pathlib import Path, PurePosixPath
@@ -11,77 +15,102 @@ from typing import Any
 
 import requests
 
-from core import base, config, fs, mods_shared, utils
+from core import base, config, fs, localization, mods_shared, utils
 
 REGISTRY_URL = "https://raw.githubusercontent.com/Dota-Modding-Community/community/main/registry.json"
 STATES_KEY = "community_installs"
 REGISTRY_TYPES = {"mod", "plugin", "theme"}
 HEADERS = {"User-Agent": "Dota2-Minify-Community-Registry"}
-MAX_ARCHIVE_SIZE = 1024 * 1024 * 1024
+MAX_ARCHIVE_SIZE = 5 * 1024 * 1024 * 1024
+REGISTRY_CACHE_NAME = "registry.json"
+REGISTRY_STATE_KEY = "community_registry"
+REGISTRY_REFRESH_INTERVAL = 86400
 
 
 def _get_registry() -> list[dict[str, Any]]:
-    response = requests.get(REGISTRY_URL, headers=HEADERS, timeout=15)
-    response.raise_for_status()
-    registry = response.json()
+    cache_path = os.path.join(base.cache_dir, "plugins", "community", REGISTRY_CACHE_NAME)
+    last_refresh = utils.get_state(REGISTRY_STATE_KEY, "last_refresh", 0)
+    cache_exists = os.path.isfile(cache_path)
+    refresh_due = (
+        config.get("community_auto_refresh_catalogue", True)
+        and (time.time() - last_refresh) > REGISTRY_REFRESH_INTERVAL
+    )
+
+    if cache_exists and not refresh_due:
+        return _read_registry_cache(cache_path)
+
+    try:
+        response = requests.get(REGISTRY_URL, headers=HEADERS, timeout=15)
+        response.raise_for_status()
+        registry = response.json()
+        if not isinstance(registry, list):
+            raise ValueError("The community registry must contain a JSON array.")
+        registry = [item for item in registry if isinstance(item, dict)]
+        fs.create_dirs(os.path.dirname(cache_path))
+        with open(cache_path, "w", encoding="utf-8") as cache_file:
+            json.dump(registry, cache_file, indent=2)
+        utils.set_state(REGISTRY_STATE_KEY, "last_refresh", int(time.time()))
+        return registry
+    except (OSError, requests.RequestException, ValueError, TypeError) as exc:
+        if cache_exists:
+            return _read_registry_cache(cache_path)
+        raise RuntimeError(f"Failed to fetch the community registry: {exc}") from exc
+
+
+def _read_registry_cache(cache_path: str) -> list[dict[str, Any]]:
+    try:
+        with open(cache_path, "r", encoding="utf-8") as cache_file:
+            registry = json.load(cache_file)
+    except (OSError, json.JSONDecodeError) as exc:
+        raise RuntimeError(f"Failed to read the cached community registry: {exc}") from exc
     if not isinstance(registry, list):
-        raise ValueError("The community registry must contain a JSON array.")
+        raise ValueError("The cached community registry must contain a JSON array.")
     return [item for item in registry if isinstance(item, dict)]
 
 
-def _repo_parts(repo_url: str) -> tuple[str, str]:
-    parsed = urllib.parse.urlparse(repo_url)
-    parts = [part for part in parsed.path.strip("/").split("/") if part]
-    if parsed.scheme != "https" or parsed.netloc.lower() != "github.com" or len(parts) != 2:
-        raise ValueError("The registry entry has an invalid GitHub repository URL.")
-    return parts[0], parts[1].removesuffix(".git")
-
-
 def _latest_release(item: dict[str, Any]) -> dict[str, Any]:
-    owner, repo = _repo_parts(str(item.get("repo", "")))
-    response = requests.get(
-        f"https://api.github.com/repos/{owner}/{repo}/releases/latest",
-        headers=HEADERS,
-        timeout=15,
-    )
-    response.raise_for_status()
-    release = response.json()
-    tag = release.get("tag_name")
-    if not isinstance(tag, str) or not tag:
-        raise ValueError("The repository's latest release has no tag.")
-    canonical_repo = release.get("html_url")
-    if isinstance(canonical_repo, str):
-        parsed_repo = urllib.parse.urlparse(canonical_repo)
-        repo_parts = [part for part in parsed_repo.path.strip("/").split("/") if part]
-        if (
-            parsed_repo.scheme != "https"
-            or parsed_repo.netloc.lower() != "github.com"
-            or len(repo_parts) < 2
-            or repo_parts[0].lower() != owner.lower()
-        ):
-            raise ValueError("GitHub returned an invalid canonical repository URL.")
-        repo = repo_parts[1]
+    releases = _release_compatibility(item)
+    asset_template = item.get("asset-url")
+    if not isinstance(asset_template, str) or not asset_template or "{tag}" not in asset_template:
+        raise ValueError("The registry entry has an invalid asset URL template.")
 
-    asset_url = item.get("latest-asset")
-    parsed_asset = urllib.parse.urlparse(asset_url if isinstance(asset_url, str) else "")
-    expected_prefix = f"/{owner}/{repo}/releases/latest/download/"
-    if (
-        parsed_asset.scheme != "https"
-        or parsed_asset.netloc.lower() != "github.com"
-        or not parsed_asset.path.startswith(expected_prefix)
-    ):
-        raise ValueError("The registry's latest-asset URL does not match its repository.")
+    if releases is None:
+        tag = "latest"
+    else:
+        compatible_tags = [tag for tag, versions in releases.items() if base.VERSION in versions]
+        tag = max(compatible_tags, key=_release_version_key, default=None)
+        if tag is None:
+            raise ValueError(f"No release supports Minify {base.VERSION}.")
 
-    asset_name = urllib.parse.unquote(parsed_asset.path[len(expected_prefix) :])
-    if not asset_name or "/" in asset_name or "\\" in asset_name:
-        raise ValueError("The registry's latest-asset URL has an invalid asset filename.")
-    assets = release.get("assets", [])
-    asset = next((candidate for candidate in assets if candidate.get("name") == asset_name), None)
-    if not asset or not str(asset.get("browser_download_url", "")).startswith(
-        f"https://github.com/{owner}/{repo}/releases/download/"
-    ):
-        raise ValueError(f"Release {tag} does not include the registry asset {asset_name}.")
-    return {"tag": tag, "asset_url": asset["browser_download_url"]}
+    asset_url = asset_template.replace("{tag}", urllib.parse.quote(tag, safe=""))
+    parsed_asset = urllib.parse.urlparse(asset_url)
+    if parsed_asset.scheme != "https" or not parsed_asset.netloc:
+        raise ValueError("The registry entry has an invalid asset URL template.")
+    checksums = item.get("sha512")
+    release = {"tag": tag, "asset_url": asset_url}
+    if isinstance(checksums, dict):
+        checksum = checksums.get(tag)
+        if not isinstance(checksum, str) or not re.fullmatch(r"[0-9a-fA-F]{128}", checksum):
+            raise ValueError(f"The registry entry has no valid SHA-512 checksum for release {tag}.")
+        release["sha512"] = checksum.lower()
+    return release
+
+
+def _verify_archive_checksum(archive_path: str, expected: Any) -> None:
+    if not isinstance(expected, str) or not re.fullmatch(r"[0-9a-fA-F]{128}", expected):
+        raise ValueError("The release has no valid SHA-512 checksum.")
+    digest = hashlib.sha512()
+    with open(archive_path, "rb") as archive:
+        for chunk in iter(lambda: archive.read(1024 * 1024), b""):
+            digest.update(chunk)
+    actual = digest.hexdigest()
+    if not hmac.compare_digest(actual, expected.lower()):
+        raise ValueError("Downloaded package checksum does not match the registry.")
+
+
+def _release_version_key(tag: str) -> tuple[int, ...]:
+    numbers = re.findall(r"\d+", tag)
+    return tuple(int(number) for number in numbers) if numbers else (-1,)
 
 
 def _install_records() -> dict[str, dict[str, Any]]:
@@ -90,12 +119,47 @@ def _install_records() -> dict[str, dict[str, Any]]:
     return records if isinstance(records, dict) else {}
 
 
+def _remove_missing_install_records(records: dict[str, dict[str, Any]]) -> dict[str, dict[str, Any]]:
+    valid_records = {}
+    for key, record in records.items():
+        if not isinstance(record, dict):
+            continue
+        item_type = record.get("type")
+        if item_type in {"mod", "plugin"}:
+            relative = record.get("path")
+            exists = isinstance(relative, str) and os.path.isdir(os.path.join(base.base_dir, relative))
+        elif item_type == "theme":
+            files = record.get("files")
+            exists = (
+                isinstance(files, list)
+                and bool(files)
+                and all(isinstance(path, str) and os.path.isfile(os.path.join(base.base_dir, path)) for path in files)
+            )
+        else:
+            exists = False
+        if exists:
+            valid_records[key] = record
+    if valid_records != records:
+        utils.write_states(STATES_KEY, valid_records)
+    return valid_records
+
+
+def reconcile_install_states() -> None:
+    _remove_missing_install_records(_install_records())
+
+
 def _item_key(item_type: str, name: str) -> str:
     return f"{item_type}:{name}"
 
 
-def _compatible_versions(item: dict[str, Any]) -> list[str]:
-    versions = item.get("versions")
+def _release_compatibility(item: dict[str, Any]) -> dict[str, list[str]] | None:
+    releases = item.get("releases")
+    if not isinstance(releases, dict):
+        return None
+    return {tag: _version_list(versions) for tag, versions in releases.items() if isinstance(tag, str) and tag}
+
+
+def _version_list(versions: Any) -> list[str]:
     if isinstance(versions, str):
         return [version.strip() for version in versions.split(",") if version.strip()]
     if isinstance(versions, list):
@@ -103,16 +167,33 @@ def _compatible_versions(item: dict[str, Any]) -> list[str]:
     return []
 
 
+def _compatible_versions(item: dict[str, Any]) -> list[str]:
+    releases = _release_compatibility(item)
+    if releases is not None:
+        return list(dict.fromkeys(version for versions in releases.values() for version in versions))
+    versions = item.get("versions")
+    return _version_list(versions)
+
+
+def _tag_is_compatible(item: dict[str, Any], tag: Any) -> bool:
+    releases = _release_compatibility(item)
+    if releases is not None:
+        return isinstance(tag, str) and base.VERSION in releases.get(tag, [])
+    return base.VERSION in _compatible_versions(item)
+
+
 def _enrich_entry(item: dict[str, Any], records: dict[str, dict[str, Any]]) -> dict[str, Any] | None:
     item_type = str(item.get("type", "")).lower()
     name = item.get("name")
     if item_type not in REGISTRY_TYPES or not isinstance(name, str) or not name.strip():
         return None
-    if base.VERSION not in _compatible_versions(item):
-        return None
 
     key = _item_key(item_type, name)
     record = records.get(key, {})
+    installed = isinstance(record, dict) and bool(record)
+    compatible = base.VERSION in _compatible_versions(item)
+    if not compatible and not installed:
+        return None
     result = {
         "id": key,
         "name": name,
@@ -122,19 +203,22 @@ def _enrich_entry(item: dict[str, Any], records: dict[str, dict[str, Any]]) -> d
         "notes_url": item.get("notes", ""),
         "manifest_url": item.get("manifest", ""),
         "compatible_versions": _compatible_versions(item),
-        "installed": isinstance(record, dict) and bool(record),
+        "installed": installed,
         "installed_tag": record.get("tag") if isinstance(record, dict) else None,
+        "installed_compatible": installed and _tag_is_compatible(item, record.get("tag")),
+        "current_version": base.VERSION,
         "latest_tag": None,
         "update_available": False,
         "available": False,
         "error": None,
     }
-    try:
-        latest = _latest_release(item)
-        result.update(latest_tag=latest["tag"], available=True)
-        result["update_available"] = result["installed"] and result["installed_tag"] != latest["tag"]
-    except (requests.RequestException, ValueError, KeyError) as exc:
-        result["error"] = str(exc)
+    if compatible:
+        try:
+            latest = _latest_release(item)
+            result.update(latest_tag=latest["tag"], available=True)
+            result["update_available"] = installed and result["installed_tag"] != latest["tag"]
+        except (requests.RequestException, ValueError, KeyError) as exc:
+            result["error"] = str(exc)
     return result
 
 
@@ -155,7 +239,8 @@ def get_item_details(params: dict[str, Any] | None = None) -> dict[str, Any]:
             if notes_url:
                 response = requests.get(notes_url, headers=HEADERS, timeout=15)
                 response.raise_for_status()
-                notes = response.text[:100_000]
+                lang = config.get("locale") or "en"
+                notes = localization.parse_notes_for_locale(response.text[:100_000], lang)
             return {"notes": notes, "manifest_url": item.get("manifest", "")}
     raise ValueError("The registry item no longer exists.")
 
@@ -197,7 +282,7 @@ def _unpack_zip(archive_path: str, destination: str) -> None:
                 raise ValueError(f"Symbolic links are not allowed in archives: {info.filename}")
             declared_total += info.file_size
             if declared_total > MAX_ARCHIVE_SIZE:
-                raise ValueError("Archive contents exceed the 1 GiB extraction limit.")
+                raise ValueError("Archive contents exceed the 5 GiB extraction limit.")
             target = (root / Path(*member.parts)).resolve()
             if not target.is_relative_to(root):
                 raise ValueError(f"Archive path escapes its destination: {info.filename}")
@@ -209,7 +294,7 @@ def _unpack_zip(archive_path: str, destination: str) -> None:
                     while chunk := source.read(64 * 1024):
                         extracted_total += len(chunk)
                         if extracted_total > MAX_ARCHIVE_SIZE:
-                            raise ValueError("Archive contents exceed the 1 GiB extraction limit.")
+                            raise ValueError("Archive contents exceed the 5 GiB extraction limit.")
                         output.write(chunk)
 
 
@@ -341,6 +426,8 @@ def _install_package(item: dict[str, Any], release: dict[str, Any], record: dict
             task_id=f"community:{key}",
         ):
             raise RuntimeError(f"Failed to download {name} ({release['tag']}).")
+        if "sha512" in release:
+            _verify_archive_checksum(archive_path, release["sha512"])
         extracted_root = os.path.join(work_dir, "extracted")
         os.makedirs(extracted_root)
         _unpack_zip(archive_path, extracted_root)

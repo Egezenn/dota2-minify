@@ -73,15 +73,20 @@ def process_dir(index, line, folder):
     line = line + "/" if line.startswith(">>") else line
     line = line[2:] if line.startswith(">>") else line
 
+    command = [
+        constants.rg_exec_path,
+        "--no-filename",
+        "--no-line-number",
+        "--color=never",
+    ]
+
+    if base.is_win:
+        command.append("--crlf")
+
+    command += [line, base.gamepakcontents_file_dir]
+
     lines = subprocess.run(
-        [
-            constants.rg_exec_path,
-            "--no-filename",
-            "--no-line-number",
-            "--color=never",
-            line,
-            base.gamepakcontents_file_dir,
-        ],
+        command,
         capture_output=True,
         text=True,
         creationflags=subprocess.CREATE_NO_WINDOW if base.is_win else 0,

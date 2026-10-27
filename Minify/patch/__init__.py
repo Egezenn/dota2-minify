@@ -5,9 +5,9 @@ import shutil
 import subprocess
 import time
 from concurrent.futures import ThreadPoolExecutor
+from typing import Optional
 
 import jsonc
-import playsound3
 import psutil
 import vpk
 
@@ -17,12 +17,23 @@ import conditions
 import helper
 from core import base, config, constants, fs, log, mods_shared, output, registry, steam, utils
 
-from patch import blacklist, manifest_utils, remap_processor, replacer, styling, unins, vpk_utils, xml_utils
+from patch import (
+    blacklist,
+    manifest_utils,
+    utils as patch_utils,
+    remap_processor,
+    replacer,
+    styling,
+    unins,
+    validators,
+    vpk_utils,
+    xml_utils,
+)
 
 dota_version_changed = False
 
 
-def patcher():
+def patcher(number: int = 66, mods_string: Optional[str] = None):
     global dota_version_changed
 
     if conditions.is_dota_running("&close_dota_terminal", "warning"):
@@ -36,8 +47,24 @@ def patcher():
 
     try:
         mod_list = constants.mods_with_order
+        explicit_mods = None
+        explicit_mods_set = set()
 
-        mods_shared.enforce_locale_mod_states()
+        if mods_string is not None:
+            requested_mods = patch_utils.parse_mods_string(mods_string)
+            if not requested_mods:
+                output.add_text("No mods specified in --mods-string.", msg_type="error")
+                return
+
+            explicit_mods, missing_mods = patch_utils.select_mods(requested_mods, constants.mods_with_order)
+            if missing_mods:
+                output.add_text(f"Unknown mod(s) in --mods-string: {', '.join(missing_mods)}", msg_type="error")
+                return
+
+            explicit_mods_set = set(explicit_mods)
+            mod_list = [mod for mod in constants.mods_with_order if mod in explicit_mods_set]
+        else:
+            mods_shared.enforce_locale_mod_states()
 
         for item in os.listdir(base.logs_dir):
             fs.remove_path(os.path.join(base.logs_dir, item))
@@ -79,43 +106,49 @@ def patcher():
         replacer_source_extracts = []
         replacer_targets = []
 
-        dependency_checkbox_states = [mods_shared.get_state(cb) for cb in mods_shared.mods_with_order]
-        dependencies_resolved = False
+        if explicit_mods is None:
+            dependency_checkbox_states = [mods_shared.get_state(cb) for cb in mods_shared.mods_with_order]
+            dependencies_resolved = False
 
-        while not dependencies_resolved:
-            for dependency_dict in constants.mod_dependencies_list:
-                for dependant, dependencies in dependency_dict.items():
-                    if mods_shared.get_state(dependant):
-                        for dependency in dependencies:
-                            try:
-                                if not conditions.workshop_installed:
-                                    workshop = False
-                                    for method_path in conditions.workshop_required_methods:
-                                        if os.path.exists(os.path.join(base.mods_dir, dependency, method_path)):
-                                            workshop = True
-                                            break
-                                    if workshop:
-                                        mods_shared.set_state(dependency, False)
+            while not dependencies_resolved:
+                for dependency_dict in constants.mod_dependencies_list:
+                    for dependant, dependencies in dependency_dict.items():
+                        if mods_shared.get_state(dependant):
+                            for dependency in dependencies:
+                                try:
+                                    if not conditions.workshop_installed:
+                                        workshop = False
+                                        for method_path in conditions.workshop_required_methods:
+                                            if os.path.exists(os.path.join(base.mods_dir, dependency, method_path)):
+                                                workshop = True
+                                                break
+                                        if workshop:
+                                            mods_shared.set_state(dependency, False)
+                                        else:
+                                            mods_shared.set_state(dependency, True)
                                     else:
                                         mods_shared.set_state(dependency, True)
-                                else:
-                                    mods_shared.set_state(dependency, True)
-                            except Exception:
-                                log.write_warning(
-                                    f"Mod dependency {dependency} couldn't be resolved, might be that the mod doesn't exist."
-                                )
-            new_states = [mods_shared.get_state(cb) for cb in mods_shared.mods_with_order]
-            if sum(dependency_checkbox_states) == sum(new_states):
-                dependencies_resolved = True
-            dependency_checkbox_states = new_states
+                                except Exception:
+                                    log.write_warning(
+                                        f"Mod dependency {dependency} couldn't be resolved, might be that the mod doesn't exist."
+                                    )
+                new_states = [mods_shared.get_state(cb) for cb in mods_shared.mods_with_order]
+                if sum(dependency_checkbox_states) == sum(new_states):
+                    dependencies_resolved = True
+                dependency_checkbox_states = new_states
+
+        def is_mod_active(mod_name, always=False):
+            if explicit_mods is not None:
+                return mod_name in explicit_mods_set
+            return always or mods_shared.get_state(mod_name)
 
         conflicts_found = {}
         for conflict_dict in constants.mod_conflicts_list:
             for conflict_mod, conflicts in conflict_dict.items():
-                if conflict_mod in mod_list and mods_shared.get_state(conflict_mod):
+                if conflict_mod in mod_list and is_mod_active(conflict_mod):
                     active_conflicts = []
                     for conflicting_mod in conflicts:
-                        if conflicting_mod in mod_list and mods_shared.get_state(conflicting_mod):
+                        if conflicting_mod in mod_list and is_mod_active(conflicting_mod):
                             active_conflicts.append(conflicting_mod)
                     if active_conflicts:
                         conflicts_found[conflict_mod] = active_conflicts
@@ -130,7 +163,7 @@ def patcher():
         # ---------------------------------------------------------------------------- #
         vpk_mods_to_merge = []
         for mod_name in mod_list:
-            if mod_name.endswith(".vpk") and mods_shared.get_state(mod_name):
+            if mod_name.endswith(".vpk") and is_mod_active(mod_name):
                 vpk_mods_to_merge.append(mod_name)
 
         if vpk_mods_to_merge:
@@ -158,7 +191,7 @@ def patcher():
             # ---------------- Colect mod data and extract necessary files --------------- #
             # ---------------------------------------------------------------------------- #
             try:
-                if always or mods_shared.get_state(folder):
+                if is_mod_active(folder, always):
                     blacklist_txt = os.path.join(mod_path, "blacklist.txt")
                     if conditions.workshop_installed:
                         styling_css = os.path.join(mod_path, "styling.css")
@@ -260,7 +293,7 @@ def patcher():
             # ---------------------------------------------------------------------------- #
             output.add_text("&decompiling_terminal")
 
-            with open(base.log_s2v, "w") as file:
+            with open(base.log_s2v, "wb") as file:
                 for pak_path, extracts in (
                     (constants.dota_core_pak_path, core_extracts),
                     (constants.dota_game_pak_path, dota_extracts),
@@ -278,14 +311,12 @@ def patcher():
                             "--output",
                             base.build_dir,
                         ],
-                        stdout=file,
+                        stdout=subprocess.PIPE,
                         stderr=subprocess.STDOUT,
                         creationflags=subprocess.CREATE_NO_WINDOW if base.is_win else 0,
                     )
-                    if res.returncode != 0:
-                        log.write_warning(
-                            f"Source2Viewer exited with code {res.returncode}. See {base.log_s2v} for details."
-                        )
+                    file.write(res.stdout)
+                    validators.source2viewer(res.returncode, res.stdout)
 
             with ThreadPoolExecutor() as executor:
                 xml_mod_args = [(os.path.join(base.build_dir, path), mods) for path, mods in xml_modifications.items()]
@@ -337,7 +368,7 @@ def patcher():
         output.add_text("&compiling_terminal")
         vpk_utils.pack(
             constants.minify_dota_compile_output_path,
-            os.path.join(helper.output_path, "pak66_dir.vpk"),
+            os.path.join(helper.output_path, f"pak{number:02d}_dir.vpk"),
             chunk_size=None if config.get("non_chunked_vpk") else vpk_utils.DEFAULT_VPK_CHUNK_SIZE,
         )
 
@@ -403,11 +434,6 @@ def patcher():
 
         if os.path.exists(base.log_warnings) and os.path.getsize(base.log_warnings) != 0:
             output.add_text("&minify_encountered_errors_terminal", msg_type="warning")
-        playsound3.playsound(os.path.join(base.sounds_dir, "success.wav"), block=False)
-
-    # chimes are from pixabay.com/sound-effects/chime-74910/
-    except (PermissionError, playsound3.PlaysoundException):
-        log.write_warning()
 
     except Exception:
         log.write_crashlog()
@@ -415,4 +441,3 @@ def patcher():
         output.add_separator()
         output.add_text("&failure_terminal", msg_type="error")
         output.add_text("&check_logs_terminal", msg_type="warning")
-        playsound3.playsound(os.path.join(base.sounds_dir, "fail.wav"), block=False)

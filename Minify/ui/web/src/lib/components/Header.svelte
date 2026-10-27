@@ -1,5 +1,6 @@
 <script lang="ts">
   import { t } from "../i18n";
+  import { Folder, Hammer, Power } from "lucide-svelte";
   import ghIcon from "../../assets/github.svg";
   import wikiIcon from "../../assets/wiki.ico";
   import discordIcon from "../../assets/discord.svg";
@@ -9,10 +10,13 @@
   export let activeTab: string;
   export let isPatching: boolean;
   export let pluginTabs: Array<{ id: string; name: string }> = [];
+  export let showWorkshopToolsButton: boolean = false;
 
   export let onTabChange: (tab: string) => void;
   export let onPatch: () => void;
   export let onUninstallClick: () => void;
+  export let onWorkshopToolsClick: () => void;
+  export let onShutdown: () => void;
 
   function openExternal(url: string) {
     if (window.pywebview?.api?.open_url) {
@@ -45,7 +49,31 @@
   </nav>
 
   <div class="header-action">
+    {#if window.location.protocol === "http:"}
+      <button
+        type="button"
+        class="header-link-btn shutdown-btn"
+        on:click={onShutdown}
+        title="Close Server"
+        aria-label="Close Server"
+      >
+        <Power size={14} strokeWidth={2} />
+      </button>
+    {/if}
+
     <div class="header-links">
+      {#if showWorkshopToolsButton}
+        <button
+          type="button"
+          class="header-link-btn"
+          on:click={onWorkshopToolsClick}
+          title="Workshop Tools"
+          aria-label="Workshop Tools"
+        >
+          <Hammer size={14} strokeWidth={2} />
+        </button>
+      {/if}
+
       <button
         type="button"
         class="header-link-btn"
@@ -53,7 +81,7 @@
         title="Open Config Directory"
         aria-label="Open Config Directory"
       >
-        CFG
+        <Folder size={14} strokeWidth={2} />
       </button>
 
       <button
@@ -169,6 +197,15 @@
     color: var(--text-primary, #000);
   }
 
+  .shutdown-btn {
+    color: #d32f2f;
+  }
+
+  .shutdown-btn:hover {
+    color: #b71c1c;
+    border-color: #d32f2f;
+  }
+
   .header-links {
     display: flex;
     align-items: center;
@@ -194,6 +231,10 @@
     background: var(--btn-hover-bg, #f0f0f0);
     border-color: var(--btn-hover-border, var(--border-color, #000));
     color: var(--accent, #17bebe);
+  }
+
+  .header-link-btn :global(svg) {
+    display: block;
   }
 
   .header-link-btn:active {

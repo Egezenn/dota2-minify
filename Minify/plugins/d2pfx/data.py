@@ -2,15 +2,28 @@ import gzip
 import io
 import json
 import os
+import threading
 import time
+from urllib.parse import urlparse
 
 import requests
-from core import base, config, fs, utils
+from core import base, config, fs, output, utils
 
 # D2PFX Browser Constants
 BASE_URL = "https://raw.githubusercontent.com/h6rd/Dota2PornFxWeb/data/"
 ASSETS_URL = "https://raw.githubusercontent.com/h6rd/Dota2PornFxWeb/main/assets/files/"
 PREVIEWS_URL = "https://raw.githubusercontent.com/h6rd/Dota2PornFxWeb/main/assets/previews/"
+
+# Hugging Face fallback
+HF_DATA_URL = "https://huggingface.co/datasets/hrdq/Dota2PornFx/resolve/data/data/"
+HF_ASSETS_URL = "https://huggingface.co/datasets/hrdq/Dota2PornFx/resolve/main/assets/files/"
+HF_PREVIEWS_URL = "https://huggingface.co/datasets/hrdq/Dota2PornFx/resolve/main/assets/previews/"
+
+URL_FALLBACK_MAP = [
+    (ASSETS_URL, HF_ASSETS_URL),
+    (PREVIEWS_URL, HF_PREVIEWS_URL),
+]
+
 CACHE_DIR = os.path.join(base.cache_dir, "plugins", "d2pfx")
 BLACKLIST = [
     "guides",
@@ -27,18 +40,73 @@ BLACKLIST = [
 
 
 class DataManager:
+    HOST_REACHABLE_CACHE = {}
+    REACHABILITY_TTL = 60
+    NOTIFIED_HOSTS = set()
+    _STATE_LOCK = threading.Lock()
+
     def __init__(self):
         self.cache_dir = CACHE_DIR
         fs.create_dirs(self.cache_dir)
         self.metadata = {}
         self.constants = {}
 
-    def download_file(self, url, dest, progress_tag=None, name=None, emit_progress=True):
-        return fs.download_file(url, dest, progress_tag=progress_tag, name=name, emit_progress=emit_progress)
+    @staticmethod
+    def to_hf_fallback(url):
+        if not url:
+            return None
+        for gh_prefix, hf_prefix in URL_FALLBACK_MAP:
+            if url.startswith(gh_prefix):
+                return hf_prefix + url[len(gh_prefix) :]
+        return None
+
+    @classmethod
+    def is_url_reachable(cls, url, timeout=3):
+        host = urlparse(url).netloc
+        with cls._STATE_LOCK:
+            cached = cls.HOST_REACHABLE_CACHE.get(host)
+            now = time.time()
+            if cached and (now - cached[1]) < cls.REACHABILITY_TTL:
+                return cached[0]
+
+            try:
+                response = requests.head(url, timeout=timeout, allow_redirects=True)
+                response.raise_for_status()
+                reachable = True
+            except Exception:
+                reachable = False
+
+            cls.HOST_REACHABLE_CACHE[host] = (reachable, now)
+            return reachable
+
+    @classmethod
+    def notify_fallback_once(cls, gh_url):
+        host = urlparse(gh_url).netloc
+        with cls._STATE_LOCK:
+            if host in cls.NOTIFIED_HOSTS:
+                return
+            cls.NOTIFIED_HOSTS.add(host)
+        output.add_text(f"{host} unreachable, D2PFX is using the Hugging Face mirror", msg_type="info")
+
+    def download_file(self, url, dest, progress_tag=None, name=None, emit_progress=True, fallback_url=None):
+        fallback_url = fallback_url or self.to_hf_fallback(url)
+        use_fallback = bool(fallback_url and fallback_url != url)
+
+        success = False
+        if not (use_fallback and not self.is_url_reachable(url)):
+            success = fs.download_file(url, dest, progress_tag=progress_tag, name=name, emit_progress=emit_progress)
+
+        if not success and use_fallback:
+            self.notify_fallback_once(url)
+            success = fs.download_file(
+                fallback_url, dest, progress_tag=progress_tag, name=name, emit_progress=emit_progress
+            )
+        return success
 
     def fetch_gz_json(self, filename, force_refresh=False):
         local_path = os.path.join(self.cache_dir, filename.replace(".gz", ""))
-        gz_url = f"{BASE_URL}data/{filename}"
+        gh_url = f"{BASE_URL}data/{filename}"
+        hf_url = f"{HF_DATA_URL}{filename}"
 
         if not force_refresh and os.path.exists(local_path):
             try:
@@ -47,17 +115,31 @@ class DataManager:
             except Exception:
                 pass
 
-        try:
-            response = requests.get(gz_url, timeout=10)
-            if response.status_code == 200:
+        if self.is_url_reachable(gh_url):
+            candidate_urls = [gh_url, hf_url]
+        else:
+            self.notify_fallback_once(gh_url)
+            candidate_urls = [hf_url]
+
+        for gz_url in candidate_urls:
+            try:
+                response = requests.get(gz_url, timeout=10)
+                response.raise_for_status()
+            except Exception:
+                if gz_url == gh_url:
+                    self.notify_fallback_once(gh_url)
+                continue
+
+            try:
                 with gzip.GzipFile(fileobj=io.BytesIO(response.content)) as f:
                     data = json.load(f)
-                    with open(local_path, "w", encoding="utf-8") as out:
-                        json.dump(data, out, indent=2)
-                    return data
-        except Exception as e:
-            print(f"Error fetching {filename}: {e}")
+                with open(local_path, "w", encoding="utf-8") as out:
+                    json.dump(data, out, indent=2)
+                return data
+            except Exception:
+                continue  # decompression, parsing, or local write failed; try the next candidate
 
+        output.add_text(f"D2PFX: Unable to download {filename} from either GitHub or Hugging Face", msg_type="error")
         return None
 
     def refresh(self):
@@ -82,20 +164,38 @@ class DataManager:
         return self.metadata is not None
 
     def get_categories(self):
-        if not self.metadata:
+        if not self.constants:
             return []
-        mods_data = self.metadata.get("modsData", {})
-        return sorted([c for c in mods_data.keys() if c.lower() not in BLACKLIST])
+        ids = []
+        for cat in self.constants.get("categories", []):
+            cat_id = cat.get("id") if isinstance(cat, dict) else None
+            if not cat_id or cat.get("hidden") or cat_id.lower() in BLACKLIST:
+                continue
+            ids.append(cat_id)
+        return ids
+
+    def _translation(self, key, locale):
+        translations = self.constants.get("translations", {})
+
+        localized = translations.get(locale)
+        if isinstance(localized, dict) and isinstance(localized.get(key), str):
+            return localized[key]
+
+        if isinstance(translations.get(key), str):
+            return translations[key]
+
+        if isinstance(self.constants.get(key), str):
+            return self.constants[key]
+
+        return None
 
     def get_category_name(self, cat_id):
-        if not self.constants:
-            return cat_id.capitalize()
-        return self.constants.get(cat_id, cat_id.capitalize())
+        locale = config.get("locale", "en")
+        return self._translation(cat_id, locale) or cat_id.capitalize()
 
     def get_category_description(self, cat_id):
-        if not self.constants:
-            return ""
-        return self.constants.get(f"{cat_id}-desc", "")
+        locale = config.get("locale", "en")
+        return self._translation(f"{cat_id}-desc", locale) or ""
 
     def get_mods(self, cat_id):
         if not self.metadata:

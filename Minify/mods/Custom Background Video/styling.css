@@ -13,9 +13,12 @@ DOTADashboard,
 
 /* g:panorama/styles/dashboard_background_last_match */
 #BackgroundMovie {
-  /* width & height can be removed if the stretch effect isn't desired */
+  /* if:stretch_width */
   width: 100%;
+  /* endif */
+  /* if:stretch_height */
   height: 100%;
+  /* endif */
   vertical-align: center;
   horizontal-align: center;
   z-index: 1;

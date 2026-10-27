@@ -22,4 +22,5 @@ export interface InstalledMod {
   label?: string;
   folder: string;
   enabled?: boolean;
+  source_date?: number | string | null;
 }

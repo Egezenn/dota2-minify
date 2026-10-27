@@ -41,6 +41,10 @@ def resolve_dependencies(retries=0):
 
     Checks for existence on `PATH` first then checks existence on root.
     """
+    if workshop_installed and not base.is_win and shutil.which("wine") is None:
+        output.add_text("&error_wine_not_found_terminal", msg_type="error")
+        return
+
     try:
         if workshop_installed:
             s2v_on_path = shutil.which(constants.s2v_executable)

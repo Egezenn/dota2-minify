@@ -5,6 +5,18 @@
       "key": "select_background",
       "text": "Select Background Video",
       "type": "button"
+    },
+    {
+      "key": "stretch_width",
+      "text": "Stretch video width",
+      "type": "checkbox",
+      "default": true
+    },
+    {
+      "key": "stretch_height",
+      "text": "Stretch video height",
+      "type": "checkbox",
+      "default": true
     }
   ]
 }

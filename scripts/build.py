@@ -147,12 +147,12 @@ def run_pyinstaller() -> None:
         sys.exit(result.returncode)
 
 
-def run_inno_setup() -> None:
-    log("Building Inno Setup installer...")
+def run_inno_setup(scripts: tuple[str, ...] = ("installer.iss", "portable.iss")) -> None:
+    log("Building Inno Setup packages...")
     try:
         import version_util
 
-        version_util.generate_metadata()
+        version_util.generate_metadata(str(SCRIPTS_DIR))
     except Exception as e:
         log(f"Warning: Failed to generate metadata via version_util: {e}")
 
@@ -173,15 +173,16 @@ def run_inno_setup() -> None:
         log("Error: Inno Setup compiler (iscc) not found on PATH or default locations.")
         sys.exit(1)
 
-    installer_iss = str(REPO_ROOT / "scripts" / "installer.iss")
-    cmd = [iscc_path, installer_iss]
+    for script_name in scripts:
+        script_path = str(REPO_ROOT / "scripts" / script_name)
+        cmd = [iscc_path, script_path]
 
-    log(f"Running Inno Setup: {' '.join(cmd)}")
-    result = subprocess.run(cmd, cwd=REPO_ROOT / "scripts")
-    if result.returncode != 0:
-        log("Error: Inno Setup build failed.")
-        sys.exit(result.returncode)
-    log("Inno Setup installer created successfully.")
+        log(f"Running Inno Setup: {' '.join(cmd)}")
+        result = subprocess.run(cmd, cwd=REPO_ROOT / "scripts")
+        if result.returncode != 0:
+            log(f"Error: Inno Setup build failed for {script_name}.")
+            sys.exit(result.returncode)
+    log("Inno Setup packages created successfully.")
 
 
 def main() -> None:
@@ -216,6 +217,16 @@ def main() -> None:
         "--setup",
         action="store_true",
         help="Build Inno Setup installer executable after packaging",
+    )
+    parser.add_argument(
+        "--setup-installer",
+        action="store_true",
+        help="Build only the Inno Setup installer executable",
+    )
+    parser.add_argument(
+        "--setup-portable",
+        action="store_true",
+        help="Build only the portable Inno Setup executable",
     )
 
     args = parser.parse_args()
@@ -289,8 +300,15 @@ def main() -> None:
 
     log("Build process completed successfully.")
 
-    if args.setup and platform.system() == "Windows":
-        run_inno_setup()
+    if (args.setup or args.setup_installer or args.setup_portable) and platform.system() == "Windows":
+        if args.setup_installer and args.setup_portable:
+            parser.error("--setup-installer and --setup-portable cannot be used together")
+        setup_scripts = ("installer.iss", "portable.iss")
+        if args.setup_installer:
+            setup_scripts = ("installer.iss",)
+        elif args.setup_portable:
+            setup_scripts = ("portable.iss",)
+        run_inno_setup(setup_scripts)
 
 
 if __name__ == "__main__":

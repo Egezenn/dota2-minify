@@ -39,7 +39,8 @@ VSVersionInfo(
 """
 
 
-def generate_metadata():
+def generate_metadata(output_dir: str | None = None):
+    output_dir = output_dir or os.path.dirname(os.path.abspath(__file__))
     try:
         # Source path relative to this script
         base_py_path = os.path.join(os.path.dirname(__file__), "..", "Minify", "core", "base.py")
@@ -73,12 +74,12 @@ def generate_metadata():
         flags = 0x2
 
     content_main = ffi_generator(v_list, version, flags)
-    with open("ffi_main.txt", "w", encoding="utf-8") as f:
+    with open(os.path.join(output_dir, "ffi_main.txt"), "w", encoding="utf-8") as f:
         f.write(content_main)
 
     # Save Inno Setup version file
     v_dotted = ".".join(str(p) for p in v_list)
-    with open("version_info.iss", "w", encoding="utf-8") as f:
+    with open(os.path.join(output_dir, "version_info.iss"), "w", encoding="utf-8") as f:
         f.write(f'#define AppVersion "{version}"\n')
         f.write(f'#define NumericVersion "{v_dotted}"\n')
 

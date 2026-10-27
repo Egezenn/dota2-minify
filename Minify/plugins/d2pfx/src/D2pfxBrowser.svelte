@@ -19,6 +19,7 @@
   let isLoadingCategories = false;
   let isLoadingMods = false;
   let installingMap: Record<string, boolean> = {};
+  let updatingMap: Record<string, boolean> = {};
   let enabledMap: Record<string, boolean> = {};
   let actionMessage = "";
   let previewModal: { url: string; title: string } | null = null;
@@ -95,6 +96,28 @@
     fetchMods();
   }
 
+  function hasNewerVersion(mod: D2Mod): boolean {
+    const installed = installedMods.find(
+      (item) =>
+        item.name === mod.name && item.category === selectedCategory && (item.label || "") === (mod.label || ""),
+    );
+    if (!installed) return false;
+
+    const latestDate = parseModDate(mod.meta?.date);
+    if (latestDate === null) return false;
+    const installedDate = parseModDate(installed.source_date);
+    return installedDate === null || latestDate > installedDate;
+  }
+
+  function parseModDate(value: unknown): number | null {
+    if (typeof value === "number" && Number.isFinite(value)) return value;
+    if (typeof value !== "string" || !value) return null;
+    const numeric = Number(value);
+    if (Number.isFinite(numeric)) return numeric;
+    const parsed = Date.parse(value);
+    return Number.isNaN(parsed) ? null : parsed;
+  }
+
   async function handleInstall(m: D2Mod) {
     const key = getModKey(m, selectedCategory);
     installingMap = { ...installingMap, [key]: true };
@@ -126,6 +149,36 @@
       const copy = { ...installingMap };
       delete copy[key];
       installingMap = copy;
+      setTimeout(() => (actionMessage = ""), 4000);
+    }
+  }
+
+  async function handleUpdate(m: D2Mod) {
+    const key = getModKey(m, selectedCategory);
+    installingMap = { ...installingMap, [key]: true };
+    updatingMap = { ...updatingMap, [key]: true };
+    actionMessage = `Updating ${m.name}...`;
+    try {
+      const res = await callApi("update_mod", {
+        mod: m,
+        cat_id: selectedCategory,
+      });
+      if (res?.success) {
+        await Promise.all([fetchMods(), refreshInstalledMods()]);
+        notifyParentModsRefreshed();
+        actionMessage = `Successfully updated ${m.name}`;
+      } else {
+        actionMessage = `Failed: ${res?.error || "Unknown error"}`;
+      }
+    } catch (err) {
+      actionMessage = `Update error: ${err}`;
+    } finally {
+      const copy = { ...installingMap };
+      delete copy[key];
+      installingMap = copy;
+      const updatingCopy = { ...updatingMap };
+      delete updatingCopy[key];
+      updatingMap = updatingCopy;
       setTimeout(() => (actionMessage = ""), 4000);
     }
   }
@@ -268,8 +321,11 @@
               mod={m}
               installed={isInstalled(m, selectedCategory, installedMods)}
               inProgress={Boolean(installingMap[key])}
+              updating={Boolean(updatingMap[key])}
+              updateAvailable={hasNewerVersion(m)}
               enabled={Boolean(enabledMap[key])}
               onInstall={handleInstall}
+              onUpdate={handleUpdate}
               onUninstall={handleUninstall}
               onToggleEnabled={handleToggleEnabled}
               onPreview={openPreview}
