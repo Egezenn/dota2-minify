@@ -20,7 +20,7 @@ from core import base, config, constants, fs, log, mods_shared, output, registry
 from patch import (
     blacklist,
     manifest_utils,
-    utils as patch_utils,
+    util,
     remap_processor,
     replacer,
     styling,
@@ -51,12 +51,12 @@ def patcher(number: int = 66, mods_string: Optional[str] = None):
         explicit_mods_set = set()
 
         if mods_string is not None:
-            requested_mods = patch_utils.parse_mods_string(mods_string)
+            requested_mods = util.parse_mods_string(mods_string)
             if not requested_mods:
                 output.add_text("No mods specified in --mods-string.", msg_type="error")
                 return
 
-            explicit_mods, missing_mods = patch_utils.select_mods(requested_mods, constants.mods_with_order)
+            explicit_mods, missing_mods = util.select_mods(requested_mods, constants.mods_with_order)
             if missing_mods:
                 output.add_text(f"Unknown mod(s) in --mods-string: {', '.join(missing_mods)}", msg_type="error")
                 return
@@ -65,6 +65,8 @@ def patcher(number: int = 66, mods_string: Optional[str] = None):
             mod_list = [mod for mod in constants.mods_with_order if mod in explicit_mods_set]
         else:
             mods_shared.enforce_locale_mod_states()
+
+        script_mods = explicit_mods_set if explicit_mods is not None else None
 
         for item in os.listdir(base.logs_dir):
             fs.remove_path(os.path.join(base.logs_dir, item))
@@ -321,7 +323,7 @@ def patcher(number: int = 66, mods_string: Optional[str] = None):
             with ThreadPoolExecutor() as executor:
                 xml_mod_args = [(os.path.join(base.build_dir, path), mods) for path, mods in xml_modifications.items()]
                 executor.map(lambda p: xml_utils.apply_modifications(*p), xml_mod_args)
-            helper.bulk_exec_script("after_decompile")
+            helper.bulk_exec_script("after_decompile", mods=script_mods)
             # ---------------------------------- STEP 3 ---------------------------------- #
             # ---------------------------- CSS resourcecompile --------------------------- #
             # ---------------------------------------------------------------------------- #
@@ -344,7 +346,7 @@ def patcher(number: int = 66, mods_string: Optional[str] = None):
             )
 
             helper.compile()
-        helper.bulk_exec_script("after_recompile")
+        helper.bulk_exec_script("after_recompile", mods=script_mods)
 
         if replacer_source_extracts:
             vpk_utils.extract(dota_pak_contents, replacer_source_extracts, base.replace_dir)
@@ -426,7 +428,7 @@ def patcher(number: int = 66, mods_string: Optional[str] = None):
                             stderr=subprocess.DEVNULL,
                         )
 
-        helper.bulk_exec_script("after_patch", False)
+        helper.bulk_exec_script("after_patch", False, mods=script_mods)
 
         output.add_separator()
         output.add_text("&success_terminal", msg_type="success")

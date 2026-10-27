@@ -12,14 +12,10 @@ if minify_root not in sys.path:
 
 # isort: split
 
-import conditions
 from core import base, log
 
 
 def main():
-    if not conditions.workshop_installed:
-        return
-
     menu_xml_path = os.path.join(current_dir, "menu.xml")
     if not os.path.exists(menu_xml_path):
         return

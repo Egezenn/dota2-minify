@@ -8,37 +8,37 @@
       "if": "enable_panorama_buttons",
       "action": "insert_after",
       "selector": "#MatchID",
-      "xml": "<Button class='SSBIPModButton DOTABUFF SimpleIconButton' onactivate='goToStatSiteMatchInternal(&apos;dotabuff&apos;)' onmouseout='UIHideTextTooltip()' onmouseover='UIShowTextTooltip(&apos;Open Match In Dotabuff&apos;)'><Label id='SSBIPModLabel' text='DB' /></Button>"
+      "xml": "<Button class='SSBIPModButton DOTABUFF SimpleIconButton' onactivate='goToStatSiteMatch(&apos;dotabuff&apos;, true)' onmouseout='UIHideTextTooltip()' onmouseover='UIShowTextTooltip(&apos;Open Match In Dotabuff&apos;)'><Label id='SSBIPModLabel' text='DB' /></Button>"
     },
     {
       "if": "enable_panorama_buttons",
       "action": "insert_after",
       "selector": "#MatchID",
-      "xml": "<Button class='SSBIPModButton OPENDOTA SimpleIconButton' onactivate='goToStatSiteMatchInternal(&apos;opendota&apos;)' onmouseout='UIHideTextTooltip()' onmouseover='UIShowTextTooltip(&apos;Open Match In OpenDota&apos;)'><Label id='SSBIPModLabel' text='OD' /></Button>"
+      "xml": "<Button class='SSBIPModButton OPENDOTA SimpleIconButton' onactivate='goToStatSiteMatch(&apos;opendota&apos;, true)' onmouseout='UIHideTextTooltip()' onmouseover='UIShowTextTooltip(&apos;Open Match In OpenDota&apos;)'><Label id='SSBIPModLabel' text='OD' /></Button>"
     },
     {
       "if": "enable_panorama_buttons",
       "action": "insert_after",
       "selector": "#MatchID",
-      "xml": "<Button class='SSBIPModButton STRATZ SimpleIconButton' onactivate='goToStatSiteMatchInternal(&apos;stratz&apos;)' onmouseout='UIHideTextTooltip()' onmouseover='UIShowTextTooltip(&apos;Open Match In Stratz&apos;)'><Label id='SSBIPModLabel' text='ST' /></Button>"
+      "xml": "<Button class='SSBIPModButton STRATZ SimpleIconButton' onactivate='goToStatSiteMatch(&apos;stratz&apos;, true)' onmouseout='UIHideTextTooltip()' onmouseover='UIShowTextTooltip(&apos;Open Match In Stratz&apos;)'><Label id='SSBIPModLabel' text='ST' /></Button>"
     },
     {
       "if": "enable_web_buttons",
       "action": "insert_after",
       "selector": "#MatchID",
-      "xml": "<Button class='SSBIPModButton DOTABUFFexternal SimpleIconButton' onactivate='goToStatSiteMatchExternal(&apos;dotabuff&apos;)' onmouseout='UIHideTextTooltip()' onmouseover='UIShowTextTooltip(&apos;Open Match In Dotabuff Externally&apos;)'><Label id='SSBIPModLabel' text='DB' /></Button>"
+      "xml": "<Button class='SSBIPModButton DOTABUFFexternal SimpleIconButton' onactivate='goToStatSiteMatch(&apos;dotabuff&apos;)' onmouseout='UIHideTextTooltip()' onmouseover='UIShowTextTooltip(&apos;Open Match In Dotabuff Externally&apos;)'><Label id='SSBIPModLabel' text='DB' /></Button>"
     },
     {
       "if": "enable_web_buttons",
       "action": "insert_after",
       "selector": "#MatchID",
-      "xml": "<Button class='SSBIPModButton OPENDOTAexternal SimpleIconButton' onactivate='goToStatSiteMatchExternal(&apos;opendota&apos;)' onmouseout='UIHideTextTooltip()' onmouseover='UIShowTextTooltip(&apos;Open Match In OpenDota Externally&apos;)'><Label id='SSBIPModLabel' text='OD' /></Button>"
+      "xml": "<Button class='SSBIPModButton OPENDOTAexternal SimpleIconButton' onactivate='goToStatSiteMatch(&apos;opendota&apos;)' onmouseout='UIHideTextTooltip()' onmouseover='UIShowTextTooltip(&apos;Open Match In OpenDota Externally&apos;)'><Label id='SSBIPModLabel' text='OD' /></Button>"
     },
     {
       "if": "enable_web_buttons",
       "action": "insert_after",
       "selector": "#MatchID",
-      "xml": "<Button class='SSBIPModButton STRATZexternal SimpleIconButton' onactivate='goToStatSiteMatchExternal(&apos;stratz&apos;)' onmouseout='UIHideTextTooltip()' onmouseover='UIShowTextTooltip(&apos;Open Match In Stratz Externally&apos;)'><Label id='SSBIPModLabel' text='ST' /></Button>"
+      "xml": "<Button class='SSBIPModButton STRATZexternal SimpleIconButton' onactivate='goToStatSiteMatch(&apos;stratz&apos;)' onmouseout='UIHideTextTooltip()' onmouseover='UIShowTextTooltip(&apos;Open Match In Stratz Externally&apos;)'><Label id='SSBIPModLabel' text='ST' /></Button>"
     }
   ],
   "panorama/layout/showcase/dashboard_page_showcase.xml": [
@@ -50,37 +50,37 @@
       "if": "enable_panorama_buttons",
       "action": "add_child",
       "selector": "#SteamFriends",
-      "xml": "<Panel id='SSBIPModMinifyDB'><Button class='SSBIPModButton DOTABUFF SimpleIconButton' onactivate='goToStatSiteProfileInternal(&apos;dotabuff&apos;)' onmouseout='UIHideTextTooltip()' onmouseover='UIShowTextTooltip(&apos;Open Dotabuff Profile&apos;)'><Label id='SSBIPModLabel' text='DB' /></Button></Panel>"
+      "xml": "<Panel id='SSBIPModMinifyDB'><Button class='SSBIPModButton DOTABUFF SimpleIconButton' onactivate='goToStatSiteProfile(&apos;dotabuff&apos;, true)' onmouseout='UIHideTextTooltip()' onmouseover='UIShowTextTooltip(&apos;Open Dotabuff Profile&apos;)'><Label id='SSBIPModLabel' text='DB' /></Button></Panel>"
     },
     {
       "if": "enable_panorama_buttons",
       "action": "add_child",
       "selector": "#SteamFriends",
-      "xml": "<Panel id='SSBIPModMinifyOD'><Button class='SSBIPModButton OPENDOTA SimpleIconButton' onactivate='goToStatSiteProfileInternal(&apos;opendota&apos;)' onmouseout='UIHideTextTooltip()' onmouseover='UIShowTextTooltip(&apos;Open OpenDota Profile&apos;)'><Label id='SSBIPModLabel' text='OD' /></Button></Panel>"
+      "xml": "<Panel id='SSBIPModMinifyOD'><Button class='SSBIPModButton OPENDOTA SimpleIconButton' onactivate='goToStatSiteProfile(&apos;opendota&apos;, true)' onmouseout='UIHideTextTooltip()' onmouseover='UIShowTextTooltip(&apos;Open OpenDota Profile&apos;)'><Label id='SSBIPModLabel' text='OD' /></Button></Panel>"
     },
     {
       "if": "enable_panorama_buttons",
       "action": "add_child",
       "selector": "#SteamFriends",
-      "xml": "<Panel id='SSBIPModMinifyST'><Button class='SSBIPModButton STRATZ SimpleIconButton' onactivate='goToStatSiteProfileInternal(&apos;stratz&apos;)' onmouseout='UIHideTextTooltip()' onmouseover='UIShowTextTooltip(&apos;Open Stratz Profile&apos;)'><Label id='SSBIPModLabel' text='ST' /></Button></Panel>"
+      "xml": "<Panel id='SSBIPModMinifyST'><Button class='SSBIPModButton STRATZ SimpleIconButton' onactivate='goToStatSiteProfile(&apos;stratz&apos;, true)' onmouseout='UIHideTextTooltip()' onmouseover='UIShowTextTooltip(&apos;Open Stratz Profile&apos;)'><Label id='SSBIPModLabel' text='ST' /></Button></Panel>"
     },
     {
       "if": "enable_web_buttons",
       "action": "add_child",
       "selector": "#SteamFriends",
-      "xml": "<Panel id='SSBIPModMinifyDBExternal'><Button class='SSBIPModButton DOTABUFFexternal SimpleIconButton' onactivate='goToStatSiteProfileExternal(&apos;dotabuff&apos;)' onmouseout='UIHideTextTooltip()' onmouseover='UIShowTextTooltip(&apos;Open Dotabuff Profile Externally&apos;)'><Label id='SSBIPModLabel' text='DB' /></Button></Panel>"
+      "xml": "<Panel id='SSBIPModMinifyDBExternal'><Button class='SSBIPModButton DOTABUFFexternal SimpleIconButton' onactivate='goToStatSiteProfile(&apos;dotabuff&apos;)' onmouseout='UIHideTextTooltip()' onmouseover='UIShowTextTooltip(&apos;Open Dotabuff Profile Externally&apos;)'><Label id='SSBIPModLabel' text='DB' /></Button></Panel>"
     },
     {
       "if": "enable_web_buttons",
       "action": "add_child",
       "selector": "#SteamFriends",
-      "xml": "<Panel id='SSBIPModMinifyODExternal'><Button class='SSBIPModButton OPENDOTAexternal SimpleIconButton' onactivate='goToStatSiteProfileExternal(&apos;opendota&apos;)' onmouseout='UIHideTextTooltip()' onmouseover='UIShowTextTooltip(&apos;Open OpenDota Profile Externally&apos;)'><Label id='SSBIPModLabel' text='OD' /></Button></Panel>"
+      "xml": "<Panel id='SSBIPModMinifyODExternal'><Button class='SSBIPModButton OPENDOTAexternal SimpleIconButton' onactivate='goToStatSiteProfile(&apos;opendota&apos;)' onmouseout='UIHideTextTooltip()' onmouseover='UIShowTextTooltip(&apos;Open OpenDota Profile Externally&apos;)'><Label id='SSBIPModLabel' text='OD' /></Button></Panel>"
     },
     {
       "if": "enable_web_buttons",
       "action": "add_child",
       "selector": "#SteamFriends",
-      "xml": "<Panel id='SSBIPModMinifySTExternal'><Button class='SSBIPModButton STRATZexternal SimpleIconButton' onactivate='goToStatSiteProfileExternal(&apos;stratz&apos;)' onmouseout='UIHideTextTooltip()' onmouseover='UIShowTextTooltip(&apos;Open Stratz Profile Externally&apos;)'><Label id='SSBIPModLabel' text='ST' /></Button></Panel>"
+      "xml": "<Panel id='SSBIPModMinifySTExternal'><Button class='SSBIPModButton STRATZexternal SimpleIconButton' onactivate='goToStatSiteProfile(&apos;stratz&apos;)' onmouseout='UIHideTextTooltip()' onmouseover='UIShowTextTooltip(&apos;Open Stratz Profile Externally&apos;)'><Label id='SSBIPModLabel' text='ST' /></Button></Panel>"
     }
   ]
 }
