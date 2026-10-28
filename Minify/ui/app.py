@@ -50,6 +50,31 @@ class Api:
     def open_config_directory(self) -> None:
         fs.open_thing(base.config_dir)
 
+    def create_debug_zip(self) -> Dict[str, Any]:
+        from core import log
+
+        try:
+            log.create_debug_zip()
+            return {"success": True}
+        except Exception as e:
+            return {"success": False, "error": str(e)}
+
+    def get_readme_content(self) -> Dict[str, Any]:
+        try:
+            readme_path = os.path.join(base.base_dir, "README.md")
+            license_path = os.path.join(base.base_dir, "LICENSE")
+            readme = ""
+            license_text = ""
+            if os.path.exists(readme_path):
+                with open(readme_path, "r", encoding="utf-8") as f:
+                    readme = f.read()
+            if os.path.exists(license_path):
+                with open(license_path, "r", encoding="utf-8") as f:
+                    license_text = f.read()
+            return {"success": True, "readme": readme, "license": license_text}
+        except Exception as e:
+            return {"success": False, "error": str(e)}
+
     def is_patching(self) -> bool:
         return self.patch_service.is_patching()
 

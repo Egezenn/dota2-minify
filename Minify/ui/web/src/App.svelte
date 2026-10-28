@@ -15,6 +15,7 @@
   import WorkshopToolsDetectedModal from "./lib/components/WorkshopToolsDetectedModal.svelte";
   import WorkshopDownloadModal from "./lib/components/WorkshopDownloadModal.svelte";
   import LegacyModsModal from "./lib/components/LegacyModsModal.svelte";
+  import AboutModal from "./lib/components/AboutModal.svelte";
   import { fetchPendingAnnouncements, markAnnouncementSeen } from "./lib/announcements";
   import { checkForUpdates, ignoreUpdate, getAppVersion } from "./lib/updater";
 
@@ -34,9 +35,13 @@
   let showUpdateModal = false;
   let showWorkshopModal = false;
   let showWorkshopDownloadModal = false;
+  let workshopModalData = null;
   let isWorkshopInstalled: boolean | null = null;
-  let legacyMods: string[] = [];
+  let legacyMods: any[] = [];
   let showLegacyModsModal = false;
+  let showAboutModal = false;
+  let aboutReadme = "";
+  let aboutLicense = "";
 
   let initialized = false;
   let isDebugEnv = false;
@@ -111,6 +116,31 @@
 
   function shutdownHost() {
     window.pywebview?.api?.shutdown_host?.();
+  }
+
+  async function handleCreateDebugZip() {
+    try {
+      if (window.pywebview?.api?.create_debug_zip) {
+        await window.pywebview.api.create_debug_zip();
+      }
+    } catch (e) {
+      // ignore
+    }
+  }
+
+  async function handleOpenAbout() {
+    try {
+      if (window.pywebview?.api?.get_readme_content) {
+        const res = await window.pywebview.api.get_readme_content();
+        if (res && res.success) {
+          aboutReadme = res.readme || "";
+          aboutLicense = res.license || "";
+        }
+      }
+    } catch (e) {
+      // ignore
+    }
+    showAboutModal = true;
   }
 
   async function checkLegacyMods() {
@@ -545,6 +575,8 @@
     onPatch={handlePatch}
     onUninstallClick={() => (showUninstallModal = true)}
     onShutdown={shutdownHost}
+    onCreateDebugZip={handleCreateDebugZip}
+    onOpenAbout={handleOpenAbout}
   />
 
   <UninstallModal
@@ -580,6 +612,12 @@
     entries={legacyMods}
     onImport={() => finishLegacyMods(true)}
     onDiscard={() => finishLegacyMods(false)}
+  />
+  <AboutModal
+    isOpen={showAboutModal}
+    readme={aboutReadme}
+    licenseText={aboutLicense}
+    onClose={() => (showAboutModal = false)}
   />
 
   <WorkshopDownloadModal

@@ -62,6 +62,8 @@ declare global {
         open_url?: (url: string) => Promise<void> | void;
         shutdown_host?: () => Promise<boolean>;
         open_config_directory?: () => Promise<void> | void;
+        create_debug_zip?: () => Promise<{ success: boolean; error?: string }>;
+        get_readme_content?: () => Promise<{ success: boolean; readme?: string; license?: string; error?: string }>;
         clear_logs: () => Promise<boolean>;
         get_steam_accounts: () => Promise<
           Array<{

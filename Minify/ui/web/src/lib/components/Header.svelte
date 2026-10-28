@@ -1,6 +1,6 @@
 <script lang="ts">
   import { t } from "../i18n";
-  import { Folder, Hammer, Power } from "lucide-svelte";
+  import { Bug, Folder, Hammer, HelpCircle, Power } from "lucide-svelte";
   import ghIcon from "../../assets/github.svg";
   import wikiIcon from "../../assets/wiki.ico";
   import discordIcon from "../../assets/discord.svg";
@@ -17,6 +17,8 @@
   export let onUninstallClick: () => void;
   export let onWorkshopToolsClick: () => void;
   export let onShutdown: () => void;
+  export let onCreateDebugZip: () => void;
+  export let onOpenAbout: () => void;
 
   function openExternal(url: string) {
     if (window.pywebview?.api?.open_url) {
@@ -73,6 +75,26 @@
           <Hammer size={14} strokeWidth={2} />
         </button>
       {/if}
+
+      <button
+        type="button"
+        class="header-link-btn"
+        on:click={() => (onCreateDebugZip ? onCreateDebugZip() : window.pywebview?.api?.create_debug_zip?.())}
+        title="Create Debug Zip"
+        aria-label="Create Debug Zip"
+      >
+        <Bug size={14} strokeWidth={2} />
+      </button>
+
+      <button
+        type="button"
+        class="header-link-btn"
+        on:click={() => (onOpenAbout ? onOpenAbout() : null)}
+        title="About"
+        aria-label="About"
+      >
+        <HelpCircle size={14} strokeWidth={2} />
+      </button>
 
       <button
         type="button"

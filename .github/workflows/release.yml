@@ -221,7 +221,7 @@ jobs:
           organization-id: "${{ secrets.SIGNPATH_ORGANIZATION_ID }}"
           project-slug: "dota2-minify"
           signing-policy-slug: "${{ github.event.inputs.signing_policy }}"
-          artifact-configuration-slug: "dota2-minify-installer"
+          artifact-configuration-slug: "dota2-minify-portable"
           github-artifact-id: "${{ steps.upload-unsigned-portable.outputs.artifact-id }}"
           wait-for-completion: true
           output-artifact-directory: "signed-portable"
