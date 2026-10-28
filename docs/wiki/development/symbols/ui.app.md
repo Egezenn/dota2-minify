@@ -9,6 +9,7 @@
 ```python
 class Api:
     def __init__(self) -> None:
+        self._host_shutdown: Any = None
         self.patch_service = PatchService()
         self.mod_service = ModService()
         self.config_service = ConfigService()
@@ -17,6 +18,14 @@ class Api:
 
     def set_window(self, window: Any) -> None:
         self.patch_service.set_window(window)
+
+    def set_host_shutdown(self, callback: Any) -> None:
+        self._host_shutdown = callback
+
+    def shutdown_host(self) -> bool:
+        if self._host_shutdown:
+            self._host_shutdown()
+        return True
 
     def start_patch(self) -> Dict[str, Any]:
         return self.patch_service.start_patch()
@@ -37,6 +46,9 @@ class Api:
 
     def get_logs(self) -> List[Dict[str, Any]]:
         return self.patch_service.get_logs()
+
+    def get_downloads(self) -> List[Dict[str, Any]]:
+        return self.patch_service.get_downloads()
 
     def clear_logs(self) -> bool:
         return self.patch_service.clear_logs()
@@ -147,9 +159,6 @@ class Api:
     def get_available_themes(self) -> List[Dict[str, str]]:
         return self.config_service.get_available_themes()
 
-    def get_theme_url(self, theme_name: str | None = None) -> str:
-        return self.config_service.get_theme_url(theme_name)
-
     def get_theme_css(self, theme_name: str | None = None) -> str:
         return self.config_service.get_theme_css(theme_name)
 
@@ -176,7 +185,12 @@ class Api:
         entries = []
         if backup_dirs:
             backup_dir = backup_dirs[-1]
-            entries.extend(f"{backup_dir.name}/{entry.name}" for entry in sorted(backup_dir.iterdir()))
+            mods_dir = Path(base.mods_dir)
+            entries.extend(
+                f"{backup_dir.name}/{entry.name}"
+                for entry in sorted(backup_dir.iterdir())
+                if not (mods_dir / entry.name).exists()
+            )
         return entries
 
     def import_legacy_mods(self, import_mods: bool = True) -> Dict[str, Any]:
@@ -311,19 +325,23 @@ class Api:
 
 </details>
 
-## `launch()`
+## `launch(host)`
 
 *No documentation available.*
 
 <details open><summary>Source</summary>
 
 ```python
-def launch() -> None:
+def launch(host: bool = False) -> None:
     if not os.path.isfile(base.dist_index):
         output.add_text(
             f"Error: Web UI build file not found at '{base.dist_index}'. Please run 'npm run build' inside Minify/ui/web.",
             msg_type="error",
         )
+
+    if host:
+        _open_in_browser()
+        return
 
     if base.is_win:
         os.environ.setdefault("WEBVIEW2_ADDITIONAL_BROWSER_ARGUMENTS", "--disable-gpu")  # #186
@@ -371,36 +389,48 @@ def launch() -> None:
     window.events.resized += _save_window_size
 
     # to prevent MSHTML
-    if not is_webview_available():
-        _show_missing_dialog()
+    if base.is_win and not is_webview2_installed():
+        output.add_text("WebView2 not installed, opening in browser...", msg_type="warning")
+        _open_in_browser()
         return
+
+    webview_failed = False
+
+    if base.is_win:
+        try:
+            from webview.platforms.edgechromium import EdgeChrome
+
+            orig_on_ready = EdgeChrome.on_webview_ready
+
+            def _patched_on_ready(self_ec: Any, sender: Any, args: Any) -> Any:
+                nonlocal webview_failed
+                if not getattr(args, "IsSuccess", True):
+                    output.add_text(
+                        f"WebView2 initialization failed ({getattr(args, 'InitializationException', 'unknown error')}), opening in browser...",
+                        msg_type="warning",
+                    )
+                    webview_failed = True
+                    try:
+                        self_ec.form.Close()
+                    except Exception:
+                        pass
+                    return
+                return orig_on_ready(self_ec, sender, args)
+
+            EdgeChrome.on_webview_ready = _patched_on_ready
+        except Exception:
+            pass
 
     api.set_window(window)
     try:
         webview.start(debug=debug_mode, icon=base.favicon_file)
-    except Exception:
-        if not is_webview_available():
-            _show_missing_dialog()
-            return
-        raise
-```
+    except Exception as e:
+        output.add_text(f"WebView initialization failed, opening in browser: {e}", msg_type="warning")
+        _open_in_browser()
+        return
 
-</details>
-
-## `is_webview_available()`
-
-*No documentation available.*
-
-<details open><summary>Source</summary>
-
-```python
-def is_webview_available() -> bool:
-    if base.is_win:
-        return is_webview2_installed()
-    try:
-        return bool(webview.initialize())
-    except Exception:
-        return False
+    if webview_failed:
+        _open_in_browser()
 ```
 
 </details>

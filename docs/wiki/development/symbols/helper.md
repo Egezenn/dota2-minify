@@ -241,7 +241,7 @@ def exec_script(script_path, mod_name, order_name, _terminal_output=True):
 
 </details>
 
-## `bulk_exec_script(order_name, terminal_output)`
+## `bulk_exec_script(order_name, terminal_output, mods)`
 
 Injects required mod instructions in bulk
 
@@ -252,10 +252,12 @@ Injects required mod instructions in bulk
 `script_prelaunch.py`
 `script_uninstall.py`
 
+When `mods` is provided, only scripts for those mods are executed.
+
 <details open><summary>Source</summary>
 
 ```python
-def bulk_exec_script(order_name, terminal_output=True):
+def bulk_exec_script(order_name, terminal_output=True, mods=None):
     """
     Injects required mod instructions in bulk
 
@@ -265,26 +267,37 @@ def bulk_exec_script(order_name, terminal_output=True):
     `script_after_patch.py`
     `script_prelaunch.py`
     `script_uninstall.py`
+
+    When `mods` is provided, only scripts for those mods are executed.
     """
     bulk_name = f"script_{order_name}.py"
     any_ran = False
-    for root, _, files in os.walk(base.mods_dir):
-        if bulk_name in files and not mods_shared.is_ignored_folder(os.path.basename(root)):
-            cfg = manifest_utils.get_mod(root)
 
-            if "browser" in cfg:
-                continue
+    mod_names = constants.mods_with_order
+    if mods is not None:
+        mod_names = [mod for mod in mod_names if mod in mods]
 
-            always = cfg.get("always", False)
+    for mod_name in mod_names:
+        root = os.path.join(base.mods_dir, mod_name)
+        script_path = os.path.join(root, bulk_name)
+        if not os.path.isfile(script_path) or mods_shared.is_ignored_folder(mod_name):
+            continue
 
-            # Uninstaller scripts should determine whether or not the mod is installed and safely quit
-            # if not installed. Determining whether or not a mod is installed is mostly undeterministic
-            if always or order_name in ["initial", "uninstall"] or mods_shared.get_state(os.path.basename(root)):
-                result = exec_script(
-                    os.path.join(root, bulk_name), os.path.basename(root), order_name, _terminal_output=terminal_output
-                )
-                if result:
-                    any_ran = True
+        cfg = manifest_utils.get_mod(root)
+
+        if "browser" in cfg:
+            continue
+
+        always = cfg.get("always", False)
+
+        # Uninstaller scripts should determine whether or not the mod is installed and safely quit
+        # if not installed. Determining whether or not a mod is installed is mostly undeterministic
+        if mods is None and not (always or order_name in ["initial", "uninstall"] or mods_shared.get_state(mod_name)):
+            continue
+
+        result = exec_script(script_path, mod_name, order_name, _terminal_output=terminal_output)
+        if result:
+            any_ran = True
 
     return any_ran
 ```

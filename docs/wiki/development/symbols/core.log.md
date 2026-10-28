@@ -112,7 +112,7 @@ def create_debug_zip():
                     zipf.write(file_path)
 
         if not base.HEADLESS:
-            ui.alert("&heeeeeeeeeeeeeelp")
+            ui.alert("&heeeeeeeeeeeeeelp", zip_filename)
         else:
             output.add_text("&heeeeeeeeeeeeeelp", zip_filename)
 
