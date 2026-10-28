@@ -14,7 +14,7 @@
     },
     {
       "key": "enable_guide_buttons",
-      "text": "Enable web buttons",
+      "text": "Enable guide buttons",
       "type": "checkbox",
       "default": true
     }

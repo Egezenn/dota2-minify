@@ -35,7 +35,6 @@ BLACKLIST = [
     "packs",
     "fonts",
     "huds",  # Contains direct panorama overrides
-    "parts",  # ^
 ]
 
 
@@ -153,7 +152,7 @@ class DataManager:
         if not config.get("d2pfx_auto_refresh_catalogue", True):
             return False
         last_refresh = utils.get_state("d2pfx", "last_refresh", 0)
-        return (time.time() - last_refresh) > 86400
+        return (time.time() - last_refresh) > 21600
 
     def load(self):
         if self._needs_refresh():

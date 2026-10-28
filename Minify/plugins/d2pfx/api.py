@@ -132,6 +132,14 @@ def get_mods(params: Dict[str, Any] = None) -> List[Dict[str, Any]]:
             if is_anime:
                 continue
 
+        is_css = False
+        if isinstance(tags, dict):
+            is_css = any(k.lower() == "css" and v for k, v in tags.items())
+        elif isinstance(tags, list):
+            is_css = any(str(t).lower() == "css" for t in tags)
+        if is_css:
+            continue
+
         filtered.append(m)
 
     if search:
