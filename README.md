@@ -2,7 +2,7 @@
 
 # [Dota2 Minify](https://egezenn.github.io/dota2-minify)
 
-[![logo](Minify/bin/images/logo.png)](https://egezenn.github.io/dota2-minify)
+[![logo](https://github.com/Egezenn/dota2-minify/raw/main/Minify/bin/images/logo.png)](https://egezenn.github.io/dota2-minify)
 
 [![discord](https://img.shields.io/badge/Discord-7289DA?style=for-the-badge&logo=discord&logoColor=white)](https://discord.com/invite/9867CPv7cy)
 [![telegram](https://img.shields.io/badge/Telegram-2CA5E0?style=for-the-badge&logo=telegram&logoColor=white)](https://t.me/dota2minify)
@@ -28,8 +28,8 @@
 
 [![Translation status](https://hosted.weblate.org/widget/dota2-minify/multi-auto.svg)](https://hosted.weblate.org/engage/dota2-minify/)
 
-![ss1](docs/assets/screenshot-1.jpg)
-![ss2](docs/assets/screenshot-2.jpg)
+![ss1](https://github.com/Egezenn/dota2-minify/raw/main/docs/assets/screenshot-1.jpg)
+![ss2](https://github.com/Egezenn/dota2-minify/raw/main/docs/assets/screenshot-2.jpg)
 
 </div>
 

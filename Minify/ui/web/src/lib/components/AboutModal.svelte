@@ -1,5 +1,7 @@
 <script lang="ts">
   import { onDestroy, onMount } from "svelte";
+  import { marked } from "marked";
+  import markedAlert from "marked-alert";
   import { t } from "../i18n";
 
   export let isOpen: boolean = false;
@@ -8,6 +10,18 @@
   export let onClose: () => void;
 
   let activeTab: "readme" | "license" = "readme";
+
+  marked.setOptions({
+    gfm: true,
+    breaks: true,
+  });
+
+  marked.use(markedAlert());
+
+  function formatMarkdown(markdown: string): string {
+    if (!markdown) return "";
+    return marked.parse(markdown) as string;
+  }
 
   function handleKeydown(e: KeyboardEvent) {
     if (!isOpen) return;
@@ -50,7 +64,11 @@
 
       <div class="modal-body">
         {#if activeTab === "readme"}
-          <pre class="content">{readme || "No README found."}</pre>
+          {#if readme}
+            <div class="markdown-content">{@html formatMarkdown(readme)}</div>
+          {:else}
+            <pre class="content">No README found.</pre>
+          {/if}
         {:else}
           <pre class="content">{licenseText || "No LICENSE found."}</pre>
         {/if}
@@ -153,6 +171,130 @@
     margin: 0;
     color: var(--text-primary, #000);
     line-height: 1.4;
+  }
+
+  .markdown-content {
+    font-size: 12px;
+    line-height: 1.5;
+    overflow-wrap: break-word;
+    color: var(--text-primary, #000);
+  }
+
+  .markdown-content :global(h1),
+  .markdown-content :global(h2),
+  .markdown-content :global(h3),
+  .markdown-content :global(h4),
+  .markdown-content :global(h5),
+  .markdown-content :global(h6) {
+    font-weight: bold;
+    margin: 12px 0 6px;
+    line-height: 1.3;
+  }
+
+  .markdown-content :global(h1) {
+    font-size: 18px;
+  }
+
+  .markdown-content :global(h2) {
+    font-size: 16px;
+  }
+
+  .markdown-content :global(h3) {
+    font-size: 14px;
+  }
+
+  .markdown-content :global(h4),
+  .markdown-content :global(h5),
+  .markdown-content :global(h6) {
+    font-size: 12px;
+  }
+
+  .markdown-content :global(p) {
+    margin: 0 0 8px;
+  }
+
+  .markdown-content :global(p:last-child) {
+    margin-bottom: 0;
+  }
+
+  .markdown-content :global(ul),
+  .markdown-content :global(ol) {
+    margin: 4px 0 8px;
+    padding-left: 20px;
+  }
+
+  .markdown-content :global(a) {
+    color: var(--accent, #17bebe);
+    text-decoration: underline;
+  }
+
+  .markdown-content :global(img) {
+    max-width: 100%;
+    height: auto;
+  }
+
+  .markdown-content :global(hr) {
+    border: none;
+    border-top: 1px solid var(--border-color, #000);
+    margin: 12px 0;
+  }
+
+  .markdown-content :global(blockquote) {
+    margin: 8px 0;
+    padding: 4px 12px;
+    border-left: 4px solid var(--border-color, #000);
+    background: var(--bg-secondary, #f8f9fa);
+  }
+
+  .markdown-content :global(code) {
+    font-family: "Consolas", "Courier New", monospace;
+    font-size: 11px;
+    padding: 1px 4px;
+    border: 1px solid var(--border-color, #000);
+    background: var(--bg-secondary, #f8f9fa);
+  }
+
+  .markdown-content :global(pre) {
+    margin: 8px 0;
+    padding: 8px 12px;
+    overflow-x: auto;
+    border: 1px solid var(--border-color, #000);
+    background: var(--bg-secondary, #f8f9fa);
+  }
+
+  .markdown-content :global(pre code) {
+    padding: 0;
+    border: none;
+    background: transparent;
+    white-space: pre;
+  }
+
+  .markdown-content :global(table) {
+    border-collapse: collapse;
+    margin: 8px 0;
+  }
+
+  .markdown-content :global(th),
+  .markdown-content :global(td) {
+    border: 1px solid var(--border-color, #000);
+    padding: 4px 8px;
+  }
+
+  .markdown-content :global(.markdown-alert) {
+    margin: 8px 0;
+    padding: 6px 10px;
+    border: 1px solid var(--border-color, #000);
+    border-left: 4px solid var(--border-color, #000);
+    background: var(--bg-secondary, #f8f9fa);
+  }
+
+  .markdown-content :global(.markdown-alert-title) {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    margin-bottom: 4px;
+    font-weight: bold;
+    font-size: 12px;
   }
 
   .modal-footer {
