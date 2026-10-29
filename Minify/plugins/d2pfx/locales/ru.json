@@ -5,6 +5,8 @@
   "button_refresh_data": "Обновить данные",
   "button_remove": "УДАЛИТЬ",
   "button_removing": "УДАЛЕНИЕ...",
+  "button_update": "",
+  "button_updating": "",
   "label_disable_mod": "Отключить мод",
   "label_enable_mod": "Включить мод",
   "label_loading_categories": "Загрузка категорий...",
