@@ -29,7 +29,7 @@ class Migrations:
     def _migrate_locale_config(self):
         locale = config.get("output_locale")
         path = config.get("output_path")
-        ui_locale = config.get("locale")
+        ui_locale = config.get("locale", "en")
 
         if isinstance(ui_locale, str) and any(c.isupper() for c in ui_locale):
             config.set("locale", "en")
