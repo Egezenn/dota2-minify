@@ -12,9 +12,10 @@ minify_dota_compile_input_path = os.path.join(
 minify_dota_compile_output_path = os.path.join(
     steam.LIBRARY, "steamapps", "common", "dota 2 beta", "game", "dota_addons", "minify"
 )
-dota_resource_compiler_path = os.path.join(
+game_resource_compiler_path = os.path.join(
     steam.LIBRARY, "steamapps", "common", "dota 2 beta", "game", "bin", "win64", "resourcecompiler.exe"
 )
+dota_resource_compiler_path = game_resource_compiler_path
 
 
 def recalc_rescomp_dirs():
@@ -25,12 +26,20 @@ def recalc_rescomp_dirs():
         dota_resource_compiler_path, \
         rescomp_override
     rescomp_override = os.path.exists(base.rescomp_override_dir)
-    if rescomp_override:
+    if rescomp_override and not os.path.exists(game_resource_compiler_path):
         minify_dota_compile_input_path = os.path.join(base.rescomp_override_dir, "content", "dota_addons", "minify")
         minify_dota_compile_output_path = os.path.join(base.rescomp_override_dir, "game", "dota_addons", "minify")
         dota_resource_compiler_path = os.path.join(
             base.rescomp_override_dir, "game", "bin", "win64", "resourcecompiler.exe"
         )
+    else:
+        minify_dota_compile_input_path = os.path.join(
+            steam.LIBRARY, "steamapps", "common", "dota 2 beta", "content", "dota_addons", "minify"
+        )
+        minify_dota_compile_output_path = os.path.join(
+            steam.LIBRARY, "steamapps", "common", "dota 2 beta", "game", "dota_addons", "minify"
+        )
+        dota_resource_compiler_path = game_resource_compiler_path
 
 
 recalc_rescomp_dirs()

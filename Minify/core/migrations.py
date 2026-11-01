@@ -10,6 +10,7 @@ class Migrations:
         self._rename_file_in_mods("modcfg.json", "manifest.json")
         self._rename_file_in_mods("xml_mod.json", "xml.json")
         self._migrate_rescomproot_and_bin()
+        self._migrate_stale_rescomproot()
         self._migrate_legacy_paks()
         self._migrate_flatten_d2pfx_manifests()
 
@@ -109,6 +110,32 @@ class Migrations:
                     output.add_text(f"Removed legacy {legacy_bin} folder")
                 except Exception as e:
                     log.write_warning(f"Failed to remove legacy {legacy_bin} folder: {e}")
+
+    def _migrate_stale_rescomproot(self):
+        smartprops_path = os.path.join(base.rescomp_override_dir, "game", "bin", "win64", "smartprops.dll")
+        if not os.path.exists(base.rescomp_override_dir) or os.path.exists(smartprops_path):
+            return
+
+        from core import constants, utils
+
+        states = utils.read_states()
+        if states.get("stale_rescomproot_migrated"):
+            return
+
+        try:
+            fs.remove_path(base.rescomp_override_dir)
+            output.add_text("Removed outdated Workshop Tools installation (missing smartprops.dll)")
+        except Exception as e:
+            log.write_warning(f"Failed to remove outdated Workshop Tools installation: {e}")
+            return
+
+        if all(os.path.exists(path) for path in constants.dota_tools_paths):
+            import helper
+
+            helper.extract_workshop_tools()
+
+        constants.recalc_rescomp_dirs()
+        utils.write_states("stale_rescomproot_migrated", True)
 
     def _migrate_legacy_paks(self):
         from patch import vpk_utils
