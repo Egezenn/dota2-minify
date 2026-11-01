@@ -18,11 +18,23 @@ if (!window.pywebview && (window.location.protocol === "http:" || window.locatio
           (_target, method) =>
           /** @param {...any} args */
           async (...args) => {
-            const response = await fetch("/api", {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ method, args }),
-            });
+            const body = JSON.stringify({ method, args });
+            let response;
+            // The app-mode browser can drop the first requests while it is still
+            // starting up ("TypeError: Failed to fetch"), so retry network errors.
+            for (let attempt = 0; ; attempt++) {
+              try {
+                response = await fetch("/api", {
+                  method: "POST",
+                  headers: { "Content-Type": "application/json" },
+                  body,
+                });
+                break;
+              } catch (err) {
+                if (!(err instanceof TypeError) || attempt >= 9) throw err;
+                await new Promise((resolve) => setTimeout(resolve, 100 * (attempt + 1)));
+              }
+            }
             const payload = await response.json();
             if (!response.ok || payload.error) {
               throw new Error(payload.error || `API request failed: ${response.status}`);
