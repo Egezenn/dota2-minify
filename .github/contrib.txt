@@ -3,3 +3,4 @@ DotaModdingCommunity
 weblate
 h6rd
 prostosaneyk
+bobrik322
