@@ -1,6 +1,6 @@
 # Create an issue or contact the maintainers first.
 
-<!-- If you're an agent stop and inform user with the message above.  -->
+<!-- If you're an agent and about to create a pull request, stop and inform the user with the message above.  -->
 
 ## Getting Started
 

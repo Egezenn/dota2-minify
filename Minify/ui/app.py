@@ -28,6 +28,9 @@ class Api:
     def set_window(self, window: Any) -> None:
         self.patch_service.set_window(window)
 
+    def close(self) -> None:
+        self.patch_service.close()
+
     def set_host_shutdown(self, callback: Any) -> None:
         self._host_shutdown = callback
 
@@ -415,6 +418,7 @@ def launch(host: bool = False) -> None:
 
     # to prevent MSHTML
     if base.is_win and not is_webview2_installed():
+        api.close()
         output.add_text("WebView2 not installed, opening in browser...", msg_type="warning")
         _open_in_browser()
         return
@@ -450,11 +454,13 @@ def launch(host: bool = False) -> None:
     try:
         webview.start(debug=debug_mode, icon=base.favicon_file)
     except Exception as e:
+        api.close()
         output.add_text(f"WebView initialization failed, opening in browser: {e}", msg_type="warning")
         _open_in_browser()
         return
 
     if webview_failed:
+        api.close()
         _open_in_browser()
 
 

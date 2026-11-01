@@ -18,6 +18,11 @@ class PatchService:
         output.register_listener(self._on_output_log)
         output.register_download_listener(self._on_download_progress)
 
+    def close(self) -> None:
+        output.unregister_listener(self._on_output_log)
+        output.unregister_download_listener(self._on_download_progress)
+        self._window = None
+
     def set_window(self, window: Any) -> None:
         self._window = window
 
