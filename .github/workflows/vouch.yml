@@ -1,0 +1,104 @@
+name: Vouch contributor
+
+on:
+  issue_comment:
+    types: [created]
+
+permissions:
+  contents: write
+  issues: write
+
+concurrency:
+  group: vouch-contrib
+  cancel-in-progress: false
+
+jobs:
+  vouch:
+    if: github.event.issue.pull_request && github.event.comment.author_association != 'BOT'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Add contributor to allowlist
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const commentBody = context.payload.comment.body.trim();
+
+            // Match "!vouch <github-id>" or "!vouch @<github-id>"
+            const match = commentBody.match(/^!vouch\s+@?([a-zA-Z0-9-]+)$/i);
+            if (!match) {
+              return; // Ignore comments that don't match the command format
+            }
+
+            const targetUser = match[1]; // Extracted GitHub ID
+            const commenter = context.payload.comment.user.login;
+            const owner = context.repo.owner;
+            const repo = context.repo.repo;
+            const branch = "main";
+            const path = ".github/contrib.txt";
+
+            let fileSha = null;
+            let content = "";
+
+            try {
+              const { data } = await github.rest.repos.getContent({ owner, repo, path, ref: branch });
+              content = Buffer.from(data.content, "base64").toString("utf8");
+              fileSha = data.sha;
+            } catch (error) {
+              if (error.status === 404) {
+                core.info(`${path} not found. Creating new file.`);
+              } else {
+                core.setFailed(`Unable to read ${path}: ${error.message}`);
+                return;
+              }
+            }
+
+            const allowed = content
+              .split(/\r?\n/)
+              .map((name) => name.trim().toLowerCase())
+              .filter(Boolean);
+
+            // Check if commenter is authorized to vouch
+            if (!allowed.includes(commenter.toLowerCase())) {
+              core.info(`@${commenter} is not an approved contributor; ignoring vouch.`);
+              return;
+            }
+
+            // Check if target is already vouched
+            if (allowed.includes(targetUser.toLowerCase())) {
+              await github.rest.issues.createComment({
+                owner,
+                repo,
+                issue_number: context.payload.issue.number,
+                body: `@${targetUser} is already an approved contributor.`,
+              });
+              return;
+            }
+
+            // Append target user to the list
+            const updated = content 
+              ? (content.endsWith("\n") ? `${content}${targetUser}\n` : `${content}\n${targetUser}\n`) 
+              : `${targetUser}\n`;
+
+            const updateParams = {
+              owner,
+              repo,
+              path,
+              branch,
+              message: `Vouch @${targetUser} as a contributor`,
+              content: Buffer.from(updated, "utf8").toString("base64"),
+            };
+
+            if (fileSha) {
+              updateParams.sha = fileSha;
+            }
+
+            await github.rest.repos.createOrUpdateFileContents(updateParams);
+
+            await github.rest.issues.createComment({
+              owner,
+              repo,
+              issue_number: context.payload.issue.number,
+              body: `@${targetUser} has been vouched by @${commenter} and added to the contributor allowlist.`,
+            });
+
+            core.info(`@${commenter} vouched for @${targetUser}.`);
