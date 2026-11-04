@@ -158,60 +158,80 @@ def download_file(
     name: Optional[str] = None,
     emit_progress: bool = True,
     task_id: Optional[str] = None,
+    timeout: float = 30.0,
+    retries: int = 1,
 ) -> bool:
     """
     Downloads a file from url to target_path using requests.
+    The file is saved as target_path + ".part" initially, and renamed to target_path on success.
+    Retries up to `retries` times on failure.
     Updates the UI progress_tag and emits download progress events if emit_progress is True.
     """
     file_name = name or os.path.basename(target_path)
     task_id = task_id or target_path
 
-    try:
-        response = requests.get(url, stream=True)
-        response.raise_for_status()
-        total_size = int(response.headers.get("content-length", 0))
-        block_size = 8192
-        downloaded = 0
-        last_report_time = 0
+    for attempt in range(1, retries + 1):
+        try:
+            response = requests.get(url, stream=True, timeout=timeout)
+            response.raise_for_status()
+            total_size = int(response.headers.get("content-length", 0))
+            block_size = 8192
+            downloaded = 0
+            last_report_time = 0
 
-        if emit_progress:
-            output.emit_download_progress(task_id, file_name, 0, total_size, "downloading")
+            part_path = target_path + ".part"
+            remove_path(part_path)
 
-        with open(target_path, "wb") as f:
-            for chunk in response.iter_content(chunk_size=block_size):
-                if chunk:
-                    f.write(chunk)
-                    downloaded += len(chunk)
-                    current_time = time.time()
-                    if current_time - last_report_time >= 0.1:
-                        if emit_progress:
-                            output.emit_download_progress(task_id, file_name, downloaded, total_size, "downloading")
-                        if progress_tag:
-                            downloaded_mb = downloaded / (1024 * 1024)
-                            total_size_mb = total_size / (1024 * 1024)
-                            if total_size > 0:
-                                output.add_text(f"Downloading: {downloaded_mb:.2f}/{total_size_mb:.2f} MB")
-                            else:
-                                output.add_text(f"Downloading: {downloaded_mb:.2f} MB")
-                        last_report_time = current_time
+            if emit_progress:
+                output.emit_download_progress(task_id, file_name, 0, total_size, "downloading")
 
-        if emit_progress:
-            output.emit_download_progress(task_id, file_name, downloaded, total_size, "finished")
-        if progress_tag:
-            downloaded_mb = downloaded / (1024 * 1024)
-            total_size_mb = total_size / (1024 * 1024)
-            if total_size > 0:
-                output.add_text(f"Downloading: {downloaded_mb:.2f}/{total_size_mb:.2f} MB")
+            with open(part_path, "wb") as f:
+                for chunk in response.iter_content(chunk_size=block_size):
+                    if chunk:
+                        f.write(chunk)
+                        downloaded += len(chunk)
+                        current_time = time.time()
+                        if current_time - last_report_time >= 0.1:
+                            if emit_progress:
+                                output.emit_download_progress(task_id, file_name, downloaded, total_size, "downloading")
+                            if progress_tag:
+                                downloaded_mb = downloaded / (1024 * 1024)
+                                total_size_mb = total_size / (1024 * 1024)
+                                if total_size > 0:
+                                    output.add_text(f"Downloading: {downloaded_mb:.2f}/{total_size_mb:.2f} MB")
+                                else:
+                                    output.add_text(f"Downloading: {downloaded_mb:.2f} MB")
+                            last_report_time = current_time
+
+            if emit_progress:
+                output.emit_download_progress(task_id, file_name, downloaded, total_size, "finished")
+            if progress_tag:
+                downloaded_mb = downloaded / (1024 * 1024)
+                total_size_mb = total_size / (1024 * 1024)
+                if total_size > 0:
+                    output.add_text(f"Downloading: {downloaded_mb:.2f}/{total_size_mb:.2f} MB")
+                else:
+                    output.add_text(f"Downloading: {downloaded_mb:.2f} MB")
+
+            remove_path(target_path)
+            move_path(part_path, target_path)
+            return os.path.exists(target_path)
+        except Exception as e:
+            err_msg = str(e)
+            part_path = target_path + ".part"
+            remove_path(part_path)
+            if emit_progress:
+                output.emit_download_progress(task_id, file_name, 0, 0, "error", error=err_msg)
+            if attempt < retries:
+                output.add_text(f"Download attempt {attempt}/{retries} failed for {target_path}: {e}", msg_type="error")
+                time.sleep(1.0)
             else:
-                output.add_text(f"Downloading: {downloaded_mb:.2f} MB")
+                output.add_text(
+                    f"Failed to download {target_path} after {retries} attempts: {err_msg}", msg_type="error"
+                )
+                return False
 
-        return True
-    except Exception as e:
-        err_msg = str(e)
-        if emit_progress:
-            output.emit_download_progress(task_id, file_name, 0, 0, "error", error=err_msg)
-        output.add_text(f"Failed to open {target_path}: {e}", msg_type="error")
-        return False
+    return False
 
 
 def extract_archive(archive_path: str, extract_dir: str = ".", target_file: Optional[str] = None) -> bool:
