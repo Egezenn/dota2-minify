@@ -5,7 +5,7 @@ import os
 import platform
 import sys
 
-VERSION = "2rc9"
+VERSION = "2"
 TITLE = f"Minify {VERSION}"
 
 OS = platform.system()

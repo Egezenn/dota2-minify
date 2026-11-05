@@ -29,7 +29,28 @@
 [![Translation status](https://hosted.weblate.org/widget/dota2-minify/multi-auto.svg)](https://hosted.weblate.org/engage/dota2-minify/)
 
 ![ss1](https://github.com/Egezenn/dota2-minify/raw/main/docs/assets/screenshot-1.jpg)
-![ss2](https://github.com/Egezenn/dota2-minify/raw/main/docs/assets/screenshot-2.jpg)
+
+<table>
+  <tbody>
+    <tr>
+      <td>
+        <img src="https://github.com/Egezenn/dota2-minify/raw/main/docs/assets/screenshot-2.png">
+      </td>
+      <td>
+        <img src="https://github.com/Egezenn/dota2-minify/raw/main/docs/assets/screenshot-3.png">
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <img src="https://github.com/Egezenn/dota2-minify/raw/main/docs/assets/screenshot-4.png">
+      </td>
+      <td>
+        <img src="https://github.com/Egezenn/dota2-minify/raw/main/docs/assets/screenshot-5.png">
+      </td>
+    </tr>
+  </tbody>
+</table>
+</div>
 
 </div>
 
@@ -87,10 +108,10 @@ This project wouldn't be available without the work of the community. Thanks to 
 | [`Tree Mod`](./Minify/mods/Tree%20Mod)                                                    | [robbyz512](https://github.com/robbyz512)          |                                                                                                              |
 | [`User Styles`](./Minify/mods/User%20Styles)                                              | [Egezenn](https://github.com/Egezenn)              |                                                                                                              |
 
-| Mod Depots                                                          | Author                                | Other                                                                                                                                                                                                                                  |
-| ------------------------------------------------------------------- | ------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [Community Mods](https://github.com/Egezenn/dota2-minify-community) | [Egezenn](https://github.com/Egezenn) | Available thanks to mod authors and maintainers                                                                                                                                                                                        |
-| [D2PFX](https://github.com/h6rd/Dota2PornFxWeb)                     | [rotten](https://github.com/h6rd)     | Thanks to [rotten](https://github.com/h6rd) for unifying/maintaining/creating a large collection of VPK mods and [mod authors](https://github.com/h6rd/Dota2PornFxWeb#credits), integrated in by [Egezenn](https://github.com/Egezenn) |
+| Mod Depots                                                            | Author                                | Other                                                                                                                                                                                                                                  |
+| --------------------------------------------------------------------- | ------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [Community Mods](https://github.com/Dota-Modding-Community/community) | [Egezenn](https://github.com/Egezenn) | Available thanks to mod authors and maintainers                                                                                                                                                                                        |
+| [D2PFX](https://github.com/h6rd/Dota2PornFxWeb)                       | [rotten](https://github.com/h6rd)     | Thanks to [rotten](https://github.com/h6rd) for unifying/maintaining/creating a large collection of VPK mods and [mod authors](https://github.com/h6rd/Dota2PornFxWeb#credits), integrated in by [Egezenn](https://github.com/Egezenn) |
 
 ## Dependencies
 

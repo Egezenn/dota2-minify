@@ -1,13 +1,26 @@
 [
   {
-    "time": "1788652800-",
-    "text": "Use the newer RCs for fixes and better experience!",
+    "time": "1796083200-",
+    "text": "Minify v2 is available!",
     "urls": ["https://egezenn.github.io/dota2-minify/"],
-    "versions": ["1.13.1", "1.13"]
-  },
-  {
-    "time": "1790726400-",
-    "text": "A tutorial is now available!",
-    "urls": ["https://www.youtube.com/watch?v=euZLNhDBvGA"]
+    "versions": [
+      "2rc9",
+      "2rc8",
+      "2rc7",
+      "2rc6",
+      "2rc5",
+      "2rc4",
+      "2rc3",
+      "2rc2",
+      "2rc1",
+      "1.14rc7",
+      "1.14rc6",
+      "1.14rc5",
+      "1.14rc4",
+      "1.14rc3",
+      "1.14rc2",
+      "1.14rc1",
+      "1.13.1"
+    ]
   }
 ]
