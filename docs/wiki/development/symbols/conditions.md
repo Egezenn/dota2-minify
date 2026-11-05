@@ -42,20 +42,18 @@ def is_compiler_found():
 
 </details>
 
-## `resolve_dependencies(retries)`
+## `resolve_dependencies()`
 
-Attempts to download dependencies ripgrep and Source2Viewer-CLI(if workshop tools are available)
-for 3 times and opens up their download URLs if they don't exist.
+Attempts to download dependencies ripgrep and Source2Viewer-CLI(if workshop tools are available).
 
 Checks for existence on `PATH` first then checks existence on root.
 
 <details open><summary>Source</summary>
 
 ```python
-def resolve_dependencies(retries=0):
+def resolve_dependencies():
     """
-    Attempts to download dependencies ripgrep and Source2Viewer-CLI(if workshop tools are available)
-    for 3 times and opens up their download URLs if they don't exist.
+    Attempts to download dependencies ripgrep and Source2Viewer-CLI(if workshop tools are available).
 
     Checks for existence on `PATH` first then checks existence on root.
     """
@@ -74,7 +72,7 @@ def resolve_dependencies(retries=0):
             if not os.path.exists(constants.s2v_executable):
                 tag = output.add_text("&downloading_cli_terminal")
                 zip_path = constants.s2v_latest.split("/")[-1]
-                if fs.download_file(constants.s2v_latest, zip_path, tag):
+                if fs.download_file(constants.s2v_latest, zip_path, tag, retries=3):
                     output.add_text("&downloaded_cli_terminal", zip_path)
                     if fs.extract_archive(zip_path, "."):
                         fs.remove_path(zip_path)
@@ -87,6 +85,8 @@ def resolve_dependencies(retries=0):
                                 constants.s2v_executable,
                                 current_permissions | stat.S_IXUSR | stat.S_IXGRP | stat.S_IXOTH,
                             )
+                else:
+                    raise RuntimeError(f"Failed to download {constants.s2v_latest}")
         elif os.path.exists(constants.s2v_executable):
             fs.remove_path(constants.s2v_executable)
 
@@ -101,7 +101,7 @@ def resolve_dependencies(retries=0):
             archive_path = constants.rg_latest.split("/")[-1]
             archive_name = archive_path[:-4] if archive_path[-4:] == ".zip" else archive_path[:-7]
 
-            if fs.download_file(constants.rg_latest, archive_path, tag):
+            if fs.download_file(constants.rg_latest, archive_path, tag, retries=3):
                 output.add_text("&downloaded_cli_terminal", archive_path)
 
                 rg_binary_name = os.path.basename(constants.rg_executable)
@@ -123,6 +123,8 @@ def resolve_dependencies(retries=0):
                             constants.rg_executable,
                             current_permissions | stat.S_IXUSR | stat.S_IXGRP | stat.S_IXOTH,
                         )
+            else:
+                raise RuntimeError(f"Failed to download {constants.rg_latest}")
         constants.s2v_exec_path = (
             constants.s2v_executable
             if os.path.isabs(constants.s2v_executable)
@@ -136,14 +138,12 @@ def resolve_dependencies(retries=0):
 
     except Exception:
         log.write_crashlog()
-        output.add_text("&failed_download_retrying_terminal", msg_type="error")
-        if retries < 3:
-            return resolve_dependencies(retries + 1)
         output.add_text("&failed_download", 3, msg_type="error")
         output.add_text("&connection_error", msg_type="error")
         webbrowser.open(constants.rg_latest)
         if workshop_installed:
             webbrowser.open(constants.s2v_latest)
+        fs.open_thing(base.base_dir)
         return
 ```
 
