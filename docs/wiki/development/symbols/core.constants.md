@@ -318,7 +318,7 @@ dota_tools_extraction_paths = [
 <details open><summary>Source</summary>
 
 ```python
-s2v_cli_ver = "20.1"
+s2v_cli_ver = "21.1"
 ```
 
 </details>
