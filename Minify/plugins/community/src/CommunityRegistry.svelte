@@ -233,7 +233,7 @@
 
   button:hover:not(:disabled) {
     background: var(--btn-hover-bg, #282828);
-    border-color: var(--btn-hover-border, var(--accent, #17bebe));
+    border-color: var(--btn-hover-border, var(--accent, #ffd55e));
   }
 
   button:disabled {
@@ -248,9 +248,9 @@
   }
 
   .filters button.active {
-    background: var(--accent, #17bebe);
+    background: var(--accent, #ffd55e);
     color: var(--accent-text, #000);
-    border-color: var(--accent, #17bebe);
+    border-color: var(--accent, #ffd55e);
   }
 
   .catalogue {

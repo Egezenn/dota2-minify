@@ -11,15 +11,15 @@
   --text-muted: #777777;
   --border-color: #333333;
 
-  --accent: #17bebe;
+  --accent: #ffd55e;
   --accent-text: #000000;
 
   --btn-bg: #1e1e1e;
   --btn-text: #e0e0e0;
   --btn-border: #333333;
   --btn-hover-bg: #282828;
-  --btn-hover-border: #17bebe;
-  --btn-active-bg: #17bebe;
+  --btn-hover-border: #ffd55e;
+  --btn-active-bg: #ffd55e;
   --btn-active-text: #000000;
 
   --input-bg: #1a1a1a;
@@ -42,7 +42,7 @@
 
   --scrollbar-track: #121212;
   --scrollbar-thumb: #2e2e2e;
-  --scrollbar-thumb-hover: #17bebe;
+  --scrollbar-thumb-hover: #ffd55e;
 }
 
 .gh-icon {

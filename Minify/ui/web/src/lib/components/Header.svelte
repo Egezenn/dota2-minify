@@ -206,9 +206,9 @@
   }
 
   .tab-btn.active {
-    background: var(--accent, #17bebe);
+    background: var(--accent, #ffd55e);
     color: var(--accent-text, #000);
-    border-color: var(--accent, #17bebe);
+    border-color: var(--accent, #ffd55e);
   }
 
   .header-action {
@@ -252,7 +252,7 @@
   .header-link-btn:hover {
     background: var(--btn-hover-bg, #f0f0f0);
     border-color: var(--btn-hover-border, var(--border-color, #000));
-    color: var(--accent, #17bebe);
+    color: var(--accent, #ffd55e);
   }
 
   .header-link-btn :global(svg) {

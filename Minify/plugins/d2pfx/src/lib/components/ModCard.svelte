@@ -140,7 +140,7 @@
   }
 
   .mod-card.active {
-    border-color: var(--accent, #17bebe);
+    border-color: var(--accent, #ffd55e);
   }
 
   .preview-box {
@@ -235,14 +235,14 @@
   }
 
   .install-btn.installed {
-    background: var(--accent, #17bebe);
+    background: var(--accent, #ffd55e);
     color: var(--accent-text, #000);
-    border-color: var(--accent, #17bebe);
+    border-color: var(--accent, #ffd55e);
   }
 
   .install-btn.update {
-    border-color: var(--accent, #17bebe);
-    color: var(--accent, #17bebe);
+    border-color: var(--accent, #ffd55e);
+    color: var(--accent, #ffd55e);
   }
 
   .install-btn:disabled {
@@ -266,7 +266,7 @@
     margin: 0;
     width: 14px;
     height: 14px;
-    accent-color: var(--accent, #17bebe);
+    accent-color: var(--accent, #ffd55e);
   }
 
   .checkbox-container:has(input:disabled) {

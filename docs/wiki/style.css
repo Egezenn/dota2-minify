@@ -107,7 +107,7 @@ nav > ul ul {
 .markdown-section h6,
 .markdown-section h6 a,
 .markdown-section h6 span {
-  color: #17bebe;
+  color: #ffd55e;
 }
 
 .markdown-section tr {
@@ -137,7 +137,7 @@ nav > ul ul {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #17bebe;
+  background: #ffd55e;
   border-radius: 4px;
 }
 
@@ -146,6 +146,6 @@ nav > ul ul {
 }
 
 html {
-  scrollbar-color: #17bebe #1d1d1e;
+  scrollbar-color: #ffd55e #1d1d1e;
   scrollbar-width: thin;
 }

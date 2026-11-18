@@ -88,11 +88,11 @@
   }
 
   .mod-card.active {
-    border-color: var(--accent, #17bebe);
+    border-color: var(--accent, #ffd55e);
   }
 
   .mod-card.active .preview-container {
-    border-bottom-color: var(--accent, #17bebe);
+    border-bottom-color: var(--accent, #ffd55e);
   }
 
   .mod-card.always-mod {

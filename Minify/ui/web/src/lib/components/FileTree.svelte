@@ -101,7 +101,7 @@
   }
 
   .tree-toggle-btn:hover .tree-name {
-    color: var(--accent, #17bebe);
+    color: var(--accent, #ffd55e);
   }
 
   .tree-chevron {

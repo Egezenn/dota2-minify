@@ -264,7 +264,7 @@
   .badge {
     font-size: 11px;
     padding: 2px 6px;
-    background: var(--accent, #17bebe);
+    background: var(--accent, #ffd55e);
     color: var(--accent-text, #000);
     font-weight: bold;
   }
@@ -323,7 +323,7 @@
   }
 
   .new-version {
-    color: var(--accent, #17bebe);
+    color: var(--accent, #ffd55e);
   }
 
   .version-arrow {
@@ -390,7 +390,7 @@
 
   .progress-bar-fill {
     height: 100%;
-    background: var(--accent, #17bebe);
+    background: var(--accent, #ffd55e);
     transition: width 0.1s linear;
   }
 
@@ -407,7 +407,7 @@
   }
 
   .status-msg.finished {
-    color: var(--accent, #17bebe);
+    color: var(--accent, #ffd55e);
   }
 
   .status-msg.error {
@@ -460,8 +460,8 @@
   }
 
   .btn-yes {
-    background: var(--accent, #17bebe);
+    background: var(--accent, #ffd55e);
     color: var(--accent-text, #000);
-    border-color: var(--accent, #17bebe);
+    border-color: var(--accent, #ffd55e);
   }
 </style>

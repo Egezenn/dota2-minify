@@ -150,9 +150,9 @@
   }
 
   .tab-btn.active {
-    background: var(--accent, #17bebe);
+    background: var(--accent, #ffd55e);
     color: #fff;
-    border-color: var(--accent, #17bebe);
+    border-color: var(--accent, #ffd55e);
   }
 
   .modal-body {
@@ -224,7 +224,7 @@
   }
 
   .markdown-content :global(a) {
-    color: var(--accent, #17bebe);
+    color: var(--accent, #ffd55e);
     text-decoration: underline;
   }
 

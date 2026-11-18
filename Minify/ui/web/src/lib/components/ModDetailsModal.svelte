@@ -481,7 +481,7 @@
   }
 
   .image-preview-btn:hover img {
-    border-color: var(--accent, #17bebe);
+    border-color: var(--accent, #ffd55e);
   }
 
   .image-wrapper img {
@@ -766,7 +766,7 @@
 
   :global(.hljs-keyword),
   :global(.token-keyword) {
-    color: var(--accent, #17bebe);
+    color: var(--accent, #ffd55e);
     font-weight: bold;
   }
 
@@ -808,7 +808,7 @@
   :global(.hljs-attribute),
   :global(.token-key),
   :global(.token-attr-name) {
-    color: var(--accent, #17bebe);
+    color: var(--accent, #ffd55e);
     font-weight: bold;
   }
 
@@ -816,13 +816,13 @@
   :global(.hljs-selector-class),
   :global(.hljs-selector-id),
   :global(.token-selector) {
-    color: var(--accent, #17bebe);
+    color: var(--accent, #ffd55e);
   }
 
   :global(.hljs-tag),
   :global(.hljs-name),
   :global(.token-tag) {
-    color: var(--accent, #17bebe);
+    color: var(--accent, #ffd55e);
     font-weight: bold;
   }
 

@@ -174,7 +174,7 @@
 
   .repo-link {
     font-size: 12px;
-    color: var(--accent, #17bebe);
+    color: var(--accent, #ffd55e);
     text-decoration: underline;
   }
 
@@ -227,9 +227,9 @@
   }
 
   .btn-yes {
-    background: var(--accent, #17bebe);
+    background: var(--accent, #ffd55e);
     color: var(--accent-text, #000000);
-    border-color: var(--accent, #17bebe);
+    border-color: var(--accent, #ffd55e);
   }
 
   .btn-yes:hover:not(:disabled) {

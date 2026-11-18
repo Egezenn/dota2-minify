@@ -74,7 +74,7 @@
     cursor: pointer;
   }
   .btn-import {
-    background: var(--accent, #17bebe);
+    background: var(--accent, #ffd55e);
     color: var(--accent-text, #000);
   }
 </style>

@@ -121,15 +121,15 @@
   }
 
   .mod-card:hover {
-    border-color: var(--accent, #17bebe);
+    border-color: var(--accent, #ffd55e);
   }
 
   .mod-card.active {
-    border-color: var(--accent, #17bebe);
+    border-color: var(--accent, #ffd55e);
   }
 
   .mod-card.active .preview-container {
-    border-bottom-color: var(--accent, #17bebe);
+    border-bottom-color: var(--accent, #ffd55e);
   }
 
   .mod-card.incompatible {
@@ -244,14 +244,14 @@
   }
 
   .action-btn.update {
-    border-color: var(--accent, #17bebe);
-    color: var(--accent, #17bebe);
+    border-color: var(--accent, #ffd55e);
+    color: var(--accent, #ffd55e);
   }
 
   .action-btn.remove {
-    background: var(--accent, #17bebe);
+    background: var(--accent, #ffd55e);
     color: var(--accent-text, #000);
-    border-color: var(--accent, #17bebe);
+    border-color: var(--accent, #ffd55e);
   }
 
   .action-btn:disabled {

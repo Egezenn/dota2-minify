@@ -251,7 +251,7 @@
   }
 
   .modal-meta a {
-    color: var(--accent, #17bebe);
+    color: var(--accent, #ffd55e);
   }
 
   .modal-meta .type {
@@ -264,7 +264,7 @@
   }
 
   .modal-meta .update-label {
-    color: var(--accent, #17bebe);
+    color: var(--accent, #ffd55e);
   }
 
   .loading-state,
@@ -325,7 +325,7 @@
   }
 
   .image-preview-btn:hover img {
-    border-color: var(--accent, #17bebe);
+    border-color: var(--accent, #ffd55e);
   }
 
   .image-wrapper img {

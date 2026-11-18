@@ -17,8 +17,8 @@
   --btn-text: #000000;
   --btn-border: #000000;
   --btn-hover-bg: #f0f0f0;
-  --btn-hover-border: #17bebe;
-  --btn-active-bg: #17bebe;
+  --btn-hover-border: #ffd55e;
+  --btn-active-bg: #ffd55e;
   --btn-active-text: #000000;
 
   --input-bg: #ffffff;
@@ -41,7 +41,7 @@
 
   --scrollbar-track: #f4f4f4;
   --scrollbar-thumb: #cccccc;
-  --scrollbar-thumb-hover: #17bebe;
+  --scrollbar-thumb-hover: #ffd55e;
 }
 
 *,

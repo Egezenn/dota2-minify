@@ -7,7 +7,7 @@
 [![discord](https://img.shields.io/badge/Discord-7289DA?style=for-the-badge&logo=discord&logoColor=white)](https://discord.com/invite/9867CPv7cy)
 [![telegram](https://img.shields.io/badge/Telegram-2CA5E0?style=for-the-badge&logo=telegram&logoColor=white)](https://t.me/dota2minify)
 
-[![website](https://custom-icon-badges.demolab.com/badge/Website-17bebe?style=for-the-badge&logo=globe&logoColor=white)](https://egezenn.github.io/dota2-minify)
+[![website](https://custom-icon-badges.demolab.com/badge/Website-ffd55e?style=for-the-badge&logo=globe&logoColor=white)](https://egezenn.github.io/dota2-minify)
 [![wiki](https://custom-icon-badges.demolab.com/badge/Wiki-1D1D1E?style=for-the-badge&logo=book&logoColor=white)](https://egezenn.github.io/dota2-minify/wiki)
 
 [![github](https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/egezenn/dota2-minify)

@@ -134,7 +134,7 @@
 
   .progress-bar-fill {
     height: 100%;
-    background: var(--accent, #17bebe);
+    background: var(--accent, #ffd55e);
   }
 
   .download-status-text {
@@ -144,7 +144,7 @@
   }
 
   .download-status-text.finished {
-    color: var(--accent, #17bebe);
+    color: var(--accent, #ffd55e);
   }
 
   .download-status-text.error {
