@@ -1,4 +1,7 @@
 import os
+import re
+import shutil
+import subprocess
 
 from core import base, config, fs, log, mods_shared, output
 
@@ -13,6 +16,7 @@ class Migrations:
         self._migrate_stale_rescomproot()
         self._migrate_legacy_paks()
         self._migrate_flatten_d2pfx_manifests()
+        self._migrate_outdated_s2v()
 
     def _migrate_removed_post_patch_settings(self):
         data = config.read_json_file(base.main_config_file_dir)
@@ -219,6 +223,45 @@ class Migrations:
                 output.add_text(f"Flattened d2pfx manifest in {mod}")
             except Exception as e:
                 log.write_warning(f"Failed to flatten d2pfx manifest in {mod}: {e}")
+
+    def _migrate_outdated_s2v(self):
+        """Remove outdated Source2Viewer-CLI so the correct version gets re-downloaded."""
+        from core import constants
+
+        s2v_path = shutil.which(constants.s2v_executable)
+        if not s2v_path:
+            candidate = constants.s2v_executable
+            if not os.path.isabs(candidate):
+                candidate = os.path.join(base.base_dir, candidate)
+            if os.path.isfile(candidate):
+                s2v_path = candidate
+
+        if not s2v_path or not os.path.isfile(s2v_path):
+            return
+
+        try:
+            res = subprocess.run(
+                [s2v_path, "--version"],
+                capture_output=True,
+                text=True,
+                timeout=10,
+                creationflags=subprocess.CREATE_NO_WINDOW if base.is_win else 0,
+            )
+            version_output = (res.stdout or "") + (res.stderr or "")
+            match = re.search(r"Version:\s*(\d+)\.(\d+)(?:\.(\d+))?", version_output)
+            if not match:
+                return
+
+            major, minor, patch = (int(g) if g else 0 for g in match.groups())
+            version = (major, minor, patch)
+            # Minimum required: 21.1.7798 (the first version that reads the new KV3 types)
+            if version >= (21, 1, 7798):
+                return
+
+            fs.remove_path(s2v_path)
+            output.add_text(f"Removed outdated Source2Viewer-CLI {major}.{minor}.{patch}; it will be re-downloaded")
+        except Exception as e:
+            log.write_warning(f"Failed to check Source2Viewer-CLI version: {e}")
 
 
 Migrations()
