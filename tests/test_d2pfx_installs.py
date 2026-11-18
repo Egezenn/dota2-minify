@@ -25,6 +25,15 @@ def test_d2pfx_install_and_uninstall_persist_install_record(tmp_path, monkeypatc
         def to_hf_fallback(url):
             return None
 
+        def get_download_urls(self, cat_id, url):
+            return [url]
+
+        def download_urls(self, urls, destination, *_args, **_kwargs):
+            for url in urls:
+                if self.download_file(url, destination):
+                    return True
+            return False
+
         def download_file(self, url, destination, *_args, **_kwargs):
             with open(destination, "wb") as mod_file:
                 mod_file.write(b"updated mod" if "v2" in url else b"mod")
