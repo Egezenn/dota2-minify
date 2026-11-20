@@ -316,3 +316,16 @@ def test_ui_alerts():
 
         alert("&test_alert_key", "World", msg_type="info")
         webview_win.evaluate_js.assert_called_once_with('alert("[Notice] Hello World!");')
+
+
+def test_remote_stylesheets_do_not_block_render():
+    # A blocking remote stylesheet keeps the window white when the host is unreachable (#228)
+    import os
+    import re
+
+    index = os.path.join(os.path.dirname(__file__), "..", "Minify", "ui", "web", "index.html")
+    with open(index, encoding="utf-8") as f:
+        html = f.read()
+    for tag in re.findall(r"<link\b[^>]*>", html):
+        if 'rel="stylesheet"' in tag and "https://" in tag:
+            assert 'media="print"' in tag and "onload=" in tag
