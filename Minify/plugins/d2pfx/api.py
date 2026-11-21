@@ -309,6 +309,7 @@ def _install_mod(params: Dict[str, Any] = None, update_target: str = None) -> Di
     if not mod_url:
         return {"success": False, "error": f"No compatible mod file (.vpk/.zip) found for '{name}'."}
 
+    download_urls = dm.get_download_urls(cat_id, mod_url)
     if not mod_url.startswith("http"):
         mod_url = dm.get_file_url(cat_id, mod_url)
 
@@ -343,14 +344,14 @@ def _install_mod(params: Dict[str, Any] = None, update_target: str = None) -> Di
 
     with concurrent.futures.ThreadPoolExecutor(max_workers=2) as executor:
         future_preview = executor.submit(_download_preview) if preview_url else None
+        # Releases -> Hugging Face -> Old GitHub(delete once it stable)
         future_mod = executor.submit(
-            dm.download_file,
-            mod_url,
+            dm.download_urls,
+            download_urls,
             mod_dest,
             None,
             f"{name} ({cat_id.upper()})",
             True,
-            dm.to_hf_fallback(mod_url),
         )
 
         mod_success = future_mod.result()
