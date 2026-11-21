@@ -1,6 +1,19 @@
 import "./app.css";
 import App from "./App.svelte";
 
+function loadWebFont() {
+  const link = document.createElement("link");
+  link.rel = "stylesheet";
+  link.href =
+    "https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&display=swap";
+  document.head.appendChild(link);
+}
+if (document.readyState === "complete") {
+  loadWebFont();
+} else {
+  window.addEventListener("load", loadWebFont, { once: true });
+}
+
 if (window.location.protocol === "http:" || window.location.protocol === "https:") {
   const favicon = document.createElement("link");
   favicon.rel = "icon";

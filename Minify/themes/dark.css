@@ -1,7 +1,7 @@
 :root {
   color-scheme: dark;
-  --font-sans: system-ui, -apple-system, sans-serif;
-  --font-mono: monospace;
+  --font-sans: "Inter", system-ui, -apple-system, sans-serif;
+  --font-mono: "Fira Code", monospace;
 
   --bg-primary: #121212;
   --bg-secondary: #1a1a1a;
