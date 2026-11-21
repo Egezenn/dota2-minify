@@ -18,7 +18,7 @@ export async function getAppVersion(): Promise<string | null> {
 
 export function cleanVersion(v: string): string {
   if (!v) return "";
-  return v.replace(/^(v|minify-?)/i, "").trim();
+  return v.replace(/^(?:minify-?|v)+/i, "").trim();
 }
 
 export function compareVersions(v1: string, v2: string): number {
@@ -81,6 +81,15 @@ export async function checkForUpdates(
     return null;
   }
 
+  try {
+    const isFrozen = await window.pywebview?.api?.is_frozen?.();
+    if (isFrozen === false) {
+      return null;
+    }
+  } catch {
+    // If the host can't report frozen state, continue with the normal update check.
+  }
+
   const optIntoRcs = Boolean(options.optIntoRcs);
   const force = Boolean(options.force);
 
@@ -133,7 +142,7 @@ export async function checkForUpdates(
 
         return {
           version: remoteVer,
-          currentVersion: current,
+          currentVersion: cleanVersion(current),
           title: rel.name || `Release v${remoteVer}`,
           body: rel.body || "",
           releaseUrl: rel.html_url || `https://github.com/Egezenn/dota2-minify/releases/tag/${tag}`,

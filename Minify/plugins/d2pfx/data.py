@@ -51,6 +51,7 @@ BLACKLIST = [
 
 class DataManager:
     HOST_REACHABLE_CACHE = {}
+    URL_FAILURE_CACHE = {}
     REACHABILITY_TTL = 60
     NOTIFIED_HOSTS = set()
     _STATE_LOCK = threading.Lock()
@@ -91,29 +92,37 @@ class DataManager:
     @classmethod
     def is_url_reachable(cls, url, timeout=3):
         host = urlparse(url).netloc
+        now = time.time()
         with cls._STATE_LOCK:
-            cached = cls.HOST_REACHABLE_CACHE.get(host)
+            failed_at = cls.URL_FAILURE_CACHE.get(url)
+            if failed_at and (now - failed_at) < cls.REACHABILITY_TTL:
+                return False
+            cached_host = cls.HOST_REACHABLE_CACHE.get(host)
+            if cached_host and (now - cached_host[1]) < cls.REACHABILITY_TTL:
+                return cached_host[0]
+
+        try:
+            if cls._is_release_url(url):
+                # HEAD on release assets is unreliable (signed redirect), probe with a 1-byte GET.
+                # Any answer below 500 means the host is up, a 404 only means this file is missing.
+                with requests.get(
+                    url, headers={"Range": "bytes=0-0"}, timeout=timeout, stream=True, allow_redirects=True
+                ) as response:
+                    status = response.status_code
+            else:
+                response = requests.head(url, timeout=timeout, allow_redirects=True)
+                status = response.status_code
+        except Exception:
+            with cls._STATE_LOCK:
+                cls.HOST_REACHABLE_CACHE[host] = (False, time.time())
+            return False
+
+        with cls._STATE_LOCK:
             now = time.time()
-            if cached and (now - cached[1]) < cls.REACHABILITY_TTL:
-                return cached[0]
-
-            try:
-                if cls._is_release_url(url):
-                    # HEAD on release assets is unreliable (signed redirect), probe with a 1-byte GET.
-                    # Any answer below 500 means the host is up, a 404 only means this file is missing.
-                    with requests.get(
-                        url, headers={"Range": "bytes=0-0"}, timeout=timeout, stream=True, allow_redirects=True
-                    ) as response:
-                        reachable = response.status_code < 500
-                else:
-                    response = requests.head(url, timeout=timeout, allow_redirects=True)
-                    response.raise_for_status()
-                    reachable = True
-            except Exception:
-                reachable = False
-
-            cls.HOST_REACHABLE_CACHE[host] = (reachable, now)
-            return reachable
+            cls.HOST_REACHABLE_CACHE[host] = (True, now)
+            if status == 404:
+                cls.URL_FAILURE_CACHE[url] = now
+        return status < 400
 
     @classmethod
     def notify_fallback_once(cls, failed_url, target="the Hugging Face mirror"):

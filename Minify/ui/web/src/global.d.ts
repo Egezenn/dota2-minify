@@ -23,6 +23,7 @@ declare global {
         >;
         is_patching: () => Promise<boolean>;
         is_debug_env: () => Promise<boolean>;
+        is_frozen: () => Promise<boolean>;
         get_version: () => Promise<string>;
         perform_update: (url: string) => Promise<boolean>;
         get_mods: () => Promise<

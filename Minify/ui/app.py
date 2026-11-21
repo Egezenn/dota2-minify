@@ -105,6 +105,9 @@ class Api:
     def is_debug_env(self) -> bool:
         return self.config_service.is_debug_env()
 
+    def is_frozen(self) -> bool:
+        return bool(base.FROZEN)
+
     def get_version(self) -> str:
         return base.VERSION
 
